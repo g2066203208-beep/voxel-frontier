@@ -1,0 +1,93 @@
+{
+  "classification": "S05_PUBLISHED_JRC_BRIDGE_EXAMPLE_SHAPE_QC_NOT_SITE_DESIGN_PASS",
+  "SOURCE": {
+    "real_rotd16_sha256": "6f03869384193a4e00b27a11af6470ff3d11fcb73ebb08f0f19332b4edbe0205",
+    "record": "ESM v3 IT-2012-0008/IT.NVL/HN/MP RotD50",
+    "processed_acceleration_sha256": "a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34"
+  },
+  "REF": {
+    "report": "European Commission JRC EUR25193EN 2012 Bridge Design to Eurocodes Worked Examples",
+    "url": "https://eurocodes.jrc.ec.europa.eu/sites/default/files/2022-06/Bridge_Design-Eurocodes-Worked_examples.pdf",
+    "printed_pages": "249-251",
+    "section": "8.4.3.1 Fig.8.51; 8.4.3.3",
+    "read_level": "official JRC PDF parsed text, not visual page; NOT licensed EN standard"
+  },
+  "STANDARD": "JRC references EN1998-1/2; no licensed EN/GB/IEC full clause acceptance",
+  "OFFICIAL": "EU JRC 2012 public worked-example PDF; ESM station metadata separately archived",
+  "RUN": "V8 real 16-period numeric fit, analytic invariant and five rejection tests; local Python synthetic JRC test; no native Abaqus E/WE",
+  "FIG": "JRC Fig8.51 is external reference, NOT thesis result",
+  "TAB": "16-row research shape comparison: 10 <=4s, 6 >4s excluded",
+  "example": {
+    "type": "Type1",
+    "ground": "B (NOT Jiayu or ESM station C)",
+    "ag_g": 0.4,
+    "S": 1.2,
+    "TB_s": 0.15,
+    "TC_s": 0.5,
+    "TD_s": 2.5,
+    "damping_ratio": 0.05
+  },
+  "provisional_beam_T1_s": 6.230957762865167,
+  "band_0p2T1_to_1p5T1_s": [
+    1.2461915525730334,
+    9.34643664429775
+  ],
+  "fit_periods_s": [
+    1.25,
+    1.5,
+    2,
+    2.5,
+    3,
+    3.5,
+    4
+  ],
+  "available_periods_in_band_s": [
+    1.25,
+    1.5,
+    2,
+    2.5,
+    3,
+    3.5,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "fitted_shape_only_scale": 23.395312845709142,
+  "log_rmse": 0.09771262057347191,
+  "min_ratio": 0.7937216036086762,
+  "max_ratio": 1.0832561612444036,
+  "excluded_over_4s_s": [
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "long_period_T1_not_covered": true,
+  "output_csv_sha256": "83cb24140a35d1e71ee6bad48bd81f2f2a66c12d990ed264d8ed214dd75770a9",
+  "output_csv_bytes": 2383,
+  "assumptions": [
+    "bridge example only; 0.4g NOT Jiayu hazard",
+    "single Italian event not ensemble",
+    "5% damping and conditional beam T1, not native PT/contact",
+    "log amplitude fit not wave matching"
+  ],
+  "error_budget": {
+    "numeric": "double precision; log stationary condition <1e-12",
+    "spectral_grid": "16 sparse periods, no dense continuous-band proof",
+    "long_period": "Annex A original NOT read, >4s refused",
+    "site_and_native_model": "unquantified"
+  },
+  "failed_cases": [
+    "negative t=0,-1,4.00001,T1,NaN rejected",
+    "no new native RUN attempted"
+  ],
+  "S05_PASS": false,
+  "S08_PASS": false,
+  "native_Abaqus_E_WE": 0,
+  "HOLD": "site-specific validated long-period spectrum and native PT/contact modes missing"
+}
