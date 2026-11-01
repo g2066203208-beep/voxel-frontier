@@ -20,6 +20,8 @@
 <a id="current-progress"></a>
 ## 当前进度 — 2026-10-29 10:52 核对
 
+**2026-11-01 17时 S06历史ROSCO四批控制台轨迹源级核验：** 实际回读T071/T072 **16个成功OpenFAST job**的原始Actions日志，四工况×四批各71条ROSCO打印值，12对跨批共3408个发电机转速/桨距/功率/估计风速打印值**逐项一致**（显示0.1单位）。已保存[1136行打印数据](../experiments/T077/recovery/S06_T071_T072_16JOB_ROSCO_CONSOLE_SAMPLES_20261101.csv)、[12对误差表](../experiments/T077/recovery/S06_T071_T072_ROSCO_CONSOLE_PAIR_QC_20261101.csv)、[16 job及SHA收据](../experiments/T077/recovery/S06_T071_T072_ROSCO_CONSOLE_RECEIPT_20261101.json)、[Python复核程序](../experiments/T077/recovery/s06_rosco_console_cross_batch_qc.py)。**新证据支持粗粒度控制状态一致，但不能证明0.05s全状态同态或RP/TP/DCM；J09/J18/J27继续HOLD**。T071/T072原始OUTB在job临时目录被读取，16个历史artifact只上传`extract/*`；源OUTB仍未定位。S06 PARTIAL/HOLD、S07 BLOCKED、12阶段0/12、E/WE原生0；下一动作=追索其他OUTB备份或最小短时同态补采。
+
 **2026-11-01 16时 S06四批真实源同步边界纠偏：** 持久Library原ZIP逐件ZIP/gzip SHA 8/8一致，真实31站×12001=372031行只含FL/ML（无RP/TP/AL/DCM）。批内27接口共324027个逐时刻条件性六分量数值；J09/J18/J27跨独立A/B/C/D运行不可冒充同步，输出明确HOLD。J29条件性|ΔMy|峰值113.631827570kN·m@672.3s（非真实全球外载）。[脚本](../experiments/T077/recovery/s06_31gage_batch_coherence_qc.py)、[30行表](../experiments/T077/recovery/S06_U09p343881_ETM_S06_31GAGE_BATCH_TIMEWISE_WRENCH_QC_20261101.csv)、[SHA收据](../experiments/T077/recovery/S06_U09p343881_ETM_S06_31GAGE_BATCH_TIMEWISE_RECEIPT_20261101.json)和[T080过程](../experiments/T080/PROCESS_LOG.md)已保存。S06 PARTIAL/HOLD、S07 BLOCKED、12阶段0/12、E/WE原生0。下一唯一动作：找原OUTB/公共状态证明跨批同态与RP/TP/AL；缺失则最小短时补采设计，禁止700s生产。
 
 **2026-11-01 15时S06源ZIP持久副本SHA最终复验（覆盖下方“上传后未复哈希”暂态）：** 从用户持久Library逐一重新物化16份已上传ZIP，逐件SHA256与原Actions下载件及2026-10-24 manifest **16/16一致**；合计125,291,677字节，更新[16行保全索引](../experiments/T077/recovery/S06_T071_T072_16_ARTIFACT_LIBRARY_PRESERVATION_20261101.csv)的`POST_UPLOAD_SHA_MATCH`和[T080原始终端结果](../experiments/T080/PROCESS_LOG.md)。S06源ZIP到期保全**字节级PASS**，但S06物理/来源全链、S07、地震、材料疲劳仍HOLD，12阶段0/12。下一唯一动作=31站同刻RP/TP/DCM六分量与惯性/风荷载所有权核对。
@@ -865,3 +867,8 @@ T057相对T053实际改变了材料身份/塑性曲线、PT每位置140→1120 m
 - START / 云端研究；read_base_sha=`83f93bb181e758f50d6901560cd1b809e8172e35`，main=`bbc5c9130f2d9fc41f776506d86118a9b8db0e65`，PR #42 Open/Draft。已读AGENTS、README、00_STATUS、00_WORKSPACE_MASTER、T079 ACADEMIC_REVIEW、T080.1/.2/.3、12阶段计划、本指挥室16时交接及T080最新过程；继承已保全16份原始ZIP与四批31站源级QC，不重跑700s OpenFAST。
 - 新增真实输入：直接读取T071 Actions run 37582521146及T072 run 37622366681的16个成功OpenFAST job原始控制台日志；已初步比对每工况A/B/C/D各71个ROSCO打印样本的发电机转速、变桨、功率、估计风速，四工况每组A-B/A-C/A-D打印值完全一致。**此为四通道十秒级四舍五入控制状态证据，不是12001点RP/TP/DCM/OUTB逐点同步证明。**
 - 本轮拟在T077/recovery原目录保存16×71原始打印值的紧凑可复核CSV、12对比较表、可执行复核脚本和SHA/原始job URL，并更新T080 PROCESS_LOG、00_STATUS及本指挥室交接；不新建T080编号，不改T057/T070/main，不合并PR、不跑昂贵生产。
+
+
+### 2026-11-01 17时｜S06 T071/T072控制台历史状态证据收尾交接
+- END / START已登记本指挥室17时；本轮实际从16个原生Actions job逐件读取日志，形成4工况×4批×71条ROSCO打印值及12对3408项精确打印值比较。原始run/job URL、归一化SHA256、1136行CSV、12行CSV、复核脚本与PR CI工作流已保存，T080 PROCESS_LOG及论文00_STATUS同步。JS实际原始日志比对完成；本地Python3合成负向自测通过；**真实CSV Python CI结果尚未确认，不能写CI PASS**。无新Abaqus/地震结果/授权规范原页，无生产RUN；main/T057/T070不动，PR仍Draft。
+- 新证据只解除“跨批是否至少有共同控制台轨迹”的**粗粒度不确定性**，不解除J09/J18/J27同刻全状态/姿态/惯性HOLD；历史OUTB未保全在现有16 ZIP内。12阶段0/12未晋级。下一责任方=云端继续检索OUTB其他备份或生成一个工况、跨批接口短时状态补采方案；具授权Abaqus方独立负责原生物理门禁。
