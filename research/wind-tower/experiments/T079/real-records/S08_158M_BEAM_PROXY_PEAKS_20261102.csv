@@ -1,0 +1,3 @@
+direction,peak_top_relative_displacement_m,time_peak_top_displacement_s,peak_top_absolute_acceleration_m_s2,peak_base_elastic_shear_kN,peak_base_elastic_moment_kNm
+HNE,0.03503702829349452,50.160000000000004,0.14504504896507978,325.96826265232266,11233.622625615168
+HNN,0.029303411223895688,63.97,0.15393397970018596,302.69328343242034,8613.006873416594
