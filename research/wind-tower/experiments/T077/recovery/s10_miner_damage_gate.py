@@ -41,7 +41,7 @@ def validate_era5_probability_source(raw):
     if n_total != 184080 or n_op != 106900:
         raise ValueError('ERA5_31BIN_HOURS_MISMATCH')
     for i, r in enumerate(rows):
-        if int(r['bin_lower_mps']) != i or int(r['bin_upper_mps_exclusive']) != i + 1:
+        if int(r['bin_lower_mps']) != i or (r['bin_upper_mps_exclusive'] != ('INF' if i == 30 else str(i + 1))):
             raise ValueError('ERA5_31BIN_ORDER_MISMATCH')
         p = float(r['p_all_hours'])
         q = float(r['p_conditional_4_to_25'])
