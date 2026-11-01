@@ -276,8 +276,8 @@ def integration_selftest():
                                 ('B2', .75, [0,6,0])]:
             for seed, offset in [('S01',0),('S02',10)]:
                 duration = 4.0
-                raw = ('time_s,stress_MPa\\n' + ''.join(
-                    f'{i*duration/(len(base)-1):g},{v+offset:g}\\n'
+                raw = ('time_s,stress_MPa\n' + ''.join(
+                    f'{i*duration/(len(base)-1):g},{v+offset:g}\n'
                     for i,v in enumerate(base))).encode('utf-8')
                 sha = hashlib.sha256(raw).hexdigest()
                 meta = {'source_sha256':sha,
@@ -317,7 +317,7 @@ def integration_selftest():
 
     def encode(items):
         out = io.StringIO(newline='')
-        writer = csv.DictWriter(out,fieldnames=FIELDS,lineterminator='\\n')
+        writer = csv.DictWriter(out,fieldnames=FIELDS,lineterminator='\n')
         writer.writeheader()
         writer.writerows(items)
         return out.getvalue().encode('utf-8')
