@@ -16,7 +16,7 @@ function makeSvg(csv) {
   for(const key of ['HNE','HNN']){
     if(Math.abs(series[key][0][0])>1e-9||Math.abs(series[key].at(-1)[0]-160.1)>1e-8)throw Error('TIME_RANGE');
   }
-  const W=1240,H=860,left=110,right=80,pw=W-left-right;
+  const W=1240,H=930,left=110,right=80,pw=W-left-right;
   const colors={HNE:'#23618b',HNN:'#bd6b32'};
   const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
   const svg=[];
@@ -52,7 +52,7 @@ function makeSvg(csv) {
   panel(532,5,0.000001,'Base elastic restoring moment (NOT full dynamic reaction)','MN·m');
   svg.push('<rect x="'+(W-320)+'" y="120" width="16" height="4" fill="'+colors.HNE+'"/>');text(W-295,127,'HNE horizontal',16);
   svg.push('<rect x="'+(W-170)+'" y="120" width="16" height="4" fill="'+colors.HNN+'"/>');text(W-145,127,'HNN horizontal',16);
-  text(left,825,'NONPRODUCTION: not Abaqus E/WE; excludes PT, joints, RNA inertia, soil and vertical input.',15,'#9a3b30');
+  text(left,895,'NONPRODUCTION: not Abaqus E/WE; excludes PT, joints, RNA inertia, soil and vertical input.',15,'#9a3b30');
   svg.push('<metadata>history_blob_sha1=56a22b920c677a937abe44a2f20287121e92be8a; source_esm_sha256=a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34; display sampled 0.1s, source dt=0.005s; no physical PASS</metadata>');
   svg.push('</svg>');
   return svg.join('\n')+'\n';
