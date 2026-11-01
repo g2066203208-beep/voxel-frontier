@@ -1,0 +1,31 @@
+name: S06 T071-T072 ROSCO console source QC
+on:
+  push:
+    branches:
+      - research/t080-seismic-integration-gates-20261022
+    paths:
+      - 'research/wind-tower/experiments/T077/recovery/s06_rosco_console_cross_batch_qc.py'
+      - 'research/wind-tower/experiments/T077/recovery/S06_T071_T072_*ROSCO*'
+      - '.github/workflows/s06-rosco-console-source-qc.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-qc:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify 16 historic job console traces and negative controls
+        run: |
+          set -euo pipefail
+          cd research/wind-tower/experiments/T077/recovery
+          python -m py_compile s06_rosco_console_cross_batch_qc.py
+          python s06_rosco_console_cross_batch_qc.py --selftest
+          python s06_rosco_console_cross_batch_qc.py \
+            --source S06_T071_T072_16JOB_ROSCO_CONSOLE_SAMPLES_20261101.csv \
+            --summary S06_T071_T072_ROSCO_CONSOLE_PAIR_QC_20261101.csv \
+            --receipt S06_T071_T072_ROSCO_CONSOLE_RECEIPT_20261101.json
