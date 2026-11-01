@@ -168,6 +168,9 @@
     "FIG": "none",
     "TAB": "8 suffixes x 9 gages; planned 984 overlap comparisons",
     "HOLD": "No actual 2s ED child patch/OUTB with RP/TP/AL yet; no exact DCM or inertia attribution; no 100-700s synchronization",
-    "physical_pass": false
+    "physical_pass": false,
+    "script_sha256": "0f19d9ea7e3f8c0723da335e816c36b1a966d549ada545f5514506a186a3d1d0",
+    "script_git_blob_sha1": "87468e0c9e131b5aea9287024a1b468d58bdfa4f",
+    "remote_replay": "V8 loaded GitHub remote script blob and reran selftest: PASS, 8 rejections, analytic wrench and reverse PASS"
   }
 }
