@@ -6,6 +6,7 @@ on:
     paths:
       - '.github/workflows/s05-esm-rotd-real.yml'
       - 'research/wind-tower/experiments/T079/s05_esm_rotd_real.py'
+      - 'research/wind-tower/experiments/T079/s05_esm_public_processed_pair.py'
       - 'research/wind-tower/experiments/T079/s08_base_motion_amplitude_gate.py'
       - 'research/wind-tower/manuscript/final-thesis/figures/plot_s08_esm_3comp_real_acceleration.py'
       - 'research/wind-tower/experiments/T079/real-records/S05_ESM_IT2012_NVL_MP_RotD_16PERIOD_20261030.csv'
@@ -287,4 +288,72 @@ jobs:
           PY
             gh api --method PUT "repos/$GITHUB_REPOSITORY/contents/$target" --input payload.json --jq '.commit.sha'
             echo "PERSISTED_REAL_ESM_DENSE_ROTD $target"
+          done
+
+  s05-independent-event-official-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Fetch existing ESM source inspector from PR commit
+        run: |
+          set -euo pipefail
+          mkdir -p source output
+          root=research/wind-tower/experiments/T079
+          curl -fLsS --retry 3 -o source/s05_esm_public_processed_pair.py "https://raw.githubusercontent.com/$GITHUB_REPOSITORY/$GITHUB_SHA/$root/s05_esm_public_processed_pair.py"
+          curl -fLsS --retry 3 -o source/s05_ground_motion_pair_qc.py "https://raw.githubusercontent.com/$GITHUB_REPOSITORY/$GITHUB_SHA/$root/s05_ground_motion_pair_qc.py"
+          python -m py_compile source/s05_esm_public_processed_pair.py
+          sha256sum source/s05_esm_public_processed_pair.py
+      - name: Run synthetic negative gate and attempt second independent ESM event
+        run: |
+          set -euo pipefail
+          python source/s05_esm_public_processed_pair.py --independent-self-test
+          python source/s05_esm_public_processed_pair.py --independent-source --output-dir output --timeout 65 | tee output/runner_stdout.log
+          python - <<'PY'
+          import json,pathlib,hashlib
+          p=pathlib.Path('output/S05_ESM_IT2012_0009_OFFICIAL_SOURCE_RECEIPT.json')
+          r=json.loads(p.read_text())
+          assert r['event_id']=='IT-2012-0009' and not r['S05_PASS'] and r['Abaqus_E_WE_RUN']==0
+          for fn,key in [('S05_ESM_IT2012_0009_OFFICIAL_SELECTION.json','metadata_sha256'),
+                         ('S05_ESM_IT2012_0009_MP_ACC_OFFICIAL.zip','waveform_response_sha256')]:
+              f=p.parent/fn
+              if f.exists():
+                  assert hashlib.sha256(f.read_bytes()).hexdigest()==r[key]
+          print('S05_INDEPENDENT_SOURCE_FETCH_RECEIPT_QC',r['status'])
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: s05-independent-esm-2012-0009-official-source-or-failure-NOT-DESIGN
+          path: output/*
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Archive official small JSON and exact source receipt on Draft PR
+        if: success() && github.ref_name == 'research/t080-seismic-integration-gates-20261022'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          root=research/wind-tower/experiments/T079/real-records
+          for name in S05_ESM_IT2012_0009_OFFICIAL_SELECTION.json S05_ESM_IT2012_0009_OFFICIAL_SOURCE_RECEIPT.json; do
+            file="output/$name"
+            test -f "$file" || continue
+            test "$(wc -c < "$file")" -le 300000 || { echo "LARGE_OFFICIAL_JSON_ARTIFACT_ONLY $name"; continue; }
+            target="$root/$name"
+            if gh api "repos/$GITHUB_REPOSITORY/contents/$target?ref=$GITHUB_REF_NAME" --jq '.content' > existing.b64 2>/dev/null; then
+              base64 -d existing.b64 > existing.file
+              cmp -s existing.file "$file" || { echo "EXISTING_SOURCE_OUTPUT_DIFFERS_HOLD: $target"; exit 1; }
+              echo "ALREADY_IDENTICAL $target"
+              continue
+            fi
+            python - "$file" "$GITHUB_REF_NAME" <<'PY' > payload.json
+          import base64,json,sys
+          f,branch=sys.argv[1:]
+          print(json.dumps({'message':'research(S05): archive independent ESM official source or failure, not design PASS',
+                            'content':base64.b64encode(open(f,'rb').read()).decode(),'branch':branch}))
+          PY
+            gh api --method PUT "repos/$GITHUB_REPOSITORY/contents/$target" --input payload.json --jq '.commit.sha'
+            echo "PERSISTED_INDEPENDENT_ESM_SOURCE $target"
           done
