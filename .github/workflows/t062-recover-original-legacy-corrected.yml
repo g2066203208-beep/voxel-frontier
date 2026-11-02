@@ -1,0 +1,70 @@
+name: T062 restore original Sep 2026 CORRECTED ledger and source SHA (NO SOLVER)
+on:
+  push:
+    branches: [research/t080-seismic-integration-gates-20261022]
+    paths:
+      - 'research/wind-tower/experiments/T062/recover_legacy_corrected_archive.py'
+      - '.github/workflows/t062-recover-original-legacy-corrected.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  recover-exact-legacy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify original primary ZIP, 7 SHA-locked historical files, and 36 source identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/wind-tower/experiments/T062/recover_legacy_corrected_archive.py --output-dir /tmp/T062_LEGACY_RESTORED | tee /tmp/T062_PRIMARY_ANALYSIS_STDOUT.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          d=Path('/tmp/T062_LEGACY_RESTORED')
+          r=json.loads((d/'LEGACY_PRIMARY_RECOVERY_RECEIPT_20261102.json').read_text())
+          assert r['original_file_manifest_entries_verified']==7
+          assert r['legacy_ledger']['rows']>0 and r['legacy_del']['rows']>0
+          assert len(r['legacy_ledger']['columns'])>1
+          assert r['current_outb_sha_count']==36
+          assert r['original_ledger_source_recovered'] and not r['physical_pass']
+          print('T062_ACTUAL_PRIMARY_ZIP_BYTES_CRC_SHA_SOURCE_RECOVERY_PASS')
+          print('COUNTS',json.dumps({
+            'ledger_rows':r['legacy_ledger']['rows'],
+            'legacy_del_rows':r['legacy_del']['rows'],
+            'legacy_rank_rows':r['legacy_rank']['rows'],
+            'legacy_source_sha_count':r['legacy_outb_sha_count'],
+            'matched_old_new':r['matched_old_current_outb'],
+            'different_old_new':r['different_old_current_outb']
+          }))
+          PY
+          sha256sum /tmp/T062_LEGACY_RESTORED/{03_RAINFLOW_CYCLE_LEDGER.csv,05_LOAD_DEL_M4_ALL36.csv,07_DEL_CONTROL_RANKING.csv,SHA256_MANIFEST_CORRECTED.csv,LEGACY_PRIMARY_RECOVERY_RECEIPT_20261102.json}
+      - name: Archive ALL originals including 5.5MB original cycle ledger (not solver run)
+        uses: actions/upload-artifact@v4
+        with:
+          name: T062_PRIMARY_20260904_CORRECTED_ORIGINALS_SHA_LOCKED
+          path: /tmp/T062_LEGACY_RESTORED/
+          retention-days: 90
+      - name: Keep provenance receipt, old DEL tables and executable original method in Draft PR
+        shell: bash
+        run: |
+          set -euo pipefail
+          out=research/wind-tower/experiments/T062/legacy-primary-recovered-20261102
+          mkdir -p "$out"
+          for f in LEGACY_PRIMARY_RECOVERY_RECEIPT_20261102.json LEGACY_PRIMARY_36OUTB_SHA_COMPARISON_20261102.csv 05_LOAD_DEL_M4_ALL36.csv 07_DEL_CONTROL_RANKING.csv finalize_rainflow_del.py CHANNEL_INDEXING_CORRECTION.md 11_METHOD_AND_EVIDENCE.md; do
+            cp "/tmp/T062_LEGACY_RESTORED/$f" "$out/$f"
+          done
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$out"
+          if git diff --cached --quiet; then
+            echo 'T062_LEGACY_RECOVERY_UNCHANGED'
+          else
+            git commit -m 'data(T062): restore original historic DEL tables and 36 OUTB source hash comparison'
+            for n in 1 2 3; do
+              git pull --rebase origin research/t080-seismic-integration-gates-20261022
+              if git push origin HEAD:refs/heads/research/t080-seismic-integration-gates-20261022; then break; fi
+              if [ "$n" = 3 ]; then exit 1; fi
+            done
+          fi
