@@ -385,8 +385,8 @@
   },
   "s07_original_input_recovery_20261103": {
     "date_local": "2026-11-03 01:03 Asia/Shanghai",
-    "status": "REAL_CI_FIRST_RUN_FAILED_ON_PREVIOUS_RECEIPT_SHA_TYPO__CORRECTED_FROM_FOUR_REAL_PREP_RECEIPTS__RERUN_PENDING",
-    "read_base_sha": "17cd3f1d8169e80dcdb63570fb5aad2ba2aa20d9",
+    "status": "SOURCE_RECOVERED_23_OF_23_SHA256_PASS__FOUR_BATCHES_PREPARED__NO_SOLVER_NO_DCM",
+    "read_base_sha": "80b50d37a5cbe77e9508b503319c3e0898e62625",
     "source_paths": {
       "part001": "research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip",
       "part002": "research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-002.zip",
@@ -435,17 +435,22 @@
     "STANDARD": "No authorized IEC/GB/NB clauses read",
     "OFFICIAL": "Historical OpenFAST v3.5.3 Windows Intel + ROSCO Bladed DLL; bytes located but patched full OpenFAST diagnostic executable still absent",
     "RUN": {
-      "workflow": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41487977109",
-      "status": "FAILED_STRICT_RECEIPT_SHA_MISMATCH__CORRECTION_SUBMITTED__RERUN_PENDING",
-      "kind": "Four-batch 2s INPUT PREPARATION ONLY; no OpenFAST solver, no Abaqus",
-      "gate_script": "research/wind-tower/experiments/T062/s07_recovered_2s_input_gate.py"
+      "workflow": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41488523561",
+      "job_id": 125425104904,
+      "status": "completed",
+      "conclusion": "success",
+      "runtime": "Windows runner Python 3.12.10; original OpenFAST v3.5.3 exe and BTS LFS materialized but not executed",
+      "kind": "Four independent 2s input PREPARATIONS ONLY; new OpenFAST native solver runs=0; Abaqus=0",
+      "result": "S07_ALL_23_SOURCE_IDENTITIES_VERIFIED__NO_SOLVER_NO_DCM",
+      "failed_prior_run": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41487977109",
+      "failed_prior_artifact_id": 13162233650
     },
     "FIG": "0",
-    "TAB": "23 historical exact source identities; new source path/blob inventory; 4 prepared-input SHA comparisons pending",
+    "TAB": "23/23 verified source identities, four derived ED source hashes, 4x 2s reconstructed prep receipts, CI JSON receipt SHA256 064ec2...",
     "assumptions": "Repo Git blobs prove archived ZIP file presence, not content SHA256 until CI reads; BTS/exe are LFS pointers until LFS pull; restored 2s inputs are not full 600s synchronized state",
     "error_budget": "Historical source SHA256 identity exact when revalidated; physical DCM/force ownership and full 600s uncertainty not bounded",
-    "failure_record": "Actions #41487977109: four original 2s input batches successfully reconstructed and exact LFS materialized; strict 23-identity gate correctly failed at Airfoils/Cylinder_Aerodyn15.dat because prior 2026-11-03 00:04 source receipt transcribed SHA as 2994cb5f79282170019be0a8c48f60155905365cac4ac88b21dda58c16f925cb; all four newly reconstructed prep receipts independently report 2994cb5f79282170019be0a8c48b60155905365cac4ac88b21dda58c16f925cb. Preserved failure artifact #13162233650. Corrected the prior receipt identity, NOT original source bytes. CI rerun required; no PASS yet.",
-    "HOLD": "Even after 23 SHA source PASS, full patched OpenFAST diagnostic build and real t1/-t3/t2 output still missing; S07 physical HOLD",
+    "failure_record": "Actions #41487977109: four original 2s input batches successfully reconstructed and exact LFS materialized; strict 23-identity gate correctly failed at Airfoils/Cylinder_Aerodyn15.dat because prior 2026-11-03 00:04 source receipt transcribed SHA as 2994cb5f79282170019be0a8c48f60155905365cac4ac88b21dda58c16f925cb; all four newly reconstructed prep receipts independently report 2994cb5f79282170019be0a8c48b60155905365cac4ac88b21dda58c16f925cb. Preserved failure artifact #13162233650. Corrected the prior receipt identity, NOT original source bytes. CI rerun required; no PASS yet. Corrected rerun #41488523561 verified all 23 SHA256 and four historical derived input maps, Windows runner completed/success; original failed run retained. The source recovery closes missing-source-location HOLD but not DCM/physics.",
+    "HOLD": "Exact 2s original input recoverability is now verified. Still need a complete patched OpenFAST v3.5.3 diagnostic executable and one actual t1/-t3/t2 DCM+inertia ownership pilot; 600s and DLC1.2 remain HOLD.",
     "physical_pass": false,
     "stage_pass": false,
     "correction": {
@@ -454,7 +459,25 @@
       "correct_sha256": "2994cb5f79282170019be0a8c48b60155905365cac4ac88b21dda58c16f925cb",
       "independent_evidence": "4/4 actual newly reconstructed batch prep receipts in Actions #41487977109 artifact #13162233650",
       "scope": "Correct erroneous text receipt only; no source data modified",
-      "verification_status": "REQUIRES_CI_RERUN"
+      "verification_status": "REAL_WINDOWS_CI_PASS_AFTER_CORRECTION"
+    },
+    "reconstruction_result": {
+      "source_identity_count": 23,
+      "source_identity_sha256_verification": "23/23 PASS exact",
+      "four_derived_ed_sha256": [
+        "e8c1653486cc96eaa5f32a28b01701df080bd2f185f851abd4ebf54a13ef23c7",
+        "7cce15fcb6ef0a0e6f9138850e4c66745450655d50d1ee59a7171b1e1530ce0f",
+        "bd59ed51c843f1ca9e82b2d3cd1441b2055e2b222a36636becc31bd54400c060",
+        "4c524f1e524d049c816f5fa44dea01f9c1d8e3a2e8cf34ca13ff45487655c4c7"
+      ],
+      "etm_s06_bts_sha256": "ad68a83a63f197c528c07502db8adff883e9c737863ef3c4cab99cfa76052147",
+      "result_json_sha256": "064ec2c78c61949a25749117c9ee476ef2cbcf0834b1e567e304740723d61344",
+      "artifact_id": 13163196895,
+      "artifact_name": "s07-original-four-batch-2s-input-reconstruction-only",
+      "historical_qc_derived_input_maps": "4/4 exact PASS",
+      "selftest_negative_rejections": 3,
+      "source_bytes_stored_in_git": "Only source archives and LFS original; generated 2s input copies intentionally not committed due size",
+      "new_native_dcm_rows": 0
     }
   }
 }
