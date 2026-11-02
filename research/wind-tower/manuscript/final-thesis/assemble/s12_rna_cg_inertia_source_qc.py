@@ -74,7 +74,7 @@ def main():
     def fmt(v):
         return "0.000000" if abs(v)<5e-7 else "%.6f"%v
     with args.output.open("w",newline="",encoding="utf-8") as f:
-        writer=csv.writer(f,lineterminator="\\n")
+        writer=csv.writer(f,lineterminator="\n")
         writer.writerow(["metric","unit","recomputed","archived_T038","scope"])
         for k,u,a,b in specs:
             writer.writerow([k,u,fmt(a),fmt(b),"R2_frozen_IEC_zero_yaw_not_operating"])
