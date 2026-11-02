@@ -404,7 +404,7 @@ jobs:
           PY
           set +e
           (cd work/batch1 && OPENFAST_S07_DCM_PROBE="$PWD/s07_native_dcm_raw.log" \
-            timeout 180 ../../../official-openfast/build/glue-codes/openfast/openfast DTU_10MW_RWT.fst) \
+            timeout 180 ../../official-openfast/build/glue-codes/openfast/openfast DTU_10MW_RWT.fst) \
             > s07_linux_native_stdout.log 2>&1
           rc=$?
           set -e
