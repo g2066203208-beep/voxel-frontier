@@ -1,0 +1,40 @@
+{
+  "FIG": "Update Chapter 3 figure to mark previous wrong historical algorithm, not distinct raw source",
+  "HOLD": "Only load-level rainflow algorithm corrected. DLC1.2 coverage and material fatigue life remain unverified",
+  "OFFICIAL": "original OpenFAST v3.5.3 files, no production solver",
+  "REF": "historical Word load-level claim and T062 archival independently recalculated DEL",
+  "RUN": "GitHub Actions 72-case-channel original/fixed/independent algorithm postprocess",
+  "SOURCE": "primary archived original script and old DEL/embedded SHA; supplement 36 original OUTB independently verified",
+  "STANDARD": "No authorized ASTM/IEC/GB design clause inspected, algorithm implementation only",
+  "TAB": "complete per-case and per-channel 72-row reference comparison",
+  "all_72_comparison_csv_sha256": "12dabbb1273ce03d3920aedda3f72f9fa1d75b671e01a1db145c0a972ffe15e2",
+  "all_72_corrected_full_cycle_multisets_match_reference": true,
+  "all_72_one_line_fixed_DEL_match_T062_new": true,
+  "all_72_original_DEL_match_legacy_05": true,
+  "all_72_weighted_count_conserved": true,
+  "corrected_max_global": {
+    "case": "U11p4_ETM_S04",
+    "channel": "TwrBsMyt",
+    "del_kNm": "26802.478501532038"
+  },
+  "current_source_manifest_sha256": "35235d543bae4b82b24260a16fae1885f8123ef3cf3d8482145c704ea1eaa392",
+  "del_channels": 72,
+  "error_budget": "DEL <=1e-5 kN-m absolute, cycle range/mean multiset rounded 1e-8, source raw int16 quantization unchanged; structural/material physical uncertainty not closed",
+  "historical_code_sha256": "b7c2d50b391d90f69fef6aa72e5bdf4be5a843c72b4460147145a0df14110649",
+  "legacy_max_global": {
+    "case": "U11p4_ETM_S03",
+    "channel": "TwrBsMyt",
+    "del_kNm": "28177.009927612042"
+  },
+  "material_life_pass": false,
+  "max_legacy_to_corrected_ratio": 1.2247999417616686,
+  "min_legacy_to_corrected_ratio": 0.4548845380032415,
+  "old_source_manifest_sha256": "c9da25b3a967c9ed3b3a859666263c6964d8480798185e6e031539c38e4c3302",
+  "one_line_cause": "legacy X=old range/Y=new range; 'if X<Y:break' reversed; correct 'if Y<X:break' in memory only",
+  "outb_cases": 36,
+  "physical_pass": false,
+  "reference": "third-party independently published rainflow 3.2.0, pinned wheel SHA256 cb6c254aa1a16a9e658ff3f39c6e5a77650d6c4e8304146169b36516d1f01660",
+  "same_sha_old_vs_current_OUTB": 36,
+  "source_reading_level": "36 actual FileID4 12001-sample archived original OUTB bytes each SHA+CRC checked; original September rainflow exact AST with hash; installed independent 3.2.0",
+  "status": "T062_ALL_36_OUTB_72_CHANNEL_OLD_RAINFLOW_BUG_CAUSALLY_VERIFIED"
+}
