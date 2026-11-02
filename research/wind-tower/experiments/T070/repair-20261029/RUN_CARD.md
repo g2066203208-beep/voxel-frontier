@@ -80,3 +80,17 @@ python research/wind-tower/experiments/T070/repair-20261029/c00b_run_child_g0.py
 - **可交本机的实际artifact：** [C00b child.inp + manifest + 两hunk patch，artifact #12874778778](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40822101386/artifacts/12874778778)，ZIP 2,960,322 bytes、GitHub上传ZIP SHA256 `ea6acc206113dcb9ee7ec44b706eed79aea6b50bfd6f33f2807777662c29f274`；内含INP的**解压后**SHA必须独立核为`d5f0922a...`，不能用ZIP动态SHA替代。C00旧子版另存artifact #12875355760，不能误送L02。
 - **REF/STANDARD/OFFICIAL/FIG/TAB：** REF无新期刊原页；STANDARD未核新授权NB/T、IEC/GB条文；OFFICIAL=Abaqus 2025官方接触关键字页（本卡前节）及真实GitHub Actions原始日志；FIG无本塔结构/地震/风疲劳图；TAB=30对接触不变、两处真实diff、CI 4正7负与真实SHA。数值/算法误差：真实输入字节/精确逆变换可复核，fixture误报已定位；接触、PT、网格、模型及输出物理误差`NEED_ESTIMATE`。
 - **阶段/HOLD/下一责任：** 12阶段仍`0/12`，S02=`NATIVE_RECHECK_PENDING`，C00b只是**静态/软件验证PASS**，绝非原生Data Check/物理PASS。**本机L02仅后台执行一次C00b Abaqus 2025 Data Check**，记录真实.dat/.msg/.sta/.log、所有新ERROR及129条历史WARNING的延续/处置；云端可并行推进S05选波、S07映射、S10/S11方法。不改冻结T057/T070，不合并PR，不启动高成本生产RUN。
+
+## 2026-11-02｜L02原生一键入口已交付，实际完整源CI成功（非Abaqus PASS）
+
+- **程序：** [l02_native_single_entry.py](l02_native_single_entry.py)。对完整冻结T070原始INP（16,587,215B；SHA256=`9b67337fc5c1a5fe0171d48cfe8ea52c69363c9780f0a8e7675552deb8c5c1f9`）和实际L01原生DAT（144,319B；SHA256=`60805bb07d8ccb5c5d922de57d910ab6417beed9dbe3d2ffb04b8c6efe7f8e57`）执行双源拒绝门，再独立重建C00b子版（16,587,192B；SHA256=`d5f0922a8f9af84cb3a0ab937f417c3f07c44a2deee40864bb074410686853ac`），不修改母本或接触/钢筋/PT参数。仅`--execute`且确有Abaqus命令时调用已有锁定G0包装器，`datacheck cpus=1 interactive`，在隔离工作目录保存原生文件和manifest；无Abaqus则在执行前拒绝。
+- **实测GitHub CI：** [Actions #41382967366/job #125077551337](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41382967366) **completed/success**。真实T070与真实L01 DAT全字节源校验、已存在的C00b双diff/逆变换、L02新入口错误拒绝及全源重建全部通过；stdout明确`L02_REAL_SOURCE_PREFLIGHT_CI_PASS_NO_ABAQUS`，`native_pass=false`。真实C00b子版重新上传至[artifact #13113718791](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41382967366/artifacts/13113718791)。这是Source/STATIC-RUN准入，不是物理验收。
+- **本机下一条可直接执行的唯一命令（必须有授权Abaqus 2025，后台CLI不触碰GUI）：**
+
+  ```powershell
+  python research/wind-tower/experiments/T070/repair-20261029/l02_native_single_entry.py --workdir D:/Codex-research-native/T070-20261029/L02_ONE_COMMAND --abaqus D:/Abaqus/Commands/abaqus.bat --execute
+  ```
+
+  工作目录必须不存在。新`L02_RECEIPT.json`、`native_g0/S02_G0_EVIDENCE_MANIFEST.json`及原生.dat/.msg/.sta/.log（按实际产生）是下阶段验收材料。保留警告和失败，不因launcher returncode=0或静态CI成功就称S02通过。
+- **严格状态：** 本次执行环境无Abaqus 2025且不能访问用户D盘，未运行L02原生；没有更改冻结T057/T070、未合并Draft PR、未执行Gravity/地震/疲劳生产。SOURCE=原始模型及真实L01 DAT双SHA；REF/STANDARD=沿用原授权缺口；OFFICIAL=GitHub原生CI与既有Abaqus软件官方语法，不代表规范验收；RUN=完整源静态成功/原生NOT_RUN；FIG=无；TAB=CI日志与receipt；接触、PT、网格的物理误差预算NEED_ESTIMATE。**S02=HOLD，12阶段0/12未晋级；下一责任是有Abaqus执行权的本机端一次L02原生G0。**
+
