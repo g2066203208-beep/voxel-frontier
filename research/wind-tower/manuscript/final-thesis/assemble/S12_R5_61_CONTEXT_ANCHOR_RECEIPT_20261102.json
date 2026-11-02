@@ -1,0 +1,62 @@
+{
+  "status": "READ_ONLY_PARAGRAPH_CONTEXT_AUDIT_NOT_PLACEMENT_PASS",
+  "sources": {
+    "r5_sha256": "da86e1fadafc977fc66d14a97a46760e73ec3b5150ddbae65fd62c7105764ee9",
+    "r2_working_sha256": "6d7edc3a286500776c2300495eb970f7c655ddf29da6514532d58bc9ca26b4e9"
+  },
+  "algorithm": {
+    "paragraph": "top-level w:p only",
+    "normalize": "remove whitespace",
+    "match": "rapidfuzz.fuzz.ratio; 95% similar is NOT exact",
+    "min_text_characters": 45,
+    "anchor_threshold": 95,
+    "runner_up_below": 90,
+    "scan_radius_r5_paragraphs": 54,
+    "max_r2_bounded_gap": 30,
+    "max_r5_near_distance": 15,
+    "scope": "13 existing exact caption excluded; 61 unresolved only"
+  },
+  "counts": {
+    "original_r5_image_placements": 74,
+    "already_restored_exact_caption": 13,
+    "remaining": 61,
+    "grades": {
+      "TWO_SIDED_NEAR_MATCH_REVIEW_ONLY": 31,
+      "DISTANT_R5_CONTEXT_HOLD": 20,
+      "WIDE_R2_CONTEXT_HOLD": 8,
+      "R2_GAP_REVIEW": 2
+    },
+    "roles": {
+      "REFERENCE_SCREENSHOT": 59,
+      "ORIGINAL_FIGURE_CANDIDATE": 2
+    }
+  },
+  "output_csv_sha256": "3aaebec962686bba1a3aa574b294d165c41c028af4fcc936a2c4b72a416fc1bd",
+  "software": {
+    "python": "3.13.5",
+    "lxml": [
+      6,
+      1,
+      1,
+      0
+    ],
+    "rapidfuzz": "3.14.3"
+  },
+  "evidence": {
+    "SOURCE": "R5 original and R2 13-image working copy locked SHA",
+    "REF": "R5 narrative paragraphs, not external article full text",
+    "STANDARD": "none read; no clause compliance",
+    "OFFICIAL": "OOXML document.xml",
+    "RUN": "read-only SHA-checked Python context audit",
+    "FIG": "no figures inserted",
+    "TAB": "61-row candidate context ledger",
+    "HOLD": "manual placement and caption/scientific-role verification"
+  },
+  "limitations": [
+    "paragraph match does not prove correct figure location",
+    "references evidence screenshots must not be labelled own experimental results",
+    "chapter reorganization may make same-text paragraphs misleading",
+    "44 additional R2-only image media not assigned",
+    "no new Abaqus/earthquake/fatigue physical RUN"
+  ]
+}
