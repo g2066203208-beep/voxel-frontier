@@ -484,6 +484,104 @@ def write_esm_16period_passband(source_csv, expected_sha256, output):
         'instrument_low_frequency_pass':False,'target_spectrum_pass':False,
         'Abaqus_E_WE_RUN':0,'S05_PASS':False},sort_keys=True))
 
+
+# S05 exact conditional T1: TWO independently catalogued USGS events, NOT accepted design records.
+_T1_CONDITIONAL_BEAM_S = 6.230957762865167
+_T1_EVENTS = {
+    'ci38457511': ('USGS_ci38457511', '9bfcd3ab44ade97a5ec1d586d0e4240c9b2d14347ff2ec3d86e8c75df0dd58ab'),
+    'ci39493944': ('USGS_ci39493944', 'd1adc38f1e489e964e00a8c837dc5f9a941e68239ece1b6d5e6c7ecb20a4d381'),
+}
+_T1_HEADER = ['event_id','station','component','npts','dt_s','T_s','raw_csv_sha256',
+              'original_mseed_sha256','pre20_mean_m_s2','raw_psa_m_s2',
+              'pre20_psa_m_s2','linear_psa_m_s2','raw_over_pre20',
+              'pre20_vs_linear_relative','decision']
+
+
+def exact_t1_cross_event(manifest_paths, T=_T1_CONDITIONAL_BEAM_S):
+    """Direct Newmark 5% PSA at one provisional beam period, raw/pre20/linear.
+
+    No filter or target-spectrum matching. Input SHA is checked by load();
+    StationXML/miniSEED hashes are RECEIPT references, not re-decoded here.
+    """
+    if len(manifest_paths)!=2 or not math.isfinite(T) or T<=0:
+        raise ValueError('T1_EVENT_COUNT_OR_PERIOD')
+    rows=[]
+    for manifest_path in manifest_paths:
+        p=pathlib.Path(manifest_path).resolve()
+        m=json.loads(p.read_text(encoding='utf-8'))
+        receipt=json.loads((p.parent/'source_receipt.json').read_text(encoding='utf-8'))
+        event=receipt.get('event_id')
+        if event not in _T1_EVENTS or any(x['event_id']==event for x in rows):
+            raise ValueError('T1_EVENT_ID_OR_DUPLICATE')
+        if m.get('source_accession','').split(';')[0]!='USGS:'+event:
+            raise ValueError('T1_ACCESSION')
+        if receipt.get('raw_mseed_sha256')!=_T1_EVENTS[event][1]:
+            raise ValueError('T1_ORIGINAL_MSEED_RECEIPT')
+        if receipt.get('files_SHA256',{}).get('manifest.json')!=sha(p):
+            raise ValueError('T1_MANIFEST_RECEIPT_SHA')
+        comp=m.get('horizontal_components',[])
+        if len(comp)!=2 or {z.get('component') for z in comp}!={'HNE','HNN'}:
+            raise ValueError('T1_PAIR_COMPONENTS')
+        for z in sorted(comp,key=lambda x:x['component']):
+            name=z['file']
+            if z['station']!='CI.CLC' or z['rsn']!='NOT_PEER_RSN' or z['unit']!='m/s2':
+                raise ValueError('T1_PAIR_IDENTITY_UNITS')
+            if receipt['files_SHA256'].get(name)!=z['sha256']:
+                raise ValueError('T1_RECEIPT_CSV_SHA')
+            a,dt=load(p.parent,z)
+            if len(a)!=20001 or abs(dt-.01)>1e-12:
+                raise ValueError('T1_SAMPLING_GRID')
+            offset=sum(a[:2000])/2000
+            b=[v-offset for v in a]
+            c=_linear_detrend(a)
+            raw=sdof(a,dt,T,.05)['pseudo_sa_m_s2']
+            pre=sdof(b,dt,T,.05)['pseudo_sa_m_s2']
+            linear=sdof(c,dt,T,.05)['pseudo_sa_m_s2']
+            if pre<=0 or not all(math.isfinite(x) for x in (raw,pre,linear)):
+                raise ValueError('T1_INVALID_SPECTRUM')
+            rows.append(dict(event_id=event,station='CI.CLC',component=z['component'],
+                npts=len(a),dt_s=dt,T_s=T,raw_csv_sha256=z['sha256'],
+                original_mseed_sha256=receipt['raw_mseed_sha256'],pre20_mean_m_s2=offset,
+                raw_psa_m_s2=raw,pre20_psa_m_s2=pre,linear_psa_m_s2=linear,
+                raw_over_pre20=raw/pre,pre20_vs_linear_relative=abs(pre-linear)/pre,
+                decision='HOLD_SOURCE_LOW_FREQ_AND_SITE_TARGET_NOT_DESIGN_WAVE'))
+    if {x['event_id'] for x in rows}!=set(_T1_EVENTS):
+        raise ValueError('T1_INDEPENDENT_EVENT_IDS')
+    return rows
+
+
+def exact_t1_selftest():
+    # Analytic test of baseline removal: DC+sinusoid pre20 should remove DC.
+    a=[.4]*2000+[.4+math.sin(.01*i) for i in range(2001)]
+    offset=sum(a[:2000])/2000
+    assert abs(offset-.4)<1e-12
+    b=[v-offset for v in a]
+    assert max(abs(x) for x in b[:2000])<1e-12
+    assert sdof(a,.01,6.230957762865167,.05)['pseudo_sa_m_s2']>0
+    assert sdof(b,.01,6.230957762865167,.05)['pseudo_sa_m_s2']>0
+    for bad in (0.,-1.,float('nan')):
+        try:exact_t1_cross_event([],bad)
+        except ValueError:pass
+        else:raise AssertionError('T1_BAD_PERIOD_ACCEPTED')
+    print('S05_EXACT_T1_SYNTHETIC_BASELINE_AND_BAD_INPUT_PASS NOT_DESIGN_WAVE')
+
+
+def write_exact_t1(manifests, output, period):
+    rows=exact_t1_cross_event(manifests,period)
+    with pathlib.Path(output).open('w',newline='',encoding='utf-8') as f:
+        w=csv.DictWriter(f,fieldnames=_T1_HEADER,lineterminator='\n')
+        w.writeheader()
+        for row in rows:
+            w.writerow({k:(format(v,'.12g') if isinstance(v,float) else v) for k,v in row.items()})
+    for event in _T1_EVENTS:
+        pair=[r for r in rows if r['event_id']==event]
+        gm=lambda key:math.sqrt(pair[0][key]*pair[1][key])
+        print('S05_EXACT_T1_REAL_CROSS_EVENT',event,
+              'raw_GM=',gm('raw_psa_m_s2'),'pre20_GM=',gm('pre20_psa_m_s2'),
+              'linear_GM=',gm('linear_psa_m_s2'),
+              'NOT_LOW_FREQ_OR_DESIGN_PASS',flush=True)
+    print('S05_EXACT_T1_4ROW_SHA256',sha(output))
+
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('--self-test',action='store_true');p.add_argument('--manifest');p.add_argument('--output')
     p.add_argument('--processed-manifest');p.add_argument('--spectral-stability',action='store_true')
@@ -491,13 +589,19 @@ if __name__=='__main__':
     p.add_argument('--long-period-gate',action='store_true')
     p.add_argument('--triage-json');p.add_argument('--second-event-json');p.add_argument('--target-json')
     p.add_argument('--esm-band-csv');p.add_argument('--expected-source-sha256')
+    p.add_argument('--exact-t1-cross-event',action='store_true');p.add_argument('--pair-manifests',nargs=2)
+    p.add_argument('--t1-period',type=float,default=_T1_CONDITIONAL_BEAM_S)
     a=p.parse_args()
     if a.self_test:
+        exact_t1_selftest()
         esm_16period_passband_selftest()
         long_period_gate_selftest()
         self_test()
         stability_selftest()
         triage_selftest()
+    elif a.exact_t1_cross_event:
+        if not a.pair_manifests or not a.output:p.error('--exact-t1-cross-event requires two --pair-manifests and --output')
+        write_exact_t1(a.pair_manifests,a.output,a.t1_period)
     elif a.esm_band_csv:
         if not a.expected_source_sha256 or not a.output:p.error('--esm-band-csv requires --expected-source-sha256 and --output')
         write_esm_16period_passband(a.esm_band_csv,a.expected_source_sha256,a.output)
