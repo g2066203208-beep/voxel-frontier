@@ -1,0 +1,75 @@
+r5_image,r2_image,image_sha256,r5_caption,caption_r2_matches,decision
+image1.png,image1.png,93fc11ca6da9506d1cce885f2f3d8079ba584ca42a0d7bae3429886da96b1bf8,证据图 E01  Kenna (2019) 摘要页：混合钢—混凝土风机塔的整体/局部响应、气动载荷与优化研究总述。（原文截图，仅用于方法/参数溯源，不作为本文计算结果）,0,UNRESOLVED_CAPTION_OR_LAYOUT
+image2.png,image64.png,aa47523eb51222ecb543c07fa2d25038cb481217a92ae960d17bc3b3ff3ea8e6,证据图 E32  王丹等：《风电机组混凝土-钢混合塔筒技术现状与发展趋势》，2025，原文首页。,0,UNRESOLVED_CAPTION_OR_LAYOUT
+image3.png,image58.png,c12f616774f9eccfbbe3df4ab536c443093ae29ed3519992c832c9e027ea17ea,"证据图 E43  Tan et al., Engineering Structures, 2025, 336:120443，水平接缝试验—有限元—参数研究原页。",0,UNRESOLVED_CAPTION_OR_LAYOUT
+image4.png,image73.png,af47e7bca958b8a70d260b7535cd2c6906b448755ce464f1011d28f5faa78b2b,"证据图 E57  Xu et al., Renewable Energy, 2025：钢—混凝土混合塔陆上风机联合仿真研究作者公开稿首页。（原文截图，仅用于研究路线溯源，不作为本文计算结果）",0,UNRESOLVED_CAPTION_OR_LAYOUT
+image5.png,image66.png,a215d6268f4e9cc4b3e8d1a3f27f57de587ffdea5756cfc24f3d4c14e939933e,"证据图 E45  Hammoud, H.G., TU Delft MSc Thesis, 2024，Load Calculation Workflow原页。",0,UNRESOLVED_CAPTION_OR_LAYOUT
+image6.png,image67.png,3c7fefb3fed8fbc60869c553265e7eed9a8e83af8d4ab1a6255299250f1c71b3,"证据图 E46  Hammoud, H.G., TU Delft MSc Thesis, 2024，Workflow Validation原页。",0,UNRESOLVED_CAPTION_OR_LAYOUT
+image7.png,image7.png,a474e5621095cf726ae4b1f8a6690938a30f8587d1b75c9e951a86668f7c0ac0,证据图 E08  Wang 等（2025）§2.3 原页：C70、GB 50010 与 CDP 数值组的风机塔对象级旁证。（原文截图，仅用于方法/参数溯源，不作为本文计算结果）,0,UNRESOLVED_CAPTION_OR_LAYOUT
+image8.png,image9.png,a538b26a59e769185b2fa5b5675adad448eb5e47cce5e0a1d2bdbe99374c64aa,证据图 E09  史鑫宇等（2021）网格敏感性原页：CDP 单轴拉压结果对网格尺寸存在显著依赖。（原文截图，仅用于方法/参数溯源，不作为本文计算结果）,0,UNRESOLVED_CAPTION_OR_LAYOUT
+image9.png,image68.png,1f300c5a5009fc79a904a24c6957adcb3eb5b52c689819697dff82286ec65dfb,"证据图 E53  Li Z, Chen H, Xu B, Ge H. Hybrid Wind Turbine Towers Optimization with a Parallel Updated Particle Swarm Algorithm，原文首页。（原文截图，仅用于优化变量与方法溯源，不作为本文计算结果）",0,UNRESOLVED_CAPTION_OR_LAYOUT
+image10.png,image62.png,69ab821ff3824ecb712ea1e1c7a8f7f9676eb836db52ab7e666f04c368c6d16a,"证据图 E42  Kenna, 2019，Optimization Methodology原页。",0,UNRESOLVED_CAPTION_OR_LAYOUT
+image11.png,image46.png,a975081def693f61eb079aededbf8d8bf693c93b82da420a7efbf82006085ca0,证据图 E23  Huang 等（2022）原文页：钢—混混塔几何优化流程、候选几何范围及1P/3P频率约束示意。（原文截图，仅用于方法/设计空间溯源，不作为本文参数范围的直接照搬）,0,UNRESOLVED_CAPTION_OR_LAYOUT
+image12.png,image63.png,22d37f925af9ed2437415c1783ad27964b47c39795f1b005a60413339404ec11,"证据图 E38  Lee, Bayat & Allison, 2025，OpenFAST control co-design作者公开稿，原文首页。",0,UNRESOLVED_CAPTION_OR_LAYOUT
+image13.png,image5.png,83a558343aa7db9e699039742f12fd061c325a58140b6448743a493672b68ca2,证据图 E05  Li Qingfu 等（2020）§3.1—3.3 原页：GB 规范曲线到 Abaqus CDP 的转换、Sidoroff 能量等价损伤式及内部应变定义。（原文截图，仅用于方法/参数溯源，不作为本文计算结果）,0,UNRESOLVED_CAPTION_OR_LAYOUT
+image14.png,image55.png,38465ed78a59c09eb0fcd5549350f702600571505685e016f7c61b1c3f9984dc,"证据图 E39  Kenna, A. The Response and Optimisation of Hybrid Wind Turbine Towers, Trinity College Dublin, 2019，论文目录原页。",0,UNRESOLVED_CAPTION_OR_LAYOUT
+image15.png,image2.png,004b37a7db31269398f1194bae82d2bdf94919e5a8a8e56adafaa1672cc40bb4,证据图 E02  Bak 等 DTU 10 MW Reference Wind Turbine 设计摘要页：10 MW 额定功率、178.3 m 转子直径及上部机组质量等公开基准。（原文截图，仅用于方法/参数溯源，不作为本文计算结果）,0,UNRESOLVED_CAPTION_OR_LAYOUT
+image16.png,image76.png,ee97ec441cc6e0fdac9a6772114ee2b713c57ba5cd5a852796d4b3a7e92f6218,证据图 E60  何泽瑜[1]原页（论文第22页）：DTU 10 MW组合参数、名义轮毂高度160.0 m及158 m混塔建模说明。（原文截图，仅用于参数/模型来源溯源，不作为本文计算结果）,0,UNRESOLVED_CAPTION_OR_LAYOUT
+image17.png,image77.png,03f6867773d87ee2c52e8450e65aa5a13df89d808e809bf22d814bdde4874734,证据图 E61  何泽瑜[1]原页（论文第23页）：31个钢筋混凝土塔段表3-2，112 m处塔顶外径4.97 m。（原文截图，仅用于参数/模型来源溯源，不作为本文计算结果）,0,UNRESOLVED_CAPTION_OR_LAYOUT
+image18.png,image78.png,53f001e617a83915d55c33e347832a5c178fd96d15c06741be48f150d6cd8adc,证据图 E62  何泽瑜[1]原页（论文第24页）：钢塔表3-3原文列名“半径”，同时给出图3-4混塔示意图和图3-5有限元模型。（原文截图，仅用于参数/模型来源溯源，不作为本文计算结果）,0,UNRESOLVED_CAPTION_OR_LAYOUT
+image19.png,image79.png,a3a0356089e516aaa8e3bb2e920116c17978273232745e3653c603e750d386b7,证据图 E63  何泽瑜[1]原页（论文第25页）：Abaqus振型、振型拟合及表3-4固有频率对比，Abaqus自由衰减频率0.1361 Hz。（原文截图，仅用于参数/模型来源溯源，不作为本文计算结果）,0,UNRESOLVED_CAPTION_OR_LAYOUT
+image20.png,image69.png,b4970c70143ced947487c95106471866b3624d3b68dbd4a4ca66f1e7842c5c90,"证据图 E35  Murtazin et al., 2025，Concrete Damaged Plasticity参数识别研究，原文首页。",0,UNRESOLVED_CAPTION_OR_LAYOUT
+image21.png,image70.png,17615f013f9161118845423db384d888d73a0b3313a78c4ff60e364c37f2462a,证据图 E36  张田等，2024，混凝土损伤塑性模型参数计算研究，原文首页。,0,UNRESOLVED_CAPTION_OR_LAYOUT
+image22.png,image3.png,622a257a42a4004df3c59fdd4278e827ddf255dd29e9a30f50ac8fe1a34f14b8,证据图 E03  GB 50010 附录 C.2.3 原页：混凝土单轴受拉应力—应变关系及参数定义。（原文截图，仅用于方法/参数溯源，不作为本文计算结果）,0,UNRESOLVED_CAPTION_OR_LAYOUT
+image23.png,image4.png,ad025befd891bc5ae2f578be818fa2285e059804cca25468fa011ef87579deb9,证据图 E04  GB 50010 附录 C.2.4 连续原页：混凝土单轴受压应力—应变关系、参数定义及表C.2.4。（原文截图，仅用于方法/参数溯源，不作为本文计算结果）,0,UNRESOLVED_CAPTION_OR_LAYOUT
+image24.png,image6.png,384ac0700c720ef8c45f5e782e4d63cc7caf3d0fd0453d7d9b5baa6279ce3a76,证据图 E06  Li Qingfu 等（2020）Table 3 原页：CDP 离散参数示例及有限元验证设置。（原文截图，仅用于方法/参数溯源，不作为本文计算结果）,0,UNRESOLVED_CAPTION_OR_LAYOUT
+image25.png,image71.png,bd69c145e5940f1a53d6d40893f4aab640c33c8e5301110f526fd8c95dd07a4a,"证据图 E44  Tan et al., Engineering Structures, 2025, 336:120443，试验装置与测点原页。",0,UNRESOLVED_CAPTION_OR_LAYOUT
+image26.png,image8.png,e3d3964e5d1c618288babca2afe17df3aba81fbe5dd55fb61b616bd425a3cfba,证据图 E07  Wang 等（2025）原页：预应力混凝土风机塔水平接缝、灌浆层及实际缺陷问题。（原文截图，仅用于方法/参数溯源，不作为本文计算结果）,0,UNRESOLVED_CAPTION_OR_LAYOUT
+image27.png,image56.png,fe82e4cc13350b3feed5877bb659f0097e3185e01a56fe1dd3ed48ecf6805072,"证据图 E40  Kenna, 2019，Benchmarking章节原页。",0,UNRESOLVED_CAPTION_OR_LAYOUT
+image28.png,image23.png,a81ff21bb09e381eddbf7ba118150972c61c4466c0280cfe512b68ea801be3c8,图2-1  基准推覆与收敛控制复核算例塔顶位移—反力曲线对比,1,EXACT_UNIQUE_CAPTION
+image29.png,image30.png,a21a458fbd968b59d97b1f2ce996eccffb25b44054abfa9b50efbc5746f1887d,图2-2  基准推覆与收敛控制复核算例人工能占内能比例,1,EXACT_UNIQUE_CAPTION
+image30.png,image74.png,2257f52d2aec44fc811ae9678f44a37ea8e046f2c206ab5f9085e4e25380a9ee,"证据图 E59  Xing et al., Frontiers in Built Environment, 2026：运行模态频率/振型与精细Abaqus模型对比验证原页。（原文截图，仅用于模型验证范式溯源，不作为本文计算结果）",0,UNRESOLVED_CAPTION_OR_LAYOUT
+image31.png,image31.png,eefa73e1c583a0fdfca9c77b2be1706b51ece1c885af4f5fd3e7278436e5e104,图2-3  来源明确的复现模型一阶水平弯曲频率与文献结果对比,1,EXACT_UNIQUE_CAPTION
+image32.png,image32.png,752c982dc53c170be8f1397056b4bf7e0b41dcd732b90a31aee36d2eab0ddfbb,图2-4  收敛控制复核算例频率步30阶水平向累计有效质量,1,EXACT_UNIQUE_CAPTION
+image33.png,image10.png,2dee8e961450274bcea7257528784f8fb3981fa83a29981b786bd4b6461010d0,证据图 E10  嘉鱼县发改局项目核准文件原页：项目名称、项目代码、40台5000 kW及簰洲湾镇项目身份。（原始文件截图，仅用于工程身份溯源）,0,UNRESOLVED_CAPTION_OR_LAYOUT
+image34.png,image11.png,73375c2f8c80ac8dcbc463a5db0390a6e3ea7490308925fa33b64a58074b46d3,证据图 E11  华润嘉鱼簰洲湾200 MW项目环评表2-2原页：场址坐标、海拔、160 m年平均风速4.79 m/s、风功率密度104.0 W/m²、NNE～NE及实际5 MW机组参数。（原始文件截图，仅用于场址参数溯源）,0,UNRESOLVED_CAPTION_OR_LAYOUT
+image35.png,image20.png,1539baafd88b7985b4889d0ee9774688c6b2c15d7be65f15178d447d1a5dd748,证据图 E20  华润嘉鱼簰洲湾200 MW项目环评正文原页：160 m年平均风速4.79 m/s、年平均风功率密度103.0 W/m²及D-1级。与E11表2-2的104.0 W/m²形成原文件内部差异。（原始文件截图，仅用于来源差异溯源）,0,UNRESOLVED_CAPTION_OR_LAYOUT
+image36.png,image72.png,fb162dfe7e68b59af07b0a37bc47ccdd226db6f0fa09d6d571b7ac77f56af5e5,"证据图 E33  Ji et al., 2025，ERA5中国区域实测对比研究，原文首页。",0,UNRESOLVED_CAPTION_OR_LAYOUT
+image37.png,image65.png,3c209434d9712cbfbab525c80ae2b3015f297f143b65e1d7459d9c0b6a1fac4c,证据图 E34  IEC 61400-15-1:2025，官方Scope原页。,0,UNRESOLVED_CAPTION_OR_LAYOUT
+image38.png,image21.png,36952c8574d35b35492a5cad9bbcd954f571db7cf1050b953dcd9b76366b7d8d,证据图 E21  嘉鱼ERA5原始NetCDF/HDF5元数据实读截图：0.25°规则网格、u10/v10/u100/v100、t2m、sp及time/units定义。（本文原始数据证据；用于证明本次统计直接来自原始NetCDF而非旧Excel）,0,UNRESOLVED_CAPTION_OR_LAYOUT
+image39.png,image22.png,fac8bf0f76d27551950b8777946aa8dfa69e11817f3cedfb8dcdb0ce1e8ad8b6,证据图 E12  嘉鱼ERA5实际下载归档状态与文件成员摘录：dataset、下载区域、7个变量及2005—2025共84季度完成状态。（本文原始数据归档证据）,0,UNRESOLVED_CAPTION_OR_LAYOUT
+image40.png,image24.png,e04eef156ea47312ef2ba4d7f08825cc31c069bf2800a6f91a74e2fb2a5b0a9e,图3-1(a)  2005—2025年ERA5年平均风速变化,1,EXACT_UNIQUE_CAPTION
+image41.png,image42.png,f36faf9ac38d1fd6b336b989cd5190f4e29f3a5682fef5ec3d28638ba1cb9e48,图3-1(b)  2005—2025年ERA5 100 m逐小时风速经验超越曲线,1,EXACT_UNIQUE_CAPTION
+image42.png,image25.png,9e9c3febc274bf880f8c68f6e7b8ddb6b9c6d9f08117d57717894ffd85eeb299,图3-2  2005—2025年ERA5月平均风速气候态,1,EXACT_UNIQUE_CAPTION
+image43.png,image39.png,7e65ada0074a660cf7beff9d836b2aa950e93dd529eecb72acdd797fc3cd04ef,图3-3(a)  2005—2025年ERA5 100 m风速—风向联合频率玫瑰图,1,EXACT_UNIQUE_CAPTION
+image44.png,image40.png,603400e35ef2fb548c1758c564c36b66ed1cab2328c02850b0127f72d6e68475,图3-3(b)  ERA5高风样本（V100≥P95=8.385 m/s）方向玫瑰图,1,EXACT_UNIQUE_CAPTION
+image45.png,image43.png,19cbb41a754fce0eb3a98a6ea3c2b216737ec2317dae2c08288f369e71e072ae,图3-4(a)  ERA5 10—100 m逐时风切变指数分布,1,EXACT_UNIQUE_CAPTION
+image46.png,image27.png,4c931c7ec41663fbbab6ef26a57ff3e0d9047ca231a1e516adfead243c56553f,图3-4(b)  160 m风速外推与项目公开值交叉核查,1,EXACT_UNIQUE_CAPTION
+image47.png,image28.png,8bd5628432b31132edf30a9480a0968766125d6b83cbf9b84f64025595eb1e75,图3-5  ERA5年最大风速GEV返回水平敏感性,1,EXACT_UNIQUE_CAPTION
+image48.png,image13.png,c42da454d0cac6c949f9fee45b37765c1a60cbdfad71232cd83827bfe5e59e95,证据图 E13  徐军等（2026）原页：IEC Kaimal谱、湍流强度、TurbSim、AeroDyn/BEM及塔架气动荷载方法。（原文截图）,0,UNRESOLVED_CAPTION_OR_LAYOUT
+image49.png,image14.png,ea15fd3eb11c2f0d9e8d2a9ee251c71cec67394add4595065ae07a21ae957499,证据图 E18  Hannesdóttir等（2019）原页：DLC 1.3与六个湍流随机种子统计的公开研究实例。（原文截图；不替代IEC授权条文）,0,UNRESOLVED_CAPTION_OR_LAYOUT
+image50.png,image15.png,fc40069b4acefa008b0dd44aca04725c4799beef12b095f602a613a27f49bc2b,证据图 E14  徐军等（2026）原页：接口变量、TCP/IP及显式联合仿真流程。（原文截图）,0,UNRESOLVED_CAPTION_OR_LAYOUT
+image51.png,image16.png,3ac99d3fd1fa1c2cb9cc2670cd6c740eacdf5d8266f729c666982a6e8d8c1cd1,证据图 E16  Kenna（2019）第4.9节原页：有限元与FAST动力特性benchmarking方法。（原文截图）,0,UNRESOLVED_CAPTION_OR_LAYOUT
+image52.png,image18.png,9d94706149e2f650999d280b40253f18e60aca86035ae371e1b5abff9e2a2213,证据图 E17  Kenna（2019）第4.9节相关原页：有限元/FAST动力结果对比。（原文截图）,0,UNRESOLVED_CAPTION_OR_LAYOUT
+image53.png,image44.png,c12e538ca8b76bd99d7e8158fa0d3ffb3350638d6572f7ebe1573a895d9a9a36,图3-6  Abaqus ODB提取的低阶弯曲模态候选结果,1,EXACT_UNIQUE_CAPTION
+image54.png,image33.png,0ea1cc1f0ce06c32500c9930fd673cbf54d1081afc2ab6b82419034610fef6fe,证据图 E22  DTU 10 MW官方HAWC2 v9.2原始输入摘录：机舱/轮毂集中质量、轴系转动惯量与Blade_st结构集。（原始模型文本截取，用于组件身份溯源）,0,UNRESOLVED_CAPTION_OR_LAYOUT
+image55.png,image17.png,a0811645b3fb615f02f5dc906c9ede90a9347facda3aa9df12da44ab055c6cee,证据图 E15  徐军等（2026）原页：联合模型与OpenFAST模态/动力响应验证。（原文截图）,0,UNRESOLVED_CAPTION_OR_LAYOUT
+image56.png,image80.png,e509f646cef013d5c224e6595e99fbae62b471decfaa7ab50f3e250d0a196921,证据图 E64  Abbas等（2022）ROSCO工具链与稳态运行区间原页：ROSCO Toolbox—DISCON.IN—ROSCO—OpenFAST关系及不同控制区运行点。（原文截图，仅用于控制器方法/流程溯源，不作为本文计算结果）,0,UNRESOLVED_CAPTION_OR_LAYOUT
+image57.png,image75.png,082386f4874e3d73f00bea24fe1617e2ab965a26315d2b1a732719832cee76d6,"证据图 E58  Mackojc et al., Energies, 2026：FEM转子—机舱模型与OpenFAST基准比较的研究目标与验证指标原页。（原文截图，仅用于跨模型验证方法溯源，不作为本文计算结果）",0,UNRESOLVED_CAPTION_OR_LAYOUT
+image58.png,image45.png,fecdcdab4cb3c1ef7ff5496a5229fd6b22f70819e8f61e08b3da2677a3d6f282,图3-7  不同RNA身份相对DTU官方HAWC2 v9.2实现的质量偏差,0,UNRESOLVED_CAPTION_OR_LAYOUT
+image59.png,image59.png,b0838fa58056d65d34a422c4476359063ff77ed68b9c5c22428ca3c13c467631,"证据图 E37  Wiley, Jonkman & Robertson, 2025，OpenFAST输入敏感性/elementary-effects研究，原文首页。",0,UNRESOLVED_CAPTION_OR_LAYOUT
+image60.png,image49.png,0223018b7f4a030599c1e3db632724940d6e1f0468fd531d27aafb1647cb6bbf,证据图 E55  Robertson et al. (2019) 多湍流随机种子与随机种子收敛原页。（原文截图，仅用于随机性与随机种子策略溯源，不作为本文计算结果）,0,UNRESOLVED_CAPTION_OR_LAYOUT
+image61.png,image81.png,2c584076db00c9dca8d4eedcf3eda66e403346b9df944c7dc27de8976979ba93,证据图 E65  Branlard等（2022）OpenFAST气动弹性Campbell原页：固定转速/桨距、周期平衡点线性化以及1P/3P/6P/9P频率线示例。（原文截图，仅用于Campbell方法溯源，不作为本文计算结果）,0,UNRESOLVED_CAPTION_OR_LAYOUT
+image62.png,image35.png,fb9df6785fd6ec6f11afe289f01e77f7f98ffb5135cd50af6406bb8353cc892a,证据图 E19  OpenFAST官方Reference Frame原页：整机参考坐标轴、主要自由度及参考系变量归属（OpenFAST_coords.pdf，第4页）。（官方原图）,0,UNRESOLVED_CAPTION_OR_LAYOUT
+image63.png,image41.png,bb3c4a68495ae5a514984986c261c54e0dc2f1289b52ffc176b886a9522e90b9,图3-8  OpenFAST—Abaqus六分量载荷传递与三级数值验证框架,0,UNRESOLVED_CAPTION_OR_LAYOUT
+image64.png,image57.png,0891729da4a88d969ca1d46c03f2fe7b57c6f4387919e318880621948c3bd105,"证据图 E41  Kenna, 2019，Response→Sensitivity衔接原页。",0,UNRESOLVED_CAPTION_OR_LAYOUT
+image65.png,image61.png,6f5e990cc98edd7041d4b849e8e9183b7ad430d097b0ea0d6f65285a2619ce4c,证据图 E54  Li et al. (2021) 优化约束原页：承载力、疲劳、稳定、固有频率和塔顶位移等约束。（原文截图，仅用于优化约束溯源，不作为本文计算结果）,0,UNRESOLVED_CAPTION_OR_LAYOUT
+image66.png,image60.png,27bdf177b38fe262ad4f12696480aff9b0407824b63501912068f80deb4864be,证据图 E56  Robertson et al. (2019) elementary-effects筛选与风机QoI原页。（原文截图，仅用于敏感性方法溯源，不作为本文计算结果）,0,UNRESOLVED_CAPTION_OR_LAYOUT
+image67.png,image47.png,c6afe517d1cb559303180623f0e6e47a301911c3771552a2d1f9cabcaeb589f1,证据图 E24  Morris（1991）原文首页：Factorial Sampling Plans for Preliminary Computational Experiments，elementary effects筛选方法原始来源。（原文截图，仅用于方法溯源）,0,UNRESOLVED_CAPTION_OR_LAYOUT
+image68.png,image48.png,6e2751b4c1dcd44418fe7439e358c3811877780ea076ce1395abd7cd51c4c7b5,证据图 E25  Campolongo 等（2007）原文首页：Morris筛选设计的改进与高效采样方法。（原文截图，仅用于方法溯源）,0,UNRESOLVED_CAPTION_OR_LAYOUT
+image60.png,image49.png,0223018b7f4a030599c1e3db632724940d6e1f0468fd531d27aafb1647cb6bbf,证据图 E30  Robertson 等（2019）原文页：OpenFAST风机载荷敏感性中采用多湍流随机种子，并通过收敛研究确定随机种子数量以区分参数效应与随机性。（原文截图，仅用于敏感性/随机种子策略溯源）,0,UNRESOLVED_CAPTION_OR_LAYOUT
+image69.png,image50.png,243eea9c22e39522d1ef78259a50acb4acc448d233e4834fe9d8c0894c5764c7,证据图 E26  McKay、Beckman 与 Conover（1979）原文页：Latin Hypercube Sampling用于计算机代码输入变量抽样的经典来源。（原文截图，仅用于方法溯源）,0,UNRESOLVED_CAPTION_OR_LAYOUT
+image70.png,image51.png,8dbf12716d08027be2ce78093bd6d7acf9ab7a4982dbe2ffdf1d7e2c894c510d,证据图 E27  Sacks 等（1989）原文首页：Design and Analysis of Computer Experiments，Kriging/随机过程代理的经典来源。（原文截图，仅用于方法溯源）,0,UNRESOLVED_CAPTION_OR_LAYOUT
+image71.png,image52.png,6cf18e5dfbd6b0fc00bd4686d81cd89e3a44ec710fc4d8cc8afa29cafa8da504,证据图 E28  Jones、Schonlau 与 Welch（1998）原文首页：昂贵黑箱函数的Kriging代理与高效全局优化/新增真实样本思想。（原文截图，仅用于代理加点方法溯源）,0,UNRESOLVED_CAPTION_OR_LAYOUT
+image72.png,image53.png,b18a12dbb8846d121388e9c993efe3b81c5f99aaf71d85539100899fcd5aaaca,证据图 E29  Deb 等（2002）原文首页：NSGA-II快速非支配排序、精英保留与多目标进化算法的经典来源。（原文截图，仅用于算法溯源）,0,UNRESOLVED_CAPTION_OR_LAYOUT
+image73.png,image54.png,371f31f3e46c90ad6d71a369f9708ead64982fe6d76da82928a2a9e0fd660153,证据图 E31  Branke 等（2004）原文首页：Pareto前沿膝点（knee）作为多目标折中方案选择的直接方法来源。（原文截图，仅用于方案选择方法溯源）,0,UNRESOLVED_CAPTION_OR_LAYOUT
