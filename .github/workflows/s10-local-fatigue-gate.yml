@@ -11,6 +11,7 @@ on:
   pull_request:
     paths:
       - 'research/wind-tower/experiments/T079/s10_local_material_fatigue_gate.py'
+      - 'research/wind-tower/experiments/T079/s10_rainflow_reference_crosscheck.py'
       - 'research/wind-tower/experiments/T079/s10_abaqus_odb_local_stress_export.py'
       - '.github/workflows/s10-local-fatigue-gate.yml'
   workflow_dispatch:
