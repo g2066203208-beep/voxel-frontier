@@ -28,3 +28,12 @@ R2Z74实际正文引用3个图像均位于第4章。R5的73个媒体部件正文
 - **HOLD**：`S12_WORD_IMAGE_RELINK_AND_LAYOUT_HOLD`，S12仍PARTIAL、12阶段0/12；S08/S09原生E/WE=0。**下一单一动作**：先在R2Z74的工作副本上按R5原段落锚点恢复73幅同SHA原图的引用与位置，逐图渲染核对；另外44幅未定位图片单列人工证据匹配，不猜位置，不改冻结母本。
 
 > **保存纪律**：两份大型DOCX仍在用户原文件库，GitHub仅保存文件名、原件SHA、可复算脚本和紧凑逐件映射。此次不修改原始DOCX、冻结T057/T070、main，不合并Draft PR #42。
+
+## 2026-11-02 13时｜原稿工作副本13幅精确图题锚点安全恢复（S12 PARTIAL）
+
+**新实物产物**：已从用户Library直接物化并逐字节核验R2Z74原件40,281,933B SHA256 `5dfe6c70e768f13ebd90c2e561a768e9be143f571b240945b1f17807628512d0`、R5原件23,653,138B SHA256 `da86e1fadafc977fc66d14a97a46760e73ec3b5150ddbae65fd62c7105764ee9`。对R5中**74处图片段落（73个独立图片，image60重复）**逐个检索紧随其后的原图题，并在R2全文按空白规范化后查找**完全一致且唯一**的图题锚点。仅13处满足全部条件，故只把这13幅**逐字节同SHA**的原R5图片段落复制至R2现有图题前，引用改为R2原本已存在的image关系；保留全部120媒体关系及原始章节正文、表格。未插入任何猜测位置、未替换科研结果。
+
+- **真实输出**：`/WindTower/S12_Word_Image_Relink_20261102/S12_R2Z74_13EXACT_FIGURE_WORKING_COPY_20261102.docx`（用户持久Library，40,284,585B；SHA256=`6d7edc3a286500776c2300495eb970f7c655ddf29da6514532d58bc9ca26b4e9`）。上传后重新物化复算SHA256完全一致。**不把40MB原稿/工作副本提交GitHub源码PR**；本次只提交小型[可复算OOXML恢复程序](s12_restore_exact_caption_images.py)、[74处逐图锚点决策表](S12_EXACT_CAPTION_RELINK_MAP_20261102.csv)、[原件/输出/测试/失败收据](S12_EXACT_CAPTION_RELINK_RECEIPT_20261102.json)。工作副本不是六章最终整合论文。
+- **确定性核验**：输入SHA拒绝不符源；13/13图题唯一；13/13图片SHA一致；恢复后R2原有3处+新增13处=**16个有效图片引用**，120个image关系不变，尚有**104个未引用关系**。ZIP CRC通过；13/13图后紧随其原图题；Word渲染**155页**。首次渲染发现图2-2跨页，已对插入图片段落加`keepNext`并重新渲染，实际查看第30页图片与图题已同页。尚未逐页逐图视觉验收，不能称排版PASS。
+- **仍未恢复**：R5的**61处图片段落**在R2中找不到完全一致的唯一图题；R2另外**44个非R5同SHA的未引用媒体**尚无可靠位置。不得把缺失的证据图强插回正文、也不得把R5旧研究路线与当前六章Markdown直接混编。首次Library上传返回`container_session_expired`，重试成功并回读哈希；首次脚本重跑误选生成稿为输入，被SHA拒绝，明确重选原件后成功。这些失败均保留在收据。
+- **SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB**：SOURCE=两份原DOCX字节SHA；REF=R5图题与图段原位置、R2精确图题；STANDARD=无新授权IEC/GB条款阅读；OFFICIAL=OOXML`word/document.xml`及关系/媒体；RUN=Python3.13.5+lxml精确锚点重挂、ZIP/关系断言与LibreOffice PDF/PNG渲染（不是Abaqus）；FIG=13幅原稿图片关系恢复，非新增科研图；TAB=74行原图段决策表；误差预算=图像字节/图题匹配精确、版式人工只抽查，内容科学正确性及剩余61处未定位；**HOLD=S12_WORD_61_UNMATCHED_PLACEMENTS_AND_44_EXTRA_MEDIA**。12阶段0/12未晋级，原生E/WE=0。下一轮只做一项：对剩余61处按可证明的同章语义段落/图题位置建立高置信度人工核对清单，先不自动插图。
