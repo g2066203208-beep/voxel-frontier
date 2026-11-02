@@ -1,3 +1,5 @@
+**2026-11-02 22:39｜S10固定角源级12行真实CI收尾回证**：[GitHub Actions #41463791579/job #125339245922](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41463791579/job/125339245922) `completed/success`；实际Node 22源级重算三份SHA锁定CSV，12行输出与已提交CSV经`cmp`逐字节一致，CSV SHA256=`594c48ad65c84f9aade20d9b75e7caf609d67997308c7a00d5a8a67f5d75562b`；`S10_FIXED_AZIMUTH_SELFTEST_PASS`、故意篡改连续方位源后`INPUT_SHA256_MISMATCH`及`S10_TAMPER_REJECT_PASS`均在原生runner stdout可见。源级程序与CSV验收通过，**不等于物理/材料/规范PASS**；S10 BLOCKED、0/12未晋级、E/WE原生0。
+
 ## 2026-11-02 22:34｜S10固定参考角与材料候选单元交叉验证（不冒充ODB）
 
 START read_base_sha=`8dff759ad57c5758efb1c39b5a20cf984de2983b`，main=`bbc5c9130f2d9fc41f776506d86118a9b8db0e65`，PR #42 Open/Draft。已读AGENTS、README、论文状态与母版、T079学术审查、T080.1/.2/.3、12阶段计划、指挥室21:20交接。继承上轮连续周向解析124行及既有1984行固定角雨流/372行原生静态候选；不重复大规模时程计算。本轮只做**三个控制截面的固定角疲劳控制位置与瞬时拉峰位置对照**，不使用未验的运动DCM或Abaqus结果。SOURCE SHA及RUN/误差/REF/STANDARD/OFFICIAL/FIG/TAB/HOLD见[既有S06报告新节](../T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。12行可复算数据与轻量CI已写入PR分支；CI真实执行结果需独立回读，不以workflow文件存在冒称成功。S10 BLOCKED，0/12，E/WE=0，不动T057/T070/main，不合并。

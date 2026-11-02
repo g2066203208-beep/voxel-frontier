@@ -1,3 +1,5 @@
+**2026-11-02 22:39｜S10固定角源级12行真实CI收尾回证**：[GitHub Actions #41463791579/job #125339245922](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41463791579/job/125339245922) `completed/success`；实际Node 22源级重算三份SHA锁定CSV，12行输出与已提交CSV经`cmp`逐字节一致，CSV SHA256=`594c48ad65c84f9aade20d9b75e7caf609d67997308c7a00d5a8a67f5d75562b`；`S10_FIXED_AZIMUTH_SELFTEST_PASS`、故意篡改连续方位源后`INPUT_SHA256_MISMATCH`及`S10_TAMPER_REJECT_PASS`均在原生runner stdout可见。源级程序与CSV验收通过，**不等于物理/材料/规范PASS**；S10 BLOCKED、0/12未晋级、E/WE原生0。
+
 ## 2026-11-02 22:34｜S10三控制截面固定周向角度源级交叉验证（未晋级）
 
 已用历史4ETM×31段16角固定参考点雨流、连续空间峰值及D400原生候选单元空间表建立CSEG16/17/28×四工况12行交叉表。12/12连续拉峰最近180°固定角，但12/12最大DEL4固定角为0°，两者不同，禁止对移动峰值包络做材料点雨流；混凝土静态候选单元轴向间隔>1.15m且无精确DCM/ODB积分点。详情见[既有S06/S10报告](../../experiments/T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)和[12行CSV](../../experiments/T077/recovery/S10_3CONTROL_FIXED_AZIMUTH_SOURCE_CROSSWALK_20261102.csv)。本轮没有新增Abaqus/OpenFAST求解、授权规范条款或真实材料寿命，S10 BLOCKED、S06 PARTIAL、**0/12未晋级**、E/WE原生0。
