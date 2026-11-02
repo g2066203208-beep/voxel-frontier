@@ -1,3 +1,12 @@
+## 2026-11-02 11时｜S10外部成熟雨流实现交叉验证：57条合成时程真实CI成功（非材料寿命）
+
+- **SOURCE/REF：** 在既有[S10材料局部应力程序](s10_local_material_fatigue_gate.py)之外新增[独立交叉验证脚本](s10_rainflow_reference_crosscheck.py)，调用 MIT 许可、第三方公开 [iamlikeme/rainflow 3.2.0](https://github.com/iamlikeme/rainflow) 的 `extract_cycles`，并非复制本项目的同一函数作“独立验证”；版本3.2.0，PyPI wheel SHA256=`cb6c254aa1a16a9e658ff3f39c6e5a77650d6c4e8304146169b36516d1f01660`，GitHub Actions 使用 `pip --require-hashes --only-binary` 固定真实外部源。被检项目雨流程序 SHA256=`028e5349d26524ce0ff9b42e4b726f46b2d76271b3731cb2b05eb8c6fd653834`。
+- **RUN：** [GitHub Actions #41381895936 / job #125074296136](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41381895936) 已远端回读 `completed/success`，Python3.12.3；原8项合成测试、ODB导出接口9项mock测试均success；新增独立对照57种确定性波形共4,309点，1,231个加权循环，逐组 `(range, mean, count)` 多重集合一致，合成S-N对照 Miner 损伤一致。覆盖平台、恒值、末端半循环、嵌套循环、重复等幅、40条固定种子离散序列与10条多频连续序列。
+- **真实失败及修复：** 初版[run #41381801775](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41381801775)及[run #41381824006](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41381824006)的原8/9测试与独立依赖安装已通过，但外部比对进入诊断 Miner 时发现合成曲线下限0.01MPa过高，部分多频小幅循环触发项目正确的 `SN_OUT_OF_RANGE_NO_EXTRAPOLATION`。将**仅测试用**S-N下限扩展至1e-12MPa（不修改真实材料输入/不禁用外推拒绝），[修复提交24fd61ec](https://github.com/g2066203208-beep/voxel-frontier/commit/24fd61ec6dd4bb807d192bc5f6bd1c1fb7d34102)后真实成功。未发现在该57条合成信号上的算法偏差，不能外推成所有记录或ASTM规范验收。
+- **STANDARD/OFFICIAL：** 使用独立开源软件作为软件算法参照，不声称已阅读ASTM E1049授权条款或IEC/GB/NB材料疲劳条款；无原生Abaqus 2025/真实ODB求解。
+- **FIG/TAB：** 无原生结构FIG/材料寿命TAB；可核结果为Actions stdout JSON（57、4309、1231，全部一致），[代码及工作流](../../../../.github/workflows/s10-local-fatigue-gate.yml)均提交在Draft PR #42。
+- **假设/误差/HOLD：** 离散幅值/均值9位小数的多重集合比较，Miner诊断两独立计数分支按`rel_tol=1e-12, abs_tol=1e-18`比较；合成曲线无物理意义。缺真实Abaqus分材料积分点应力时程、PT均值状态、验证的材料S–N与均值应力处理、DLC1.2完整矩阵、界面/网格V&V。**S10仍BLOCKED，12阶段0/12，E/WE原生0**；不修改冻结T057/T070，不合并PR、不跑昂贵生产。下一最优物理动作仍是本机按已准备C00b SHA子版完成L02原生Data Check，再对适用的局部ODB逐材料提取真实历史；不重复配筋微审计。
+
 ## 2026-11-02 11时｜S10只读ODB提取接口最终CI回证（合成软件PASS；原生物理HOLD）
 
 - **RUN / 真实远端日志：** [GitHub Actions #41381411069](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41381411069)已远端回读`completed/success`，job=`125072829416`，Ubuntu Python **3.12.3**，只稀疏checkout两份方法程序；原S10雨流/Miner脚本`SELF_TEST_PASS`（8类合成oracle），新增ODB接口`S10_ODB_EXPORT_MOCK_TEST_PASS_NOT_ABAQUS`（**9类合成mock oracle**：三帧分量/单位、缺失/重复IP、非均匀时间、非法分量/坐标声明/哈希、缺manifest、伪ODB SHA拒绝）。全程**没有调用原生Abaqus/ODB，没有真实塔架应力或材料疲劳计算**。
