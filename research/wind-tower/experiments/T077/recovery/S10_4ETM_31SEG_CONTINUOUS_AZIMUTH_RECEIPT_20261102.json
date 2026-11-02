@@ -1,0 +1,172 @@
+{
+  "status": "SOURCE_NUMERIC_QC_ONLY_NOT_NATIVE_OR_MATERIAL_FATIGUE",
+  "source_level": "16 historical Actions ZIP/GZIP derived gage histories, not raw OUTB",
+  "SOURCE": {
+    "manifest_sha256": "dfc07558eb87002c3f54bb88671644519b77dfc38daf3971026f43686d4c2ed8",
+    "gross_sha256": "8ae262435e13c0f10326acef7270b9962c943bb5f212171d830fe834f3a364ed",
+    "existing_16angle_control_sha256": "36c0a8a97db36885159fff79cc61daced9c939ab688f98ce1c6b860a89ac91d3",
+    "archives": [
+      {
+        "case": "U09p343881_ETM_S06",
+        "batch": "A",
+        "zip_sha256": "ebccacd12a6f5fb3e6098c5130a7ca355409c4f7d5be4169ab23e4b265cd477f",
+        "gzip_sha256": "3280b3a8332719b163f776efa61999588717ba5c1d71394b32f002e3c9b93e56",
+        "rows": 108009,
+        "segments": 9
+      },
+      {
+        "case": "U09p343881_ETM_S06",
+        "batch": "B",
+        "zip_sha256": "5acbb25968ce43892157545cded26973623f22b5a137839e5154b293aef167db",
+        "gzip_sha256": "73ac606f43a1bf777fa303ca781a76a643dbe79bda52f7177886f417d07c5e20",
+        "rows": 108009,
+        "segments": 9
+      },
+      {
+        "case": "U09p343881_ETM_S06",
+        "batch": "C",
+        "zip_sha256": "f202176ca1b1849f2de2b278c5cc1aab2a70892bfbee5163c70950f36920b9ab",
+        "gzip_sha256": "6a65c81c4941993b769de89f3290f3579087f912c33900870ddf418af6fbfd26",
+        "rows": 108009,
+        "segments": 9
+      },
+      {
+        "case": "U09p343881_ETM_S06",
+        "batch": "D",
+        "zip_sha256": "8ac68a5cdc2da3eceadbc2ca6507ae2ded953610fcc4d21f58169a0775fa17ab",
+        "gzip_sha256": "c76ed030f23538e92d66fc16479b267bbd4e091e734609e72f1b73a872146c89",
+        "rows": 48004,
+        "segments": 4
+      },
+      {
+        "case": "U11p4_ETM_S04",
+        "batch": "A",
+        "zip_sha256": "c66a8a22693af0ed5c9cb8f68f51c48a24c046ba4e60cacdb1115040dd0007a9",
+        "gzip_sha256": "1931fd91b7e7fc1304f928c404def83e7e7106f3359357642882b8101b55291d",
+        "rows": 108009,
+        "segments": 9
+      },
+      {
+        "case": "U11p4_ETM_S04",
+        "batch": "B",
+        "zip_sha256": "9f8da88aaee392748989537da923cc5c4d08778ad82902d6e595e67c4e3dfacc",
+        "gzip_sha256": "c3cc8ad336ebc1614a2cec4df9a1db130d2be5d3ebacf766c0f6f341666c76c1",
+        "rows": 108009,
+        "segments": 9
+      },
+      {
+        "case": "U11p4_ETM_S04",
+        "batch": "C",
+        "zip_sha256": "a2a11f4b81d42efe9c90592f3b452f8f895091c5c5ed5e201c7a9cbbf70923b8",
+        "gzip_sha256": "d112a7c9e9efeaa53c0d636b189d0f4e9adc11683fb56b5ab6329a1cc1f0685e",
+        "rows": 108009,
+        "segments": 9
+      },
+      {
+        "case": "U11p4_ETM_S04",
+        "batch": "D",
+        "zip_sha256": "e9df5093f221da7b17831c4f5c5a4a6c3db9ce1008a85b3b0e07f79348d56235",
+        "gzip_sha256": "fabd1b384d24bf90eee5561d730424a7fca23ed6c5f719c0beb34a5a2c8e1b82",
+        "rows": 48004,
+        "segments": 4
+      },
+      {
+        "case": "U19p202140_ETM_S04",
+        "batch": "A",
+        "zip_sha256": "e232b56f5048f6eb68acdde3a207569122000107da77d156fcb67ba018ed196e",
+        "gzip_sha256": "dfa86c52da20ec6d5a38d141922ea6ec397a00661366a58d0c7c7d7ef6bda15b",
+        "rows": 108009,
+        "segments": 9
+      },
+      {
+        "case": "U19p202140_ETM_S04",
+        "batch": "B",
+        "zip_sha256": "ac6122d52ce94cd68a78a48ef9575068ff100d65bdc3aefef4a105df9afe14eb",
+        "gzip_sha256": "38f21f08d3708175a302b98b8883fa5c106e04a32ed712896cb15fb85281613e",
+        "rows": 108009,
+        "segments": 9
+      },
+      {
+        "case": "U19p202140_ETM_S04",
+        "batch": "C",
+        "zip_sha256": "83d78b38b14561799c54b4c2e2592301085eb8002699674fc465b9b913f6044b",
+        "gzip_sha256": "5ddd47022f781e5be06ecd11cefa84f669567bf3b3b4ab669182dc47c31b8975",
+        "rows": 108009,
+        "segments": 9
+      },
+      {
+        "case": "U19p202140_ETM_S04",
+        "batch": "D",
+        "zip_sha256": "cff5136795dd77b0e1297018d40a3cbfa9880b91338d9a3a96d426c042a11e80",
+        "gzip_sha256": "769ca91660065ecbe752e297c820ab1655bb55336bde09523d9305feb454122e",
+        "rows": 48004,
+        "segments": 4
+      },
+      {
+        "case": "U19p202140_ETM_S06",
+        "batch": "A",
+        "zip_sha256": "83060fec0ded3088c13df1cd237e82d6995db04a8e40405d020428cad692fb20",
+        "gzip_sha256": "ed18a3cf225674da7a163e6d204e5255c502f8040f8b752bdf2447b092f2315f",
+        "rows": 108009,
+        "segments": 9
+      },
+      {
+        "case": "U19p202140_ETM_S06",
+        "batch": "B",
+        "zip_sha256": "bcc1e23c48c63d97c0139e09ced2d6d90bb8907baaec559dcc751998074ccdc2",
+        "gzip_sha256": "e4e87602f3afe13984d6ba72e9f2c8524308335341fe2f3bf7d69fc5fc0da6a6",
+        "rows": 108009,
+        "segments": 9
+      },
+      {
+        "case": "U19p202140_ETM_S06",
+        "batch": "C",
+        "zip_sha256": "db8a20d563a3c4c30ec6a1c7d0947fe1ae20d8e411b21b3cecc8ae365a77f74d",
+        "gzip_sha256": "271c0851a9621f685b7a7709cee798724fea13c8ecf1318b9d277382060b2ccb",
+        "rows": 108009,
+        "segments": 9
+      },
+      {
+        "case": "U19p202140_ETM_S06",
+        "batch": "D",
+        "zip_sha256": "81b756bfac670c08f7061d132aabf77d0b95f19c2a2d2f8899d7f804ba186239",
+        "gzip_sha256": "5d43a409e244d11f7a9a9b288116202873742014a3b536495be99af264dffc78",
+        "rows": 48004,
+        "segments": 4
+      }
+    ]
+  },
+  "REF": "Inherited OpenFAST/T077 nominal section mapping and ASTM rainflow context; no new full-text reading",
+  "STANDARD": "No new authorized IEC/GB/NB original clauses read",
+  "OFFICIAL": "Historical GitHub Actions archives; no new solver execution",
+  "RUN": "Python 3 source-only continuous azimuth extrema, no Abaqus/OpenFAST production",
+  "FIG": "NONE",
+  "TAB": "S10_4ETM_31SEG_CONTINUOUS_AZIMUTH_ENVELOPE_20261102.csv",
+  "rows": 124,
+  "time_points_per_gage": 12001,
+  "max_tension_gap_MPa": 0.19630463797067677,
+  "max_compression_gap_MPa": 0.1963043908707185,
+  "max_gap_over_theoretical_bound": 0.772486628091096,
+  "max_numerical_bound_slack_MPa": 0.0,
+  "csv_sha256": "6002f69286eb9941265697732ec7acd961ac6b5757d7472423d91e0374288f21",
+  "assumptions": [
+    "Common fixed section frame within each individual batch, not physically verified",
+    "Gross circular annulus; sigma=0.001*(Fz/A+(Ro/I)*(Mx*sin(theta)-My*cos(theta)))",
+    "At each time, optimizing theta is a spatial envelope, NOT a fixed material point"
+  ],
+  "error_budget": {
+    "archive_sha256": "exact",
+    "time_grid_s": "2e-8",
+    "grid16_source_rounding_MPa": "~5e-11",
+    "numeric_tolerance_MPa": 1e-08,
+    "csv_rounding_MPa": "<=5e-10",
+    "rigorous_bound": "gap<=max_t(Ro/I*hypot(Mx,My)*0.001)*(1-cos(pi/16))"
+  },
+  "HOLD": [
+    "Dynamic local coordinate transforms and PT/gravity ownership unverified",
+    "Continuous-angle extrema cannot be rainflow-counted as one material point",
+    "No local material stress, DLC1.2 life, seismic E/WE or native Abaqus PASS"
+  ],
+  "physical_pass": false,
+  "native_Abaqus_runs": 0
+}
