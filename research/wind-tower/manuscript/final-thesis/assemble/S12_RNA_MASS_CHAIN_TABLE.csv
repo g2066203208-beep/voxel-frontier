@@ -1,0 +1,5 @@
+identity,source_level,blade_each_kg,nacelle_kg,hub_kg,rna_component_subtotal_kg,delta_vs_hawc2_kg,delta_vs_r2_midpoint_kg,interpretation
+HAWC2_51_station_component_subtotal,source-derived HAWC2 station integration,41722.411281503148,446040.000000,105520.000000,676727.233844509465,0.000000000000,-26.056878630654,Reference component subtotal only; not a full native RNA model.
+R2_51_input_station_trapezoid,source-derived R2 blade station integration,41738.792488560000,446036.250000,105520.000000,676772.627465680009,45.393621170544,19.336742539890,Alternative integration of R2 input stations; not a solver output.
+R2_51_runtime_midpoint_float64,source-derived R2 frozen geometry midpoint integration,41732.346907713385,446036.250000,105520.000000,676753.290723140119,26.056878630654,0.000000000000,Current R2 input-specific mass reconstruction; not running-state M6.
+R2_archived_EDsum_printed,archived OpenFAST ED.sum printed summary,,,,676753.250000000000,26.016155490535,-0.040723140119,"Rounded solver print, same archived R2 input; do not imply exact equality."

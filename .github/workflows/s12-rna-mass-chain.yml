@@ -1,0 +1,51 @@
+name: S12 RNA source-mass chain QC (non-solver)
+on:
+  push:
+    branches: [research/t080-seismic-integration-gates-20261022]
+    paths:
+      - 'research/wind-tower/manuscript/final-thesis/assemble/s12_rna_mass_chain_table.py'
+      - 'research/wind-tower/manuscript/final-thesis/assemble/S12_RNA_MASS_CHAIN_TABLE.csv'
+      - '.github/workflows/s12-rna-mass-chain.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-locked-table:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Source-locked real T038 table + byte-identical output
+        run: |
+          python3 research/wind-tower/manuscript/final-thesis/assemble/s12_rna_mass_chain_table.py \
+            --source-json research/wind-tower/experiments/T038/openfast-rna-current.json \
+            --delta-csv research/wind-tower/experiments/T038/openfast-rna-mass-difference.csv \
+            --expected-json-sha256 cf60ca9d6d2e65f24d9e0037ec8f66bde8010002bc6050e1bccccad70f9db71e \
+            --expected-delta-sha256 7992ec3318d72fd6673a729e06a4e7764c2beb58a29cdad2d0b24f7d3cdeee44 \
+            --output /tmp/S12_RNA_MASS_CHAIN_TABLE.csv
+          cmp /tmp/S12_RNA_MASS_CHAIN_TABLE.csv research/wind-tower/manuscript/final-thesis/assemble/S12_RNA_MASS_CHAIN_TABLE.csv
+          sha256sum research/wind-tower/experiments/T038/openfast-rna-current.json \
+            research/wind-tower/experiments/T038/openfast-rna-mass-difference.csv \
+            research/wind-tower/manuscript/final-thesis/assemble/S12_RNA_MASS_CHAIN_TABLE.csv
+      - name: Negative tests (bad SHA and inconsistent mass both rejected)
+        run: |
+          python3 - <<'PY'
+          import json,subprocess,sys
+          from pathlib import Path
+          script='research/wind-tower/manuscript/final-thesis/assemble/s12_rna_mass_chain_table.py'
+          source=Path('research/wind-tower/experiments/T038/openfast-rna-current.json')
+          delta='research/wind-tower/experiments/T038/openfast-rna-mass-difference.csv'
+          out=Path('/tmp/S12_SHOULD_NOT_EXIST.csv')
+          out.unlink(missing_ok=True)
+          def invoke(src,extra=[]):
+              r=subprocess.run([sys.executable,script,'--source-json',str(src),'--delta-csv',delta,'--output',str(out),*extra],capture_output=True,text=True)
+              assert r.returncode!=0 and not out.exists(),(r.returncode,r.stdout,r.stderr)
+              print(r.stderr.strip().splitlines()[-1])
+          invoke(source,['--expected-json-sha256','0'*64])
+          bad=json.loads(source.read_text())
+          bad['mass_chain']['RNA_kg']+=1
+          changed=Path('/tmp/S12_BAD_RNA_SOURCE.json')
+          changed.write_text(json.dumps(bad))
+          invoke(changed)
+          print('NEGATIVE 2/2 PASS (no output written)')
+          PY
