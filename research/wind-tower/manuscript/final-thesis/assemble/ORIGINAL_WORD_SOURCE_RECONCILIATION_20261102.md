@@ -72,3 +72,11 @@ R2Z74实际正文引用3个图像均位于第4章。R5的73个媒体部件正文
 **REF**：T038原始质量链与R5旧图3-7，仅作历史来源；**STANDARD**：未新读IEC/GB/NB授权条文；**OFFICIAL**：OpenFAST v3.5.3固定源码定位及原始ED.sum，沿用T038已登记阅读层级；**FIG**：0幅新增正式图片，表格为现行Ch2 §2.9候选图2-10的数据依据；**TAB**：四行新来源/口径对照表。**误差预算**：双精度算术恒等式≤1e-7 kg、ED.sum打印差0.040723 kg；未覆盖物理叶片柔性、运行态转速、RNA全惯量或独立真实机组标定。HAWC2小计不等于另一软件的完整原生RNA真值，绝不能用26.0569kg称“真实质量误差”。**HOLD**：旧图3-7仍不直接恢复；当前表仅能支撑来源身份/质量分账，不能写RNA物理验证PASS或据此声明结构动力结果。**S12 PARTIAL，12阶段0/12，E/WE原生0；本助手不开展任何Abaqus工作。**
 
 **2026-11-02 16时真实远端CI回证（覆盖本节“待核”）：** [GitHub Actions #41411668813](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41411668813) / [job #125165881427](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41411668813/job/125165881427) = `completed/success`。GitHub runner实际检出PR提交`5721d9d046693f08a40f2e2327bd0cc36ae6cae8`的完整T038 JSON与差分CSV，Python3生成4行表，`cmp`与PR已提交表逐字节相同；stdout显示JSON SHA256=`cf60ca9d6d2e65f24d9e0037ec8f66bde8010002bc6050e1bccccad70f9db71e`、差分CSV SHA256=`7992ec3318d72fd6673a729e06a4e7764c2beb58a29cdad2d0b24f7d3cdeee44`、结果CSV SHA256=`d6b942f0674ae129bead497b7c3ab5913cfee9c9f08ba615a8103f15bd5a7237`，最大质量恒等式浮点残差`5.820766091346741e-11 kg`。SHA篡改与RNA质量+1kg篡改两项负测均正确失败、无输出（2/2）。**CI仅验证T038源数据与程序数值一致，非动态RNA/论文图表物理PASS。**
+
+## 2026-11-02 17时｜S12 RNA组件质量来源双面板工作图
+
+- SOURCE：T038原始JSON SHA256 cf60ca9d6d2e65f24d9e0037ec8f66bde8010002bc6050e1bccccad70f9db71e；差分CSV SHA256 7992ec3318d72fd6673a729e06a4e7764c2beb58a29cdad2d0b24f7d3cdeee44；四行已复算CSV SHA256 d6b942f0674ae129bead497b7c3ab5913cfee9c9f08ba615a8103f15bd5a7237。本轮直接读取PR四行CSV，继承此前真实源级CI成功记录，不重跑OpenFAST。
+- RUN/FIG/TAB：新增[可复算Python 3标准库生成器](s12_rna_mass_figure.py)、[SVG双面板图](S12_RNA_MASS_SOURCE_FIG.svg)，第二章2.9.2已引用工作图但不占正式图号。图A四种质量口径相对HAWC2差值0、45.393621、26.056879、26.016155 kg；图B分解+49.143621−19.336743−3.750000=+26.056879 kg。表为原有四行CSV。
+- REF：T038来源账本与旧R5图3-7（历史参考，不复用旧图）；STANDARD：未新增授权规范原页核读，不做条款验收；OFFICIAL：归档OpenFAST ED.sum打印证据继承T038，非本轮新原生运行。
+- 假设/误差：图形差值标签四位小数，位置按8 px/kg及5 px/kg缩放并保留两位像素；显示舍入误差上限约0.00005 kg，A图像素位置舍入误差上限约0.000625 kg。质量分解计算容差1e-6 kg；ED.sum打印与R2重建差0.040723 kg，非物理误差预算。原图不具CG/J和动态身份验证能力。
+- 失败/HOLD：原生地震E/WE结果0，正式图2-10尚缺CG/J完整对照，Word完整装配仍缺大量图片；不以图形、CI或来源账本冒称结构物理PASS。S12 PARTIAL、12阶段0/12；不开展Abaqus相关工作。

@@ -6,6 +6,8 @@ on:
       - 'research/wind-tower/manuscript/final-thesis/assemble/s12_rna_mass_chain_table.py'
       - 'research/wind-tower/manuscript/final-thesis/assemble/S12_RNA_MASS_CHAIN_TABLE.csv'
       - '.github/workflows/s12-rna-mass-chain.yml'
+      - 'research/wind-tower/manuscript/final-thesis/assemble/s12_rna_mass_figure.py'
+      - 'research/wind-tower/manuscript/final-thesis/assemble/S12_RNA_MASS_SOURCE_FIG.svg'
   workflow_dispatch:
 permissions:
   contents: read
@@ -48,4 +50,21 @@ jobs:
           changed.write_text(json.dumps(bad))
           invoke(changed)
           print('NEGATIVE 2/2 PASS (no output written)')
+          PY
+
+      - name: Source-locked SVG regeneration and bad-SHA rejection
+        run: |
+          python3 research/wind-tower/manuscript/final-thesis/assemble/s12_rna_mass_figure.py --source-csv research/wind-tower/manuscript/final-thesis/assemble/S12_RNA_MASS_CHAIN_TABLE.csv --output /tmp/S12_RNA_MASS_SOURCE_FIG.svg
+          cmp /tmp/S12_RNA_MASS_SOURCE_FIG.svg research/wind-tower/manuscript/final-thesis/assemble/S12_RNA_MASS_SOURCE_FIG.svg
+          python3 - <<'PY'
+          import subprocess,sys
+          from pathlib import Path
+          src=Path('research/wind-tower/manuscript/final-thesis/assemble/S12_RNA_MASS_CHAIN_TABLE.csv')
+          tampered=Path('/tmp/S12_TAMPERED.csv')
+          tampered.write_bytes(src.read_bytes().replace(b'676727.233844509465',b'676728.233844509465'))
+          out=Path('/tmp/S12_SHOULD_NOT_EXIST.svg')
+          out.unlink(missing_ok=True)
+          p=subprocess.run([sys.executable,'research/wind-tower/manuscript/final-thesis/assemble/s12_rna_mass_figure.py','--source-csv',str(tampered),'--output',str(out)],capture_output=True,text=True)
+          assert p.returncode!=0 and not out.exists(),p.stdout+p.stderr
+          print('FIGURE BAD-SHA REJECTED')
           PY
