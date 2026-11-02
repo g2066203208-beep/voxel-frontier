@@ -1,0 +1,93 @@
+name: S10 continuous azimuth gross envelope source QC (NO SOLVER)
+on:
+  push:
+    branches: [research/t080-seismic-integration-gates-20261022]
+    paths:
+      - '.github/workflows/s10-continuous-azimuth-source-qc.yml'
+      - 'research/wind-tower/experiments/T077/recovery/s10_continuous_azimuth_envelope.py'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: s10-continuous-azimuth-source-qc
+  cancel-in-progress: false
+jobs:
+  source-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Syntax, analytic known answers, and input-SHA rejection
+        run: |
+          set -euo pipefail
+          P=research/wind-tower/experiments/T077/recovery
+          python -m py_compile "$P/s10_continuous_azimuth_envelope.py"
+          python "$P/s10_continuous_azimuth_envelope.py" --selftest
+          python - <<'PY'
+          import importlib.util,pathlib,tempfile
+          p=pathlib.Path('research/wind-tower/experiments/T077/recovery/s10_continuous_azimuth_envelope.py')
+          spec=importlib.util.spec_from_file_location('s10env',p)
+          import sys
+          sys.path.insert(0,str(p.parent))
+          m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
+          with tempfile.TemporaryDirectory() as td:
+              q=pathlib.Path(td)/'bad.csv';q.write_text('tampered\n')
+              try:m.locked(q,'gross')
+              except ValueError as e:assert str(e)=='INPUT_SHA256_MISMATCH:gross'
+              else:raise AssertionError('TAMPERED_SOURCE_ACCEPTED')
+          print('S10_INPUT_SHA_REJECTION_PASS')
+          PY
+      - name: Download existing 16 historical Actions ZIPs (not solver)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          TAG=windtower-s06-t071-t072-source-archive-20261027
+          test "$(gh release view "$TAG" --json isDraft --jq '.isDraft')" = true
+          mkdir -p "$RUNNER_TEMP/s10_release" "$RUNNER_TEMP/s10_input" "$RUNNER_TEMP/s10_out"
+          gh release download "$TAG" --pattern '*_original_actions.zip' --dir "$RUNNER_TEMP/s10_release"
+          test "$(find "$RUNNER_TEMP/s10_release" -maxdepth 1 -name '*_original_actions.zip' | wc -l)" -eq 16
+          for case in U09p343881_ETM_S06 U11p4_ETM_S04 U19p202140_ETM_S04 U19p202140_ETM_S06; do
+            for batch in A B C D; do
+              ln -s "$RUNNER_TEMP/s10_release/${case}_batch${batch}_original_actions.zip" "$RUNNER_TEMP/s10_input/S06_${case}_${batch}_original.zip"
+            done
+          done
+      - name: Compute exact continuous spatial peak envelope and compare 16-angle grid
+        run: |
+          set -euo pipefail
+          P=research/wind-tower/experiments/T077/recovery
+          python "$P/s10_continuous_azimuth_envelope.py" \
+            --source-dir "$RUNNER_TEMP/s10_input" \
+            --manifest "$P/S06_RECOVERED_16_ARTIFACT_SHA256_MANIFEST_20261024.csv" \
+            --gross "$P/S06_158M_TOWER_GROSS_SECTION_IDENTITY_31SEG_20261026.csv" \
+            --control "$P/S10_4CASE_31SEG_SYNC_GROSS_CONTROL_20261030.csv" \
+            --out "$RUNNER_TEMP/s10_out/S10_4ETM_31SEG_CONTINUOUS_AZIMUTH_ENVELOPE_20261102.csv" \
+            --receipt "$RUNNER_TEMP/s10_out/S10_4ETM_31SEG_CONTINUOUS_AZIMUTH_RECEIPT_20261102.json"
+          sha256sum "$RUNNER_TEMP"/s10_out/*
+      - name: Persist source-only output on Draft PR branch
+        run: |
+          set -euo pipefail
+          P=research/wind-tower/experiments/T077/recovery
+          cp "$RUNNER_TEMP/s10_out/"*CONTINUOUS_AZIMUTH* "$P/"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$P/S10_4ETM_31SEG_CONTINUOUS_AZIMUTH_"*
+          if git diff --cached --quiet; then
+            echo 'S10_CONTINUOUS_AZIMUTH_NO_CHANGE'
+          else
+            git commit -m 'data(S10): preserve exact spatial envelope and 16-angle discretization QC'
+            git pull --rebase origin research/t080-seismic-integration-gates-20261022
+            git push origin HEAD:research/t080-seismic-integration-gates-20261022
+          fi
+      - name: Preserve real logs and computed source data
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s10-continuous-azimuth-source-only
+          path: ${{ runner.temp }}/s10_out/
+          retention-days: 30
+          if-no-files-found: warn
