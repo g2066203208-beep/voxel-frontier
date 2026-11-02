@@ -511,8 +511,11 @@ def exact_t1_cross_event(manifest_paths, T=_T1_CONDITIONAL_BEAM_S):
         p=pathlib.Path(manifest_path).resolve()
         m=json.loads(p.read_text(encoding='utf-8'))
         receipt=json.loads((p.parent/'source_receipt.json').read_text(encoding='utf-8'))
-        event=receipt.get('event_id')
-        if event not in _T1_EVENTS or event in seen_events:
+        accession=m.get('source_accession','').split(';')[0]
+        event=accession.removeprefix('USGS:') if accession.startswith('USGS:') else ''
+        if (event not in _T1_EVENTS or event in seen_events
+            or receipt.get('event_id',event)!=event
+            or '/'+event not in receipt.get('event_catalog','')):
             raise ValueError('T1_EVENT_ID_OR_DUPLICATE')
         seen_events.add(event)
         if m.get('source_accession','').split(';')[0]!='USGS:'+event:
