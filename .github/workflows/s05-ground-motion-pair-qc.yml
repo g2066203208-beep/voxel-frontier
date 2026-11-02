@@ -56,6 +56,61 @@ jobs:
           python3 -m py_compile s05_ground_motion_pair_qc.py
           python3 s05_ground_motion_pair_qc.py --self-test
           echo 'Synthetic unit tests ONLY; 0 real PEER records, 0 Abaqus RUN, 0 S05 physics PASS.'
+      - name: REAL 2019 Ridgecrest and 2020 Lone Pine exact T1 two-event source-locked spectra
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }}/research/wind-tower/experiments/T079/real-records"
+          mkdir -p exact-t1/ridge exact-t1/lone
+          for event in ci38457511 ci39493944; do
+            if [[ "$event" == ci38457511 ]]; then folder="ridge"; else folder="lone"; fi
+            root="$base/USGS_${event}/CI_CLC"
+            for file in manifest.json source_receipt.json CI_CLC_HNE_accel_mps2.csv CI_CLC_HNN_accel_mps2.csv; do
+              curl -fLsS --retry 3 --output "exact-t1/$folder/$file" "$root/$file"
+            done
+          done
+          curl -fLsS --retry 3 --output exact-t1/committed.csv \
+            "$base/S05_USGS_TWO_EVENT_CLC_DIRECT_T1_4COMP_20261102.csv"
+          python3 s05_ground_motion_pair_qc.py --exact-t1-cross-event \
+            --pair-manifests exact-t1/ridge/manifest.json exact-t1/lone/manifest.json \
+            --output exact-t1/computed.csv
+          python3 - <<'PY'
+          import csv,hashlib,math,pathlib,json
+          p=pathlib.Path('exact-t1')
+          a=list(csv.DictReader((p/'computed.csv').open()))
+          b=list(csv.DictReader((p/'committed.csv').open()))
+          assert len(a)==len(b)==4 and list(a[0])==list(b[0])
+          assert {x['event_id'] for x in a}=={'ci38457511','ci39493944'}
+          assert all(x['decision']=='HOLD_SOURCE_LOW_FREQ_AND_SITE_TARGET_NOT_DESIGN_WAVE' for x in a)
+          n=0
+          for x,y in zip(a,b):
+            for k in x:
+              if k in ('event_id','station','component','raw_csv_sha256','original_mseed_sha256','decision'):
+                assert x[k]==y[k],(k,x[k],y[k])
+              else:
+                assert math.isclose(float(x[k]),float(y[k]),rel_tol=2e-9,abs_tol=1e-11),(k,x[k],y[k])
+                n+=1
+          assert n==36,(n,'expected 9 numeric columns x4')
+          for event in ('ci38457511','ci39493944'):
+            q=[x for x in a if x['event_id']==event]
+            gm=math.sqrt(float(q[0]['pre20_psa_m_s2'])*float(q[1]['pre20_psa_m_s2']))
+            print('REAL_CLC_TWO_EVENT_T1_GEOMEAN_PRE20',event,gm,'NOT_DESIGN_PASS')
+          # Rejection test: corrupted receipt hash must not silently pass.
+          f=p/'lone/source_receipt.json'
+          original=f.read_text()
+          bad=json.loads(original);bad['raw_mseed_sha256']='0'*64
+          f.write_text(json.dumps(bad))
+          import subprocess
+          neg=subprocess.run(['python3','s05_ground_motion_pair_qc.py','--exact-t1-cross-event',
+            '--pair-manifests',str(p/'ridge/manifest.json'),str(p/'lone/manifest.json'),
+            '--output',str(p/'rejected.csv')],capture_output=True,text=True)
+          assert neg.returncode!=0 and 'T1_ORIGINAL_MSEED_RECEIPT' in neg.stderr,neg.stderr
+          f.write_text(original)
+          print('S05_REAL_4ROW_CROSS_LANGUAGE_PYTHON_V8_NUMERIC_PASS',n,'cells',
+            'corrupt_source_rejected','computed_sha256',hashlib.sha256((p/'computed.csv').read_bytes()).hexdigest())
+          print('S05_0_NATIVE_E_WE_NO_TARGET_NO_LOW_FREQ_PASS')
+          PY
+
       - name: REAL ESM 16-period source-locked highpass-distance and dt-grid QC (not design PASS)
         shell: bash
         run: |
