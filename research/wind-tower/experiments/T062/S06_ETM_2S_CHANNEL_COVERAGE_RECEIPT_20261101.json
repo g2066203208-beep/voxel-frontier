@@ -1,4 +1,31 @@
 {
+  "s07_linux_case_port_20261103": {
+    "date_local": "2026-11-03 05时 Asia/Shanghai",
+    "status": "NATIVE_2S_AERODYN_AIRFOIL_CASE_FAILURE_CONFIRMED__DERIVED_INPUT_FIX_COMMITTED__NEW_CI_PENDING",
+    "SOURCE": {
+      "native_run_id": 41515936733,
+      "native_job_id": 125519391202,
+      "native_log_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41515936733/job/125519391202",
+      "native_log_artifact_id": 13175479711,
+      "native_log_artifact_sha256": "cd78853ce86377c09fe19849b55767d8db47c0b55756e9de8863290178ddeceb",
+      "read_level": "ACTUAL_NATIVE_GNU_OPENFAST_JOB_LOG_AND_REPOSITORY_SOURCE_PREPARER_LINES_151_164",
+      "original_airfoil_member": "CASES/Rotor/Airfoils/Cylinder_Aerodyn15.dat",
+      "original_airfoil_sha256": "2994cb5f79282170019be0a8c48b60155905365cac4ac88b21dda58c16f925cb",
+      "original_shared_blade_sha256": "6ad2426fd429f4e01008700d31d4b64d79358522bcf265ce12f7706e8a1f895d",
+      "input_commit_sha": "37f4fcaf0afd4d1bac98b61d37f5bc9b32486fc5"
+    },
+    "REF": "Existing T062 2s native overlap and ElastoDyn tagged source; no new paper full text",
+    "STANDARD": "No newly read authorized IEC/GB/NB standard clauses; no compliance conclusion",
+    "OFFICIAL": "OpenFAST v3.5.3 patched GNU double, ROSCO v2.9.0 Linux diagnostic substitute, not equivalent to historical Windows ROSCO",
+    "RUN": "Actual OpenFAST startup reached AeroDyn; FATAL input file ./../Rotor/Airfoils/Cylinder_AeroDyn15.dat not found; exit code 1. Path separator fix reached AeroDyn. New case-only fix source committed, new native CI not yet verified.",
+    "FIG": "0; no physical response plots",
+    "TAB": "Original source filename Cylinder_Aerodyn15.dat vs requested Cylinder_AeroDyn15.dat; derived-only case patch count must be exactly 1 and each source/derived text SHA256 logged by CI",
+    "assumptions": "Case-only mismatch inferred from source member identity and exact native fatal error. No changes to wind, mass, stiffness, controller tuning or 158m geometry. Fail-closed on missing source, hash mismatch, duplicate reference or case collision.",
+    "error_budget": "Source SHA256 byte exact; synthetic positive/no-op/negative case-count fixture passed locally on Python 3; native solver numerical and controller equivalence errors unquantified.",
+    "failure_record": "Actions #41515936733 completed/failure; other three jobs success; exact native failure after ElastoDyn is AeroDyn airfoil case mismatch; prior missing-blade problem no longer first error.",
+    "HOLD": "S07 native DCM=0 verified rows; no successful 2s native pilot or inertia ledger; S06 PARTIAL; E/WE native 0; 0/12 stage PASS",
+    "physical_pass": false
+  },
   "stage": "S06/S07",
   "status": "CORRECTED_NATIVE_2S_POSE_INVENTORY_PASS_EXACT_DCM_PHYSICAL_HOLD",
   "case": "U09p343881_ETM_S06",

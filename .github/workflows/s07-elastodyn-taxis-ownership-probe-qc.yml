@@ -373,6 +373,36 @@ jobs:
                   })
           assert rows, 'NO_WINDOWS_PATH_REFERENCES_FOUND__HOLD'
           assert blade.is_file(), 'MISSING_SHARED_ROTOR_AFTER_PORT__HOLD'
+
+          # The archived Windows AeroDyn input spells AeroDyn, while the SHA-locked
+          # archived member spells Aerodyn. Linux resolves paths case-sensitively.
+          # Change only the derived 2s text reference, never rename source files.
+          airfoil = root.parent / 'Rotor' / 'Airfoils' / 'Cylinder_Aerodyn15.dat'
+          assert airfoil.is_file(), 'MISSING_ORIGINAL_SHARED_CYLINDER_AIRFOIL__HOLD'
+          airfoil_sha = hashlib.sha256(airfoil.read_bytes()).hexdigest()
+          assert airfoil_sha == '2994cb5f79282170019be0a8c48b60155905365cac4ac88b21dda58c16f925cb', 'ORIGINAL_CYLINDER_AIRFOIL_SHA256_MISMATCH'
+          wrong = b'Cylinder_AeroDyn15.dat'
+          right = b'Cylinder_Aerodyn15.dat'
+          assert wrong != right and wrong.lower() == right.lower()
+          assert (root / '../Rotor/Airfoils/Cylinder_Aerodyn15.dat').resolve() == airfoil.resolve()
+          case_rows = []
+          for p in sorted(root.parent.rglob('*')):
+              if not p.is_file() or p.suffix.lower() not in ('.fst', '.dat', '.txt'):
+                  continue
+              before = p.read_bytes()
+              hits = before.count(wrong)
+              if hits:
+                  after = before.replace(wrong, right)
+                  p.write_bytes(after)
+                  case_rows.append({
+                      'file': str(p.relative_to(root.parent)),
+                      'references_repaired': hits,
+                      'source_sha256': hashlib.sha256(before).hexdigest(),
+                      'derived_sha256': hashlib.sha256(after).hexdigest(),
+                  })
+          assert sum(r['references_repaired'] for r in case_rows) == 1, 'CYLINDER_AIRFOIL_REFERENCE_CARDINALITY_HOLD'
+          assert not (root.parent / 'Rotor' / 'Airfoils' / 'Cylinder_AeroDyn15.dat').exists(), 'AMBIGUOUS_CYLINDER_CASE_COLLISION_HOLD'
+
           receipt = {
               'purpose': 'Linux path separator portability in derived 2s diagnostic input and shared work/Rotor tree only',
               'original_shared_blade_sha256': blade_source_sha,
@@ -382,6 +412,8 @@ jobs:
               'controller_equivalence_verified': False,
               'physical_pass': False,
               'files': rows,
+              'case_sensitive_airfoil_source_sha256': airfoil_sha,
+              'case_sensitive_airfoil_repairs': case_rows,
           }
           Path('s07_linux_path_port_receipt.json').write_text(json.dumps(receipt, indent=2) + '\n')
           print('S07_DERIVED_WINDOWS_PATH_PORT_PASS', len(rows), 'files')
