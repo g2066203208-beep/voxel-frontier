@@ -463,10 +463,21 @@ jobs:
           src=p.read_bytes()
           text=src.decode('utf-8-sig')
           pat=r'(?m)^(\s*)(?:"[^"\r\n]+"|\S+)(\s+DLL_FileName\b[^\r\n]*)$'
-          edited,n=re.subn(pat,lambda m:m.group(1)+'"Control/libdiscon.so"'+m.group(2),text)
+          edited,n=re.subn(pat,lambda m:m.group(1)+'"libdiscon.so"'+m.group(2),text)
           if n!=1: raise ValueError('DLL_FILENAME_CARDINALITY_HOLD_'+str(n))
+          # OpenFAST resolves DLL_FileName relative to the ServoDyn input directory.
+          # Do not prepend Control/ when ServoDyn.dat is already inside Control/.
+          match=re.search(r'(?m)^\\s*"([^"\\r\\n]+)"\\s+DLL_FileName\\b',edited)
+          if not match or match.group(1)!='libdiscon.so':
+              raise ValueError('S07_DERIVED_DLL_REFERENCE_HOLD')
+          resolved=(p.parent/match.group(1)).resolve()
+          expected=Path('work/batch1/Control/libdiscon.so').resolve()
+          if resolved!=expected or not expected.is_file():
+              raise ValueError('S07_DERIVED_DLL_RESOLUTION_HOLD')
           p.write_text(edited)
-          r={'source_servo_sha256':hashlib.sha256(src).hexdigest(),
+          r={'resolved_linux_controller_path':str(resolved),
+             'controller_path_rule':'relative to ServoDyn input directory, no duplicated Control prefix',
+             'source_servo_sha256':hashlib.sha256(src).hexdigest(),
              'derived_linux_servo_sha256':hashlib.sha256(p.read_bytes()).hexdigest(),
              'source_controller_sha256':hashlib.sha256(Path('work/batch1/Control/libdiscon.dll').read_bytes()).hexdigest(),
              'linux_controller_sha256':hashlib.sha256(Path('work/batch1/Control/libdiscon.so').read_bytes()).hexdigest(),
