@@ -6,6 +6,8 @@ on:
     paths:
       - '.github/workflows/s05-ground-motion-pair-qc.yml'
       - 'research/wind-tower/experiments/T079/s05_esm_public_processed_pair.py'
+      - 'research/wind-tower/experiments/T079/s05_stationxml_transfer_response_qc.py'
+      - 'research/wind-tower/experiments/T079/real-records/S05_USGS_CLC_STATIONXML_F1_TRANSFER_4CHANNEL_20261102.csv'
       - 'research/wind-tower/experiments/T079/s05_ground_motion_pair_qc.py'
       - 'research/wind-tower/experiments/T079/s05_event_balanced_spectrum_gate.py'
       - 'research/wind-tower/experiments/T079/s05_parametric_target_spectrum_fit.py'
@@ -824,3 +826,53 @@ jobs:
             s05_receipt.json
           if-no-files-found: warn
           retention-days: 90
+
+  s05-stationxml-real-transfer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Fetch two immutable SCEDC StationXML/receipt pairs and current audited program
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }}/research/wind-tower/experiments/T079"
+          curl -fLsS --retry 3 -o audit.py "$root/s05_stationxml_transfer_response_qc.py"
+          curl -fLsS --retry 3 -o committed.csv "$root/real-records/S05_USGS_CLC_STATIONXML_F1_TRANSFER_4CHANNEL_20261102.csv"
+          for ev in ci38457511 ci39493944; do
+            folder="real-records/USGS_$ev/CI_CLC"
+            mkdir -p "$folder/original"
+            curl -fLsS --retry 3 -o "$folder/source_receipt.json" "$root/$folder/source_receipt.json"
+            curl -fLsS --retry 3 -o "$folder/original/CI_station_response.xml" "$root/$folder/original/CI_station_response.xml"
+          done
+          python3 -m py_compile audit.py
+          python3 audit.py --self-test --base real-records --output computed.csv
+      - name: Check real four-channel source-locked PZ/FIR ratios and reject tampered source
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import csv, math, pathlib, subprocess
+          a=list(csv.DictReader(open('computed.csv',newline='')))
+          b=list(csv.DictReader(open('committed.csv',newline='')))
+          assert len(a)==len(b)==4 and list(a[0])==list(b[0])
+          n=0
+          for x,y in zip(a,b):
+              assert x['seed_id']==y['seed_id'] and x['event_id']==y['event_id']
+              for k in x:
+                  try:
+                      xv=float(x[k]); yv=float(y[k])
+                  except ValueError:
+                      assert x[k]==y[k],(k,x[k],y[k])
+                  else:
+                      assert math.isclose(xv,yv,rel_tol=1e-10,abs_tol=1e-12),(k,xv,yv)
+                      n+=1
+              assert 0.99<float(x['total_ratio_f1_over_1hz'])<1.01
+              assert x['status'].endswith('NO_SNR_NO_DESIGN_PASS')
+          p=pathlib.Path('real-records/USGS_ci39493944/CI_CLC/original/CI_station_response.xml')
+          original=p.read_text(encoding='latin1')
+          p.write_text(original.replace('<Source>SCEDC</Source>','<Source>FAKE</Source>',1),encoding='latin1')
+          bad=subprocess.run(['python3','audit.py','--base','real-records'],capture_output=True,text=True)
+          assert bad.returncode!=0 and 'STATIONXML_SHA256_MISMATCH' in bad.stderr,bad.stderr
+          print('S05_SCEDC_REAL_STATIONXML_FOUR_CHANNEL_PZ_FIR_NUMERIC_PASS',n,'numeric cells')
+          print('S05_STATIONXML_SOURCE_SHA_TAMPER_REJECTED; SNR_PROCESSING_TARGET_SPECTRUM_HOLD; ABAQUS_E_WE_ZERO')
+          PY
