@@ -1,0 +1,80 @@
+name: S07 OpenFAST v3.5.3 exact-t-axis diagnostic source and Fortran smoke
+on:
+  push:
+    paths:
+      - '.github/workflows/s07-elastodyn-taxis-ownership-probe-qc.yml'
+      - 'research/wind-tower/experiments/T062/s07_elastodyn_taxis_ownership_probe.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  official-source-and-synthetic-fortran:
+    if: github.ref_name == 'research/t080-seismic-integration-gates-20261022'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Sparse checkout existing diagnostic (never the frozen structure model)
+        uses: actions/checkout@v4
+        with:
+          lfs: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            research/wind-tower/experiments/T062/s07_elastodyn_taxis_ownership_probe.py
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Source-locked parser and gravity-inertia ledger selftests
+        shell: bash
+        run: |
+          set -euo pipefail
+          script=research/wind-tower/experiments/T062/s07_elastodyn_taxis_ownership_probe.py
+          python --version
+          gfortran --version | head -n 1
+          python -m py_compile "$script"
+          python "$script" --selftest | tee source_ledger_selftest.log
+          python "$script" --fortran-smoke | tee fortran_smoke.log
+          grep -q '"synthetic_ledger": "PASS_NONZERO_GRAVITY_INERTIA_HYDRO"' source_ledger_selftest.log
+          grep -q '"fortran_syntax_and_runtime": "PASS"' fortran_smoke.log
+          grep -q '"scope": "SYNTHETIC_STUB_NOT_OPENFAST_NATIVE"' fortran_smoke.log
+          echo 'S07_SYNTHETIC_FORTRAN_AND_OWNERSHIP_TESTS_PASS; NOT_OPENFAST_NATIVE'
+      - name: Verify official tagged ElastoDyn source and fail-closed patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          script=research/wind-tower/experiments/T062/s07_elastodyn_taxis_ownership_probe.py
+          curl --fail --location --silent --show-error --retry 2 --max-time 50 \
+            https://raw.githubusercontent.com/OpenFAST/openfast/v3.5.3/modules/elastodyn/src/ElastoDyn.f90 \
+            --output official_ElastoDyn_v353.f90
+          printf '%s  %s\n' \
+            'a8ea1a88dc22d5401ea450f376aa7f66e3242785f1e038a22933054aaaf4f7d3' \
+            official_ElastoDyn_v353.f90 | sha256sum --check
+          python "$script" --source official_ElastoDyn_v353.f90 --out patched_diagnostic_only.f90 \
+            | tee source_patch_receipt.log
+          grep -q 'S07_DIAGNOSTIC_ONLY' patched_diagnostic_only.f90
+          test "$(grep -c 'S07_DIAGNOSTIC_ONLY' patched_diagnostic_only.f90)" -eq 1
+          cp official_ElastoDyn_v353.f90 tampered_source.f90
+          printf '\n! intentional SHA mismatch\n' >> tampered_source.f90
+          if python "$script" --source tampered_source.f90 --out rejected_output.f90 > negative_stdout.log 2>&1; then
+            echo 'TAMPERED_SOURCE_WAS_ACCEPTED' >&2
+            exit 1
+          fi
+          test ! -e rejected_output.f90
+          grep -q 'OFFICIAL_SOURCE_SHA256_MISMATCH' negative_stdout.log
+          echo 'S07_OFFICIAL_SOURCE_PATCH_AND_TAMPER_REJECTION_PASS; NOT_COMPILED_OPENFAST'
+          sha256sum official_ElastoDyn_v353.f90 patched_diagnostic_only.f90 "$script" \
+            | tee source_sha256.log
+      - name: Preserve small real logs, including failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s07-exact-t-axis-source-and-fortran-smoke-logs
+          path: |
+            source_ledger_selftest.log
+            fortran_smoke.log
+            source_patch_receipt.log
+            source_sha256.log
+            negative_stdout.log
+          if-no-files-found: warn
+          retention-days: 30
