@@ -236,3 +236,69 @@ jobs:
             s07_reconstruction_gate.log
           if-no-files-found: warn
           retention-days: 30
+
+
+  full-openfast-v353-patched-native-build-no-production:
+    if: github.ref_name == 'research/t080-seismic-integration-gates-20261022'
+    runs-on: ubuntu-22.04
+    timeout-minutes: 22
+    steps:
+      - name: Sparse checkout only existing diagnostic patcher
+        uses: actions/checkout@v4
+        with:
+          lfs: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            research/wind-tower/experiments/T062/s07_elastodyn_taxis_ownership_probe.py
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install official v3.5.3 documented minimal build dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends gfortran g++ cmake make libblas-dev liblapack-dev
+          { gfortran --version | head -1; cmake --version | head -1; git --version; } | tee s07_native_toolchain.log
+      - name: Clone exact tagged official OpenFAST and insert source-locked t-axis probe
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --depth 1 --branch v3.5.3 https://github.com/OpenFAST/openfast.git official-openfast
+          cd official-openfast
+          test "$(git rev-parse HEAD)" = '6a7a543790f3cad4a65b87242a619ac5b34b4c0f'
+          git submodule update --init --recursive --depth 1
+          cd ..
+          source=official-openfast/modules/elastodyn/src/ElastoDyn.f90
+          echo 'a8ea1a88dc22d5401ea450f376aa7f66e3242785f1e038a22933054aaaf4f7d3  '"$source" | sha256sum -c
+          python research/wind-tower/experiments/T062/s07_elastodyn_taxis_ownership_probe.py --source "$source" --out s07_ElastoDyn_patched.f90 | tee s07_native_patch_receipt.log
+          echo '0412e3d8bab3729ec488853e053297c17aab3863e746e4a3178286049b366f00  s07_ElastoDyn_patched.f90' | sha256sum -c
+          cp s07_ElastoDyn_patched.f90 "$source"
+          sha256sum "$source" research/wind-tower/experiments/T062/s07_elastodyn_taxis_ownership_probe.py | tee s07_native_input_hashes.log
+          echo 'S07_FULL_SOURCE_PATCHED__NOT_YET_COMPILED'
+      - name: Configure and build actual complete OpenFAST native binary (no turbine run)
+        shell: bash
+        run: |
+          set -euo pipefail
+          cmake -S official-openfast -B official-openfast/build -DCMAKE_BUILD_TYPE=Release -DBUILD_FASTFARM=OFF -DBUILD_OPENFAST_CPP_API=OFF 2>&1 | tee s07_native_cmake.log
+          cmake --build official-openfast/build --target openfast -j 2 2>&1 | tee s07_native_build.log
+          exe=official-openfast/build/glue-codes/openfast/openfast
+          test -x "$exe"
+          "$exe" -v 2>&1 | tee s07_native_version.log
+          sha256sum "$exe" | tee s07_native_binary_hash.log
+          echo 'S07_FULL_PATCHED_OPENFAST_NATIVE_BINARY_BUILT__NO_TURBINE_RUN_NO_DCM'
+      - name: Preserve actual configure/build logs even when compilation fails (never upload binary)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s07-full-patched-openfast-v353-native-build-logs
+          path: |
+            s07_native_toolchain.log
+            s07_native_patch_receipt.log
+            s07_native_input_hashes.log
+            s07_native_cmake.log
+            s07_native_build.log
+            s07_native_version.log
+            s07_native_binary_hash.log
+          if-no-files-found: warn
+          retention-days: 30
