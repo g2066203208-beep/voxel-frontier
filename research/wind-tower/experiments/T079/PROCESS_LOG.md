@@ -4,6 +4,17 @@
 - **REF / 算法：** 按ASTM E1049型转折点栈计数的实现思路进行rainflow，保留端部半循环，输出应力幅值范围/均值/计数；损伤诊断为`sum(n_i/N_i)`，由外部材料专属S-N表在log-log坐标内插且严格拒绝外推；对每个风速bin先按各seed的`damage_per_hour`算术均值，再乘**用户显式提供**的年度bin小时。**本轮未核读ASTM授权标准原页，不能称ASTM条款符合性验收；该实现仅通过下述合成手算oracle，不等于独立成熟rainflow库交叉验收。**
 - **STANDARD / OFFICIAL：** 本轮没有取得IEC 61400-1/6:2025、NB/T10907授权疲劳条文，也没有Abaqus原生局部应力结果；不自带任何混凝土、PT、HRB335/400/500或Q345疲劳曲线。S-N来源由调用方显式提供；`mean_stress_policy=IGNORE_MEAN_DIAGNOSTIC_ONLY`明确说明**忽略均值应力不可用于正式寿命结论**，特别不能将钢筋范围曲线套用混凝土或预应力钢绞线。
 - **RUN（实际本地执行，不是GitHub Actions/原生Abaqus）：** 2026-11-02，Python **3.13.5**，命令`python s10_local_material_fatigue_gate.py --self-test`，stdout=`SELF_TEST_PASS`；通过8类测试：常值零循环、两端半循环、双闭合三角循环、嵌套3MPa循环、S-N对数插值、超范围拒绝、显式bin小时年化、SHA篡改拒绝。合成5点`[0,10,0,10,0]` MPa、dt=1s、测试S-N点(5MPa,2e6次)/(20MPa,2e4次)、测试bin=3600h/年，精确得到2个10MPa循环、`N(10)=2e5`、`D_record=1.0e-5`、`D_annual_diagnostic=32.4`；**32.4是故意高损伤的合成单元测试数值，不是任何塔架寿命/安全指标**。测试比较`math.isclose(rel_tol=1e-12)`，没有物理误差预算。
+- **本地原始stdout逐字记录（Python 3.13.5，exit=0；可复算）：**
+
+  ```json
+  {
+    "status": "SELF_TEST_PASS",
+    "tests": ["constant", "half_cycles", "closed_triangles", "nested_cycle", "loglog_SN", "no_extrapolation", "annual_hours", "source_sha256_rejection"],
+    "synthetic_damage_per_record": 9.999999999999997e-06,
+    "synthetic_annualized_damage": 32.39999999999999
+  }
+  ```
+
 - **FIG/TAB：** 本轮无真实结构响应图/材料寿命表；上述合成测试的可重现输出为方法测试TAB。新增[轻量CI工作流](../../../../.github/workflows/s10-local-fatigue-gate.yml)用于PR内Ubuntu Python自测，**本条日志写入时尚无GitHub runner success日志，不冒称CI已通过**。
 - **HOLD / 下一责任：** S10仍BLOCKED，缺经S03/S04/S07验收的Abaqus材料控制点真实时程、有效PT均值状态、材料专属疲劳曲线与均值应力/应力比处理、年度风速概率及seed收敛。下一轮一项最优动作=针对既有S06四工况×31段恢复资料，检查是否已有**真实局部材料应力时程**；若没有，冻结可供Abaqus ODB提取的材料/位置/分量CSV接口并用独立成熟雨流实现对照本程序，禁止拿六分量风载直接喂给S10。严格12阶段0/12未晋级，原生Abaqus E/WE=0，保留S11抗震约束疲劳优化主线。
 
