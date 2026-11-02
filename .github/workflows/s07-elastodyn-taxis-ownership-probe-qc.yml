@@ -5,6 +5,7 @@ on:
       - '.github/workflows/s07-elastodyn-taxis-ownership-probe-qc.yml'
       - 'research/wind-tower/experiments/T062/s07_elastodyn_taxis_ownership_probe.py'
       - 'research/wind-tower/experiments/T062/s07_native_2s_bundle_gate.py'
+      - 'research/wind-tower/experiments/T062/s07_recovered_2s_input_gate.py'
   workflow_dispatch:
 
 permissions:
@@ -135,5 +136,102 @@ jobs:
             native_input_gap_receipt.json
             native_input_gap_stdout.log
             native_input_gap_sha256.log
+          if-no-files-found: warn
+          retention-days: 30
+
+  restored-2s-input-source-identity-no-solver:
+    if: github.ref_name == 'research/t080-seismic-integration-gates-20261022'
+    runs-on: windows-latest
+    timeout-minutes: 18
+    steps:
+      - name: Sparse checkout existing T062 preparer, three original ZIPs and LFS source pointers
+        uses: actions/checkout@v4
+        with:
+          lfs: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            research/wind-tower/experiments/T062/s06_etm_2s_native_overlap.py
+            research/wind-tower/experiments/T062/s06_ntm_native_0p1s_probe.py
+            research/wind-tower/experiments/T062/s06_native_4batch_common_channel_qc.py
+            research/wind-tower/experiments/T062/s06_historical_outb_source_gate.py
+            research/wind-tower/experiments/T062/s07_recovered_2s_input_gate.py
+            research/wind-tower/experiments/T062/S06_NTM_ORIGINAL_FST_ED_31GAGE_CONTRACT_20261031.json
+            research/wind-tower/experiments/T062/S06_ETM_NATIVE_2S_OVERLAP_QC_20261101.json
+            research/wind-tower/experiments/T062/S06_ETM_2S_CHANNEL_COVERAGE_RECEIPT_20261101.json
+            research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip
+            research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-002.zip
+            research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip
+            research/wind-tower/archive/local-large-assets-20261004/turbSim-36/inputs/U09p343881_ETM_S06.bts
+            research/wind-tower/references/baselines-and-site-20261004/runtime-binaries/openfast_x64_v353.exe
+            research/wind-tower/references/baselines-and-site-20261004/openfast-v330-adaptation/1FreeDecay/Control/libdiscon.dll
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Materialize exact historical LFS BTS and exe and run fail-closed selftests
+        shell: pwsh
+        run: |
+          $ErrorActionPreference='Stop'
+          $root='research/wind-tower'
+          $bts="$root/archive/local-large-assets-20261004/turbSim-36/inputs/U09p343881_ETM_S06.bts"
+          $exe="$root/references/baselines-and-site-20261004/runtime-binaries/openfast_x64_v353.exe"
+          git lfs install --local
+          git lfs pull --include="$exe,$bts" --exclude=""
+          if ($LASTEXITCODE -ne 0) { throw 'LFS_SOURCE_RECOVERY_FAILED' }
+          if ((Get-Item $exe).Length -ne 61086208) { throw 'EXE_SIZE_MISMATCH' }
+          if ((Get-Item $bts).Length -lt 1024 -or (Get-Item $bts).Length -gt 524288000) { throw 'BTS_LFS_POINTER_OR_RESOURCE_CAP' }
+          python "$root/experiments/T062/s07_recovered_2s_input_gate.py" --selftest
+          if ($LASTEXITCODE -ne 0) { throw 'INPUT_IDENTITY_SELFTEST_FAILED' }
+          python "$root/experiments/T062/s06_etm_2s_native_overlap.py" --selftest
+          if ($LASTEXITCODE -ne 0) { throw 'PREPARER_SELFTEST_FAILED' }
+          Write-Host 'S07_ORIGINAL_LFS_MATERIALIZED_AND_SELFTESTS_PASS__NO_SOLVER'
+      - name: Reconstruct all four original 2s ETM input directories, no solver
+        shell: pwsh
+        run: |
+          $ErrorActionPreference='Stop'
+          $root='research/wind-tower'
+          $script="$root/experiments/T062/s06_etm_2s_native_overlap.py"
+          foreach ($b in 1..4) {
+            $prepareArgs=@('--prepare','--overlap','--batch',"$b",
+              '--archive1',"$root/archive/local-assets-20261004/openfast-36-r2/part-001.zip",
+              '--archive2',"$root/archive/local-assets-20261004/openfast-36-r2/part-002.zip",
+              '--supp',"$root/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip",
+              '--dll',"$root/references/baselines-and-site-20261004/openfast-v330-adaptation/1FreeDecay/Control/libdiscon.dll",
+              '--exe',"$root/references/baselines-and-site-20261004/runtime-binaries/openfast_x64_v353.exe",
+              '--contract',"$root/experiments/T062/S06_NTM_ORIGINAL_FST_ED_31GAGE_CONTRACT_20261031.json",
+              '--bts',"$root/archive/local-large-assets-20261004/turbSim-36/inputs/U09p343881_ETM_S06.bts",
+              '--outdir',"work/batch$b")
+            & python $script @prepareArgs
+            if ($LASTEXITCODE -ne 0) { throw "SOURCE_PREP_BATCH_$b FAILED" }
+          }
+          Write-Host 'S07_FOUR_INPUT_BATCHES_RECONSTRUCTED__ZERO_OPENFAST_RUNS'
+      - name: Validate all 23 exact SHA identities and four historical derived input maps
+        shell: pwsh
+        run: |
+          $ErrorActionPreference='Stop'
+          $root='research/wind-tower'
+          $gate="$root/experiments/T062/s07_recovered_2s_input_gate.py"
+          $gateArgs=@('--root','work',
+            '--source-receipt',"$root/experiments/T062/S06_ETM_2S_CHANNEL_COVERAGE_RECEIPT_20261101.json",
+            '--historical-qc',"$root/experiments/T062/S06_ETM_NATIVE_2S_OVERLAP_QC_20261101.json",
+            '--archive1',"$root/archive/local-assets-20261004/openfast-36-r2/part-001.zip",
+            '--archive2',"$root/archive/local-assets-20261004/openfast-36-r2/part-002.zip",
+            '--supp',"$root/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip",
+            '--exe',"$root/references/baselines-and-site-20261004/runtime-binaries/openfast_x64_v353.exe",
+            '--bts',"$root/archive/local-large-assets-20261004/turbSim-36/inputs/U09p343881_ETM_S06.bts",
+            '--out','work/s07_recovered_2s_input_gate_receipt.json')
+          & python $gate @gateArgs 2>&1 | Tee-Object -FilePath 's07_reconstruction_gate.log'
+          if ($LASTEXITCODE -ne 0) { throw 'S07_RECONSTRUCTED_SOURCE_GATE_HOLD' }
+          python -c "import json; r=json.load(open('work/s07_recovered_2s_input_gate_receipt.json')); assert r['identity_count']==23 and r['physical_pass'] is False and r['status'].startswith('ALL_23_'); print('S07_ALL_23_SOURCE_IDENTITIES_VERIFIED__NO_SOLVER_NO_DCM')"
+          if ($LASTEXITCODE -ne 0) { throw 'S07_GATE_RECEIPT_ASSERTION_FAILED' }
+          Get-FileHash 'work/s07_recovered_2s_input_gate_receipt.json' -Algorithm SHA256
+      - name: Retain only small receipts and real failure logs, never BTS or binary
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s07-original-four-batch-2s-input-reconstruction-only
+          path: |
+            work/s07_recovered_2s_input_gate_receipt.json
+            work/batch*/S06_0P1S_PREP_RECEIPT.json
+            s07_reconstruction_gate.log
           if-no-files-found: warn
           retention-days: 30
