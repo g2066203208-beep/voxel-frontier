@@ -7,7 +7,7 @@
 ## 2026-11-02 21时｜S10解析连续方位瞬时峰值（原件CI待验）
 
 - **SOURCE**：历史16件ZIP逐件哈希见manifest SHA256 `dfc07558eb87002c3f54bb88671644519b77dfc38daf3971026f43686d4c2ed8`；31段gross A/I SHA256 `8ae262435e13c0f10326acef7270b9962c943bb5f212171d830fe834f3a364ed`；旧16角124行控制表SHA256 `36c0a8a97db36885159fff79cc61daced9c939ab688f98ce1c6b860a89ac91d3`。阅读层级=仓库既有完整派生表及源程序；16件ZIP须由CI再核。
-- **RUN**：[源级程序](s10_continuous_azimuth_envelope.py)及[轻量CI](../../../../.github/workflows/s10-continuous-azimuth-source-qc.yml)，使用 `σ(θ,t)=0.001[Fz/A+(Ro/I)(Mx sinθ−My cosθ)]`，连续解析极值 `σ±(t)=0.001 Fz/A ± 0.001(Ro/I)hypot(Mx,My)`；从真实600s各时刻选极值，和既有16角最大/最小对照，强制验证 `Δpeak≤max_t[0.001(Ro/I)hypot(Mx,My)]*(1−cos(π/16))`。合成已知答案及坏SHA拒绝包含在CI，**本次尚未回读原生CI，不能称RUN通过**。
+- **RUN**：[源级程序](s10_continuous_azimuth_envelope.py)及[轻量CI](../../../../../.github/workflows/s10-continuous-azimuth-source-qc.yml)，使用 `σ(θ,t)=0.001[Fz/A+(Ro/I)(Mx sinθ−My cosθ)]`，连续解析极值 `σ±(t)=0.001 Fz/A ± 0.001(Ro/I)hypot(Mx,My)`；从真实600s各时刻选极值，和既有16角最大/最小对照，强制验证 `Δpeak≤max_t[0.001(Ro/I)hypot(Mx,My)]*(1−cos(π/16))`。合成已知答案及坏SHA拒绝包含在CI，**本次尚未回读原生CI，不能称RUN通过**。
 - **REF/STANDARD/OFFICIAL**：REF=既有T077/REF018截面名义应力方法，无新全文；STANDARD=无新授权IEC/GB/NB原页；OFFICIAL=历史Actions ZIP，非本轮求解。
 - **FIG/TAB**：FIG=0；TAB=拟输出124行 `S10_4ETM_31SEG_CONTINUOUS_AZIMUTH_ENVELOPE_20261102.csv` 及来源JSON，**目前尚未生成，禁止冒称实测**。
 - **误差/HOLD**：SHA256精确，源时间容差2e-8s，CSV舍入≤5e-10MPa，既有控制表12有效数字；局部轴系/PT/重力惯性归属/材料位置物理误差未估。**瞬时最不利角度随时间变化，不可把连续空间包络作为固定材料点时程雨流**；不等于疲劳寿命、DLC1.2、地震或原生Abaqus PASS。12阶段0/12、E/WE=0、S10 BLOCKED。失败待CI原生日志记录。
