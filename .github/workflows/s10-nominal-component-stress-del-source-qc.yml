@@ -1,0 +1,45 @@
+name: S10 component nominal stress-DEL source-only QC (NO SOLVER)
+on:
+  push:
+    branches: [research/t080-seismic-integration-gates-20261022]
+    paths:
+      - '.github/workflows/s10-nominal-component-stress-del-source-qc.yml'
+      - 'research/wind-tower/experiments/T077/recovery/s10_nominal_component_stress_del_screen.js'
+      - 'research/wind-tower/experiments/T077/recovery/S10_4ETM_31SEG_NOMINAL_COMPONENT_STRESS_DEL_M4_20261102.csv'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Recompute all 124 rows and verify committed bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          d=research/wind-tower/experiments/T077/recovery
+          node "$d/s10_nominal_component_stress_del_screen.js" --selftest
+          node "$d/s10_nominal_component_stress_del_screen.js" \
+            "$d/S06_4CASE_31GAGE_6COMP_RAINFLOW_DEL_20261027.csv" \
+            "$d/S06_158M_TOWER_GROSS_SECTION_IDENTITY_31SEG_20261026.csv" \
+            /tmp/s10_stress.csv
+          cmp "$d/S10_4ETM_31SEG_NOMINAL_COMPONENT_STRESS_DEL_M4_20261102.csv" /tmp/s10_stress.csv
+          echo 'REAL_SOURCE_RECOMPUTE_EXACT_PASS'
+      - name: Reject altered source SHA and invalid numeric data
+        shell: bash
+        run: |
+          set -euo pipefail
+          d=research/wind-tower/experiments/T077/recovery
+          cp "$d/S06_4CASE_31GAGE_6COMP_RAINFLOW_DEL_20261027.csv" /tmp/altered.csv
+          printf 'altered\n' >> /tmp/altered.csv
+          if node "$d/s10_nominal_component_stress_del_screen.js" /tmp/altered.csv \
+            "$d/S06_158M_TOWER_GROSS_SECTION_IDENTITY_31SEG_20261026.csv" /tmp/should_not_exist.csv; then
+            echo 'BAD_SHA_ACCEPTED'; exit 1
+          fi
+          test ! -e /tmp/should_not_exist.csv
+          echo 'NEGATIVE_SHA_REJECT_PASS'
