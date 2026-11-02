@@ -409,5 +409,22 @@ jobs:
             s07_native_build.log
             s07_native_version.log
             s07_native_binary_hash.log
+            s07_linux_prep.log
+            s07_rosco_source_commit.log
+            s07_rosco_cmake.log
+            s07_rosco_build.log
+            s07_rosco_install.log
+            s07_rosco_library_locations.log
+            s07_rosco_library_sha256.log
+            s07_rosco_ldd.log
+            s07_linux_derived_identity.json
+            s07_linux_native_stdout.log
+            s07_linux_native_stdout_tail.log
+            s07_linux_native_exit_code.log
+            s07_linux_dcm_raw_sha256.log
+            s07_linux_dcm_raw_size.log
+            s07_linux_dcm_missing.log
+            s07_linux_dcm_audit.json
+            work/batch1/S06_0P1S_PREP_RECEIPT.json
           if-no-files-found: warn
           retention-days: 30
