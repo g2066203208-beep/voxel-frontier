@@ -1,0 +1,67 @@
+{
+  "FIG": "grouped 36-case actual load-DEL and legacy source-divergence marker",
+  "HOLD": "historical CORRECTED archive, original cycle ledger and ranking original source hashes missing; cannot certify legacy S03",
+  "Neq": 100000,
+  "OFFICIAL": "OpenFAST archived output source previously checked, no new simulation or native solve",
+  "REF": "historic 2026-09 Word manuscript reported S03 and S02; original historical CSV/outb bytes not available in this run",
+  "RUN": "Python deterministic postprocessing from existing archival 72-row DEL CSV",
+  "STANDARD": "no new IEC/GB authorized clause checked; m=4 and Neq=1e5 are diagnostic normalization",
+  "TAB": "36-case paired rank CSV",
+  "candidate_claim": "current source supports S04 maximum; historical CORRECTED S03 is unverified distinct-source claim; no invented version-mismatch root cause",
+  "case_count": 36,
+  "csv_sha256": "66a66cd79e6ff17c3283825fe55068da0e786d59c2a28a2de80e9802e73a95a8",
+  "current_my": {
+    "DEL_kNm": 26802.478501532034,
+    "S04_over_S03_pct": 16.505172806059008,
+    "case": "U11p4_ETM_S04",
+    "current_S03_DEL_kNm": 23005.397834265204,
+    "top3": [
+      {
+        "DEL_kNm": 26802.478501532034,
+        "case": "U11p4_ETM_S04"
+      },
+      {
+        "DEL_kNm": 26023.386818040908,
+        "case": "U09p343881_ETM_S06"
+      },
+      {
+        "DEL_kNm": 24323.114873025417,
+        "case": "U19p202140_ETM_S04"
+      }
+    ]
+  },
+  "error_budget": "source DEL serialized float64; exact-key assertions 1e-8 kN-m; ranking gap >3000 kN-m S04-S03; historical true uncertainty UNKNOWN",
+  "historical_mx": {
+    "case": "U19p202140_ETM_S02",
+    "claimed_kNm": 9715.431,
+    "current_same_case_kNm": 9468.855047640667,
+    "difference_kNm": 246.57595235933331
+  },
+  "historical_my": {
+    "case": "U11p4_ETM_S03",
+    "claim_exceeds_current_global_max_kNm": 1374.5314984679644,
+    "claimed_kNm": 28177.01,
+    "current_same_case_kNm": 23005.397834265204,
+    "difference_kNm": 5171.612165734794,
+    "difference_pct_of_current": 22.479994490823273
+  },
+  "m": 4,
+  "material_fatigue_life": false,
+  "normalization_counterfactual": {
+    "Neq_needed_for_legacy_Mx_S02": 90228.05305737,
+    "Neq_needed_for_legacy_My_S03": 44436.45114962844,
+    "formula": "Neq_implied=100000*(DEL_current/DEL_historical)^4, fixed current fourth moment",
+    "single_global_Neq_cannot_reconcile_both": true,
+    "uniform_Neq_change_cannot_reverse_S03_S04_rank": true
+  },
+  "physical_pass": false,
+  "prior_rainflow_crosscheck": "RAINFLOW_METHOD_SUMMARY.json: generic/OpenFAST ASTM same S04 max; OpenFAST Windap S04 also max",
+  "row_count": 72,
+  "source_file_sha256": "b362bcd7c37ccc56e21035de39448b5e761ec03f371b6b2f3eb30f41b013630d",
+  "source_git_blob_sha1": "1b334e9afdbd792a2f4b1a41cdb150dc3698352d",
+  "source_path": "recomputed-load-fatigue/05_LOAD_DEL_M4_ALL36_RECOMPUTED.csv",
+  "source_reading_level": "T062 archival 36 case / 72 DEL derived table originally recomputed from 36 OUTB; original OUTBs not re-decoded by this script",
+  "source_sha_note": "source Git blob SHA1 validated; output SHA256 values below",
+  "status": "36_ARCHIVED_LOAD_DEL_IDENTITY_PASS_LEGACY_CORRECTED_SOURCE_HOLD",
+  "svg_sha256": "9af62acfa3aa6325ae9137acae67a7e99e0ce4e7fe59788509d108508e91b04b"
+}
