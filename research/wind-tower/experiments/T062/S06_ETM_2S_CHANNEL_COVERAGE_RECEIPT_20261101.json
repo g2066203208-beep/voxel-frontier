@@ -185,5 +185,46 @@
     "decoded_parity_samples": 48380,
     "nonzero_differences": 0,
     "prior_absent_claim_superseded": true
+  },
+  "s07_taxis_probe_ci_20261102": {
+    "date_local": "2026-11-02 23:12 Asia/Shanghai",
+    "status": "OFFICIAL_SOURCE_PATCH_AND_SYNTHETIC_FORTRAN_SMOKE_PASS__NATIVE_DCM_HOLD",
+    "SOURCE": {
+      "official_tag": "OpenFAST v3.5.3",
+      "file": "modules/elastodyn/src/ElastoDyn.f90",
+      "sha256": "a8ea1a88dc22d5401ea450f376aa7f66e3242785f1e038a22933054aaaf4f7d3",
+      "read_level": "ACTUAL_TAGGED_OFFICIAL_SOURCE_BYTES_DOWNLOADED_SHA256_CHECKED",
+      "existing_2s_outb": "41 samples x four batches and 81 TP/RP/AL per batch inherited from prior native receipt; NOT reread this run",
+      "script": "research/wind-tower/experiments/T062/s07_elastodyn_taxis_ownership_probe.py",
+      "script_sha256": "b14fc9c6bb7679e665b30c050d43ae32cf5f86a107e09eac90a199897b83e957",
+      "patched_source_sha256": "0412e3d8bab3729ec488853e053297c17aab3863e746e4a3178286049b366f00"
+    },
+    "REF": "Existing ElastoDyn v3.5.3 source semantics and T062 2s native receipts; no new journal full text",
+    "STANDARD": "No authorized IEC/GB/NB clauses read; no code acceptance",
+    "OFFICIAL": "https://github.com/OpenFAST/openfast/blob/v3.5.3/modules/elastodyn/src/ElastoDyn.f90",
+    "RUN": {
+      "kind": "GitHub Actions Ubuntu source-locked Python and gfortran synthetic stub",
+      "run_id": 41469176799,
+      "job_id": 125357921523,
+      "url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41469176799",
+      "status": "completed",
+      "conclusion": "success",
+      "python": "3.12.15",
+      "gfortran": "13.3.0",
+      "synthetic_ledger": "PASS_NONZERO_GRAVITY_INERTIA_HYDRO",
+      "synthetic_negative_rejections": 7,
+      "fortran_stub_compilation_and_execution": "PASS",
+      "official_source_patch": "PASS",
+      "source_tamper_rejection": "PASS",
+      "native_openfast_runs": 0,
+      "native_abaqus_runs": 0
+    },
+    "FIG": "0; no physical plot",
+    "TAB": "No new real 2s DCM rows; existing 41x4 original native output remains unchanged",
+    "assumptions": "Single diagnostic gage=220; injected block tested with a synthetic typed Fortran stub, not linked against complete ElastoDyn/OpenFAST; official source patch only",
+    "error_budget": "Exact SHA256 source/patch/script; synthetic algebra checked by independent known answer and 7 negative rejects; real 2s DCM, dynamic ownership and full-state errors NEED_ESTIMATE",
+    "failure_record": "No CI failure. Deliberately tampered official source rejected; no output produced.",
+    "HOLD": "Full patched OpenFAST v3.5.3 executable was NOT built or run; no measured t1/-t3/t2 DCM, gravity/inertia ledger, or validated 31-station mapping. 0/12 stages, E/WE native 0.",
+    "acceptance": "DIAGNOSTIC_SOURCE_AND_STUB_ONLY_PASS__S07_PHYSICAL_HOLD"
   }
 }
