@@ -1,3 +1,15 @@
+## 2026-11-02 19:15｜四ETM全窗批内接缝数值源级复算CI成功（覆盖本文件19时“待回证”状态）
+
+- **真实RUN/OFFICIAL**：[Actions #41435041898/job #125242625708](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41435041898/job/125242625708)已回读`completed/success`；Ubuntu Python 3.12实际下载此前保全的DRAFT release **16件原始Actions ZIP**，核对每件历史ZIP/GZIP SHA256及CSV schema、case/batch/segment、31站、12001点时轴、六分量有限值。程序自测、四案manifest选择、2个非法case及1个篡改manifest拒绝全部通过；旧U09 S06案例CSV回归SHA256 `ae7d587b21d856f415e4298f8b2941f86f3590f35bbcd9f56c7a75a86b611185` **逐字节一致**。原生CI stdout已直接读取，三案新表/收据由bot自动提交到Draft PR并远端回读。
+- **TAB（4案真实源级数值；单位依列，非外风载）**：四案均31站×12001=372,031条源记录；**每案27个同批接缝×12001=324,027组条件性时刻差值、3个跨批接缝禁止配对**，总计1,296,108组同批接缝时刻对照；结果表每案30接缝（其中3行HOLD）。
+  - U09p343881_ETM_S06：既有[CSV](S06_U09p343881_ETM_S06_31GAGE_BATCH_TIMEWISE_WRENCH_QC_20261101.csv)，max|ΔFz|=643.561279 kN、max|ΔMy|=113.631828 kN·m（本轮复算一致）。
+  - U11p4_ETM_S04：[30行CSV](S06_U11p4_ETM_S04_31GAGE_BATCH_TIMEWISE_WRENCH_QC_20261102.csv) SHA256=`398524aceba138dfef7e78d92929d0d6e95f93d9b707e953f38635d396fd002b`，[原始收据](S06_U11p4_ETM_S04_31GAGE_BATCH_TIMEWISE_RECEIPT_20261102.json)；max|ΔFz|=643.682825 kN、max|ΔMy|=136.404899 kN·m（J01/541.45s和J29/475s，**不同时间**）。
+  - U19p202140_ETM_S04：[30行CSV](S06_U19p202140_ETM_S04_31GAGE_BATCH_TIMEWISE_WRENCH_QC_20261102.csv) SHA256=`d66e5966cc84cd2a69715322b376226793019e9644cedf698ef42d20e8fd15d2`，[原始收据](S06_U19p202140_ETM_S04_31GAGE_BATCH_TIMEWISE_RECEIPT_20261102.json)；max|ΔFz|=643.359387 kN、max|ΔMy|=135.798095 kN·m（J01/245.1s、J29/245.15s）。
+  - U19p202140_ETM_S06：[30行CSV](S06_U19p202140_ETM_S06_31GAGE_BATCH_TIMEWISE_WRENCH_QC_20261102.csv) SHA256=`385104b435f254d437d0ad181dcd0940e724ad3f365e3a0510307cee1e8bd11b`，[原始收据](S06_U19p202140_ETM_S06_31GAGE_BATCH_TIMEWISE_RECEIPT_20261102.json)；max|ΔFz|=643.331948 kN、max|ΔMy|=126.895345 kN·m（J01/449.95s、J29/671.45s）。
+- **SOURCE/REF/STANDARD/FIG**：SOURCE=SHA256锁定的16个历史Actions源ZIP、原manifest SHA256 `dfc07558eb87002c3f54bb88671644519b77dfc38daf3971026f43686d4c2ed8`，每个ZIP/GZIP哈希见manifest；REF=既有T062/T077 OpenFAST截面内力解释，没有新期刊全文；STANDARD=未读取新授权IEC/GB/NB原页；FIG=0，不生成伪外载/应力图。程序/工作流：[源级程序](s06_31gage_batch_coherence_qc.py)、[真实CI](../../../../.github/workflows/s06-four-etm-full-window-within-batch-qc.yml)；工作流SHA与执行提交见Actions日志。
+- **假设/误差预算/HOLD**：上述Δ仅是**同一历史批次、假设共同固定坐标系**下的截面内力六分量差，平移力矩项按`r×F`，不是独立外部风载、真实材料应力或风震响应；各案ZIP/GZIP哈希精确，时间误差门槛2e-8s、CSV保留9位小数（舍入≤5e-10对应单位），但动态局部轴系、惯性/重力所有权及跨批运行状态差异尚无物理误差预算。**跨批J09/J18/J27×4案共12条接缝时程仍HOLD，不能据此宣称四批在全600s完全同步**。S06独立准备有实质增量但仍PARTIAL，12阶段**0/12未晋级**，地震E/WE原生0；本助手未做Abaqus、未运行OpenFAST生产、未改main/冻结母本、未合并PR。
+- **下一唯一动作**：利用已保全的原始OUTB/同态姿态源，检验历史四批是否具有可证的长时程共同状态；不能证明则保持跨批分离，只允许27接缝批内比较，不将31站拼成一条同态外载序列。
+
 
 ## 2026-11-02 19时｜S06四ETM历史全窗批内时程扩展（非求解，待CI实源回证）
 
