@@ -357,39 +357,7 @@ jobs:
           p=Path('work/batch1/Control/DTU_10MW_RWT_ServoDyn.dat')
           src=p.read_bytes()
           text=src.decode('utf-8-sig')
-          pat=r'(?m)^(\s*)(?:"[^"\r\n]+"|\S+)(\s+DLL_FileName\b[^\r\n]*)
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: s07-full-patched-openfast-v353-native-build-logs
-          path: |
-            s07_native_toolchain.log
-            s07_native_patch_receipt.log
-            s07_native_input_hashes.log
-            s07_native_cmake.log
-            s07_native_build.log
-            s07_native_version.log
-            s07_native_binary_hash.log
-            s07_linux_prep.log
-            s07_rosco_source_commit.log
-            s07_rosco_cmake.log
-            s07_rosco_build.log
-            s07_rosco_install.log
-            s07_rosco_library_locations.log
-            s07_rosco_library_sha256.log
-            s07_rosco_ldd.log
-            s07_linux_derived_identity.json
-            s07_linux_native_stdout.log
-            s07_linux_native_stdout_tail.log
-            s07_linux_native_exit_code.log
-            s07_linux_dcm_raw_sha256.log
-            s07_linux_dcm_raw_size.log
-            s07_linux_dcm_missing.log
-            s07_linux_dcm_audit.json
-            work/batch1/S06_0P1S_PREP_RECEIPT.json
-          if-no-files-found: warn
-          retention-days: 30
-
+          pat=r'(?m)^(\s*)(?:"[^"\r\n]+"|\S+)(\s+DLL_FileName\b[^\r\n]*)$'
           edited,n=re.subn(pat,lambda m:m.group(1)+'"Control/libdiscon.so"'+m.group(2),text)
           if n!=1: raise ValueError('DLL_FILENAME_CARDINALITY_HOLD_'+str(n))
           p.write_text(edited)
