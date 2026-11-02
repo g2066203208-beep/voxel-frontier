@@ -1,0 +1,19 @@
+name: S10 local material fatigue method gate
+on:
+  pull_request:
+    paths:
+      - 'research/wind-tower/experiments/T079/s10_local_material_fatigue_gate.py'
+      - '.github/workflows/s10-local-fatigue-gate.yml'
+  workflow_dispatch:
+
+jobs:
+  synthetic-oracles:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify method code and execute synthetic oracles
+        run: |
+          sha256sum research/wind-tower/experiments/T079/s10_local_material_fatigue_gate.py
+          python3 --version
+          python3 research/wind-tower/experiments/T079/s10_local_material_fatigue_gate.py --self-test
