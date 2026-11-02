@@ -2,7 +2,8 @@
 // S10 conditional component-wise nominal stress load-DEL screening.
 // No Abaqus, no joint stress, no material fatigue life, no DLC1.2 acceptance.
 "use strict";
-const fs=require("node:fs"),crypto=require("node:crypto");
+import fs from "node:fs";
+import crypto from "node:crypto";
 const EXPECTED={
  load:"9e22e98ac44c2cbd6bf011c4bc2e9a150c4bac76b5e7c4a1eddd8e6de611134b",
  gross:"8ae262435e13c0f10326acef7270b9962c943bb5f212171d830fe834f3a364ed"
@@ -66,7 +67,7 @@ function selftest(){
  for(const bad of [-1,NaN,Infinity]){let ok=false;try{stressDel(bad,1)}catch(e){ok=true}must(ok,"BAD_DEL_NOT_REJECTED")}
  return "SELFTEST_PASS";
 }
-if(require.main===module){
+if(process.argv[1] && process.argv[1].endsWith("s10_nominal_component_stress_del_screen.js")){
  try{
   console.log(selftest());
   if(process.argv.includes("--selftest"))process.exit(0);
@@ -78,4 +79,4 @@ if(require.main===module){
   console.log("REAL_SOURCE_PASS rows=124 sha256="+digest(result));
  }catch(e){console.error(e.message);process.exitCode=1}
 }
-module.exports={build,section,stressDel,selftest,EXPECTED};
+export {build,section,stressDel,selftest,EXPECTED};
