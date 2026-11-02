@@ -36,7 +36,7 @@ def audit(path):
 def main():
     if len(sys.argv)!=3:raise SystemExit('two original .docx paths required')
     r2,r5=map(audit,sys.argv[1:]);ref={x['sha256']:x for x in r5}
-    def number(x):return int(re.search(r'image(\\d+)',x['media']).group(1))
+    def number(x):return int(re.search(r'image(\d+)',x['media']).group(1))
     w=csv.writer(sys.stdout,lineterminator='\n');w.writerow(['r2_img','r5_img','r5_chapters','live'])
     for x in sorted(r2,key=number):
         y=ref.get(x['sha256'])
