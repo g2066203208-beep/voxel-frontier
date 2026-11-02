@@ -1,3 +1,14 @@
+## 2026-11-02 11时｜S10四工况×31段风载与材料应力严格分流；只读ODB积分点提取接口（NEED_NATIVE）
+
+- **SOURCE/读取层级：** 实读[T077/S06四工况六分量DEL表](../T077/recovery/S06_4CASE_31GAGE_6COMP_RAINFLOW_DEL_20261027.csv)表头及原始数据行，原登记完整744行=4工况×31段×6通道、12001点×0.05s、600s，源SHA256=`9e22e98ac44c2cbd6bf011c4bc2e9a150c4bac76b5e7c4a1eddd8e6de611134b`，见[已核的完整来源收据](../T077/recovery/S10_4CASE_LOAD_SCREEN_SOURCE_RECEIPT_20261029.json)。这些通道是`Fx/Fy/Fz/Mx/My/Mz`的荷载/荷载雨流/DEL，**绝非局部材料应力时程**。同时直接读[T077/S10 372控制×2径向=744元素候选绑定收据](../T077/recovery/S10_4ETM_31SEG_MIDPLANE_2RAD_CONTROL_BINDING_RECEIPT_20261031.json)，其明确`NO_ODB`，模型候选是D400/Pe支路而非冻结T057 HRB335。不能用截面gross名义应力、元素中心点、控制峰值或DEL代替积分点真实应力。
+- **新增实际文件：** [只读Abaqus ODB局部应力CSV导出程序](s10_abaqus_odb_local_stress_export.py)，Git Blob=`bc848122cff9ff293a227151feecaa5bf49e0ad7`。接口强制manifest声明ODB原件SHA256、模型INP SHA256（**仅声明、不能由ODB自动证明**）、step/instance/已有element set/element label/integration point/section point、S分量、坐标基准、应力→MPa因子、frame起点、材料/位置/bin/seed；用`odbAccess.openOdb(readOnly=True)`和`fieldOutputs['S'].getSubset(...,INTEGRATION_POINT)`，逐帧只允许唯一命中值、严格等间隔时间/有限值，输出`time_s,stress_MPa`和含CSV SHA256的receipt；原件哈希不符即拒绝。未运行Abaqus，未提取任何真实局部应力。
+- **REF：** 继承T079原分材料疲劳方法、T077源控件绑定和已有[Abaqus官方输出变量文档](https://docs.software.vt.edu/abaqusv2025/English/SIMACAEOUTRefMap/simaout-c-std-elementvariables.htm)作为待原生确认接口背景；**本轮未核读授权ASTM E1049原页或任何新增期刊全文**。具体`S11`方向/材料对应关系须在实际模型ODB中独立证明，manifest字符串本身不能证明物理身份。
+- **STANDARD/OFFICIAL：** 未获得IEC61400-1/6:2025及GB/NB授权疲劳条款原页，不作条款验收；官方层仅为Abaqus接口使用意图，**没有原生软件运行证据**。
+- **RUN：** 新程序内置9项合成mock ODB单测（3帧单位换算、缺失/重复IP拒绝、非均匀时步、分量/基准/哈希拒绝、缺manifest/假ODB拒绝）；[既有S10轻量CI](../../../../.github/workflows/s10-local-fatigue-gate.yml)已增加新程序`--self-test`调用。**截至本条日志写入，尚无可核的GitHub runner成功stdout；单测是已写的测试代码，不冒称执行通过。** 不运行昂贵Abaqus生产求解。
+- **FIG/TAB：** 本轮无新物理结构图；TAB为上述真实744行载荷数据身份核验与744候选元素元数据的已有来源，不新增假应力表。没有材料Miner损伤/寿命结果。
+- **假设/误差预算：** ODB应力S分量、坐标基准、应力单位、积分点与真实材料身份需在本机原生核对；CSV用12有效数字输出，舍入约≤5e-12相对量级（非严格误差上界）；时间步比较`max(1e-10s,1e-7×dt)`仅为**软件网格检测容差**，不代表物理精度。原生PT均值、网格、接触、应力场、材料疲劳曲线与风速年化误差**未定界**。
+- **HOLD/PASS：** `S06_LOAD_SOURCE_IDENTITY_CONFIRMED_NOT_LOCAL_STRESS`；`S10_ODB_EXPORT_INTERFACE_WRITTEN_NEED_NATIVE_AND_TEST_RUN`；S10仍BLOCKED，12阶段0/12未晋级，Abaqus原生E/WE=0。下一唯一动作=取得一个真实、已验证初态的Abaqus ODB并按本接口提取一处控制积分点`S(t)`，与独立ODB/材料身份核验交叉检查；在此之前可先执行/回读合成mock CI，不得宣称疲劳寿命。S05地震链与S11优化保留。
+
 ## 2026-11-02 10时｜S10局部材料应力雨流—Miner独立方法管线（真实本地运行；合成输入；非结构疲劳PASS）
 
 - **SOURCE / 输入身份：** 新增[可复算程序](s10_local_material_fatigue_gate.py)（UTF-8字节SHA256=`028e5349d26524ce0ff9b42e4b726f46b2d76271b3731cb2b05eb8c6fd653834`，Git Blob SHA=`e60e4290d7ef060ac97adcd4fff9aa7cf97cda0b`）；真实输入模式必须是`LOCAL_MATERIAL_STRESS_ABAQUS`，逐条记录须提供CSV `time_s,stress_MPa`、文件SHA256、材料、位置、风速bin及独立seed。拒绝载荷DEL、截面极值表、CDP损伤替代材料应力；本轮**没有**真实ODB局部应力CSV，测试输入全部是显式构造的合成序列，合成文件在程序self-test内可确定性再生，不伪称塔架结果。
