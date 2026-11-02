@@ -76,6 +76,23 @@ jobs:
           assert x['c00b_sha256']=='d5f0922a8f9af84cb3a0ab937f417c3f07c44a2deee40864bb074410686853ac'
           print('C00B_REAL_PARENT_NATIVE_DAT_STATIC_PASS', x['c00b_sha256'])
           PY
+      - name: L02 single-entry REAL parent/L01 DAT preflight (NO Abaqus)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/wind-tower/experiments/T070/repair-20261029/l02_native_single_entry.py --self-test
+          python3 research/wind-tower/experiments/T070/repair-20261029/l02_native_single_entry.py --workdir "${RUNNER_TEMP}/T070_L02_SHA_LOCKED_PREFLIGHT" --preflight-only
+          echo "d5f0922a8f9af84cb3a0ab937f417c3f07c44a2deee40864bb074410686853ac  ${RUNNER_TEMP}/T070_L02_SHA_LOCKED_PREFLIGHT/input/BASE001_T070_G0_CONTACT_GROUPS_C00B_CHILD.inp" | sha256sum -c -
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          r=json.loads((Path(os.environ['RUNNER_TEMP'])/'T070_L02_SHA_LOCKED_PREFLIGHT/L02_RECEIPT.json').read_text())
+          assert r['status']=='REAL_SOURCE_C00B_PREFLIGHT_PASS_NO_ABAQUS'
+          assert r['native_abaqus_invoked'] is False
+          assert r['frozen_t070_sha256']=='9b67337fc5c1a5fe0171d48cfe8ea52c69363c9780f0a8e7675552deb8c5c1f9'
+          assert r['l01_native_dat_sha256']=='60805bb07d8ccb5c5d922de57d910ab6417beed9dbe3d2ffb04b8c6efe7f8e57'
+          print('L02_REAL_SOURCE_PREFLIGHT_CI_PASS_NO_ABAQUS')
+          PY
       - name: Upload C00b child, two-hunk diff and manifest for local L02 (NOT native pass)
         uses: actions/upload-artifact@v4
         with:
