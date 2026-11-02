@@ -1,0 +1,67 @@
+name: S10 real ERA5 NTM three-bin partial load-m4 + source references (NO SOLVER)
+on:
+  push:
+    branches: [research/t080-seismic-integration-gates-20261022]
+    paths:
+      - 'research/wind-tower/experiments/T062/s10_era5_ntm_partial_m4_and_seed_subset.py'
+      - '.github/workflows/s10-era5-ntm-partial-m4.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  era5-ntm-covered-bin-diagnostic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            research/wind-tower/experiments/T062
+          sparse-checkout-cone-mode: false
+      - name: Verify 21-year wind-bin source + 18 original NTM source + 126-slot coverage
+        shell: bash
+        run: |
+          set -euo pipefail
+          out=research/wind-tower/experiments/T062/partial-annual-load-diagnostic-20261102
+          mkdir -p "$out"
+          python3 research/wind-tower/experiments/T062/s10_era5_ntm_partial_m4_and_seed_subset.py --output-dir "$out" | tee /tmp/s10-annual-partial-numeric.log
+          python3 - <<'PY'
+          import json,math,csv
+          from pathlib import Path
+          d=Path('research/wind-tower/experiments/T062/partial-annual-load-diagnostic-20261102')
+          j=json.loads((d/'S10_REAL_18NTM_3BIN_PARTIAL_M4_RECEIPT_20261102.json').read_text())
+          rows=list(csv.DictReader((d/'S10_REAL_18NTM_3BIN_PARTIAL_M4_BY_CHANNEL_20261102.csv').open()))
+          assert len(rows)==6 and j['SOURCE_OBSERVATIONS']['era5_hours']==184080
+          assert j['SOURCE_OBSERVATIONS']['formal_verified_DLC12_slots']==0
+          assert j['SOURCE_OBSERVATIONS']['uncovered_operating_hours']==99736
+          assert all(r['formal_DLC12_status']=='NOT_VALIDATED' and r['material_damage_status']=='NOT_COMPUTABLE' for r in rows)
+          assert set(j['RESULTS'])=={'TwrBsMxt','TwrBsMyt'}
+          assert all(v['3of6_joint_subset_combinations']==8000 for v in j['RESULTS'].values())
+          assert all(v['known_bin_partial_all_hour_weighted_m4_3of6_min_MNm4']<=
+                     v['known_bin_partial_all_hour_weighted_m4_MNm4']<=
+                     v['known_bin_partial_all_hour_weighted_m4_3of6_max_MNm4']
+                     for v in j['RESULTS'].values())
+          assert j['PHYSICAL_PASS'] is False and j['MATERIAL_FATIGUE_PASS'] is False
+          print('S10_18_ACTUAL_NTM_3BIN_SOURCE_LOCKED_M4_PARTIAL_3OF6_ENVELOPE_PASS_NOT_LIFE')
+          PY
+          sha256sum "$out/"*
+      - uses: actions/upload-artifact@v4
+        with:
+          name: S10_18NTM_ERA5_COVERED_ONLY_LOAD4_MOMENT
+          path: research/wind-tower/experiments/T062/partial-annual-load-diagnostic-20261102/
+          retention-days: 90
+      - name: Preserve exact outputs to existing Draft PR
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/wind-tower/experiments/T062/partial-annual-load-diagnostic-20261102/
+          if ! git diff --cached --quiet; then
+            git commit -m "data(S10): three covered ERA5-NMT bin m4 intensity and 8000 seed subsets"
+            for n in 1 2 3; do
+              git pull --rebase origin research/t080-seismic-integration-gates-20261022
+              if git push origin HEAD:refs/heads/research/t080-seismic-integration-gates-20261022; then break; fi
+              if [ "$n" = 3 ]; then exit 1; fi
+            done
+          fi
