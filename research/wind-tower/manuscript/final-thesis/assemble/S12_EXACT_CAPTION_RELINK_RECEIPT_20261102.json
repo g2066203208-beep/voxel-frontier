@@ -1,0 +1,70 @@
+{
+  "status": "SOURCE_LEVEL_EXACT_CAPTION_REATTACH_ONLY_NOT_RENDER_OR_SCIENTIFIC_PASS",
+  "inputs": {
+    "r2_sha256": "5dfe6c70e768f13ebd90c2e561a768e9be143f571b240945b1f17807628512d0",
+    "r5_sha256": "da86e1fadafc977fc66d14a97a46760e73ec3b5150ddbae65fd62c7105764ee9"
+  },
+  "output": {
+    "sha256": "6d7edc3a286500776c2300495eb970f7c655ddf29da6514532d58bc9ca26b4e9",
+    "bytes": 40284585,
+    "path": "/mnt/data/word_recovery/S12_R2Z74_13EXACT_FIGURE_WORKING_COPY_20261102.docx",
+    "persistent_library_path": "/WindTower/S12_Word_Image_Relink_20261102/S12_R2Z74_13EXACT_FIGURE_WORKING_COPY_20261102.docx",
+    "library_file_id": "libfile_859e588b79bc8191b73989cede7f2fb2",
+    "post_upload_rehash": "MATCH_SHA256_6d7edc3a286500776c2300495eb970f7c655ddf29da6514532d58bc9ca26b4e9"
+  },
+  "source_image_relations": 120,
+  "source_embedded_images": 3,
+  "r5_image_placements": 74,
+  "r5_unique_images": 73,
+  "restored_placements": 13,
+  "restored_unique_images": 13,
+  "output_embedded_images": 16,
+  "remaining_unreferenced_relations": 104,
+  "unresolved_placements": 61,
+  "unmatched_new_media": 44,
+  "constraints": [
+    "exact original image bytes",
+    "exact unique caption text",
+    "no insertion for missing caption",
+    "no original DOCX changed"
+  ],
+  "verification": [
+    "ZIP CRC valid",
+    "120 image relationships retained",
+    "16 embedded images",
+    "13 captions immediately follow restored images"
+  ],
+  "limitations": [
+    "no native Abaqus or structural verification",
+    "not an integrated thesis",
+    "full Word pagination and figure content QA pending"
+  ],
+  "evidence": {
+    "SOURCE": "original DOCX byte SHA256",
+    "REF": "R5 caption and figure placement",
+    "STANDARD": "not evaluated",
+    "OFFICIAL": "OOXML image relations",
+    "RUN": "Python lxml deterministic relink",
+    "FIG": "13 exact-caption original images",
+    "TAB": "74 source placement decisions",
+    "HOLD": "61 unmatched captions; 44 additional unmatched media; render and content QA"
+  },
+  "render_qa": {
+    "tool": "docx skill render_docx.py (LibreOffice->PDF->PNG)",
+    "page_count": 155,
+    "inspected_pages": [
+      30,
+      47
+    ],
+    "observations": [
+      "page 30 image and caption 图2-2 appear together after keepNext adjustment",
+      "page 47 ERA5 graph previously visually inspected in pre-keepNext render",
+      "full 155-page manual QA not completed"
+    ],
+    "status": "PARTIAL_VISUAL_QA_NOT_FINAL_THESIS"
+  },
+  "failure_history": [
+    "First Library upload returned container_session_expired; retry succeeded; post-upload materialization and SHA rehash matched.",
+    "First post-keepNext rerun selected generated output as input via broad find and was rejected by source SHA guard; rerun with exact source path succeeded."
+  ]
+}
