@@ -1,0 +1,59 @@
+name: T062 archived 36-case DEL source ranking and figure (NO SOLVER)
+on:
+  push:
+    branches: [research/t080-seismic-integration-gates-20261022]
+    paths:
+      - 'research/wind-tower/experiments/T062/t062_del_36case_provenance_figure.py'
+      - '.github/workflows/t062-del-source-reconciliation.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  reproduce-source-locked-figure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read archived load-DEL (no OpenFAST simulation), verify 36x2 and source SHA
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 --version
+          python3 research/wind-tower/experiments/T062/t062_del_36case_provenance_figure.py --self-test
+          python3 research/wind-tower/experiments/T062/t062_del_36case_provenance_figure.py --output-dir research/wind-tower/experiments/T062 > /tmp/t062-source-del-comparison-run.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("research/wind-tower/experiments/T062/T062_36CASE_DEL_SOURCE_COMPARISON_20261102.json")
+          r=json.loads(p.read_text(encoding="utf-8"))
+          assert r["case_count"]==36 and r["row_count"]==72
+          assert r["current_my"]["case"]=="U11p4_ETM_S04"
+          assert r["normalization_counterfactual"]["single_global_Neq_cannot_reconcile_both"]
+          assert r["physical_pass"] is False
+          assert r["historical_my"]["difference_kNm"]>5000
+          print("T062_REAL_ARCHIVED_36CASE_PROVENANCE_PASS_NO_OPENFAST_RUN",r["source_file_sha256"])
+          PY
+          sha256sum research/wind-tower/experiments/T062/T062_36CASE_MY_MX_ARCHIVED_RANK_20261102.csv research/wind-tower/experiments/T062/FIG3_T062_36CASE_MY_DEL_SOURCE_CONFLICT_20261102.svg research/wind-tower/experiments/T062/T062_36CASE_DEL_SOURCE_COMPARISON_20261102.json
+      - name: Preserve source-locked 36-case table figure and provenance receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: T062_DEL_36CASE_SOURCE_COMPARISON_20261102
+          path: |
+            research/wind-tower/experiments/T062/T062_36CASE_MY_MX_ARCHIVED_RANK_20261102.csv
+            research/wind-tower/experiments/T062/FIG3_T062_36CASE_MY_DEL_SOURCE_CONFLICT_20261102.svg
+            research/wind-tower/experiments/T062/T062_36CASE_DEL_SOURCE_COMPARISON_20261102.json
+          retention-days: 90
+      - name: Commit permanent research outputs to Draft PR branch (never main)
+        if: github.event_name == 'push'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/wind-tower/experiments/T062/T062_36CASE_MY_MX_ARCHIVED_RANK_20261102.csv research/wind-tower/experiments/T062/FIG3_T062_36CASE_MY_DEL_SOURCE_CONFLICT_20261102.svg research/wind-tower/experiments/T062/T062_36CASE_DEL_SOURCE_COMPARISON_20261102.json
+          if git diff --cached --quiet; then
+            echo "T062_DERIVED_OUTPUT_UNCHANGED"
+          else
+            git commit -m "data(T062): preserve source-locked 36-case DEL ranking and manuscript figure"
+            git push origin "HEAD:refs/heads/research/t080-seismic-integration-gates-20261022"
+          fi
