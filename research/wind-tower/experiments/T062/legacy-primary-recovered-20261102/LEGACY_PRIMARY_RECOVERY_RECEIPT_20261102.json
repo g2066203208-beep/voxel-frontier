@@ -199,7 +199,7 @@
   "original_archive": "archive/local-assets-20261004/openfast-36-r2/part-001.zip",
   "original_archive_sha256": "ddfa02734274ad5bd36e84d975d18544bb5360554e25d71d8689f32313a95267",
   "original_embedded_manifest_encoding": "utf-8-sig",
-  "original_file_manifest_entries_verified": 7,
+  "original_file_manifest_entries_verified": 10,
   "original_ledger_source_recovered": true,
   "original_manifest_sha256": "c9da25b3a967c9ed3b3a859666263c6964d8480798185e6e031539c38e4c3302",
   "physical_pass": false,
@@ -226,6 +226,21 @@
       "bytes": 116189,
       "name": "SHA256_MANIFEST_CORRECTED.csv",
       "sha256": "1ce81f925020a2583506a9071e6fe4ee6f78b8bbed68ae57081435342f502552"
+    },
+    {
+      "bytes": 6852,
+      "name": "rainflow_del_r1.py",
+      "sha256": "b7c2d50b391d90f69fef6aa72e5bdf4be5a843c72b4460147145a0df14110649"
+    },
+    {
+      "bytes": 3653,
+      "name": "analyze_r2_corrected.py",
+      "sha256": "e6e5f0e30dba929122c3dfe54a07273974a27ef3b60e8dbdabd4f797233daff5"
+    },
+    {
+      "bytes": 4724,
+      "name": "02_CHANNEL_MAPPING_QA_RAINFLOW.csv",
+      "sha256": "90f1f0e3d6e63603cb8f3453f8ba41f97437c21ca3ea82e5d02e3a270febc7ac"
     },
     {
       "bytes": 7019,
