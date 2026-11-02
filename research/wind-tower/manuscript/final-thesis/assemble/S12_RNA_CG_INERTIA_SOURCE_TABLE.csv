@@ -1,0 +1,17 @@
+metric,unit,recomputed,archived_T038,scope
+mass_kg,kg,676753.290723,676753.290723,R2_frozen_IEC_zero_yaw_not_operating
+CG_x_from_tower_top_m,m,-0.872962,-0.872962,R2_frozen_IEC_zero_yaw_not_operating
+CG_y_from_tower_top_m,m,0.000000,0.000000,R2_frozen_IEC_zero_yaw_not_operating
+CG_z_from_tower_top_m,m,2.783588,2.783588,R2_frozen_IEC_zero_yaw_not_operating
+JG_xx,kg*m^2,155901495.338512,155901495.338512,R2_frozen_IEC_zero_yaw_not_operating
+JG_xy,kg*m^2,0.000000,0.000000,R2_frozen_IEC_zero_yaw_not_operating
+JG_xz,kg*m^2,-5231495.690282,-5231495.690282,R2_frozen_IEC_zero_yaw_not_operating
+JG_yy,kg*m^2,94926999.798112,94926999.798112,R2_frozen_IEC_zero_yaw_not_operating
+JG_yz,kg*m^2,0.000000,0.000000,R2_frozen_IEC_zero_yaw_not_operating
+JG_zz,kg*m^2,99481015.620165,99481015.620165,R2_frozen_IEC_zero_yaw_not_operating
+JT_xx,kg*m^2,161145225.037954,161145225.037954,R2_frozen_IEC_zero_yaw_not_operating
+JT_xy,kg*m^2,0.000000,0.000000,R2_frozen_IEC_zero_yaw_not_operating
+JT_xz,kg*m^2,-3587006.875091,-3587006.875091,R2_frozen_IEC_zero_yaw_not_operating
+JT_yy,kg*m^2,100686458.495480,100686458.495480,R2_frozen_IEC_zero_yaw_not_operating
+JT_yz,kg*m^2,0.000000,0.000000,R2_frozen_IEC_zero_yaw_not_operating
+JT_zz,kg*m^2,99996744.618090,99996744.618090,R2_frozen_IEC_zero_yaw_not_operating
