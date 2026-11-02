@@ -1,0 +1,68 @@
+name: T062 ALL36 original OUTB rainflow algorithm causal closure (NO SOLVER)
+on:
+  push:
+    branches: [research/t080-seismic-integration-gates-20261022]
+    paths:
+      - 'research/wind-tower/experiments/T062/t062_all36_original_rainflow_causality.py'
+      - '.github/workflows/t062-all36-rainflow-causal-closure.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  all36-repro:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            research/wind-tower/experiments/T062
+            research/wind-tower/archive/local-assets-20261004/file-manifest.json
+            research/wind-tower/archive/local-assets-20261004-supplement/file-manifest.json
+            research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2
+          sparse-checkout-cone-mode: false
+      - name: Install independently released rainflow SHA-pinned wheel
+        shell: bash
+        run: |
+          python3 -m pip install --disable-pip-version-check --no-cache-dir --no-deps --only-binary=:all: --require-hashes -r <(printf '%s\n' 'rainflow==3.2.0 --hash=sha256:cb6c254aa1a16a9e658ff3f39c6e5a77650d6c4e8304146169b36516d1f01660')
+      - name: Compare old original function, one-line fix and third-party on ALL 36 authentic OUTB
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/wind-tower/experiments/T062/t062_all36_original_rainflow_causality.py --output-dir research/wind-tower/experiments/T062/legacy-primary-recovered-20261102
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('research/wind-tower/experiments/T062/legacy-primary-recovered-20261102/T062_ALL36_RAINFLOW_CAUSAL_RECEIPT_20261102.json')
+          d=json.loads(p.read_text())
+          assert d['outb_cases']==36 and d['del_channels']==72
+          assert d['all_72_original_DEL_match_legacy_05'] is True
+          assert d['all_72_one_line_fixed_DEL_match_T062_new'] is True
+          assert d['all_72_corrected_full_cycle_multisets_match_reference'] is True
+          assert d['all_72_weighted_count_conserved'] is True
+          assert d['material_life_pass'] is False
+          print('T062_TRUE_36_OUTB_72_CHANNEL_ALGORITHM_ROOT_CAUSE_VALIDATED_NO_SOLVER')
+          PY
+          sha256sum research/wind-tower/experiments/T062/legacy-primary-recovered-20261102/T062_ALL36_RAINFLOW_CAUSAL*
+      - uses: actions/upload-artifact@v4
+        with:
+          name: T062_36_OUTB_72_CHANNEL_COMPLETE_CAUSAL_CLOSURE
+          path: |
+            research/wind-tower/experiments/T062/legacy-primary-recovered-20261102/T062_ALL36_RAINFLOW_CAUSAL_RECEIPT_20261102.json
+            research/wind-tower/experiments/T062/legacy-primary-recovered-20261102/T062_ALL36_RAINFLOW_CAUSAL_DEL_COMPARE_20261102.csv
+          retention-days: 90
+      - name: Preserve 72-case reproducible original/fixed/reference numbers to PR
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/wind-tower/experiments/T062/legacy-primary-recovered-20261102/T062_ALL36_RAINFLOW_CAUSAL*
+          if ! git diff --cached --quiet; then
+            git commit -m 'data(T062): close historical rainflow algorithm error across 36 original OUTB'
+            for n in 1 2 3; do
+              git pull --rebase origin research/t080-seismic-integration-gates-20261022
+              if git push origin HEAD:refs/heads/research/t080-seismic-integration-gates-20261022; then break; fi
+              if [ "$n" = 3 ]; then exit 1; fi
+            done
+          fi
