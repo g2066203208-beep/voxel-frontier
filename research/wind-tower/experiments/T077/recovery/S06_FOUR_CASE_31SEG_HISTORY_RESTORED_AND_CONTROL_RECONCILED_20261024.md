@@ -1,3 +1,9 @@
+### 2026-11-02 21:20｜连续周向瞬时峰值源级真实回证（覆盖本节待验状态）
+
+- **RUN/原生日志**：[Actions #41451778222/job #125298476357](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41451778222/job/125298476357) `completed/success`；真实Ubuntu Python 3.12.15运行SHA锁定16件历史ZIP/GZIP、4案×31站×12001点，合成已知答案、11.25°锐界、坏SHA拒绝均通过。生成[124行CSV](S10_4ETM_31SEG_CONTINUOUS_AZIMUTH_ENVELOPE_20261102.csv)，SHA256 `6002f69286eb9941265697732ec7acd961ac6b5757d7472423d91e0374288f21`，Git blob `259d920877a14cf64ebc604e502051cacd77b489`；[JSON原件收据](S10_4ETM_31SEG_CONTINUOUS_AZIMUTH_RECEIPT_20261102.json)，SHA256 `a640feba9abb65053ae5a049aa8998acc12697a5434e54d8d2170ba8f6820195`，Git blob `1acbcdc3d88e1cac8035fcca5e7eb8095348d7e0`。两文件由GitHub Actions bot提交并远端回读。源输入SHA、16件档案身份及误差预算详见收据。
+- **真实TAB**：连续方位解析最大拉峰`25.013489806 MPa`（U09p343881_ETM_S06/CSEG17/t=652.75s/θ=176.568768°），对照旧16角`24.963984288 MPa`，漏采`0.049505519 MPa`；连续最小压峰`−30.273028787 MPa`（同工况CSEG16/t=652.75s/θ=356.673155°），旧16角`−30.226498351 MPa`。最大单站漏采拉峰`0.196304638 MPa`、压峰`0.196304391 MPa`（U19p202140_ETM_S06/CSEG28），均低于严格角度上界；最大实际漏采/相应理论上界比`0.7724866281`。**这不是16角疲劳DEL误差上界**。
+- **SOURCE/REF/STANDARD/OFFICIAL/FIG**：SOURCE=16历史ZIP、manifest SHA `dfc07558...`、gross SHA `8ae26243...`、旧16角控制SHA `36c0a8a9...`；REF=既有T077/REF018名义应力方法，未读新全文；STANDARD=未取得IEC/GB/NB授权条文；OFFICIAL=归档Actions派生历史源，非新原生OpenFAST/Abaqus；FIG=0。**假设/误差/HOLD**：固定共同截面系和圆环毛截面，源哈希精确、时间容差2e-8s、CSV 9位舍入；实际PT/重力惯性/坐标/局部材料应力与DLC1.2仍未验。连续最不利方位θ(t)会变动，空间峰值包络**不得作为固定材料点时程做雨流**。本轮CI无失败；历史原生Abaqus=0，物理PASS=false，S10 BLOCKED，12阶段0/12，E/WE=0。
+
 ## 2026-11-02 21时｜S10解析连续方位瞬时峰值（原件CI待验）
 
 - **SOURCE**：历史16件ZIP逐件哈希见manifest SHA256 `dfc07558eb87002c3f54bb88671644519b77dfc38daf3971026f43686d4c2ed8`；31段gross A/I SHA256 `8ae262435e13c0f10326acef7270b9962c943bb5f212171d830fe834f3a364ed`；旧16角124行控制表SHA256 `36c0a8a97db36885159fff79cc61daced9c939ab688f98ce1c6b860a89ac91d3`。阅读层级=仓库既有完整派生表及源程序；16件ZIP须由CI再核。
