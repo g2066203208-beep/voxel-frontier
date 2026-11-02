@@ -1,0 +1,64 @@
+name: T062 original vs corrected rainflow REAL S03/S04 OUTB root cause
+on:
+  push:
+    branches: [research/t080-seismic-integration-gates-20261022]
+    paths:
+      - 'research/wind-tower/experiments/T062/t062_legacy_rainflow_root_cause_gate.py'
+      - '.github/workflows/t062-legacy-rainflow-root-cause.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  reproduce-legacy-algorithm-bug:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            research/wind-tower/experiments/T062
+            research/wind-tower/archive/local-assets-20261004-supplement/file-manifest.json
+            research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-015.zip
+            research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-016.zip
+          sparse-checkout-cone-mode: false
+      - name: Pin independent rainflow 3.2.0 by verified PyPI wheel SHA
+        shell: bash
+        run: |
+          python3 -m pip install --disable-pip-version-check --no-cache-dir --no-deps --only-binary=:all: --require-hashes -r <(printf '%s\n' 'rainflow==3.2.0 --hash=sha256:cb6c254aa1a16a9e658ff3f39c6e5a77650d6c4e8304146169b36516d1f01660')
+      - name: Real original OUTB two-case three-method reproduction, no solver
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/wind-tower/experiments/T062/t062_legacy_rainflow_root_cause_gate.py --output research/wind-tower/experiments/T062/legacy-primary-recovered-20261102/LEGACY_RAINFLOW_CAUSAL_GATE_20261102.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('research/wind-tower/experiments/T062/legacy-primary-recovered-20261102/LEGACY_RAINFLOW_CAUSAL_GATE_20261102.json')
+          d=json.loads(p.read_text())
+          assert d['status']=='T062_SOURCE_IDENTICAL_HISTORICAL_ALGORITHM_CAUSE_REPRODUCED'
+          assert len(d['real_cases'])==2
+          assert all(r['patched_full_cycle_range_mean_count_equal_independent_reference'] for r in d['real_cases'])
+          assert not d['material_fatigue_pass']
+          print('T062_2_REAL_OUTB_ORIGINAL_AND_ONE_LINE_FIXED_RAINFLOW_ORACLE_PASS_NOT_MATERIAL_LIFE')
+          PY
+          sha256sum research/wind-tower/experiments/T062/legacy-primary-recovered-20261102/LEGACY_RAINFLOW_CAUSAL_GATE_20261102.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: T062_LEGACY_RAINFLOW_ORIGINAL_ROOT_CAUSE_REAL_OUTB
+          path: research/wind-tower/experiments/T062/legacy-primary-recovered-20261102/LEGACY_RAINFLOW_CAUSAL_GATE_20261102.json
+          retention-days: 90
+      - name: Preserve source-bound root-cause receipt in existing Draft PR
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/wind-tower/experiments/T062/legacy-primary-recovered-20261102/LEGACY_RAINFLOW_CAUSAL_GATE_20261102.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'data(T062): reproduce historical reversal comparison flaw on two original OUTB'
+            for n in 1 2 3; do
+              git pull --rebase origin research/t080-seismic-integration-gates-20261022
+              if git push origin HEAD:refs/heads/research/t080-seismic-integration-gates-20261022; then break; fi
+              if [ "$n" = 3 ]; then exit 1; fi
+            done
+          fi
