@@ -2,10 +2,10 @@
 """T062: regenerate source-locked 36-case My/Mx load-DEL ranking and Figure 3.
 
 Only uses the ALREADY independently recomputed 36-case, 72-row archived OUTB
-derived CSV. Never invents the missing historical CORRECTED OUTB or rainflow
-ledger, and does not launch any OpenFAST simulation. The legacy values are
-published historical claims, NOT additional verified data points from the
-current 36-case source.
+derived CSV. The original historical ledger was later recovered and the
+36/36 same-source, wrong-comparator cause independently verified. No solve. The legacy values are
+verified historical legacy-output values from the SAME OUTB with the prior
+incorrect rainflow comparison; NOT additional observations.
 
 Output: 36-case paired table, six-group actual data figure (SVG), JSON receipt.
 This is load-level screening, NOT material fatigue life.
@@ -105,8 +105,8 @@ def pack_csv(found, myrank, mxrank):
     for prefix, _ in GROUPS:
         for i in range(1,7):
             cid = f"{prefix}_S{i:02d}"
-            role = ("legacy_My_control_UNVERIFIED_SOURCE" if cid==LEGACY_MY_CASE
-                    else "legacy_Mx_control_UNVERIFIED_SOURCE" if cid==LEGACY_MX_CASE
+            role = ("legacy_My_control_INCORRECT_RAINFLOW" if cid==LEGACY_MY_CASE
+                    else "legacy_Mx_control_INCORRECT_RAINFLOW" if cid==LEGACY_MX_CASE
                     else "none")
             w.writerow([cid,prefix.split("_")[0],prefix.split("_")[1],f"S{i:02d}",
                 f"{found[cid,'TwrBsMyt']:.12f}",f"{found[cid,'TwrBsMxt']:.12f}",
@@ -130,7 +130,7 @@ def svg_plot(found):
         xx=x(tick*1000)
         z.append(f'<line x1="{xx:.2f}" x2="{xx:.2f}" y1="95" y2="540" stroke="#e6eaf0" stroke-width="1"/>')
         z.append(t(xx,563,tick,13,fill="#56677a",anchor="middle"))
-    z.append(t(620,598,"My load-DEL  (MN·m)   —   source: current archived 36 OUTB, NOT historical CORRECTED series",12,fill="#56677a",anchor="middle"))
+    z.append(t(620,598,"My load-DEL  (MN·m)   —   same 36 source OUTB; solid=corrected rainflow, orange hollow=historical wrong-comparator output",12,fill="#56677a",anchor="middle"))
     for gi,(prefix,label) in enumerate(GROUPS):
         cy=y0+gi*step
         z.append(t(35,cy+5,label,16,weight="bold" if "ETM" in prefix else "normal"))
@@ -148,7 +148,7 @@ def svg_plot(found):
     z.append(f'<line x1="{hx:.2f}" x2="{hx:.2f}" y1="94" y2="540" stroke="#c36d32" stroke-dasharray="5,5" stroke-width="1.5"/>')
     z.append(f'<circle cx="{hx:.2f}" cy="{y0+3*step+1}" r="7" fill="#ffffff" stroke="#c36d32" stroke-width="2.3"/>')
     z.append(t(1000,105,"Historic S03=28.177",13,fill="#a55221",weight="bold"))
-    z.append(t(1000,122,"UNVERIFIED source",11,fill="#a55221"))
+    z.append(t(1000,122,"old comparator",11,fill="#a55221"))
     z.append(t(x(EXPECTED_MY_KNM)-5,y0+3*step-24,"S04=26.802 (current)",11,fill="#197c83",anchor="end"))
     z.append(t(37,540,"NTM: slate   |   ETM: teal   |   hollow orange marker: legacy claim, not an extra OUTB observation",11,fill="#536576"))
     z.append("</svg>\n")
@@ -167,7 +167,7 @@ def build(source: bytes):
     if abs(n_my-n_mx) < 1000:
         raise AssertionError("NORMALIZATION_TEST_INCONCLUSIVE")
     result = {
-        "status": "36_ARCHIVED_LOAD_DEL_IDENTITY_PASS_LEGACY_CORRECTED_SOURCE_HOLD",
+        "status": "36_ARCHIVED_LOAD_DEL_RAINFLOW_CODE_CAUSE_CLOSED",
         "source_path": str(SOURCE.relative_to(HERE)),
         "source_git_blob_sha1": SOURCE_GIT_BLOB,
         "source_file_sha256": digest(source),
@@ -189,17 +189,17 @@ def build(source: bytes):
             "single_global_Neq_cannot_reconcile_both":True,
             "uniform_Neq_change_cannot_reverse_S03_S04_rank":True},
         "prior_rainflow_crosscheck":"RAINFLOW_METHOD_SUMMARY.json: generic/OpenFAST ASTM same S04 max; OpenFAST Windap S04 also max",
-        "candidate_claim":"current source supports S04 maximum; historical CORRECTED S03 is unverified distinct-source claim; no invented version-mismatch root cause",
+        "candidate_claim":"same 36/36 OUTB SHA; historical original comparator reversed; 72/72 original and one-line-fixed DEL reproduced with independent rainflow 3.2.0",
         "source_sha_note":"source Git blob SHA1 validated; output SHA256 values below",
         "csv_sha256":digest(csv_bytes),"svg_sha256":digest(svg_bytes),
-        "error_budget":"source DEL serialized float64; exact-key assertions 1e-8 kN-m; ranking gap >3000 kN-m S04-S03; historical true uncertainty UNKNOWN",
-        "REF":"historic 2026-09 Word manuscript reported S03 and S02; original historical CSV/outb bytes not available in this run",
+        "error_budget":"source DEL serialized float64; same-OUTB 72/72 validated via independently pinned original/fixed/reference comparison; DEL 1e-5 kN-m causal oracle; physical error not addressed",
+        "REF":"original historical 03/05/07 CSV, original 2026-09 rainflow_del_r1.py, 36 matching source OUTB SHA and 72/72 causal full comparison recovered",
         "STANDARD":"no new IEC/GB authorized clause checked; m=4 and Neq=1e5 are diagnostic normalization",
         "OFFICIAL":"OpenFAST archived output source previously checked, no new simulation or native solve",
         "RUN":"Python deterministic postprocessing from existing archival 72-row DEL CSV",
-        "FIG":"grouped 36-case actual load-DEL and legacy source-divergence marker",
+        "FIG":"grouped 36-case corrected load-DEL plus old-code comparator-error marker",
         "TAB":"36-case paired rank CSV",
-        "HOLD":"historical CORRECTED archive, original cycle ledger and ranking original source hashes missing; cannot certify legacy S03",
+        "HOLD":"Historical load-level algorithm dispute is CLOSED; formal DLC1.2 and material fatigue life remain unverified",
         "physical_pass":False,"material_fatigue_life":False,
     }
     receipt=(json.dumps(result,ensure_ascii=False,sort_keys=True,indent=2)+"\n").encode("utf-8")
@@ -223,7 +223,7 @@ def self_test(source: bytes):
     assert r["current_my"]["case"]==CURRENT_MY_CASE
     assert abs(r["historical_my"]["difference_kNm"]-5171.612165734794)<1e-8
     assert len(csv_bytes.splitlines())==37
-    assert svg_bytes.startswith(b"<svg") and b"UNVERIFIED source" in svg_bytes
+    assert svg_bytes.startswith(b"<svg") and b"old comparator" in svg_bytes
     print("T062_36CASE_SOURCE_LOCKED_ORACLE_PASS_NO_SIMULATION")
 
 
