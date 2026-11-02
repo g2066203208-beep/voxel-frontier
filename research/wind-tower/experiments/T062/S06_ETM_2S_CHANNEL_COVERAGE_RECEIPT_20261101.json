@@ -1,4 +1,43 @@
 {
+  "s07_case_reference_cardinality_failure_20261103_06h": {
+      "timestamp_local": "2026-11-03 06h Asia/Shanghai",
+      "stage": "S07_BLOCKED_DIAGNOSTIC_ONLY",
+      "status": "ACTUAL_CI_CASE_REFERENCE_CARDINALITY_FAILURE__REPAIR_COMMITTED__NEW_NATIVE_RESULT_PENDING",
+      "SOURCE": {
+        "run_id": 41526866571,
+        "job_id": 125556736339,
+        "run_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41526866571",
+        "log_reading_level": "FULL_ACTUAL_ACTIONS_JOB_LOG",
+        "failed_step": "Normalize Windows input path separators in derived 2s copy only",
+        "original_airfoil_sha256": "2994cb5f79282170019be0a8c48b60155905365cac4ac88b21dda58c16f925cb",
+        "original_blade_sha256": "6ad2426fd429f4e01008700d31d4b64d79358522bcf265ce12f7706e8a1f895d",
+        "original_bts_sha256": "ad68a83a63f197c528c07502db8adff883e9c737863ef3c4cab99cfa76052147",
+        "failed_input_commit": "6e0d4eaae7604006e24ae467c86e8a2d2ae089eb",
+        "workflow_blob_sha1_after_fix": "55c42e4803bd68b5a56735db24a8d706538816cb"
+      },
+      "REF": "Existing T062 original 2s ETM source recovery and S07 source probe; no new journal full text",
+      "STANDARD": "No new authorized IEC/GB/NB clause read; no code PASS",
+      "OFFICIAL": "Official OpenFAST v3.5.3 and ROSCO v2.9.0 source workflow inherited; neither was recompiled in this failed job",
+      "RUN": {
+        "actual_ci": "completed/failure",
+        "other_jobs_success": 3,
+        "first_error": "AssertionError: CYLINDER_AIRFOIL_REFERENCE_CARDINALITY_HOLD",
+        "actual_2s_solver_started": false,
+        "actual_dcm_rows": 0,
+        "artifact_id": 13179794937,
+        "artifact_sha256": "f781bb3f3a12ed5c00f893544c453f2b606f23b9cb19f162baa458de534826c8",
+        "fix_commit": "7891a7a39dbb726895b97fb70e93a9bb259df970",
+        "fix_test_status": "CODE_COMMITTED_NEW_CI_NOT_YET_READ"
+      },
+      "FIG": "0; no physical response figure",
+      "TAB": "New workflow prints per-file case reference matches and before/after SHA256, accepts all exact matches >=1 in work/batch1 or work/Rotor, checks no unpatched reference/collision",
+      "assumptions": "Historical Windows source may repeat identical AeroDyn filename in multiple restored text files; exact source airfoil content is SHA-locked. This is a hypothesis, not yet proven match count because failed CI did not print count.",
+      "error_budget": "Only byte-exact filename token replacement in temporary diagnostic text, with per-file SHA256 and all-reference check; source archive unmodified. Native numerical, controller equivalence and material response uncertainty unquantified.",
+      "failure_record": "The previous strict global count ==1 assertion stopped before ROSCO build and before OpenFAST 2s; this is an input-portability gate failure, not a physical simulation result. Next run will print actual per-file match count.",
+      "HOLD": "Need new CI per-file match receipt and successful native 2s DCM/inertia audit. S07 not PASS, S06 PARTIAL, E/WE native 0, 0/12 stages advanced.",
+      "physical_pass": false,
+      "stage_pass": false
+    },
   "s07_linux_case_port_20261103": {
     "date_local": "2026-11-03 05时 Asia/Shanghai",
     "status": "NATIVE_2S_AERODYN_AIRFOIL_CASE_FAILURE_CONFIRMED__DERIVED_INPUT_FIX_COMMITTED__NEW_CI_PENDING",
