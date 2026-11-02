@@ -326,6 +326,59 @@ jobs:
           assert r['gage_nodes'][-1]==220 and len(r['gage_nodes'])==9
           print('S07_ORIGINAL_2S_BATCH1_PREP_PASS__NOT_NATIVE_RUN')
           PY
+      - name: Normalize Windows input path separators in derived 2s copy only
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib, json, re
+          from pathlib import Path
+          
+          root = Path('work/batch1')
+          quoted = re.compile(rb'"[^"\r\n]*\\[^"\r\n]*"')
+          bare = re.compile(rb'(?<![A-Za-z0-9_.])(?:\.\.?\\)[^\s\r\n]+')
+          
+          def port(data):
+              data = quoted.sub(lambda m: m.group(0).replace(b'\\', b'/'), data)
+              return bare.sub(lambda m: m.group(0).replace(b'\\', b'/'), data)
+          
+          # Synthetic positive/negative tests: change only Windows separators in path tokens.
+          test = b'"./..\\Rotor\\blade.dat" BldFile(1)\n123.0 Mass\n'
+          expected = b'"./../Rotor/blade.dat" BldFile(1)\n123.0 Mass\n'
+          assert port(test) == expected
+          assert port(expected) == expected
+          assert port(b'0.1 DT\n') == b'0.1 DT\n'
+          assert port(b'NotAPath Value\n') == b'NotAPath Value\n'
+          
+          rows = []
+          for p in sorted(root.rglob('*')):
+              if not p.is_file() or p.suffix.lower() not in ('.fst', '.dat', '.txt'):
+                  continue
+              before = p.read_bytes()
+              if b'\\' not in before:
+                  continue
+              after = port(before)
+              if after != before:
+                  p.write_bytes(after)
+                  rows.append({
+                      'file': str(p.relative_to(root)),
+                      'source_sha256': hashlib.sha256(before).hexdigest(),
+                      'derived_sha256': hashlib.sha256(after).hexdigest(),
+                      'backslash_count_removed': before.count(b'\\') - after.count(b'\\'),
+                  })
+          assert rows, 'NO_WINDOWS_PATH_REFERENCES_FOUND__HOLD'
+          assert (root / 'Rotor' / 'DTU_10MW_ElastoDyn_Blades.dat').is_file(), 'MISSING_ORIGINAL_BLADE_FILE__HOLD'
+          receipt = {
+              'purpose': 'Linux path separator portability in derived 2s diagnostic input only',
+              'source_model_modified': False,
+              'physics_parameter_modified': False,
+              'controller_equivalence_verified': False,
+              'physical_pass': False,
+              'files': rows,
+          }
+          Path('s07_linux_path_port_receipt.json').write_text(json.dumps(receipt, indent=2) + '\n')
+          print('S07_DERIVED_WINDOWS_PATH_PORT_PASS', len(rows), 'files')
+          PY
       - name: Compile official ROSCO v2.9.0 Linux Bladed interface (diagnostic substitution)
         shell: bash
         run: |
@@ -418,6 +471,7 @@ jobs:
             s07_rosco_library_sha256.log
             s07_rosco_ldd.log
             s07_linux_derived_identity.json
+            s07_linux_path_port_receipt.json
             s07_linux_native_stdout.log
             s07_linux_native_stdout_tail.log
             s07_linux_native_exit_code.log
