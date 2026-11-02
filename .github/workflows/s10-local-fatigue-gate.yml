@@ -6,6 +6,7 @@ on:
     paths:
       - 'research/wind-tower/experiments/T079/s10_abaqus_odb_local_stress_export.py'
       - 'research/wind-tower/experiments/T079/s10_local_material_fatigue_gate.py'
+      - 'research/wind-tower/experiments/T079/s10_rainflow_reference_crosscheck.py'
       - '.github/workflows/s10-local-fatigue-gate.yml'
   pull_request:
     paths:
@@ -25,6 +26,7 @@ jobs:
           sparse-checkout: |
             research/wind-tower/experiments/T079/s10_local_material_fatigue_gate.py
             research/wind-tower/experiments/T079/s10_abaqus_odb_local_stress_export.py
+            research/wind-tower/experiments/T079/s10_rainflow_reference_crosscheck.py
           sparse-checkout-cone-mode: false
       - name: Verify code SHA and execute method oracles (no native Abaqus)
         run: |
@@ -32,3 +34,10 @@ jobs:
           python3 --version
           python3 research/wind-tower/experiments/T079/s10_local_material_fatigue_gate.py --self-test
           python3 research/wind-tower/experiments/T079/s10_abaqus_odb_local_stress_export.py --self-test
+      - name: Install independently distributed rainflow 3.2.0 with pinned wheel SHA256
+        shell: bash
+        run: |
+          python3 -m pip install --disable-pip-version-check --no-cache-dir --no-deps --only-binary=:all: --require-hashes -r <(printf '%s\n' 'rainflow==3.2.0 --hash=sha256:cb6c254aa1a16a9e658ff3f39c6e5a77650d6c4e8304146169b36516d1f01660')
+      - name: Independent cycle/range/mean and synthetic Miner comparison (not Abaqus)
+        run: |
+          python3 research/wind-tower/experiments/T079/s10_rainflow_reference_crosscheck.py --self-test
