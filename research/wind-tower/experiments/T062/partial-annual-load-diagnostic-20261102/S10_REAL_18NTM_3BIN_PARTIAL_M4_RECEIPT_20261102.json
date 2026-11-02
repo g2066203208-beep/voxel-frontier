@@ -1,0 +1,141 @@
+{
+  "ERROR_BUDGET": "source int16 half-step recorded upstream; seed-subset finite sensitivity only; 93.3% diagnostic operating hours outside empirical bins; ERA5 site bias and bin center mismatch unquantified",
+  "FIG": "No new physical figure",
+  "HOLD": "Formal DLC1.2 and materials life unverified: 18 of 21 assumed operating bins not sampled, no material stress history, standard 2025 clauses unread",
+  "MATERIAL_FATIGUE_PASS": false,
+  "OFFICIAL": "OpenFAST native outputs inherited original-source verification + IEC official edition pages, no new solver",
+  "PHYSICAL_PASS": false,
+  "READING_LEVEL": "This run reads archived 31-bin ERA5-derived CSV, SHA-verified 1080-row OUTB-derived load-DEL and 126-row source coverage; prior run reads 18 actual OpenFAST OUTB and original ERA5 workbook; no new original CDS or new OpenFAST solve",
+  "REFS": [
+    {
+      "doi": "10.5194/wes-4-479-2019",
+      "id": "REF011",
+      "reading": "full-text journal HTML §2.2, §2.4, §4.1.3 and §3.3.2 personally reviewed this turn",
+      "transfer": "multiple seeds per wind speed, seed convergence and wind probability as method; 5MW/30-seed sensitivity not direct 10MW data"
+    },
+    {
+      "doi": "10.1016/j.engstruct.2025.120295",
+      "id": "REF018",
+      "reading": "publisher title/volume/abstract and prior archived user complete-PDF method audit; NOT new full PDF read this turn",
+      "transfer": "2025 segmental PT concrete tower fatigue workflow motivates material separation; no numeric life transferred"
+    },
+    {
+      "doi": "10.1002/er.6382",
+      "id": "REF083",
+      "reading": "publisher open-access full HTML methods/limitations personally reviewed this turn; prior user PDF audit inherited",
+      "transfer": "hourly dynamic shear from ERA5 10m/100m for site wind climate, not measured Jiayu source"
+    },
+    {
+      "doi": "10.1016/j.renene.2018.03.056",
+      "id": "REF080",
+      "reading": "publisher abstract + prior user PDF method audit inherited",
+      "transfer": "ERA5 wind climate baseline only, not high-frequency wind loading"
+    },
+    {
+      "doi": "10.1016/j.rser.2022.112741",
+      "id": "REF090",
+      "reading": "publisher abstract/highlights + prior full PDF review inherited",
+      "transfer": "reanalysis site uncertainty, no numeric Jiayu error estimate"
+    },
+    {
+      "id": "REF132",
+      "reading": "repository original licensed 172pp edition review inherited; not reopened authorized original now",
+      "standard": "IEC 61400-1:2019 Ed4.0",
+      "transfer": "base-2019 DLC1.2/NTM identity only; pending 2025 amendment compliance check"
+    },
+    {
+      "id": "REF048",
+      "reading": "IEC official current product metadata (edition, 2026-10 correction, 358pp) personally reviewed; full clauses NOT read",
+      "standard": "IEC 61400-1:2019+AMD1:2025 Ed4.1 corrected 2026-10",
+      "transfer": "amendment may change NTM distribution/DLC scope; cannot claim 2025 formal validation",
+      "uri": "https://webstore.iec.ch/en/publication/111042"
+    },
+    {
+      "id": "REF049",
+      "reading": "IEC official current product metadata, 311pp, tower & foundation scope; full clauses NOT read",
+      "standard": "IEC 61400-6:2020+AMD1:2025 Ed1.1",
+      "transfer": "no structural compliance asserted",
+      "uri": "https://webstore.iec.ch/en/publication/107942"
+    }
+  ],
+  "RESULTS": {
+    "TwrBsMxt": {
+      "3of6_joint_subset_combinations": 8000,
+      "annual_hours_8760_from_these_3_bins": 340.920469361,
+      "channel": "TwrBsMxt",
+      "covered_bins": [
+        9,
+        11,
+        19
+      ],
+      "covered_observed_hours_21y": 7164,
+      "covered_probability_all_era5_hours": 0.038917861799,
+      "covered_probability_given_diagnostic_operation": 0.067015902713,
+      "error_scope": "3-of-6 finite-sample subset envelope only, not statistical confidence interval; bins/ERA5/quantization/model uncertainty outside",
+      "formal_DLC12_2025_edition": "NOT_VERIFIED",
+      "interpretation": "partial site-hour-weighted load m4 intensity only; not a complete-year DEL nor local material Miner damage",
+      "known_bin_partial_all_hour_weighted_m4_3of6_max_MNm4": 156.588949045,
+      "known_bin_partial_all_hour_weighted_m4_3of6_min_MNm4": 94.624326442,
+      "known_bin_partial_all_hour_weighted_m4_MNm4": 125.606637743,
+      "known_bin_partial_m4_percent_split": {
+        "11": 40.793436,
+        "19": 2.729214,
+        "9": 56.47735
+      },
+      "total_annual_fatigue_damage": "UNDEFINED_MISSING_18_OF_21_DIAGNOSTIC_BINS_AND_LOCAL_MATERIAL_STRESSES",
+      "unrepresented_observed_diagnostic_operation_fraction": 0.932984097287
+    },
+    "TwrBsMyt": {
+      "3of6_joint_subset_combinations": 8000,
+      "annual_hours_8760_from_these_3_bins": 340.920469361,
+      "channel": "TwrBsMyt",
+      "covered_bins": [
+        9,
+        11,
+        19
+      ],
+      "covered_observed_hours_21y": 7164,
+      "covered_probability_all_era5_hours": 0.038917861799,
+      "covered_probability_given_diagnostic_operation": 0.067015902713,
+      "error_scope": "3-of-6 finite-sample subset envelope only, not statistical confidence interval; bins/ERA5/quantization/model uncertainty outside",
+      "formal_DLC12_2025_edition": "NOT_VERIFIED",
+      "interpretation": "partial site-hour-weighted load m4 intensity only; not a complete-year DEL nor local material Miner damage",
+      "known_bin_partial_all_hour_weighted_m4_3of6_max_MNm4": 284675.288493532,
+      "known_bin_partial_all_hour_weighted_m4_3of6_min_MNm4": 133839.310401669,
+      "known_bin_partial_all_hour_weighted_m4_MNm4": 209257.2994476,
+      "known_bin_partial_m4_percent_split": {
+        "11": 40.786853,
+        "19": 0.07499,
+        "9": 59.138157
+      },
+      "total_annual_fatigue_damage": "UNDEFINED_MISSING_18_OF_21_DIAGNOSTIC_BINS_AND_LOCAL_MATERIAL_STRESSES",
+      "unrepresented_observed_diagnostic_operation_fraction": 0.932984097287
+    }
+  },
+  "RUN": "GitHub Actions Python stdlib m4 probability diagnostic 3bins x6seed x2tower channels, exhaustive 3-of-6 subsets, no Abaqus",
+  "SOURCE": {
+    "21bin_126seed_slots_sha256": "d4e25023f343ea76f2de5ce90c7d24dd985df770ec9f4747d203391010431e67",
+    "era5_31bin_sha256": "e4058620a36b23bb218103875d4dc5b0711fc45d418b23a2208c2fc9c16c9102",
+    "original_18NTM_1080rows_sha256": "95de6578cf379d1b2e1d99a68c26954a68e93cc8bfc4bdcd63dd324ae2999a0f",
+    "original_OUTB_S06_receipt_sha256": "c0a061e5895c580de413dfa02ab828dbc8be09e05ead8c57ba45445b72581125"
+  },
+  "SOURCE_OBSERVATIONS": {
+    "archived_NTM_cases": 18,
+    "bins_4_through_8_hour_share_of_operating": 0.892441534144,
+    "covered_bins": [
+      9,
+      11,
+      19
+    ],
+    "era5_hours": 184080,
+    "formal_verified_DLC12_slots": 0,
+    "operating_hours_4_to_25_DIAGNOSTIC": 106900,
+    "total_21_wind_bins": 21,
+    "uncovered_operating_hours": 99736,
+    "untested_18_of_21_bins": "no known load m4 available, no zero-fill permitted"
+  },
+  "STANDARD": "2019 base text review inherited; 2025 consolidated IEC full text NOT available this run; 4-25m/s and 1m/s bins planning assumptions not claimed IEC mandatory",
+  "TAB": "6-row per-bin m4 intensity and two-channel annual-hour-weighted covered-only moments",
+  "TAB_CSV_SHA256": "d43f963fb30e16a33e87acdf6e9571710826974eee89d1f3527ab6504d85f695",
+  "status": "S10_REAL_18_NTM_SITE_WEIGHTED_PARTIAL_M4_SOURCE_DIAGNOSTIC_ONLY"
+}
