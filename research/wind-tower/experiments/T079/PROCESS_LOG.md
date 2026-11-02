@@ -1,3 +1,13 @@
+## 2026-11-02 08时｜S05两独立震源真实CI.CLC记录在临时T1=6.230957762865167s处的直接谱与基线敏感性（非设计选波）
+
+**本轮不是重新下载2019/2020源波或重复旧4/6/8/10s结果。** 已读取PR #42现存官方SCEDC/EarthScope FDSN原始miniSEED/StationXML收据和4份真实CSV（Ridgecrest 2019 USGS ci38457511与Lone Pine 2020 USGS ci39493944，均CI.CLC，双水平HNE/HNN、20001点、dt=0.01s）。四个CSV及原miniSEED的精确SHA256见[本轮完整收据](real-records/S05_USGS_TWO_EVENT_CLC_DIRECT_T1_RECEIPT_20261102.json)；条件性T1来自158m连续线弹性梁，不是Abaqus原生PT/接触模态。
+
+**RUN / 真实计算：** 直接对四条原始加速度及前20s均值去除、全窗线性去趋势两种诊断数据分别执行5%阻尼Newmark平均加速度积分，计算同一个T1的伪谱加速度（12条谱）。[四行原始数表](real-records/S05_USGS_TWO_EVENT_CLC_DIRECT_T1_4COMP_20261102.csv)SHA256=`42d1461487c4b9b036a4669ca91cd7b00f5682ec98e8e7f6aa22e4a7b5e0f8dc`；[现有T079程序增加可复算模式](s05_ground_motion_pair_qc.py)SHA256=`46cc72e844c528210f0feb896c266284ac3d1c95188ba3bac66fc64a4571ed9b`，命令：`python s05_ground_motion_pair_qc.py --exact-t1-cross-event --pair-manifests ridge/manifest.json lone/manifest.json --output recomputed.csv`，两个目录还须包含对应原CSV及source_receipt.json。**两事件的前20s去均值双水平几何均值谱：2019=0.369602455543m/s²，2020=0.003183818226m/s²**；不去直流的对应值=0.524128002164与0.362321021718m/s²，2020未经处理的结果比前20s去均值大**113.80倍**，揭示原始仪器直流偏置不能当作地震长周期动力需求。线性去趋势与前20s去均值结果很接近，但**两种处理一致不等于低频仪器可靠**。
+
+**独立真测试：** [Actions #41366225483](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41366225483) 的`seismic-source-preflight` job #125026842866 **success**，Python 3标准库重新读取全部真实源CSV、校验SHA及双水平身份，四行**36个数值单元**与V8原算数值一致（rel≤2e−9、abs≤1e−11），并通过人为篡改原miniSEED收据的拒绝测试；Python重算CSV SHA256=`78fade6903b144e99dedede35d1d62b48fd31e157baa060e09dc8def185a5dc8`，与原提交CSV字节SHA不同但数值回归通过。整条workflow **failure**，因为**另一个旧ESM源下载/RotD job失败**，不能说全部CI成功。先前#41366044852因把同事件第二分量误判为重复、#41366134844因2019历史收据没有`event_id`而失败，已修复并保留真实日志。没有执行原生Abaqus/OpenFAST生产RUN。
+
+**SOURCE**=两场独立USGS事件的官方SCEDC/EarthScope FDSN既有源字节收据及四个Git CSV；**REF**=T079方法方案和既有条件性梁T1，无新期刊全文；**STANDARD**=本轮未读授权IEC/GB/NB条款；**OFFICIAL**=原官方miniSEED/StationXML源SHA继承，未新增仪器低频可靠性证据；**RUN**=12条真实记录驱动线性振子谱+Python原生CI；**FIG**=无新增结构响应图；**TAB**=四行数值表+两事件几何均值；**假设**=20s前震均值、零初始相对状态、5%阻尼、临时T1；**误差预算**=源SHA和跨语言数值回归已闭合，但dt收敛、仪器频带、目标谱及真实PT/接触模态不确定性均NEED-ESTIMATE；**PASS/HOLD**=NUMERIC_QC_PASS / SOURCE_LOW_FREQ_HOLD / DESIGN_WAVE_HOLD / S05_PARTIAL / S08_NATIVE_E=0 / S09_WE=0 / 12阶段0/12。**下一最优动作**：从已有官方StationXML及CESMD处理记录核实这两条CI.CLC波在0.16049Hz的仪器有效频带与处理可追溯性；无可靠证据则剔除，不再用任意去均值方式强行选波。
+
 ## 2026-11-02 07时｜S05第二真实事件IT-2012-0009/NVL原件及五周期实算（SOURCE-NUMERIC；非场址设计波）
 
 - **START/继承：** 指挥室07时START登记`read_base_sha=58d991fe8b659a529238cd1abf206219ae4152c8`；核对最新main及PR #42 Draft，阅读AGENTS、README、论文00_STATUS/00_WORKSPACE_MASTER、T079 ACADEMIC_REVIEW/METHOD_PLAN/PROCESS_LOG、T080.1/.2/.3、12阶段总计划及既有3事件5对表。继承IT-2012-0008/NVL的46周期RotD，不重复该事件；本轮对另一个**不同事件ID**实际取得官方原件并数值计算。
