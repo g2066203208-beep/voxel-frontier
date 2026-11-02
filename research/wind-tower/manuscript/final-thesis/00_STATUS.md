@@ -1,3 +1,5 @@
+**2026-11-02 18时｜S12 RNA冻结构形CG/J来源级独立重建**：已从T038锁定SHA的155质量点与源级JSON独立计算m、CG、质心/塔顶惯量共16项，最大来源算术闭合残差5.96e-8（混合SI量纲，来自惯量项）。新增[16行表](assemble/S12_RNA_CG_INERTIA_SOURCE_TABLE.csv)、[Python标准库脚本](assemble/s12_rna_cg_inertia_source_qc.py)，已写入Ch2 §2.9.2及[来源报告](assemble/ORIGINAL_WORD_SOURCE_RECONCILIATION_20261102.md)，并扩展现有S12轻量CI；本轮JS实际源级复算通过，Python远端CI待回证。**非动态/物理验证，0/12未晋级，S12 PARTIAL，E/WE=0**；本助手不开展Abaqus工作。下一动作=核验新增CI真实stdout及两类负测。
+
 **2026-11-02 17时CI回证｜S12 RNA质量工作图源级复算成功**：[Actions #41420030987](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41420030987) completed/success；Python重算SVG与提交文件逐字节相同，SVG SHA256 4f4ed66923d02d2213ec464981e48f63d2487ade002ef834b7f6452c4893908c；图形坏SHA拒绝、质量表原有2类负测均通过。仅源级图表QC，不是物理PASS；0/12、S12 PARTIAL、E/WE=0。
 
 **2026-11-02 17时｜S12第二章RNA来源质量工作图已生成**：新增[双面板SVG](assemble/S12_RNA_MASS_SOURCE_FIG.svg)、[确定性Python生成器](assemble/s12_rna_mass_figure.py)，嵌入[Ch2 §2.9.2](chapters/02_研究对象_精细有限元模型与分层验证.md)但暂不占正式图号。真实源级四行表SHA256 d6b942f0674ae129bead497b7c3ab5913cfee9c9f08ba615a8103f15bd5a7237；+26.056879kg为来源与积分口径差，不能写作物理质量误差或CG/J/动态PASS。验证与HOLD见[源级报告](assemble/ORIGINAL_WORD_SOURCE_RECONCILIATION_20261102.md)。0/12未晋级，S12 PARTIAL，原生E/WE=0。
