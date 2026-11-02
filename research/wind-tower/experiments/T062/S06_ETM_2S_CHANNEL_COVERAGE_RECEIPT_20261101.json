@@ -514,14 +514,16 @@
       "logs_artifact_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41489834311/artifacts/13163668309",
       "new_openfast_turbine_runs": 0,
       "native_abaqus_runs": 0,
-      "actual_dcm_rows": 0
+      "actual_dcm_rows": 0,
+      "binary_persisted": false,
+      "binary_retention": "Runner-local executable only; no executable uploaded to GitHub artifact or repository. Only 7 small build/version/hash logs preserved. Rebuild required before 2s turbine pilot."
     },
     "FIG": "0",
     "TAB": "Actual full native compile/link/version evidence; 23/23 prior source identities and four 2s batches separately PASS",
     "assumptions": "Compiled Linux GNU double-precision diagnostic executable is not the archived Windows Intel single-precision runtime. The historical Windows Bladed ROSCO DLL cannot be loaded directly by Linux. No turbine FST/ED/BTS was run by new binary.",
     "error_budget": "Official source/patch/executable SHA exact; compile and -v prove binary build only. Controller ABI, Linux-vs-Windows numerical drift, DCM, force/inertia ownership and 600s synchronization not estimated.",
     "failure_record": "First full tagged native compile and link succeeded without compiler error. Earlier S07 input-source SHA transcription failure retained in s07_original_input_recovery_20261103; no new turbine solver failure because no turbine was run.",
-    "HOLD": "Linux-compatible ROSCO Bladed controller or explicitly bounded non-controller pilot and 2s input path portability needed before first patched native FST run. No actual t1/-t3/t2 DCM or inertial ownership data; S07 physical HOLD.",
+    "HOLD": "Linux-compatible ROSCO Bladed controller or explicitly bounded non-controller pilot and 2s input path portability needed before first patched native FST run. No actual t1/-t3/t2 DCM or inertial ownership data; S07 physical HOLD. Built Linux executable was ephemeral (SHA and build recipe/log preserved, binary not archived).",
     "physical_pass": false,
     "stage_pass": false
   }
