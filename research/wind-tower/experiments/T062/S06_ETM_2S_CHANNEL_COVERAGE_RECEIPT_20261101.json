@@ -226,5 +226,161 @@
     "failure_record": "No CI failure. Deliberately tampered official source rejected; no output produced.",
     "HOLD": "Full patched OpenFAST v3.5.3 executable was NOT built or run; no measured t1/-t3/t2 DCM, gravity/inertia ledger, or validated 31-station mapping. 0/12 stages, E/WE native 0.",
     "acceptance": "DIAGNOSTIC_SOURCE_AND_STUB_ONLY_PASS__S07_PHYSICAL_HOLD"
+  },
+  "s07_native_2s_bundle_gate_20261103": {
+    "date_local": "2026-11-03 00:04 Asia/Shanghai",
+    "status": "ORIGINAL_2S_OUTPUT_ARTIFACT_SHA_VERIFIED__NO_RERUN_INPUT_BUNDLE__NATIVE_DCM_HOLD",
+    "SOURCE": {
+      "artifact_id": 13080759167,
+      "archive_sha256": "7fcae2bf57be571cacc6d3d9b82f1a254257ce59fdb946a1cfb56d3639eb9f1b",
+      "read_level": "ACTUAL_DOWNLOADED_ZIP_ALL_17_MEMBERS_4_OUTB_4_NATIVE_STDOUT_4_PREP_RECEIPTS_4_EXIT_CODES_AND_SUMMARY",
+      "member_count": 17,
+      "original_outb_sha256": [
+        "c3f40b400f827fbcdd49e9a63f5bb2295a5c0f368a9644b90b591d66b7bb0242",
+        "be9dd3b6dd611925cf5c314200ed4e1c111218bd4464d6cccf0ee1f73bb3b902",
+        "867553e8ef29806fccdaad24bb3938493138b31b616c9a9446e81cbefe53bbd7",
+        "701575bd988177b7c0c666640b49981c653d77738893909cb307fccdf172c855"
+      ]
+    },
+    "REF": "T062 original 2s native overlap receipt and prior official ElastoDyn source semantics; no new paper",
+    "STANDARD": "No newly read authorized IEC/GB/NB clauses",
+    "OFFICIAL": "Original OpenFAST v3.5.3 Windows Intel Fortran 2021, ROSCO v2.6.0 legacy Bladed DLL; official v3.5.3 tagged source verified in prior CI, not rebuilt here",
+    "RUN": "Local Python 3.13.5 actually read 110KB ZIP, SHA and four 41-sample OUTB, 4 native stdout and 4 prep receipts; positive and three negative checks PASS. New native solver runs=0. GitHub Actions CI for new repository script pending independent result.",
+    "FIG": "0",
+    "TAB": "Four original OUTB source hashes and 23 exact missing identity SHA256 entries below",
+    "required_source_identities_not_in_output_zip": [
+      {
+        "kind": "derived_ed",
+        "name": "batch1/DTU_10MW_RWT_ElastoDyn.dat",
+        "sha256": "e8c1653486cc96eaa5f32a28b01701df080bd2f185f851abd4ebf54a13ef23c7"
+      },
+      {
+        "kind": "derived_ed",
+        "name": "batch2/DTU_10MW_RWT_ElastoDyn.dat",
+        "sha256": "7cce15fcb6ef0a0e6f9138850e4c66745450655d50d1ee59a7171b1e1530ce0f"
+      },
+      {
+        "kind": "derived_ed",
+        "name": "batch3/DTU_10MW_RWT_ElastoDyn.dat",
+        "sha256": "bd59ed51c843f1ca9e82b2d3cd1441b2055e2b222a36636becc31bd54400c060"
+      },
+      {
+        "kind": "derived_ed",
+        "name": "batch4/DTU_10MW_RWT_ElastoDyn.dat",
+        "sha256": "4c524f1e524d049c816f5fa44dea01f9c1d8e3a2e8cf34ca13ff45487655c4c7"
+      },
+      {
+        "kind": "derived_common",
+        "name": "DTU_10MW_RWT.fst",
+        "sha256": "38095fe245053f3b196baf6450cbfbd488afcf895c2acbfeb6cd4983dbef4eed"
+      },
+      {
+        "kind": "derived_common",
+        "name": "DTU_10MW_InflowWind.dat",
+        "sha256": "7d36507f36f150cc549d17b729c17b0381251ddcc9e814dda978659d366d527d"
+      },
+      {
+        "kind": "derived_common",
+        "name": "Control/libdiscon.dll",
+        "sha256": "7aebb0d2166c0cc095d11c2b7bc13da136547c557b0f331dcdce84fe181802aa"
+      },
+      {
+        "kind": "wind",
+        "name": "ETM_S06.bts",
+        "sha256": "ad68a83a63f197c528c07502db8adff883e9c737863ef3c4cab99cfa76052147"
+      },
+      {
+        "kind": "original_component",
+        "name": "tower",
+        "sha256": "f738d35fc9c8b8d8745f2ed9490c92578b056cfe37201bbfa0bfdb24906d2983"
+      },
+      {
+        "kind": "original_component",
+        "name": "servo",
+        "sha256": "103e7bd71209a095b833ca4ba62627ae7724870615112fdccfbff502076c966e"
+      },
+      {
+        "kind": "original_component",
+        "name": "exe",
+        "sha256": "0cc8147fdda188365b8eacda8a831e74fafef59440d71185d66c3272af9e176a"
+      },
+      {
+        "kind": "shared_rotor",
+        "name": "Airfoils/Cylinder_Aerodyn15.dat",
+        "sha256": "2994cb5f79282170019be0a8c48f60155905365cac4ac88b21dda58c16f925cb"
+      },
+      {
+        "kind": "shared_rotor",
+        "name": "Airfoils/FFA_W3_241_AeroDyn15.dat",
+        "sha256": "6c5aff68e1e4d52021867a7cda42616aafc8fdd08d52d6f92d2b7841714c69fd"
+      },
+      {
+        "kind": "shared_rotor",
+        "name": "Airfoils/FFA_W3_301_AeroDyn15.dat",
+        "sha256": "2a38e9062d278a55e7bbc8f879022bbb2696906a628ac57a896455146c798296"
+      },
+      {
+        "kind": "shared_rotor",
+        "name": "Airfoils/FFA_W3_360_AeroDyn15.dat",
+        "sha256": "d32e7c2ef4babab699126167e2108d92471fbead0a61aafb2ddd40fb662dbcb4"
+      },
+      {
+        "kind": "shared_rotor",
+        "name": "Airfoils/FFA_W3_480_AeroDyn15.dat",
+        "sha256": "a8933ac866dc3ec019d77a9c9b2a25fc45a8924f525807a0c36de0b727a3892d"
+      },
+      {
+        "kind": "shared_rotor",
+        "name": "Airfoils/FFA_W3_600_AeroDyn15.dat",
+        "sha256": "0f8603417eb31cfd5604aedf64e2e2a5c2994d7d14b94db2ec9fd250a6d5934f"
+      },
+      {
+        "kind": "shared_rotor",
+        "name": "DTU_10MW_AeroDyn15_blade.dat",
+        "sha256": "2e1597b858dab17c5bfd98d5963d0e00c2dc279f5107a5f21d4b2a48f8edb9fa"
+      },
+      {
+        "kind": "shared_rotor",
+        "name": "DTU_10MW_ElastoDyn_Blades.dat",
+        "sha256": "6ad2426fd429f4e01008700d31d4b64d79358522bcf265ce12f7706e8a1f895d"
+      },
+      {
+        "kind": "shared_rotor",
+        "name": "DTU_10MW_RWT_AeroDyn15.dat",
+        "sha256": "e258d2e8fc7664b93f3e6a792c46ec38bea327859f95c3b200391e9f2bb1a568"
+      },
+      {
+        "kind": "source_archive",
+        "name": "part001",
+        "sha256": "ddfa02734274ad5bd36e84d975d18544bb5360554e25d71d8689f32313a95267"
+      },
+      {
+        "kind": "source_archive",
+        "name": "part002",
+        "sha256": "5100b6b255e1706874feac95d6d967c7625b53536efac26d77719d56db63d71a"
+      },
+      {
+        "kind": "source_archive",
+        "name": "supp",
+        "sha256": "c8d8201f97025729634b3f6a97076524c4329179693a97778456e6e7201477b0"
+      }
+    ],
+    "observed": {
+      "original_native_batches": 4,
+      "original_native_outb_samples": 164,
+      "zip_members": 17,
+      "rerunnable_fst_in_zip": 0,
+      "rerunnable_ed_in_zip": 0,
+      "rerunnable_bts_in_zip": 0,
+      "controller_binary_in_zip": 0,
+      "patched_openfast_executable_in_zip": 0,
+      "negative_tests_passed": 3
+    },
+    "assumptions": "Missing from THIS 2s output ZIP only, not proof that input sources never existed; original 2s Windows Intel/Bladed DLL is not directly executable as a Linux gfortran patched build.",
+    "error_budget": "Exact SHA256 byte identity; original packed OUTB quantization inherited, not re-evaluated; native DCM/force ownership and 600s uncertainty NEED_ESTIMATE.",
+    "failure_record": "Did not start an ungrounded native compile or production run; verified artifact contains output only. No FST/ED/BTS/compatible controller and no patched OpenFAST binary.",
+    "HOLD": "Recover original SHA-locked source archives/2s derived inputs plus compatible ROSCO controller and separate patched v3.5.3 executable before one native 2s DCM pilot; S07 BLOCKED.",
+    "stage_pass": false,
+    "physical_pass": false
   }
 }
