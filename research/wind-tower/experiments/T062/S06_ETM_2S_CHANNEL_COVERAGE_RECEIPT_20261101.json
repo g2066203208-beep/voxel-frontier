@@ -587,5 +587,38 @@
     "stage_pass": false,
     "physical_pass": false,
     "new_native_dcm_rows_verified": 0
+  },
+  "s07_shared_rotor_path_failure_20261103": {
+    "timestamp_local": "2026-11-03 04h Asia/Shanghai",
+    "stage": "S07_PARTIAL_NATIVE_RUN_HOLD",
+    "SOURCE": "Original GitHub Actions #41507220101 job #125489490506 stdout; existing T062/s06_ntm_native_0p1s_probe.py lines 151-164; prior original archive SHA-locked recovery",
+    "REF": "T062 2s original input and S07 diagnostic source contract",
+    "STANDARD": "No newly read authorized IEC/GB/NB clauses; no compliance assertion",
+    "OFFICIAL": "Official OpenFAST v3.5.3 source and ROSCO v2.9.0 are inherited, not re-fetched in this check",
+    "RUN": {
+      "url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41507220101",
+      "job_id": 125489490506,
+      "status": "completed",
+      "conclusion": "failure",
+      "other_jobs_success": 3,
+      "first_fatal": "AssertionError: MISSING_ORIGINAL_BLADE_FILE__HOLD",
+      "failure_step": "Normalize Windows input path separators in derived 2s copy only",
+      "failure_artifact_id": 13171987822,
+      "failure_artifact_zip_sha256": "635db32b95e6177d87a09501f97c6ac44187e2856486d47203abfaccbdb4774e",
+      "native_2s_run_started": false,
+      "actual_dcm_rows": 0
+    },
+    "TAB": "Original shared CASES/Rotor extracted to work/Rotor, not work/batch1/Rotor; original blade source SHA256 6ad2426fd429f4e01008700d31d4b64d79358522bcf265ce12f7706e8a1f895d",
+    "FIG": "0",
+    "source_sha256": {
+      "original_shared_blade": "6ad2426fd429f4e01008700d31d4b64d79358522bcf265ce12f7706e8a1f895d",
+      "prior_bts": "ad68a83a63f197c528c07502db8adff883e9c737863ef3c4cab99cfa76052147"
+    },
+    "assumptions": "Derived Linux diagnostic only. Windows-to-Linux path normalization applies to text cards in both work/batch1 and work/Rotor. No change to original archive bytes or physical parameter values.",
+    "error_budget": "Byte-level SHA of source and derived text to be logged in new CI; Python fixture tree/token checks passed locally, not native physical validation. Controller ABI/version and DCM numerical uncertainty remain unquantified.",
+    "failure_record": "New retry #41507220101 failed before ROSCO compile/native run due to erroneous shared Rotor assertion. Correct path per archived source restorer is work/Rotor. Do not claim original blade missing.",
+    "HOLD": "Await fresh workflow execution, actual native 2s t-axis/DCM and inertia ownership; no S07 physical PASS or E/WE result.",
+    "stage_pass": false,
+    "physical_pass": false
   }
 }
