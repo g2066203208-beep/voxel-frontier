@@ -479,5 +479,38 @@
       "source_bytes_stored_in_git": "Only source archives and LFS original; generated 2s input copies intentionally not committed due size",
       "new_native_dcm_rows": 0
     }
+  },
+  "s07_full_native_patched_build_20261103": {
+    "date_local": "2026-11-03 01:16 Asia/Shanghai",
+    "status": "FULL_OFFICIAL_OPENFAST_BUILD_CI_IN_PROGRESS__NO_TURBINE_RUN_NO_DCM",
+    "read_base_sha": "dafa27668029acf9c794ed1fb455aa81b360a734",
+    "SOURCE": {
+      "official_repo": "https://github.com/OpenFAST/openfast",
+      "tag": "v3.5.3",
+      "tag_commit": "6a7a543790f3cad4a65b87242a619ac5b34b4c0f",
+      "official_ElastoDyn_sha256": "a8ea1a88dc22d5401ea450f376aa7f66e3242785f1e038a22933054aaaf4f7d3",
+      "patched_ElastoDyn_expected_sha256": "0412e3d8bab3729ec488853e053297c17aab3863e746e4a3178286049b366f00",
+      "existing_2s_source_gate": "s07_original_input_recovery_20261103; 23/23 SHA verified, four input batches prepared in Actions 41488523561",
+      "read_level": "OFFICIAL_TAG_SOURCE_AND_V353_BUILD_DOCS__ACTUAL_FULL_NATIVE_BUILD_RUNNING"
+    },
+    "REF": "Existing T062 official source semantics and S07 four-batch 2s native input receipts; no new paper",
+    "STANDARD": "No new authorized IEC/GB/NB clauses read",
+    "OFFICIAL": "https://openfast.readthedocs.io/en/v3.5.3/source/install/ ; official v3.5.3 source tag",
+    "RUN": {
+      "workflow": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41489834311",
+      "kind": "Bounded Ubuntu 22.04 CMake complete patched OpenFAST build, not turbine run",
+      "status": "in_progress",
+      "conclusion": null,
+      "openfast_2s_native_runs": 0,
+      "abaqus_runs": 0
+    },
+    "FIG": "0",
+    "TAB": "No native DCM rows yet",
+    "assumptions": "Official tagged source patch in isolated CI checkout; Linux gfortran build does not imply historical Windows Intel Fortran/ROSCO DLL ABI or 2s turbine operating-state equivalence",
+    "error_budget": "Exact source/patch SHA256 gates; compile/link success if achieved proves build only, not physics. Native DCM, inertia ownership and 600s coherence remain unbounded",
+    "failure_record": "Pending CI full build result; preserve actual configure/compiler stdout artifact on success or failure",
+    "HOLD": "Need successful full patched executable AND Linux-compatible controller/validated single-batch 2s run to obtain actual t1/-t3/t2 DCM; S07 physical HOLD",
+    "physical_pass": false,
+    "stage_pass": false
   }
 }
