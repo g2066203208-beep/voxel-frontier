@@ -6,6 +6,7 @@ on:
       - 'research/wind-tower/experiments/T062/s07_elastodyn_taxis_ownership_probe.py'
       - 'research/wind-tower/experiments/T062/s07_native_2s_bundle_gate.py'
       - 'research/wind-tower/experiments/T062/s07_recovered_2s_input_gate.py'
+      - 'research/wind-tower/experiments/T062/S06_ETM_2S_CHANNEL_COVERAGE_RECEIPT_20261101.json'
   workflow_dispatch:
 
 permissions:
