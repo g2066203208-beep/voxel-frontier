@@ -80,3 +80,5 @@ R2Z74实际正文引用3个图像均位于第4章。R5的73个媒体部件正文
 - REF：T038来源账本与旧R5图3-7（历史参考，不复用旧图）；STANDARD：未新增授权规范原页核读，不做条款验收；OFFICIAL：归档OpenFAST ED.sum打印证据继承T038，非本轮新原生运行。
 - 假设/误差：图形差值标签四位小数，位置按8 px/kg及5 px/kg缩放并保留两位像素；显示舍入误差上限约0.00005 kg，A图像素位置舍入误差上限约0.000625 kg。质量分解计算容差1e-6 kg；ED.sum打印与R2重建差0.040723 kg，非物理误差预算。原图不具CG/J和动态身份验证能力。
 - 失败/HOLD：原生地震E/WE结果0，正式图2-10尚缺CG/J完整对照，Word完整装配仍缺大量图片；不以图形、CI或来源账本冒称结构物理PASS。S12 PARTIAL、12阶段0/12；不开展Abaqus相关工作。
+
+**2026-11-02 17时真实CI回证：** [GitHub Actions #41420030987](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41420030987) / [job #125193087127](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41420030987/job/125193087127) 为 completed/success。GitHub runner真实检出提交144cae99bbcd05e603479cf92674ee969b1445bd，Python 3标准库按SHA锁定CSV生成SVG，cmp与PR工作图逐字节相同；SVG SHA256=4f4ed66923d02d2213ec464981e48f63d2487ade002ef834b7f6452c4893908c。原T038四行表重算与2类负测均通过，新增图形篡改CSV SHA拒绝测试通过且无输出。独立日志含四个分解量49.14362117055862、-19.336742539846455、-3.75、26.056878630653955 kg。此为源级图形/程序一致性验证，非RNA动态、结构或地震物理PASS。
