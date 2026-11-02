@@ -1,5 +1,12 @@
 name: S10 local material fatigue and ODB export method gates
 on:
+  push:
+    branches:
+      - research/t080-seismic-integration-gates-20261022
+    paths:
+      - 'research/wind-tower/experiments/T079/s10_abaqus_odb_local_stress_export.py'
+      - 'research/wind-tower/experiments/T079/s10_local_material_fatigue_gate.py'
+      - '.github/workflows/s10-local-fatigue-gate.yml'
   pull_request:
     paths:
       - 'research/wind-tower/experiments/T079/s10_local_material_fatigue_gate.py'
