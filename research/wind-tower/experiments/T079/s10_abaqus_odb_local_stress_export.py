@@ -135,8 +135,9 @@ def run_manifest(manifest_path):
         rows = extract_rows(odb, m, INTEGRATION_POINT)
     finally:
         odb.close()
-    if output.exists():
-        raise ValueError("OUTPUT_EXISTS_REFUSE_OVERWRITE")
+    receipt_path = Path(str(output)+".receipt.json")
+    if output.exists() or receipt_path.exists():
+        raise ValueError("OUTPUT_OR_RECEIPT_EXISTS_REFUSE_OVERWRITE")
     output.parent.mkdir(parents=True, exist_ok=True)
     with output.open("w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f, lineterminator="\n")
@@ -151,9 +152,6 @@ def run_manifest(manifest_path):
                "stress_basis_asserted": m["stress_basis"], "component": m["component"],
                "hold": ["No material identity/coordinate basis independently certified",
                         "No validated PT/gravity/contact state", "No SN/mean-stress/annual-bin PASS"]}
-    receipt_path = Path(str(output)+".receipt.json")
-    if receipt_path.exists():
-        raise ValueError("RECEIPT_EXISTS_REFUSE_OVERWRITE")
     receipt_path.write_text(json.dumps(receipt, indent=2, ensure_ascii=False)+"\n", encoding="utf-8")
     return receipt
 
