@@ -82,3 +82,12 @@ R2Z74实际正文引用3个图像均位于第4章。R5的73个媒体部件正文
 - 失败/HOLD：原生地震E/WE结果0，正式图2-10尚缺CG/J完整对照，Word完整装配仍缺大量图片；不以图形、CI或来源账本冒称结构物理PASS。S12 PARTIAL、12阶段0/12；不开展Abaqus相关工作。
 
 **2026-11-02 17时真实CI回证：** [GitHub Actions #41420030987](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41420030987) / [job #125193087127](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41420030987/job/125193087127) 为 completed/success。GitHub runner真实检出提交144cae99bbcd05e603479cf92674ee969b1445bd，Python 3标准库按SHA锁定CSV生成SVG，cmp与PR工作图逐字节相同；SVG SHA256=4f4ed66923d02d2213ec464981e48f63d2487ade002ef834b7f6452c4893908c。原T038四行表重算与2类负测均通过，新增图形篡改CSV SHA拒绝测试通过且无输出。独立日志含四个分解量49.14362117055862、-19.336742539846455、-3.75、26.056878630653955 kg。此为源级图形/程序一致性验证，非RNA动态、结构或地震物理PASS。
+
+
+## 2026-11-02 18时｜S12 OpenFAST R2 CG/J源级独立重建（非动态/物理验收）
+- **SOURCE/阅读层级**：直接读取仓库T038已归档的[OpenFAST R2源级JSON](../../../experiments/T038/openfast-rna-current.json)（SHA256 `cf60ca9d6d2e65f24d9e0037ec8f66bde8010002bc6050e1bccccad70f9db71e`）与[155行冻结构形质量点](../../../experiments/T038/openfast-rna-frozen-mass-points.csv)（SHA256 `dcb26756018f94c99b499ced52002cd0c5d3d51b8371cb83f42af9b2b6600566`）。本轮**未重新读取上游ZIP原始ED/Blade卡**；原件SHA及固定OpenFAST v3.5.3源码commit `6a7a543790f3cad4a65b87242a619ac5b34b4c0f`沿用T038的SOURCE登记。
+- **REF/STANDARD/OFFICIAL**：REF为T038 `openfast-rna-audit.md`及 `coordinate-method-evidence.json` 的冻结构形方法和局限；本轮无新期刊全文、无授权规范原页核读，STANDARD=NOT-REVIEWED；OFFICIAL=既有ED.sum归档打印，仅用作质量来源身份，不声称本轮运行官方求解器。
+- **RUN/TAB/FIG**：新增[标准库可复算脚本](s12_rna_cg_inertia_source_qc.py)与[16行CG/J来源表](S12_RNA_CG_INERTIA_SOURCE_TABLE.csv)，复用原S12 CI工作流；FIG=0（不抢正式图2-10编号）。实际独立JS逐点累加155个质量点（机舱1、轮毂1、三叶各51），将T038明示的`native_intrinsic_kgm2`与点质量二阶矩相加，再以平行轴公式重建塔顶惯量；最大绝对来源恒等式残差 `5.960464477539063e-8`（涉及不同SI量纲，最大来自kg·m²惯量项），未进行任何生产求解。
+- **源级结果（IEC xyz，塔顶为原点，零偏航、冻结姿态）**：`m=676753.2907231401 kg`，`CG=(-0.87296249889154,~0,2.78358803030605)m`；`J_G`对角 `(155901495.338512,94926999.798112,99481015.620165) kg·m²`，`J_G,xz=-5231495.690282 kg·m²`；`J_T`对角 `(161145225.037954,100686458.495480,99996744.618090) kg·m²`，`J_T,xz=-3587006.875091 kg·m²`。近零交叉项仅按六位小数展示为0，不意味着物理实物惯量测得为零。
+- **假设/误差预算**：对T038冻结构形的数值重建，`155`质量点、源JSON中的本征项、同一IEC坐标与塔顶原点，均不含运行变桨/转速耦合、叶片弹性形变或未建模横向本征惯量。程序预设来源闭合容差`2e-6`（混合SI量纲下逐项绝对值检查），CSV六位小数舍入误差上界`5e-7`（各指标自身单位）；此处的`5.96e-8`是数值恒等式残差，**不是RNA物理验证误差**。
+- **失败/负测/HOLD**：程序要求两原件SHA匹配、155个正质量点、源总质量和CG/J逐项闭合；CI另含错误SHA与篡改质量点并提供新SHA的拒绝测试。CI结果须以实际Actions日志为准，未回读前只称JS真实源级复算。现有数据可作为第二章CG/J**来源表**，但不能形成“质量/CG/J动态验证PASS”的正式图2-10，更不能用于替代运行态R0/R1或地震响应验证。S12 PARTIAL，12阶段0/12，E/WE原生结果0；本助手未开展Abaqus相关工作。
