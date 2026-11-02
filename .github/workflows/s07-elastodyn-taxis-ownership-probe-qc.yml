@@ -467,7 +467,7 @@ jobs:
           if n!=1: raise ValueError('DLL_FILENAME_CARDINALITY_HOLD_'+str(n))
           # OpenFAST resolves DLL_FileName relative to the ServoDyn input directory.
           # Do not prepend Control/ when ServoDyn.dat is already inside Control/.
-          match=re.search(r'(?m)^\\s*"([^"\\r\\n]+)"\\s+DLL_FileName\\b',edited)
+          match=re.search(r'(?m)^\s*"([^"\r\n]+)"\s+DLL_FileName\b',edited)
           if not match or match.group(1)!='libdiscon.so':
               raise ValueError('S07_DERIVED_DLL_REFERENCE_HOLD')
           resolved=(p.parent/match.group(1)).resolve()
