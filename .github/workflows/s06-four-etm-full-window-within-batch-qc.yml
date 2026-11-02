@@ -1,0 +1,118 @@
+name: S06 four ETM full-window within-batch source QC (NO SOLVER)
+on:
+  push:
+    branches: [research/t080-seismic-integration-gates-20261022]
+    paths:
+      - '.github/workflows/s06-four-etm-full-window-within-batch-qc.yml'
+      - 'research/wind-tower/experiments/T077/recovery/s06_31gage_batch_coherence_qc.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: s06-four-etm-source-only
+  cancel-in-progress: false
+
+jobs:
+  source-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate program and negative tests
+        run: |
+          set -euo pipefail
+          SCRIPT=research/wind-tower/experiments/T077/recovery/s06_31gage_batch_coherence_qc.py
+          python -m py_compile "$SCRIPT"
+          python "$SCRIPT" --selftest
+          python - <<'PY'
+          import importlib.util, pathlib, tempfile
+          p=pathlib.Path('research/wind-tower/experiments/T077/recovery/s06_31gage_batch_coherence_qc.py')
+          spec=importlib.util.spec_from_file_location('s06batch',p)
+          mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod)
+          manifest=pathlib.Path('research/wind-tower/experiments/T077/recovery/S06_RECOVERED_16_ARTIFACT_SHA256_MANIFEST_20261024.csv')
+          for case in mod.CASES:
+              got=mod.load_case_manifest(manifest,case)
+              assert len(got)==4 and sum(x[2] for x in got.values())==31
+          for case in ('INVALID','U09p343881_ETM_S05'):
+              try: mod.load_case_manifest(manifest,case)
+              except ValueError: pass
+              else: raise AssertionError('BAD_CASE_ACCEPTED')
+          with tempfile.TemporaryDirectory() as td:
+              bad=pathlib.Path(td)/'manifest.csv'
+              bad.write_bytes(manifest.read_bytes()+b'\n')
+              try: mod.load_case_manifest(bad,mod.CASES[0])
+              except ValueError as e: assert 'MANIFEST_SHA256_MISMATCH' in str(e)
+              else: raise AssertionError('TAMPERED_MANIFEST_ACCEPTED')
+          print('S06_MANIFEST_FOUR_CASES_AND_3_NEGATIVES_PASS')
+          PY
+      - name: Download immutable 16-source ZIPs from existing DRAFT research release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          TAG=windtower-s06-t071-t072-source-archive-20261027
+          test "$(gh release view "$TAG" --json isDraft --jq '.isDraft')" = true
+          mkdir -p "$RUNNER_TEMP/s06_release" "$RUNNER_TEMP/s06_input" "$RUNNER_TEMP/s06_out"
+          gh release download "$TAG" --pattern '*_original_actions.zip' --dir "$RUNNER_TEMP/s06_release"
+          test "$(find "$RUNNER_TEMP/s06_release" -maxdepth 1 -name '*_original_actions.zip' | wc -l)" -eq 16
+          for case in U09p343881_ETM_S06 U11p4_ETM_S04 U19p202140_ETM_S04 U19p202140_ETM_S06; do
+            for batch in A B C D; do
+              ln -s "$RUNNER_TEMP/s06_release/${case}_batch${batch}_original_actions.zip" "$RUNNER_TEMP/s06_input/S06_${case}_${batch}_original.zip"
+            done
+          done
+      - name: Recompute 600s x 31 gages x 4 ETM source diagnostics
+        shell: bash
+        run: |
+          set -euo pipefail
+          SCRIPT=research/wind-tower/experiments/T077/recovery/s06_31gage_batch_coherence_qc.py
+          MANIFEST=research/wind-tower/experiments/T077/recovery/S06_RECOVERED_16_ARTIFACT_SHA256_MANIFEST_20261024.csv
+          for case in U09p343881_ETM_S06 U11p4_ETM_S04 U19p202140_ETM_S04 U19p202140_ETM_S06; do
+            python "$SCRIPT" --case "$case" --manifest "$MANIFEST" --source-dir "$RUNNER_TEMP/s06_input" --out-dir "$RUNNER_TEMP/s06_out"
+          done
+          echo 'FIRST_CASE_REGRESSION'
+          echo 'ae7d587b21d856f415e4298f8b2941f86f3590f35bbcd9f56c7a75a86b611185  '"$RUNNER_TEMP"'/s06_out/S06_U09p343881_ETM_S06_31GAGE_BATCH_TIMEWISE_WRENCH_QC_20261101.csv' | sha256sum -c -
+          python - <<'PY'
+          import json,os,pathlib
+          root=pathlib.Path(os.environ['RUNNER_TEMP'])/'s06_out'
+          for p in sorted(root.glob('*RECEIPT*.json')):
+              x=json.loads(p.read_text())
+              assert x['within_batch_joints']==27 and x['cross_batch_joints_unverified']==3
+              assert x['within_batch_joint_time_samples']==324027
+              assert x['rows']==372031 and len(x['source_archives'])==4
+              print('S06_CASE_SOURCE_QC',x['case'],'27/30 within',x['peak_abs_conditional_by_component'])
+          assert len(list(root.glob('*RECEIPT*.json')))==4
+          PY
+          sha256sum "$RUNNER_TEMP"/s06_out/*
+      - name: Save three additional case summaries to PR branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          dest=research/wind-tower/experiments/T077/recovery
+          for case in U11p4_ETM_S04 U19p202140_ETM_S04 U19p202140_ETM_S06; do
+            cp "$RUNNER_TEMP/s06_out/S06_${case}_31GAGE_BATCH_TIMEWISE_WRENCH_QC_20261102.csv" "$dest/"
+            cp "$RUNNER_TEMP/s06_out/S06_${case}_31GAGE_BATCH_TIMEWISE_RECEIPT_20261102.json" "$dest/"
+          done
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$dest"/S06_*_31GAGE_BATCH_TIMEWISE_*_20261102.*
+          if git diff --cached --quiet; then
+            echo 'SOURCE_QC_NO_CHANGE'
+          else
+            git commit -m 'data(S06): save four-ETM full-window within-batch source diagnostics'
+            git pull --rebase origin research/t080-seismic-integration-gates-20261022
+            git push origin HEAD:research/t080-seismic-integration-gates-20261022
+          fi
+      - name: Preserve real source-QC receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s06-four-etm-600s-within-batch-source-qc
+          path: ${{ runner.temp }}/s06_out/
+          retention-days: 30
+          if-no-files-found: warn
