@@ -307,7 +307,7 @@
       {
         "kind": "shared_rotor",
         "name": "Airfoils/Cylinder_Aerodyn15.dat",
-        "sha256": "2994cb5f79282170019be0a8c48f60155905365cac4ac88b21dda58c16f925cb"
+        "sha256": "2994cb5f79282170019be0a8c48b60155905365cac4ac88b21dda58c16f925cb"
       },
       {
         "kind": "shared_rotor",
@@ -385,7 +385,7 @@
   },
   "s07_original_input_recovery_20261103": {
     "date_local": "2026-11-03 01:03 Asia/Shanghai",
-    "status": "REPO_SOURCE_PATHS_FOUND__FOUR_BATCH_INPUT_RECONSTRUCTION_CI_IN_PROGRESS__NO_SOLVER",
+    "status": "REAL_CI_FIRST_RUN_FAILED_ON_PREVIOUS_RECEIPT_SHA_TYPO__CORRECTED_FROM_FOUR_REAL_PREP_RECEIPTS__RERUN_PENDING",
     "read_base_sha": "17cd3f1d8169e80dcdb63570fb5aad2ba2aa20d9",
     "source_paths": {
       "part001": "research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip",
@@ -436,7 +436,7 @@
     "OFFICIAL": "Historical OpenFAST v3.5.3 Windows Intel + ROSCO Bladed DLL; bytes located but patched full OpenFAST diagnostic executable still absent",
     "RUN": {
       "workflow": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41487977109",
-      "status": "IN_PROGRESS__NOT_PASS",
+      "status": "FAILED_STRICT_RECEIPT_SHA_MISMATCH__CORRECTION_SUBMITTED__RERUN_PENDING",
       "kind": "Four-batch 2s INPUT PREPARATION ONLY; no OpenFAST solver, no Abaqus",
       "gate_script": "research/wind-tower/experiments/T062/s07_recovered_2s_input_gate.py"
     },
@@ -444,9 +444,17 @@
     "TAB": "23 historical exact source identities; new source path/blob inventory; 4 prepared-input SHA comparisons pending",
     "assumptions": "Repo Git blobs prove archived ZIP file presence, not content SHA256 until CI reads; BTS/exe are LFS pointers until LFS pull; restored 2s inputs are not full 600s synchronized state",
     "error_budget": "Historical source SHA256 identity exact when revalidated; physical DCM/force ownership and full 600s uncertainty not bounded",
-    "failure_record": "Previous output ZIP lacked inputs but branch stores separate original input archives and LFS pointers; earlier claim interpreted only for that ZIP. New CI pending.",
+    "failure_record": "Actions #41487977109: four original 2s input batches successfully reconstructed and exact LFS materialized; strict 23-identity gate correctly failed at Airfoils/Cylinder_Aerodyn15.dat because prior 2026-11-03 00:04 source receipt transcribed SHA as 2994cb5f79282170019be0a8c48f60155905365cac4ac88b21dda58c16f925cb; all four newly reconstructed prep receipts independently report 2994cb5f79282170019be0a8c48b60155905365cac4ac88b21dda58c16f925cb. Preserved failure artifact #13162233650. Corrected the prior receipt identity, NOT original source bytes. CI rerun required; no PASS yet.",
     "HOLD": "Even after 23 SHA source PASS, full patched OpenFAST diagnostic build and real t1/-t3/t2 output still missing; S07 physical HOLD",
     "physical_pass": false,
-    "stage_pass": false
+    "stage_pass": false,
+    "correction": {
+      "item": "Airfoils/Cylinder_Aerodyn15.dat",
+      "prior_receipt_sha256": "2994cb5f79282170019be0a8c48f60155905365cac4ac88b21dda58c16f925cb",
+      "correct_sha256": "2994cb5f79282170019be0a8c48b60155905365cac4ac88b21dda58c16f925cb",
+      "independent_evidence": "4/4 actual newly reconstructed batch prep receipts in Actions #41487977109 artifact #13162233650",
+      "scope": "Correct erroneous text receipt only; no source data modified",
+      "verification_status": "REQUIRES_CI_RERUN"
+    }
   }
 }
