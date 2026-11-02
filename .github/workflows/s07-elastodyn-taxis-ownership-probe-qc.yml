@@ -4,10 +4,12 @@ on:
     paths:
       - '.github/workflows/s07-elastodyn-taxis-ownership-probe-qc.yml'
       - 'research/wind-tower/experiments/T062/s07_elastodyn_taxis_ownership_probe.py'
+      - 'research/wind-tower/experiments/T062/s07_native_2s_bundle_gate.py'
   workflow_dispatch:
 
 permissions:
   contents: read
+  actions: read
 
 jobs:
   official-source-and-synthetic-fortran:
@@ -76,5 +78,62 @@ jobs:
             source_patch_receipt.log
             source_sha256.log
             negative_stdout.log
+          if-no-files-found: warn
+          retention-days: 30
+
+  original-native-2s-input-availability:
+    if: github.ref_name == 'research/t080-seismic-integration-gates-20261022'
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - name: Sparse checkout S07 original-artifact identity gate
+        uses: actions/checkout@v4
+        with:
+          lfs: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            research/wind-tower/experiments/T062/s07_native_2s_bundle_gate.py
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download original real OpenFAST 2s Actions artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --silent --show-error --retry 2 --max-time 90 \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/13080759167/zip" \
+            --output native_2s_original.zip
+          echo "7fcae2bf57be571cacc6d3d9b82f1a254257ce59fdb946a1cfb56d3639eb9f1b  native_2s_original.zip" | sha256sum --check
+      - name: Audit original ZIP bytes, run positive and three negative tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          script=research/wind-tower/experiments/T062/s07_native_2s_bundle_gate.py
+          python -m py_compile "$script"
+          python "$script" --archive native_2s_original.zip --selftest --out native_input_gap_receipt.json | tee native_input_gap_stdout.log
+          python - <<'PY'
+          import json
+          x=json.load(open('native_input_gap_receipt.json'))
+          assert x['status']=='OUTPUT_ZIP_VERIFIED__NATIVE_RERUN_INPUT_BUNDLE_HOLD'
+          assert x['missing_identity_count']==23 and x['native_samples_total']==164
+          assert x['tests']['negative_rejections']==3
+          assert x['runnable_bundle_in_this_zip'] is False
+          assert x['native_exact_dcm_obtained'] is False
+          print('S07_REAL_2S_OUTPUT_ARCHIVE_VERIFIED__RERUN_INPUT_HOLD_NOT_NATIVE_DCM')
+          PY
+          sha256sum "$script" native_input_gap_receipt.json | tee native_input_gap_sha256.log
+      - name: Preserve real artifact gate and failures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s07-real-native-2s-input-availability-gate
+          path: |
+            native_input_gap_receipt.json
+            native_input_gap_stdout.log
+            native_input_gap_sha256.log
           if-no-files-found: warn
           retention-days: 30
