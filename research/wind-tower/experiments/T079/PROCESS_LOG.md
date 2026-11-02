@@ -1,3 +1,17 @@
+## 2026-11-02 09时｜S05两独立震源SCEDC官方StationXML仪器传递函数真实频域核验（非SNR、非设计选波）
+
+**本轮实际新证据：** 不重新下载或重复计算Ridgecrest 2019与Lone Pine 2020的12条T1谱。直接读取PR #42中已保存的两份**SCEDC官方StationXML原始文件**：2019 `USGS_ci38457511/CI_CLC/original/CI_station_response.xml`（SHA256=`31aff27345c4795d37b10d1affce7e2a3504e5d5a93cd0758bc8781a4da32e4c`）和2020 `USGS_ci39493944/CI_CLC/original/CI_station_response.xml`（SHA256=`9892557ccfb828dff034eb82faba8e2877460534c94ed0e9766955a89afeeec3`）。逐份使用同目录`source_receipt.json`的两处SHA字段核对，选择**事件时刻有效且locationCode为空**的CI.CLC..HNE/HNN；2020原件另含locationCode=`2C`的200Hz通道，明确排除，不能把同码不同location混算。
+
+**OFFICIAL/原始响应字段：** 两事件CI.CLC HNE/HNN均为Kinemetrics EpiSensor ES-T加速度计、100Hz，StationXML中第1级为Laplace(rad/s)四极零零点模拟响应、第2级常数增益、第3级常数增益/无非平坦系数、第4级100Hz数字FIR（2019每分量65系数、2020每分量71系数）。2019仪器灵敏度参考频率为0.03Hz（HNE 213945、HNN 213809 counts/(m/s²)），2020为1Hz（HNE 214078、HNN 213941）。**灵敏度参考频率不是高通截止、噪声下限或正式地震处理频带。**
+
+**RUN/实数结果：** 复用此前未验PT/接缝的简化梁暂定`T1=6.230957762865167s`，`f1=0.1604889710470726Hz`。按StationXML极点`H_PZ(i2πf)=K∏(i2πf-z)/∏(i2πf-p)`和数字FIR`H_FIR(f)=Σc_k exp(-i2πfk/100)`，计算**幅值比**`|H_PZ(f1)H_FIR(f1)|/|H_PZ(1Hz)H_FIR(1Hz)|`（常数增益和归一化常数在比值中消去）。[四通道真实数值表](real-records/S05_USGS_CLC_STATIONXML_F1_TRANSFER_4CHANNEL_20261102.csv)：2019 HNE/HNN均为**0.998891102402371**，2020 HNE/HNN均为**0.999398540248107**。相对各自StationXML标定参考频率，2019为1.00003142994261、2020为0.999398540248107。故**仪器模型的确定性频响形状在f1相对1Hz近乎平坦**，但这**不证明实际记录的长周期信噪比、基线修正、去仪器响应处理、震前窗口或中国场址目标谱已可靠**；Lone Pine未经去均值的谱/去均值谱113.80倍异常仍然存在。
+
+**可复算/原生日志：** [离线Python3标准库程序](s05_stationxml_transfer_response_qc.py)直接解析两份真实StationXML，检查源SHA、事件epoch、空location、单位、灵敏度、100Hz采样、四级响应、四极/FIR，执行复数频域计算及合成解析测试。[GitHub Actions #41370694750 / job #125040332996](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41370694750/job/125040332996) **completed/success**，真实日志含`S05_STATIONXML_REAL_4CHANNEL_TRANSFER_SHAPE_QC_PASS`、**4行44个数值单元**与已提交CSV逐项对照通过（rel≤1e-10、abs≤1e-12），篡改2020官方XML被`STATIONXML_SHA256_MISMATCH`正确拒绝。**整条workflow为failure**，原因是无关的旧`esm-public-processed-accelerogram-source` job失败；本轮独立StationXML job为success，不能冒称整条工作流全绿。
+
+**SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB：** SOURCE=两份Git已保存SCEDC StationXML及两份源收据（原件SHA如上）；REF=既有T079地震方法及S08暂定梁模态，不新增期刊全文；STANDARD=本轮无IEC/GB/NB授权原页、无条款验收；OFFICIAL=SCEDC FDSN station/response元数据，读取层级为完整XML响应字段，不是台站噪声功率谱或正式处理记录；RUN=实际两事件×双水平4通道复数PZ/FIR比值及GitHub Python原生CI；FIG=无新结构响应图；TAB=4行传递函数表。假设=线性时不变仪器、StationXML阶段链正确、数字FIR为非对称原始系数、采样100Hz、暂定梁f1；数值误差=跨V8/Python独立实现4×11数值字段≤1e-10相对、原件SHA精确核对，**仪器噪声、基线/处理、时间积分及实际结构周期的物理不确定性均未估计，不能纳入本次数值容差**。PASS仅`INSTRUMENT_TRANSFER_SHAPE_NUMERIC_QC`；HOLD=`NO_OFFICIAL_LONGPERIOD_SNR_OR_PROCESSING_QC`/`NO_SITE_TARGET`/`NO_NATIVE_PT_CONTACT_MODE`。S05 PARTIAL、S08/S09原生Abaqus E/WE=0、严格0/12阶段未晋级；S10材料疲劳和S11优化不变。
+
+**下一唯一动作：** 针对两条CI.CLC记录，优先获取/核对有事件和台站身份的**官方处理后加速度及噪声/信号频带元数据**（例如可核的CESMD处理报告），用其与现有原始counts→灵敏度换算记录进行低频交叉比较；在此之前不把仪器模型平坦当作选波通过。不得再重做已完成的12条T1谱、修改冻结T057/T070或运行昂贵生产。
+
 ## 2026-11-02 08时｜S05两独立震源真实CI.CLC记录在临时T1=6.230957762865167s处的直接谱与基线敏感性（非设计选波）
 
 **本轮不是重新下载2019/2020源波或重复旧4/6/8/10s结果。** 已读取PR #42现存官方SCEDC/EarthScope FDSN原始miniSEED/StationXML收据和4份真实CSV（Ridgecrest 2019 USGS ci38457511与Lone Pine 2020 USGS ci39493944，均CI.CLC，双水平HNE/HNN、20001点、dt=0.01s）。四个CSV及原miniSEED的精确SHA256见[本轮完整收据](real-records/S05_USGS_TWO_EVENT_CLC_DIRECT_T1_RECEIPT_20261102.json)；条件性T1来自158m连续线弹性梁，不是Abaqus原生PT/接触模态。
