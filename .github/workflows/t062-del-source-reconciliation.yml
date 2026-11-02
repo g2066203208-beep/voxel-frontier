@@ -59,5 +59,9 @@ jobs:
             echo "T062_DERIVED_OUTPUT_UNCHANGED"
           else
             git commit -m "data(T062): preserve source-locked 36-case DEL ranking and manuscript figure"
-            git push origin "HEAD:refs/heads/research/t080-seismic-integration-gates-20261022"
+            for n in 1 2 3; do
+              git pull --rebase origin research/t080-seismic-integration-gates-20261022
+              if git push origin "HEAD:refs/heads/research/t080-seismic-integration-gates-20261022"; then break; fi
+              if [ "$n" = 3 ]; then exit 1; fi
+            done
           fi
