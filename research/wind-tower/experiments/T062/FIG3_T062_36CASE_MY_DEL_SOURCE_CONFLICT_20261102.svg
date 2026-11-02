@@ -16,7 +16,7 @@
 <text x="860.00" y="563.00" font-family="Arial, sans-serif" font-size="13" fill="#56677a" font-weight="normal" text-anchor="middle">25</text>
 <line x1="980.00" x2="980.00" y1="95" y2="540" stroke="#e6eaf0" stroke-width="1"/>
 <text x="980.00" y="563.00" font-family="Arial, sans-serif" font-size="13" fill="#56677a" font-weight="normal" text-anchor="middle">30</text>
-<text x="620.00" y="598.00" font-family="Arial, sans-serif" font-size="12" fill="#56677a" font-weight="normal" text-anchor="middle">My load-DEL  (MN·m)   —   source: current archived 36 OUTB, NOT historical CORRECTED series</text>
+<text x="620.00" y="598.00" font-family="Arial, sans-serif" font-size="12" fill="#56677a" font-weight="normal" text-anchor="middle">My load-DEL  (MN·m)   —   same 36 source OUTB; solid=corrected rainflow, orange hollow=historical wrong-comparator output</text>
 <text x="35.00" y="151.00" font-family="Arial, sans-serif" font-size="16" fill="#203045" font-weight="normal" text-anchor="start">9.344 m/s  NTM</text>
 <line x1="500.33" x2="601.16" y1="146" y2="146" stroke="#b9c6d4" stroke-width="3"/>
 <circle cx="601.16" cy="132.50" r="4.8" fill="#566f90" stroke="#ffffff" stroke-width="1.4"/>
@@ -74,7 +74,7 @@
 <line x1="936.25" x2="936.25" y1="94" y2="540" stroke="#c36d32" stroke-dasharray="5,5" stroke-width="1.5"/>
 <circle cx="936.25" cy="363" r="7" fill="#ffffff" stroke="#c36d32" stroke-width="2.3"/>
 <text x="1000.00" y="105.00" font-family="Arial, sans-serif" font-size="13" fill="#a55221" font-weight="bold" text-anchor="start">Historic S03=28.177</text>
-<text x="1000.00" y="122.00" font-family="Arial, sans-serif" font-size="11" fill="#a55221" font-weight="normal" text-anchor="start">UNVERIFIED source</text>
+<text x="1000.00" y="122.00" font-family="Arial, sans-serif" font-size="11" fill="#a55221" font-weight="normal" text-anchor="start">old comparator</text>
 <text x="898.26" y="338.00" font-family="Arial, sans-serif" font-size="11" fill="#197c83" font-weight="normal" text-anchor="end">S04=26.802 (current)</text>
 <text x="37.00" y="540.00" font-family="Arial, sans-serif" font-size="11" fill="#536576" font-weight="normal" text-anchor="start">NTM: slate   |   ETM: teal   |   hollow orange marker: legacy claim, not an extra OUTB observation</text>
 </svg>

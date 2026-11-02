@@ -1,15 +1,15 @@
 {
-  "FIG": "grouped 36-case actual load-DEL and legacy source-divergence marker",
-  "HOLD": "historical CORRECTED archive, original cycle ledger and ranking original source hashes missing; cannot certify legacy S03",
+  "FIG": "grouped 36-case corrected load-DEL plus old-code comparator-error marker",
+  "HOLD": "Historical load-level algorithm dispute is CLOSED; formal DLC1.2 and material fatigue life remain unverified",
   "Neq": 100000,
   "OFFICIAL": "OpenFAST archived output source previously checked, no new simulation or native solve",
-  "REF": "historic 2026-09 Word manuscript reported S03 and S02; original historical CSV/outb bytes not available in this run",
+  "REF": "original historical 03/05/07 CSV, original 2026-09 rainflow_del_r1.py, 36 matching source OUTB SHA and 72/72 causal full comparison recovered",
   "RUN": "Python deterministic postprocessing from existing archival 72-row DEL CSV",
   "STANDARD": "no new IEC/GB authorized clause checked; m=4 and Neq=1e5 are diagnostic normalization",
   "TAB": "36-case paired rank CSV",
-  "candidate_claim": "current source supports S04 maximum; historical CORRECTED S03 is unverified distinct-source claim; no invented version-mismatch root cause",
+  "candidate_claim": "same 36/36 OUTB SHA; historical original comparator reversed; 72/72 original and one-line-fixed DEL reproduced with independent rainflow 3.2.0",
   "case_count": 36,
-  "csv_sha256": "66a66cd79e6ff17c3283825fe55068da0e786d59c2a28a2de80e9802e73a95a8",
+  "csv_sha256": "5d9a432b53b4e5b4cea31f9cf788289fe407f463f3db2c77a10ce370834d8d7c",
   "current_my": {
     "DEL_kNm": 26802.478501532034,
     "S04_over_S03_pct": 16.505172806059008,
@@ -30,7 +30,7 @@
       }
     ]
   },
-  "error_budget": "source DEL serialized float64; exact-key assertions 1e-8 kN-m; ranking gap >3000 kN-m S04-S03; historical true uncertainty UNKNOWN",
+  "error_budget": "source DEL serialized float64; same-OUTB 72/72 validated via independently pinned original/fixed/reference comparison; DEL 1e-5 kN-m causal oracle; physical error not addressed",
   "historical_mx": {
     "case": "U19p202140_ETM_S02",
     "claimed_kNm": 9715.431,
@@ -62,6 +62,6 @@
   "source_path": "recomputed-load-fatigue/05_LOAD_DEL_M4_ALL36_RECOMPUTED.csv",
   "source_reading_level": "T062 archival 36 case / 72 DEL derived table originally recomputed from 36 OUTB; original OUTBs not re-decoded by this script",
   "source_sha_note": "source Git blob SHA1 validated; output SHA256 values below",
-  "status": "36_ARCHIVED_LOAD_DEL_IDENTITY_PASS_LEGACY_CORRECTED_SOURCE_HOLD",
-  "svg_sha256": "9af62acfa3aa6325ae9137acae67a7e99e0ce4e7fe59788509d108508e91b04b"
+  "status": "36_ARCHIVED_LOAD_DEL_RAINFLOW_CODE_CAUSE_CLOSED",
+  "svg_sha256": "f694806159bc2da2cd437e952364ad98deb74b753bebf8b0343d1bf00dff57d4"
 }
