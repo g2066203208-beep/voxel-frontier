@@ -1,0 +1,249 @@
+{
+  "claim_limit": "Source identities and original CSV are restored; does not independently re-run the historical DEL algorithm or prove material fatigue",
+  "current_manifest_sha256": "35235d543bae4b82b24260a16fae1885f8123ef3cf3d8482145c704ea1eaa392",
+  "current_outb_sha_count": 36,
+  "different_old_current_outb": 0,
+  "fig": "None; original historical evidence ledger and rankings",
+  "legacy_del": {
+    "columns": [
+      "case_id",
+      "URef_mps",
+      "wind_type",
+      "seed",
+      "channel",
+      "m",
+      "Neq",
+      "total_cycles_weighted",
+      "n_cycle_records",
+      "max_range",
+      "p95_range",
+      "p99_range",
+      "DEL_load_comparison",
+      "unit",
+      "goodman_correction"
+    ],
+    "encoding": "utf-8-sig",
+    "first_rows": [
+      {
+        "DEL_load_comparison": "2279.8670846522873",
+        "Neq": "100000.0",
+        "URef_mps": "9.343881",
+        "case_id": "U09p343881_ETM_S01",
+        "channel": "TwrBsMxt",
+        "goodman_correction": "NOT_APPLIED",
+        "m": "4",
+        "max_range": "19697.479731864434",
+        "n_cycle_records": "807",
+        "p95_range": "11167.278997784948",
+        "p99_range": "15359.93054924345",
+        "seed": "S01",
+        "total_cycles_weighted": "670.0",
+        "unit": "(kN-m)",
+        "wind_type": "ETM"
+      },
+      {
+        "DEL_load_comparison": "20375.032198990477",
+        "Neq": "100000.0",
+        "URef_mps": "9.343881",
+        "case_id": "U09p343881_ETM_S01",
+        "channel": "TwrBsMyt",
+        "goodman_correction": "NOT_APPLIED",
+        "m": "4",
+        "max_range": "287592.57951528276",
+        "n_cycle_records": "778",
+        "p95_range": "54885.643404399445",
+        "p99_range": "102878.66312084002",
+        "seed": "S01",
+        "total_cycles_weighted": "664.5",
+        "unit": "(kN-m)",
+        "wind_type": "ETM"
+      },
+      {
+        "DEL_load_comparison": "2400.125658393674",
+        "Neq": "100000.0",
+        "URef_mps": "9.343881",
+        "case_id": "U09p343881_ETM_S02",
+        "channel": "TwrBsMxt",
+        "goodman_correction": "NOT_APPLIED",
+        "m": "4",
+        "max_range": "20201.541002614475",
+        "n_cycle_records": "754",
+        "p95_range": "11882.198470113986",
+        "p99_range": "14867.345448442482",
+        "seed": "S02",
+        "total_cycles_weighted": "631.0",
+        "unit": "(kN-m)",
+        "wind_type": "ETM"
+      }
+    ],
+    "rows": 72
+  },
+  "legacy_ledger": {
+    "columns": [
+      "case_id",
+      "channel",
+      "cycle_id",
+      "range",
+      "amplitude",
+      "mean",
+      "count",
+      "unit"
+    ],
+    "encoding": "utf-8-sig",
+    "first_rows": [
+      {
+        "amplitude": "1252.1602861541428",
+        "case_id": "U09p343881_ETM_S01",
+        "channel": "TwrBsMxt",
+        "count": "1.0",
+        "cycle_id": "1",
+        "mean": "5324.225239231002",
+        "range": "2504.3205723082856",
+        "unit": "(kN-m)"
+      },
+      {
+        "amplitude": "530.6643690163128",
+        "case_id": "U09p343881_ETM_S01",
+        "channel": "TwrBsMxt",
+        "count": "0.5",
+        "cycle_id": "2",
+        "mean": "5779.472980429691",
+        "range": "1061.3287380326256",
+        "unit": "(kN-m)"
+      }
+    ],
+    "rows": 57286
+  },
+  "legacy_outb_sha_count": 36,
+  "legacy_rank": {
+    "columns": [
+      "rank",
+      "case_id",
+      "URef_mps",
+      "wind_type",
+      "seed",
+      "channel",
+      "m",
+      "Neq",
+      "total_cycles_weighted",
+      "n_cycle_records",
+      "max_range",
+      "p95_range",
+      "p99_range",
+      "DEL_load_comparison",
+      "unit",
+      "goodman_correction"
+    ],
+    "encoding": "utf-8-sig",
+    "first_rows": [
+      {
+        "DEL_load_comparison": "28177.009927612038",
+        "Neq": "100000.0",
+        "URef_mps": "11.400000",
+        "case_id": "U11p4_ETM_S03",
+        "channel": "TwrBsMyt",
+        "goodman_correction": "NOT_APPLIED",
+        "m": "4",
+        "max_range": "367934.48512146453",
+        "n_cycle_records": "804",
+        "p95_range": "58142.182416146214",
+        "p99_range": "107556.17396322462",
+        "rank": "1",
+        "seed": "S03",
+        "total_cycles_weighted": "679.5",
+        "unit": "(kN-m)",
+        "wind_type": "ETM"
+      },
+      {
+        "DEL_load_comparison": "24688.99471488991",
+        "Neq": "100000.0",
+        "URef_mps": "11.400000",
+        "case_id": "U11p4_ETM_S04",
+        "channel": "TwrBsMyt",
+        "goodman_correction": "NOT_APPLIED",
+        "m": "4",
+        "max_range": "293215.9986823408",
+        "n_cycle_records": "780",
+        "p95_range": "83843.32541718154",
+        "p99_range": "203845.73933698863",
+        "rank": "2",
+        "seed": "S04",
+        "total_cycles_weighted": "655.0",
+        "unit": "(kN-m)",
+        "wind_type": "ETM"
+      },
+      {
+        "DEL_load_comparison": "24315.133209814685",
+        "Neq": "100000.0",
+        "URef_mps": "11.400000",
+        "case_id": "U11p4_ETM_S06",
+        "channel": "TwrBsMyt",
+        "goodman_correction": "NOT_APPLIED",
+        "m": "4",
+        "max_range": "355784.17809272656",
+        "n_cycle_records": "832",
+        "p95_range": "66786.28078518221",
+        "p99_range": "122517.0413402569",
+        "rank": "3",
+        "seed": "S06",
+        "total_cycles_weighted": "694.5",
+        "unit": "(kN-m)",
+        "wind_type": "ETM"
+      }
+    ],
+    "rows": 72
+  },
+  "matched_old_current_outb": 36,
+  "missing_one_source": 0,
+  "old_embedded_manifest_rows": 979,
+  "original_archive": "archive/local-assets-20261004/openfast-36-r2/part-001.zip",
+  "original_archive_sha256": "ddfa02734274ad5bd36e84d975d18544bb5360554e25d71d8689f32313a95267",
+  "original_embedded_manifest_encoding": "utf-8-sig",
+  "original_file_manifest_entries_verified": 7,
+  "original_ledger_source_recovered": true,
+  "original_manifest_sha256": "c9da25b3a967c9ed3b3a859666263c6964d8480798185e6e031539c38e4c3302",
+  "physical_pass": false,
+  "ref": "2026-09 R2Z74 original thesis used these historical 03/05/07 CSV",
+  "run": "GitHub Actions Python stdlib ZIP/CSV/SHA source-level processing only",
+  "s10_material_life_pass": false,
+  "source_files": [
+    {
+      "bytes": 5585315,
+      "name": "03_RAINFLOW_CYCLE_LEDGER.csv",
+      "sha256": "7b03a4a99a2e3fe18975cabe0f8b0d9435f7dccdbaa42fae0985a3a3e48027b7"
+    },
+    {
+      "bytes": 11583,
+      "name": "05_LOAD_DEL_M4_ALL36.csv",
+      "sha256": "673722596503b1cba1e4cf777daeaa143a4f0ac89e074db27d893356a9fe1bfb"
+    },
+    {
+      "bytes": 11795,
+      "name": "07_DEL_CONTROL_RANKING.csv",
+      "sha256": "eb8025884ad3a8235769835c59ce27afd4a588017a63e45a43c65b97c3a2f51a"
+    },
+    {
+      "bytes": 116189,
+      "name": "SHA256_MANIFEST_CORRECTED.csv",
+      "sha256": "1ce81f925020a2583506a9071e6fe4ee6f78b8bbed68ae57081435342f502552"
+    },
+    {
+      "bytes": 7019,
+      "name": "finalize_rainflow_del.py",
+      "sha256": "6c6d1d18e785a825851c58998d3e4aa5c19ab297f8f8767f9ea541dce19e669c"
+    },
+    {
+      "bytes": 935,
+      "name": "CHANNEL_INDEXING_CORRECTION.md",
+      "sha256": "a6622cf790bf7b56045f0d06d3d1340944f37b2b16656280a7a47a88ce37e72e"
+    },
+    {
+      "bytes": 1374,
+      "name": "11_METHOD_AND_EVIDENCE.md",
+      "sha256": "06832737358e0aedc75aded09d0d663c11110bf0cc692fd6be0a15274759a772"
+    }
+  ],
+  "source_reading_level": "actual original 2026-10-04 part-001 ZIP bytes CRC and SHA verified; embedded corrected manifest 36-case original OUTB SHA compared to actual current supplement manifest",
+  "standard": "No new authorized IEC/GB material clause read",
+  "tab": "Original 03/05/07 CSV, 36-case old vs current OUTB source hashes"
+}
