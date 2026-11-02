@@ -24,3 +24,7 @@
 - 所有精确结果必须能追到RUN/FIG/TAB；
 - 未闭合项要么补算，要么明确降级为研究边界；
 - 历史R2Z74和旧七章稿只作来源核对，不能覆盖当前正文。
+
+## 2026-11-02 原始Word图像断链风险（S12；装配前必读）
+
+[原件OOXML核验及SOURCE/FIG/TAB/HOLD](ORIGINAL_WORD_SOURCE_RECONCILIATION_20261102.md)：用户R2Z74原稿ZIP虽含120个image媒体关系，正文XML实际只引用3个，**117个未引用**；R5原稿73幅媒体图像均可按字节SHA在R2Z74找到，但在R2Z74均断链。[120行图像映射](ORIGINAL_WORD_IMAGE_RECOVERY_20261102.csv)及[复算脚本](recover_word_image_map.py)已保留。**六章Markdown拼接不等于原稿图表无损整合**；恢复必须基于原段落锚点和Word渲染复核，不得按章号猜位置或将旧Simpack研究结论当成已验证结果。S12仍PARTIAL。
