@@ -67,7 +67,7 @@ def run():
     import rainflow as reference
     if getattr(reference, '__version__', None) != VERSION:
         raise ValueError('REFERENCE_VERSION_MISMATCH')
-    curve = [(0.01, 1e12), (100, 1e3)]  # SYNTHETIC ONLY; not a material curve
+    curve = [(1e-12, 1e12), (100, 1e3)]  # SYNTHETIC ONLY; span tiny multitone reversals
     details = []
     for name, series in cases():
         actual = project_rainflow(series)
