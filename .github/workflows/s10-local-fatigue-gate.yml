@@ -1,8 +1,9 @@
-name: S10 local material fatigue method gate
+name: S10 local material fatigue and ODB export method gates
 on:
   pull_request:
     paths:
       - 'research/wind-tower/experiments/T079/s10_local_material_fatigue_gate.py'
+      - 'research/wind-tower/experiments/T079/s10_abaqus_odb_local_stress_export.py'
       - '.github/workflows/s10-local-fatigue-gate.yml'
   workflow_dispatch:
 
@@ -12,8 +13,9 @@ jobs:
     timeout-minutes: 3
     steps:
       - uses: actions/checkout@v4
-      - name: Verify method code and execute synthetic oracles
+      - name: Verify code SHA and execute method oracles (no native Abaqus)
         run: |
-          sha256sum research/wind-tower/experiments/T079/s10_local_material_fatigue_gate.py
+          sha256sum research/wind-tower/experiments/T079/s10_local_material_fatigue_gate.py research/wind-tower/experiments/T079/s10_abaqus_odb_local_stress_export.py
           python3 --version
           python3 research/wind-tower/experiments/T079/s10_local_material_fatigue_gate.py --self-test
+          python3 research/wind-tower/experiments/T079/s10_abaqus_odb_local_stress_export.py --self-test
