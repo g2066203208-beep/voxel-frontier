@@ -526,5 +526,44 @@
     "HOLD": "Linux-compatible ROSCO Bladed controller or explicitly bounded non-controller pilot and 2s input path portability needed before first patched native FST run. No actual t1/-t3/t2 DCM or inertial ownership data; S07 physical HOLD. Built Linux executable was ephemeral (SHA and build recipe/log preserved, binary not archived).",
     "physical_pass": false,
     "stage_pass": false
+  },
+  "s07_linux_rosco_native_2s_attempt_20261103": {
+    "date_local": "2026-11-03 02:08 Asia/Shanghai",
+    "status": "WORKFLOW_SUBMITTED__NEW_CI_NOT_YET_VERIFIED__NATIVE_DCM_HOLD",
+    "read_base_sha": "80bfe3fc7f86bba7c955ea31c229e6adbd3f04da",
+    "workflow_commit": "a25f53037896c784bd12b64168c2611a4440bbe2",
+    "workflow_path": ".github/workflows/s07-elastodyn-taxis-ownership-probe-qc.yml",
+    "SOURCE": {
+      "original_2s_inputs": "23/23 exact SHA256 identities and batch1 2s ETM source, prior Windows Actions #41488523561",
+      "original_bts_sha256": "ad68a83a63f197c528c07502db8adff883e9c737863ef3c4cab99cfa76052147",
+      "original_windows_openfast_exe_sha256": "0cc8147fdda188365b8eacda8a831e74fafef59440d71185d66c3272af9e176a",
+      "original_windows_rosco_dll_sha256": "7aebb0d2166c0cc095d11c2b7bc13da136547c557b0f331dcdce84fe181802aa",
+      "original_openfast_tag": "v3.5.3",
+      "original_elastodyn_sha256": "a8ea1a88dc22d5401ea450f376aa7f66e3242785f1e038a22933054aaaf4f7d3",
+      "patched_elastodyn_sha256": "0412e3d8bab3729ec488853e053297c17aab3863e746e4a3178286049b366f00",
+      "linux_rosco_candidate_tag": "v2.9.0",
+      "linux_rosco_source_commit": "PENDING_REAL_CI",
+      "linux_rosco_binary_sha256": "PENDING_REAL_CI",
+      "derived_servo_sha256": "PENDING_REAL_CI",
+      "source_reading_level": "Original model source SHA from prior native recovery, ROSCO official documentation and v2.9.0 Zenodo release metadata; Linux binary has not yet been inspected"
+    },
+    "REF": "T062 S06 2s native four-batch parity receipt and existing exact t-axis probe; ROSCO v2.9.0 release DOI 10.5281/zenodo.10535404 (release metadata, not journal method)",
+    "STANDARD": "No authorized IEC/GB/NB original clauses newly read; no code acceptance",
+    "OFFICIAL": [
+      "https://rosco.readthedocs.io/en/docs/source/install.html",
+      "https://rosco.readthedocs.io/en/docs/source/standard_use.html",
+      "https://zenodo.org/records/10535404",
+      "https://github.com/OpenFAST/openfast/tree/v3.5.3"
+    ],
+    "RUN": "Existing OpenFAST full diagnostic native compile PASS at Actions #41489834311; NEW workflow modified for single 2s Linux ROSCO native run, status/run ID/log NOT VERIFIED. No new solver success claimed.",
+    "FIG": "0",
+    "TAB": "Planned: Linux ROSCO source commit, compiled libdiscon.so SHA/ldd, derived ServoDyn SHA, original 2s prep SHA, native exit/log, t-axis DCM orthogonality and gravity/inertia ownership",
+    "assumptions": "Linux ROSCO v2.9.0 is a diagnostic substitution; original Windows controller version and ABI equivalence are unproven. Only batch1 node220 and startup 0–2s; not original full-state 600s.",
+    "error_budget": "Input byte hashes exact if new CI passes; DCM orthogonality/handedness and force ledger tests use existing 2e-5 and 5e-5/1e-5 numerical screens, not physical validation tolerances; controller/version and precision drift unknown.",
+    "failure_record": "Initial workflow string insertion unintentionally duplicated an artifact block inside a regex; corrected in commits c145b7a4 and a25f5303 before claiming any CI result. Actual new runner failure/success logs not yet retrieved.",
+    "HOLD": "Need actual GitHub Actions runner result and logs, Linux controller ABI/parameter compatibility, exact DCM and inertia ledger; no 2s native RUN/physical PASS asserted until verified.",
+    "stage_pass": false,
+    "physical_pass": false,
+    "new_native_dcm_rows_verified": 0
   }
 }
