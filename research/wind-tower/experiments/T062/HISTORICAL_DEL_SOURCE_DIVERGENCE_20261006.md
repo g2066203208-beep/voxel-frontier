@@ -250,3 +250,19 @@
 - **论文正文已接续：** [第3章§3.7.5](../../manuscript/final-thesis/chapters/03_场址风环境与整机随机风控制载荷.md)增加36工况图、源限定排序与Neq反事实；[第4章§4.7](../../manuscript/final-thesis/chapters/04_10MW混合塔架风致疲劳性能分析.md)保留历史S03、采用现档S04作源级My筛选，不宣称已得到真实材料寿命。
 - **REF/STANDARD/OFFICIAL/误差：** REF仅核历史Word已经登记的旧数值，未得到历史CORRECTED原OUTB/57,286行账本；STANDARD未读新增授权规范条款；OFFICIAL仅先前OpenFAST二进制源核验与本轮真实GitHub runner；FIG是载荷筛查非材料响应图；逐值回归容差1e-8kN·m，真实历史版本不确定度未知。S06 PARTIAL/HOLD、S10方法准备/材料寿命HOLD、12阶段0/12未晋级。
 - **单一剩余HOLD/下一非原生动作：** 追索旧 `03_RAINFLOW_CYCLE_LEDGER.csv`、`07_DEL_CONTROL_RANKING.csv` 或历史CORRECTED 36份OUTB的**真实文件哈希**；找不到时保持双谱系标记而非反复重跑同一归档。
+
+## 2026-11-02｜T062正式纠错闭合：36份原始OUTB相同，旧雨流比较方向错误
+
+**本节取代上方历史SOURCE-DIVERGENCE HOLD断言，但不删除早期审查谱系。历史原稿的28.177010 MN·m确有真实数据出处，不是凭空编造；但其雨流算法错误，正式指标采用独立修正结果。**
+
+**SOURCE / SHA / 阅读层级：** [2026-10-04原始主归档](../../archive/local-assets-20261004/openfast-36-r2/part-001.zip)经真实ZIP CRC和主清单逐件SHA验证，恢复57,286行、5,585,315字节历史雨流账本（SHA256 `7b03a4a99a2e3fe18975cabe0f8b0d9435f7dccdbaa42fae0985a3a3e48027b7`）、72条历史DEL（SHA256 `673722596503b1cba1e4cf777daeaa143a4f0ac89e074db27d893356a9fe1bfb`）以及原始[雨流脚本](legacy-primary-recovered-20261102/rainflow_del_r1.py)（SHA256 `b7c2d50b391d90f69fef6aa72e5bdf4be5a843c72b4460147145a0df14110649`）。恢复的原始内嵌SHA清单与现归档36个OUTB字节SHA **36/36一致**，见[全36哈希逐行比较](legacy-primary-recovered-20261102/LEGACY_PRIMARY_36OUTB_SHA_COMPARISON_20261102.csv)；排除旧/新OUTB源版本不同的假说。
+
+**根因：** 原始函数中X代表先前幅值范围、Y代表新范围，误把雨流闭合终止条件写成 `if X<Y: break`；与独立实现一致的条件为 `if Y<X: break`。历史源码保持原样，仅在隔离AST里反转一个比较条件，源SHA锁定。
+
+**RUN / 验收：** [恢复原始档CI #41390652747](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41390652747)、[恢复原代码CI #41390828429](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41390828429)、[S03/S04单测CI #41391271995](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41391271995)、[36份源OUTB×2通道全72回归CI #41391433429](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41391433429)均已真实远端回读 `completed/success`。原程序72/72复现旧DEL、单行修正72/72复现现档独立DEL、修正后的(range,mean,count)多重集合72/72与SHA固定的独立第三方rainflow 3.2.0一致、总加权循环数72/72守恒；DEL绝对验收误差1e-5 kN·m，多重集合舍入8位。未运行OpenFAST生产求解。
+
+**TAB / FIG：** [72条完整三方法对比CSV](legacy-primary-recovered-20261102/T062_ALL36_RAINFLOW_CAUSAL_DEL_COMPARE_20261102.csv) SHA256 `12dabbb1273ce03d3920aedda3f72f9fa1d75b671e01a1db145c0a972ffe15e2`、[数据与回归JSON收据](legacy-primary-recovered-20261102/T062_ALL36_RAINFLOW_CAUSAL_RECEIPT_20261102.json)、[36工况图3更新](FIG3_T062_36CASE_MY_DEL_SOURCE_CONFLICT_20261102.svg)。旧S03 My=28.177010→修正23.005398 MN·m；旧S04 My=24.688995→修正26.802479 MN·m（修正后My第一）；Mx原S02=9.715431→修正9.468855 MN·m（修正后Mx第一）。
+
+**REF / STANDARD / OFFICIAL：** REF为真实学位原稿、真实原始源码和旧CSV；STANDARD没有新读ASTM/IEC/GB授权原页，不宣称条文PASS；OFFICIAL为真实OpenFAST源OUTB、版本CRC/SHA和第三方独立Python算法计算，不能冒充任何结构物理结果。独立wheel SHA256 `cb6c254aa1a16a9e658ff3f39c6e5a77650d6c4e8304146169b36516d1f01660`。原始量化误差和物理模型误差未由该软件算法回归消除。
+
+**HOLD / 后续：** T062本次旧S03-vs-新S04载荷DEL矛盾 **CLOSED（36/36同源+72/72程序因果复现）**；S06正式DLC1.2风况bin与S10分材料疲劳寿命仍HOLD，12阶段0/12未晋级。后续只推进独立OpenFAST/ERA5/NTM统计与论文，不做任何Abaqus工作。
