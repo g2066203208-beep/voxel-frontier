@@ -1,3 +1,10 @@
+## 2026-11-02 11时｜S10只读ODB提取接口最终CI回证（合成软件PASS；原生物理HOLD）
+
+- **RUN / 真实远端日志：** [GitHub Actions #41381411069](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41381411069)已远端回读`completed/success`，job=`125072829416`，Ubuntu Python **3.12.3**，只稀疏checkout两份方法程序；原S10雨流/Miner脚本`SELF_TEST_PASS`（8类合成oracle），新增ODB接口`S10_ODB_EXPORT_MOCK_TEST_PASS_NOT_ABAQUS`（**9类合成mock oracle**：三帧分量/单位、缺失/重复IP、非均匀时间、非法分量/坐标声明/哈希、缺manifest、伪ODB SHA拒绝）。全程**没有调用原生Abaqus/ODB，没有真实塔架应力或材料疲劳计算**。
+- **SOURCE SHA256 / 远端runner逐字节计算：** `s10_local_material_fatigue_gate.py`=`028e5349d26524ce0ff9b42e4b726f46b2d76271b3731cb2b05eb8c6fd653834`；最终`s10_abaqus_odb_local_stress_export.py`=`4fe6cf115d5c3e37e6b94c8e09a56f14adcb2a145b22df4307740b834bd49661`。修正了导出时先写CSV后发现同名receipt存在的部分写入风险：现在在任何写入前同时检查CSV和receipt是否已存在；没有强行覆盖。
+- **REF/STANDARD/OFFICIAL/FIG/TAB：** 延续下方本轮身份审计与方法背景；未新增授权规范原页、论文全文或原生Abaqus结果，FIG无真实结构图，TAB只有真实S06载荷源表及mock诊断输出，**没有材料寿命表**。CI验证的仅为mock API软件逻辑和旧S10合成算法oracle，尚缺成熟独立rainflow库交叉检验、真实ODB API版本实测及PT/材料源验证。
+- **误差与HOLD：** 软件mock测试为离散精确判别/浮点预期值，不代表局部应力物理误差；本轮不能定界材料应力、均值状态、风速概率、接缝与网格误差。严格0/12未晋级，S10 BLOCKED，S08/S09原生E/WE=0。**下一轮单一最优可独立动作：用独立成熟rainflow实现对既有S10算法做多种复杂合成载荷序列的半循环、均值与损伤逐项交叉验证，记录算法版本、差异及SHA；不依赖Abaqus原生输入。**
+
 ## 2026-11-02 11时｜S10四工况×31段风载与材料应力严格分流；只读ODB积分点提取接口（NEED_NATIVE）
 
 - **SOURCE/读取层级：** 实读[T077/S06四工况六分量DEL表](../T077/recovery/S06_4CASE_31GAGE_6COMP_RAINFLOW_DEL_20261027.csv)表头及原始数据行，原登记完整744行=4工况×31段×6通道、12001点×0.05s、600s，源SHA256=`9e22e98ac44c2cbd6bf011c4bc2e9a150c4bac76b5e7c4a1eddd8e6de611134b`，见[已核的完整来源收据](../T077/recovery/S10_4CASE_LOAD_SCREEN_SOURCE_RECEIPT_20261029.json)。这些通道是`Fx/Fy/Fz/Mx/My/Mz`的荷载/荷载雨流/DEL，**绝非局部材料应力时程**。同时直接读[T077/S10 372控制×2径向=744元素候选绑定收据](../T077/recovery/S10_4ETM_31SEG_MIDPLANE_2RAD_CONTROL_BINDING_RECEIPT_20261031.json)，其明确`NO_ODB`，模型候选是D400/Pe支路而非冻结T057 HRB335。不能用截面gross名义应力、元素中心点、控制峰值或DEL代替积分点真实应力。
