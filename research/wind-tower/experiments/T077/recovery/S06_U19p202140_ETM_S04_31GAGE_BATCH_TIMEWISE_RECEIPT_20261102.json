@@ -1,0 +1,112 @@
+{
+  "status": "SOURCE_NUMERIC_QC_ONLY_NOT_NATIVE_NOT_GLOBAL_LOAD",
+  "case": "U19p202140_ETM_S04",
+  "source_level": "REAL_HISTORICAL_OPENFAST_DERIVED_CSV_GZ_FROM_GITHUB_ACTIONS_ARCHIVE_NOT_RAW_OUTB",
+  "source_archives": [
+    {
+      "batch": "A",
+      "zip_sha256": "e232b56f5048f6eb68acdde3a207569122000107da77d156fcb67ba018ed196e",
+      "gzip_sha256": "dfa86c52da20ec6d5a38d141922ea6ec397a00661366a58d0c7c7d7ef6bda15b",
+      "rows": 108009,
+      "segments": 9
+    },
+    {
+      "batch": "B",
+      "zip_sha256": "ac6122d52ce94cd68a78a48ef9575068ff100d65bdc3aefef4a105df9afe14eb",
+      "gzip_sha256": "38f21f08d3708175a302b98b8883fa5c106e04a32ed712896cb15fb85281613e",
+      "rows": 108009,
+      "segments": 9
+    },
+    {
+      "batch": "C",
+      "zip_sha256": "83d78b38b14561799c54b4c2e2592301085eb8002699674fc465b9b913f6044b",
+      "gzip_sha256": "5ddd47022f781e5be06ecd11cefa84f669567bf3b3b4ab669182dc47c31b8975",
+      "rows": 108009,
+      "segments": 9
+    },
+    {
+      "batch": "D",
+      "zip_sha256": "cff5136795dd77b0e1297018d40a3cbfa9880b91338d9a3a96d426c042a11e80",
+      "gzip_sha256": "769ca91660065ecbe752e297c820ab1655bb55336bde09523d9305feb454122e",
+      "rows": 48004,
+      "segments": 4
+    }
+  ],
+  "time_start_s": 100.0,
+  "time_end_s": 700.0,
+  "dt_s": 0.05,
+  "segments": 31,
+  "rows": 372031,
+  "within_batch_joints": 27,
+  "cross_batch_joints_unverified": 3,
+  "cross_batch_joint_ids": [
+    "J09",
+    "J18",
+    "J27"
+  ],
+  "within_batch_joint_time_samples": 324027,
+  "peak_abs_conditional_by_component": {
+    "Fx_kN": 70.54324773416079,
+    "Fy_kN": 20.686195752622382,
+    "Fz_kN": 643.3593867954514,
+    "Mx_kNm": 40.51583154489322,
+    "My_kNm": 135.79809466789993,
+    "Mz_kNm": 6.696496846112495
+  },
+  "peak_abs_conditional_location": {
+    "Fx_kN": {
+      "joint": "J29",
+      "time_s": 245.15,
+      "signed_value": -70.54324773416079
+    },
+    "Fy_kN": {
+      "joint": "J29",
+      "time_s": 204.15,
+      "signed_value": 20.686195752622382
+    },
+    "Fz_kN": {
+      "joint": "J01",
+      "time_s": 245.1,
+      "signed_value": 643.3593867954514
+    },
+    "Mx_kNm": {
+      "joint": "J29",
+      "time_s": 204.15,
+      "signed_value": -40.51583154489322
+    },
+    "My_kNm": {
+      "joint": "J29",
+      "time_s": 245.15,
+      "signed_value": -135.79809466789993
+    },
+    "Mz_kNm": {
+      "joint": "J01",
+      "time_s": 122.6,
+      "signed_value": 6.696496846112495
+    }
+  },
+  "csv_sha256": "d66e5966cc84cd2a69715322b376226793019e9644cedf698ef42d20e8fd15d2",
+  "assumptions": [
+    "Within-batch station samples use same output clock, not independently verified DCM.",
+    "Moment transport assumes all FL/ML in same fixed frame: M_above_at_below=M_above+(r_above-r_below)xF_above.",
+    "No timewise arithmetic is emitted across independent A/B/C/D OpenFAST runs even if clock labels match."
+  ],
+  "error_budget": {
+    "archive_identity": "SHA256 exact match required",
+    "time_grid_tolerance_s": 2e-08,
+    "arithmetic": "Python 3 binary64; output rounded to 9 decimals; no physical frame/inertia bound"
+  },
+  "SOURCE": "16-file historic manifest, four archived ZIP bytes, 31 gage derived FL/ML",
+  "REF": "existing T062/T077 OpenFAST v3.5.3 source interpretation; no new paper full-text",
+  "STANDARD": "no IEC/GB/NB authorized clauses read in this run",
+  "OFFICIAL": "GitHub Actions archive and existing OpenFAST research provenance; no new native solver",
+  "RUN": "local Python source-only calculation, no OpenFAST/Abaqus solver",
+  "FIG": "NONE",
+  "TAB": "S06_U19p202140_ETM_S04_31GAGE_BATCH_TIMEWISE_WRENCH_QC_20261102.csv",
+  "HOLD": [
+    "No TP/RP/AL/DCM in these four archived ZIPs.",
+    "Three batch-boundary joints J09/J18/J27 cannot be treated as synchronized trajectories.",
+    "Section FL/ML include gravity and inertia, not isolated external wind force.",
+    "No actual global-frame six-wrench transport or inertia ownership; no Abaqus physical PASS."
+  ]
+}
