@@ -24,7 +24,7 @@ jobs:
           from pathlib import Path
           d=Path('/tmp/T062_LEGACY_RESTORED')
           r=json.loads((d/'LEGACY_PRIMARY_RECOVERY_RECEIPT_20261102.json').read_text())
-          assert r['original_file_manifest_entries_verified']==7
+          assert r['original_file_manifest_entries_verified']==10
           assert r['legacy_ledger']['rows']>0 and r['legacy_del']['rows']>0
           assert len(r['legacy_ledger']['columns'])>1
           assert r['current_outb_sha_count']==36
@@ -52,7 +52,7 @@ jobs:
           set -euo pipefail
           out=research/wind-tower/experiments/T062/legacy-primary-recovered-20261102
           mkdir -p "$out"
-          for f in LEGACY_PRIMARY_RECOVERY_RECEIPT_20261102.json LEGACY_PRIMARY_36OUTB_SHA_COMPARISON_20261102.csv 05_LOAD_DEL_M4_ALL36.csv 07_DEL_CONTROL_RANKING.csv finalize_rainflow_del.py CHANNEL_INDEXING_CORRECTION.md 11_METHOD_AND_EVIDENCE.md; do
+          for f in LEGACY_PRIMARY_RECOVERY_RECEIPT_20261102.json LEGACY_PRIMARY_36OUTB_SHA_COMPARISON_20261102.csv 05_LOAD_DEL_M4_ALL36.csv 07_DEL_CONTROL_RANKING.csv rainflow_del_r1.py analyze_r2_corrected.py 02_CHANNEL_MAPPING_QA_RAINFLOW.csv finalize_rainflow_del.py CHANNEL_INDEXING_CORRECTION.md 11_METHOD_AND_EVIDENCE.md; do
             cp "/tmp/T062_LEGACY_RESTORED/$f" "$out/$f"
           done
           git config user.name 'github-actions[bot]'
