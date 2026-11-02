@@ -26,6 +26,25 @@ EXPECTED = {
 COMP = ('Fx_kN','Fy_kN','Fz_kN','Mx_kNm','My_kNm','Mz_kNm')
 HEADER = ('case','batch','segment','gage_index','gage_z_m','time_s',*COMP,'V_kN','M_kNm','T_abs_kNm','N_comp_kN')
 N=12001
+MANIFEST_SHA256 = 'dfc07558eb87002c3f54bb88671644519b77dfc38daf3971026f43686d4c2ed8'
+CASES = ('U09p343881_ETM_S06','U11p4_ETM_S04',
+         'U19p202140_ETM_S04','U19p202140_ETM_S06')
+
+def load_case_manifest(path, case):
+ require(case in CASES,'UNKNOWN_CASE')
+ raw=Path(path).read_bytes()
+ require(sha(raw)==MANIFEST_SHA256,'MANIFEST_SHA256_MISMATCH')
+ rows=list(csv.DictReader(io.StringIO(raw.decode('utf-8-sig'))))
+ require(len(rows)==16 and len({(r['case'],r['batch']) for r in rows})==16,
+         'MANIFEST_16_CASE_BATCH_IDENTITY')
+ selection={r['batch']:r for r in rows if r['case']==case}
+ require(set(selection)==set('ABCD'),'CASE_BATCH_INCOMPLETE')
+ for batch,r in selection.items():
+  require(int(r['rows'])==(9 if batch!='D' else 4)*N,'MANIFEST_ROW_COUNT')
+  require(all(len(r[k])==64 for k in ('zip_sha256','gzip_sha256','uncompressed_csv_sha256')),
+          'MANIFEST_DIGEST_INVALID')
+ return {b:(selection[b]['zip_sha256'],selection[b]['gzip_sha256'],
+            9 if b!='D' else 4) for b in 'ABCD'}
 
 def sha(b): return hashlib.sha256(b).hexdigest()
 
@@ -98,10 +117,13 @@ def selftest():
  return 'SELFTEST_PASS' 
 
 def main():
- p=argparse.ArgumentParser();p.add_argument('--source-dir');p.add_argument('--out-dir');p.add_argument('--selftest',action='store_true');a=p.parse_args()
+ global CASE, EXPECTED
+ p=argparse.ArgumentParser();p.add_argument('--source-dir');p.add_argument('--out-dir');p.add_argument('--selftest',action='store_true');p.add_argument('--case',default=CASE);p.add_argument('--manifest');a=p.parse_args()
  print(selftest())
  if a.selftest: return
- require(a.source_dir and a.out_dir,'SOURCE_AND_OUTPUT_REQUIRED')
+ require(a.source_dir and a.out_dir and a.manifest,'SOURCE_OUTPUT_MANIFEST_REQUIRED')
+ CASE=a.case
+ EXPECTED=load_case_manifest(a.manifest,CASE)
  all_data={};heights={};source=[]
  for batch in 'ABCD':
   data,h,meta=parse_archive(Path(a.source_dir)/f'S06_{CASE}_{batch}_original.zip',batch)
