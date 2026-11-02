@@ -1,5 +1,14 @@
 # 论文研究工作要求
 
+> [!CAUTION]
+> **用户2026-11-02最新明确指令：本ChatGPT助手不做任何Abaqus相关工作，全部跳过。此条覆盖本文件以下所有旧派工、后台执行、S01/S02/S03/S04原生验证建议及“下一最优动作”中涉及Abaqus的部分，直至用户本人明确撤销。**
+>
+> - **禁止本助手执行、准备、调试、修改、审核或派发Abaqus/CAE工作**：包括INP/ODB、原生求解、Data Check、G0/L02、PT/重力/接触原生验证、模型修复、Abaqus运行脚本、日志回收、或以此为由请求用户操作本机。
+> - **不要把Abaqus列为本助手下一步待办，也不要反复要求用户执行**；相关阶段按既有证据维持HOLD，留给用户另行指定的Abaqus执行方。本助手仅可被动承认它们的历史状态或引用已确认的结果背景，不新增Abaqus审查。
+> - **立即聚焦可独立执行的非Abaqus工作**：已有Word论文成果与章节整合、OpenFAST/TurbSim风工况源级核验与载荷统计、地震实测资料及规范来源整理、不依赖ODB的雨流/DEL和统计方法核验、非Abaqus的优化算法与期刊稿。保持科研证据等级，避免从零重复旧成果。
+> - 本条是对**本ChatGPT执行者的工作范围约束**，不抹去历史Abaqus成果，也不替其他获用户授权的本机执行者做决定。
+
+
 > [!IMPORTANT]
 > **每次写入前必须先读[论文指挥室的当前进度与交接日志](https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/governance/COMMAND_ROOM.md#read-before-write)。**
 > 这包括本机 Codex、网页版 GPT、新开的会话和其他执行者。没有核对最新进度，不得凭旧会话摘要重新派工、改状态或启动重复计算。
