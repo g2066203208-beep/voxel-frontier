@@ -1,3 +1,8 @@
+## 2026-11-02 22:34｜S10固定参考角与材料候选单元交叉验证（不冒充ODB）
+
+START read_base_sha=`8dff759ad57c5758efb1c39b5a20cf984de2983b`，main=`bbc5c9130f2d9fc41f776506d86118a9b8db0e65`，PR #42 Open/Draft。已读AGENTS、README、论文状态与母版、T079学术审查、T080.1/.2/.3、12阶段计划、指挥室21:20交接。继承上轮连续周向解析124行及既有1984行固定角雨流/372行原生静态候选；不重复大规模时程计算。本轮只做**三个控制截面的固定角疲劳控制位置与瞬时拉峰位置对照**，不使用未验的运动DCM或Abaqus结果。SOURCE SHA及RUN/误差/REF/STANDARD/OFFICIAL/FIG/TAB/HOLD见[既有S06报告新节](../T077/recovery/S06_FOUR_CASE_31SEG_HISTORY_RESTORED_AND_CONTROL_RECONCILED_20261024.md)。12行可复算数据与轻量CI已写入PR分支；CI真实执行结果需独立回读，不以workflow文件存在冒称成功。S10 BLOCKED，0/12，E/WE=0，不动T057/T070/main，不合并。
+
+
 ## 2026-11-02 03时｜S08真实158m沿高地震包络（非Abaqus E）
 
 - **SOURCE/阅读层级：** 继承T077 158m/70站OpenFAST质量/EI SHA256=`f738d35fc9c8b8d8745f2ed9490c92578b056cfe37201bbfa0bfdb24906d2983`及历史ESM v3 IT-2012-0008/NVL/MP已处理波CSV SHA256=`a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34`；HNE/HNN各32040点×0.005s。**REF**=既有T079方法/ESM来源；**STANDARD**=无新授权规范条款核读；**OFFICIAL**=历史ESM已处理源而非原始仪器波或嘉鱼设计谱。

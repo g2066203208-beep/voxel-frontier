@@ -1,0 +1,39 @@
+name: S10 three-section fixed reference azimuth source join (NO SOLVER)
+on:
+  push:
+    branches: [research/t080-seismic-integration-gates-20261022]
+    paths:
+      - '.github/workflows/s10-three-section-fixed-azimuth-qc.yml'
+      - 'research/wind-tower/experiments/T077/recovery/s10_three_section_fixed_azimuth_crosswalk.cjs'
+      - 'research/wind-tower/experiments/T077/recovery/S10_3CONTROL_FIXED_AZIMUTH_SOURCE_CROSSWALK_20261102.csv'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Selftest and 12-row real-source join
+        run: |
+          set -euo pipefail
+          P=research/wind-tower/experiments/T077/recovery
+          node --check "$P/s10_three_section_fixed_azimuth_crosswalk.cjs"
+          node "$P/s10_three_section_fixed_azimuth_crosswalk.cjs" --selftest
+          node "$P/s10_three_section_fixed_azimuth_crosswalk.cjs" --input-dir "$P" --out "$RUNNER_TEMP/crosswalk.csv"
+          cmp "$P/S10_3CONTROL_FIXED_AZIMUTH_SOURCE_CROSSWALK_20261102.csv" "$RUNNER_TEMP/crosswalk.csv"
+          sha256sum "$RUNNER_TEMP/crosswalk.csv"
+      - name: Wrong-source SHA fail closed
+        run: |
+          set -euo pipefail
+          P=research/wind-tower/experiments/T077/recovery
+          mkdir -p "$RUNNER_TEMP/tamper"
+          cp "$P/S10_4CASE_31SEG_16AZ_SYNC_GROSS_RAINFLOW_20261030.csv" "$P/S10_4ETM_31SEG_CONTINUOUS_AZIMUTH_ENVELOPE_20261102.csv" "$P/S10_4ETM_31SEG_NATIVE_ELEMENT_SPATIAL_BINDING_QC_20261031.csv" "$RUNNER_TEMP/tamper/"
+          printf '\nTAMPER\n' >> "$RUNNER_TEMP/tamper/S10_4ETM_31SEG_CONTINUOUS_AZIMUTH_ENVELOPE_20261102.csv"
+          if node "$P/s10_three_section_fixed_azimuth_crosswalk.cjs" --input-dir "$RUNNER_TEMP/tamper" --out "$RUNNER_TEMP/should_not_exist.csv"; then exit 1; fi
+          test ! -e "$RUNNER_TEMP/should_not_exist.csv"
+          echo S10_TAMPER_REJECT_PASS
