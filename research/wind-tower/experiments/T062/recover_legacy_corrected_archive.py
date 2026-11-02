@@ -28,6 +28,9 @@ FILES = (
     "05_LOAD_DEL_M4_ALL36.csv",
     "07_DEL_CONTROL_RANKING.csv",
     "SHA256_MANIFEST_CORRECTED.csv",
+    "rainflow_del_r1.py",
+    "analyze_r2_corrected.py",
+    "02_CHANNEL_MAPPING_QA_RAINFLOW.csv",
     "finalize_rainflow_del.py",
     "CHANNEL_INDEXING_CORRECTION.md",
     "11_METHOD_AND_EVIDENCE.md",
@@ -36,7 +39,8 @@ REQUIRED = {"03_RAINFLOW_CYCLE_LEDGER.csv": 5585315,
             "05_LOAD_DEL_M4_ALL36.csv": 11583,
             "07_DEL_CONTROL_RANKING.csv": 11795,
             "SHA256_MANIFEST_CORRECTED.csv": 116189,
-            "finalize_rainflow_del.py": 7019}
+            "finalize_rainflow_del.py": 7019,
+            "rainflow_del_r1.py": 6852}
 
 
 def sha(b: bytes) -> str:
