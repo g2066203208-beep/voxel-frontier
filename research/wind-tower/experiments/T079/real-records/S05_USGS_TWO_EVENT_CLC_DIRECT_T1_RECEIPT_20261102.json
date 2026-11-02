@@ -1,0 +1,96 @@
+{
+  "status": "S05_REAL_TWO_INDEPENDENT_EVENT_EXACT_T1_SOURCE_QC_NUMERIC_PASS_NOT_DESIGN_WAVE",
+  "date_utc": "2026-11-02T00:17:00Z",
+  "source_level": "Existing official SCEDC/EarthScope FDSN StationXML and miniSEED already archived in GitHub PR #42, this run re-read FOUR derived original-accelerometer-counts-to-SI CSVs directly from immutable GitHub blob identities; source receipt hashes are inherited, NOT re-downloaded or re-decoded this run.",
+  "conditional_T1_s": 6.230957762865167,
+  "conditional_T1_source": "T079 158m 35-element elastic Euler-Bernoulli beam proxy, f1=0.160488971 Hz, no PT/contact/SSI/RNA rotary inertia; NOT validated native tower mode.",
+  "method": "5% damping; unit mass; zero initial relative displacement and velocity; Newmark average acceleration beta=1/4 gamma=1/2; pseudoSa=omega^2 max(abs(relative_u)); compare raw counts/sensitivity-converted acceleration vs pre-event first 20 s mean subtraction vs whole-window linear least-squares detrend; NO filtering, spectral matching, time scaling or design-wave acceptance.",
+  "software": "V8 JavaScript direct independent calculation; GitHub Actions Python 3.x standard library exact T1 independent regeneration and 36 numeric-cell regression; same Newmark recurrence in existing s05_ground_motion_pair_qc.py.",
+  "inputs": [
+    {
+      "event": "USGS ci38457511 Ridgecrest 2019",
+      "station": "CI.CLC",
+      "dt_s": 0.01,
+      "npts": 20001,
+      "source_original_mseed_sha256": "9bfcd3ab44ade97a5ec1d586d0e4240c9b2d14347ff2ec3d86e8c75df0dd58ab",
+      "csv_HNE_sha256": "fb0c91fe588ccb4f6bed3d4ac77c4bc148231d8e5df6be19aa9cf3bc3d4c25ef",
+      "csv_HNN_sha256": "d6250274d578b87e4310eadcca5a910dd38cd69ad639dbca435af8e8a0d81e30",
+      "source_receipt": "research/wind-tower/experiments/T079/real-records/USGS_ci38457511/CI_CLC/source_receipt.json",
+      "pre20_GM_PSA_m_s2": 0.36960245554270366,
+      "raw_GM_PSA_m_s2": 0.5241280021641609,
+      "linear_GM_PSA_m_s2": 0.36974297085567
+    },
+    {
+      "event": "USGS ci39493944 Lone Pine 2020",
+      "station": "CI.CLC",
+      "dt_s": 0.01,
+      "npts": 20001,
+      "source_original_mseed_sha256": "d1adc38f1e489e964e00a8c837dc5f9a941e68239ece1b6d5e6c7ecb20a4d381",
+      "csv_HNE_sha256": "60a1201a67da19c30c2bfc1e2889b6c492c03d0a5133c296dc4fc68bee3426ae",
+      "csv_HNN_sha256": "e54bc509e573daecb31254cdc694d7678aa3460dab5460882e8d1abf97e91e12",
+      "source_receipt": "research/wind-tower/experiments/T079/real-records/USGS_ci39493944/CI_CLC/source_receipt.json",
+      "pre20_GM_PSA_m_s2": 0.0031838182255385416,
+      "raw_GM_PSA_m_s2": 0.362321021717891,
+      "linear_GM_PSA_m_s2": 0.003182285432921334
+    }
+  ],
+  "output_csv": "research/wind-tower/experiments/T079/real-records/S05_USGS_TWO_EVENT_CLC_DIRECT_T1_4COMP_20261102.csv",
+  "output_csv_sha256": "42d1461487c4b9b036a4669ca91cd7b00f5682ec98e8e7f6aa22e4a7b5e0f8dc",
+  "output_csv_git_blob_sha": "a2b27fa1dc4c381bd6cd65c3ffd93cdb8ef87a75",
+  "script": "research/wind-tower/experiments/T079/s05_ground_motion_pair_qc.py",
+  "script_sha256": "46cc72e844c528210f0feb896c266284ac3d1c95188ba3bac66fc64a4571ed9b",
+  "script_git_blob_sha": "98958d62f06a800face3c125fafd09c9bbab993d",
+  "python_recomputed_csv_sha256": "78fade6903b144e99dedede35d1d62b48fd31e157baa060e09dc8def185a5dc8",
+  "byte_match": false,
+  "numeric_regression": "36 numeric cells match within rel_tol=2e-9 and abs_tol=1e-11, source CSVs SHA checked by Python load(), raw MSEED hash receipt identity checked, corrupted MSEED receipt rejected.",
+  "CI": {
+    "run_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41366225483",
+    "job_id": 125026842866,
+    "job_name": "seismic-source-preflight",
+    "job_conclusion": "success",
+    "whole_workflow_conclusion": "failure",
+    "unrelated_failure": "esm-public-processed-accelerogram-source job failed while re-fetching existing ESM source; this T1 job is independently green; no global workflow PASS claimed."
+  },
+  "SOURCE": "Official SCEDC/EarthScope FDSN archived 2019/2020 CI.CLC miniSEED+StationXML and CSV source receipts in PR branch; no new external source fetched this run.",
+  "REF": "Existing T079 METHOD_PLAN, source QC methodology, conditional T079 beam proxy. No new journal full-text read.",
+  "STANDARD": "No new licensed IEC 2025, GB/NB clauses accessed. No seismic design clause acceptance.",
+  "OFFICIAL": "Original station response and raw waveform SHA receipts inherited from existing official FDSN retrieval. Not a new official instrument usable-frequency or processed wave QC.",
+  "RUN": "REAL JS 4x20001x3 Newmark T1 spectral numerical calculations; independent Python CI successful; native Abaqus E=0 WE=0.",
+  "FIG": "None newly generated; no tower seismic response plot.",
+  "TAB": "4-row direct two-event x two-component T1 spectrum table and two geometric mean summaries in this receipt.",
+  "assumptions": "First 20 seconds are pre-event for 2019 and 2020 requests; removing mean and linear detrending are diagnostic, not instrument-approved baseline processing. Two event IDs are different seismic sequences, but one station and unvalidated long-period sensor response. Comparison uses unscaled amplitudes.",
+  "error_budget": {
+    "input_sha256": "four source CSV SHA256 and inherited miniSEED SHA checked",
+    "time_grid": "20001 samples x0.01s per component; no dt/2 convergence in this round",
+    "cross_language": "36 numeric cells tolerance rel 2e-9 abs 1e-11; Python/JS output CSV serialization SHA differs",
+    "processing": "2019 raw/pre20 GM ratio=1.418, 2020 raw/pre20 GM ratio=113.8; enormous baseline bias in 2020 uncorrected record",
+    "instrument_low_frequency": "UNKNOWN",
+    "site_target": "UNKNOWN",
+    "T1_native_uncertainty": "UNKNOWN",
+    "uncertainty_conclusion": "Not design-wave qualified; no engineering error bound or PASS."
+  },
+  "failures": [
+    {
+      "run": 41366044852,
+      "error": "Initial exact-T1 code falsely classified second component of first event as duplicate; corrected with event set per manifest."
+    },
+    {
+      "run": 41366134844,
+      "error": "2019 legacy source_receipt.json omitted event_id; corrected to derive from source_accession and cross-check official catalog URL."
+    },
+    {
+      "run": 41366225483,
+      "error": "Independent T1 Python job PASS; separate ESM workflow job failure remains; no global CI success."
+    }
+  ],
+  "PASS_HOLD": {
+    "source_identity": "PASS_EXISTING_SHA_RECEIPTS",
+    "numeric_reproducibility": "PASS_4_COMPONENTS",
+    "S05": "PARTIAL_HOLD",
+    "design_wave": "HOLD",
+    "native_Abaqus_E": 0,
+    "native_Abaqus_WE": 0,
+    "stages_passed": 0
+  },
+  "next_single_action": "Obtain instrument response/processed low-frequency usable-band evidence for the already archived CI.CLC Ridgecrest/Lone Pine traces at f≈0.16049 Hz; if unavailable, reject both for formal design and choose independently processed records with documented 0.1–0.2 Hz reliability. Do not repeat baseline arithmetic."
+}
