@@ -240,3 +240,13 @@
 **REF/STANDARD/FIG**：REF未新增期刊原页，2026已有160m风震/PT先行研究不可声明首创；STANDARD无新增授权IEC2025/GB/NB条款、不称规范合规；FIG无Abaqus、地震或真实风疲劳响应图，TAB仅原始数据代数诊断。
 
 **误差预算 / HOLD**：端点间真实1120节点加速度场未知，线性插值的物理误差**无法用现有九点定界**；原始OUTB int16各通道压缩半LSB为`0.5/abs(ColScl)`，尚未合成区间级可辨识阈值；数值DCM逆变换1.45519e-11kN、独立力矩参考点差5.71199e-11kN·m仅为代数误差，不可替代气动/惯性物理误差。九测点只覆盖塔底，T071/T072正式31段OUTB尚缺；不得导出Abaqus外载，不得重复叠加内力中已包含的重力/惯性。Abaqus/OpenFAST昂贵生产/地震E或WE/S10真实材料寿命均未运行；本轮12阶段**0/12正式PASS**，S07独立准备加深但`PHYSICS_HOLD`。**下一唯一最优动作：**从原始OUTB各FL/AL列的ColScl确定相邻截面力差的打包量化误差上界，判断0.03676kN未分配量是否具有统计/物理可分辨性；不冒称真实气动力。
+
+## 2026-11-02｜T062旧稿DEL冲突的36工况排序/正文落稿（HOLD保留）
+
+- **SOURCE：** 继承现有T062对原始36件 `.outb` 的独立解析、三种rainflow复算，不伪称再次读取原二进制。新一轮直接逐项读取T062的[72行原始归档复算DEL表](recomputed-load-fatigue/05_LOAD_DEL_M4_ALL36_RECOMPUTED.csv)，SHA256=`b362bcd7c37ccc56e21035de39448b5e761ec03f371b6b2f3eb30f41b013630d`，Git blob=`1b334e9afdbd792a2f4b1a41cdb150dc3698352d`。完整36case×2通道、m4、Neq=100000、六seed身份检查，拒绝伪造源SHA。
+- **真实新TAB/FIG：** [36行My/Mx双通道source-locked排序](T062_36CASE_MY_MX_ARCHIVED_RANK_20261102.csv) SHA256=`66a66cd79e6ff17c3283825fe55068da0e786d59c2a28a2de80e9802e73a95a8`；[六组×六seed发表用散点图](FIG3_T062_36CASE_MY_DEL_SOURCE_CONFLICT_20261102.svg) SHA256=`9af62acfa3aa6325ae9137acae67a7e99e0ce4e7fe59788509d108508e91b04b`；[完整数值/校验收据](T062_36CASE_DEL_SOURCE_COMPARISON_20261102.json)。现归档My最强=`U11p4_ETM_S04` 26802.478502kN·m、S03仅23005.397834kN·m（S04高16.50517%）；历史Word旧稿S03=28177.010kN·m，比现归档S03高5171.612166kN·m（22.480%）；同名Mx S02旧9715.431 vs现9468.855048kN·m。历史S03和当前S04**不是同一输入版的已证共同结果**。
+- **新增可证伪判断：** 若仅变Neq、固定现档rainflow四次矩，My-S03旧值所需Neq=44436.45115，而Mx-S02旧值所需Neq=90228.05306，故“一个统一Neq配置错误导致两数不同”与这些数值不相容；统一Neq也不改变S04＞S03的现档排名。不能据此判旧稿存在具体软件bug或原始物理错误。
+- **真实RUN：** [Actions #41386985308/job #125089878244](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41386985308) `completed/success`（Python3.12.3），`T062_36CASE_SOURCE_LOCKED_ORACLE_PASS_NO_SIMULATION`、`T062_REAL_ARCHIVED_36CASE_PROVENANCE_PASS_NO_OPENFAST_RUN`、三文件SHA；[确定性程序](t062_del_36case_provenance_figure.py)和[可重复工作流](../../../.github/workflows/t062-del-source-reconciliation.yml)已入PR，由runner保存永久CSV/SVG/JSON。
+- **论文正文已接续：** [第3章§3.7.5](../../manuscript/final-thesis/chapters/03_场址风环境与整机随机风控制载荷.md)增加36工况图、源限定排序与Neq反事实；[第4章§4.7](../../manuscript/final-thesis/chapters/04_10MW混合塔架风致疲劳性能分析.md)保留历史S03、采用现档S04作源级My筛选，不宣称已得到真实材料寿命。
+- **REF/STANDARD/OFFICIAL/误差：** REF仅核历史Word已经登记的旧数值，未得到历史CORRECTED原OUTB/57,286行账本；STANDARD未读新增授权规范条款；OFFICIAL仅先前OpenFAST二进制源核验与本轮真实GitHub runner；FIG是载荷筛查非材料响应图；逐值回归容差1e-8kN·m，真实历史版本不确定度未知。S06 PARTIAL/HOLD、S10方法准备/材料寿命HOLD、12阶段0/12未晋级。
+- **单一剩余HOLD/下一非原生动作：** 追索旧 `03_RAINFLOW_CYCLE_LEDGER.csv`、`07_DEL_CONTROL_RANKING.csv` 或历史CORRECTED 36份OUTB的**真实文件哈希**；找不到时保持双谱系标记而非反复重跑同一归档。
