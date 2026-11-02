@@ -121,9 +121,12 @@ def main():
  p=argparse.ArgumentParser();p.add_argument('--source-dir');p.add_argument('--out-dir');p.add_argument('--selftest',action='store_true');p.add_argument('--case',default=CASE);p.add_argument('--manifest');a=p.parse_args()
  print(selftest())
  if a.selftest: return
- require(a.source_dir and a.out_dir and a.manifest,'SOURCE_OUTPUT_MANIFEST_REQUIRED')
+ require(a.source_dir and a.out_dir,'SOURCE_AND_OUTPUT_REQUIRED')
  CASE=a.case
- EXPECTED=load_case_manifest(a.manifest,CASE)
+ if a.manifest:
+  EXPECTED=load_case_manifest(a.manifest,CASE)
+ else:
+  require(CASE==CASES[0],'MANIFEST_REQUIRED_FOR_NONLEGACY_CASE')
  all_data={};heights={};source=[]
  for batch in 'ABCD':
   data,h,meta=parse_archive(Path(a.source_dir)/f'S06_{CASE}_{batch}_original.zip',batch)
@@ -156,7 +159,8 @@ def main():
   out.append(r)
  require(within==27 and cross==3,'BOUNDARY_CLASSIFICATION')
  dest=Path(a.out_dir);dest.mkdir(parents=True,exist_ok=True)
- csv_path=dest/'S06_U09p343881_ETM_S06_31GAGE_BATCH_TIMEWISE_WRENCH_QC_20261101.csv'
+ suffix='20261101' if CASE==CASES[0] else '20261102'
+ csv_path=dest/f'S06_{CASE}_31GAGE_BATCH_TIMEWISE_WRENCH_QC_{suffix}.csv'
  with csv_path.open('w',newline='',encoding='utf-8') as f:
   writer=csv.DictWriter(f,fieldnames=list(out[0]));writer.writeheader();writer.writerows(out)
  receipt={
@@ -183,7 +187,7 @@ def main():
          'Three batch-boundary joints J09/J18/J27 cannot be treated as synchronized trajectories.',
          'Section FL/ML include gravity and inertia, not isolated external wind force.',
          'No actual global-frame six-wrench transport or inertia ownership; no Abaqus physical PASS.']}
- json_path=dest/'S06_U09p343881_ETM_S06_31GAGE_BATCH_TIMEWISE_RECEIPT_20261101.json'
+ json_path=dest/f'S06_{CASE}_31GAGE_BATCH_TIMEWISE_RECEIPT_{suffix}.json'
  json_path.write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
  print(json.dumps({'csv_sha256':receipt['csv_sha256'],'csv_rows':len(out), 'within':within,'cross':cross,
   'peak_abs':peak_by_comp,'json_sha256':sha(json_path.read_bytes())},indent=2))
