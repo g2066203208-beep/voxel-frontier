@@ -23,9 +23,7 @@ jobs:
           # The generator intentionally rejects overwriting changed files. In CI
           # remove ONLY its three versioned derived outputs so a corrected
           # caption or source annotation can be deterministically regenerated.
-          rm -f research/wind-tower/experiments/T062/T062_36CASE_MY_MX_ARCHIVED_RANK_20261102.csv \\
-                research/wind-tower/experiments/T062/FIG3_T062_36CASE_MY_DEL_SOURCE_CONFLICT_20261102.svg \\
-                research/wind-tower/experiments/T062/T062_36CASE_DEL_SOURCE_COMPARISON_20261102.json
+          rm -f research/wind-tower/experiments/T062/T062_36CASE_MY_MX_ARCHIVED_RANK_20261102.csv research/wind-tower/experiments/T062/FIG3_T062_36CASE_MY_DEL_SOURCE_CONFLICT_20261102.svg research/wind-tower/experiments/T062/T062_36CASE_DEL_SOURCE_COMPARISON_20261102.json
           python3 research/wind-tower/experiments/T062/t062_del_36case_provenance_figure.py --output-dir research/wind-tower/experiments/T062 > /tmp/t062-source-del-comparison-run.json
           python3 - <<'PY'
           import json
