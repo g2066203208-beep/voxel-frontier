@@ -1,3 +1,12 @@
+## 2026-11-02 10时｜S10局部材料应力雨流—Miner独立方法管线（真实本地运行；合成输入；非结构疲劳PASS）
+
+- **SOURCE / 输入身份：** 新增[可复算程序](s10_local_material_fatigue_gate.py)（UTF-8字节SHA256=`028e5349d26524ce0ff9b42e4b726f46b2d76271b3731cb2b05eb8c6fd653834`，Git Blob SHA=`e60e4290d7ef060ac97adcd4fff9aa7cf97cda0b`）；真实输入模式必须是`LOCAL_MATERIAL_STRESS_ABAQUS`，逐条记录须提供CSV `time_s,stress_MPa`、文件SHA256、材料、位置、风速bin及独立seed。拒绝载荷DEL、截面极值表、CDP损伤替代材料应力；本轮**没有**真实ODB局部应力CSV，测试输入全部是显式构造的合成序列，合成文件在程序self-test内可确定性再生，不伪称塔架结果。
+- **REF / 算法：** 按ASTM E1049型转折点栈计数的实现思路进行rainflow，保留端部半循环，输出应力幅值范围/均值/计数；损伤诊断为`sum(n_i/N_i)`，由外部材料专属S-N表在log-log坐标内插且严格拒绝外推；对每个风速bin先按各seed的`damage_per_hour`算术均值，再乘**用户显式提供**的年度bin小时。**本轮未核读ASTM授权标准原页，不能称ASTM条款符合性验收；该实现仅通过下述合成手算oracle，不等于独立成熟rainflow库交叉验收。**
+- **STANDARD / OFFICIAL：** 本轮没有取得IEC 61400-1/6:2025、NB/T10907授权疲劳条文，也没有Abaqus原生局部应力结果；不自带任何混凝土、PT、HRB335/400/500或Q345疲劳曲线。S-N来源由调用方显式提供；`mean_stress_policy=IGNORE_MEAN_DIAGNOSTIC_ONLY`明确说明**忽略均值应力不可用于正式寿命结论**，特别不能将钢筋范围曲线套用混凝土或预应力钢绞线。
+- **RUN（实际本地执行，不是GitHub Actions/原生Abaqus）：** 2026-11-02，Python **3.13.5**，命令`python s10_local_material_fatigue_gate.py --self-test`，stdout=`SELF_TEST_PASS`；通过8类测试：常值零循环、两端半循环、双闭合三角循环、嵌套3MPa循环、S-N对数插值、超范围拒绝、显式bin小时年化、SHA篡改拒绝。合成5点`[0,10,0,10,0]` MPa、dt=1s、测试S-N点(5MPa,2e6次)/(20MPa,2e4次)、测试bin=3600h/年，精确得到2个10MPa循环、`N(10)=2e5`、`D_record=1.0e-5`、`D_annual_diagnostic=32.4`；**32.4是故意高损伤的合成单元测试数值，不是任何塔架寿命/安全指标**。测试比较`math.isclose(rel_tol=1e-12)`，没有物理误差预算。
+- **FIG/TAB：** 本轮无真实结构响应图/材料寿命表；上述合成测试的可重现输出为方法测试TAB。新增[轻量CI工作流](../../../.github/workflows/s10-local-fatigue-gate.yml)用于PR内Ubuntu Python自测，**本条日志写入时尚无GitHub runner success日志，不冒称CI已通过**。
+- **HOLD / 下一责任：** S10仍BLOCKED，缺经S03/S04/S07验收的Abaqus材料控制点真实时程、有效PT均值状态、材料专属疲劳曲线与均值应力/应力比处理、年度风速概率及seed收敛。下一轮一项最优动作=针对既有S06四工况×31段恢复资料，检查是否已有**真实局部材料应力时程**；若没有，冻结可供Abaqus ODB提取的材料/位置/分量CSV接口并用独立成熟雨流实现对照本程序，禁止拿六分量风载直接喂给S10。严格12阶段0/12未晋级，原生Abaqus E/WE=0，保留S11抗震约束疲劳优化主线。
+
 ## 2026-11-02 09时｜S05两独立震源SCEDC官方StationXML仪器传递函数真实频域核验（非SNR、非设计选波）
 
 **本轮实际新证据：** 不重新下载或重复计算Ridgecrest 2019与Lone Pine 2020的12条T1谱。直接读取PR #42中已保存的两份**SCEDC官方StationXML原始文件**：2019 `USGS_ci38457511/CI_CLC/original/CI_station_response.xml`（SHA256=`31aff27345c4795d37b10d1affce7e2a3504e5d5a93cd0758bc8781a4da32e4c`）和2020 `USGS_ci39493944/CI_CLC/original/CI_station_response.xml`（SHA256=`9892557ccfb828dff034eb82faba8e2877460534c94ed0e9766955a89afeeec3`）。逐份使用同目录`source_receipt.json`的两处SHA字段核对，选择**事件时刻有效且locationCode为空**的CI.CLC..HNE/HNN；2020原件另含locationCode=`2C`的200Hz通道，明确排除，不能把同码不同location混算。
