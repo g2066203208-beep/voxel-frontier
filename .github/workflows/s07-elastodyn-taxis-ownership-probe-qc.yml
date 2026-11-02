@@ -350,8 +350,13 @@ jobs:
           assert port(b'0.1 DT\n') == b'0.1 DT\n'
           assert port(b'NotAPath Value\n') == b'NotAPath Value\n'
           
+          # The source restorer places CASES/Rotor in work/Rotor, a sibling of batch1.
+          blade = root.parent / 'Rotor' / 'DTU_10MW_ElastoDyn_Blades.dat'
+          assert blade.is_file(), 'MISSING_ORIGINAL_SHARED_ROTOR_BLADE_FILE__HOLD'
+          blade_source_sha = hashlib.sha256(blade.read_bytes()).hexdigest()
+          assert blade_source_sha == '6ad2426fd429f4e01008700d31d4b64d79358522bcf265ce12f7706e8a1f895d', 'ORIGINAL_SHARED_BLADE_SHA256_MISMATCH'
           rows = []
-          for p in sorted(root.rglob('*')):
+          for p in sorted(root.parent.rglob('*')):
               if not p.is_file() or p.suffix.lower() not in ('.fst', '.dat', '.txt'):
                   continue
               before = p.read_bytes()
@@ -361,15 +366,17 @@ jobs:
               if after != before:
                   p.write_bytes(after)
                   rows.append({
-                      'file': str(p.relative_to(root)),
+                      'file': str(p.relative_to(root.parent)),
                       'source_sha256': hashlib.sha256(before).hexdigest(),
                       'derived_sha256': hashlib.sha256(after).hexdigest(),
                       'backslash_count_removed': before.count(b'\\') - after.count(b'\\'),
                   })
           assert rows, 'NO_WINDOWS_PATH_REFERENCES_FOUND__HOLD'
-          assert (root / 'Rotor' / 'DTU_10MW_ElastoDyn_Blades.dat').is_file(), 'MISSING_ORIGINAL_BLADE_FILE__HOLD'
+          assert blade.is_file(), 'MISSING_SHARED_ROTOR_AFTER_PORT__HOLD'
           receipt = {
-              'purpose': 'Linux path separator portability in derived 2s diagnostic input only',
+              'purpose': 'Linux path separator portability in derived 2s diagnostic input and shared work/Rotor tree only',
+              'original_shared_blade_sha256': blade_source_sha,
+              'shared_rotor_root': 'work/Rotor',
               'source_model_modified': False,
               'physics_parameter_modified': False,
               'controller_equivalence_verified': False,
