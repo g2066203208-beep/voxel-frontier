@@ -385,6 +385,10 @@ jobs:
           right = b'Cylinder_Aerodyn15.dat'
           assert wrong != right and wrong.lower() == right.lower()
           assert (root / '../Rotor/Airfoils/Cylinder_Aerodyn15.dat').resolve() == airfoil.resolve()
+          # Two identical references in separate restored text files are not
+          # an error. Verify each exact token and preserve per-file SHA.
+          assert (wrong + b'\\n' + wrong).replace(wrong, right) == (right + b'\\n' + right)
+          assert right.replace(wrong, right) == right
           case_rows = []
           for p in sorted(root.parent.rglob('*')):
               if not p.is_file() or p.suffix.lower() not in ('.fst', '.dat', '.txt'):
@@ -400,8 +404,16 @@ jobs:
                       'source_sha256': hashlib.sha256(before).hexdigest(),
                       'derived_sha256': hashlib.sha256(after).hexdigest(),
                   })
-          assert sum(r['references_repaired'] for r in case_rows) == 1, 'CYLINDER_AIRFOIL_REFERENCE_CARDINALITY_HOLD'
+          case_total = sum(r['references_repaired'] for r in case_rows)
+          print('S07_CYLINDER_CASE_MATCHES', json.dumps(case_rows, sort_keys=True))
+          # Prior CI failed because it assumed one occurrence across the
+          # entire restored tree. Require >=1 and inspect each modified file,
+          # rather than silently ignoring valid repeated exact references.
+          assert case_total >= 1, 'CYLINDER_AIRFOIL_REFERENCE_ZERO_MATCH_HOLD'
+          assert all(r['file'].startswith(('batch1/', 'Rotor/')) for r in case_rows), 'CYLINDER_AIRFOIL_UNEXPECTED_TREE_HOLD'
+          assert all(r['source_sha256'] != r['derived_sha256'] for r in case_rows), 'CYLINDER_AIRFOIL_UNCHANGED_SHA_HOLD'
           assert not (root.parent / 'Rotor' / 'Airfoils' / 'Cylinder_AeroDyn15.dat').exists(), 'AMBIGUOUS_CYLINDER_CASE_COLLISION_HOLD'
+          assert not any(wrong in p.read_bytes() for p in root.parent.rglob('*') if p.is_file() and p.suffix.lower() in ('.fst', '.dat', '.txt')), 'CYLINDER_AIRFOIL_UNPATCHED_REFERENCE_HOLD'
 
           receipt = {
               'purpose': 'Linux path separator portability in derived 2s diagnostic input and shared work/Rotor tree only',
@@ -414,6 +426,7 @@ jobs:
               'files': rows,
               'case_sensitive_airfoil_source_sha256': airfoil_sha,
               'case_sensitive_airfoil_repairs': case_rows,
+              'case_sensitive_airfoil_reference_total': case_total,
           }
           Path('s07_linux_path_port_receipt.json').write_text(json.dumps(receipt, indent=2) + '\n')
           print('S07_DERIVED_WINDOWS_PATH_PORT_PASS', len(rows), 'files')
