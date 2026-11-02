@@ -1,0 +1,104 @@
+{
+  "FIG": "previous source-divergence figure requires revised causal caption",
+  "HOLD": "Need whole-36-case crosscheck to claim original algorithm issue applies to all; not material S-N/Miner/20-year life",
+  "OFFICIAL": "real OpenFAST original FileID4 source verified; no new OpenFAST solver",
+  "REF": "original September 2026 rainflow_del_r1.py and T062 independent source DEL",
+  "RUN": "GitHub Actions pure Python: exact original functions/patch/reference against two real OUTB",
+  "STANDARD": "rainflow package declares ASTM algorithm, authorized ASTM text not read",
+  "TAB": "two control cases original/fix/reference with full cycle statistics",
+  "error_budget": "DEL absolute 1e-5 kN-m and 1e-8 range/mean for multiset; physical error not evaluated",
+  "historical_script_sha256": "b7c2d50b391d90f69fef6aa72e5bdf4be5a843c72b4460147145a0df14110649",
+  "identical_old_new_OUTB_sha_count": 36,
+  "material_fatigue_pass": false,
+  "one_line_patch_in_memory_only": true,
+  "original_source_unchanged": true,
+  "pinned_rainflow_wheel_sha256": "cb6c254aa1a16a9e658ff3f39c6e5a77650d6c4e8304146169b36516d1f01660",
+  "real_cases": [
+    {
+      "case": "U11p4_ETM_S03",
+      "current_T062_05_CSV_DEL_kNm": 23005.397834265204,
+      "independent_rainflow_3_2_DEL_kNm": 23005.397834265208,
+      "legacy_cycle_rows": 804,
+      "n_samples": 12001,
+      "one_comparator_fix_DEL_kNm": 23005.397834265208,
+      "original_function_DEL_kNm": 28177.00992761204,
+      "original_legacy_05_CSV_DEL_kNm": 28177.009927612038,
+      "original_outb_sha256": "abc09ecf3856e6750110d6d23137c123dd15bb884d40d72271eb7a69addf351e",
+      "original_zip_sha256": "6044ab49bf2a941168ea10b45b83bdd8eac2ad441db035c6256d0dfaca6fa07f",
+      "patched_cycle_rows": 687,
+      "patched_full_cycle_range_mean_count_equal_independent_reference": true,
+      "reference_cycle_rows": 687,
+      "weighted_cycle_sum_corrected": 679.5,
+      "weighted_cycle_sum_original": 679.5
+    },
+    {
+      "case": "U11p4_ETM_S04",
+      "current_T062_05_CSV_DEL_kNm": 26802.478501532034,
+      "independent_rainflow_3_2_DEL_kNm": 26802.478501532038,
+      "legacy_cycle_rows": 780,
+      "n_samples": 12001,
+      "one_comparator_fix_DEL_kNm": 26802.478501532038,
+      "original_function_DEL_kNm": 24688.99471488991,
+      "original_legacy_05_CSV_DEL_kNm": 24688.99471488991,
+      "original_outb_sha256": "650e08d46c164d831b9b3fc703238bd22e3b19644c367498639bb900142f7ad0",
+      "original_zip_sha256": "90b26b847185fa4615736978d30cb0f8d54b3aba66a669cb9f0bd154b8c913ef",
+      "patched_cycle_rows": 662,
+      "patched_full_cycle_range_mean_count_equal_independent_reference": true,
+      "reference_cycle_rows": 662,
+      "weighted_cycle_sum_corrected": 655.0,
+      "weighted_cycle_sum_original": 655.0
+    }
+  ],
+  "root_cause": "Old X=previous range, Y=NEW range and incorrectly breaks on X<Y; must break when Y<X. One comparator-only change recovers independent reference on 2 real controls.",
+  "source_reading_level": "Original 2026-09 script AST executed with exact SHA; true S03/S04 original OpenFAST 7MB OUTB SHA validated; independent wheel 3.2.0",
+  "status": "T062_SOURCE_IDENTICAL_HISTORICAL_ALGORITHM_CAUSE_REPRODUCED",
+  "synthetic_counterexample": {
+    "independent_cycles": [
+      [
+        5.0,
+        7.5,
+        1.0
+      ],
+      [
+        15.0,
+        7.5,
+        0.5
+      ]
+    ],
+    "original_cycles": [
+      [
+        10.0,
+        5.0,
+        0.5
+      ],
+      [
+        5.0,
+        7.5,
+        0.5
+      ],
+      [
+        10.0,
+        10.0,
+        0.5
+      ]
+    ],
+    "patched_cycles": [
+      [
+        5.0,
+        7.5,
+        1.0
+      ],
+      [
+        15.0,
+        7.5,
+        0.5
+      ]
+    ],
+    "signal": [
+      0,
+      10,
+      5,
+      15
+    ]
+  }
+}
