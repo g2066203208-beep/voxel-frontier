@@ -1,4 +1,58 @@
 {
+  "s07_linux_rosco_relative_path_failure_20261103_07h": {
+    "timestamp_local": "2026-11-03 07h Asia/Shanghai",
+    "stage": "S07_BLOCKED_DIAGNOSTIC_ONLY",
+    "status": "TWO_ACTUAL_NATIVE_INITIALIZATION_FAILURES__DERIVED_DLL_RELATIVE_PATH_FIX_COMMITTED__NEW_NATIVE_RESULT_PENDING",
+    "SOURCE": {
+      "runs": [
+        {
+          "run_id": 41535377249,
+          "job_id": 125585758006,
+          "artifact_id": 13184383860,
+          "artifact_zip_sha256": "2e92fc861ca6558fd352046cccdd37a5e60173b08bd28782a6fd93e8f4bb685b"
+        },
+        {
+          "run_id": 41535425387,
+          "job_id": 125585925242,
+          "artifact_id": 13185310455,
+          "artifact_zip_sha256": "258372c5a4abe0ec60eca0efd21d989167eb6202a7286677ecffd66fe52ff0e8"
+        }
+      ],
+      "reading_level": "FULL_ACTUAL_GITHUB_ACTIONS_JOB_LOGS_AND_ARTIFACT_METADATA",
+      "original_bts_sha256": "ad68a83a63f197c528c07502db8adff883e9c737863ef3c4cab99cfa76052147",
+      "historical_windows_controller_sha256": "7aebb0d2166c0cc095d11c2b7bc13da136547c557b0f331dcdce84fe181802aa",
+      "linux_rosco_controller_sha256": "95410f20aac378749943601cdaf1c89ea31e622766727c8abbb1bbc2bf4bb709",
+      "previous_derived_servo_sha256": "7f5a52062af42a126b779799803b6a399335aefeb1f8c1a6dfcc4b584e43ca5b",
+      "workflow_git_blob_sha1_after_fix": "359baba884ed752fff15a8004dabcd6f74c65e9a"
+    },
+    "REF": "T062 original ETM 2s source reconstruction; no new journal full text",
+    "STANDARD": "No newly read authorized IEC/GB/NB clause; no code compliance PASS",
+    "OFFICIAL": "OpenFAST v3.5.3 GNU Fortran 11.4.0 and ROSCO v2.9.0 Linux build; native initialization failed before time integration",
+    "RUN": {
+      "first_actual_fatal": "FAST_InitializeAll:SrvD_Init:BladedInterface_Init: ./Control/Control/libdiscon.so could not be loaded",
+      "native_rc": [
+        1,
+        1
+      ],
+      "other_jobs_success_each": 3,
+      "real_dcm_rows": 0,
+      "real_inertia_ownership_rows": 0,
+      "fix_commits": [
+        "4f651a1f9648b0336b52946d849d2e68243eabcc",
+        "c46609bea002eb3073afa5b71736598fcc26eefe"
+      ],
+      "fix_native_ci": "PENDING_NO_PASS_CLAIM",
+      "synthetic_path_tests": "Python 3 local: 3 positive, 2 negative passed; NOT OpenFAST native"
+    },
+    "FIG": "0",
+    "TAB": "Actual failed Linux DLL path ./Control/Control/libdiscon.so versus expected work/batch1/Control/libdiscon.so; source/derived SHA values above",
+    "assumptions": "ServoDyn input is work/batch1/Control/DTU_10MW_RWT_ServoDyn.dat and DLL_FileName resolves relative to its parent; derived diagnostic only, Windows historical control state not equivalent",
+    "error_budget": "Original BTS and controller SHA identities locked; derived ServoDyn path-only replacement checked by regex and resolved-path assertion, numeric card modifications not intended; native DCM/controller/precision uncertainty unquantified",
+    "failure_record": "Two independent native CI runs passed full OpenFAST build, input reconstruction and Linux ROSCO compilation, but failed ServoDyn library loading at duplicate Control/Control path; no DCM raw file. Previous regex fix first accidentally double-escaped backslashes; corrected before this receipt, synthetic tests passed.",
+    "HOLD": "Await fresh native 2s run and actual DCM/orthogonality/inertia audit; do not claim source equivalence, physics PASS, DLC1.2, material life, seismic E/WE or stage advancement",
+    "stage_pass": false,
+    "physical_pass": false
+  },
   "s07_case_reference_cardinality_failure_20261103_06h": {
       "timestamp_local": "2026-11-03 06h Asia/Shanghai",
       "stage": "S07_BLOCKED_DIAGNOSTIC_ONLY",
