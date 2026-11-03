@@ -1,3 +1,5 @@
+> **2026-11-04 02时原生数值补证：** 直接下载并校验原始single-precision Actions ZIP/GTE，取t=0.1875s的903行原生数据，用本地GNU Fortran 14.2.0编译三种单精度微程序（-O0、-O2及ffp-contract=fast）。三种真实二进制所得Mx残差**均为−0.0013260841369628906 kN·m**，标志间差0，3项异常拒绝测试通过；完整六分量表/输入SHA/失败记录见[原T062收据](../../experiments/T062/S07_DCM_PRECISION_OWNERSHIP_RECHECK_20261104.json)。此为原始GTE的数值重放，不是GNU11.4原始完整OpenFAST等价性、风载归属或物理验收；新CI原生结果仍待回读，严格**0/12未晋级**，E/WE原生0，正式DLC1.2 0/126。
+
 > **2026-11-04 02时增量（非阶段PASS）：** S07针对历史原生2秒t=0.1875s Mx残差，已提交GNU real32 901单元源级微型程序、SHA锁定原件驱动与既有CI三编译参数对照（-O0/-O2、ffp-contract off/fast）。本地合成自测通过，**真实原件CI待回读**；原件ZIP SHA256=`983bce8ca81981ff5fd00e5261dbfb2c0b6e18b074aa4eb1ff425e6851fb9735`，原始G/T/E SHA256=`77f247d7e0b66997041ffbba70c859bdd38fd345eb303b18b78c6599fa2caa92`；具体代码/方法/失败及HOLD见[原T062收据](../../experiments/T062/S07_DCM_PRECISION_OWNERSHIP_RECHECK_20261104.json)。无新增OpenFAST/Abaqus生产求解、无授权规范原页或地震结果；S06 PARTIAL、S07/S10 BLOCKED、正式DLC1.2 0/126、E/WE=0，严格**0/12未晋级**。保留Ch4风致分材料疲劳与Ch5优化主线，不改冻结T057/T070。
 
 ### 2026-11-04 01时｜S07官方ElastoDyn积分次序修正与原生CI复算（0/12）
