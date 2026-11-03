@@ -548,7 +548,6 @@ jobs:
           assert r['controller_native_stdout_audit']['historical_windows_rosco_version']=='2.6.0'
           assert r['controller_native_stdout_audit']['linux_substitute_rosco_version']=='2.6.0'
           assert r['controller_native_stdout_audit']['same_rosco_version'] is True
-          assert r['controller_native_stdout_audit']['same_rosco_version'] is False
           print('S07_SAME_ROSCO_VERSION_260_NATIVE_LOG_AND_TIME_RESOLVED_DIFFERENCES__NOT_TOOLCHAIN_EQUIVALENCE')
           PY
           sha256sum "$script" s07_original_windows_2s.zip work/batch1/DTU_10MW_RWT.outb s07_pair_compare.json | tee s07_pair_sha256.log
