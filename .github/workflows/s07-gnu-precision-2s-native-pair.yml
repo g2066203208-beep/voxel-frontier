@@ -1,0 +1,420 @@
+name: S07 controlled GNU precision single-vs-double 2s native diagnostic
+on:
+  push:
+    paths:
+      - '.github/workflows/s07-gnu-precision-2s-native-pair.yml'
+      - 'research/wind-tower/experiments/T062/s07_gnu_precision_2s_pair_qc.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  native-gnu-precision-two-second-pair:
+    if: github.ref_name == 'research/t080-seismic-integration-gates-20261022'
+    runs-on: ubuntu-22.04
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        precision: [single, double]
+    steps:
+      - name: Sparse checkout S07 diagnostic and original 2s source dependencies only
+        uses: actions/checkout@v4
+        with:
+          lfs: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            research/wind-tower/experiments/T062/s07_elastodyn_taxis_ownership_probe.py
+            research/wind-tower/experiments/T062/s07_windows_linux_2s_pair_qc.py
+            research/wind-tower/experiments/T062/s06_etm_2s_native_overlap.py
+            research/wind-tower/experiments/T062/s06_ntm_native_0p1s_probe.py
+            research/wind-tower/experiments/T062/s06_native_4batch_common_channel_qc.py
+            research/wind-tower/experiments/T062/s06_historical_outb_source_gate.py
+            research/wind-tower/experiments/T062/S06_NTM_ORIGINAL_FST_ED_31GAGE_CONTRACT_20261031.json
+            research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip
+            research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-002.zip
+            research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip
+            research/wind-tower/archive/local-large-assets-20261004/turbSim-36/inputs/U09p343881_ETM_S06.bts
+            research/wind-tower/references/baselines-and-site-20261004/runtime-binaries/openfast_x64_v353.exe
+            research/wind-tower/references/baselines-and-site-20261004/openfast-v330-adaptation/1FreeDecay/Control/libdiscon.dll
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install official v3.5.3 documented minimal build dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends gfortran g++ cmake make libblas-dev liblapack-dev
+          { gfortran --version | head -1; cmake --version | head -1; git --version; } | tee s07_native_toolchain.log
+      - name: Clone exact tagged official OpenFAST and insert source-locked t-axis probe
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --depth 1 --branch v3.5.3 https://github.com/OpenFAST/openfast.git official-openfast
+          cd official-openfast
+          test "$(git rev-parse HEAD)" = '6a7a543790f3cad4a65b87242a619ac5b34b4c0f'
+          git submodule update --init --recursive --depth 1
+          cd ..
+          source=official-openfast/modules/elastodyn/src/ElastoDyn.f90
+          echo 'a8ea1a88dc22d5401ea450f376aa7f66e3242785f1e038a22933054aaaf4f7d3  '"$source" | sha256sum -c
+          python research/wind-tower/experiments/T062/s07_elastodyn_taxis_ownership_probe.py --source "$source" --out s07_ElastoDyn_patched.f90 | tee s07_native_patch_receipt.log
+          echo '0412e3d8bab3729ec488853e053297c17aab3863e746e4a3178286049b366f00  s07_ElastoDyn_patched.f90' | sha256sum -c
+          cp s07_ElastoDyn_patched.f90 "$source"
+          sha256sum "$source" research/wind-tower/experiments/T062/s07_elastodyn_taxis_ownership_probe.py | tee s07_native_input_hashes.log
+          echo 'S07_FULL_SOURCE_PATCHED__NOT_YET_COMPILED'
+      - name: Configure and build native OpenFAST with exactly one precision toggle
+        shell: bash
+        run: |
+          set -euo pipefail
+          precision='${{ matrix.precision }}'
+          if [ "$precision" = single ]; then flag=OFF; else flag=ON; fi
+          cmake -S official-openfast -B official-openfast/build -DCMAKE_BUILD_TYPE=Release -DBUILD_FASTFARM=OFF -DBUILD_OPENFAST_CPP_API=OFF -DDOUBLE_PRECISION="$flag" 2>&1 | tee s07_native_cmake.log
+          grep -q "^DOUBLE_PRECISION:BOOL=$flag$" official-openfast/build/CMakeCache.txt
+          cp official-openfast/build/CMakeCache.txt s07_openfast_cmake_cache.txt
+          echo "S07_PRECISION_CMAKE_MATRIX=$precision/$flag" | tee s07_precision_matrix.log
+          cmake --build official-openfast/build --target openfast -j 2 2>&1 | tee s07_native_build.log
+          exe=official-openfast/build/glue-codes/openfast/openfast
+          test -x "$exe"
+          "$exe" -v 2>&1 | tee s07_native_version.log
+          sha256sum "$exe" | tee s07_native_binary_hash.log
+          echo 'S07_FULL_PATCHED_OPENFAST_NATIVE_BINARY_BUILT__NO_TURBINE_RUN_NO_DCM'
+      - name: Recover and SHA-verify one original 2s ETM batch (no solver yet)
+        shell: bash
+        run: |
+          set -euo pipefail
+          root=research/wind-tower
+          bts="$root/archive/local-large-assets-20261004/turbSim-36/inputs/U09p343881_ETM_S06.bts"
+          winexe="$root/references/baselines-and-site-20261004/runtime-binaries/openfast_x64_v353.exe"
+          git lfs install --local
+          git lfs pull --include="$bts,$winexe" --exclude=""
+          echo 'ad68a83a63f197c528c07502db8adff883e9c737863ef3c4cab99cfa76052147  '"$bts" | sha256sum -c
+          echo '0cc8147fdda188365b8eacda8a831e74fafef59440d71185d66c3272af9e176a  '"$winexe" | sha256sum -c
+          python "$root/experiments/T062/s06_etm_2s_native_overlap.py" --selftest
+          python "$root/experiments/T062/s06_etm_2s_native_overlap.py" --prepare --overlap --batch 1 \
+            --archive1 "$root/archive/local-assets-20261004/openfast-36-r2/part-001.zip" \
+            --archive2 "$root/archive/local-assets-20261004/openfast-36-r2/part-002.zip" \
+            --supp "$root/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip" \
+            --dll "$root/references/baselines-and-site-20261004/openfast-v330-adaptation/1FreeDecay/Control/libdiscon.dll" \
+            --exe "$winexe" \
+            --contract "$root/experiments/T062/S06_NTM_ORIGINAL_FST_ED_31GAGE_CONTRACT_20261031.json" \
+            --bts "$bts" --outdir work/batch1 | tee s07_linux_prep.log
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('work/batch1/S06_0P1S_PREP_RECEIPT.json').read_text())
+          assert r['case']=='U09p343881_ETM_S06' and r['TMax_s']==2.0
+          assert r['gage_nodes'][-1]==220 and len(r['gage_nodes'])==9
+          print('S07_ORIGINAL_2S_BATCH1_PREP_PASS__NOT_NATIVE_RUN')
+          PY
+      - name: Normalize Windows input path separators in derived 2s copy only
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib, json, re
+          from pathlib import Path
+          
+          root = Path('work/batch1')
+          quoted = re.compile(rb'"[^"\r\n]*\\[^"\r\n]*"')
+          bare = re.compile(rb'(?<![A-Za-z0-9_.])(?:\.\.?\\)[^\s\r\n]+')
+          
+          def port(data):
+              data = quoted.sub(lambda m: m.group(0).replace(b'\\', b'/'), data)
+              return bare.sub(lambda m: m.group(0).replace(b'\\', b'/'), data)
+          
+          # Synthetic positive/negative tests: change only Windows separators in path tokens.
+          test = b'"./..\\Rotor\\blade.dat" BldFile(1)\n123.0 Mass\n'
+          expected = b'"./../Rotor/blade.dat" BldFile(1)\n123.0 Mass\n'
+          assert port(test) == expected
+          assert port(expected) == expected
+          assert port(b'0.1 DT\n') == b'0.1 DT\n'
+          assert port(b'NotAPath Value\n') == b'NotAPath Value\n'
+          
+          # The source restorer places CASES/Rotor in work/Rotor, a sibling of batch1.
+          blade = root.parent / 'Rotor' / 'DTU_10MW_ElastoDyn_Blades.dat'
+          assert blade.is_file(), 'MISSING_ORIGINAL_SHARED_ROTOR_BLADE_FILE__HOLD'
+          blade_source_sha = hashlib.sha256(blade.read_bytes()).hexdigest()
+          assert blade_source_sha == '6ad2426fd429f4e01008700d31d4b64d79358522bcf265ce12f7706e8a1f895d', 'ORIGINAL_SHARED_BLADE_SHA256_MISMATCH'
+          rows = []
+          for p in sorted(root.parent.rglob('*')):
+              if not p.is_file() or p.suffix.lower() not in ('.fst', '.dat', '.txt'):
+                  continue
+              before = p.read_bytes()
+              if b'\\' not in before:
+                  continue
+              after = port(before)
+              if after != before:
+                  p.write_bytes(after)
+                  rows.append({
+                      'file': str(p.relative_to(root.parent)),
+                      'source_sha256': hashlib.sha256(before).hexdigest(),
+                      'derived_sha256': hashlib.sha256(after).hexdigest(),
+                      'backslash_count_removed': before.count(b'\\') - after.count(b'\\'),
+                  })
+          assert rows, 'NO_WINDOWS_PATH_REFERENCES_FOUND__HOLD'
+          assert blade.is_file(), 'MISSING_SHARED_ROTOR_AFTER_PORT__HOLD'
+
+          # The archived Windows AeroDyn input spells AeroDyn, while the SHA-locked
+          # archived member spells Aerodyn. Linux resolves paths case-sensitively.
+          # Change only the derived 2s text reference, never rename source files.
+          airfoil = root.parent / 'Rotor' / 'Airfoils' / 'Cylinder_Aerodyn15.dat'
+          assert airfoil.is_file(), 'MISSING_ORIGINAL_SHARED_CYLINDER_AIRFOIL__HOLD'
+          airfoil_sha = hashlib.sha256(airfoil.read_bytes()).hexdigest()
+          assert airfoil_sha == '2994cb5f79282170019be0a8c48b60155905365cac4ac88b21dda58c16f925cb', 'ORIGINAL_CYLINDER_AIRFOIL_SHA256_MISMATCH'
+          wrong = b'Cylinder_AeroDyn15.dat'
+          right = b'Cylinder_Aerodyn15.dat'
+          assert wrong != right and wrong.lower() == right.lower()
+          assert (root / '../Rotor/Airfoils/Cylinder_Aerodyn15.dat').resolve() == airfoil.resolve()
+          # Two identical references in separate restored text files are not
+          # an error. Verify each exact token and preserve per-file SHA.
+          assert (wrong + b'\\n' + wrong).replace(wrong, right) == (right + b'\\n' + right)
+          assert right.replace(wrong, right) == right
+          case_rows = []
+          for p in sorted(root.parent.rglob('*')):
+              if not p.is_file() or p.suffix.lower() not in ('.fst', '.dat', '.txt'):
+                  continue
+              before = p.read_bytes()
+              hits = before.count(wrong)
+              if hits:
+                  after = before.replace(wrong, right)
+                  p.write_bytes(after)
+                  case_rows.append({
+                      'file': str(p.relative_to(root.parent)),
+                      'references_repaired': hits,
+                      'source_sha256': hashlib.sha256(before).hexdigest(),
+                      'derived_sha256': hashlib.sha256(after).hexdigest(),
+                  })
+          case_total = sum(r['references_repaired'] for r in case_rows)
+          print('S07_CYLINDER_CASE_MATCHES', json.dumps(case_rows, sort_keys=True))
+          # Prior CI failed because it assumed one occurrence across the
+          # entire restored tree. Require >=1 and inspect each modified file,
+          # rather than silently ignoring valid repeated exact references.
+          assert case_total >= 1, 'CYLINDER_AIRFOIL_REFERENCE_ZERO_MATCH_HOLD'
+          assert all(r['file'].startswith(('batch1/', 'Rotor/')) for r in case_rows), 'CYLINDER_AIRFOIL_UNEXPECTED_TREE_HOLD'
+          assert all(r['source_sha256'] != r['derived_sha256'] for r in case_rows), 'CYLINDER_AIRFOIL_UNCHANGED_SHA_HOLD'
+          assert not (root.parent / 'Rotor' / 'Airfoils' / 'Cylinder_AeroDyn15.dat').exists(), 'AMBIGUOUS_CYLINDER_CASE_COLLISION_HOLD'
+          assert not any(wrong in p.read_bytes() for p in root.parent.rglob('*') if p.is_file() and p.suffix.lower() in ('.fst', '.dat', '.txt')), 'CYLINDER_AIRFOIL_UNPATCHED_REFERENCE_HOLD'
+
+          receipt = {
+              'purpose': 'Linux path separator portability in derived 2s diagnostic input and shared work/Rotor tree only',
+              'original_shared_blade_sha256': blade_source_sha,
+              'shared_rotor_root': 'work/Rotor',
+              'source_model_modified': False,
+              'physics_parameter_modified': False,
+              'controller_equivalence_verified': False,
+              'physical_pass': False,
+              'files': rows,
+              'case_sensitive_airfoil_source_sha256': airfoil_sha,
+              'case_sensitive_airfoil_repairs': case_rows,
+              'case_sensitive_airfoil_reference_total': case_total,
+          }
+          Path('s07_linux_path_port_receipt.json').write_text(json.dumps(receipt, indent=2) + '\n')
+          print('S07_DERIVED_WINDOWS_PATH_PORT_PASS', len(rows), 'files')
+          PY
+      - name: Compile official ROSCO v2.6.0 Linux Bladed interface (diagnostic substitution)
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --depth 1 --branch v2.6.0 https://github.com/NREL/ROSCO.git official-rosco
+          git -C official-rosco rev-parse HEAD | tee s07_rosco_source_commit.log
+          test "$(git -C official-rosco rev-parse HEAD)" = '51629665d22f92770f861daeebcebd47ab32abb1'
+          test -f official-rosco/ROSCO/CMakeLists.txt
+          sha256sum official-rosco/ROSCO/CMakeLists.txt | tee s07_rosco_cmake_source_sha256.log
+          cmake -S official-rosco/ROSCO -B official-rosco/build \
+            -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$PWD/rosco-install" 2>&1 | tee s07_rosco_cmake.log
+          cmake --build official-rosco/build -j 2 2>&1 | tee s07_rosco_build.log
+          cmake --install official-rosco/build 2>&1 | tee s07_rosco_install.log
+          find official-rosco rosco-install -type f -name 'libdiscon.so*' -print | tee s07_rosco_library_locations.log
+          so=$(find rosco-install official-rosco -type f -name libdiscon.so -print -quit)
+          test -n "$so" && test -s "$so"
+          cp "$so" work/batch1/Control/libdiscon.so
+          sha256sum work/batch1/Control/libdiscon.so | tee s07_rosco_library_sha256.log
+          ldd work/batch1/Control/libdiscon.so | tee s07_rosco_ldd.log
+          ! grep -q 'not found' s07_rosco_ldd.log
+          echo 'S07_LINUX_ROSCO_LIBRARY_COMPILED__HISTORICAL_WINDOWS_DLL_NOT_IDENTICAL'
+      - name: Port only ServoDyn DLL path, run exactly one 2s native ETM diagnostic
+        shell: bash
+        env:
+          OMP_NUM_THREADS: '2'
+          OPENBLAS_NUM_THREADS: '2'
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib,re,json
+          from pathlib import Path
+          p=Path('work/batch1/Control/DTU_10MW_RWT_ServoDyn.dat')
+          src=p.read_bytes()
+          text=src.decode('utf-8-sig')
+          pat=r'(?m)^(\s*)(?:"[^"\r\n]+"|\S+)(\s+DLL_FileName\b[^\r\n]*)$'
+          edited,n=re.subn(pat,lambda m:m.group(1)+'"libdiscon.so"'+m.group(2),text)
+          if n!=1: raise ValueError('DLL_FILENAME_CARDINALITY_HOLD_'+str(n))
+          # OpenFAST resolves DLL_FileName relative to the ServoDyn input directory.
+          # Do not prepend Control/ when ServoDyn.dat is already inside Control/.
+          match=re.search(r'(?m)^\s*"([^"\r\n]+)"\s+DLL_FileName\b',edited)
+          if not match or match.group(1)!='libdiscon.so':
+              raise ValueError('S07_DERIVED_DLL_REFERENCE_HOLD')
+          resolved=(p.parent/match.group(1)).resolve()
+          expected=Path('work/batch1/Control/libdiscon.so').resolve()
+          if resolved!=expected or not expected.is_file():
+              raise ValueError('S07_DERIVED_DLL_RESOLUTION_HOLD')
+          p.write_text(edited)
+          r={'resolved_linux_controller_path':str(resolved),
+             'controller_path_rule':'relative to ServoDyn input directory, no duplicated Control prefix',
+             'source_servo_sha256':hashlib.sha256(src).hexdigest(),
+             'derived_linux_servo_sha256':hashlib.sha256(p.read_bytes()).hexdigest(),
+             'source_controller_sha256':hashlib.sha256(Path('work/batch1/Control/libdiscon.dll').read_bytes()).hexdigest(),
+             'linux_controller_sha256':hashlib.sha256(Path('work/batch1/Control/libdiscon.so').read_bytes()).hexdigest(),
+             'change':'DLL_FileName only; historical Windows controller replaced by ROSCO v2.6.0 Linux diagnostic build',
+             'source_equivalence':False,'physical_pass':False}
+          Path('s07_linux_derived_identity.json').write_text(json.dumps(r,indent=2)+'\n')
+          print('S07_LINUX_DLL_PATH_ONLY_CHANGE',json.dumps(r))
+          PY
+          set +e
+          (cd work/batch1 && OPENFAST_S07_DCM_PROBE="$PWD/s07_native_dcm_raw.log" \
+            timeout 180 ../../official-openfast/build/glue-codes/openfast/openfast DTU_10MW_RWT.fst) \
+            > s07_linux_native_stdout.log 2>&1
+          rc=$?
+          set -e
+          echo "$rc" | tee s07_linux_native_exit_code.log
+          tail -n 65 s07_linux_native_stdout.log | tee s07_linux_native_stdout_tail.log
+          if [ -f work/batch1/s07_native_dcm_raw.log ]; then
+            sha256sum work/batch1/s07_native_dcm_raw.log | tee s07_linux_dcm_raw_sha256.log
+            wc -l -c work/batch1/s07_native_dcm_raw.log | tee s07_linux_dcm_raw_size.log
+            python research/wind-tower/experiments/T062/s07_elastodyn_taxis_ownership_probe.py \
+              --audit work/batch1/s07_native_dcm_raw.log > s07_linux_dcm_audit.json
+            python - <<'PY'
+          import json
+          r=json.load(open('s07_linux_dcm_audit.json'))
+          assert r['rows'] and all(x['element_rows']>0 for x in r['rows'])
+          print('S07_ACTUAL_NATIVE_DCM_AND_OWNERSHIP_DIAGNOSTIC_QC',len(r['rows']))
+          PY
+          else
+            echo 'S07_NO_NATIVE_DCM_RAW__HOLD' | tee s07_linux_dcm_missing.log
+          fi
+          test "$rc" -eq 0
+          grep -q 'OpenFAST terminated normally.' s07_linux_native_stdout.log
+          grep -Eiq 'Precision:[[:space:]]*${'${{ matrix.precision }}'}' s07_linux_native_stdout.log
+          test -s s07_linux_dcm_audit.json
+          echo 'S07_SINGLE_2S_NATIVE_DIAGNOSTIC_COMPLETED__NOT_HISTORICAL_EQUIVALENCE_OR_PHYSICAL_PASS'
+      - name: Compress real native probe and OUTB with source SHA and bounded size
+        if: always()
+        shell: bash
+        run: |
+          python - <<'PY'
+          import gzip,hashlib,json
+          from pathlib import Path
+          rows=[]
+          for src,dest in [
+              ('work/batch1/s07_native_dcm_raw.log','s07_native_dcm_raw.log.gz'),
+              ('work/batch1/DTU_10MW_RWT.outb','s07_linux_native_2s.outb.gz')]:
+              p=Path(src)
+              if not p.is_file():
+                  rows.append({'source':src,'status':'MISSING__HOLD'})
+                  continue
+              raw=p.read_bytes()
+              if not (0<len(raw)<100_000_000):
+                  rows.append({'source':src,'status':'RESOURCE_SIZE_HOLD','bytes':len(raw)})
+                  continue
+              zipped=gzip.compress(raw,compresslevel=6,mtime=0)
+              if gzip.decompress(zipped)!=raw:raise RuntimeError('S07_GZIP_ROUNDTRIP_HOLD')
+              Path(dest).write_bytes(zipped)
+              rows.append({'source':src,'status':'GZIP_ROUNDTRIP_VERIFIED',
+                           'source_bytes':len(raw),'source_sha256':hashlib.sha256(raw).hexdigest(),
+                           'compressed_path':dest,'compressed_bytes':len(zipped),
+                           'compressed_sha256':hashlib.sha256(zipped).hexdigest()})
+          Path('s07_native_compressed_artifacts.json').write_text(json.dumps({
+              'source':'native Linux 2s probe/OUTB, no production',
+              'physical_pass':False,'controller_equivalence_verified':False,'files':rows},indent=2)+'\n')
+          print('S07_NATIVE_COMPRESSED_ARTIFACT_MANIFEST',json.dumps(rows))
+          PY
+      - name: Preserve actual configure/build logs even when compilation fails (never upload binary)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s07-precision-2s-${'${{ matrix.precision }}'}
+          path: |
+            s07_native_toolchain.log
+            s07_native_patch_receipt.log
+            s07_native_input_hashes.log
+            s07_native_cmake.log
+            s07_openfast_cmake_cache.txt
+            s07_precision_matrix.log
+            s07_native_build.log
+            s07_native_version.log
+            s07_native_binary_hash.log
+            s07_linux_prep.log
+            s07_rosco_source_commit.log
+            s07_rosco_cmake_source_sha256.log
+            s07_rosco_cmake.log
+            s07_rosco_build.log
+            s07_rosco_install.log
+            s07_rosco_library_locations.log
+            s07_rosco_library_sha256.log
+            s07_rosco_ldd.log
+            s07_linux_derived_identity.json
+            s07_linux_path_port_receipt.json
+            s07_linux_native_stdout.log
+            s07_linux_native_stdout_tail.log
+            s07_linux_native_exit_code.log
+            s07_linux_dcm_raw_sha256.log
+            s07_linux_dcm_raw_size.log
+            s07_linux_dcm_missing.log
+            s07_linux_dcm_audit.json
+            s07_native_compressed_artifacts.json
+            s07_native_dcm_raw.log.gz
+            s07_linux_native_2s.outb.gz
+            work/batch1/S06_0P1S_PREP_RECEIPT.json
+          if-no-files-found: warn
+          retention-days: 30
+
+  paired-precision-native-outb-qc:
+    needs: native-gnu-precision-two-second-pair
+    if: github.ref_name == 'research/t080-seismic-integration-gates-20261022'
+    runs-on: ubuntu-22.04
+    timeout-minutes: 6
+    steps:
+      - name: Checkout existing native OUTB decoder and precision-pair QC
+        uses: actions/checkout@v4
+        with:
+          lfs: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            research/wind-tower/experiments/T062/s07_linux_v290_v260_2s_pair_qc.py
+            research/wind-tower/experiments/T062/s07_gnu_precision_2s_pair_qc.py
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Retrieve two native short-run artifacts without binary executables
+        uses: actions/download-artifact@v4
+        with:
+          pattern: s07-precision-2s-*
+          path: precision-artifacts
+          merge-multiple: false
+      - name: Run fail-closed synthetic tests and native 295x41 OUTB comparison
+        shell: bash
+        run: |
+          set -euo pipefail
+          script=research/wind-tower/experiments/T062/s07_gnu_precision_2s_pair_qc.py
+          python -m py_compile "$script"
+          python "$script" --selftest | tee s07_precision_pair_selftest.log
+          python "$script" --single precision-artifacts/s07-precision-2s-single \
+            --double precision-artifacts/s07-precision-2s-double \
+            --out s07_gnu_precision_native_pair.json | tee s07_precision_pair_stdout.log
+          sha256sum "$script" s07_gnu_precision_native_pair.json | tee s07_precision_pair_sha256.log
+          echo 'S07_GNU_PRECISION_2S_NATIVE_A_B_COMPLETE_NOT_DLC12_OR_PHYSICAL_PASS'
+      - name: Preserve numerical report and failure logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s07-gnu-precision-2s-pair-numeric-receipt
+          path: |
+            s07_precision_pair_selftest.log
+            s07_precision_pair_stdout.log
+            s07_gnu_precision_native_pair.json
+            s07_precision_pair_sha256.log
+          if-no-files-found: warn
+          retention-days: 30
