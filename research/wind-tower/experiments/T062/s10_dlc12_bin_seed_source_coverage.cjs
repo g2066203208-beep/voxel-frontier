@@ -83,6 +83,7 @@ function proxySensitivity(per,operatingHours,historicalHours,powers){
   var priority=sourceRecoveryFrontier(per,operatingHours,historicalHours).ranked_missing_bins;
   var top5=new Set(priority.slice(0,5).map(function(x){return x.bin_lower_mps;}));
   var top7=new Set(priority.slice(0,7).map(function(x){return x.bin_lower_mps;}));
+  var quantize=function(x){return Number(x.toFixed(12));};
   var scenarios=powers.map(function(p){
     var scored=per.map(function(x){return {bin:x.bin,hours:x.hours,has_archived_ntm:x.historical_seed_count===6,weight:x.hours*Math.pow((x.bin+0.5)/10,p)};});
     var total=scored.reduce(function(s,x){return s+x.weight;},0);
@@ -92,8 +93,8 @@ function proxySensitivity(per,operatingHours,historicalHours,powers){
     var after5=sum(function(x){return x.has_archived_ntm||top5.has(x.bin);});
     var after7=sum(function(x){return x.has_archived_ntm||top7.has(x.bin);});
     ok(initial<=after5+1e-14&&after5<=after7+1e-14&&after7<=1+1e-14,"PROXY_MONOTONICITY");
-    var ranked=scored.filter(function(x){return x.hours>0&&!x.has_archived_ntm;}).sort(function(a,b){return b.weight-a.weight||a.bin-b.bin;}).slice(0,5).map(function(x){return {bin_lower_mps:x.bin,source_hours:x.hours,hypothetical_weight_share:x.weight/total};});
-    return {power_p:p,archived_source_proxy_share:initial,after_top5_hour_priority_proxy_share:after5,after_top7_hour_priority_proxy_share:after7,remaining_proxy_share_after_top7:1-after7,top5_missing_bins_by_proxy:ranked};
+    var ranked=scored.filter(function(x){return x.hours>0&&!x.has_archived_ntm;}).sort(function(a,b){return b.weight-a.weight||a.bin-b.bin;}).slice(0,5).map(function(x){return {bin_lower_mps:x.bin,source_hours:x.hours,hypothetical_weight_share:quantize(x.weight/total)};});
+    return {power_p:p,archived_source_proxy_share:quantize(initial),after_top5_hour_priority_proxy_share:quantize(after5),after_top7_hour_priority_proxy_share:quantize(after7),remaining_proxy_share_after_top7:quantize(1-after7),top5_missing_bins_by_proxy:ranked};
   });
   ok(Math.abs(scenarios.find(function(x){return x.power_p===0;}).archived_source_proxy_share-historicalHours/operatingHours)<1e-12,"PROXY_P0_HOUR_ORACLE");
   return {label:"HYPOTHETICAL_U_POWER_SOURCE_COVERAGE_SENSITIVITY_NOT_FATIGUE_DAMAGE",weight_definition:"ERA5 hours in 1m/s bin multiplied by ((bin_lower+0.5)/10)^p",powers:powers,scenario_assumptions:"Uniform per-hour hypothetical severity U^p, fixed 1m/s bin center, 4<=U<25 only; no local stress/S-N/rainflow/mean stress/cut-in-out/availability or IEC clauses",hour_priority_top5_bins:Array.from(top5),hour_priority_top7_bins:Array.from(top7),scenarios:scenarios,zero_observed_hours_caveat:"Zero historical hours do not establish zero design probability or fatigue risk",physical_pass:false};
@@ -186,7 +187,10 @@ if(typeof require!=="undefined"&&require.main===module){
   ok(n===17,"NEGATIVE_TEST_COUNT");
   if(process.argv.includes("--check")){
     ok(z.csv===fs.readFileSync(path.join(dir,"S10_ERA5_21BIN_6SEED_NTM_SOURCE_COVERAGE_20261031.csv"),"utf8"),"COMMITTED_CSV_MISMATCH");
-    ok(z.receipt===fs.readFileSync(path.join(dir,"S10_ERA5_21BIN_6SEED_COVERAGE_RECEIPT_20261031.json"),"utf8"),"COMMITTED_RECEIPT_MISMATCH");
+    var savedReceipt=fs.readFileSync(path.join(dir,"S10_ERA5_21BIN_6SEED_COVERAGE_RECEIPT_20261031.json"),"utf8");
+    if(z.receipt!==savedReceipt){var first=0;while(first<Math.min(z.receipt.length,savedReceipt.length)&&z.receipt[first]===savedReceipt[first])first++;
+      console.error("COMMITTED_RECEIPT_FIRST_DIFF",first,"generated",JSON.stringify(z.receipt.slice(Math.max(0,first-50),first+100)),"saved",JSON.stringify(savedReceipt.slice(Math.max(0,first-50),first+100)));}
+    ok(z.receipt===savedReceipt,"COMMITTED_RECEIPT_MISMATCH");
   }
   console.log(JSON.stringify({status:"SOURCE_MATRIX_QC_PASS_NOT_DLC12",rows:126,negative_tests:n,summary:z.summary,csv_sha256:sha256(z.csv)}));
 }

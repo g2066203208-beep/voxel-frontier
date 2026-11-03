@@ -232,171 +232,171 @@
       "scenarios": [
         {
           "power_p": 0,
-          "archived_source_proxy_share": 0.06701590271281571,
-          "after_top5_hour_priority_proxy_share": 0.9594574368568756,
-          "after_top7_hour_priority_proxy_share": 0.9952198316183349,
-          "remaining_proxy_share_after_top7": 0.004780168381665062,
+          "archived_source_proxy_share": 0.067015902713,
+          "after_top5_hour_priority_proxy_share": 0.959457436857,
+          "after_top7_hour_priority_proxy_share": 0.995219831618,
+          "remaining_proxy_share_after_top7": 0.004780168382,
           "top5_missing_bins_by_proxy": [
             {
               "bin_lower_mps": 4,
               "source_hours": 26927,
-              "hypothetical_weight_share": 0.25188961646398506
+              "hypothetical_weight_share": 0.251889616464
             },
             {
               "bin_lower_mps": 5,
               "source_hours": 24769,
-              "hypothetical_weight_share": 0.23170252572497663
+              "hypothetical_weight_share": 0.231702525725
             },
             {
               "bin_lower_mps": 6,
               "source_hours": 19994,
-              "hypothetical_weight_share": 0.18703461178671657
+              "hypothetical_weight_share": 0.187034611787
             },
             {
               "bin_lower_mps": 7,
               "source_hours": 14467,
-              "hypothetical_weight_share": 0.13533208606173994
+              "hypothetical_weight_share": 0.135332086062
             },
             {
               "bin_lower_mps": 8,
               "source_hours": 9245,
-              "hypothetical_weight_share": 0.08648269410664172
+              "hypothetical_weight_share": 0.086482694107
             }
           ]
         },
         {
           "power_p": 2,
-          "archived_source_proxy_share": 0.1447350993716408,
-          "after_top5_hour_priority_proxy_share": 0.8859922680808074,
-          "after_top7_hour_priority_proxy_share": 0.9786217142669978,
-          "remaining_proxy_share_after_top7": 0.021378285733002156,
+          "archived_source_proxy_share": 0.144735099372,
+          "after_top5_hour_priority_proxy_share": 0.885992268081,
+          "after_top7_hour_priority_proxy_share": 0.978621714267,
+          "remaining_proxy_share_after_top7": 0.021378285733,
           "top5_missing_bins_by_proxy": [
             {
               "bin_lower_mps": 6,
               "source_hours": 19994,
-              "hypothetical_weight_share": 0.17292855907282476
+              "hypothetical_weight_share": 0.172928559073
             },
             {
               "bin_lower_mps": 7,
               "source_hours": 14467,
-              "hypothetical_weight_share": 0.16658708542266085
+              "hypothetical_weight_share": 0.166587085423
             },
             {
               "bin_lower_mps": 5,
               "source_hours": 24769,
-              "hypothetical_weight_share": 0.15338192139317844
+              "hypothetical_weight_share": 0.153381921393
             },
             {
               "bin_lower_mps": 8,
               "source_hours": 9245,
-              "hypothetical_weight_share": 0.13673669816139175
+              "hypothetical_weight_share": 0.136736698161
             },
             {
               "bin_lower_mps": 4,
               "source_hours": 26927,
-              "hypothetical_weight_share": 0.1116229046591108
+              "hypothetical_weight_share": 0.111622904659
             }
           ]
         },
         {
           "power_p": 4,
-          "archived_source_proxy_share": 0.23063821012946473,
-          "after_top5_hour_priority_proxy_share": 0.7545227150211345,
-          "after_top7_hour_priority_proxy_share": 0.9299657977895582,
-          "remaining_proxy_share_after_top7": 0.07003420221044176,
+          "archived_source_proxy_share": 0.230638210129,
+          "after_top5_hour_priority_proxy_share": 0.754522715021,
+          "after_top7_hour_priority_proxy_share": 0.92996579779,
+          "remaining_proxy_share_after_top7": 0.07003420221,
           "top5_missing_bins_by_proxy": [
             {
               "bin_lower_mps": 8,
               "source_hours": 9245,
-              "hypothetical_weight_share": 0.15469723432627247
+              "hypothetical_weight_share": 0.154697234326
             },
             {
               "bin_lower_mps": 7,
               "source_hours": 14467,
-              "hypothetical_weight_share": 0.14673153678968473
+              "hypothetical_weight_share": 0.14673153679
             },
             {
               "bin_lower_mps": 10,
               "source_hours": 3149,
-              "hypothetical_weight_share": 0.12269582581611362
+              "hypothetical_weight_share": 0.122695825816
             },
             {
               "bin_lower_mps": 6,
               "source_hours": 19994,
-              "hypothetical_weight_share": 0.11440711797693034
+              "hypothetical_weight_share": 0.114407117977
             },
             {
               "bin_lower_mps": 5,
               "source_hours": 24769,
-              "hypothetical_weight_share": 0.07265393854633155
+              "hypothetical_weight_share": 0.072653938546
             }
           ]
         },
         {
           "power_p": 8,
-          "archived_source_proxy_share": 0.2639592754124552,
-          "after_top5_hour_priority_proxy_share": 0.41329244233279244,
-          "after_top7_hour_priority_proxy_share": 0.6798400173057105,
-          "remaining_proxy_share_after_top7": 0.32015998269428947,
+          "archived_source_proxy_share": 0.263959275412,
+          "after_top5_hour_priority_proxy_share": 0.413292442333,
+          "after_top7_hour_priority_proxy_share": 0.679840017306,
+          "remaining_proxy_share_after_top7": 0.320159982694,
           "top5_missing_bins_by_proxy": [
             {
               "bin_lower_mps": 10,
               "source_hours": 3149,
-              "hypothetical_weight_share": 0.14303742781231488
+              "hypothetical_weight_share": 0.143037427812
             },
             {
               "bin_lower_mps": 12,
               "source_hours": 674,
-              "hypothetical_weight_share": 0.12351014716060323
+              "hypothetical_weight_share": 0.123510147161
             },
             {
               "bin_lower_mps": 13,
               "source_hours": 283,
-              "hypothetical_weight_share": 0.09598850375612138
+              "hypothetical_weight_share": 0.095988503756
             },
             {
               "bin_lower_mps": 8,
               "source_hours": 9245,
-              "hypothetical_weight_share": 0.07744991755349122
+              "hypothetical_weight_share": 0.077449917553
             },
             {
               "bin_lower_mps": 14,
               "source_hours": 126,
-              "hypothetical_weight_share": 0.07569674440063226
+              "hypothetical_weight_share": 0.075696744401
             }
           ]
         },
         {
           "power_p": 12,
-          "archived_source_proxy_share": 0.18459102476968858,
-          "after_top5_hour_priority_proxy_share": 0.2055853069055587,
-          "after_top7_hour_priority_proxy_share": 0.3757443405329586,
-          "remaining_proxy_share_after_top7": 0.6242556594670414,
+          "archived_source_proxy_share": 0.18459102477,
+          "after_top5_hour_priority_proxy_share": 0.205585306906,
+          "after_top7_hour_priority_proxy_share": 0.375744340533,
+          "remaining_proxy_share_after_top7": 0.624255659467,
           "top5_missing_bins_by_proxy": [
             {
               "bin_lower_mps": 15,
               "source_hours": 61,
-              "hypothetical_weight_share": 0.12908252948830612
+              "hypothetical_weight_share": 0.129082529488
             },
             {
               "bin_lower_mps": 17,
               "source_hours": 14,
-              "hypothetical_weight_share": 0.12709892404881448
+              "hypothetical_weight_share": 0.127098924049
             },
             {
               "bin_lower_mps": 14,
               "source_hours": 126,
-              "hypothetical_weight_share": 0.11976883525561069
+              "hypothetical_weight_share": 0.119768835256
             },
             {
               "bin_lower_mps": 16,
               "source_hours": 26,
-              "hypothetical_weight_share": 0.11650322102416946
+              "hypothetical_weight_share": 0.116503221024
             },
             {
               "bin_lower_mps": 13,
               "source_hours": 283,
-              "hypothetical_weight_share": 0.11411662308285676
+              "hypothetical_weight_share": 0.114116623083
             }
           ]
         }
