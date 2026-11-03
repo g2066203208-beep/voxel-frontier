@@ -289,5 +289,51 @@
     "failure_record": "Original artifact names literal ${'single'}/${'double'}; corrected YAML artifact name and grep; preserve single DCM stderr and HOLD; offline original ZIP recovery and 295x41 paired calculation succeeded despite original CI skip. No repaired CI PASS asserted.",
     "HOLD": "S07 original single-precision DCM inertia/gravity ownership audit remains HOLD; GNU precision causes large 2s output sensitivity (e.g. TwrBsMyt 13215.52 kN·m), but source/precision diagnostic alone is NOT physical PASS, cannot establish Intel Windows equivalence. DLC1.2 0/126; E/WE 0; S06 PARTIAL; S07/S10 BLOCKED.",
     "next": "Run existing committed T062 GNU precision pair QC on extracted original ZIPs and compare with independent 295x41 receipt, then resolve DCM ownership separately; do not start production."
+  },
+  "gnu_precision_2s_22h_full_numeric_files": {
+    "timestamp_local": "2026-11-03 22h Asia/Shanghai",
+    "stage": "S07",
+    "status": "ORIGINAL_OFFLINE_295_CHANNEL_NUMERIC_TABLES_COMMITTED__NOT_NATIVE_CI_PASS__NOT_PHYSICAL_PASS",
+    "SOURCE": {
+      "reading_level": "DIRECT_PRIOR_LOCAL_ORIGINAL_GITHUB_ACTIONS_ZIP_AND_OUTB_OFFLINE_RECOMPUTATION; CURRENT_RUN_REVALIDATED_ATTACHED_FULL_NUMERIC_JSON_CSV_AND_REMOTE_GIT_BLOBS",
+      "native_actions_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41632768388",
+      "original_single_zip_sha256": "983bce8ca81981ff5fd00e5261dbfb2c0b6e18b074aa4eb1ff425e6851fb9735",
+      "original_double_zip_sha256": "d8a5dec02b3dc4b536061f5bfcfd80e3bd472f322e83c5e7b1ee705508017c7c",
+      "original_single_outb_sha256": "d0ac71b498b2764587a91b8523bbd72c9dad84a48a1b632e0b1922a3470e3c39",
+      "original_double_outb_sha256": "be43d3ad2a278fbd1afe91753382d681f5eb2d8c8b401ccd78d23eb5765136c8",
+      "csv_path": "research/wind-tower/experiments/T062/S07_GNU_PRECISION_2S_295_CHANNELS.csv",
+      "csv_sha256": "101ceaf50cd276d0c60d5c70b1094518697a0201507cec3c13003332f08e7bcd",
+      "csv_git_blob_sha1": "e73523f230be4fdc11cd228bedc32beea270a174",
+      "json_path": "research/wind-tower/experiments/T062/S07_GNU_PRECISION_ORIGINAL_ARTIFACT_2S_295CH_NUMERIC_QC.json",
+      "json_sha256": "562fa1a588db78d70e8d3368c71b882db2ec80b9a740203389d172138d246799",
+      "json_git_blob_sha1": "e6864323cfe8a6ebf33126c208f61ffbe653b20d",
+      "sha256_reading_level": "SOURCE_FILE_HASH_COMPUTED_FROM_ATTACHED_LOCAL_BYTES; GIT_BLOB_SHA1_COMPUTED_FROM_SAME_LOCAL_BYTES_AND_MATCHED_REMOTE_FETCH"
+    },
+    "REF": "Existing T062 original native paired OUTB and official source; no new full-text paper reading",
+    "STANDARD": "No authorized IEC/GB/NB original clauses read; no standard compliance PASS",
+    "OFFICIAL": "OpenFAST v3.5.3, ROSCO v2.6.0 from original tagged native logs; no new software build",
+    "RUN": {
+      "new_solver_runs": 0,
+      "new_native_ci_confirmed_success": false,
+      "original_two_2s_native_solver_normal": true,
+      "original_workflow_failed_after_solver": true,
+      "original_paired_ci_skipped": true,
+      "current_revalidation": "ATTACHED_OFFLINE_NUMERIC_TABLE_INTERNAL_CROSSCHECK_AND_REMOTE_GIT_BLOB_IDENTITY",
+      "samples": 41,
+      "channels": 295,
+      "channels_exceeding_encoding_budget": 266,
+      "pairs_exceeding_encoding_budget": 10284,
+      "total_pairs": 12095,
+      "t0_channels_exceeding": 21,
+      "checks": "295 CSV rows identical to JSON rows; sum of per-channel exceed_count and sum of 41 per-time exceed counts both equal 10284; 266 channels with exceed_count>0; exact Git blob SHA1 match",
+      "physical_pass": false
+    },
+    "FIG": "0",
+    "TAB": "Original 295-row channel summary CSV + original JSON 295 channel rows, 41 time-bin exceedance counts and 6 tower-base maxima. Neither file stores all 12095 raw single/double time-value pairs.",
+    "assumptions": "Original 2s native artifact input hashes and ROSCO controller binary are identical. Offline paired summary uses packed OUTB values; precision is not a full physical validation. No new native solver or corrected CI run claimed.",
+    "error_budget": "1.1 x sum of OUTB half-LSB +1e-8 only for packed-encoding detection; not a physical or structural tolerance",
+    "failure_record": "Original workflow #41632768388 failed postprocessing; single DCM INERTIA_GRAVITY_OWNERSHIP_RECONSTRUCTION_HOLD; double DCM succeeded. Corrected workflow source committed previously, but no corrected native CI success verified in this run.",
+    "HOLD": "S07 DLC1.2 0/126; original single DCM ownership unresolved; GNU single/double 2s sensitivity large; cannot infer Windows Intel equivalence, fatigue or seismic physical acceptance; S06 PARTIAL, S07/S10 BLOCKED, E/WE=0, 0/12 PASS.",
+    "next": "Use existing corrected workflow and repo-native T062 s07_gnu_precision_2s_pair_qc.py to reproduce from original artifacts; compare every 295-channel metric with persisted original tables, retaining separate DCM ownership HOLD; no 700s production."
   }
 }
