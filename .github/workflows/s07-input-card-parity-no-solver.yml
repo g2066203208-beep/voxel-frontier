@@ -1,0 +1,108 @@
+name: S07 historical Windows vs Linux input-card parity (no solver)
+on:
+  push:
+    paths:
+      - '.github/workflows/s07-input-card-parity-no-solver.yml'
+      - 'research/wind-tower/experiments/T062/s07_windows_linux_input_parity_qc.py'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  input-card-byte-parity:
+    if: github.ref_name == 'research/t080-seismic-integration-gates-20261022'
+    runs-on: ubuntu-22.04
+    timeout-minutes: 12
+    steps:
+      - name: Sparse checkout exact original preparer and new read-only parity script
+        uses: actions/checkout@v4
+        with:
+          lfs: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            research/wind-tower/experiments/T062/s07_windows_linux_input_parity_qc.py
+            research/wind-tower/experiments/T062/s06_etm_2s_native_overlap.py
+            research/wind-tower/experiments/T062/s06_ntm_native_0p1s_probe.py
+            research/wind-tower/experiments/T062/s06_native_4batch_common_channel_qc.py
+            research/wind-tower/experiments/T062/s06_historical_outb_source_gate.py
+            research/wind-tower/experiments/T062/S06_NTM_ORIGINAL_FST_ED_31GAGE_CONTRACT_20261031.json
+            research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip
+            research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-002.zip
+            research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip
+            research/wind-tower/archive/local-large-assets-20261004/turbSim-36/inputs/U09p343881_ETM_S06.bts
+            research/wind-tower/references/baselines-and-site-20261004/runtime-binaries/openfast_x64_v353.exe
+            research/wind-tower/references/baselines-and-site-20261004/openfast-v330-adaptation/1FreeDecay/Control/libdiscon.dll
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Source-only selftests (4 positive and 5 negative; zero solver)
+        shell: bash
+        run: |
+          set -euo pipefail
+          script=research/wind-tower/experiments/T062/s07_windows_linux_input_parity_qc.py
+          python -m py_compile "$script"
+          python "$script" --selftest | tee s07_input_parity_selftest.log
+          grep -q '"negative_rejections": 5' s07_input_parity_selftest.log
+          sha256sum "$script" | tee s07_input_parity_script_sha.log
+      - name: Recover original SHA-locked 158m ETM batch1 input only
+        shell: bash
+        run: |
+          set -euo pipefail
+          root=research/wind-tower
+          bts="$root/archive/local-large-assets-20261004/turbSim-36/inputs/U09p343881_ETM_S06.bts"
+          exe="$root/references/baselines-and-site-20261004/runtime-binaries/openfast_x64_v353.exe"
+          git lfs install --local
+          git lfs pull --include="$bts,$exe" --exclude=""
+          echo 'ad68a83a63f197c528c07502db8adff883e9c737863ef3c4cab99cfa76052147  '"$bts" | sha256sum -c
+          echo '0cc8147fdda188365b8eacda8a831e74fafef59440d71185d66c3272af9e176a  '"$exe" | sha256sum -c
+          python "$root/experiments/T062/s06_etm_2s_native_overlap.py" \
+            --prepare --overlap --batch 1 \
+            --archive1 "$root/archive/local-assets-20261004/openfast-36-r2/part-001.zip" \
+            --archive2 "$root/archive/local-assets-20261004/openfast-36-r2/part-002.zip" \
+            --supp "$root/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip" \
+            --dll "$root/references/baselines-and-site-20261004/openfast-v330-adaptation/1FreeDecay/Control/libdiscon.dll" \
+            --exe "$exe" \
+            --contract "$root/experiments/T062/S06_NTM_ORIGINAL_FST_ED_31GAGE_CONTRACT_20261031.json" \
+            --bts "$bts" --outdir work/batch1 | tee s07_original_input_prep.log
+          echo 'S07_SOURCE_INPUT_RECONSTRUCTED_NO_SOLVER'
+      - name: Download real Linux v2.6.0 native artifact and audit exact source/derived hashes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --silent --show-error --retry 2 --max-time 90 \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/13207156108/zip" \
+            --output s07_linux_v260_native_artifact.zip
+          echo '51d2e0c5926f9aac4f9b24851a83e2f1e744584cc3a16371108b97280652cf5c  s07_linux_v260_native_artifact.zip' | sha256sum -c
+          python research/wind-tower/experiments/T062/s07_windows_linux_input_parity_qc.py \
+            --root work/batch1 \
+            --linux-artifact s07_linux_v260_native_artifact.zip \
+            --out s07_windows_linux_input_parity_receipt.json \
+            | tee s07_input_parity_stdout.log
+          python - <<'PY'
+          import json
+          r=json.load(open('s07_windows_linux_input_parity_receipt.json'))
+          assert r['RUN']['native_solver_invoked'] is False
+          assert r['RUN']['servo_pre_post_sha_matched'] is True
+          assert r['RUN']['numeric_tokens_unchanged'] > 0
+          assert r['physical_pass'] is False
+          print('S07_REAL_INPUT_TRANSFORM_HASH_PARITY_PASS_NOT_PHYSICS_PASS')
+          PY
+          sha256sum s07_windows_linux_input_parity_receipt.json | tee s07_input_parity_receipt_sha.log
+      - name: Preserve receipts and actual failure logs, not binary sources
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s07-windows-linux-real-input-card-parity-no-solver
+          path: |
+            s07_input_parity_selftest.log
+            s07_input_parity_script_sha.log
+            s07_original_input_prep.log
+            s07_input_parity_stdout.log
+            s07_windows_linux_input_parity_receipt.json
+            s07_input_parity_receipt_sha.log
+          if-no-files-found: warn
+          retention-days: 30
