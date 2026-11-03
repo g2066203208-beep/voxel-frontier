@@ -374,14 +374,25 @@
       ],
       "repo_script_path": "research/wind-tower/experiments/T062/s07_gnu_precision_native_independent_recheck.py",
       "no_solver_ci_workflow": ".github/workflows/s07-gnu-precision-original-artifact-recheck.yml",
-      "no_solver_ci_status": "NOT_YET_CONFIRMED"
+      "no_solver_ci_status": "COMPLETED_SUCCESS_JOB_LOG_AND_ARTIFACT_RETRIEVED",
+      "no_solver_ci_run_id": 41660748825,
+      "no_solver_ci_job_id": 126002957457,
+      "no_solver_ci_original_native_zip_downloaded_and_sha_verified": true,
+      "no_solver_ci_original_native_outb_reparse_pass": true,
+      "no_solver_ci_python_version": "3.12.15",
+      "no_solver_ci_source_script_sha256": "55c0e500d041e19b2a6ef4034b59982844fab7bb2fd8fcf29e07c6f8f929f220",
+      "no_solver_ci_report_sha256": "88a6a038d65660f03138983029d3f0f45c037a5b81f20a588c83cacaf865287a",
+      "no_solver_ci_artifact_zip_sha256": "8f65457436f9dae7114ca575dbdd4f68b2be6db3432edfe9d0a04397274a2346",
+      "no_solver_ci_artifact_id": 13241981497,
+      "no_solver_ci_artifact_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41660748825/artifacts/13241981497",
+      "no_solver_ci_log_marker": "S07_295_NATIVE_ARCHIVE_RECHECK_PASS_NOT_PHYSICS_PASS"
     },
     "FIG": "0",
     "TAB": "Previously committed 295-row CSV/JSON and 41-bin time counts independently verified",
     "assumptions": "Single/double native artifacts are paired by SHA256 and source/controller identity; packed OUTB threshold is not physical tolerance",
     "error_budget": "1.1*(two OUTB packed half-LSB)+1e-8 is encoding-only; saved numeric metric recheck max(1e-11,1e-10*abs(value))",
-    "failure_record": "Original workflow #41632768388 failed post-solver and paired job skipped; original single DCM inertia/gravity ownership remains HOLD. This local independent recheck is not the new CI run.",
-    "HOLD": "S07 DLC1.2 remains 0/126; inertia/gravity load ownership and physical cross-precision equivalence not validated; no fatigue or seismic physical PASS",
+    "failure_record": "Original workflow #41632768388 failed post-solver and paired job skipped; original single DCM inertia/gravity ownership remains HOLD. This local independent recheck is not the new CI run. Corrected independent no-solver CI #41660748825 succeeded, but does not resolve original DCM ownership HOLD.",
+    "HOLD": "Original single-precision DCM inertial/gravity ownership unresolved; only source/summary reproducibility PASS, not DLC1.2/structural/material/seismic physical PASS",
     "physical_pass": false,
     "stage_pass_count": "0/12"
   }
