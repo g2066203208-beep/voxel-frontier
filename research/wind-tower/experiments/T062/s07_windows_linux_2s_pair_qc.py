@@ -4,6 +4,7 @@
 Controller/toolchain comparison only; not controller equivalence, mapping or fatigue PASS.
 """
 import argparse
+import csv
 import hashlib
 import io
 import json
@@ -102,6 +103,67 @@ def temporal_divergence(win_raw, linux_raw, hw, hl, names):
             'samplewise_exceedance_total':sum(time_counts),
             'budget':'per-sample within_quant, NOT a physical equivalence threshold'}
 
+
+def t0_row(name, unit, windows_value, windows_half_lsb, linux_value, linux_half_lsb):
+    """One packed OUTB initial sample; a coding-difference test, NOT physics."""
+    vals=(windows_value, windows_half_lsb, linux_value, linux_half_lsb)
+    if not all(map(math.isfinite, vals)) or windows_half_lsb <= 0 or linux_half_lsb <= 0:
+        raise ValueError('S07_T0_NONFINITE_OR_BAD_QUANTIZATION_HOLD')
+    _, budget=within_quant(windows_value,windows_half_lsb,linux_value,linux_half_lsb)
+    delta=windows_value-linux_value
+    if name.startswith('TwHt') and name.endswith('FLzt'):
+        group='TOWER_GAGE_AXIAL_FORCE'
+    elif name.startswith('TwHt') and name.endswith('TPzi'):
+        group='TOWER_GAGE_AXIAL_POSITION'
+    elif name=='TwrBsFzt':
+        group='TOWER_BASE_AXIAL_FORCE'
+    elif name in ('RtAeroCq','RtAeroPwr'):
+        group='AERODYNAMIC_INITIAL_OUTPUT'
+    else:
+        group='OTHER'
+    return {'channel':name,'unit':unit,'group':group,
+            'windows_t0':windows_value,'linux_t0':linux_value,
+            'windows_minus_linux_t0':delta,'abs_delta_t0':abs(delta),
+            'windows_half_lsb':windows_half_lsb,'linux_half_lsb':linux_half_lsb,
+            'packed_quantization_budget':budget,
+            'abs_delta_over_packed_budget':abs(delta)/budget,
+            'exceeds_packed_quantization':abs(delta)>budget}
+
+
+def initial_state_inventory(win_raw,linux_raw,hw,hl,names):
+    """Full 295-channel t=0 inventory; preserve all rows for audit."""
+    rows=[]
+    for name in sorted(names):
+        iw=hw['channel_names'].index(name)
+        il=hl['channel_names'].index(name)
+        unit=hw['channel_units'][iw]
+        if unit!=hl['channel_units'][il]:
+            raise ValueError('S07_T0_UNIT_MISMATCH_'+name)
+        w,qw=decode(win_raw,hw,name,0)
+        l,ql=decode(linux_raw,hl,name,0)
+        rows.append(t0_row(name,unit,w,qw,l,ql))
+    exceed=[r for r in rows if r['exceeds_packed_quantization']]
+    counts={g:sum(r['group']==g for r in exceed) for g in
+            ('TOWER_GAGE_AXIAL_FORCE','TOWER_GAGE_AXIAL_POSITION',
+             'TOWER_BASE_AXIAL_FORCE','AERODYNAMIC_INITIAL_OUTPUT','OTHER')}
+    return {'time_s':0.0,'all_channel_count':len(rows),
+            'exceeding_channel_count':len(exceed),
+            'exceeding_group_counts':counts,
+            'all_channel_rows':rows,
+            'exceeding_channel_rows':exceed,
+            'interpretation':'Windows minus Linux native output at t=0; packed encoding threshold only, not proof of a model initial-condition mismatch or compiler cause'}
+
+
+def write_initial_exceed_csv(path, initial):
+    fields=('channel','unit','group','windows_t0','linux_t0',
+            'windows_minus_linux_t0','abs_delta_t0','windows_half_lsb',
+            'linux_half_lsb','packed_quantization_budget',
+            'abs_delta_over_packed_budget','exceeds_packed_quantization')
+    with path.open('w',newline='',encoding='utf-8') as stream:
+        writer=csv.DictWriter(stream,fieldnames=fields,lineterminator='\n')
+        writer.writeheader()
+        writer.writerows(initial['exceeding_channel_rows'])
+
 def audit(win_zip,linux_outb,derived_receipt,linux_stdout=None):
     if sha(win_zip)!=WIN_ZIP_SHA:
         raise ValueError('WINDOWS_ORIGINAL_ARTIFACT_SHA256_MISMATCH')
@@ -144,6 +206,9 @@ def audit(win_zip,linux_outb,derived_receipt,linux_stdout=None):
     temporal=temporal_divergence(original,linux_outb,hw,hl,names)
     if temporal['samplewise_exceedance_total'] != sum(r['exceeds_packed_quantization_count'] for r in rows):
         raise ValueError('S07_TEMPORAL_CHANNEL_COUNT_PARITY_HOLD')
+    initial=initial_state_inventory(original,linux_outb,hw,hl,names)
+    if initial['exceeding_channel_count'] != temporal['t0_exceeding_channels']:
+        raise ValueError('S07_T0_TEMPORAL_PARITY_HOLD')
     logs=controller_log_audit(win_zip,linux_stdout) if linux_stdout is not None else None
     return {
       'stage':'S07','status':'WINDOWS_LINUX_2S_PAIRED_DIAGNOSTIC_ONLY',
@@ -158,6 +223,7 @@ def audit(win_zip,linux_outb,derived_receipt,linux_stdout=None):
       'quantization_exceeding_samples':sum(r['exceeds_packed_quantization_count'] for r in rows),
       'channels':rows,
       'temporal_divergence':temporal,
+      'initial_state_t0':initial,
       'controller_native_stdout_audit':logs,
       'SOURCE':'Windows OpenFAST-v3.5.3 Intel 2021 Actions artifact #13080759167 and actual Linux OpenFAST-v3.5.3 GNU + ROSCO v2.6.0 OUTB',
       'REF':'T062 S06_ETM_NATIVE_2S_OVERLAP_QC_20261101.json and S07 native DCM audit',
@@ -192,7 +258,14 @@ def selftest():
         import re
         assert len(re.findall(rb'Running ROSCO-v([0-9]+\.[0-9]+\.[0-9]+)',testlog))==1
     except AssertionError:raise
-    return {'positive_equal':True,'positive_divergence':True,'negative_rejections':5,
+    assert not t0_row('TwrBsFzt','kN',0.,.01,0.,.01)['exceeds_packed_quantization']
+    assert t0_row('TwHt1FLzt','kN',1.,.01,1.1,.01)['exceeds_packed_quantization']
+    assert t0_row('TwHt1TPzi','m',1.,.01,1.1,.01)['group']=='TOWER_GAGE_AXIAL_POSITION'
+    for bad in [(float('nan'),.01,1.,.01),(1.,0.,1.,.01)]:
+        try:t0_row('TwrBsFzt','kN',*bad)
+        except ValueError:pass
+        else:raise AssertionError('S07_T0_NEGATIVE_NOT_REJECTED')
+    return {'positive_equal':True,'positive_divergence':True,'t0_positive':3,'negative_rejections':7,
             'native_run':False,'physical_pass':False}
 
 def main():
@@ -202,6 +275,8 @@ def main():
     p.add_argument('--derived-receipt',type=Path)
     p.add_argument('--linux-stdout',type=Path)
     p.add_argument('--out',type=Path)
+    p.add_argument('--t0-csv',type=Path)
+    p.add_argument('--strict-t0-21',action='store_true')
     p.add_argument('--selftest',action='store_true')
     a=p.parse_args()
     if a.selftest:print(json.dumps(selftest(),sort_keys=True))
@@ -211,7 +286,20 @@ def main():
     result=audit(a.windows_zip.read_bytes(),a.linux_outb.read_bytes(),
                  json.loads(a.derived_receipt.read_text()),
                  a.linux_stdout.read_bytes() if a.linux_stdout else None)
+    if a.strict_t0_21:
+        x=result['initial_state_t0']
+        expected={'TOWER_GAGE_AXIAL_FORCE':9,'TOWER_GAGE_AXIAL_POSITION':9,
+                  'TOWER_BASE_AXIAL_FORCE':1,'AERODYNAMIC_INITIAL_OUTPUT':2,'OTHER':0}
+        if (x['all_channel_count']!=295 or x['exceeding_channel_count']!=21
+            or x['exceeding_group_counts']!=expected):
+            raise ValueError('S07_T0_21_PATTERN_EXPECTED_REPRODUCIBILITY_HOLD')
+    if a.t0_csv:
+        write_initial_exceed_csv(a.t0_csv,result['initial_state_t0'])
     a.out.write_text(json.dumps(result,indent=2,sort_keys=True)+'\n')
-    print(json.dumps({k:v for k,v in result.items() if k!='channels'},sort_keys=True))
+    print(json.dumps({'samples':result['samples'],'common_channels':result['common_channels'],
+                      'quantization_exceeding_samples':result['quantization_exceeding_samples'],
+                      't0_exceeding_channels':result['initial_state_t0']['exceeding_channel_count'],
+                      't0_group_counts':result['initial_state_t0']['exceeding_group_counts'],
+                      'physical_pass':False},sort_keys=True))
 
 if __name__=='__main__':main()
