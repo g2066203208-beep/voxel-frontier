@@ -34,8 +34,8 @@ def read_one(root, expected):
     need(flag == expected, "PRECISION_MATRIX_CACHE_MISMATCH")
     stdout = (root / "s07_linux_native_stdout.log").read_bytes()
     need(b"OpenFAST terminated normally." in stdout, "NATIVE_TERMINATION_HOLD")
-    need(re.search(rb"Running ROSCO-v2\\.6\\.0", stdout) is not None, "ROSCO_VERSION_HOLD")
-    precision = re.search(rb"Precision:\\s*(single|double)", stdout, re.IGNORECASE)
+    need(re.search(rb"Running ROSCO-v2\.6\.0", stdout) is not None, "ROSCO_VERSION_HOLD")
+    precision = re.search(rb"Precision:\s*(single|double)", stdout, re.IGNORECASE)
     need(precision is not None, "NATIVE_PRECISION_STDOUT_MISSING")
     need(precision.group(1).decode().lower() == ("single" if expected == "OFF" else "double"),
          "NATIVE_PRECISION_STDOUT_MISMATCH")
@@ -90,7 +90,7 @@ def pair(single, double):
     }
 
 def selftest():
-    need(cache_flag("A=1\\nDOUBLE_PRECISION:BOOL=OFF\\n") == "OFF", "CACHE_POSITIVE_HOLD")
+    need(cache_flag("A=1\nDOUBLE_PRECISION:BOOL=OFF\n") == "OFF", "CACHE_POSITIVE_HOLD")
     x = {f"C{i}": [0.0] * 41 for i in range(295)}
     u = {k: "(u)" for k in x}
     q = {k: 0.01 for k in x}
@@ -104,7 +104,7 @@ def selftest():
     need(report["quantization_exceeding_samples"] == 0, "PAIR_POSITIVE_HOLD")
     rejected = 0
     bads = [
-        lambda: cache_flag("DOUBLE_PRECISION:BOOL=ON\\nDOUBLE_PRECISION:BOOL=OFF"),
+        lambda: cache_flag("DOUBLE_PRECISION:BOOL=ON\nDOUBLE_PRECISION:BOOL=OFF"),
         lambda: cache_flag("DOUBLE_PRECISION:STRING=ON"),
         lambda: pair((a, aa), (b, {**bb, "derived_servo_sha256": "tampered"})),
         lambda: compare(a, ({**b[0], "EXTRA": [0.0]*41}, u, q)),
