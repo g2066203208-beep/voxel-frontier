@@ -1,0 +1,123 @@
+name: S07 historical Windows Linux t0 original-artifact replay (NO SOLVER)
+on:
+  push:
+    branches: [research/t080-seismic-integration-gates-20261022]
+    paths:
+      - '.github/workflows/s07-native-t0-artifact-replay.yml'
+      - 'research/wind-tower/experiments/T062/s07_windows_linux_2s_pair_qc.py'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  native-t0-replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            research/wind-tower/experiments/T062/s07_windows_linux_2s_pair_qc.py
+            research/wind-tower/experiments/T062/s06_historical_outb_source_gate.py
+            research/wind-tower/experiments/T062/s06_native_4batch_common_channel_qc.py
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download and hash-verify TWO existing original native artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fLsS --retry 3 --max-time 90 -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/13080759167/zip" \
+            -o s07_windows_original.zip
+          curl -fLsS --retry 3 --max-time 90 -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/13207156108/zip" \
+            -o s07_linux_v260_original.zip
+          echo '7fcae2bf57be571cacc6d3d9b82f1a254257ce59fdb946a1cfb56d3639eb9f1b  s07_windows_original.zip' | sha256sum -c
+          echo '51d2e0c5926f9aac4f9b24851a83e2f1e744584cc3a16371108b97280652cf5c  s07_linux_v260_original.zip' | sha256sum -c
+          python - <<'PY'
+          import gzip,hashlib,json,zipfile
+          from pathlib import Path
+          z=zipfile.ZipFile('s07_linux_v260_original.zip')
+          if z.testzip() is not None:raise RuntimeError('S07_ARTIFACT_CRC_HOLD')
+          needed=['s07_linux_native_2s.outb.gz','s07_linux_native_stdout.log','s07_linux_derived_identity.json']
+          if any(k not in z.namelist() for k in needed):raise RuntimeError('S07_MISSING_ORIGINAL_ARTIFACT_MEMBER')
+          raw=gzip.decompress(z.read(needed[0]))
+          if hashlib.sha256(raw).hexdigest()!='8ab8dd100985fe822a289776b728fa8423fa93b1f137d5ec110b1e2d5f1796a7':
+              raise RuntimeError('S07_LINUX_NATIVE_OUTB_SHA_HOLD')
+          Path('s07_linux_v260_original.outb').write_bytes(raw)
+          Path('s07_linux_v260_stdout.log').write_bytes(z.read(needed[1]))
+          identity=json.loads(z.read(needed[2]))
+          if identity.get('source_equivalence') is not False or identity.get('physical_pass') is not False:
+              raise RuntimeError('S07_DERIVED_IDENTITY_HOLD')
+          Path('s07_linux_v260_identity.json').write_text(json.dumps(identity,indent=2)+'\n')
+          print('S07_ORIGINAL_NATIVE_ARTIFACT_BYTES_SHA_LOCKED__NO_SOLVER')
+          PY
+      - name: Recompute 295 t0 values and exact 21 outliers; preserve failures
+        shell: bash
+        run: |
+          set -euo pipefail
+          script=research/wind-tower/experiments/T062/s07_windows_linux_2s_pair_qc.py
+          python -m py_compile "$script"
+          python "$script" --selftest | tee s07_t0_selftest.log
+          python "$script" --windows-zip s07_windows_original.zip \
+            --linux-outb s07_linux_v260_original.outb \
+            --derived-receipt s07_linux_v260_identity.json \
+            --linux-stdout s07_linux_v260_stdout.log \
+            --strict-t0-21 --t0-csv s07_native_t0_21.csv \
+            --out s07_native_295_t0_and_41time_qc.json | tee s07_native_t0_stdout.log
+          python - <<'PY'
+          import csv,json,hashlib
+          from pathlib import Path
+          r=json.loads(Path('s07_native_295_t0_and_41time_qc.json').read_text())
+          x=r['initial_state_t0']
+          rows=list(csv.DictReader(Path('s07_native_t0_21.csv').open()))
+          assert len(rows)==x['exceeding_channel_count']==21
+          assert len(x['all_channel_rows'])==r['common_channels']==295
+          assert r['temporal_divergence']['t0_exceeding_channels']==21
+          assert r['controller_native_stdout_audit']['same_rosco_version'] is True
+          assert r['controller_native_stdout_audit']['historical_windows_rosco_version']=='2.6.0'
+          assert r['controller_native_stdout_audit']['linux_substitute_rosco_version']=='2.6.0'
+          assert r['physical_pass'] is False and r['controller_equivalence_verified'] is False
+          outputs=['s07_native_t0_21.csv','s07_native_295_t0_and_41time_qc.json','s07_t0_selftest.log']
+          manifest={'SOURCE':{'reading_level':'ORIGINAL_ACTIONS_ARTIFACT_ZIP_NATIVE_OUTB_SHA256_CRC',
+                             'windows_artifact_id':13080759167,'linux_artifact_id':13207156108,
+                             'windows_zip_sha256':r['windows_zip_sha256'],
+                             'windows_outb_sha256':r['windows_batch1_outb_sha256'],
+                             'linux_outb_sha256':r['linux_batch1_outb_sha256']},
+                    'REF':'Existing T062 2s original source receipts',
+                    'STANDARD':'No newly read authorized IEC/GB/NB clauses',
+                    'OFFICIAL':'OpenFAST v3.5.3 Intel Windows vs GNU Linux; ROSCO v2.6.0 both',
+                    'RUN':'Read-only replay of two previously completed native 2s outputs; no solver',
+                    'FIG':0,'TAB':{'all_channels':295,'exceeding_channels':21,
+                                  'groups':x['exceeding_group_counts']},
+                    'assumptions':'t0 output delta is not proof of internal initial-condition or compiler causality',
+                    'error_budget':'1.1*(two OUTB half-LSB)+1e-8, encoding only',
+                    'HOLD':'Compiler precision and initial state remain confounded; no DLC1.2/physical PASS',
+                    'physical_pass':False,'stage_pass':False,
+                    'script_sha256':hashlib.sha256(Path('research/wind-tower/experiments/T062/s07_windows_linux_2s_pair_qc.py').read_bytes()).hexdigest(),
+                    'outputs_sha256':{k:hashlib.sha256(Path(k).read_bytes()).hexdigest() for k in outputs}}
+          Path('s07_native_t0_source_manifest.json').write_text(json.dumps(manifest,indent=2,sort_keys=True)+'\n')
+          print('S07_T0_21_REAL_NATIVE_ARTIFACT_REPLAY_PASS_NOT_PHYSICAL_PASS')
+          PY
+          sha256sum "$script" s07_native_t0_21.csv s07_native_295_t0_and_41time_qc.json s07_native_t0_source_manifest.json | tee s07_t0_output_sha256.log
+      - name: Preserve real values and failures; no binary or solver artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s07-historical-t0-21-native-outb-replay
+          path: |
+            s07_native_t0_21.csv
+            s07_native_295_t0_and_41time_qc.json
+            s07_native_t0_source_manifest.json
+            s07_t0_selftest.log
+            s07_native_t0_stdout.log
+            s07_t0_output_sha256.log
+          if-no-files-found: warn
+          retention-days: 30
