@@ -409,8 +409,13 @@
     "first_failure_Mx_cancellation_factor": 2072.4823008429357,
     "interpretation": "Original double arithmetic parser false-failure sensitivity is substantial; not evidence of a proven missing physical load term. One float32 residual remains and exact compiler arithmetic ordering is unverified.",
     "native_new_solver_runs": 0,
-    "ci": "SUBMITTED_AWAITING_VERIFICATION",
+    "ci": "COMPLETED_SUCCESS_ONLY_NUMERIC_REPLAY_NOT_PHYSICS_PASS",
     "physical_pass": false,
-    "HOLD": "S07 gravity/inertia load ownership and six-component mapping remain blocked; DLC1.2 0/126."
+    "HOLD": "S07 gravity/inertia load ownership and six-component mapping remain blocked; DLC1.2 0/126.",
+    "ci_run_id": 41670711027,
+    "ci_artifact_id": 13248540862,
+    "ci_artifact_zip_sha256": "35643903e2f40105cfef057f845c5a8ee0ce542bfad1df20f4190f81a720805d",
+    "ci_numeric_json_sha256": "27fa669d897e7bd07dc2561d550ed998d1060c8554f751d69106cec271cc0b38",
+    "executed_script_sha256": "7f48e5e16e8babf4829e52634760d8125ca54ebaf674e2a45923fd49ad734163"
   }
 }
