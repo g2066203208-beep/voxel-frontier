@@ -1228,5 +1228,63 @@
     "HOLD": "S07 formal DLC1.2 and physical mapping blocked by controller/precision/initial-state parity plus S01-S04 structural native gates; short 2s diagnostic is not production. E/WE=0, materials fatigue lifetime=0, 0/12.",
     "stage_pass": false,
     "physical_pass": false
+  },
+  "s07_rosco_v260_native_2s_same_version_pair_actual_20261103_13h": {
+    "timestamp_local": "2026-11-03 13h Asia/Shanghai",
+    "stage": "S07_SAME_VERSION_NATIVE_2S_PAIRED_DIAGNOSTIC__NOT_PHYSICAL_PASS",
+    "SOURCE": {
+      "reading_level": "DIRECT_NATIVE_ACTIONS_JOB_STDOUT_AND_PAIRED_JSON_IN_JOB_LOG",
+      "run_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41576807568",
+      "run_id": 41576807568,
+      "job_id": 125722103210,
+      "run_jobs": "3/4 success; native main job marked failure at contradictory post-run assertion",
+      "artifact_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41576807568/artifacts/13204996277",
+      "artifact_zip_sha256": "37c85037dd61c828498e0d2ac4a22c73907d32fd8ed9c366803f56354e634303",
+      "historical_windows_outb_sha256": "c3f40b400f827fbcdd49e9a63f5bb2295a5c0f368a9644b90b591d66b7bb0242",
+      "linux_v260_outb_sha256": "e91b6cc6796231a10359d612f1c0a7dbbd20042e003d192f9deeb671e5bca752",
+      "linux_native_dcm_raw_sha256": "b680d40bf4007fb3e2f3be01e2a69ef954a6f48bd4dafa59001d916550de64e5",
+      "original_bts_sha256": "ad68a83a63f197c528c07502db8adff883e9c737863ef3c4cab99cfa76052147",
+      "linux_rosco_v260_library_sha256": "665c256f81085d18ef173c94badbde4561458bbbf859f30f5275a32d2d9db862",
+      "historical_windows_controller_sha256": "7aebb0d2166c0cc095d11c2b7bc13da136547c557b0f331dcdce84fe181802aa"
+    },
+    "REF": "Reuse existing T062 Windows/Linux ROSCO v2.9.0 2s paired receipt; no new journal full-text",
+    "STANDARD": "No newly read authorized IEC/GB/NB clause; no compliance claim",
+    "OFFICIAL": "Official ROSCO v2.6.0 source tag 51629665d22f92770f861daeebcebd47ab32abb1; actual Linux native stdout Running ROSCO-v2.6.0, OpenFAST terminated normally",
+    "RUN": {
+      "native_openfast_v353_2s": "COMPLETED_NORMALLY",
+      "native_dcm_samples": 161,
+      "native_paired_comparison": "EXECUTED_295_CHANNELS_41_TIMES",
+      "workflow_result": "FAILURE_POSTRUN_ASSERTION_ONLY",
+      "python_selftests": "2 positive and 5 negative (per job stdout)",
+      "linux_rosco_v260_default_parameter_warnings": 0,
+      "previous_v290_default_parameter_warnings": 45,
+      "controller_version_same_as_historical_windows": true,
+      "controller_equivalence_verified": false,
+      "physical_pass": false
+    },
+    "FIG": "0; diagnostic data not thesis figure",
+    "TAB": {
+      "common_channels": 295,
+      "samples": 41,
+      "paired_samples": 12095,
+      "quantization_exceeding_channels": 266,
+      "quantization_exceeding_samples_v260": 10286,
+      "previous_v290_exceeding_samples": 10297,
+      "t0_exceeding_channels_v260": 21,
+      "t005_exceeding_channels_v260": 163,
+      "t2_exceeding_channels_v260": 264,
+      "t005_previous_v290": 165,
+      "t2_previous_v290": 266,
+      "first_pitch_exceedance_s_v260": 0.95,
+      "first_pitch_exceedance_s_v290": 0.05,
+      "wind_xyz_exceedance": "0/41 each",
+      "note": "11 fewer quantization exceedances is not a causal controller effect or physical equivalence evidence"
+    },
+    "assumptions": "Same ETM_S06 BTS and batch1 restoration, Linux ROSCO source pinned to v2.6.0; Windows Intel single vs Linux GNU double precision and initial state remain different; only 2s startup",
+    "error_budget": "1.1*(Windows OUTB half-LSB + Linux OUTB half-LSB) + 1e-8 per sample, encoding/quantization diagnostic only, NOT physical tolerance",
+    "failure_record": "Real CI failed because workflow asserts same_rosco_version is True and then immediately is False; actual JSON same_rosco_version=true. Post-run AssertionError exit 1; native OpenFAST 2s and paired JSON completed. Corrective patch removes contradictory False assertion. New CI outcome PENDING; no solver failure should be inferred from CI job status.",
+    "HOLD": "ROSCO release version now matched, but toolchain precision and initial state are not matched, with 21 channels divergent at t=0 and 10,286/12,095 quantization exceedances; no formal DLC1.2, fatigue, seismic, or structural physical PASS",
+    "stage_pass": false,
+    "physical_pass": false
   }
 }
