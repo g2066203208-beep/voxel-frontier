@@ -41,6 +41,17 @@ jobs:
                      v['known_bin_partial_all_hour_weighted_m4_MNm4']<=
                      v['known_bin_partial_all_hour_weighted_m4_3of6_max_MNm4']
                      for v in j['RESULTS'].values())
+          slopes=j['LOAD_M4_SPEED_EXPONENT_DIAGNOSTIC']
+          assert set(slopes)=={'TwrBsMxt','TwrBsMyt'}
+          for channel in slopes:
+            assert len(slopes[channel]['intervals'])==2
+            for item in slopes[channel]['intervals']:
+              assert item['subset_pairs']==400 and item['not_material_damage'] is True
+              assert item['3of6_subset_p_min']<=item['effective_p_for_load_DEL_fourth_moment']<=item['3of6_subset_p_max']
+          assert 6<slopes['TwrBsMxt']['intervals'][1]['effective_p_for_load_DEL_fourth_moment']<9
+          assert 0<slopes['TwrBsMyt']['intervals'][1]['effective_p_for_load_DEL_fourth_moment']<1
+          assert slopes['TwrBsMyt']['intervals'][1]['3of6_subset_p_min']<0
+          print('S10_REAL_18NTM_NONUNIVERSAL_U_POWER_LOAD_DEL_PASS_NOT_MATERIAL_DAMAGE')
           assert j['PHYSICAL_PASS'] is False and j['MATERIAL_FATIGUE_PASS'] is False
           print('S10_18_ACTUAL_NTM_3BIN_SOURCE_LOCKED_M4_PARTIAL_3OF6_ENVELOPE_PASS_NOT_LIFE')
           PY
