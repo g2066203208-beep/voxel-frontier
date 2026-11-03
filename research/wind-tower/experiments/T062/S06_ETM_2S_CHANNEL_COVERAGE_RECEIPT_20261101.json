@@ -1127,7 +1127,8 @@
       },
       "new_ci_script_and_workflow_commits": [
         "c0dae29dd05a38c0c0f4e80f6d496c8b9df54477",
-        "7e230f5e6dafc5eee1dde96c38edccb8f1abf6fd"
+        "7e230f5e6dafc5eee1dde96c38edccb8f1abf6fd",
+        "8de160a0b9b78ebf539653d142d291f0e5b675e6"
       ],
       "new_ci_validation": "PENDING_AT_RECEIPT_WRITE__NO_NATIVE_RETEST_CLAIM",
       "controller_equivalence_verified": false,
@@ -1189,7 +1190,7 @@
     },
     "assumptions": "The two 2s outputs share ETM S06 BTS and sample grid, but differ in ROSCO version 2.6.0 versus 2.9.0, Windows Intel single versus Linux GNU double precision, and initial numerical state. Missing v2.9.0 fields may default intentionally; 45 warnings do not prove erroneous behavior.",
     "error_budget": "1.1*(Windows half-LSB+Linux half-LSB)+1e-8 per sample, independent per-channel original units. t0 21 channels already exceed packed budget; this budget is NOT a physical tolerance. Toolchain, precision, controller, initialization and numerical causality not separated.",
-    "failure_record": "No new native solver run. The previous 295-channel comparison alone cannot isolate cause; initial t=0 non-equivalence and actual ROSCO 2.6.0/2.9.0 logs now independently verified. Newly extended CI still requires real Actions completion.",
+    "failure_record": "No new native solver run. The previous 295-channel comparison alone cannot isolate cause; initial t=0 non-equivalence and actual ROSCO 2.6.0/2.9.0 logs now independently verified. Newly extended CI still requires real Actions completion. Initial newly committed Python regex mistakenly doubled backslash before dot, which would reject genuine ROSCO version logs; corrected at commit 8de160a0 before claiming any new CI PASS. Earlier in-flight CI snapshots may fail; preserve their real outcomes.",
     "HOLD": "Version mismatch plus 45 v2.9.0 default/missing input warnings and 21 t0 non-equivalent channels prevent declaring controller or initial-state parity. Need same-version controller and matched precision/initialization 2s A/B; no formal DLC1.2 or material fatigue physical PASS.",
     "stage_pass": false,
     "physical_pass": false
