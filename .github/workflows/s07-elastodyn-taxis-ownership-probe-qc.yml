@@ -6,6 +6,7 @@ on:
       - 'research/wind-tower/experiments/T062/s07_elastodyn_taxis_ownership_probe.py'
       - 'research/wind-tower/experiments/T062/s07_native_2s_bundle_gate.py'
       - 'research/wind-tower/experiments/T062/s07_recovered_2s_input_gate.py'
+      - 'research/wind-tower/experiments/T062/s07_windows_linux_2s_pair_qc.py'
       - 'research/wind-tower/experiments/T062/S06_ETM_2S_CHANNEL_COVERAGE_RECEIPT_20261101.json'
   workflow_dispatch:
 
@@ -250,6 +251,7 @@ jobs:
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             research/wind-tower/experiments/T062/s07_elastodyn_taxis_ownership_probe.py
+            research/wind-tower/experiments/T062/s07_windows_linux_2s_pair_qc.py
             research/wind-tower/experiments/T062/s06_etm_2s_native_overlap.py
             research/wind-tower/experiments/T062/s06_ntm_native_0p1s_probe.py
             research/wind-tower/experiments/T062/s06_native_4batch_common_channel_qc.py
@@ -512,6 +514,66 @@ jobs:
           grep -q 'OpenFAST terminated normally.' s07_linux_native_stdout.log
           test -s s07_linux_dcm_audit.json
           echo 'S07_SINGLE_2S_NATIVE_DIAGNOSTIC_COMPLETED__NOT_HISTORICAL_EQUIVALENCE_OR_PHYSICAL_PASS'
+      - name: Compare SHA-locked historical Windows and Linux 2s OUTB (not controller equivalence)
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          script=research/wind-tower/experiments/T062/s07_windows_linux_2s_pair_qc.py
+          python -m py_compile "$script"
+          python "$script" --selftest | tee s07_pair_selftest.log
+          curl --fail --location --silent --show-error --retry 2 --max-time 90 \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/13080759167/zip" \
+            --output s07_original_windows_2s.zip
+          echo '7fcae2bf57be571cacc6d3d9b82f1a254257ce59fdb946a1cfb56d3639eb9f1b  s07_original_windows_2s.zip' | sha256sum -c
+          test -s work/batch1/DTU_10MW_RWT.outb
+          python "$script" \
+            --windows-zip s07_original_windows_2s.zip \
+            --linux-outb work/batch1/DTU_10MW_RWT.outb \
+            --derived-receipt s07_linux_derived_identity.json \
+            --out s07_pair_compare.json | tee s07_pair_compare_stdout.log
+          python - <<'PY'
+          import json
+          r=json.load(open('s07_pair_compare.json'))
+          assert r['samples']==41 and r['common_channels']>=11
+          assert r['physical_pass'] is False and r['controller_equivalence_verified'] is False
+          print('S07_NATIVE_WINDOWS_LINUX_PAIRED_DIFFERENCE_MEASURED__NOT_EQUIVALENCE_OR_PHYSICAL_PASS')
+          PY
+          sha256sum "$script" s07_original_windows_2s.zip work/batch1/DTU_10MW_RWT.outb s07_pair_compare.json | tee s07_pair_sha256.log
+      - name: Compress real native probe and OUTB with source SHA and bounded size
+        if: always()
+        shell: bash
+        run: |
+          python - <<'PY'
+          import gzip,hashlib,json
+          from pathlib import Path
+          rows=[]
+          for src,dest in [
+              ('work/batch1/s07_native_dcm_raw.log','s07_native_dcm_raw.log.gz'),
+              ('work/batch1/DTU_10MW_RWT.outb','s07_linux_native_2s.outb.gz')]:
+              p=Path(src)
+              if not p.is_file():
+                  rows.append({'source':src,'status':'MISSING__HOLD'})
+                  continue
+              raw=p.read_bytes()
+              if not (0<len(raw)<100_000_000):
+                  rows.append({'source':src,'status':'RESOURCE_SIZE_HOLD','bytes':len(raw)})
+                  continue
+              zipped=gzip.compress(raw,compresslevel=6,mtime=0)
+              if gzip.decompress(zipped)!=raw:raise RuntimeError('S07_GZIP_ROUNDTRIP_HOLD')
+              Path(dest).write_bytes(zipped)
+              rows.append({'source':src,'status':'GZIP_ROUNDTRIP_VERIFIED',
+                           'source_bytes':len(raw),'source_sha256':hashlib.sha256(raw).hexdigest(),
+                           'compressed_path':dest,'compressed_bytes':len(zipped),
+                           'compressed_sha256':hashlib.sha256(zipped).hexdigest()})
+          Path('s07_native_compressed_artifacts.json').write_text(json.dumps({
+              'source':'native Linux 2s probe/OUTB, no production',
+              'physical_pass':False,'controller_equivalence_verified':False,'files':rows},indent=2)+'\n')
+          print('S07_NATIVE_COMPRESSED_ARTIFACT_MANIFEST',json.dumps(rows))
+          PY
       - name: Preserve actual configure/build logs even when compilation fails (never upload binary)
         if: always()
         uses: actions/upload-artifact@v4
@@ -542,6 +604,13 @@ jobs:
             s07_linux_dcm_raw_size.log
             s07_linux_dcm_missing.log
             s07_linux_dcm_audit.json
+            s07_pair_selftest.log
+            s07_pair_compare.json
+            s07_pair_compare_stdout.log
+            s07_pair_sha256.log
+            s07_native_compressed_artifacts.json
+            s07_native_dcm_raw.log.gz
+            s07_linux_native_2s.outb.gz
             work/batch1/S06_0P1S_PREP_RECEIPT.json
           if-no-files-found: warn
           retention-days: 30
