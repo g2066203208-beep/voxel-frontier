@@ -1194,5 +1194,39 @@
     "HOLD": "Version mismatch plus 45 v2.9.0 default/missing input warnings and 21 t0 non-equivalent channels prevent declaring controller or initial-state parity. Need same-version controller and matched precision/initialization 2s A/B; no formal DLC1.2 or material fatigue physical PASS.",
     "stage_pass": false,
     "physical_pass": false
+  },
+  "s07_same_version_rosco_v260_trial_20261103_12h": {
+    "timestamp_local": "2026-11-03 12h Asia/Shanghai",
+    "stage": "S07_CONTROLLED_SHORT_2S_ROSCO_VERSION_MATCH_ATTEMPT__NOT_PHYSICAL_PASS",
+    "SOURCE": {
+      "reading_level": "DIRECT_GITHUB_PR_MAIN_AND_REQUIRED_RESEARCH_FILES + ACTUAL_NATIVE_CI_JOB_LOG + OFFICIAL_GITHUB_TAG_REF_AND_V2.6.0_CMAKE_SOURCE",
+      "previous_native_run_id": 41570829978,
+      "previous_native_job_id": 125703061287,
+      "previous_native_status": "completed/success; 4/4 jobs; native 2s OpenFAST normal; 295x41 v2.9.0 diagnostic",
+      "rosco_v260_tag_commit": "51629665d22f92770f861daeebcebd47ab32abb1",
+      "rosco_v260_cmake_path": "ROSCO/CMakeLists.txt",
+      "rosco_v260_source": "https://github.com/NatLabRockies/ROSCO/tree/v2.6.0/ROSCO",
+      "historical_windows_artifact_zip_sha256": "7fcae2bf57be571cacc6d3d9b82f1a254257ce59fdb946a1cfb56d3639eb9f1b",
+      "historical_windows_controller_sha256": "7aebb0d2166c0cc095d11c2b7bc13da136547c557b0f331dcdce84fe181802aa",
+      "original_bts_sha256": "ad68a83a63f197c528c07502db8adff883e9c737863ef3c4cab99cfa76052147"
+    },
+    "REF": "Reuse existing T062 Windows/Linux v2.9.0 native 2s paired evidence; no new journal full text",
+    "STANDARD": "No newly read authorized IEC/GB/NB clause; no code compliance claim",
+    "OFFICIAL": "Official ROSCO v2.6.0 tag Git commit 51629665 and historical native stdout Running ROSCO-v2.6.0; official tag CMakeLists in ROSCO/ not rosco/controller/",
+    "RUN": {
+      "prior_v290_native": "PASS_DIAGNOSTIC_ONLY",
+      "new_v260_native": "NOT_YET_EXECUTED_AT_COMMIT",
+      "test_plan": "Same original ETM_S06 2s BTS; same OpenFAST v3.5.3 GNU diagnostic and original Windows v2.6.0 OUTB; compile v2.6.0 source with pinned tag, assert native ROSCO-v2.6.0 and paired 41x295; preserve stdout/OUTB/probe SHA and failure logs",
+      "new_v260_physical_pass": false,
+      "controller_equivalence_verified": false
+    },
+    "FIG": "0; no new thesis response figure",
+    "TAB": "Historical v2.9.0 paired 295x41: 10297/12095 packed-quantization exceedances, t0=21; new v2.6.0 counts PENDING",
+    "assumptions": "Only ROSCO source version intentionally changed in derived Linux 2s branch; Windows Intel single precision vs Linux GNU double and initial-state confounding remain. Same version is necessary but not sufficient for controller equivalence.",
+    "error_budget": "1.1*(two native OUTB half-LSB)+1e-8 for diagnostic difference counting only; not a physical tolerance. Same-version paired discrepancies and numerical error allocation to be measured, not assumed.",
+    "failure_record": "No v2.6.0 native run before this commit. v2.6.0 source layout verified at official tag ROSCO/CMakeLists.txt; compilation or runtime may fail; preserve first actual CI failure and do not claim success.",
+    "HOLD": "S07 formal DLC1.2 and physical mapping blocked by controller/precision/initial-state parity plus S01-S04 structural native gates; short 2s diagnostic is not production. E/WE=0, materials fatigue lifetime=0, 0/12.",
+    "stage_pass": false,
+    "physical_pass": false
   }
 }

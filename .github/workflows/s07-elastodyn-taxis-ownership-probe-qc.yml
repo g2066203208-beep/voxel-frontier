@@ -433,13 +433,16 @@ jobs:
           Path('s07_linux_path_port_receipt.json').write_text(json.dumps(receipt, indent=2) + '\n')
           print('S07_DERIVED_WINDOWS_PATH_PORT_PASS', len(rows), 'files')
           PY
-      - name: Compile official ROSCO v2.9.0 Linux Bladed interface (diagnostic substitution)
+      - name: Compile official ROSCO v2.6.0 Linux Bladed interface (diagnostic substitution)
         shell: bash
         run: |
           set -euo pipefail
-          git clone --depth 1 --branch v2.9.0 https://github.com/NREL/ROSCO.git official-rosco
+          git clone --depth 1 --branch v2.6.0 https://github.com/NREL/ROSCO.git official-rosco
           git -C official-rosco rev-parse HEAD | tee s07_rosco_source_commit.log
-          cmake -S official-rosco/rosco/controller -B official-rosco/build \
+          test "$(git -C official-rosco rev-parse HEAD)" = '51629665d22f92770f861daeebcebd47ab32abb1'
+          test -f official-rosco/ROSCO/CMakeLists.txt
+          sha256sum official-rosco/ROSCO/CMakeLists.txt | tee s07_rosco_cmake_source_sha256.log
+          cmake -S official-rosco/ROSCO -B official-rosco/build \
             -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$PWD/rosco-install" 2>&1 | tee s07_rosco_cmake.log
           cmake --build official-rosco/build -j 2 2>&1 | tee s07_rosco_build.log
           cmake --install official-rosco/build 2>&1 | tee s07_rosco_install.log
@@ -483,7 +486,7 @@ jobs:
              'derived_linux_servo_sha256':hashlib.sha256(p.read_bytes()).hexdigest(),
              'source_controller_sha256':hashlib.sha256(Path('work/batch1/Control/libdiscon.dll').read_bytes()).hexdigest(),
              'linux_controller_sha256':hashlib.sha256(Path('work/batch1/Control/libdiscon.so').read_bytes()).hexdigest(),
-             'change':'DLL_FileName only; historical Windows controller replaced by ROSCO v2.9.0 Linux diagnostic build',
+             'change':'DLL_FileName only; historical Windows controller replaced by ROSCO v2.6.0 Linux diagnostic build',
              'source_equivalence':False,'physical_pass':False}
           Path('s07_linux_derived_identity.json').write_text(json.dumps(r,indent=2)+'\n')
           print('S07_LINUX_DLL_PATH_ONLY_CHANGE',json.dumps(r))
@@ -543,9 +546,10 @@ jobs:
           assert r['physical_pass'] is False and r['controller_equivalence_verified'] is False
           assert r['temporal_divergence']['samplewise_exceedance_total']==r['quantization_exceeding_samples']
           assert r['controller_native_stdout_audit']['historical_windows_rosco_version']=='2.6.0'
-          assert r['controller_native_stdout_audit']['linux_substitute_rosco_version']=='2.9.0'
+          assert r['controller_native_stdout_audit']['linux_substitute_rosco_version']=='2.6.0'
+          assert r['controller_native_stdout_audit']['same_rosco_version'] is True
           assert r['controller_native_stdout_audit']['same_rosco_version'] is False
-          print('S07_REAL_NATIVE_LOG_VERSION_MISMATCH_AND_TIME_RESOLVED_DIFFERENCES__NOT_CAUSAL_ATTRIBUTION')
+          print('S07_SAME_ROSCO_VERSION_260_NATIVE_LOG_AND_TIME_RESOLVED_DIFFERENCES__NOT_TOOLCHAIN_EQUIVALENCE')
           PY
           sha256sum "$script" s07_original_windows_2s.zip work/batch1/DTU_10MW_RWT.outb s07_pair_compare.json | tee s07_pair_sha256.log
       - name: Compress real native probe and OUTB with source SHA and bounded size
@@ -594,6 +598,7 @@ jobs:
             s07_native_binary_hash.log
             s07_linux_prep.log
             s07_rosco_source_commit.log
+            s07_rosco_cmake_source_sha256.log
             s07_rosco_cmake.log
             s07_rosco_build.log
             s07_rosco_install.log

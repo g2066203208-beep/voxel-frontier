@@ -71,7 +71,9 @@ def controller_log_audit(win_zip, linux_stdout):
             'linux_rosco_default_or_missing_parameter_warnings':len(warnings),
             'linux_warning_lines':warnings,
             'version_evidence_level':'ACTUAL_WINDOWS_4_NATIVE_STDOUT_AND_LINUX_NATIVE_STDOUT',
-            'causality':'VERSION_MISMATCH_OBSERVED__NOT_SOLE_CAUSE_ESTABLISHED'}
+            'causality':('SAME_VERSION_OBSERVED__TOOLCHAIN_AND_INITIAL_STATE_STILL_DIFFER'
+                         if win_versions[0] == linux_version else
+                         'VERSION_MISMATCH_OBSERVED__NOT_SOLE_CAUSE_ESTABLISHED')}
 
 def temporal_divergence(win_raw, linux_raw, hw, hl, names):
     """Counts exact packed-OUTB quantization exceedances at every native instant."""
@@ -157,13 +159,13 @@ def audit(win_zip,linux_outb,derived_receipt,linux_stdout=None):
       'channels':rows,
       'temporal_divergence':temporal,
       'controller_native_stdout_audit':logs,
-      'SOURCE':'Windows OpenFAST-v3.5.3 Intel 2021 Actions artifact #13080759167 and actual Linux OpenFAST-v3.5.3 GNU + ROSCO v2.9.0 OUTB',
+      'SOURCE':'Windows OpenFAST-v3.5.3 Intel 2021 Actions artifact #13080759167 and actual Linux OpenFAST-v3.5.3 GNU + ROSCO v2.6.0 OUTB',
       'REF':'T062 S06_ETM_NATIVE_2S_OVERLAP_QC_20261101.json and S07 native DCM audit',
       'STANDARD':'No authorized IEC/GB clause reviewed here',
-      'OFFICIAL':'OpenFAST v3.5.3; ROSCO v2.9.0 Linux diagnostic substitution',
+      'OFFICIAL':'OpenFAST v3.5.3; ROSCO v2.6.0 Linux diagnostic substitution',
       'RUN':'2s 41-point per channel native paired output, no long run',
       'FIG':'none','TAB':'per-channel max/rms/mean difference and packed quantization budget',
-      'ASSUMPTIONS':'Common source BTS and restored batch1; different controller binary/toolchain; 2s initialization only',
+      'ASSUMPTIONS':'Common source BTS and restored batch1; same ROSCO release intended, but different binary/toolchain/precision and possibly initialization; 2s only',
       'ERROR_BUDGET':'1.1*(two OUTB half-LSB)+1e-8 per sample; not an acceptable physical/controller equivalence tolerance',
       'HOLD':'2s difference cannot establish historical controller state equivalence; 600s DLC1.2, cross-batch load map, physical response and material life unverified',
       'controller_equivalence_verified':False,'physical_pass':False}
@@ -182,7 +184,7 @@ def selftest():
     try:sample_grid({'file_id':4,'num_samples':41,'first_time_s':0.,'time_increment_s':.1})
     except ValueError:pass
     else:raise AssertionError('S07_BAD_DT_ACCEPTED')
-    testlog=b'Running ROSCO-v2.9.0\nROSCO Warning: Did not find X\n'
+    testlog=b'Running ROSCO-v2.6.0\nROSCO Warning: Did not find X\n'
     try:controller_log_audit(b'not a zip',testlog)
     except (ValueError,zipfile.BadZipFile):pass
     else:raise AssertionError('S07_BAD_CONTROLLER_ARCHIVE_ACCEPTED')
