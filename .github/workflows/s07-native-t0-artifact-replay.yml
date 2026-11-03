@@ -106,6 +106,9 @@ jobs:
           Path('s07_native_t0_source_manifest.json').write_text(json.dumps(manifest,indent=2,sort_keys=True)+'\n')
           print('S07_T0_21_REAL_NATIVE_ARTIFACT_REPLAY_PASS_NOT_PHYSICAL_PASS')
           PY
+          echo 'S07_T0_CSV_BEGIN'
+          cat s07_native_t0_21.csv
+          echo 'S07_T0_CSV_END'
           sha256sum "$script" s07_native_t0_21.csv s07_native_295_t0_and_41time_qc.json s07_native_t0_source_manifest.json | tee s07_t0_output_sha256.log
       - name: Preserve real values and failures; no binary or solver artifacts
         if: always()
