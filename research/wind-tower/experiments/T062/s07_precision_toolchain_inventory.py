@@ -81,7 +81,7 @@ def fortran_kind_probe():
     with tempfile.TemporaryDirectory(prefix="s07-kind-") as tmp:
         source = Path(tmp) / "kind.f90"
         source.write_text(FORTRAN, encoding="utf-8")
-        for label, flags in (("gnu_default", []), ("gnu_default_real8", ["-fdefault-real-8"])):
+        for label, flags in (("gnu_default", []), ("gnu_real8_only_NOT_OpenFAST", ["-fdefault-real-8"]), ("gnu_openfast_v353_double", ["-fdefault-real-8", "-fdefault-double-8"])):
             exe = Path(tmp) / ("kind_" + label + (".exe" if os.name == "nt" else ""))
             cmd = [compiler, *flags, str(source), "-o", str(exe)]
             build = subprocess.run(cmd, capture_output=True, text=True, timeout=30, check=False)
@@ -92,6 +92,8 @@ def fortran_kind_probe():
             require(len(parts) == 4 and parts[0] == "REAL_STORAGE_BITS", "FORTRAN_KIND_OUTPUT_HOLD")
             bits = [int(v) for v in parts[1:]]
             require(all(v in (32, 64, 80, 128) for v in bits), "FORTRAN_KIND_BITS_HOLD")
+            expected = {"gnu_default": [32, 64, 64], "gnu_real8_only_NOT_OpenFAST": [64, 128, 64], "gnu_openfast_v353_double": [64, 64, 64]}[label]
+            require(bits == expected, "FORTRAN_KIND_EXPECTED_BITS_HOLD_" + label)
             rows.append({"mode": label, "flags": flags, "storage_bits_default_double_selected15": bits,
                          "stdout": run.stdout.strip(), "source_sha256": hashlib.sha256(FORTRAN.encode()).hexdigest()})
     return {"status": "GNU_FORTRAN_KIND_SMOKE_ONLY", "compiler": compiler,
@@ -149,7 +151,12 @@ def main():
                    "python_version": sys.version.split()[0]},
         "REF": "T062 Windows/Linux 2s same-input, ROSCO v2.6.0 receipts; no new paper read",
         "STANDARD": "No authorized IEC/GB/NB pages read; no clause pass",
-        "OFFICIAL": {"toolchain_on_current_runner_path": tool_inventory()},
+        "OFFICIAL": {"openfast_v353_precision_option": "CMakeLists.txt option(DOUBLE_PRECISION ... on)",
+                     "openfast_v353_gnu_double_flags": ["-fdefault-real-8", "-fdefault-double-8"],
+                     "openfast_v353_intel_double_flags": "Intel flags vary by compiler version; see tagged official CMake source",
+                     "openfast_v353_fortran_options_git_blob_sha1": "0efa0aed55f8b005dbe8d199aecf436d6ec9d133",
+                     "openfast_v353_fortran_options_url": "https://github.com/OpenFAST/openfast/blob/v3.5.3/cmake/OpenfastFortranOptions.cmake",
+                     "toolchain_on_current_runner_path": tool_inventory()},
         "RUN": {"pe": pe, "fortran_kind_smoke": fortran_kind_probe() if args.probe_fortran else None,
                 "openfast_solver_invoked": False, "abaqus_invoked": False, "physical_pass": False},
         "FIG": None, "TAB": "This JSON: runner toolchain availability and PE metadata",
