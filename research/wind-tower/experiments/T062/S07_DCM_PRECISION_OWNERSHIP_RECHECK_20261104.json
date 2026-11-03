@@ -1,0 +1,86 @@
+{
+  "timestamp_local": "2026-11-04 00h Asia/Shanghai",
+  "stage": "S07",
+  "status": "NATIVE_2S_DCM_PRECISION_REPLAY_NUMERIC_DIAGNOSTIC_ONLY_NOT_PHYSICS_PASS",
+  "stage_pass_count": "0/12",
+  "SOURCE": {
+    "read_level": "DIRECT_NATIVE_2S_G_T_E_ALL_161_TIMESTEPS_FROM_ACTIONS_41632768388_SINGLE",
+    "artifact_id": 13229996252,
+    "zip_sha256": "983bce8ca81981ff5fd00e5261dbfb2c0b6e18b074aa4eb1ff425e6851fb9735",
+    "raw_dcm_sha256": "77f247d7e0b66997041ffbba70c859bdd38fd345eb303b18b78c6599fa2caa92",
+    "raw_dcm_bytes": 56055853,
+    "raw_lines": 145383,
+    "official_elastodyn_f90_sha256": "a8ea1a88dc22d5401ea450f376aa7f66e3242785f1e038a22933054aaaf4f7d3",
+    "native_2s_stdout": "OpenFAST terminated normally; original ownership parser HOLD"
+  },
+  "REF": "OpenFAST v3.5.3 official modules/elastodyn/src/ElastoDyn.f90 L1165-L1206",
+  "STANDARD": "No newly read authorized IEC/GB/NB original clauses",
+  "OFFICIAL": "https://github.com/OpenFAST/openfast/blob/v3.5.3/modules/elastodyn/src/ElastoDyn.f90",
+  "RUN": {
+    "type": "READ_ONLY_PYTHON_3_13_5_STANDARD_LIBRARY_REPLAY",
+    "script": "research/wind-tower/experiments/T062/s07_dcm_precision_ownership_recheck.py",
+    "script_git_blob_sha1": "6a76dbf985af245432761fec91bbc39e5f13144d",
+    "workflow": ".github/workflows/s07-gnu-precision-original-artifact-recheck.yml",
+    "native_new_solver_runs": 0,
+    "negative_rejections": 3,
+    "ci_status": "SUBMITTED_NOT_YET_CONFIRMED"
+  },
+  "FIG": 0,
+  "TAB": {
+    "native_samples": 161,
+    "gage": 220,
+    "topnode": 1120,
+    "element_rows_each": 901,
+    "components": 6,
+    "float64_pass": 150,
+    "float64_fail": 11,
+    "float32_pass": 160,
+    "float32_fail": 1,
+    "float64_failed_times_s": [
+      0.1875,
+      0.225,
+      0.2625,
+      0.2875,
+      0.4,
+      0.4125,
+      0.45,
+      0.55,
+      0.5625,
+      0.5875,
+      0.6125
+    ],
+    "float32_failed_times_s": [
+      0.1875
+    ],
+    "max_abs_float64_kN_kNm": [
+      0.002395452587506952,
+      0.2101914849554305,
+      0.0004332259915145187,
+      0.03149254283380287,
+      0.029724768715823302,
+      0.5790678379416931
+    ],
+    "max_abs_float32_kN_kNm": [
+      0.0001373291015625,
+      0.005859375,
+      0.00006103515625,
+      0.00439453125,
+      0,
+      0.03125
+    ],
+    "first_failure": {
+      "time_s": 0.1875,
+      "component": "Mx",
+      "native_Mx_kNm": 5.185017108917236,
+      "float64_residual_kNm": -0.0020139728351109554,
+      "float32_residual_kNm": -0.0015606880187988281,
+      "absolute_term_sum_Nm": 10745856.18779878,
+      "cancellation_factor": 2072.4823008429357
+    }
+  },
+  "assumptions": "Float32 per-operation rounding approximates native single precision but not exact GNU compiler evaluation order. Native G/T/E printed values already rounded. No separate missing load term established.",
+  "error_budget": "Original audit componentwise atol=1e-5 and rtol=5e-5; near-zero Mx cancellation factor ~2072 amplifies floating point differences; these are numerical audit thresholds not physics tolerances.",
+  "failure_record": "Original single DCM INERTIA_GRAVITY_OWNERSHIP_RECONSTRUCTION_HOLD reproduced under float64 11/161 time instants; float32 emulation leaves 1/161 (t=0.1875 Mx). This does not prove full load ownership.",
+  "HOLD": "Native arithmetic order/rounding at t=0.1875 Mx still unclosed; tower FL/ML include gravity/inertia and cannot be treated as wind-only; formal six-component mapping and DLC1.2 0/126, E/WE=0; no physics PASS.",
+  "physical_pass": false
+}
