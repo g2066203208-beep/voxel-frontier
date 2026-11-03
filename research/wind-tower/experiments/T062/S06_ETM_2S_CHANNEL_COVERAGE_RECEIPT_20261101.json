@@ -4,7 +4,7 @@
     "stage": "S07_INDEPENDENT_PREPARATION__PENDING_NATIVE_PAIR_CI",
     "read_base_sha": "6bdb3bb1d6c76502429d18c85494569cc717e34c",
     "SOURCE": {
-      "windows_2s_artifact": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41543742809",
+      "windows_2s_artifact": "Historical Windows original output ZIP artifact #13080759167 (run URL not independently resolved; use GitHub Actions artifact ID and exact ZIP SHA)",
       "windows_original_zip_artifact_id": 13080759167,
       "windows_original_zip_sha256": "7fcae2bf57be571cacc6d3d9b82f1a254257ce59fdb946a1cfb56d3639eb9f1b",
       "windows_batch1_outb_sha256": "c3f40b400f827fbcdd49e9a63f5bb2295a5c0f368a9644b90b591d66b7bb0242",
