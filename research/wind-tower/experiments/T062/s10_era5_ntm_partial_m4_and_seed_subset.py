@@ -10,6 +10,7 @@ import csv
 import hashlib
 import itertools
 import json
+import math
 from pathlib import Path
 
 HERE=Path(__file__).resolve().parent
@@ -136,6 +137,48 @@ def run():
         rows+=out
         aggregate[channel]=agg
     check(len(rows)==6,"BAD_OUT_ROW_COUNT")
+    # Actual load DEL data, not assumed U^p: effective fourth-moment slope
+    # between the THREE observed wind speeds. Each bin has six original seeds.
+    speed_values={9:9.343881,11:11.4,19:19.202140}
+    def effective_p(ua,ub,la,lb):
+        check(ua>0 and ub>ua and la>0 and lb>0,"BAD_LOG_SLOPE_INPUT")
+        return 4*math.log(lb/la)/math.log(ub/ua)
+    # Synthetic regression: DEL proportional to U -> fourth moment p=4;
+    # constant DEL -> p=0. Neither is an empirical material law.
+    check(abs(effective_p(9,18,2,4)-4)<1e-12,"SYNTHETIC_P4_FAIL")
+    check(abs(effective_p(9,18,2,2))<1e-12,"SYNTHETIC_P0_FAIL")
+    load_m4_speed_slope={}
+    for channel in expected_channels:
+        levels={}
+        subsets={}
+        for wind in (9,11,19):
+            vals=by_group[(wind,channel)]
+            levels[wind]=(sum(v**4 for v in vals.values())/6)**0.25
+            subsets[wind]=[(sum(vals[k]**4 for k in keys)/3)**0.25
+                for keys in itertools.combinations(sorted(vals),3)]
+            check(len(subsets[wind])==20,"SLOPE_SUBSET_COUNT_FAIL")
+        intervals=[]
+        for lo,hi in ((9,11),(11,19)):
+            ua,ub=speed_values[lo],speed_values[hi]
+            p=effective_p(ua,ub,levels[lo],levels[hi])
+            p_min=effective_p(ua,ub,max(subsets[lo]),min(subsets[hi]))
+            p_max=effective_p(ua,ub,min(subsets[lo]),max(subsets[hi]))
+            check(p_min<=p<=p_max,"SLOPE_OUTSIDE_SUBSET_ENVELOPE")
+            intervals.append({"wind_speed_start_mps":ua,"wind_speed_end_mps":ub,
+                "effective_p_for_load_DEL_fourth_moment":q(p,9),
+                "3of6_subset_p_min":q(p_min,9),
+                "3of6_subset_p_max":q(p_max,9),
+                "subset_pairs":400,
+                "not_material_damage":True})
+        load_m4_speed_slope[channel]={"wind_speed_mps":[speed_values[w] for w in (9,11,19)],
+            "six_seed_power_mean_DEL_MNm":[q(levels[w],9) for w in (9,11,19)],
+            "intervals":intervals}
+    # Regressions lock the actual archived source, not a universal exponent.
+    check(load_m4_speed_slope["TwrBsMxt"]["intervals"][1]["effective_p_for_load_DEL_fourth_moment"]>6
+          and load_m4_speed_slope["TwrBsMyt"]["intervals"][1]["effective_p_for_load_DEL_fourth_moment"]<1,
+          "SOURCE_SPECIFIC_NONUNIVERSAL_P_REGRESSION_FAILED")
+    check(load_m4_speed_slope["TwrBsMyt"]["intervals"][1]["3of6_subset_p_min"]<0,
+          "SOURCE_SPECIFIC_SUBSET_SIGN_REGRESSION_FAILED")
     receipt={
       "status":"S10_REAL_18_NTM_SITE_WEIGHTED_PARTIAL_M4_SOURCE_DIAGNOSTIC_ONLY",
       "SOURCE":{"era5_31bin_sha256":hash_file(BIN),
@@ -149,6 +192,8 @@ def run():
            "bins_4_through_8_hour_share_of_operating":q(sum(hours[i] for i in range(4,9))/106900,12),
            "untested_18_of_21_bins":"no known load m4 available, no zero-fill permitted"},
       "RESULTS":aggregate,
+      "LOAD_M4_SPEED_EXPONENT_DIAGNOSTIC":load_m4_speed_slope,
+      "LOAD_M4_SPEED_EXPONENT_METHOD":"p_eff=4*ln(DEL4root_b/DEL4root_a)/ln(U_b/U_a), actual 6-seed m4 means; 20x20 extreme 3-of-6 subset envelope per adjacent speed pair; 3 bins only, not global U^p, not material Miner",
       "REFS":[
        {"id":"REF011","doi":"10.5194/wes-4-479-2019","reading":"full-text journal HTML §2.2, §2.4, §4.1.3 and §3.3.2 personally reviewed this turn","transfer":"multiple seeds per wind speed, seed convergence and wind probability as method; 5MW/30-seed sensitivity not direct 10MW data"},
        {"id":"REF018","doi":"10.1016/j.engstruct.2025.120295","reading":"publisher title/volume/abstract and prior archived user complete-PDF method audit; NOT new full PDF read this turn","transfer":"2025 segmental PT concrete tower fatigue workflow motivates material separation; no numeric life transferred"},
@@ -163,10 +208,10 @@ def run():
       ],
       "STANDARD":"2019 base text review inherited; 2025 consolidated IEC full text NOT available this run; 4-25m/s and 1m/s bins planning assumptions not claimed IEC mandatory",
       "OFFICIAL":"OpenFAST native outputs inherited original-source verification + IEC official edition pages, no new solver",
-      "RUN":"GitHub Actions Python stdlib m4 probability diagnostic 3bins x6seed x2tower channels, exhaustive 3-of-6 subsets, no Abaqus",
+      "RUN":"GitHub Actions Python stdlib m4 probability diagnostic 3bins x6seed x2tower channels, exhaustive 3-of-6 subsets and 400 paired subsets per adjacent wind-speed interval, no solver",
       "FIG":"No new physical figure",
-      "TAB":"6-row per-bin m4 intensity and two-channel annual-hour-weighted covered-only moments",
-      "ERROR_BUDGET":"source int16 half-step recorded upstream; seed-subset finite sensitivity only; 93.3% diagnostic operating hours outside empirical bins; ERA5 site bias and bin center mismatch unquantified",
+      "TAB":"6-row per-bin m4 intensity, two-channel covered-only moments, four empirical adjacent-bin load-m4 speed exponents and 3-of-6 subset envelopes",
+      "ERROR_BUDGET":"source int16 half-step recorded upstream; six-seed and 3-of-6 subsets are finite-sample sensitivity NOT confidence intervals; actual wind speeds differ from integer bin labels; only three wind speeds, 93.3% diagnostic operating hours outside empirical bins; ERA5 site bias, pitch/control and model uncertainties unquantified",
       "HOLD":"Formal DLC1.2 and materials life unverified: 18 of 21 assumed operating bins not sampled, no material stress history, standard 2025 clauses unread",
       "PHYSICAL_PASS":False,
       "MATERIAL_FATIGUE_PASS":False
