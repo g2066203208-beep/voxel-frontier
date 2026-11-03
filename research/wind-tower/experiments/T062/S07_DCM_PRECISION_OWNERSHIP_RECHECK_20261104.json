@@ -142,11 +142,12 @@
     "physical_pass": false
   },
   "gnu_real32_micro_20261104_02h": {
-    "status": "COMMITTED_NATIVE_GTE_REPLAY_CI_RESULT_PENDING_NOT_PHYSICS_PASS",
+    "status": "DIRECT_ORIGINAL_NATIVE_GTE_GNU_REAL32_LOCAL_EXECUTED__CI_PENDING_NOT_PHYSICS_PASS",
     "SOURCE": {
       "original_zip_sha256": "983bce8ca81981ff5fd00e5261dbfb2c0b6e18b074aa4eb1ff425e6851fb9735",
       "original_raw_gte_sha256": "77f247d7e0b66997041ffbba70c859bdd38fd345eb303b18b78c6599fa2caa92",
-      "read_level": "EXISTING_SHA_LOCKED_NATIVE_GTE_LOG__MICRO_REAL_ARCHIVE_CI_NOT_YET_READ"
+      "read_level": "DIRECT_NATIVE_GTE_903_ROWS_FROM_SHA_VERIFIED_ACTIONS_13229996252",
+      "selected_gte_sha256": "23a5c05a04fad27fc0893c3173ce0a9612f7df44812d43d18baad550b44832b1"
     },
     "REF": "OpenFAST v3.5.3 official ElastoDyn.f90 L1175-L1202",
     "STANDARD": "No new authorized IEC/GB/NB clauses read",
@@ -163,14 +164,59 @@
       ],
       "local_synthetic_test": "PASS on local GNU Fortran, 901 E rows; Fx/Mx 0.0010000000474974513 kN or kNm each; 3 malformed-row rejects",
       "github_native_archive_ci": "PENDING_NOT_VERIFIED",
-      "new_openfast_abaqus_solver_runs": 0
+      "new_openfast_abaqus_solver_runs": 0,
+      "local_gfortran_version": "GNU Fortran (Debian 14.2.0-19) 14.2.0",
+      "local_native_archive": "PASS_SHA_CRC_GTE_903_ROWS",
+      "local_native_negative_rejections": 3,
+      "local_native_replay_sha256": "78a7d676d203272a7dff7a80bf990bf34ef60fc605bc92e2f93c9eb7e45695a7",
+      "local_native_replay_driver_sha256": "171ca1d601b17df2d562a54d24435d983c4990e182974a00048c3e89b2077cfc",
+      "local_native_replay_note": "Local driver has same numerical algorithm; remote driver patched for format-independent negative test, GitHub CI still pending independent verification",
+      "first_real_input_failure": "Initial local driver used literal string matching for malformed row injection; real GTE scientific notation made 3/3 negative tests fail. Corrected to token-index mutation, retested 3/3 PASS; remote PR script patched."
     },
     "FIG": 0,
-    "TAB": "Program emits three real32 six-component arrays and Mx residuals against native printed G; native result pending CI",
+    "TAB": {
+      "time_s": 0.1875,
+      "native_target_kN_kNm": [
+        -28.249061584472656,
+        -20314.033203125,
+        4.879697799682617,
+        5.185017108917236,
+        -783.0894165039062,
+        428.6462707519531
+      ],
+      "gnu_reconstructed_kN_kNm": [
+        -28.24906349182129,
+        -20314.033203125,
+        4.87969970703125,
+        5.183691024780273,
+        -783.0894165039062,
+        428.64404296875
+      ],
+      "residual_kN_kNm": [
+        -0.0000019073486328125,
+        0,
+        0.0000019073486328125,
+        -0.0013260841369628906,
+        0,
+        -0.002227783203125
+      ],
+      "Mx_residual_kNm_by_flag": {
+        "-O0 -ffp-contract=off": -0.0013260841369628906,
+        "-O2 -ffp-contract=off": -0.0013260841369628906,
+        "-O2 -ffp-contract=fast": -0.0013260841369628906
+      },
+      "Mx_interflag_spread_kNm": 0,
+      "negative_tests": 3,
+      "binary_sha256_by_flag": {
+        "-O0 -ffp-contract=off": "603e1502f35fbdb588c596709df63e28f7db2ccceb7547a604375b02cbf48c6b",
+        "-O2 -ffp-contract=off": "7a4849656845b779985f929e28e6b5234be3370f7cbb34c5ba854dda06acbf98",
+        "-O2 -ffp-contract=fast": "7a4849656845b779985f929e28e6b5234be3370f7cbb34c5ba854dda06acbf98"
+      }
+    },
     "assumptions": "Uses 903 native G/T/E lines at t=0.1875 s, first 900 full upper elements then half gage element, real32 reading from printed decimal; compiler flags isolate reassociation/FMA tendency but do not guarantee equivalence to historical OpenFAST executable.",
-    "error_budget": "Report absolute Mx residual and inter-variant spread; old 1e-5+5e-5|Mx| is numerical diagnostic only, not physics tolerance.",
-    "failure_record": "Previous corrected Python float32 Mx residual -0.0013260841369628906 kNm, ratio 4.925; native GNU results not yet verified.",
-    "HOLD": "Compiler-specific native replay must complete and be read; printed state truncation, wind-only ownership and six-component mapping still unverified; S07 BLOCKED.",
+    "error_budget": "Mx residual 0.001326084 kNm=1.326084 Nm; original numerical tolerance ratio 4.925; 1.326 Nm / 10.745856 MNm sum abs terms ~1.23e-7, of order binary32 epsilon. Three GNU 14.2 flag variants yield identical Mx on printed ledger; this is not proof FMA cannot matter in historical GNU 11.4 build.",
+    "failure_record": "Real native data initially exposed a brittle negative-test generator (literal 'G 0.1875' absent from E-format GTE); corrected token mutation, 3/3 reject tests passed; actual real32 Mx remains -0.001326084 kNm in all three builds.",
+    "HOLD": "GNU 14.2 O0/O2/FMA flag comparison did not close Mx; GNU 11.4 original compiler exact flags, source expression order and native output formatting still require comparison; no wind-only ownership/physical PASS.",
     "physical_pass": false
   }
 }
