@@ -5,9 +5,9 @@
   "REF": "T062 18 NTM source and six-seed convergence; T079 method and 12-stage plan",
   "STANDARD": "IEC 61400-1/6 2025 licensed clauses NOT read this run; bin centers and 4-25 operating range are NONNORMATIVE planning assumptions",
   "OFFICIAL": "Archived OpenFAST v3.5.3 source identity, ERA5-derived workbook provenance; no new ECMWF original-CDS or site mast verification",
-  "RUN": "Pure JS source-locked coverage construction and six negative tests; no OpenFAST/TurbSim/Abaqus production solve",
+  "RUN": "Pure JS source-locked coverage and source-recovery frontier, 11 negative tests; no OpenFAST/TurbSim/Abaqus production solve",
   "FIG": "none: no physical response figure",
-  "TAB": "126-row 21 wind bins x 6 seed source availability CSV; 21-bin summary in this receipt",
+  "TAB": "126-row 21 wind bins x 6 seed source availability CSV; 21-bin summary and ranked 13-bin source-recovery frontier",
   "input_sha256": {
     "era5_derived_workbook_from_prior_receipt": "bbc290075fb4d7ff6435988acf1ea83c2c31453d207bfa821609b8e9a86953d0",
     "era5_bin_csv": "e4058620a36b23bb218103875d4dc5b0711fc45d418b23a2208c2fc9c16c9102",
@@ -68,7 +68,140 @@
         "bin": 8,
         "hours": 9245
       }
-    ]
+    ],
+    "source_recovery_frontier": {
+      "purpose": "NONNORMATIVE_SOURCE_RECOVERY_PRIORITY_BY_ERA5_HOURS_NOT_FATIGUE_RISK",
+      "source_covered_hours_before": 7164,
+      "source_covered_share_before": 0.06701590271281571,
+      "positive_missing_bins": 13,
+      "ranked_missing_bins": [
+        {
+          "rank": 1,
+          "bin_lower_mps": 4,
+          "source_hours": 26927,
+          "cumulative_diagnostic_hours": 34091,
+          "cumulative_diagnostic_operating_share": 0.31890551917680077
+        },
+        {
+          "rank": 2,
+          "bin_lower_mps": 5,
+          "source_hours": 24769,
+          "cumulative_diagnostic_hours": 58860,
+          "cumulative_diagnostic_operating_share": 0.5506080449017774
+        },
+        {
+          "rank": 3,
+          "bin_lower_mps": 6,
+          "source_hours": 19994,
+          "cumulative_diagnostic_hours": 78854,
+          "cumulative_diagnostic_operating_share": 0.7376426566884939
+        },
+        {
+          "rank": 4,
+          "bin_lower_mps": 7,
+          "source_hours": 14467,
+          "cumulative_diagnostic_hours": 93321,
+          "cumulative_diagnostic_operating_share": 0.8729747427502339
+        },
+        {
+          "rank": 5,
+          "bin_lower_mps": 8,
+          "source_hours": 9245,
+          "cumulative_diagnostic_hours": 102566,
+          "cumulative_diagnostic_operating_share": 0.9594574368568756
+        },
+        {
+          "rank": 6,
+          "bin_lower_mps": 10,
+          "source_hours": 3149,
+          "cumulative_diagnostic_hours": 105715,
+          "cumulative_diagnostic_operating_share": 0.9889148737137512
+        },
+        {
+          "rank": 7,
+          "bin_lower_mps": 12,
+          "source_hours": 674,
+          "cumulative_diagnostic_hours": 106389,
+          "cumulative_diagnostic_operating_share": 0.9952198316183349
+        },
+        {
+          "rank": 8,
+          "bin_lower_mps": 13,
+          "source_hours": 283,
+          "cumulative_diagnostic_hours": 106672,
+          "cumulative_diagnostic_operating_share": 0.997867165575304
+        },
+        {
+          "rank": 9,
+          "bin_lower_mps": 14,
+          "source_hours": 126,
+          "cumulative_diagnostic_hours": 106798,
+          "cumulative_diagnostic_operating_share": 0.9990458372310571
+        },
+        {
+          "rank": 10,
+          "bin_lower_mps": 15,
+          "source_hours": 61,
+          "cumulative_diagnostic_hours": 106859,
+          "cumulative_diagnostic_operating_share": 0.9996164639850328
+        },
+        {
+          "rank": 11,
+          "bin_lower_mps": 16,
+          "source_hours": 26,
+          "cumulative_diagnostic_hours": 106885,
+          "cumulative_diagnostic_operating_share": 0.9998596819457437
+        },
+        {
+          "rank": 12,
+          "bin_lower_mps": 17,
+          "source_hours": 14,
+          "cumulative_diagnostic_hours": 106899,
+          "cumulative_diagnostic_operating_share": 0.9999906454630496
+        },
+        {
+          "rank": 13,
+          "bin_lower_mps": 18,
+          "source_hours": 1,
+          "cumulative_diagnostic_hours": 106900,
+          "cumulative_diagnostic_operating_share": 1
+        }
+      ],
+      "thresholds": [
+        {
+          "target_diagnostic_hour_share": 0.9,
+          "additional_missing_bins": 5,
+          "reached_share": 0.9594574368568756
+        },
+        {
+          "target_diagnostic_hour_share": 0.95,
+          "additional_missing_bins": 5,
+          "reached_share": 0.9594574368568756
+        },
+        {
+          "target_diagnostic_hour_share": 0.98,
+          "additional_missing_bins": 6,
+          "reached_share": 0.9889148737137512
+        },
+        {
+          "target_diagnostic_hour_share": 0.99,
+          "additional_missing_bins": 7,
+          "reached_share": 0.9952198316183349
+        },
+        {
+          "target_diagnostic_hour_share": 0.995,
+          "additional_missing_bins": 7,
+          "reached_share": 0.9952198316183349
+        },
+        {
+          "target_diagnostic_hour_share": 0.999,
+          "additional_missing_bins": 9,
+          "reached_share": 0.9990458372310571
+        }
+      ],
+      "formal_dlc12_validated_bins": 0,
+      "caveat": "Neither probability coverage nor six archived seeds establishes IEC DLC1.2 or annual Miner damage; rare high-wind bins may dominate fatigue."
+    }
   },
   "per_bin": [
     {
@@ -198,7 +331,7 @@
       "formal_dlc12_seed_count": 0
     }
   ],
-  "negative_tests_passed": 6,
+  "negative_tests_passed": 11,
   "numerical_error_budget": "integer hour counts exact; p_all/p_conditional are 12-decimal rounded prior outputs (up to 0.5e-12 per bin); bin boundary classification and ERA5 wind shear/source bias unquantified; 0.1-0.29786 m/s actual-to-center offset is a planning mismatch, not physics error tolerance",
   "HOLD": "0/126 slots formally validated DLC1.2; 18 historical NTM are screening only; no 4-25 full-source suite, controller/IEC gate, local Abaqus material stress, annual Miner, native E/WE or S01-S04 physical PASS",
   "physical_pass": false,
