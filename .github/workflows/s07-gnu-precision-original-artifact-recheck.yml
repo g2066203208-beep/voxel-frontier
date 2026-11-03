@@ -25,6 +25,8 @@ jobs:
           sparse-checkout: |
             research/wind-tower/experiments/T062/s07_gnu_precision_native_independent_recheck.py
             research/wind-tower/experiments/T062/s07_dcm_precision_ownership_recheck.py
+            research/wind-tower/experiments/T062/s07_dcm_gnu_real32_micro.f90
+            research/wind-tower/experiments/T062/s07_dcm_gnu_micro_driver.py
             research/wind-tower/experiments/T062/S07_GNU_PRECISION_2S_295_CHANNELS.csv
             research/wind-tower/experiments/T062/S07_GNU_PRECISION_ORIGINAL_ARTIFACT_2S_295CH_NUMERIC_QC.json
       - uses: actions/setup-python@v5
@@ -120,6 +122,32 @@ jobs:
           PY
           sha256sum "$script" s07_dcm_precision_ownership_receipt.json \
             | tee s07_dcm_precision_ownership_sha256.log
+      - name: GNU real32 t=0.1875s native GTE micro replay under 3 arithmetic flags (no solver)
+        shell: bash
+        run: |
+          set -euo pipefail
+          d=research/wind-tower/experiments/T062
+          gfortran --version | head -1
+          python -m py_compile "$d/s07_dcm_gnu_micro_driver.py"
+          python "$d/s07_dcm_gnu_micro_driver.py" --self-test \
+            --fortran "$d/s07_dcm_gnu_real32_micro.f90" \
+            --out s07_gnu_micro_synthetic.json | tee s07_gnu_micro_synthetic.log
+          python "$d/s07_dcm_gnu_micro_driver.py" --archive original-single.zip \
+            --fortran "$d/s07_dcm_gnu_real32_micro.f90" \
+            --out s07_gnu_micro_native.json | tee s07_gnu_micro_native.log
+          python - <<'PY'
+          import json
+          s=json.load(open('s07_gnu_micro_synthetic.json'))
+          r=json.load(open('s07_gnu_micro_native.json'))
+          assert s['RUN']['negative_rejections']==3
+          assert r['SOURCE']['read_level']=='DIRECT_NATIVE_GTE_903_ROWS'
+          assert r['RUN']['variant_count']==3 and not r['physical_pass']
+          assert all(len(v['residual_kN_kNm'])==6 for v in r['TAB'].values())
+          print('S07_GNU_REAL32_3_VARIANTS_NATIVE_GTE_NUMERIC_ONLY_NOT_PHYSICS_PASS')
+          PY
+          sha256sum "$d/s07_dcm_gnu_real32_micro.f90" "$d/s07_dcm_gnu_micro_driver.py" \
+            s07_gnu_micro_synthetic.json s07_gnu_micro_native.json \
+            | tee s07_gnu_micro_sha256.log
       - name: Preserve independent report and failed-run logs
         if: always()
         uses: actions/upload-artifact@v4
@@ -132,5 +160,10 @@ jobs:
             s07_dcm_precision_ownership_receipt.json
             s07_dcm_precision_ownership_stdout.log
             s07_dcm_precision_ownership_sha256.log
+            s07_gnu_micro_synthetic.json
+            s07_gnu_micro_synthetic.log
+            s07_gnu_micro_native.json
+            s07_gnu_micro_native.log
+            s07_gnu_micro_sha256.log
           if-no-files-found: warn
           retention-days: 30
