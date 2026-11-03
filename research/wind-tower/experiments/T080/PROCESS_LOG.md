@@ -1,3 +1,5 @@
+**2026-11-03 15时 S10原生CI最终回证**：[Actions #41595176297/job #125780727504](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41595176297)已`completed/success`；实际完整job日志出现`SOURCE_MATRIX_QC_PASS_NOT_DLC12`、`rows=126`、`negative_tests=11`，证实修复后Node 20.20.2 CLI已真实执行5项新增拒绝测试，生成收据与Git提交版本逐字节`--check`通过。**这是源数据/算法验收，不是2025 IEC DLC1.2、局部材料疲劳、地震或物理PASS**；阶段0/12。
+
 **2026-11-03 15时 S10 CI纠偏追加**：真实Actions [#41595030991](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41595030991) 在代码先于收据提交的瞬间因`COMMITTED_RECEIPT_MISMATCH`失败，属于两次顺序提交间的派生JSON不一致，**不是物理计算失败**；收据随后提交后[#41595034359](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41595034359)原生Node 20.20.2源覆盖`--check`成功。但复核成功日志发现CLI仍只执行原6项负例，新增5项仅在本轮V8实际执行。已以[20319381](https://github.com/g2066203208-beep/voxel-frontier/commit/203193819ca597381d2ec4b5006db3870f263f7e)修复CLI，使其执行全部11项，新的[#41595176297](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41595176297)待真实回读，**未提前宣布新CI通过**。原始126行CSV不变，仍为S10源级准备、0/12未晋级。
 
 ### 2026-11-03 15时｜S10源覆盖前沿实际计算与交接
