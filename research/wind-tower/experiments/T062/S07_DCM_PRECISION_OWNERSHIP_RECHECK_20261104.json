@@ -23,7 +23,14 @@
     "workflow": ".github/workflows/s07-gnu-precision-original-artifact-recheck.yml",
     "native_new_solver_runs": 0,
     "negative_rejections": 3,
-    "ci_status": "SUBMITTED_NOT_YET_CONFIRMED"
+    "ci_status": "COMPLETED_SUCCESS_NATIVE_ARTIFACT_RECHECK_NOT_PHYSICS_PASS",
+    "ci_run_id": 41670711027,
+    "ci_job_id": 126037996897,
+    "ci_artifact_id": 13248540862,
+    "ci_artifact_zip_sha256": "35643903e2f40105cfef057f845c5a8ee0ce542bfad1df20f4190f81a720805d",
+    "ci_full_numeric_receipt_sha256": "27fa669d897e7bd07dc2561d550ed998d1060c8554f751d69106cec271cc0b38",
+    "ci_executed_script_sha256": "7f48e5e16e8babf4829e52634760d8125ca54ebaf674e2a45923fd49ad734163",
+    "ci_log_marker": "S07_NATIVE_DCM_PRECISION_REPLAY_PASS_NOT_OWNERSHIP_OR_PHYSICS_PASS"
   },
   "FIG": 0,
   "TAB": {
