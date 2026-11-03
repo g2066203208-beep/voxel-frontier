@@ -1,4 +1,171 @@
 {
+  "s07_windows_linux_2s_pair_native_20261103_10h": {
+    "timestamp_local": "2026-11-03 10h Asia/Shanghai",
+    "stage": "S07_NATIVE_2S_PAIRED_DIAGNOSTIC__NOT_PHYSICAL_PASS",
+    "SOURCE": {
+      "reading_level": "FULL_ACTUAL_ACTIONS_JOB_LOG + DOWNLOADED ORIGINAL 31-MEMBER ZIP + INDEPENDENT PYTHON JSON COUNTS, ZIP CRC AND GZIP SHA256/ROUNDTRIP + LIBRARY UPLOAD-BACK BYTE COMPARISON",
+      "run_id": 41558173256,
+      "job_id": 125662066975,
+      "run_status": "completed/success; 4/4 jobs successful",
+      "artifact_id": 13196871081,
+      "artifact_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41558173256/artifacts/13196871081",
+      "original_artifact_zip_sha256": "30ad5d9821af7c21999d2fbdf07271504cb202d1b36584d0a2a5c60348fa6251",
+      "original_artifact_zip_bytes": 9848868,
+      "archive_members": 31,
+      "source_windows_zip_sha256": "7fcae2bf57be571cacc6d3d9b82f1a254257ce59fdb946a1cfb56d3639eb9f1b",
+      "source_windows_outb_sha256": "c3f40b400f827fbcdd49e9a63f5bb2295a5c0f368a9644b90b591d66b7bb0242",
+      "source_bts_sha256": "ad68a83a63f197c528c07502db8adff883e9c737863ef3c4cab99cfa76052147",
+      "linux_outb_sha256": "ca2b1e961520782b90f32de905b3597e3eee3543922259949d32c898a752f555",
+      "paired_json_sha256": "85440cf43db8e211a753224ca1c5d1577c53c9872c95b7549ed0e238c5dc716e",
+      "historical_controller_sha256": "7aebb0d2166c0cc095d11c2b7bc13da136547c557b0f331dcdce84fe181802aa",
+      "linux_rosco_v290_sha256": "95410f20aac378749943601cdaf1c89ea31e622766727c8abbb1bbc2bf4bb709",
+      "native_dcm_raw_uncompressed_sha256": "238eb41bd4567e5c13bfc03759ac3945789742f71e23f5396aedefe15022aa48",
+      "native_dcm_raw_gzip_sha256": "84a3c919d652265f1c0eb5328c923d6dff22942c5613a0fa973c86cbf4ac84ac",
+      "native_dcm_raw_bytes": 56055853,
+      "native_linux_outb_gzip_sha256": "0724abc766780a46bca19a8f9b3c928b9322138d08d803e45c5dcb7218df7d7d",
+      "persistent_library_path": "/WindTower/S07_Native_2S_20261103.zip",
+      "persistent_library_file_id": "libfile_41b54276fc8081919bb6c136d8820950",
+      "post_upload_readback": "byte-identical cmp and SHA256 30ad5d98... verified"
+    },
+    "REF": "Existing T062 S06_ETM_NATIVE_2S_OVERLAP_QC_20261101.json; existing s07_windows_linux_2s_pair_qc.py; no newly read journal full text",
+    "STANDARD": "No new authorized IEC/GB/NB clause read; no code compliance claim",
+    "OFFICIAL": "Native OpenFAST v3.5.3; historical Windows Intel Fortran 2021 with historical DLL versus Linux GNU Fortran 11.4.0 ROSCO v2.9.0 substitution",
+    "RUN": {
+      "native_2s_exit_code": 0,
+      "paired_samples": 41,
+      "dt_s": 0.05,
+      "common_channels": 295,
+      "channels_exceeding_packed_quantization": 266,
+      "exceeding_channel_samples": 10297,
+      "total_channel_samples": 12095,
+      "native_probe_dcm_rows": 161,
+      "source_zip_crc_pass": true,
+      "paired_json_independent_counts_pass": true,
+      "compressed_raw_sha_roundtrip_pass": true,
+      "compressed_outb_sha_roundtrip_pass": true,
+      "original_artifact_uploaded_to_persistent_library": true,
+      "library_post_upload_sha256_match": true,
+      "local_synthetic_tests": "2 positive and 4 negative previously; actual CI selftest 4 negative",
+      "physical_pass": false,
+      "controller_equivalence_verified": false
+    },
+    "FIG": "0; diagnostic data not thesis physical response figures",
+    "TAB": {
+      "key_channel_quantization_differences": [
+        {
+          "channel": "Wind1VelX",
+          "unit": "m/s",
+          "max_abs_delta": 0.0000013914486,
+          "exceeding_samples_41": 0,
+          "max_quantization_budget": 0.0000710788691
+        },
+        {
+          "channel": "Wind1VelY",
+          "unit": "m/s",
+          "max_abs_delta": 0.00000141837734,
+          "exceeding_samples_41": 0,
+          "max_quantization_budget": 0.0000509015072
+        },
+        {
+          "channel": "Wind1VelZ",
+          "unit": "m/s",
+          "max_abs_delta": 0.0000628879181,
+          "exceeding_samples_41": 0,
+          "max_quantization_budget": 0.0000701139357
+        },
+        {
+          "channel": "GenSpeed",
+          "unit": "rpm",
+          "max_abs_delta": 2.76345349,
+          "exceeding_samples_41": 40,
+          "max_quantization_budget": 0.00104988884
+        },
+        {
+          "channel": "GenTq",
+          "unit": "kN-m",
+          "max_abs_delta": 0,
+          "exceeding_samples_41": 0,
+          "max_quantization_budget": 1.57952802e-8
+        },
+        {
+          "channel": "BldPitch1",
+          "unit": "deg",
+          "max_abs_delta": 0.124999674,
+          "exceeding_samples_41": 25,
+          "max_quantization_budget": 0.0000188299703
+        },
+        {
+          "channel": "RotSpeed",
+          "unit": "rpm",
+          "max_abs_delta": 0.0426919729,
+          "exceeding_samples_41": 40,
+          "max_quantization_budget": 0.00000516375853
+        },
+        {
+          "channel": "RotThrust",
+          "unit": "kN",
+          "max_abs_delta": 190.547697,
+          "exceeding_samples_41": 40,
+          "max_quantization_budget": 0.0268442439
+        },
+        {
+          "channel": "TwrBsFxt",
+          "unit": "kN",
+          "max_abs_delta": 159.328972,
+          "exceeding_samples_41": 40,
+          "max_quantization_budget": 0.0326210459
+        },
+        {
+          "channel": "TwrBsFyt",
+          "unit": "kN",
+          "max_abs_delta": 16.2105321,
+          "exceeding_samples_41": 40,
+          "max_quantization_budget": 0.0135963889
+        },
+        {
+          "channel": "TwrBsFzt",
+          "unit": "kN",
+          "max_abs_delta": 28.3829869,
+          "exceeding_samples_41": 41,
+          "max_quantization_budget": 0.00829155861
+        },
+        {
+          "channel": "TwrBsMxt",
+          "unit": "kN-m",
+          "max_abs_delta": 1012.18166,
+          "exceeding_samples_41": 40,
+          "max_quantization_budget": 0.692794539
+        },
+        {
+          "channel": "TwrBsMyt",
+          "unit": "kN-m",
+          "max_abs_delta": 13115.9238,
+          "exceeding_samples_41": 40,
+          "max_quantization_budget": 5.036892
+        },
+        {
+          "channel": "TwrBsMzt",
+          "unit": "kN-m",
+          "max_abs_delta": 1793.24813,
+          "exceeding_samples_41": 40,
+          "max_quantization_budget": 0.240611911
+        },
+        {
+          "channel": "YawBrTDxt",
+          "unit": "m",
+          "max_abs_delta": 0.0691656836,
+          "exceeding_samples_41": 39,
+          "max_quantization_budget": 0.0000306529119
+        }
+      ],
+      "full_295_channel_table": "s07_pair_compare.json inside original artifact #13196871081; do not confuse quantization exceedance with physical acceptance threshold"
+    },
+    "assumptions": "Same historical ETM S06 BTS and restored 158m batch1 inputs; Windows/Linux differ in controller binary, toolchain and diagnostic instrumentation; 2s initial transient only; no attribution of observed differences solely to controller.",
+    "error_budget": "per-channel per-sample 1.1*(OUTB half-LSB Windows + OUTB half-LSB Linux)+1e-8; purely encoding/quantization screening, NOT numerical model equivalence acceptance; no established physical error tolerance",
+    "failure_record": "Native CI succeeded, but 266/295 common channels and 10297/12095 channel-time samples exceed encoding uncertainty; no false controller equivalence PASS. Previously missing raw 56MB probe now archived as gzip in artifact and persistent Library.",
+    "HOLD": "S07 formal controller/model-state equivalence NOT demonstrated; 2s diagnostic cannot establish 600s DLC1.2, 31-segment long-history, external load/inertia ownership, material fatigue or seismic E/WE. S06 PARTIAL, S07 BLOCKED, 0/12 strict stages; no Abaqus work per current AGENTS.",
+    "next_single_action": "Audit historical Windows DLL ROSCO identity/configuration and ServoDyn initialization against Linux ROSCO v2.9.0; design matched-controller/toolchain 2s A/B to isolate cause before formal DLC1.2."
+  },
   "s07_windows_linux_2s_pair_20261103_09h": {
     "timestamp_local": "2026-11-03 09h Asia/Shanghai",
     "stage": "S07_INDEPENDENT_PREPARATION__PENDING_NATIVE_PAIR_CI",
