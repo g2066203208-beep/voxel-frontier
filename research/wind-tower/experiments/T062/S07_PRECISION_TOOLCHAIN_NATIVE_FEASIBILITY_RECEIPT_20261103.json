@@ -103,5 +103,47 @@
   "error_budget": "Exact historical Windows EXE SHA256 and PE architecture; five malformed synthetic PE cases rejected on each runner; all three Fortran kind modes matched exact expected storage bits. This is a compiler-kind test, not a numerical solution error budget.",
   "failure_record": "No failed job in final run. Initial exploratory run 41625735453 succeeded but did not include official paired -fdefault-double-8 test; superseded by final run 41625982701. Script local SHA differed across runners, likely CRLF conversion; canonical Git blob is recorded.",
   "HOLD": "The existing Windows Intel 2021 single and Linux GNU 11.4 double 2s trajectories are not a precision-only A/B test; Intel ifort/ifx absent from both runner PATH snapshots. Controller binary, compiler vendor/version, precision and initial dynamic state remain confounded. Formal DLC1.2 0/126, E/WE native 0, S06 PARTIAL, S07 BLOCKED, S10 BLOCKED, 0/12 PASS.",
-  "next_optimal_action": "Prepare a same-Linux GNU 11.4 / ROSCO v2.6.0 / same ETM S06 input / OpenFAST v3.5.3 controlled 2s single-vs-double pilot using -DDOUBLE_PRECISION=OFF versus ON; retain full CMake cache, compiler flags, OUTB and initialization logs, then isolate precision effect without claiming Windows Intel equivalence. No 700s production."
+  "next_optimal_action": "Prepare a same-Linux GNU 11.4 / ROSCO v2.6.0 / same ETM S06 input / OpenFAST v3.5.3 controlled 2s single-vs-double pilot using -DDOUBLE_PRECISION=OFF versus ON; retain full CMake cache, compiler flags, OUTB and initialization logs, then isolate precision effect without claiming Windows Intel equivalence. No 700s production.",
+  "gnu_single_double_2s_pilot_20261103_20h": {
+    "timestamp_local": "2026-11-03 20h Asia/Shanghai",
+    "stage": "S07",
+    "status": "NATIVE_GNU_PRECISION_MATRIX_SUBMITTED__CI_IN_PROGRESS__NOT_PHYSICAL_PASS",
+    "SOURCE": {
+      "reading_level": "PR_42_COMMITTED_SCRIPT_AND_WORKFLOW; ACTIONS_RUN_STARTED_NO_FINAL_NATIVE_OUTB_YET",
+      "read_base_sha": "fad9aab3ddc63f750e9aaa37c9f52139e8f0d7a3",
+      "workflow_run_id": 41632768388,
+      "workflow_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41632768388",
+      "original_bts_sha256": "ad68a83a63f197c528c07502db8adff883e9c737863ef3c4cab99cfa76052147",
+      "official_openfast_tag_commit": "6a7a543790f3cad4a65b87242a619ac5b34b4c0f",
+      "official_rosco_tag_commit": "51629665d22f92770f861daeebcebd47ab32abb1",
+      "workflow_path": ".github/workflows/s07-gnu-precision-2s-native-pair.yml",
+      "qc_script_path": "research/wind-tower/experiments/T062/s07_gnu_precision_2s_pair_qc.py",
+      "run_source_sha256": "PENDING_NATIVE_ARTIFACT"
+    },
+    "REF": "T062 previous native 2s and packed OUTB parser; no newly read paper",
+    "STANDARD": "No new authorized IEC/GB/NB clauses; no compliance PASS",
+    "OFFICIAL": "Tagged OpenFAST v3.5.3 and ROSCO v2.6.0, Ubuntu22.04 GNU Fortran11.4, CMake DOUBLE_PRECISION=OFF/ON; compile/run stdout must verify",
+    "RUN": {
+      "type": "TWO_SHORT_2S_NATIVE_DIAGNOSTIC_JOBS_ONLY",
+      "matrix": [
+        "single_OFF",
+        "double_ON"
+      ],
+      "expected_samples_per_case": 41,
+      "expected_channels": 295,
+      "ci_status_last_checked": "in_progress",
+      "ci_pass": false,
+      "native_results": "PENDING",
+      "expensive_700s_production": false,
+      "abaqus": false,
+      "physical_pass": false
+    },
+    "FIG": "0",
+    "TAB": "PENDING original native OUTB and paired 295x41 QC JSON, no numerical results yet",
+    "assumptions": "Single variable DOUBLE_PRECISION within same GNU11.4/ROSCO2.6/OpenFAST source and same ETM S06 inputs; no claim of Windows Intel equivalence.",
+    "error_budget": "Input/source SHA strict equality; native stdout must report actual single/double; packed OUTB pair 1.1*(half-LSB sums)+1e-8 is encoding threshold, not physical tolerance.",
+    "failure_record": "Original 20h matrix run started; no failure or success asserted until complete native job logs/artifacts read. Initial QC source regex/newline escaping corrected in commit 4e1fa251 before workflow launch.",
+    "HOLD": "No paired native OFF/ON output confirmed yet; historical Windows Intel single vs GNU double remains confounded. Formal DLC1.2 0/126, E/WE=0, S06 PARTIAL, S07/S10 BLOCKED, 0/12.",
+    "next_optimal_action": "Read native Actions #41632768388 complete logs/artifacts and 295x41 paired JSON; repair first real failure if present, else quantify precision effect on t0 and tower-base six components."
+  }
 }
