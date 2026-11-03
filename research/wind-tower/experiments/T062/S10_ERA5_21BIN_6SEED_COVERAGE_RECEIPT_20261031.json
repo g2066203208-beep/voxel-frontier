@@ -5,9 +5,9 @@
   "REF": "T062 18 NTM source and six-seed convergence; T079 method and 12-stage plan",
   "STANDARD": "IEC 61400-1/6 2025 licensed clauses NOT read this run; bin centers and 4-25 operating range are NONNORMATIVE planning assumptions",
   "OFFICIAL": "Archived OpenFAST v3.5.3 source identity, ERA5-derived workbook provenance; no new ECMWF original-CDS or site mast verification",
-  "RUN": "Pure JS source-locked coverage and source-recovery frontier, 11 negative tests; no OpenFAST/TurbSim/Abaqus production solve",
+  "RUN": "Pure JS source-locked coverage and source-recovery frontier, 17 negative tests; no OpenFAST/TurbSim/Abaqus production solve",
   "FIG": "none: no physical response figure",
-  "TAB": "126-row 21 wind bins x 6 seed source availability CSV; 21-bin summary and ranked 13-bin source-recovery frontier",
+  "TAB": "126-row 21 wind bins x 6 seed source availability CSV; 21-bin summary ranked 13-bin source-recovery frontier and 5 hypothetical U^p scenarios",
   "input_sha256": {
     "era5_derived_workbook_from_prior_receipt": "bbc290075fb4d7ff6435988acf1ea83c2c31453d207bfa821609b8e9a86953d0",
     "era5_bin_csv": "e4058620a36b23bb218103875d4dc5b0711fc45d418b23a2208c2fc9c16c9102",
@@ -201,6 +201,208 @@
       ],
       "formal_dlc12_validated_bins": 0,
       "caveat": "Neither probability coverage nor six archived seeds establishes IEC DLC1.2 or annual Miner damage; rare high-wind bins may dominate fatigue."
+    },
+    "hypothetical_severity_proxy": {
+      "label": "HYPOTHETICAL_U_POWER_SOURCE_COVERAGE_SENSITIVITY_NOT_FATIGUE_DAMAGE",
+      "weight_definition": "ERA5 hours in 1m/s bin multiplied by ((bin_lower+0.5)/10)^p",
+      "powers": [
+        0,
+        2,
+        4,
+        8,
+        12
+      ],
+      "scenario_assumptions": "Uniform per-hour hypothetical severity U^p, fixed 1m/s bin center, 4<=U<25 only; no local stress/S-N/rainflow/mean stress/cut-in-out/availability or IEC clauses",
+      "hour_priority_top5_bins": [
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "hour_priority_top7_bins": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        10,
+        12
+      ],
+      "scenarios": [
+        {
+          "power_p": 0,
+          "archived_source_proxy_share": 0.06701590271281571,
+          "after_top5_hour_priority_proxy_share": 0.9594574368568756,
+          "after_top7_hour_priority_proxy_share": 0.9952198316183349,
+          "remaining_proxy_share_after_top7": 0.004780168381665062,
+          "top5_missing_bins_by_proxy": [
+            {
+              "bin_lower_mps": 4,
+              "source_hours": 26927,
+              "hypothetical_weight_share": 0.25188961646398506
+            },
+            {
+              "bin_lower_mps": 5,
+              "source_hours": 24769,
+              "hypothetical_weight_share": 0.23170252572497663
+            },
+            {
+              "bin_lower_mps": 6,
+              "source_hours": 19994,
+              "hypothetical_weight_share": 0.18703461178671657
+            },
+            {
+              "bin_lower_mps": 7,
+              "source_hours": 14467,
+              "hypothetical_weight_share": 0.13533208606173994
+            },
+            {
+              "bin_lower_mps": 8,
+              "source_hours": 9245,
+              "hypothetical_weight_share": 0.08648269410664172
+            }
+          ]
+        },
+        {
+          "power_p": 2,
+          "archived_source_proxy_share": 0.1447350993716408,
+          "after_top5_hour_priority_proxy_share": 0.8859922680808074,
+          "after_top7_hour_priority_proxy_share": 0.9786217142669978,
+          "remaining_proxy_share_after_top7": 0.021378285733002156,
+          "top5_missing_bins_by_proxy": [
+            {
+              "bin_lower_mps": 6,
+              "source_hours": 19994,
+              "hypothetical_weight_share": 0.17292855907282476
+            },
+            {
+              "bin_lower_mps": 7,
+              "source_hours": 14467,
+              "hypothetical_weight_share": 0.16658708542266085
+            },
+            {
+              "bin_lower_mps": 5,
+              "source_hours": 24769,
+              "hypothetical_weight_share": 0.15338192139317844
+            },
+            {
+              "bin_lower_mps": 8,
+              "source_hours": 9245,
+              "hypothetical_weight_share": 0.13673669816139175
+            },
+            {
+              "bin_lower_mps": 4,
+              "source_hours": 26927,
+              "hypothetical_weight_share": 0.1116229046591108
+            }
+          ]
+        },
+        {
+          "power_p": 4,
+          "archived_source_proxy_share": 0.23063821012946473,
+          "after_top5_hour_priority_proxy_share": 0.7545227150211345,
+          "after_top7_hour_priority_proxy_share": 0.9299657977895582,
+          "remaining_proxy_share_after_top7": 0.07003420221044176,
+          "top5_missing_bins_by_proxy": [
+            {
+              "bin_lower_mps": 8,
+              "source_hours": 9245,
+              "hypothetical_weight_share": 0.15469723432627247
+            },
+            {
+              "bin_lower_mps": 7,
+              "source_hours": 14467,
+              "hypothetical_weight_share": 0.14673153678968473
+            },
+            {
+              "bin_lower_mps": 10,
+              "source_hours": 3149,
+              "hypothetical_weight_share": 0.12269582581611362
+            },
+            {
+              "bin_lower_mps": 6,
+              "source_hours": 19994,
+              "hypothetical_weight_share": 0.11440711797693034
+            },
+            {
+              "bin_lower_mps": 5,
+              "source_hours": 24769,
+              "hypothetical_weight_share": 0.07265393854633155
+            }
+          ]
+        },
+        {
+          "power_p": 8,
+          "archived_source_proxy_share": 0.2639592754124552,
+          "after_top5_hour_priority_proxy_share": 0.41329244233279244,
+          "after_top7_hour_priority_proxy_share": 0.6798400173057105,
+          "remaining_proxy_share_after_top7": 0.32015998269428947,
+          "top5_missing_bins_by_proxy": [
+            {
+              "bin_lower_mps": 10,
+              "source_hours": 3149,
+              "hypothetical_weight_share": 0.14303742781231488
+            },
+            {
+              "bin_lower_mps": 12,
+              "source_hours": 674,
+              "hypothetical_weight_share": 0.12351014716060323
+            },
+            {
+              "bin_lower_mps": 13,
+              "source_hours": 283,
+              "hypothetical_weight_share": 0.09598850375612138
+            },
+            {
+              "bin_lower_mps": 8,
+              "source_hours": 9245,
+              "hypothetical_weight_share": 0.07744991755349122
+            },
+            {
+              "bin_lower_mps": 14,
+              "source_hours": 126,
+              "hypothetical_weight_share": 0.07569674440063226
+            }
+          ]
+        },
+        {
+          "power_p": 12,
+          "archived_source_proxy_share": 0.18459102476968858,
+          "after_top5_hour_priority_proxy_share": 0.2055853069055587,
+          "after_top7_hour_priority_proxy_share": 0.3757443405329586,
+          "remaining_proxy_share_after_top7": 0.6242556594670414,
+          "top5_missing_bins_by_proxy": [
+            {
+              "bin_lower_mps": 15,
+              "source_hours": 61,
+              "hypothetical_weight_share": 0.12908252948830612
+            },
+            {
+              "bin_lower_mps": 17,
+              "source_hours": 14,
+              "hypothetical_weight_share": 0.12709892404881448
+            },
+            {
+              "bin_lower_mps": 14,
+              "source_hours": 126,
+              "hypothetical_weight_share": 0.11976883525561069
+            },
+            {
+              "bin_lower_mps": 16,
+              "source_hours": 26,
+              "hypothetical_weight_share": 0.11650322102416946
+            },
+            {
+              "bin_lower_mps": 13,
+              "source_hours": 283,
+              "hypothetical_weight_share": 0.11411662308285676
+            }
+          ]
+        }
+      ],
+      "zero_observed_hours_caveat": "Zero historical hours do not establish zero design probability or fatigue risk",
+      "physical_pass": false
     }
   },
   "per_bin": [
@@ -331,7 +533,7 @@
       "formal_dlc12_seed_count": 0
     }
   ],
-  "negative_tests_passed": 11,
+  "negative_tests_passed": 17,
   "numerical_error_budget": "integer hour counts exact; p_all/p_conditional are 12-decimal rounded prior outputs (up to 0.5e-12 per bin); bin boundary classification and ERA5 wind shear/source bias unquantified; 0.1-0.29786 m/s actual-to-center offset is a planning mismatch, not physics error tolerance",
   "HOLD": "0/126 slots formally validated DLC1.2; 18 historical NTM are screening only; no 4-25 full-source suite, controller/IEC gate, local Abaqus material stress, annual Miner, native E/WE or S01-S04 physical PASS",
   "physical_pass": false,

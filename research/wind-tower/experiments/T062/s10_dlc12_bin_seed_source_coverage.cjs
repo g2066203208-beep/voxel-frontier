@@ -66,6 +66,51 @@ function frontierNegativeTests(per,operatingHours,historicalHours){
   tests.forEach(function(fn,index){var rejected=false;try{fn();}catch(e){rejected=true;}ok(rejected,"FRONTIER_NEGATIVE_ACCEPTED_"+index);});
   return tests.length;
 }
+
+function proxySensitivity(per,operatingHours,historicalHours,powers){
+  // Purely illustrative per-hour U^p weights; no local stress, S-N, Miner or IEC compliance.
+  powers=powers||[0,2,4,8,12];
+  ok(Array.isArray(per)&&per.length===21&&Number.isInteger(operatingHours)&&operatingHours>0,"PROXY_INPUT_COUNT");
+  ok(Array.isArray(powers)&&powers.length>0&&powers.every(function(p){return Number.isInteger(p)&&p>=0&&p<=12;})&&new Set(powers).size===powers.length,"PROXY_INVALID_POWERS");
+  var seen=new Set(),totalHours=0,archivedHours=0;
+  per.forEach(function(x){
+    ok(Number.isInteger(x.bin)&&x.bin>=4&&x.bin<=24&&!seen.has(x.bin),"PROXY_INVALID_OR_DUPLICATE_BIN");
+    seen.add(x.bin);
+    ok(Number.isInteger(x.hours)&&x.hours>=0&&[0,6].includes(x.historical_seed_count),"PROXY_INVALID_HOURS_OR_SEEDS");
+    totalHours+=x.hours;if(x.historical_seed_count===6)archivedHours+=x.hours;
+  });
+  ok(totalHours===operatingHours&&archivedHours===historicalHours,"PROXY_HOUR_PARITY");
+  var priority=sourceRecoveryFrontier(per,operatingHours,historicalHours).ranked_missing_bins;
+  var top5=new Set(priority.slice(0,5).map(function(x){return x.bin_lower_mps;}));
+  var top7=new Set(priority.slice(0,7).map(function(x){return x.bin_lower_mps;}));
+  var scenarios=powers.map(function(p){
+    var scored=per.map(function(x){return {bin:x.bin,hours:x.hours,has_archived_ntm:x.historical_seed_count===6,weight:x.hours*Math.pow((x.bin+0.5)/10,p)};});
+    var total=scored.reduce(function(s,x){return s+x.weight;},0);
+    ok(Number.isFinite(total)&&total>0,"PROXY_ZERO_OR_NONFINITE_WEIGHT");
+    var sum=function(pred){return scored.filter(pred).reduce(function(s,x){return s+x.weight;},0)/total;};
+    var initial=sum(function(x){return x.has_archived_ntm;});
+    var after5=sum(function(x){return x.has_archived_ntm||top5.has(x.bin);});
+    var after7=sum(function(x){return x.has_archived_ntm||top7.has(x.bin);});
+    ok(initial<=after5+1e-14&&after5<=after7+1e-14&&after7<=1+1e-14,"PROXY_MONOTONICITY");
+    var ranked=scored.filter(function(x){return x.hours>0&&!x.has_archived_ntm;}).sort(function(a,b){return b.weight-a.weight||a.bin-b.bin;}).slice(0,5).map(function(x){return {bin_lower_mps:x.bin,source_hours:x.hours,hypothetical_weight_share:x.weight/total};});
+    return {power_p:p,archived_source_proxy_share:initial,after_top5_hour_priority_proxy_share:after5,after_top7_hour_priority_proxy_share:after7,remaining_proxy_share_after_top7:1-after7,top5_missing_bins_by_proxy:ranked};
+  });
+  ok(Math.abs(scenarios.find(function(x){return x.power_p===0;}).archived_source_proxy_share-historicalHours/operatingHours)<1e-12,"PROXY_P0_HOUR_ORACLE");
+  return {label:"HYPOTHETICAL_U_POWER_SOURCE_COVERAGE_SENSITIVITY_NOT_FATIGUE_DAMAGE",weight_definition:"ERA5 hours in 1m/s bin multiplied by ((bin_lower+0.5)/10)^p",powers:powers,scenario_assumptions:"Uniform per-hour hypothetical severity U^p, fixed 1m/s bin center, 4<=U<25 only; no local stress/S-N/rainflow/mean stress/cut-in-out/availability or IEC clauses",hour_priority_top5_bins:Array.from(top5),hour_priority_top7_bins:Array.from(top7),scenarios:scenarios,zero_observed_hours_caveat:"Zero historical hours do not establish zero design probability or fatigue risk",physical_pass:false};
+}
+function proxyNegativeTests(per,operatingHours,historicalHours){
+  var mutation=function(f){var copy=per.map(function(x){return Object.assign({},x);});f(copy);return copy;};
+  var cases=[
+    function(){return proxySensitivity(mutation(function(x){x[1].bin=x[0].bin;}),operatingHours,historicalHours);},
+    function(){return proxySensitivity(mutation(function(x){x[0].hours=-1;}),operatingHours,historicalHours);},
+    function(){return proxySensitivity(mutation(function(x){x[0].hours=1.5;}),operatingHours,historicalHours);},
+    function(){return proxySensitivity(mutation(function(x){x[0].historical_seed_count=5;}),operatingHours,historicalHours);},
+    function(){return proxySensitivity(per,operatingHours+1,historicalHours);},
+    function(){return proxySensitivity(per,operatingHours,historicalHours,[-1,4]);}
+  ];
+  cases.forEach(function(f,i){var rejected=false;try{f();}catch(e){rejected=true;}ok(rejected,"PROXY_NEGATIVE_ACCEPTED_"+i);});
+  return cases.length;
+}
 function build(binText,idText,binReceiptText,grossText){
   ok(sha256("abc")==="ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad","SHA256_ORACLE");
   var br=JSON.parse(binReceiptText),gr=JSON.parse(grossText);
@@ -104,13 +149,13 @@ function build(binText,idText,binReceiptText,grossText){
     source_reading_level:"THIS RUN: direct derived 31-bin CSV and 18-row identity CSV plus prior SHA receipts; NOT direct re-read of original 31.8MB ERA5 workbook or 18 OUTB bytes",
     REF:"T062 18 NTM source and six-seed convergence; T079 method and 12-stage plan",STANDARD:"IEC 61400-1/6 2025 licensed clauses NOT read this run; bin centers and 4-25 operating range are NONNORMATIVE planning assumptions",
     OFFICIAL:"Archived OpenFAST v3.5.3 source identity, ERA5-derived workbook provenance; no new ECMWF original-CDS or site mast verification",
-    RUN:"Pure JS source-locked coverage and source-recovery frontier, 11 negative tests; no OpenFAST/TurbSim/Abaqus production solve",
-    FIG:"none: no physical response figure",TAB:"126-row 21 wind bins x 6 seed source availability CSV; 21-bin summary and ranked 13-bin source-recovery frontier",
+    RUN:"Pure JS source-locked coverage and source-recovery frontier, 17 negative tests; no OpenFAST/TurbSim/Abaqus production solve",
+    FIG:"none: no physical response figure",TAB:"126-row 21 wind bins x 6 seed source availability CSV; 21-bin summary ranked 13-bin source-recovery frontier and 5 hypothetical U^p scenarios",
     input_sha256:{era5_derived_workbook_from_prior_receipt:br.source_sha256_actual,era5_bin_csv:sha256(binText),era5_bin_receipt_json:sha256(binReceiptText),ntm_18case_identity_csv:sha256(idText),ntm_outb_source_receipt_json:sha256(grossText)},
     output_csv_sha256:sha256(matrix),software:"Node.js >=20 standard library, same pure-JS algorithm checked in V8; SHA256 independently checked against abc oracle",
     assumptions:{hub_height_m:161.368806,operating_wind_range_mps:"[4,25) DIAGNOSTIC ONLY",bin_width_mps:1,planned_centers:"4.5...24.5 m/s; NOT IEC official sampling plan",case_matching:"floor(actual archived NTM wind speed); NOT equivalence to planned bin center or formal DLC1.2",seed_count_per_bin:6,zero_ERA5_hours:"zero observed in 21-year derived record, NOT zero design probability or zero required simulations"},
-    summary:{total_era5_hours:allHours,diagnostic_operating_hours:operatingHours,planning_bins:21,planned_seed_slots:126,archived_ntm_screening_slots:historicalCount,unfilled_source_slots:126-historicalCount,formal_dlc12_verified_slots:0,historical_bins:[9,11,19],archived_bin_site_hours:historicalHours,archived_bin_share_of_operating_hours:historicalHours/operatingHours,unrepresented_operating_hours:operatingHours-historicalHours,unrepresented_share_of_operating_hours:(operatingHours-historicalHours)/operatingHours,positive_hours_bins_without_archived_ntm:positiveEmpty,zero_observed_hours_bins_without_archived_ntm:5,low_wind_4_to_9_hours:[4,5,6,7,8].reduce(function(s,i){return s+Number(binMap.get(i).hours);},0),max_abs_historical_center_offset_mps:maxCenterDelta,top5_missing_bins_by_hours:topMissing,source_recovery_frontier:frontier},
-    per_bin:per,negative_tests_passed:11,
+    summary:{total_era5_hours:allHours,diagnostic_operating_hours:operatingHours,planning_bins:21,planned_seed_slots:126,archived_ntm_screening_slots:historicalCount,unfilled_source_slots:126-historicalCount,formal_dlc12_verified_slots:0,historical_bins:[9,11,19],archived_bin_site_hours:historicalHours,archived_bin_share_of_operating_hours:historicalHours/operatingHours,unrepresented_operating_hours:operatingHours-historicalHours,unrepresented_share_of_operating_hours:(operatingHours-historicalHours)/operatingHours,positive_hours_bins_without_archived_ntm:positiveEmpty,zero_observed_hours_bins_without_archived_ntm:5,low_wind_4_to_9_hours:[4,5,6,7,8].reduce(function(s,i){return s+Number(binMap.get(i).hours);},0),max_abs_historical_center_offset_mps:maxCenterDelta,top5_missing_bins_by_hours:topMissing,source_recovery_frontier:frontier,hypothetical_severity_proxy:proxySensitivity(per,operatingHours,historicalHours)},
+    per_bin:per,negative_tests_passed:17,
     numerical_error_budget:"integer hour counts exact; p_all/p_conditional are 12-decimal rounded prior outputs (up to 0.5e-12 per bin); bin boundary classification and ERA5 wind shear/source bias unquantified; 0.1-0.29786 m/s actual-to-center offset is a planning mismatch, not physics error tolerance",
     HOLD:"0/126 slots formally validated DLC1.2; 18 historical NTM are screening only; no 4-25 full-source suite, controller/IEC gate, local Abaqus material stress, annual Miner, native E/WE or S01-S04 physical PASS",
     physical_pass:false,stages_passed:0
@@ -128,7 +173,7 @@ function negativeTests(binText,idText,binReceiptText,grossText){
   ];
   var n=0;tests.forEach(function(t){var failed=false;try{t();}catch(e){failed=true;}ok(failed,"NEGATIVE_TEST_DID_NOT_REJECT_"+n);n++;});return n;
 }
-if(typeof module!=="undefined")module.exports={sha256:sha256,build:build,negativeTests:negativeTests,sourceRecoveryFrontier:sourceRecoveryFrontier,frontierNegativeTests:frontierNegativeTests};
+if(typeof module!=="undefined")module.exports={sha256:sha256,build:build,negativeTests:negativeTests,sourceRecoveryFrontier:sourceRecoveryFrontier,frontierNegativeTests:frontierNegativeTests,proxySensitivity:proxySensitivity,proxyNegativeTests:proxyNegativeTests};
 if(typeof require!=="undefined"&&require.main===module){
   var fs=require("fs"),path=require("path"),dir=__dirname;
   var b=fs.readFileSync(path.join(dir,"S10_ERA5_2005_2025_HUB_1MS_BINS_20261031.csv"),"utf8");
@@ -137,7 +182,8 @@ if(typeof require!=="undefined"&&require.main===module){
   var g=fs.readFileSync(path.join(dir,"S10_18NTM_GROSS_STRESS_SOURCE_RECEIPT_20261031.json"),"utf8");
   var z=build(b,i,r,g),n=negativeTests(b,i,r,g);
   n+=frontierNegativeTests(JSON.parse(z.receipt).per_bin,106900,7164);
-  ok(n===11,"NEGATIVE_TEST_COUNT");
+  n+=proxyNegativeTests(JSON.parse(z.receipt).per_bin,106900,7164);
+  ok(n===17,"NEGATIVE_TEST_COUNT");
   if(process.argv.includes("--check")){
     ok(z.csv===fs.readFileSync(path.join(dir,"S10_ERA5_21BIN_6SEED_NTM_SOURCE_COVERAGE_20261031.csv"),"utf8"),"COMMITTED_CSV_MISMATCH");
     ok(z.receipt===fs.readFileSync(path.join(dir,"S10_ERA5_21BIN_6SEED_COVERAGE_RECEIPT_20261031.json"),"utf8"),"COMMITTED_RECEIPT_MISMATCH");
