@@ -104,6 +104,36 @@ def build_run(src, block, flags, directory):
             'Mx_residual_kNm':rows['GNU_REAL32_S07'][3]-rows['NATIVE_G_TARGET'][3],
             'compiler_stdout':compiled.stdout}
 
+def summation_only_error_budget(abs_term_sum_nm, n_terms, residual_knm):
+    """Conservative IEEE binary32 sequential-addition bound, NOT a physics tolerance.
+
+    Assumes exact precomputed summands and conventional round-to-nearest.
+    Product/cross-product rounding, decimal ledger serialization, and load
+    ownership are explicitly outside this summation-only bound.
+    """
+    if not (math.isfinite(abs_term_sum_nm) and abs_term_sum_nm >= 0
+            and isinstance(n_terms, int) and n_terms > 0
+            and math.isfinite(residual_knm)):
+        raise ValueError('INVALID_SUMMATION_BUDGET_INPUT')
+    unit_roundoff = 2.0**-24
+    nu = n_terms * unit_roundoff
+    if nu >= 1:
+        raise ValueError('SUMMATION_GAMMA_UNDEFINED')
+    gamma_n = nu / (1.0 - nu)
+    bound_nm = gamma_n * abs_term_sum_nm
+    return {
+        'type': 'CONSERVATIVE_SUMMATION_ONLY_DIAGNOSTIC_NOT_PHYSICS_PASS',
+        'n_terms_upper_count': n_terms,
+        'ieee_real32_unit_roundoff': unit_roundoff,
+        'gamma_n': gamma_n,
+        'historical_abs_Mx_terms_Nm': abs_term_sum_nm,
+        'historical_abs_Mx_terms_source': 'T062 S07_DCM_PRECISION_OWNERSHIP_RECHECK_20261104.json first_failure.absolute_term_sum_Nm; original SHA-locked 161x901 GTE replay',
+        'bound_Nm': bound_nm,
+        'observed_Mx_residual_Nm': residual_knm * 1000.0,
+        'observed_over_bound': abs(residual_knm * 1000.0) / bound_nm if bound_nm else None,
+        'assumptions': 'Sequential summation of at most n_terms exact moment summands; not a bound on full OpenFAST expression, source-log decimal truncation, model physics, or force ownership.'
+    }
+
 def main():
     ap=argparse.ArgumentParser()
     ap.add_argument('--archive')
@@ -149,6 +179,24 @@ def main():
                 for i in (0,3):
                     if abs(runs[key]['six_components_kN_kNm'][i]-.001)>1e-8:
                         raise AssertionError('FLOAT32_CANCELLATION_FIXTURE_HOLD')
+    # The archived float64 GTE recheck reported 10,745,856.18779878 N.m
+    # sum of absolute Mx contributions at this same SHA-locked time sample.
+    # 902 = tower-top contribution + 900 full elements + 1 half element.
+    # This gamma_n calculation is a conservative summation-only sensitivity,
+    # not evidence that the full 1.326 N.m residual is caused by rounding.
+    if a.self_test:
+        roundoff_budget = summation_only_error_budget(1.0, 2, 0.0)
+        assert 0.0 < roundoff_budget['gamma_n'] < 1e-5
+        for invalid in ((float('nan'), 2, 0.0), (1.0, 0, 0.0)):
+            try:
+                summation_only_error_budget(*invalid)
+            except ValueError:
+                pass
+            else:
+                raise AssertionError('SUMMATION_BUDGET_BAD_INPUT_NOT_REJECTED')
+    else:
+        roundoff_budget = summation_only_error_budget(
+            10745856.18779878, 902, runs['O0_no_contract']['Mx_residual_kNm'])
     receipt={'status':'GNU_REAL32_MICRO_DIAGNOSTIC_NOT_PHYSICS_PASS',
              'SOURCE':{'archive_zip_sha256':ZIP_SHA if not a.self_test else None,
                        'raw_gte_sha256':raw_sha,'selected_gte_sha256':sha(block.encode()),
@@ -162,7 +210,7 @@ def main():
                     'fortran_source_sha256':sha(src.read_bytes()),
                     'python_driver_sha256':sha(Path(__file__).read_bytes()),
                     'negative_rejections':rejects,'variant_count':len(variants)},
-             'FIG':0,'TAB':runs,
+             'FIG':0,'TAB':runs,'summation_only_roundoff_budget':roundoff_budget,
              'assumptions':'Native G/T/E values are printed decimal approximations of runtime state; binary32 reading and expression ordering tested under compiler flags, not proof of exact OpenFAST optimization flags.',
              'error_budget':'Report absolute Mx residual in kN.m and cross-variant spread; historical atol=1e-5/rtol=5e-5 is diagnostic, not physical tolerance.',
              'HOLD':'Even exact numeric reconstruction cannot establish wind-only force/moment ownership, inertia/gravity removal, or DLC1.2 physics PASS.',
