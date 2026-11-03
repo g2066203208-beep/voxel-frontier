@@ -1,4 +1,54 @@
 {
+  "s07_windows_linux_real_input_card_parity_ci_20261103_18h": {
+    "timestamp_local": "2026-11-03 18h Asia/Shanghai",
+    "stage": "S07_INPUT_BYTE_TRANSFORM_QC_PASS__NOT_DYNAMIC_OR_PHYSICAL_PASS",
+    "read_base_sha": "b9e02bbfb3f3b08984eca15c7047e45c491e1c1d",
+    "SOURCE": {
+      "reading_level": "ORIGINAL_GITHUB_ACTIONS_JOB_LOG_AND_RUN_ARTIFACT_METADATA_READ_IN_THIS_ROUND",
+      "original_bts_sha256": "ad68a83a63f197c528c07502db8adff883e9c737863ef3c4cab99cfa76052147",
+      "windows_exe_sha256": "0cc8147fdda188365b8eacda8a831e74fafef59440d71185d66c3272af9e176a",
+      "linux_v260_artifact_id": 13207156108,
+      "linux_v260_artifact_zip_sha256": "51d2e0c5926f9aac4f9b24851a83e2f1e744584cc3a16371108b97280652cf5c",
+      "new_ci_artifact_id": 13217619181,
+      "new_ci_artifact_zip_sha256": "f8cab7a1d07c24db2932424f49ed97cfb5caea5ffdc5d47a26804a99e86ac497",
+      "new_ci_receipt_sha256": "edd53f209818171613926b280135e24a0aa1cfbae6dc1875ce1d88e8a73fc628",
+      "qc_script_sha256": "c9c580c06c856eca5271d2b8e8bc68fb94cf4f3caadc5669fc9cd0bc2ecea9df"
+    },
+    "REF": "T062 original ETM S06 2s OpenFAST native Windows/Linux v2.6.0 sources; no new peer-reviewed full text read",
+    "STANDARD": "No authorized IEC/GB/NB standard pages read in this run; NO CLAUSE PASS",
+    "OFFICIAL": {
+      "software": "GitHub Actions Ubuntu 22.04, CPython 3.12.15, historical OpenFAST v3.5.3 and ROSCO v2.6.0 source identities",
+      "run_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41609438050",
+      "job_id": 125827324860,
+      "artifact_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41609438050/artifacts/13217619181"
+    },
+    "RUN": {
+      "type": "NO_SOLVER_INPUT_CARD_RECONSTRUCTION_AND_REAL_ARTIFACT_SHA_PARITY",
+      "status": "completed_success",
+      "workflow_id": 41609438050,
+      "job_conclusion": "success",
+      "steps_passed": 10,
+      "selftest_positive": 4,
+      "selftest_negative_rejected": 5,
+      "real_source_input_rebuilt": true,
+      "source_text_files_audited": 23,
+      "path_port_files": 7,
+      "airfoil_case_files": 2,
+      "airfoil_case_references": 2,
+      "numeric_tokens_unchanged": 11876,
+      "actual_linux_receipt_sha_matched": true,
+      "servo_pre_post_sha_matched": true,
+      "native_solver_invoked": false,
+      "physical_pass": false
+    },
+    "FIG": "None (no new physical plots)",
+    "TAB": "Actual input SHA/card identity audit JSON inside artifact #13217619181, sha256 edd53f209818171613926b280135e24a0aa1cfbae6dc1875ce1d88e8a73fc628",
+    "assumptions": "The historical ETM S06 batch1 preparer and actual Linux v2.6.0 receipt represent the same 2s source branch. All tested transformations are source text path/case/DLL substitutions, not runtime identity.",
+    "error_budget": "Strict SHA256 equality for rebuilt vs actual recorded source/derived input, 11876 numeric tokens unchanged. Zero tolerance for hash mismatch. No physical or solver tolerance assessed.",
+    "failure_record": "No failing step in this run; prior pending status replaced only for this exact CI. Does not resolve previously observed t0=21 Windows/Linux packed-output differences.",
+    "HOLD": "Intel Windows vs GNU Linux floating-point precision, compiled controller binary and dynamic initialization remain unisolated. Formal DLC1.2=0/126 verified, E/WE native=0, local material fatigue physical PASS=0. S06 PARTIAL, S07 BLOCKED, 12-stage PASS=0/12.",
+    "next_optimal_action": "Use exact parity-locked source to isolate compiler precision via controlled 2s Windows-vs-Linux same-version/same-precision pilot; first establish available binary/build toolchain, do not launch expensive production RUN."
+  },
   "s07_windows_linux_t0_native_21_20261103_16h": {
     "timestamp_local": "2026-11-03 16h Asia/Shanghai",
     "stage": "S07_T0_INITIAL_NATIVE_21_CHANNEL_SOURCE_QC__NOT_PHYSICAL_PASS",
