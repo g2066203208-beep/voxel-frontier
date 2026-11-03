@@ -1,4 +1,73 @@
 {
+  "s07_windows_linux_t0_native_21_20261103_16h": {
+    "timestamp_local": "2026-11-03 16h Asia/Shanghai",
+    "stage": "S07_T0_INITIAL_NATIVE_21_CHANNEL_SOURCE_QC__NOT_PHYSICAL_PASS",
+    "read_base_sha": "8102289d8c0119d2cd11fcff08e59bf823d0d00d",
+    "SOURCE": {
+      "reading_level": "TWO_ORIGINAL_SHA_LOCKED_ACTIONS_ZIPS__NATIVE_OUTB_BYTES_DECODED_IN_ACTUAL_GITHUB_ACTIONS__COMPLETE_21_CSV_PRINTED_IN_ORIGINAL_JOB_LOG__REMOTE_CSV_READBACK_BYTE_IDENTICAL",
+      "windows_artifact_id": 13080759167,
+      "windows_zip_sha256": "7fcae2bf57be571cacc6d3d9b82f1a254257ce59fdb946a1cfb56d3639eb9f1b",
+      "windows_outb_sha256": "c3f40b400f827fbcdd49e9a63f5bb2295a5c0f368a9644b90b591d66b7bb0242",
+      "linux_artifact_id": 13207156108,
+      "linux_zip_sha256": "51d2e0c5926f9aac4f9b24851a83e2f1e744584cc3a16371108b97280652cf5c",
+      "linux_outb_sha256": "8ab8dd100985fe822a289776b728fa8423fa93b1f137d5ec110b1e2d5f1796a7",
+      "original_bts_sha256": "ad68a83a63f197c528c07502db8adff883e9c737863ef3c4cab99cfa76052147",
+      "committed_csv": "research/wind-tower/experiments/T062/S07_WINDOWS_LINUX_T0_21_NATIVE_CHANNELS_20261103.csv",
+      "csv_sha256": "dd4c9906943ab0856bbde88619460b4118fa7b755676f66512fc32ef41b081e6",
+      "csv_git_blob_sha1": "e32994d934201a7614a9d985b78db12db4fb60e0",
+      "full_295_native_pair_json_sha256": "acb88cb00abb60d9355094cf3baa1d0489bb04175d491fc36d25ae2e3a9fa496",
+      "manifest_sha256": "3906b906b48159f5753ffa5ec976c53df57e0f339373256088f070fd21a20fdd",
+      "replay_artifact_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41602002874/artifacts/13215005755",
+      "artifact_note": "artifact ID 13215005755 belongs to first successful run 41601919541; second run 41602002874 has separate artifact, see Actions run"
+    },
+    "REF": "Existing T062 original 2s windows/linux source identity, controller temporal divergence and DCM receipts; no new journal full text",
+    "STANDARD": "No newly read authorized IEC/GB/NB original clause; no compliance claim",
+    "OFFICIAL": "Native OpenFAST v3.5.3 Windows Intel single precision / Linux GNU double precision; actual stdout ROSCO v2.6.0 both",
+    "RUN": {
+      "analysis_only": true,
+      "solver_invoked_in_this_replay": false,
+      "run_id": 41602002874,
+      "job_id": 125802712507,
+      "job_status": "completed/success",
+      "native_input_runs": "PREVIOUS_WINDOWS_AND_LINUX_2S_ONLY",
+      "python_version": "3.12.15",
+      "synthetic_positive_tests": 5,
+      "synthetic_negative_rejections": 7,
+      "channels": 295,
+      "t0_exceeding_channels": 21,
+      "paired_time_samples": 41,
+      "paired_channel_samples": 12095,
+      "total_exceeding_channel_samples": 10286,
+      "physical_pass": false
+    },
+    "FIG": "0; source diagnostic not a thesis physics figure",
+    "TAB": {
+      "source_csv_rows": 21,
+      "all_channel_rows_in_actions_json": 295,
+      "group_counts": {
+        "tower_gage_axial_force": 9,
+        "tower_gage_axial_position": 9,
+        "tower_base_axial_force": 1,
+        "aerodynamic_initial_outputs": 2
+      },
+      "tower_gage_axial_force_abs_delta_kN_range": [
+        0.12240277963064727,
+        0.1972546276738285
+      ],
+      "tower_gage_axial_position_max_abs_delta_m": 0.000021563710738803366,
+      "tower_base_axial_force_abs_delta_kN": 0.1492270944727352,
+      "aerodynamic_rotor_power_abs_delta_W": 380.15264562144876,
+      "maximum_relative_difference_axial_force_gages": 0.000008102583432315907,
+      "maximum_relative_difference_axial_position_gages": 6.994109483168778e-7,
+      "maximum_relative_difference_rotor_power": 0.000024625871882639497
+    },
+    "assumptions": "All 21 exceed packing tolerance, not a physical error threshold. Differences are mostly small in engineering magnitude. t0 output channels do not prove underlying model initial-condition differences. Same ROSCO version does not isolate compiler precision or initialization.",
+    "error_budget": "Per channel 1.1*(two native OUTB packed half-LSB)+1e-8; source reconstruction uses exact archived packed bytes; no verified physical/controller equivalence tolerance or initial-state uncertainty budget.",
+    "failure_record": "Two read-only Actions replays 41601919541 and 41602002874 completed/success; previous native controller mismatch and historical failed assertions retained in prior T062 entries.",
+    "HOLD": "Windows/Linux toolchain precision and initial-condition/derived input identity still confounded; cannot attribute t0 deltas causally or accept 600s DLC1.2/physical mapping; S06 PARTIAL, S07 BLOCKED, 0/12 stages.",
+    "stage_pass": false,
+    "physical_pass": false
+  },
   "s07_windows_linux_2s_pair_native_20261103_10h": {
     "timestamp_local": "2026-11-03 10h Asia/Shanghai",
     "stage": "S07_NATIVE_2S_PAIRED_DIAGNOSTIC__NOT_PHYSICAL_PASS",
