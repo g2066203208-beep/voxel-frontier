@@ -145,5 +145,41 @@
     "failure_record": "Original 20h matrix run started; no failure or success asserted until complete native job logs/artifacts read. Initial QC source regex/newline escaping corrected in commit 4e1fa251 before workflow launch.",
     "HOLD": "No paired native OFF/ON output confirmed yet; historical Windows Intel single vs GNU double remains confounded. Formal DLC1.2 0/126, E/WE=0, S06 PARTIAL, S07/S10 BLOCKED, 0/12.",
     "next_optimal_action": "Read native Actions #41632768388 complete logs/artifacts and 295x41 paired JSON; repair first real failure if present, else quantify precision effect on t0 and tower-base six components."
+  },
+  "gnu_precision_2s_21h_native_failure_receipt": {
+    "status": "BOTH_2S_NATIVE_SOLVER_NORMAL__POSTPROCESS_FAIL__PAIR_SKIPPED",
+    "stage_pass": "0/12",
+    "SOURCE": {
+      "level": "DIRECT_NATIVE_GITHUB_JOB_LOGS_AND_ARTIFACT_METADATA_NOT_OUTB_VALUES",
+      "run": 41632768388,
+      "single_job": 125906243581,
+      "double_job": 125906243960,
+      "paired_job": 125913127824,
+      "single_artifact": 13229996252,
+      "double_artifact": 13229932734,
+      "single_zip_sha256": "983bce8ca81981ff5fd00e5261dbfb2c0b6e18b074aa4eb1ff425e6851fb9735",
+      "double_zip_sha256": "d8a5dec02b3dc4b536061f5bfcfd80e3bd472f322e83c5e7b1ee705508017c7c",
+      "single_dcm_sha256": "77f247d7e0b66997041ffbba70c859bdd38fd345eb303b18b78c6599fa2caa92",
+      "double_dcm_sha256": "b680d40bf4007fb3e2f3be01e2a69ef954a6f48bd4dafa59001d916550de64e5"
+    },
+    "REF": "Existing T062 only; no new paper",
+    "STANDARD": "No authorized IEC/GB clauses read",
+    "OFFICIAL": "OpenFAST v3.5.3 single/double and ROSCO v2.6.0 confirmed by original native stdout",
+    "RUN": {
+      "single": "2s normal termination; DCM ownership INERTIA_GRAVITY_OWNERSHIP_RECONSTRUCTION_HOLD",
+      "double": "2s normal termination; 161 DCM rows PASS; malformed precision grep fails",
+      "paired": "SKIPPED",
+      "fix_commit": "7ba5650d4e0d8dc9fa92ee63aeda3db0da9f4afb",
+      "production": false,
+      "abaqus": false,
+      "physical_pass": false
+    },
+    "FIG": "0",
+    "TAB": "No paired numerical OUTB yet",
+    "assumptions": "DCM ownership and numerical precision comparison are independent gates",
+    "error_budget": "OUTB encoding threshold not physical tolerance; source SHA strict, pending pair QC",
+    "failure_record": "Original artifact names literal ${'single'}/${'double'}; corrected YAML artifact name and grep; preserve single DCM stderr and HOLD",
+    "HOLD": "S07 physical BLOCKED; DCM ownership still HOLD; formal DLC1.2 0/126; E/WE=0",
+    "next": "Check corrected CI and paired 295x41 numerical results"
   }
 }
