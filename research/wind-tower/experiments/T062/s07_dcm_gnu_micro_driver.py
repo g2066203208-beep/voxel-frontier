@@ -118,14 +118,16 @@ def main():
     g=validate(block)
     rejects=0
     lines=block.splitlines()
-    nonfinite=lines[:]
-    p=nonfinite[0].split()
-    p[3]='NaN'
-    nonfinite[0]=' '.join(p)
-    invalid_nonfinite='\n'.join(nonfinite)+'\n'
-    for bad in (block.replace('G 0.1875','X 0.1875',1),
-                block.replace('E 0.1875 220 220','E 0.1875 220 221',1),
-                invalid_nonfinite):
+    bad_blocks=[]
+    # Native log uses E-format decimals and variable spaces; mutate fields,
+    # not a brittle literal substring that only matches synthetic fixtures.
+    for row,field,value in [(0,0,'X'),(2,3,'221'),(0,3,'NaN')]:
+        altered=lines[:]
+        parts=altered[row].split()
+        parts[field]=value
+        altered[row]=' '.join(parts)
+        bad_blocks.append('\n'.join(altered)+'\n')
+    for bad in bad_blocks:
         try:
             validate(bad)
         except ValueError:
