@@ -4,6 +4,7 @@ on:
     paths:
       - '.github/workflows/s07-gnu-precision-original-artifact-recheck.yml'
       - 'research/wind-tower/experiments/T062/s07_gnu_precision_native_independent_recheck.py'
+      - 'research/wind-tower/experiments/T062/s07_dcm_precision_ownership_recheck.py'
   workflow_dispatch:
 
 permissions:
@@ -23,6 +24,7 @@ jobs:
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             research/wind-tower/experiments/T062/s07_gnu_precision_native_independent_recheck.py
+            research/wind-tower/experiments/T062/s07_dcm_precision_ownership_recheck.py
             research/wind-tower/experiments/T062/S07_GNU_PRECISION_2S_295_CHANNELS.csv
             research/wind-tower/experiments/T062/S07_GNU_PRECISION_ORIGINAL_ARTIFACT_2S_295CH_NUMERIC_QC.json
       - uses: actions/setup-python@v5
@@ -93,6 +95,27 @@ jobs:
           PY
           sha256sum "$script" original-single.zip original-double.zip s07_native_independent_recheck.json \
             | tee s07_native_independent_recheck_sha256.log
+      - name: Reconstruct native DCM gage 220 with float32 and float64 arithmetic (no solver)
+        shell: bash
+        run: |
+          set -euo pipefail
+          script=research/wind-tower/experiments/T062/s07_dcm_precision_ownership_recheck.py
+          python -m py_compile "$script"
+          python "$script" --archive original-single.zip --out s07_dcm_precision_ownership_receipt.json \
+            | tee s07_dcm_precision_ownership_stdout.log
+          python - <<'PY'
+          import json
+          d=json.load(open('s07_dcm_precision_ownership_receipt.json'))
+          assert d['native_sample_count']==161 and d['elements_per_sample']==901
+          assert d['float64_pass_samples']==150 and d['float32_pass_samples']==160
+          assert d['negative_rejections']==3 and not d['physical_pass']
+          assert d['first_fail_float64']['time_s']==0.1875
+          assert d['first_fail_float32']['time_s']==0.1875
+          assert d['first_failure_Mx_cancellation']['cancellation_factor']>2000
+          print('S07_NATIVE_DCM_PRECISION_REPLAY_PASS_NOT_OWNERSHIP_OR_PHYSICS_PASS')
+          PY
+          sha256sum "$script" s07_dcm_precision_ownership_receipt.json \
+            | tee s07_dcm_precision_ownership_sha256.log
       - name: Preserve independent report and failed-run logs
         if: always()
         uses: actions/upload-artifact@v4
@@ -102,5 +125,8 @@ jobs:
             s07_native_independent_recheck.json
             s07_native_independent_recheck_stdout.log
             s07_native_independent_recheck_sha256.log
+            s07_dcm_precision_ownership_receipt.json
+            s07_dcm_precision_ownership_stdout.log
+            s07_dcm_precision_ownership_sha256.log
           if-no-files-found: warn
           retention-days: 30
