@@ -1,4 +1,39 @@
 {
+  "s07_windows_linux_2s_pair_20261103_09h": {
+    "timestamp_local": "2026-11-03 09h Asia/Shanghai",
+    "stage": "S07_INDEPENDENT_PREPARATION__PENDING_NATIVE_PAIR_CI",
+    "read_base_sha": "6bdb3bb1d6c76502429d18c85494569cc717e34c",
+    "SOURCE": {
+      "windows_2s_artifact": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41543742809",
+      "windows_original_zip_artifact_id": 13080759167,
+      "windows_original_zip_sha256": "7fcae2bf57be571cacc6d3d9b82f1a254257ce59fdb946a1cfb56d3639eb9f1b",
+      "windows_batch1_outb_sha256": "c3f40b400f827fbcdd49e9a63f5bb2295a5c0f368a9644b90b591d66b7bb0242",
+      "original_bts_sha256": "ad68a83a63f197c528c07502db8adff883e9c737863ef3c4cab99cfa76052147",
+      "linux_previous_native_success_runs": [
+        41543742809,
+        41543799960
+      ],
+      "new_pair_ci": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41558173256"
+    },
+    "REF": "T062 s07_windows_linux_2s_pair_qc.py; s06_historical_outb_source_gate.py; s06_native_4batch_common_channel_qc.py; s07_elastodyn_taxis_ownership_probe.py",
+    "STANDARD": "No newly reviewed authorized IEC/GB/NB original clauses",
+    "OFFICIAL": "OpenFAST v3.5.3 Windows Intel 2021 historical vs GNU Linux patched diagnostic; historical DLL vs ROSCO v2.9.0 Linux substitution",
+    "RUN": "Local Python 3.13.5 AST parse and 2 positive + 4 negative synthetic metric checks using an isolated stand-in for imported OUTB helpers; actual GitHub Actions real 2s pairing and gzip retention pending",
+    "FIG": "0",
+    "TAB": "planned per-channel 41-sample max/RMS/mean difference, quantization-budget exceedance; raw 56MB probe and Linux OUTB compressed artifact with SHA manifest",
+    "code_git_blob_sha1": "730da75652d65ae15eff584c2fa109e9f52d6549",
+    "workflow_git_blob_sha1": "d82fb342d4cb565c6d699736b3d74d3ecd90909c",
+    "commits": [
+      "1fa3aaca11538b4e9dac256106205fdd3cfd9999",
+      "9d7724fb5dee76dc5bf8982e0ab010a85e48ca3a"
+    ],
+    "assumptions": "Same original ETM S06 BTS and batch1 158m source; 2s initial transient only; different controller binary/toolchain; time grid 41x0.05s",
+    "error_budget": "Per-channel per-time packed OUTB quantization budget 1.1*(half-LSB_win+half-LSB_linux)+1e-8; NOT a physical or controller equivalence acceptance tolerance",
+    "failures": "No new native failures reported at receipt creation; original 56MB probe was absent from previous artifacts; new CI pending",
+    "physical_pass": false,
+    "controller_equivalence_verified": false,
+    "HOLD": "Until actual native paired report and compressed raw evidence are available and independently reviewed, controller state equivalence and full S07 remain unverified; S06 PARTIAL, E/WE native 0, 0/12."
+  },
   "s07_native_2s_dcm_success_20261103_08h": {
     "timestamp_local": "2026-11-03 08h Asia/Shanghai",
     "stage": "S07_PARTIAL_NATIVE_DIAGNOSTIC__STILL_BLOCKED",
