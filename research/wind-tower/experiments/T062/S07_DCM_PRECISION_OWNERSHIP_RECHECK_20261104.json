@@ -254,5 +254,54 @@
     "failure_record": "Original 0.1875s Mx numerical diagnostic still exceeds old atol/rtol 4.925x; previous GNU14.2 three-flag tests did not close it. New GitHub CI has no verified job log.",
     "HOLD": "Inertia/gravity/external wind six-component ownership and DLC1.2 physical acceptance unclosed; E/WE native zero; 0/12 strict.",
     "physical_pass": false
+  },
+  "gnu11_ci_native_micro_replay_20261104_04h": {
+    "status": "COMPLETED_SUCCESS_NUMERIC_DIAGNOSTIC_ONLY_NOT_PHYSICS_PASS",
+    "SOURCE": {
+      "read_level": "DIRECT_GITHUB_ACTIONS_JOB_LOG_TEXT_AND_STEP_CONCLUSIONS",
+      "run_id": 41700508640,
+      "job_id": 126142226838,
+      "run_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41700508640",
+      "original_zip_sha256": "983bce8ca81981ff5fd00e5261dbfb2c0b6e18b074aa4eb1ff425e6851fb9735",
+      "original_gte_sha256": "77f247d7e0b66997041ffbba70c859bdd38fd345eb303b18b78c6599fa2caa92",
+      "new_artifact_id": 13262893753,
+      "new_artifact_zip_sha256": "NOT_DOWNLOADED_OR_REHASHED_IN_THIS_RUN"
+    },
+    "REF": "Existing official OpenFAST v3.5.3 ElastoDyn source-order record; no new paper fulltext",
+    "STANDARD": "No newly read authorized IEC/GB/NB clauses",
+    "OFFICIAL": "GitHub Actions hosted Ubuntu22.04 GNU Fortran 11.4.0 job log; compiler identity printed in job",
+    "RUN": {
+      "kind": "NO_SOLVER_NATIVE_GTE_REPLAY",
+      "compiler": "GNU Fortran (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0",
+      "status": "completed/success",
+      "variant_count": 3,
+      "negative_rejections": 3,
+      "synthetic_self_test": true,
+      "openfast_new_solver_runs": 0,
+      "fortran_source_sha256": "8a33e122b173a44330dc1f314b3f617e0f4bf58fa67ef8d9a89a11886857e330",
+      "micro_driver_sha256": "32eda780d92dae34ee1b6ebb40a0085c4869cbc023e924faf91ac842df64db94",
+      "native_numeric_json_sha256": "3460b2bf2e6f68327bd0616f78cad4a3c9b58422c126cc09479b264afdc2f119",
+      "synthetic_json_sha256": "a79d63e3b8ab960a2fb858367862ba16eed575345a41a4021efdea5dc0fe713e"
+    },
+    "TAB": {
+      "time_s": 0.1875,
+      "Mx_residual_kNm": {
+        "O0_no_contract": -0.0013260841369628906,
+        "O2_no_contract": -0.0013260841369628906,
+        "O2_contract_fast": -0.0013260841369628906
+      },
+      "max_cross_variant_spread_kNm": 0,
+      "summation_only_error_bound_Nm": 577.7647152643005,
+      "observed_residual_Nm": -1.3260841369628906,
+      "native_295_channels_rechecked": 295,
+      "numeric_fields_rechecked": 4720,
+      "native_295_exceeding_pairs": 10284
+    },
+    "FIG": 0,
+    "assumptions": "Micro replay uses 903 G/T/E rows serialized by original native solver; identical flags across 11.4/14.2 do not imply complete OpenFAST executable equivalence.",
+    "error_budget": "577.764715 N.m is summation-only conservative gamma_n bound; excludes products, cross products, printed decimal serialization and model error; not a physics acceptance tolerance.",
+    "failure_record": "Earlier CI 41691760295 failed; new run 41700508640 completed/success. Original t=0.1875s Mx numerical threshold still exceeded; cannot infer missing physical force.",
+    "HOLD": "Inertia/gravity/wind wrench ownership unclosed; DLC1.2 0/126; E/WE native 0; 0/12 strict.",
+    "physical_pass": false
   }
 }
