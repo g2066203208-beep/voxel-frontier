@@ -1,4 +1,139 @@
 {
+  "s07_native_2s_dcm_success_20261103_08h": {
+    "timestamp_local": "2026-11-03 08h Asia/Shanghai",
+    "stage": "S07_PARTIAL_NATIVE_DIAGNOSTIC__STILL_BLOCKED",
+    "status": "TWO_INDEPENDENT_NATIVE_2S_OPENFAST_RUNS_SUCCESS_161_DCM_ROWS_SOURCE_LEDGER_QC__NOT_PHYSICAL_PASS",
+    "SOURCE": {
+      "reading_level": "ACTUAL_FULL_GITHUB_ACTIONS_JOB_LOGS_AND_DOWNLOADED_ORIGINAL_ARTIFACT_ZIP_JSON",
+      "runs": [
+        {
+          "run_id": 41543742809,
+          "job_id": 125614030270,
+          "artifact_id": 13187883050,
+          "artifact_zip_sha256": "97eb41291909aa430297ee8180cdf7217e6eb16463a400200d966c7183f8f4bd"
+        },
+        {
+          "run_id": 41543799960,
+          "job_id": 125614224946,
+          "artifact_id": 13188746904,
+          "artifact_zip_sha256": "d1c9dd26653401f35e1cd949a17a2b0f752f9ecc18c38353687df185a0ea0d93"
+        }
+      ],
+      "audit_json_sha256": "a49efaa80fd64f9b51986bbac0dbf36522c50fbc54a9b51b4f71df694a59e924",
+      "native_raw_probe_sha256_from_ci": "238eb41bd4567e5c13bfc03759ac3945789742f71e23f5396aedefe15022aa48",
+      "native_raw_probe_bytes": 56055853,
+      "native_raw_probe_lines": 145383,
+      "raw_probe_uploaded": false,
+      "official_elastodyn_f90_sha256": "a8ea1a88dc22d5401ea450f376aa7f66e3242785f1e038a22933054aaaf4f7d3",
+      "bts_sha256": "ad68a83a63f197c528c07502db8adff883e9c737863ef3c4cab99cfa76052147",
+      "source_servo_sha256": "103e7bd71209a095b833ca4ba62627ae7724870615112fdccfbff502076c966e",
+      "derived_linux_servo_sha256": "1f932e88a8030a4539a2ba46b1565174439909fafb5a8bc60bd39ee97d2f8bb4",
+      "historical_windows_controller_sha256": "7aebb0d2166c0cc095d11c2b7bc13da136547c557b0f331dcdce84fe181802aa",
+      "linux_rosco_v290_controller_sha256": "95410f20aac378749943601cdaf1c89ea31e622766727c8abbb1bbc2bf4bb709",
+      "repeated_audit_byte_identical": true
+    },
+    "REF": "Inherited T062 native source-locked DCM/inertia ledger; no new journal full text",
+    "STANDARD": "No new authorized IEC/GB/NB clauses read; NO clause compliance",
+    "OFFICIAL": "Official OpenFAST v3.5.3 source patched diagnostic copy, GNU Fortran 11.4.0; ROSCO v2.9.0 Linux controller; original Windows control-state equivalence NOT established",
+    "RUN": {
+      "native_runs_completed_success": 2,
+      "native_2s_exit_code": [
+        0,
+        0
+      ],
+      "native_output": "OpenFAST terminated normally.",
+      "native_dcm_audit_rows_each": 161,
+      "first_time_s": 0,
+      "last_time_s": 2,
+      "dt_s": 0.0125,
+      "element_rows_each": 901,
+      "source_ledger_reconstruction": "T062 audit parser accepted all 161 time groups; reconstructed top+tower gravity/inertia, not pure wind",
+      "postprocess": "Independent JSON-series orthonormality/handedness/time grid QC; not independent raw ledger reparse",
+      "max_QtQ_minus_I_component": 6.661338147750939e-16,
+      "max_abs_detQ_minus_1": 5.551115123125783e-16,
+      "negative_tests_rejected": 5,
+      "real_2s_dcm_rows": 161,
+      "physical_pass": false
+    },
+    "FIG": "0; no original physical response figure",
+    "TAB": {
+      "force_kN_min_max": [
+        [
+          -92.32030903695056,
+          1815.058797817301
+        ],
+        [
+          -303.35002546110036,
+          483.536951925465
+        ],
+        [
+          -20573.413535742045,
+          -20090.08388239157
+        ]
+      ],
+      "moment_kNm_min_max": [
+        [
+          -8379.118983281418,
+          15770.38379198758
+        ],
+        [
+          -1293.097269595708,
+          235236.47340667862
+        ],
+        [
+          -1822.9269966570632,
+          12179.85232358484
+        ]
+      ],
+      "first_row": {
+        "time_s": 0,
+        "F_IEC_kN": [
+          -69.93709502264326,
+          0.32127547984799754,
+          -20090.08388239157
+        ],
+        "M_IEC_kNm": [
+          -5.6603208498745765,
+          -1117.2374764686774,
+          -168.35860557735
+        ]
+      },
+      "middle_row": {
+        "time_s": 1,
+        "F_IEC_kN": [
+          133.56511414653923,
+          -132.49894376615248,
+          -20388.246693130368
+        ],
+        "M_IEC_kNm": [
+          7055.862158933703,
+          53085.626354047694,
+          6250.175274240343
+        ]
+      },
+      "last_row": {
+        "time_s": 2,
+        "F_IEC_kN": [
+          1815.058797817301,
+          -100.30007663244037,
+          -20421.94878023278
+        ],
+        "M_IEC_kNm": [
+          15770.38379198758,
+          235236.47340667862,
+          8371.52150770412
+        ]
+      },
+      "full_161_rows": "Both original CI artifacts contain byte-identical s07_linux_dcm_audit.json; use s07_native_2s_dcm_artifact_qc.py --csv to export 161-row CSV; local generated CSV SHA256 d0394f4ca2c1fc332f306cf4f6d1bf77cc048770b525e7e10876da982b880083, not committed separately",
+      "reproducible_script": "research/wind-tower/experiments/T062/s07_native_2s_dcm_artifact_qc.py"
+    },
+    "assumptions": "The archived audit JSON is the source-locked T062 parser's reconstruction of the full native raw probe; the 56 MB raw probe was not uploaded. 2 s startup/one batch/gage 220 is NOT 600 s ETM, 31-segment all-gage identity, historical Windows controller equivalence or full DLC1.2. No Abaqus work.",
+    "error_budget": "Numeric QC tolerances: time abs<=1e-12 s, Q orthogonality component and det abs<=1e-12; observed 6.66e-16 and 5.55e-16. Native T062 raw-ledger parser uses rtol 5e-5 and atol 1e-5 for global/local wrench comparisons, but raw residual maxima not retained. Controller replacement/precision/physics and W/E/WE uncertainties remain UNQUANTIFIED.",
+    "failure_record": "Earlier CI #41543712077 failed S07_DERIVED_DLL_REFERENCE_HOLD (incorrect regex); corrected at c46609be; subsequent two independent native runs success. Historical failures preserved in older receipt entries.",
+    "HOLD": "S07 diagnostic source mapping succeeded, but full S07 physics/long-run/controller equivalence remains BLOCKED. Native 2 s DCM 161 rows are valid diagnostic evidence only; independent raw 56 MB probe and original controller paired output not archived. S06 PARTIAL; E/WE=0; fatigue/optimization physical PASS=0; 12-stage 0/12.",
+    "stage_pass": false,
+    "physical_pass": false
+  },
   "s07_linux_rosco_relative_path_failure_20261103_07h": {
     "timestamp_local": "2026-11-03 07h Asia/Shanghai",
     "stage": "S07_BLOCKED_DIAGNOSTIC_ONLY",
@@ -54,44 +189,44 @@
     "physical_pass": false
   },
   "s07_case_reference_cardinality_failure_20261103_06h": {
-      "timestamp_local": "2026-11-03 06h Asia/Shanghai",
-      "stage": "S07_BLOCKED_DIAGNOSTIC_ONLY",
-      "status": "ACTUAL_CI_CASE_REFERENCE_CARDINALITY_FAILURE__REPAIR_COMMITTED__NEW_NATIVE_RESULT_PENDING",
-      "SOURCE": {
-        "run_id": 41526866571,
-        "job_id": 125556736339,
-        "run_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41526866571",
-        "log_reading_level": "FULL_ACTUAL_ACTIONS_JOB_LOG",
-        "failed_step": "Normalize Windows input path separators in derived 2s copy only",
-        "original_airfoil_sha256": "2994cb5f79282170019be0a8c48b60155905365cac4ac88b21dda58c16f925cb",
-        "original_blade_sha256": "6ad2426fd429f4e01008700d31d4b64d79358522bcf265ce12f7706e8a1f895d",
-        "original_bts_sha256": "ad68a83a63f197c528c07502db8adff883e9c737863ef3c4cab99cfa76052147",
-        "failed_input_commit": "6e0d4eaae7604006e24ae467c86e8a2d2ae089eb",
-        "workflow_blob_sha1_after_fix": "55c42e4803bd68b5a56735db24a8d706538816cb"
-      },
-      "REF": "Existing T062 original 2s ETM source recovery and S07 source probe; no new journal full text",
-      "STANDARD": "No new authorized IEC/GB/NB clause read; no code PASS",
-      "OFFICIAL": "Official OpenFAST v3.5.3 and ROSCO v2.9.0 source workflow inherited; neither was recompiled in this failed job",
-      "RUN": {
-        "actual_ci": "completed/failure",
-        "other_jobs_success": 3,
-        "first_error": "AssertionError: CYLINDER_AIRFOIL_REFERENCE_CARDINALITY_HOLD",
-        "actual_2s_solver_started": false,
-        "actual_dcm_rows": 0,
-        "artifact_id": 13179794937,
-        "artifact_sha256": "f781bb3f3a12ed5c00f893544c453f2b606f23b9cb19f162baa458de534826c8",
-        "fix_commit": "7891a7a39dbb726895b97fb70e93a9bb259df970",
-        "fix_test_status": "CODE_COMMITTED_NEW_CI_NOT_YET_READ"
-      },
-      "FIG": "0; no physical response figure",
-      "TAB": "New workflow prints per-file case reference matches and before/after SHA256, accepts all exact matches >=1 in work/batch1 or work/Rotor, checks no unpatched reference/collision",
-      "assumptions": "Historical Windows source may repeat identical AeroDyn filename in multiple restored text files; exact source airfoil content is SHA-locked. This is a hypothesis, not yet proven match count because failed CI did not print count.",
-      "error_budget": "Only byte-exact filename token replacement in temporary diagnostic text, with per-file SHA256 and all-reference check; source archive unmodified. Native numerical, controller equivalence and material response uncertainty unquantified.",
-      "failure_record": "The previous strict global count ==1 assertion stopped before ROSCO build and before OpenFAST 2s; this is an input-portability gate failure, not a physical simulation result. Next run will print actual per-file match count.",
-      "HOLD": "Need new CI per-file match receipt and successful native 2s DCM/inertia audit. S07 not PASS, S06 PARTIAL, E/WE native 0, 0/12 stages advanced.",
-      "physical_pass": false,
-      "stage_pass": false
+    "timestamp_local": "2026-11-03 06h Asia/Shanghai",
+    "stage": "S07_BLOCKED_DIAGNOSTIC_ONLY",
+    "status": "ACTUAL_CI_CASE_REFERENCE_CARDINALITY_FAILURE__REPAIR_COMMITTED__NEW_NATIVE_RESULT_PENDING",
+    "SOURCE": {
+      "run_id": 41526866571,
+      "job_id": 125556736339,
+      "run_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41526866571",
+      "log_reading_level": "FULL_ACTUAL_ACTIONS_JOB_LOG",
+      "failed_step": "Normalize Windows input path separators in derived 2s copy only",
+      "original_airfoil_sha256": "2994cb5f79282170019be0a8c48b60155905365cac4ac88b21dda58c16f925cb",
+      "original_blade_sha256": "6ad2426fd429f4e01008700d31d4b64d79358522bcf265ce12f7706e8a1f895d",
+      "original_bts_sha256": "ad68a83a63f197c528c07502db8adff883e9c737863ef3c4cab99cfa76052147",
+      "failed_input_commit": "6e0d4eaae7604006e24ae467c86e8a2d2ae089eb",
+      "workflow_blob_sha1_after_fix": "55c42e4803bd68b5a56735db24a8d706538816cb"
     },
+    "REF": "Existing T062 original 2s ETM source recovery and S07 source probe; no new journal full text",
+    "STANDARD": "No new authorized IEC/GB/NB clause read; no code PASS",
+    "OFFICIAL": "Official OpenFAST v3.5.3 and ROSCO v2.9.0 source workflow inherited; neither was recompiled in this failed job",
+    "RUN": {
+      "actual_ci": "completed/failure",
+      "other_jobs_success": 3,
+      "first_error": "AssertionError: CYLINDER_AIRFOIL_REFERENCE_CARDINALITY_HOLD",
+      "actual_2s_solver_started": false,
+      "actual_dcm_rows": 0,
+      "artifact_id": 13179794937,
+      "artifact_sha256": "f781bb3f3a12ed5c00f893544c453f2b606f23b9cb19f162baa458de534826c8",
+      "fix_commit": "7891a7a39dbb726895b97fb70e93a9bb259df970",
+      "fix_test_status": "CODE_COMMITTED_NEW_CI_NOT_YET_READ"
+    },
+    "FIG": "0; no physical response figure",
+    "TAB": "New workflow prints per-file case reference matches and before/after SHA256, accepts all exact matches >=1 in work/batch1 or work/Rotor, checks no unpatched reference/collision",
+    "assumptions": "Historical Windows source may repeat identical AeroDyn filename in multiple restored text files; exact source airfoil content is SHA-locked. This is a hypothesis, not yet proven match count because failed CI did not print count.",
+    "error_budget": "Only byte-exact filename token replacement in temporary diagnostic text, with per-file SHA256 and all-reference check; source archive unmodified. Native numerical, controller equivalence and material response uncertainty unquantified.",
+    "failure_record": "The previous strict global count ==1 assertion stopped before ROSCO build and before OpenFAST 2s; this is an input-portability gate failure, not a physical simulation result. Next run will print actual per-file match count.",
+    "HOLD": "Need new CI per-file match receipt and successful native 2s DCM/inertia audit. S07 not PASS, S06 PARTIAL, E/WE native 0, 0/12 stages advanced.",
+    "physical_pass": false,
+    "stage_pass": false
+  },
   "s07_linux_case_port_20261103": {
     "date_local": "2026-11-03 05时 Asia/Shanghai",
     "status": "NATIVE_2S_AERODYN_AIRFOIL_CASE_FAILURE_CONFIRMED__DERIVED_INPUT_FIX_COMMITTED__NEW_CI_PENDING",
