@@ -1,0 +1,107 @@
+{
+  "timestamp_local": "2026-11-03 19h Asia/Shanghai",
+  "stage": "S07",
+  "status": "COMPILER_PRECISION_FEASIBILITY_QC_PASS__NOT_DYNAMIC_OR_PHYSICAL_PASS",
+  "stage_pass_count": "0/12",
+  "SOURCE": {
+    "reading_level": "DIRECT_ORIGINAL_WINDOWS_2S_OUTB_ARTIFACT_NATIVE_STDOUT; ORIGINAL_LINUX_V260_JOB_LOG; DIRECT_OFFICIAL_OPENFAST_V353_CMAKE_TAG; NEW_WINDOWS_AND_LINUX_ACTIONS_ARTIFACT_BYTES",
+    "historical_windows_original_artifact_id": 13080759167,
+    "historical_windows_artifact_zip_sha256": "7fcae2bf57be571cacc6d3d9b82f1a254257ce59fdb946a1cfb56d3639eb9f1b",
+    "historical_windows_batch1_stdout_sha256": "35b3da592f14877cd2f592410b75c0e08193e846ae29fbdd4aac15b3744fe150",
+    "historical_windows_exe_sha256": "0cc8147fdda188365b8eacda8a831e74fafef59440d71185d66c3272af9e176a",
+    "historical_windows_exe_size_bytes": 61086208,
+    "historical_linux_v260_original_job_id": 125740275442,
+    "historical_linux_v260_original_run_id": 41582491428,
+    "new_final_workflow_run_id": 41625982701,
+    "new_windows_artifact_id": 13224934423,
+    "new_windows_artifact_zip_sha256": "036586e987059f8d21bf8febd29c0f19e7c44264f117ec0d0903f554bd2b51c0",
+    "new_windows_json_sha256": "61d2925f0e18288b2297484e67697eea5b68d349791350c0b0763d9045dc4cb5",
+    "new_linux_artifact_id": 13225128748,
+    "new_linux_artifact_zip_sha256": "3b4986ba2e98df7a1987e392e9cd824394fef3a7310020cc9f1d1fdc8bc83b7b",
+    "new_linux_json_sha256": "4cf165d65614d99fba38fae53d239d573218ee2d69a22ba6ccd058796d514c24",
+    "qc_script_git_blob_sha1": "ae9699d242ab6dd5dfd2efc112a184578298aa37",
+    "qc_script_linux_checkout_sha256": "abf04b2957efa661593e574b05ca914833a0d8b8034c971d3e391d2d95ad679b",
+    "qc_script_windows_checkout_sha256": "5509257aa86a8307dc7ca75bd25cc8aeb6acde97052dd64b711af1add098430a",
+    "script_checkout_sha_note": "Runner-local bytes differ; likely checkout line-ending conversion, not independently proven. Git blob SHA is the cross-runner canonical identity; do not claim runner-local SHA equal."
+  },
+  "REF": "Existing T062 historical native source and paired OUTB only; no new peer-reviewed paper full text",
+  "STANDARD": "No authorized IEC/GB/NB full clauses read; NO STANDARD PASS",
+  "OFFICIAL": {
+    "historical_windows_openfast_stdout": "OpenFAST-v3.5.3 / Intel(R) Fortran Compiler 2021 / 64 bit / Precision: single",
+    "historical_linux_openfast_stdout": "OpenFAST-v3.5.3-dirty / GCC 11.4.0 / 64 bit / Precision: double",
+    "openfast_v353_top_level_option": "option(DOUBLE_PRECISION \"Treat REAL as double precision\" on)",
+    "openfast_v353_gnu_double_flags": [
+      "-fdefault-real-8",
+      "-fdefault-double-8"
+    ],
+    "openfast_v353_fortran_options_git_blob_sha1": "0efa0aed55f8b005dbe8d199aecf436d6ec9d133",
+    "openfast_v353_fortran_options_url": "https://github.com/OpenFAST/openfast/blob/v3.5.3/cmake/OpenfastFortranOptions.cmake",
+    "runner_windows": "Windows Server 2022 / GNU Fortran MinGW 14.2.0 on PATH; ifort/ifx not on PATH; clang 20.1.8",
+    "runner_linux": "Ubuntu 22.04 / GNU Fortran 11.4.0 on PATH; ifort/ifx not on PATH; clang 14.0.0"
+  },
+  "RUN": {
+    "type": "NO_SOLVER_PE_SHA_HEADER_AND_COMPILER_AVAILABILITY_PLUS_TINY_FORTRAN_KIND_SMOKE",
+    "new_actions_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41625982701",
+    "job_conclusions": {
+      "windows": "success",
+      "linux": "success"
+    },
+    "synthetic_pe_positive_each": 1,
+    "synthetic_pe_negative_rejections_each": 5,
+    "historical_pe_header": {
+      "machine": "AMD64",
+      "format": "PE32+",
+      "sections": 9,
+      "linker_version": "14.29",
+      "compiler_and_real_kind": "NOT_DETERMINABLE_FROM_PE_HEADER"
+    },
+    "kind_storage_bits": {
+      "gnu_default": {
+        "windows": [
+          32,
+          64,
+          64
+        ],
+        "linux": [
+          32,
+          64,
+          64
+        ]
+      },
+      "gnu_real8_only_NOT_OpenFAST": {
+        "windows": [
+          64,
+          128,
+          64
+        ],
+        "linux": [
+          64,
+          128,
+          64
+        ]
+      },
+      "gnu_openfast_v353_double": {
+        "windows": [
+          64,
+          64,
+          64
+        ],
+        "linux": [
+          64,
+          64,
+          64
+        ]
+      }
+    },
+    "openfast_solver_invoked": false,
+    "abaqus_invoked": false,
+    "physical_pass": false
+  },
+  "FIG": "0; no new physical response plot",
+  "TAB": "This receipt plus two original CI JSON artifacts; bit array order = default REAL, DOUBLE PRECISION, selected_real_kind(15,300)",
+  "assumptions": "The original Windows and Linux native stdout identify each historical executable's compiler and precision; the current runners are different machines/environments. Presence of MinGW gfortran does not make it Intel 2021 or prove controller binary equivalence.",
+  "error_budget": "Exact historical Windows EXE SHA256 and PE architecture; five malformed synthetic PE cases rejected on each runner; all three Fortran kind modes matched exact expected storage bits. This is a compiler-kind test, not a numerical solution error budget.",
+  "failure_record": "No failed job in final run. Initial exploratory run 41625735453 succeeded but did not include official paired -fdefault-double-8 test; superseded by final run 41625982701. Script local SHA differed across runners, likely CRLF conversion; canonical Git blob is recorded.",
+  "HOLD": "The existing Windows Intel 2021 single and Linux GNU 11.4 double 2s trajectories are not a precision-only A/B test; Intel ifort/ifx absent from both runner PATH snapshots. Controller binary, compiler vendor/version, precision and initial dynamic state remain confounded. Formal DLC1.2 0/126, E/WE native 0, S06 PARTIAL, S07 BLOCKED, S10 BLOCKED, 0/12 PASS.",
+  "next_optimal_action": "Prepare a same-Linux GNU 11.4 / ROSCO v2.6.0 / same ETM S06 input / OpenFAST v3.5.3 controlled 2s single-vs-double pilot using -DDOUBLE_PRECISION=OFF versus ON; retain full CMake cache, compiler flags, OUTB and initialization logs, then isolate precision effect without claiming Windows Intel equivalence. No 700s production."
+}
