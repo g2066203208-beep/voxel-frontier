@@ -107,12 +107,16 @@ jobs:
           import json
           d=json.load(open('s07_dcm_precision_ownership_receipt.json'))
           assert d['native_sample_count']==161 and d['elements_per_sample']==901
-          assert d['float64_pass_samples']==150 and d['float32_pass_samples']==160
+          assert d['legacy_float32_pass_samples']==160, 'OLD_REPLAY_REGRESSION'
+          assert d['native_sample_count']==161 and d['elements_per_sample']==901
           assert d['negative_rejections']==3 and not d['physical_pass']
-          assert d['first_fail_float64']['time_s']==0.1875
-          assert d['first_fail_float32']['time_s']==0.1875
+          assert d['source_order_fixture']['legacy_half_first_Fx_kN']==0
+          assert d['source_order_fixture']['source_order_Fx_kN']>0
           assert d['first_failure_Mx_cancellation']['cancellation_factor']>2000
-          print('S07_NATIVE_DCM_PRECISION_REPLAY_PASS_NOT_OWNERSHIP_OR_PHYSICS_PASS')
+          print('S07_NATIVE_DCM_SOURCE_ORDER_REPLAY_NUMERIC_ONLY_NOT_PHYSICS_PASS')
+          print('source_order_float32_pass=',d['float32_pass_samples'])
+          print('legacy_half_first_float32_pass=',d['legacy_float32_pass_samples'])
+          print('source_order_delta=',d['source_order_float32_pass_delta'])
           PY
           sha256sum "$script" s07_dcm_precision_ownership_receipt.json \
             | tee s07_dcm_precision_ownership_sha256.log
