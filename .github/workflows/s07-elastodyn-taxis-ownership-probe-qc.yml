@@ -534,13 +534,18 @@ jobs:
             --windows-zip s07_original_windows_2s.zip \
             --linux-outb work/batch1/DTU_10MW_RWT.outb \
             --derived-receipt s07_linux_derived_identity.json \
+            --linux-stdout s07_linux_native_stdout.log \
             --out s07_pair_compare.json | tee s07_pair_compare_stdout.log
           python - <<'PY'
           import json
           r=json.load(open('s07_pair_compare.json'))
           assert r['samples']==41 and r['common_channels']>=11
           assert r['physical_pass'] is False and r['controller_equivalence_verified'] is False
-          print('S07_NATIVE_WINDOWS_LINUX_PAIRED_DIFFERENCE_MEASURED__NOT_EQUIVALENCE_OR_PHYSICAL_PASS')
+          assert r['temporal_divergence']['samplewise_exceedance_total']==r['quantization_exceeding_samples']
+          assert r['controller_native_stdout_audit']['historical_windows_rosco_version']=='2.6.0'
+          assert r['controller_native_stdout_audit']['linux_substitute_rosco_version']=='2.9.0'
+          assert r['controller_native_stdout_audit']['same_rosco_version'] is False
+          print('S07_REAL_NATIVE_LOG_VERSION_MISMATCH_AND_TIME_RESOLVED_DIFFERENCES__NOT_CAUSAL_ATTRIBUTION')
           PY
           sha256sum "$script" s07_original_windows_2s.zip work/batch1/DTU_10MW_RWT.outb s07_pair_compare.json | tee s07_pair_sha256.log
       - name: Compress real native probe and OUTB with source SHA and bounded size
