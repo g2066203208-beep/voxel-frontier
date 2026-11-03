@@ -1,3 +1,5 @@
+**2026-11-04 00时｜S07原生DCM数值重建进展（0/12未晋级）**：直接核验原单精度2秒DCM日志（SHA256 `77f247d7e0b66997041ffbba70c859bdd38fd345eb303b18b78c6599fa2caa92`），对161个时刻×901个塔单元按官方ElastoDyn v3.5.3 L1165–1206重建：float64旧审计11/161时刻超数值阈值；逐运算float32仅1/161（t=0.1875s Mx），该点约2072倍大项抵消。**不是新漏项的证明，也不是物理PASS**；新可运行脚本、数值收据和CI入口见[T062 S07 DCM精度收据](../../experiments/T062/S07_DCM_PRECISION_OWNERSHIP_RECHECK_20261104.json)。SOURCE=原native ZIP/日志SHA；REF/OFFICIAL=官方源码；STANDARD=未读新授权条款；RUN=只读复算、无solver；FIG=0；TAB=161时刻；HOLD=精确GNU浮点顺序、惯性/重力六分量映射；S06 PARTIAL、S07/S10 BLOCKED、DLC1.2 0/126、E/WE=0、严格0/12。
+
 **2026-11-03 23时原生无求解CI核实**：[Actions #41660748825](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41660748825) completed/success，295通道、4720次指标对照、10284超编码预算、t0=21复现，原始ZIP/OUTB及CI artifact SHA已登记[T062精度收据](../../experiments/T062/S07_PRECISION_TOOLCHAIN_NATIVE_FEASIBILITY_RECEIPT_20261103.json)。仅源数据可复现性PASS，single DCM惯性/重力所有权及正式DLC1.2物理验收仍HOLD，0/12不晋级。
 
 ### 2026-11-03 23时｜S07原始2秒GNU精度OUTB独立复核：数据证据加强，阶段不晋级
