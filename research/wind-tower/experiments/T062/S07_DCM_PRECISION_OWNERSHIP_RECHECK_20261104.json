@@ -218,5 +218,41 @@
     "failure_record": "Real native data initially exposed a brittle negative-test generator (literal 'G 0.1875' absent from E-format GTE); corrected token mutation, 3/3 reject tests passed; actual real32 Mx remains -0.001326084 kNm in all three builds.",
     "HOLD": "GNU 14.2 O0/O2/FMA flag comparison did not close Mx; GNU 11.4 original compiler exact flags, source expression order and native output formatting still require comparison; no wind-only ownership/physical PASS.",
     "physical_pass": false
+  },
+  "summation_only_roundoff_budget_20261104_03h": {
+    "status": "ANALYTIC_SUMMATION_ONLY_DIAGNOSTIC_CI_PENDING_NOT_PHYSICS_PASS",
+    "SOURCE": {
+      "original_zip_sha256": "983bce8ca81981ff5fd00e5261dbfb2c0b6e18b074aa4eb1ff425e6851fb9735",
+      "original_gte_sha256": "77f247d7e0b66997041ffbba70c859bdd38fd345eb303b18b78c6599fa2caa92",
+      "absolute_term_sum_source": "Existing first_failure.absolute_term_sum_Nm in this T062 receipt; directly recovered from original native GTE in prior round",
+      "read_level": "REUSED_SHA_LOCKED_PRIOR_GTE_NUMERIC_RECEIPT_PLUS_NEW_EXPLICIT_ANALYTIC_BOUND",
+      "driver_git_blob_sha1": "7b0f746c092594898f6d5c9c37e918fef0febfe0",
+      "workflow_git_blob_sha1": "fc22ca5f0b9937070554d90b15b2dd7df5d4574f"
+    },
+    "REF": "IEEE 754 binary32 round-to-nearest summation model, gamma_n=n*u/(1-n*u); analytic assumption not a cited IEC/GB acceptance clause",
+    "STANDARD": "No new authorized IEC/GB/NB original clauses read",
+    "OFFICIAL": "OpenFAST v3.5.3 ElastoDyn.f90 L1175-L1202 official 900 upper elements then half gage; GNU Fortran real32 micro recheck",
+    "RUN": {
+      "type": "DIRECT_JAVASCRIPT_DOUBLE_ARITHMETIC_EVALUATION_OF_ANALYTIC_GAMMA_N; PYTHON_CI_NEW_ASSERT_PENDING",
+      "new_solver_runs": 0,
+      "ci_status": "NOT_YET_VERIFIED",
+      "synthetic_python_regression": "ADDED_TO_EXISTING_MICRO_DRIVER_NOT_YET_NATIVE_CI_VERIFIED"
+    },
+    "FIG": 0,
+    "TAB": {
+      "unit_roundoff": 5.960464477539063e-8,
+      "n_terms_conservative": 902,
+      "gamma_n": 0.000053766280244873816,
+      "abs_Mx_terms_Nm": 10745856.18779878,
+      "summation_only_bound_Nm": 577.7647152643005,
+      "observed_Mx_residual_Nm": -1.3260841369628906,
+      "observed_over_summation_bound": 0.002295197511942675,
+      "old_diagnostic_tolerance_Nm": 0.26925085544586186
+    },
+    "assumptions": "902 is conservative count of top moment + 900 full tower elements + 1 half element. Standard gamma_n forward error assumes precomputed exact summands, sequential binary32 additions and n*u<1; products/cross products, decimal serialization and physics/model error are NOT covered.",
+    "error_budget": "Summation-only conservative 577.7647 N.m versus 1.326084 N.m observed. This is NOT a rigorous bound on complete OpenFAST reconstructed Mx, not an acceptance tolerance, and cannot prove rounding is the sole cause.",
+    "failure_record": "Original 0.1875s Mx numerical diagnostic still exceeds old atol/rtol 4.925x; previous GNU14.2 three-flag tests did not close it. New GitHub CI has no verified job log.",
+    "HOLD": "Inertia/gravity/external wind six-component ownership and DLC1.2 physical acceptance unclosed; E/WE native zero; 0/12 strict.",
+    "physical_pass": false
   }
 }
