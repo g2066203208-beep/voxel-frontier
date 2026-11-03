@@ -1,0 +1,109 @@
+name: S07 historical PE and cross-runner Fortran precision availability (NO SOLVER)
+on:
+  push:
+    branches: [research/t080-seismic-integration-gates-20261022]
+    paths:
+      - '.github/workflows/s07-precision-toolchain-no-solver.yml'
+      - 'research/wind-tower/experiments/T062/s07_precision_toolchain_inventory.py'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  linux-gnu-precision-smoke:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            research/wind-tower/experiments/T062/s07_precision_toolchain_inventory.py
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Inventory GNU runner and execute only a tiny Fortran kind program
+        shell: bash
+        run: |
+          set -euo pipefail
+          script=research/wind-tower/experiments/T062/s07_precision_toolchain_inventory.py
+          python -m py_compile "$script"
+          python "$script" --selftest | tee s07_selftest_linux.log
+          python "$script" --probe-fortran --out s07_linux_toolchain.json | tee s07_linux_stdout.log
+          python - <<'PY'
+          import json
+          r=json.load(open('s07_linux_toolchain.json'))
+          assert r['RUN']['openfast_solver_invoked'] is False
+          assert r['RUN']['abaqus_invoked'] is False
+          assert r['RUN']['physical_pass'] is False
+          assert r['RUN']['pe'] is None
+          print('S07_LINUX_TOOLCHAIN_INVENTORY_PASS__NOT_OPENFAST_PRECISION_EQUIVALENCE')
+          PY
+          sha256sum "$script" s07_linux_toolchain.json | tee s07_linux_sha256.log
+      - name: Retain real source/runner receipts and failures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s07-linux-gnu-precision-inventory-no-solver
+          path: |
+            s07_selftest_linux.log
+            s07_linux_stdout.log
+            s07_linux_toolchain.json
+            s07_linux_sha256.log
+          if-no-files-found: warn
+          retention-days: 30
+  windows-historical-pe-and-compiler-availability:
+    runs-on: windows-2022
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            research/wind-tower/experiments/T062/s07_precision_toolchain_inventory.py
+            research/wind-tower/references/baselines-and-site-20261004/runtime-binaries/openfast_x64_v353.exe
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Materialize SHA-locked historical Windows OpenFAST PE only (NO RUN)
+        shell: pwsh
+        run: |
+          $ErrorActionPreference='Stop'
+          $exe='research/wind-tower/references/baselines-and-site-20261004/runtime-binaries/openfast_x64_v353.exe'
+          git lfs install --local
+          git lfs pull --include="$exe" --exclude=""
+          if ($LASTEXITCODE -ne 0) { throw 'HISTORICAL_EXE_LFS_RECOVERY_HOLD' }
+          if ((Get-Item $exe).Length -ne 61086208) { throw 'HISTORICAL_EXE_SIZE_HOLD' }
+          (Get-FileHash $exe -Algorithm SHA256).Hash.ToLower() | Out-File -Encoding ascii s07_windows_exe_sha256.log
+          if ((Get-Content s07_windows_exe_sha256.log).Trim() -ne '0cc8147fdda188365b8eacda8a831e74fafef59440d71185d66c3272af9e176a') { throw 'HISTORICAL_EXE_SHA_HOLD' }
+      - name: Parse actual PE metadata, inventory compilers, optional GNU kind smoke
+        shell: pwsh
+        run: |
+          $ErrorActionPreference='Stop'
+          $script='research/wind-tower/experiments/T062/s07_precision_toolchain_inventory.py'
+          $exe='research/wind-tower/references/baselines-and-site-20261004/runtime-binaries/openfast_x64_v353.exe'
+          python -m py_compile $script
+          if ($LASTEXITCODE -ne 0) { throw 'PYTHON_SYNTAX_HOLD' }
+          python $script --selftest | Tee-Object -FilePath s07_selftest_windows.log
+          if ($LASTEXITCODE -ne 0) { throw 'PE_SYNTHETIC_SELFTEST_HOLD' }
+          python $script --pe $exe --probe-fortran --out s07_windows_toolchain.json | Tee-Object -FilePath s07_windows_stdout.log
+          if ($LASTEXITCODE -ne 0) { throw 'HISTORICAL_PE_AND_TOOLCHAIN_HOLD' }
+          python -c "import json; r=json.load(open('s07_windows_toolchain.json')); assert r['RUN']['pe']['machine']=='AMD64'; assert r['RUN']['pe']['fortran_real_kind_from_pe']=='UNDETERMINABLE'; assert r['RUN']['openfast_solver_invoked'] is False; print('S07_HISTORICAL_PE_HEADER_VERIFIED_NOT_COMPILER_OR_REAL_KIND')"
+          if ($LASTEXITCODE -ne 0) { throw 'PE_SEMANTICS_ASSERTION_HOLD' }
+          (Get-FileHash $script -Algorithm SHA256).Hash.ToLower() | Out-File -Encoding ascii s07_windows_script_sha256.log
+          (Get-FileHash s07_windows_toolchain.json -Algorithm SHA256).Hash.ToLower() | Out-File -Encoding ascii s07_windows_receipt_sha256.log
+      - name: Retain original PE identity and runner receipts (never upload executable)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s07-windows-pe-and-compiler-inventory-no-solver
+          path: |
+            s07_windows_exe_sha256.log
+            s07_selftest_windows.log
+            s07_windows_stdout.log
+            s07_windows_toolchain.json
+            s07_windows_script_sha256.log
+            s07_windows_receipt_sha256.log
+          if-no-files-found: warn
+          retention-days: 30
