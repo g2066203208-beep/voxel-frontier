@@ -4,6 +4,8 @@ on:
     branches: [research/t080-seismic-integration-gates-20261022]
     paths:
       - 'research/wind-tower/experiments/T062/s10_era5_ntm_partial_m4_and_seed_subset.py'
+      - 'research/wind-tower/experiments/T062/s10_channel_aware_m4_priority.cjs'
+      - 'research/wind-tower/experiments/T062/S10_CHANNEL_AWARE_M4_INTERPOLATION_PRIORITY_20261104.json'
       - '.github/workflows/s10-era5-ntm-partial-m4.yml'
   workflow_dispatch:
 permissions:
@@ -18,6 +20,11 @@ jobs:
           sparse-checkout: |
             research/wind-tower/experiments/T062
           sparse-checkout-cone-mode: false
+      - name: Verify source-locked channel-aware wind-bin ranking (no solver)
+        shell: bash
+        run: |
+          set -euo pipefail
+          node research/wind-tower/experiments/T062/s10_channel_aware_m4_priority.cjs --check
       - name: Verify 21-year wind-bin source + 18 original NTM source + 126-slot coverage
         shell: bash
         run: |
