@@ -1,0 +1,106 @@
+name: S07 original native GNU precision OUTB saved-table independent recheck (no solver)
+on:
+  push:
+    paths:
+      - '.github/workflows/s07-gnu-precision-original-artifact-recheck.yml'
+      - 'research/wind-tower/experiments/T062/s07_gnu_precision_native_independent_recheck.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  recheck-original-native-archives:
+    if: github.ref_name == 'research/t080-seismic-integration-gates-20261022'
+    runs-on: ubuntu-22.04
+    timeout-minutes: 8
+    steps:
+      - name: Sparse checkout immutable saved tables and independent parser
+        uses: actions/checkout@v4
+        with:
+          lfs: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            research/wind-tower/experiments/T062/s07_gnu_precision_native_independent_recheck.py
+            research/wind-tower/experiments/T062/S07_GNU_PRECISION_2S_295_CHANNELS.csv
+            research/wind-tower/experiments/T062/S07_GNU_PRECISION_ORIGINAL_ARTIFACT_2S_295CH_NUMERIC_QC.json
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download original two native 2-second ZIPs from historical run, never rerun solver
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 41632768388
+          github-token: ${{ github.token }}
+          pattern: s07-precision-2s-*
+          path: native-original
+          merge-multiple: false
+      - name: Resolve native precision from archived CMake flags and verify exact two archives
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          roots=list(Path('native-original').rglob('s07_openfast_cmake_cache.txt'))
+          assert len(roots)==2, ('EXPECTED_EXACTLY_TWO_NATIVE_ARCHIVES',len(roots))
+          for cache in roots:
+              data=cache.read_text()
+              flags=[f for f in ('OFF','ON') if 'DOUBLE_PRECISION:BOOL='+f in data]
+              assert len(flags)==1, ('CACHE_PRECISION_HOLD',cache)
+              target=Path('native-single' if flags[0]=='OFF' else 'native-double')
+              assert not target.exists(), 'DUPLICATE_PRECISION_ARCHIVE_HOLD'
+              target.symlink_to(cache.parent.resolve(),target_is_directory=True)
+          assert Path('native-single').is_dir() and Path('native-double').is_dir()
+          print('TWO_ORIGINAL_NATIVE_PRECISION_ARCHIVES_RESOLVED_NO_SOLVER')
+          PY
+      - name: Repack original extracted artifacts losslessly for SHA-locked independent parser
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import zipfile,hashlib
+          # The archive download action extracts original artifact ZIPs, and
+          # re-zipping would change ZIP SHA; fetch ORIGINAL bytes via GitHub API
+          # using GITHUB_TOKEN in the next step, not a synthesized ZIP.
+          assert Path('native-single/s07_linux_native_2s.outb.gz').is_file()
+          assert Path('native-double/s07_linux_native_2s.outb.gz').is_file()
+          print('EXTRACTED_NATIVE_PAYLOAD_PRESENT__ORIGINAL_ZIP_REQUIRED')
+          PY
+      - name: Fetch original ZIP bytes by immutable artifact ID and run SHA-locked 295-row recheck
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api repos/g2066203208-beep/voxel-frontier/actions/artifacts/13229996252/zip > original-single.zip
+          gh api repos/g2066203208-beep/voxel-frontier/actions/artifacts/13229932734/zip > original-double.zip
+          script=research/wind-tower/experiments/T062/s07_gnu_precision_native_independent_recheck.py
+          dir=research/wind-tower/experiments/T062
+          python -m py_compile "$script"
+          python "$script" --single original-single.zip --double original-double.zip \
+            --csv "$dir/S07_GNU_PRECISION_2S_295_CHANNELS.csv" \
+            --json "$dir/S07_GNU_PRECISION_ORIGINAL_ARTIFACT_2S_295CH_NUMERIC_QC.json" \
+            --out s07_native_independent_recheck.json | tee s07_native_independent_recheck_stdout.log
+          python - <<'PY'
+          import json
+          d=json.load(open('s07_native_independent_recheck.json'))
+          assert d['compared_channels']==295 and d['numeric_field_comparisons']==4720
+          assert d['exceeding_pairs']==10284 and d['t0_exceeding_channels']==21
+          assert d['time_counts_match'] and not d['physical_pass']
+          print('S07_295_NATIVE_ARCHIVE_RECHECK_PASS_NOT_PHYSICS_PASS')
+          PY
+          sha256sum "$script" original-single.zip original-double.zip s07_native_independent_recheck.json \
+            | tee s07_native_independent_recheck_sha256.log
+      - name: Preserve independent report and failed-run logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s07-original-gnu-native-295-summary-independent-recheck
+          path: |
+            s07_native_independent_recheck.json
+            s07_native_independent_recheck_stdout.log
+            s07_native_independent_recheck_sha256.log
+          if-no-files-found: warn
+          retention-days: 30
