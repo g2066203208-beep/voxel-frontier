@@ -17,8 +17,8 @@
       "csv_git_blob_sha1": "e32994d934201a7614a9d985b78db12db4fb60e0",
       "full_295_native_pair_json_sha256": "acb88cb00abb60d9355094cf3baa1d0489bb04175d491fc36d25ae2e3a9fa496",
       "manifest_sha256": "3906b906b48159f5753ffa5ec976c53df57e0f339373256088f070fd21a20fdd",
-      "replay_artifact_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41602002874/artifacts/13215005755",
-      "artifact_note": "artifact ID 13215005755 belongs to first successful run 41601919541; second run 41602002874 has separate artifact, see Actions run"
+      "replay_artifact_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41602002874/artifacts/13214567310",
+      "artifact_note": "Second successful no-solver replay run 41602002874; artifact #13214567310 contains full 295-channel JSON, 21-row CSV and SHA manifest"
     },
     "REF": "Existing T062 original 2s windows/linux source identity, controller temporal divergence and DCM receipts; no new journal full text",
     "STANDARD": "No newly read authorized IEC/GB/NB original clause; no compliance claim",
