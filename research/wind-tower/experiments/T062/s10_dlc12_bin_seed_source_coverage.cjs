@@ -136,7 +136,8 @@ if(typeof require!=="undefined"&&require.main===module){
   var r=fs.readFileSync(path.join(dir,"S10_ERA5_2005_2025_HUB_BIN_RECEIPT_20261031.json"),"utf8");
   var g=fs.readFileSync(path.join(dir,"S10_18NTM_GROSS_STRESS_SOURCE_RECEIPT_20261031.json"),"utf8");
   var z=build(b,i,r,g),n=negativeTests(b,i,r,g);
-  ok(n===6,"NEGATIVE_TEST_COUNT");
+  n+=frontierNegativeTests(JSON.parse(z.receipt).per_bin,106900,7164);
+  ok(n===11,"NEGATIVE_TEST_COUNT");
   if(process.argv.includes("--check")){
     ok(z.csv===fs.readFileSync(path.join(dir,"S10_ERA5_21BIN_6SEED_NTM_SOURCE_COVERAGE_20261031.csv"),"utf8"),"COMMITTED_CSV_MISMATCH");
     ok(z.receipt===fs.readFileSync(path.join(dir,"S10_ERA5_21BIN_6SEED_COVERAGE_RECEIPT_20261031.json"),"utf8"),"COMMITTED_RECEIPT_MISMATCH");
