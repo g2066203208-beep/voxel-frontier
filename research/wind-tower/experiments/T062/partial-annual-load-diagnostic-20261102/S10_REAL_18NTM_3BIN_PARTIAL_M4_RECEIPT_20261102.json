@@ -1,7 +1,74 @@
 {
-  "ERROR_BUDGET": "source int16 half-step recorded upstream; seed-subset finite sensitivity only; 93.3% diagnostic operating hours outside empirical bins; ERA5 site bias and bin center mismatch unquantified",
+  "ERROR_BUDGET": "source int16 half-step recorded upstream; six-seed and 3-of-6 subsets are finite-sample sensitivity NOT confidence intervals; actual wind speeds differ from integer bin labels; only three wind speeds, 93.3% diagnostic operating hours outside empirical bins; ERA5 site bias, pitch/control and model uncertainties unquantified",
   "FIG": "No new physical figure",
   "HOLD": "Formal DLC1.2 and materials life unverified: 18 of 21 assumed operating bins not sampled, no material stress history, standard 2025 clauses unread",
+  "LOAD_M4_SPEED_EXPONENT_DIAGNOSTIC": {
+    "TwrBsMxt": {
+      "intervals": [
+        {
+          "3of6_subset_p_max": 7.911101401,
+          "3of6_subset_p_min": 3.069440997,
+          "effective_p_for_load_DEL_fourth_moment": 5.362569076,
+          "not_material_damage": true,
+          "subset_pairs": 400,
+          "wind_speed_end_mps": 11.4,
+          "wind_speed_start_mps": 9.343881
+        },
+        {
+          "3of6_subset_p_max": 8.381170765,
+          "3of6_subset_p_min": 6.258641575,
+          "effective_p_for_load_DEL_fourth_moment": 7.412566056,
+          "not_material_damage": true,
+          "subset_pairs": 400,
+          "wind_speed_end_mps": 19.20214,
+          "wind_speed_start_mps": 11.4
+        }
+      ],
+      "six_seed_power_mean_DEL_MNm": [
+        6.907503137,
+        9.018254535,
+        23.700456548
+      ],
+      "wind_speed_mps": [
+        9.343881,
+        11.4,
+        19.20214
+      ]
+    },
+    "TwrBsMyt": {
+      "intervals": [
+        {
+          "3of6_subset_p_max": 8.946848826,
+          "3of6_subset_p_min": 1.395188669,
+          "effective_p_for_load_DEL_fourth_moment": 5.130291591,
+          "not_material_damage": true,
+          "subset_pairs": 400,
+          "wind_speed_end_mps": 11.4,
+          "wind_speed_start_mps": 9.343881
+        },
+        {
+          "3of6_subset_p_max": 1.642138749,
+          "3of6_subset_p_min": -0.410533722,
+          "effective_p_for_load_DEL_fourth_moment": 0.519207046,
+          "not_material_damage": true,
+          "subset_pairs": 400,
+          "wind_speed_end_mps": 19.20214,
+          "wind_speed_start_mps": 11.4
+        }
+      ],
+      "six_seed_power_mean_DEL_MNm": [
+        44.641262276,
+        57.613196848,
+        61.647419964
+      ],
+      "wind_speed_mps": [
+        9.343881,
+        11.4,
+        19.20214
+      ]
+    }
+  },
+  "LOAD_M4_SPEED_EXPONENT_METHOD": "p_eff=4*ln(DEL4root_b/DEL4root_a)/ln(U_b/U_a), actual 6-seed m4 means; 20x20 extreme 3-of-6 subset envelope per adjacent speed pair; 3 bins only, not global U^p, not material Miner",
   "MATERIAL_FATIGUE_PASS": false,
   "OFFICIAL": "OpenFAST native outputs inherited original-source verification + IEC official edition pages, no new solver",
   "PHYSICAL_PASS": false,
@@ -112,7 +179,7 @@
       "unrepresented_observed_diagnostic_operation_fraction": 0.932984097287
     }
   },
-  "RUN": "GitHub Actions Python stdlib m4 probability diagnostic 3bins x6seed x2tower channels, exhaustive 3-of-6 subsets, no Abaqus",
+  "RUN": "GitHub Actions Python stdlib m4 probability diagnostic 3bins x6seed x2tower channels, exhaustive 3-of-6 subsets and 400 paired subsets per adjacent wind-speed interval, no solver",
   "SOURCE": {
     "21bin_126seed_slots_sha256": "d4e25023f343ea76f2de5ce90c7d24dd985df770ec9f4747d203391010431e67",
     "era5_31bin_sha256": "e4058620a36b23bb218103875d4dc5b0711fc45d418b23a2208c2fc9c16c9102",
@@ -135,7 +202,7 @@
     "untested_18_of_21_bins": "no known load m4 available, no zero-fill permitted"
   },
   "STANDARD": "2019 base text review inherited; 2025 consolidated IEC full text NOT available this run; 4-25m/s and 1m/s bins planning assumptions not claimed IEC mandatory",
-  "TAB": "6-row per-bin m4 intensity and two-channel annual-hour-weighted covered-only moments",
+  "TAB": "6-row per-bin m4 intensity, two-channel covered-only moments, four empirical adjacent-bin load-m4 speed exponents and 3-of-6 subset envelopes",
   "TAB_CSV_SHA256": "d43f963fb30e16a33e87acdf6e9571710826974eee89d1f3527ab6504d85f695",
   "status": "S10_REAL_18_NTM_SITE_WEIGHTED_PARTIAL_M4_SOURCE_DIAGNOSTIC_ONLY"
 }
