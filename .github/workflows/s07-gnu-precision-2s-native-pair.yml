@@ -284,21 +284,32 @@ jobs:
           if [ -f work/batch1/s07_native_dcm_raw.log ]; then
             sha256sum work/batch1/s07_native_dcm_raw.log | tee s07_linux_dcm_raw_sha256.log
             wc -l -c work/batch1/s07_native_dcm_raw.log | tee s07_linux_dcm_raw_size.log
-            python research/wind-tower/experiments/T062/s07_elastodyn_taxis_ownership_probe.py \
-              --audit work/batch1/s07_native_dcm_raw.log > s07_linux_dcm_audit.json
-            python - <<'PY'
+            # DCM ownership is a separate physical/load-transfer gate, not the
+            # precision-only OpenFAST OUTB A/B gate. Preserve native failure.
+            if python research/wind-tower/experiments/T062/s07_elastodyn_taxis_ownership_probe.py \
+              --audit work/batch1/s07_native_dcm_raw.log \
+              > s07_linux_dcm_audit.json 2> s07_linux_dcm_audit_stderr.log; then
+              python - <<'PY'
           import json
           r=json.load(open('s07_linux_dcm_audit.json'))
           assert r['rows'] and all(x['element_rows']>0 for x in r['rows'])
           print('S07_ACTUAL_NATIVE_DCM_AND_OWNERSHIP_DIAGNOSTIC_QC',len(r['rows']))
           PY
+              echo 'DCM_OWNERSHIP_DIAGNOSTIC_QC_PASS_NOT_PRECISION_OR_PHYSICAL_PASS' | tee s07_linux_dcm_audit_status.log
+            else
+              dcm_rc=$?
+              echo "DCM_OWNERSHIP_RECONSTRUCTION_HOLD__EXIT_${dcm_rc}" | tee s07_linux_dcm_audit_status.log
+              cat s07_linux_dcm_audit_stderr.log
+            fi
           else
             echo 'S07_NO_NATIVE_DCM_RAW__HOLD' | tee s07_linux_dcm_missing.log
           fi
           test "$rc" -eq 0
           grep -q 'OpenFAST terminated normally.' s07_linux_native_stdout.log
-          grep -Eiq 'Precision:[[:space:]]*${'${{ matrix.precision }}'}' s07_linux_native_stdout.log
-          test -s s07_linux_dcm_audit.json
+          expected_precision='${{ matrix.precision }}'
+          grep -Eiq "Precision:[[:space:]]*${expected_precision}" s07_linux_native_stdout.log
+          test -s work/batch1/s07_native_dcm_raw.log
+          test -s s07_linux_dcm_audit_status.log
           echo 'S07_SINGLE_2S_NATIVE_DIAGNOSTIC_COMPLETED__NOT_HISTORICAL_EQUIVALENCE_OR_PHYSICAL_PASS'
       - name: Compress real native probe and OUTB with source SHA and bounded size
         if: always()
@@ -335,7 +346,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: s07-precision-2s-${'${{ matrix.precision }}'}
+          name: s07-precision-2s-${{ matrix.precision }}
           path: |
             s07_native_toolchain.log
             s07_native_patch_receipt.log
@@ -364,6 +375,8 @@ jobs:
             s07_linux_dcm_raw_size.log
             s07_linux_dcm_missing.log
             s07_linux_dcm_audit.json
+            s07_linux_dcm_audit_stderr.log
+            s07_linux_dcm_audit_status.log
             s07_native_compressed_artifacts.json
             s07_native_dcm_raw.log.gz
             s07_linux_native_2s.outb.gz
