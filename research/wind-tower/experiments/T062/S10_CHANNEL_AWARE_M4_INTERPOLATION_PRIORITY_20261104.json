@@ -1,0 +1,257 @@
+{
+  "status": "S10_SOURCE_RECOVERY_PRIORITY_ONLY_NOT_FATIGUE",
+  "SOURCE": {
+    "era5_31bin_sha256": "e4058620a36b23bb218103875d4dc5b0711fc45d418b23a2208c2fc9c16c9102",
+    "load_18ntm_receipt_sha256": "166a17f35625b7ba57177c10aa4174fdfd63b2e2051f8afb5dffdfc0c3a6487c",
+    "archived_outb_derived_del_csv_sha256": "95de6578cf379d1b2e1d99a68c26954a68e93cc8bfc4bdcd63dd324ae2999a0f"
+  },
+  "READING_LEVEL": "Direct derived ERA5 31-bin CSV and 18-NTM six-seed load-DEL receipt; original ERA5 workbook and OUTB not reread in this calculation",
+  "REF": "Existing T062 load-DEL source-locked study and finite 3-of-6 seed subset sensitivity; no new full-paper read",
+  "STANDARD": "IEC 61400-1/6 2025 licensed clauses unavailable; 1m/s centers and [4,25) m/s are nonnormative planning assumptions",
+  "OFFICIAL": "Inherited original OpenFAST v3.5.3 OUTB and ERA5 workbook provenance, not a new native solver run",
+  "RUN": "Deterministic Node.js standard-library calculation and five tamper-rejection tests; no production solver",
+  "FIG": "none",
+  "TAB": "13 missing positive-hour bins; 5 NO-EXTRAPOLATION low bins and two channel-specific 8-bin interpolation ranks",
+  "ASSUMPTIONS": "Piecewise DEL^4 power interpolation ONLY inside actual three speeds 9.343881/11.4/19.20214 m/s; 6-seed DEL anchor, bin-center speed, ERA5 hours/184080. This is NOT a material damage model",
+  "ERROR_BUDGET": "Reported moments rounded to 6 decimals (<=0.5e-6 MNm^4); 3-of-6 slope envelope is NOT a confidence interval; anchor DEL, nonlinear controller, ERA5 bias, wind-bin representativeness and model-form errors NOT bounded",
+  "HOLD": "4-8 m/s covers 95402/106900 diagnostic operating hours but has NO observed load-DEL anchor; 13 positive-hour missing bins; local material stress, IEC2025 DLC1.2, physical baseline and E/WE unavailable",
+  "no_extrapolation_bins": [
+    {
+      "bin": 4,
+      "hours": 26927,
+      "load_m4": "NOT_ESTIMATED"
+    },
+    {
+      "bin": 5,
+      "hours": 24769,
+      "load_m4": "NOT_ESTIMATED"
+    },
+    {
+      "bin": 6,
+      "hours": 19994,
+      "load_m4": "NOT_ESTIMATED"
+    },
+    {
+      "bin": 7,
+      "hours": 14467,
+      "load_m4": "NOT_ESTIMATED"
+    },
+    {
+      "bin": 8,
+      "hours": 9245,
+      "load_m4": "NOT_ESTIMATED"
+    }
+  ],
+  "interpolated_missing_bins": 8,
+  "positive_missing_bins": 13,
+  "results": {
+    "TwrBsMxt": {
+      "interpolated_missing_bins_ranked": [
+        {
+          "bin": 10,
+          "hours": 3149,
+          "center_mps_NONNORMATIVE": 10.5,
+          "source_bracket_mps": [
+            9.343881,
+            11.4
+          ],
+          "nominal_load_m4_weighted": 72.799583,
+          "slope_sensitivity_min": 55.71273,
+          "slope_sensitivity_max": 98.003738
+        },
+        {
+          "bin": 12,
+          "hours": 674,
+          "center_mps_NONNORMATIVE": 12.5,
+          "source_bracket_mps": [
+            11.4,
+            19.20214
+          ],
+          "nominal_load_m4_weighted": 47.938468,
+          "slope_sensitivity_min": 43.104361,
+          "slope_sensitivity_max": 52.412314
+        },
+        {
+          "bin": 13,
+          "hours": 283,
+          "center_mps_NONNORMATIVE": 13.5,
+          "source_bracket_mps": [
+            11.4,
+            19.20214
+          ],
+          "nominal_load_m4_weighted": 35.60955,
+          "slope_sensitivity_min": 29.297803,
+          "slope_sensitivity_max": 41.945954
+        },
+        {
+          "bin": 14,
+          "hours": 126,
+          "center_mps_NONNORMATIVE": 14.5,
+          "source_bracket_mps": [
+            11.4,
+            19.20214
+          ],
+          "nominal_load_m4_weighted": 26.927368,
+          "slope_sensitivity_min": 20.400993,
+          "slope_sensitivity_max": 33.992053
+        },
+        {
+          "bin": 15,
+          "hours": 61,
+          "center_mps_NONNORMATIVE": 15.5,
+          "source_bracket_mps": [
+            11.4,
+            19.20214
+          ],
+          "nominal_load_m4_weighted": 21.372164,
+          "slope_sensitivity_min": 14.992843,
+          "slope_sensitivity_max": 28.779707
+        },
+        {
+          "bin": 16,
+          "hours": 26,
+          "center_mps_NONNORMATIVE": 16.5,
+          "source_bracket_mps": [
+            11.4,
+            19.20214
+          ],
+          "nominal_load_m4_weighted": 14.479709,
+          "slope_sensitivity_min": 9.450694,
+          "slope_sensitivity_max": 20.715599
+        },
+        {
+          "bin": 17,
+          "hours": 14,
+          "center_mps_NONNORMATIVE": 17.5,
+          "source_bracket_mps": [
+            11.4,
+            19.20214
+          ],
+          "nominal_load_m4_weighted": 12.059686,
+          "slope_sensitivity_min": 7.354486,
+          "slope_sensitivity_max": 18.265245
+        },
+        {
+          "bin": 18,
+          "hours": 1,
+          "center_mps_NONNORMATIVE": 18.5,
+          "source_bracket_mps": [
+            11.4,
+            19.20214
+          ],
+          "nominal_load_m4_weighted": 1.30047,
+          "slope_sensitivity_min": 0.743821,
+          "slope_sensitivity_max": 2.078576
+        }
+      ],
+      "first_two_separated_under_conditional_slope_variation": true,
+      "bin13_above_bin14_under_conditional_slope_variation": false
+    },
+    "TwrBsMyt": {
+      "interpolated_missing_bins_ranked": [
+        {
+          "bin": 10,
+          "hours": 3149,
+          "center_mps_NONNORMATIVE": 10.5,
+          "source_bracket_mps": [
+            9.343881,
+            11.4
+          ],
+          "nominal_load_m4_weighted": 123601.218956,
+          "slope_sensitivity_min": 79945.674048,
+          "slope_sensitivity_max": 192919.966333
+        },
+        {
+          "bin": 12,
+          "hours": 674,
+          "center_mps_NONNORMATIVE": 12.5,
+          "source_bracket_mps": [
+            11.4,
+            19.20214
+          ],
+          "nominal_load_m4_weighted": 42316.734729,
+          "slope_sensitivity_min": 38843.443125,
+          "slope_sensitivity_max": 46928.342289
+        },
+        {
+          "bin": 13,
+          "hours": 283,
+          "center_mps_NONNORMATIVE": 13.5,
+          "source_bracket_mps": [
+            11.4,
+            19.20214
+          ],
+          "nominal_load_m4_weighted": 18492.368426,
+          "slope_sensitivity_min": 15802.386493,
+          "slope_sensitivity_max": 22358.78482
+        },
+        {
+          "bin": 14,
+          "hours": 126,
+          "center_mps_NONNORMATIVE": 14.5,
+          "source_bracket_mps": [
+            11.4,
+            19.20214
+          ],
+          "nominal_load_m4_weighted": 8544.562676,
+          "slope_sensitivity_min": 6832.288391,
+          "slope_sensitivity_max": 11194.245411
+        },
+        {
+          "bin": 15,
+          "hours": 61,
+          "center_mps_NONNORMATIVE": 15.5,
+          "source_bracket_mps": [
+            11.4,
+            19.20214
+          ],
+          "nominal_load_m4_weighted": 4282.400535,
+          "slope_sensitivity_min": 3218.362103,
+          "slope_sensitivity_max": 6046.673531
+        },
+        {
+          "bin": 16,
+          "hours": 26,
+          "center_mps_NONNORMATIVE": 16.5,
+          "source_bracket_mps": [
+            11.4,
+            19.20214
+          ],
+          "nominal_load_m4_weighted": 1885.508242,
+          "slope_sensitivity_min": 1337.000304,
+          "slope_sensitivity_max": 2855.931518
+        },
+        {
+          "bin": 17,
+          "hours": 14,
+          "center_mps_NONNORMATIVE": 17.5,
+          "source_bracket_mps": [
+            11.4,
+            19.20214
+          ],
+          "nominal_load_m4_weighted": 1046.769341,
+          "slope_sensitivity_min": 702.741129,
+          "slope_sensitivity_max": 1693.814562
+        },
+        {
+          "bin": 18,
+          "hours": 1,
+          "center_mps_NONNORMATIVE": 18.5,
+          "source_bracket_mps": [
+            11.4,
+            19.20214
+          ],
+          "nominal_load_m4_weighted": 76.957922,
+          "slope_sensitivity_min": 49.063627,
+          "slope_sensitivity_max": 132.546626
+        }
+      ],
+      "first_two_separated_under_conditional_slope_variation": true,
+      "bin13_above_bin14_under_conditional_slope_variation": true
+    }
+  },
+  "physical_pass": false,
+  "material_fatigue_pass": false,
+  "formal_dlc12_verified_slots": 0,
+  "earthquake_native_results": 0
+}
