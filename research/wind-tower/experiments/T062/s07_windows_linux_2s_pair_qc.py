@@ -47,7 +47,60 @@ def channel_metrics(a, qa, b, qb):
             'exceeds_packed_quantization_count':sum(abs(e)>q for e,q in zip(errors,budgets)),
             'windows_min_max':[min(a),max(a)],'linux_min_max':[min(b),max(b)]}
 
-def audit(win_zip,linux_outb,derived_receipt):
+def controller_log_audit(win_zip, linux_stdout):
+    """Read actual native stdout bytes; version difference is not causal proof."""
+    import re
+    with zipfile.ZipFile(io.BytesIO(win_zip)) as z:
+        windows_logs = [z.read(f'work/batch{i}/native_stdout.log') for i in range(1, 5)]
+    def version(raw):
+        m = re.findall(rb'Running ROSCO-v([0-9]+\\.[0-9]+\\.[0-9]+)', raw)
+        if len(m) != 1:
+            raise ValueError('S07_ROSCO_VERSION_LOG_CARDINALITY_HOLD')
+        return m[0].decode('ascii')
+    win_versions = [version(raw) for raw in windows_logs]
+    if len(set(win_versions)) != 1:
+        raise ValueError('S07_HISTORICAL_WINDOWS_CONTROLLER_VERSION_INCONSISTENT')
+    linux_version = version(linux_stdout)
+    warnings = [line.strip() for line in linux_stdout.decode('utf-8', errors='replace').splitlines()
+                if 'ROSCO Warning:' in line]
+    return {'historical_windows_rosco_version':win_versions[0],
+            'linux_substitute_rosco_version':linux_version,
+            'same_rosco_version':win_versions[0] == linux_version,
+            'windows_native_stdout_sha256_by_batch':[sha(raw) for raw in windows_logs],
+            'linux_native_stdout_sha256':sha(linux_stdout),
+            'linux_rosco_default_or_missing_parameter_warnings':len(warnings),
+            'linux_warning_lines':warnings,
+            'version_evidence_level':'ACTUAL_WINDOWS_4_NATIVE_STDOUT_AND_LINUX_NATIVE_STDOUT',
+            'causality':'VERSION_MISMATCH_OBSERVED__NOT_SOLE_CAUSE_ESTABLISHED'}
+
+def temporal_divergence(win_raw, linux_raw, hw, hl, names):
+    """Counts exact packed-OUTB quantization exceedances at every native instant."""
+    time_counts = [0]*41
+    first_exceed = {}
+    for name in sorted(names):
+        a=[decode(win_raw,hw,name,i) for i in range(41)]
+        b=[decode(linux_raw,hl,name,i) for i in range(41)]
+        first = None
+        for i,((x,qx),(y,qy)) in enumerate(zip(a,b)):
+            if not all(math.isfinite(v) for v in (x,qx,y,qy)):
+                raise ValueError('S07_TEMPORAL_NONFINITE_HOLD')
+            _,limit=within_quant(x,qx,y,qy)
+            if abs(x-y)>limit:
+                time_counts[i]+=1
+                if first is None:first=i
+        if name in ('Wind1VelX','Wind1VelY','Wind1VelZ','GenSpeed','RotSpeed',
+                    'BldPitch1','BldPitch2','BldPitch3','GenTq','RotThrust',
+                    'TwrBsMyt','TwrBsFxt','YawBrTDxt'):
+            first_exceed[name] = None if first is None else round(first*.05,10)
+    return {'exceeding_channels_by_time_0_to_2s':time_counts,
+            't0_exceeding_channels':time_counts[0],
+            't005_exceeding_channels':time_counts[1],
+            't2_exceeding_channels':time_counts[-1],
+            'first_exceedance_time_s_selected_channels':first_exceed,
+            'samplewise_exceedance_total':sum(time_counts),
+            'budget':'per-sample within_quant, NOT a physical equivalence threshold'}
+
+def audit(win_zip,linux_outb,derived_receipt,linux_stdout=None):
     if sha(win_zip)!=WIN_ZIP_SHA:
         raise ValueError('WINDOWS_ORIGINAL_ARTIFACT_SHA256_MISMATCH')
     with zipfile.ZipFile(io.BytesIO(win_zip)) as z:
@@ -86,6 +139,10 @@ def audit(win_zip,linux_outb,derived_receipt):
                                    [v for v,q in l],[q for v,q in l]))
         rows.append(row)
     exceed=[r for r in rows if r['exceeds_packed_quantization_count']]
+    temporal=temporal_divergence(original,linux_outb,hw,hl,names)
+    if temporal['samplewise_exceedance_total'] != sum(r['exceeds_packed_quantization_count'] for r in rows):
+        raise ValueError('S07_TEMPORAL_CHANNEL_COUNT_PARITY_HOLD')
+    logs=controller_log_audit(win_zip,linux_stdout) if linux_stdout is not None else None
     return {
       'stage':'S07','status':'WINDOWS_LINUX_2S_PAIRED_DIAGNOSTIC_ONLY',
       'windows_zip_sha256':sha(win_zip),'windows_batch1_outb_sha256':sha(original),
@@ -98,6 +155,8 @@ def audit(win_zip,linux_outb,derived_receipt):
       'quantization_exceeding_channels':len(exceed),
       'quantization_exceeding_samples':sum(r['exceeds_packed_quantization_count'] for r in rows),
       'channels':rows,
+      'temporal_divergence':temporal,
+      'controller_native_stdout_audit':logs,
       'SOURCE':'Windows OpenFAST-v3.5.3 Intel 2021 Actions artifact #13080759167 and actual Linux OpenFAST-v3.5.3 GNU + ROSCO v2.9.0 OUTB',
       'REF':'T062 S06_ETM_NATIVE_2S_OVERLAP_QC_20261101.json and S07 native DCM audit',
       'STANDARD':'No authorized IEC/GB clause reviewed here',
@@ -123,7 +182,15 @@ def selftest():
     try:sample_grid({'file_id':4,'num_samples':41,'first_time_s':0.,'time_increment_s':.1})
     except ValueError:pass
     else:raise AssertionError('S07_BAD_DT_ACCEPTED')
-    return {'positive_equal':True,'positive_divergence':True,'negative_rejections':4,
+    testlog=b'Running ROSCO-v2.9.0\\nROSCO Warning: Did not find X\\n'
+    try:controller_log_audit(b'not a zip',testlog)
+    except (ValueError,zipfile.BadZipFile):pass
+    else:raise AssertionError('S07_BAD_CONTROLLER_ARCHIVE_ACCEPTED')
+    try:
+        import re
+        assert len(re.findall(rb'Running ROSCO-v([0-9]+\\.[0-9]+\\.[0-9]+)',testlog))==1
+    except AssertionError:raise
+    return {'positive_equal':True,'positive_divergence':True,'negative_rejections':5,
             'native_run':False,'physical_pass':False}
 
 def main():
@@ -131,6 +198,7 @@ def main():
     p.add_argument('--windows-zip',type=Path)
     p.add_argument('--linux-outb',type=Path)
     p.add_argument('--derived-receipt',type=Path)
+    p.add_argument('--linux-stdout',type=Path)
     p.add_argument('--out',type=Path)
     p.add_argument('--selftest',action='store_true')
     a=p.parse_args()
@@ -139,7 +207,8 @@ def main():
         if a.selftest:return
         p.error('provide --windows-zip --linux-outb --derived-receipt --out')
     result=audit(a.windows_zip.read_bytes(),a.linux_outb.read_bytes(),
-                 json.loads(a.derived_receipt.read_text()))
+                 json.loads(a.derived_receipt.read_text()),
+                 a.linux_stdout.read_bytes() if a.linux_stdout else None)
     a.out.write_text(json.dumps(result,indent=2,sort_keys=True)+'\n')
     print(json.dumps({k:v for k,v in result.items() if k!='channels'},sort_keys=True))
 
