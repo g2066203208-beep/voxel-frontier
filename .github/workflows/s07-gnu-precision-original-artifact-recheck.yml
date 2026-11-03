@@ -5,6 +5,8 @@ on:
       - '.github/workflows/s07-gnu-precision-original-artifact-recheck.yml'
       - 'research/wind-tower/experiments/T062/s07_gnu_precision_native_independent_recheck.py'
       - 'research/wind-tower/experiments/T062/s07_dcm_precision_ownership_recheck.py'
+      - 'research/wind-tower/experiments/T062/s07_dcm_gnu_micro_driver.py'
+      - 'research/wind-tower/experiments/T062/s07_dcm_gnu_real32_micro.f90'
   workflow_dispatch:
 
 permissions:
@@ -140,6 +142,11 @@ jobs:
           s=json.load(open('s07_gnu_micro_synthetic.json'))
           r=json.load(open('s07_gnu_micro_native.json'))
           assert s['RUN']['negative_rejections']==3
+          assert 0 < s['summation_only_roundoff_budget']['gamma_n'] < 1e-5
+          b=r['summation_only_roundoff_budget']
+          assert b['n_terms_upper_count']==902 and b['bound_Nm']>0
+          assert b['type'].endswith('NOT_PHYSICS_PASS')
+          print('S07_REAL32_SUMMATION_ONLY_ERROR_BUDGET_DIAGNOSTIC_NOT_PHYSICS_PASS', b['bound_Nm'], b['observed_Mx_residual_Nm'])
           assert r['SOURCE']['read_level']=='DIRECT_NATIVE_GTE_903_ROWS'
           assert r['RUN']['variant_count']==3 and not r['physical_pass']
           assert all(len(v['residual_kN_kNm'])==6 for v in r['TAB'].values())
