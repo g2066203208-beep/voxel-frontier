@@ -335,5 +335,54 @@
     "failure_record": "Original workflow #41632768388 failed postprocessing; single DCM INERTIA_GRAVITY_OWNERSHIP_RECONSTRUCTION_HOLD; double DCM succeeded. Corrected workflow source committed previously, but no corrected native CI success verified in this run.",
     "HOLD": "S07 DLC1.2 0/126; original single DCM ownership unresolved; GNU single/double 2s sensitivity large; cannot infer Windows Intel equivalence, fatigue or seismic physical acceptance; S06 PARTIAL, S07/S10 BLOCKED, E/WE=0, 0/12 PASS.",
     "next": "Use existing corrected workflow and repo-native T062 s07_gnu_precision_2s_pair_qc.py to reproduce from original artifacts; compare every 295-channel metric with persisted original tables, retaining separate DCM ownership HOLD; no 700s production."
+  },
+  "independent_native_outb_saved_summary_recheck_20261103_23h": {
+    "status": "INDEPENDENT_NATIVE_OUTB_REPARSE_MATCH_NOT_PHYSICS_PASS",
+    "SOURCE": {
+      "reading_level": "ORIGINAL_GITHUB_ACTIONS_ZIP_CRC_AND_NATIVE_OUTB_BYTES_READ_IN_CONTAINER",
+      "actions_run_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41632768388",
+      "single_artifact_id": 13229996252,
+      "double_artifact_id": 13229932734,
+      "single_zip_sha256": "983bce8ca81981ff5fd00e5261dbfb2c0b6e18b074aa4eb1ff425e6851fb9735",
+      "double_zip_sha256": "d8a5dec02b3dc4b536061f5bfcfd80e3bd472f322e83c5e7b1ee705508017c7c",
+      "single_outb_sha256": "d0ac71b498b2764587a91b8523bbd72c9dad84a48a1b632e0b1922a3470e3c39",
+      "double_outb_sha256": "be43d3ad2a278fbd1afe91753382d681f5eb2d8c8b401ccd78d23eb5765136c8",
+      "saved_csv_sha256": "101ceaf50cd276d0c60d5c70b1094518697a0201507cec3c13003332f08e7bcd",
+      "saved_json_sha256": "562fa1a588db78d70e8d3368c71b882db2ec80b9a740203389d172138d246799"
+    },
+    "REF": "Existing T062 GNU single/double precision and OpenFAST v3.5.3 source; no new full text",
+    "STANDARD": "No authorized IEC/GB/NB original clauses read",
+    "OFFICIAL": "Original OpenFAST v3.5.3 / ROSCO v2.6.0 native logs and CMake flags",
+    "RUN": {
+      "local_python_version": "3.13.5",
+      "native_solver_invocations": 0,
+      "source_zip_crc_pass": 2,
+      "source_outb_sha256_pass": 2,
+      "paired_source_identity_pass": true,
+      "channels": 295,
+      "samples": 41,
+      "per_channel_numeric_metrics": 8,
+      "comparisons_to_csv_and_json": 4720,
+      "max_numeric_recompute_difference": 0,
+      "time_counts_exact_match": true,
+      "exceeding_pairs": 10284,
+      "exceeding_channels": 266,
+      "t0_exceeding_channels": 21,
+      "local_negative_rejections": [
+        "CSV tampered metric rejected",
+        "original ZIP byte tampering rejected"
+      ],
+      "repo_script_path": "research/wind-tower/experiments/T062/s07_gnu_precision_native_independent_recheck.py",
+      "no_solver_ci_workflow": ".github/workflows/s07-gnu-precision-original-artifact-recheck.yml",
+      "no_solver_ci_status": "NOT_YET_CONFIRMED"
+    },
+    "FIG": "0",
+    "TAB": "Previously committed 295-row CSV/JSON and 41-bin time counts independently verified",
+    "assumptions": "Single/double native artifacts are paired by SHA256 and source/controller identity; packed OUTB threshold is not physical tolerance",
+    "error_budget": "1.1*(two OUTB packed half-LSB)+1e-8 is encoding-only; saved numeric metric recheck max(1e-11,1e-10*abs(value))",
+    "failure_record": "Original workflow #41632768388 failed post-solver and paired job skipped; original single DCM inertia/gravity ownership remains HOLD. This local independent recheck is not the new CI run.",
+    "HOLD": "S07 DLC1.2 remains 0/126; inertia/gravity load ownership and physical cross-precision equivalence not validated; no fatigue or seismic physical PASS",
+    "physical_pass": false,
+    "stage_pass_count": "0/12"
   }
 }
