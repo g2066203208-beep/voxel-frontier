@@ -89,5 +89,32 @@
   "error_budget": "Original audit componentwise atol=1e-5 and rtol=5e-5; near-zero Mx cancellation factor ~2072 amplifies floating point differences; these are numerical audit thresholds not physics tolerances.",
   "failure_record": "Original single DCM INERTIA_GRAVITY_OWNERSHIP_RECONSTRUCTION_HOLD reproduced under float64 11/161 time instants; float32 emulation leaves 1/161 (t=0.1875 Mx). This does not prove full load ownership.",
   "HOLD": "Native arithmetic order/rounding at t=0.1875 Mx still unclosed; tower FL/ML include gravity/inertia and cannot be treated as wind-only; formal six-component mapping and DLC1.2 0/126, E/WE=0; no physics PASS.",
-  "physical_pass": false
+  "physical_pass": false,
+  "source_order_correction_20261104_01h": {
+    "status": "OFFICIAL_SOURCE_LOOP_ORDER_MISMATCH_IDENTIFIED__NATIVE_RECHECK_RUNNING_NOT_PHYSICS_PASS",
+    "SOURCE": {
+      "native_zip_sha256": "983bce8ca81981ff5fd00e5261dbfb2c0b6e18b074aa4eb1ff425e6851fb9735",
+      "native_gte_sha256": "77f247d7e0b66997041ffbba70c859bdd38fd345eb303b18b78c6599fa2caa92",
+      "read_level": "DIRECT_OPENFAST_TAGGED_SOURCE_L1165_1206_AND_PYTHON_SOURCE",
+      "updated_script_git_blob_sha1": "9437e403828a5bdc4f541c2b68e7e82b4e067a53"
+    },
+    "REF": "OpenFAST v3.5.3 ElastoDyn.f90 local tower gage L1175-L1202",
+    "STANDARD": "No new authorized IEC/GB/NB original clauses read",
+    "OFFICIAL": "https://github.com/OpenFAST/openfast/blob/v3.5.3/modules/elastodyn/src/ElastoDyn.f90#L1175-L1202",
+    "RUN": {
+      "new_solver_runs": 0,
+      "workflow_run_id": 41681710021,
+      "ci_status_at_record": "IN_PROGRESS",
+      "method": "Legacy half-first vs official full-upper-first/half-last; synthetic 1e8-1e8+1 float32 cancellation regression"
+    },
+    "FIG": 0,
+    "TAB": "161 time steps x 901 elements, native source-order replay pending CI",
+    "source_order": "Fortran DO J=gage+1..TwrNodes completes 900 upper elements before half gage element; TmpVec2*0.5*abs(DHNodes) left associative",
+    "prior_replay_error": "Previous Python placed half element first and precombined half weight. Historical float64 11/161 and float32 1/161 failures are not source-order-faithful native comparisons.",
+    "assumptions": "IEEE float32 per operation is approximate; native compiler FMA/order remains unverified",
+    "error_budget": "Old atol=1e-5 rtol=5e-5 numerical diagnostic only; new native residual to be measured",
+    "failure_record": "t=0.1875s Mx residual cannot be called a physical missing load or exact compiler discrepancy until corrected replay",
+    "HOLD": "Native archive CI pending; six-component gravity/inertia ownership remains unvalidated; DLC1.2 0/126; E/WE 0",
+    "physical_pass": false
+  }
 }
