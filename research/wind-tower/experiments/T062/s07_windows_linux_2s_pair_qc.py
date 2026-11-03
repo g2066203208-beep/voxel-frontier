@@ -53,7 +53,7 @@ def controller_log_audit(win_zip, linux_stdout):
     with zipfile.ZipFile(io.BytesIO(win_zip)) as z:
         windows_logs = [z.read(f'work/batch{i}/native_stdout.log') for i in range(1, 5)]
     def version(raw):
-        m = re.findall(rb'Running ROSCO-v([0-9]+\\.[0-9]+\\.[0-9]+)', raw)
+        m = re.findall(rb'Running ROSCO-v([0-9]+\.[0-9]+\.[0-9]+)', raw)
         if len(m) != 1:
             raise ValueError('S07_ROSCO_VERSION_LOG_CARDINALITY_HOLD')
         return m[0].decode('ascii')
@@ -182,13 +182,13 @@ def selftest():
     try:sample_grid({'file_id':4,'num_samples':41,'first_time_s':0.,'time_increment_s':.1})
     except ValueError:pass
     else:raise AssertionError('S07_BAD_DT_ACCEPTED')
-    testlog=b'Running ROSCO-v2.9.0\\nROSCO Warning: Did not find X\\n'
+    testlog=b'Running ROSCO-v2.9.0\nROSCO Warning: Did not find X\n'
     try:controller_log_audit(b'not a zip',testlog)
     except (ValueError,zipfile.BadZipFile):pass
     else:raise AssertionError('S07_BAD_CONTROLLER_ARCHIVE_ACCEPTED')
     try:
         import re
-        assert len(re.findall(rb'Running ROSCO-v([0-9]+\\.[0-9]+\\.[0-9]+)',testlog))==1
+        assert len(re.findall(rb'Running ROSCO-v([0-9]+\.[0-9]+\.[0-9]+)',testlog))==1
     except AssertionError:raise
     return {'positive_equal':True,'positive_divergence':True,'negative_rejections':5,
             'native_run':False,'physical_pass':False}
