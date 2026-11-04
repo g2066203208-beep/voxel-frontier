@@ -744,6 +744,19 @@
       "all_other_json_exact": true,
       "comparison_script": "s05_esm_five_endpoint_artifact_qc.py --compare-snr-utc previous.zip current.zip",
       "new_mode_CI": "NOT_RUN"
+    },
+    "official_operator_contact_followup": {
+      "source_level": "Official Italian Civil Protection RAN webpage and official 2023 procurement listing/abstract; full procurement attachment not newly downloaded or page-audited.",
+      "OFFICIAL": [
+        "https://ran.protezionecivile.it/EN/quakelive.php?anno=2012&evid=902001&minmag=3.5",
+        "https://rischi.protezionecivile.gov.it/en/seismic/activities/ran-national-accelerometric-network/",
+        "https://www.protezionecivile.gov.it/en/bando-di-gara/avviso-di-indagine-di-mercato-laffidamento-del-servizio-di-manutenzione-ordinaria-straordinaria-con-efficienza-garantita-e-riparazioni-incluse-ran-0/"
+      ],
+      "contact": "ran@protezionecivile.it",
+      "finding": "RAN official site lists contact ran@protezionecivile.it and IT network data attribution; DPC 2023 tender explicitly describes maintenance of Syscom/Reftek instrument subnetwork, confirming correct operator/source route, NOT NVL 2012 serial or calibration.",
+      "requested_evidence": "NVL IT station on 2012-05-20: MS2007+ sensor and REF TEK 130-01/3 digitizer serial numbers, installation/maintenance epochs, response poles-zeros/FIR/sensitivity, anti-alias filter settings, calibration amplitude/phase and usable band at 0.1–0.2 Hz",
+      "action_status": "NOT_CONTACTED; official contact identified only",
+      "HOLD": "Official contact is not calibration proof"
     }
   }
 }
