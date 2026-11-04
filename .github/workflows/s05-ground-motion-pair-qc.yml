@@ -1208,6 +1208,22 @@ jobs:
                                           [[float(c.real),float(c.imag)] for c in v] if k in ('poles','zeros')
                                           else float(v) if isinstance(v,(float,int,complex)) and not isinstance(v,bool)
                                           else str(v)[:300]) for k,v in paz.items()}
+                                      import cmath,math
+                                      def analog_h(freq):
+                                          jw=complex(0,2*math.pi*freq)
+                                          numerator=complex(paz.get('gain',1.0))
+                                          for zero in paz['zeros']:numerator*=jw-zero
+                                          denominator=1+0j
+                                          for pole in paz['poles']:denominator*=jw-pole
+                                          return numerator/denominator
+                                      hdc=analog_h(0)
+                                      if abs(hdc)==0:raise ValueError('DC_NORMALIZATION_UNDEFINED')
+                                      item['paz_only_relative_to_dc']=[
+                                          {'frequency_hz':f,
+                                           'amplitude_ratio':abs(analog_h(f)/hdc),
+                                           'phase_shift_deg':math.degrees(cmath.phase(analog_h(f)/hdc))}
+                                          for f in (0.1,0.125,1/6,0.2,0.25)]
+                                      item['paz_scope']='ANALOG_POLES_ZEROS_ONLY; NOT complete FIR/ADC/ESM processed response or calibrated usable frequency'
                                       item['status']='PAZ_METADATA_EXTRACTED_NOT_CALIBRATION_PASS'
                                   except Exception as e:
                                       item['error']=type(e).__name__+': '+str(e)[:250]
@@ -1219,7 +1235,9 @@ jobs:
           for x in result['members']:print('RAN_NVl_DATALESS_MEMBER',x)
           for x in result['channel_response_attempts']:
               print('RAN_NVL_RESPONSE_ATTEMPT',x['seed_id'],x['status'],x.get('error','NONE'))
-              if x.get('paz_metadata'):print('RAN_NVL_PAZ_METADATA',x['seed_id'],x['paz_metadata'])
+              if x.get('paz_metadata'):
+                  print('RAN_NVL_PAZ_METADATA',x['seed_id'],x['paz_metadata'])
+                  print('RAN_NVL_PAZ_ONLY_RELATIVE_DC',x['seed_id'],x['paz_only_relative_to_dc'])
           print('S05_RAN_DATALESS_RESPONSE_ATTEMPT_NOT_CALIBRATION_PASS')
           PY
       - name: Archive exact official HTTP source and failure manifest (no restricted standard)
