@@ -58,6 +58,54 @@
     "original_controller_source_configs_checked": 18,
     "original_18ntm_gage_count": 9
   },
+  "cut_in_sensitivity": {
+    "status": "SCENARIO_ONLY_NOT_ACTUAL_CONTROLLER_CUT_IN",
+    "bin_policy": "Whole 1m/s ERA5 bins with hypothetical integer cut-in k=4..9; no within-bin interpolation, no controller or IEC approval",
+    "scenarios": [
+      {
+        "hypothetical_cut_in_mps_NONNORMATIVE": 4,
+        "eligible_era5_hours_4_to_25": 106900,
+        "uncovered_lowwind_hours_4_to_8": 95402,
+        "uncovered_share_of_eligible": 0.8924415341440599,
+        "uncovered_candidate_slots": 30
+      },
+      {
+        "hypothetical_cut_in_mps_NONNORMATIVE": 5,
+        "eligible_era5_hours_4_to_25": 79973,
+        "uncovered_lowwind_hours_4_to_8": 68475,
+        "uncovered_share_of_eligible": 0.8562264764357971,
+        "uncovered_candidate_slots": 24
+      },
+      {
+        "hypothetical_cut_in_mps_NONNORMATIVE": 6,
+        "eligible_era5_hours_4_to_25": 55204,
+        "uncovered_lowwind_hours_4_to_8": 43706,
+        "uncovered_share_of_eligible": 0.791717991449895,
+        "uncovered_candidate_slots": 18
+      },
+      {
+        "hypothetical_cut_in_mps_NONNORMATIVE": 7,
+        "eligible_era5_hours_4_to_25": 35210,
+        "uncovered_lowwind_hours_4_to_8": 23712,
+        "uncovered_share_of_eligible": 0.6734450440215848,
+        "uncovered_candidate_slots": 12
+      },
+      {
+        "hypothetical_cut_in_mps_NONNORMATIVE": 8,
+        "eligible_era5_hours_4_to_25": 20743,
+        "uncovered_lowwind_hours_4_to_8": 9245,
+        "uncovered_share_of_eligible": 0.44569252277876875,
+        "uncovered_candidate_slots": 6
+      },
+      {
+        "hypothetical_cut_in_mps_NONNORMATIVE": 9,
+        "eligible_era5_hours_4_to_25": 11498,
+        "uncovered_lowwind_hours_4_to_8": 0,
+        "uncovered_share_of_eligible": 0,
+        "uncovered_candidate_slots": 0
+      }
+    ]
+  },
   "assumptions": "Candidate lowwind centers 4.5..8.5m/s; historical seed1 reused across speeds ONLY as a proposed paired design; original 51x51/0.025s/700s and FST 0.0125s/0.05s settings are historical metadata, not approved lowwind inputs. Controller binary and below/near cut-in operating state unverified.",
   "ERROR_BUDGET": "Integer ERA5 hours exact; conditional probability prior 12-digit decimal rounded <=0.5e-12 per bin; proposed wind centers differ from physical turbulent realizations; physical/control/turbulence model errors NOT ESTIMATED. Git tree/release/Actions name search cannot prove missing archive members.",
   "HOLD": "No verified 4-8m/s 158m NTM original OUTB/BTS, original BTS bytes unarchived even for 18 prior cases; lowwind controller cut-in, wind-bin IEC2025, source input versions, 31-segment full time series, material stress and DLC1.2 unresolved.",
