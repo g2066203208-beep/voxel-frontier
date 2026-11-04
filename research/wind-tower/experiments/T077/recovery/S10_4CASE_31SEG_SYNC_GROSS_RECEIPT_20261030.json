@@ -224,5 +224,68 @@
     "FAILURE_RECORD": "One source ZIP single-byte modification was rejected before parsing; all four authentic source ZIP/GZIP/CSV byte hashes match inherited original manifest. No source identity claim beyond recovered CSV archive.",
     "HOLD": "Four historical ETM batches lack fully verified same-state original OUTB/coordinate ownership, low-wind DLC1.2 normal-operation inputs and local material/PT mean stress. No material fatigue life, no S10 PASS.",
     "stage_passed": 0
+  },
+  "azimuth_grid_convergence_4ETM_extension_20261105": {
+    "status": "SOURCE_QC_PASS__CONDITIONAL_NOMINAL_STRESS_SCREEN__NOT_PHYSICAL_PASS",
+    "SOURCE": "Directly materialized 16 Library T071/T072 original ZIPs; each ZIP CRC and ZIP/GZIP/CSV SHA256 checked against committed 16-row manifest; 4 cases x 31 segments x 12001 time points = 1,488,124 recovered rows; Fz/Mx/My used for signed gross-annulus stress. Original native OUTB, same-state RP/TP/DCM and wind-load ownership not recovered.",
+    "reading_level": "Original 16 archived ZIP bytes and nested GZIP/CSV numeric rows; existing He2024-derived gross geometry; no new licensed standards or peer-reviewed original pages read.",
+    "REF": "Existing He2024 section geometry and previously recorded Huang2025 Eq.(1) methodological analogy; not a new full-text extraction.",
+    "STANDARD": "NONE: no authorized IEC/GB/NB clauses newly read; no clause compliance.",
+    "OFFICIAL": "Historical OpenFAST-derived export; not a new native OpenFAST solver run.",
+    "RUN": "Local CPython 3.13.5 / NumPy 2.3.5 / pandas 2.2.3; 16 ZIP CRC and three-level SHA256 pass, 7 analytic checks and 3 synthetic invalid-signal rejections, real-byte manifest and U11p4/A ZIP mutation both correctly rejected; wall 11.25s; no new GitHub Actions CI or native solver.",
+    "FIG": "0 (no new physical figures)",
+    "TAB": "124 rows x 16/32/64 azimuth maxima x m4/m10; compressed .csv.gz stored in GitHub (gzip -d yields canonical CSV SHA256).",
+    "manifest_path": "research/wind-tower/experiments/T077/recovery/S06_RECOVERED_16_ARTIFACT_SHA256_MANIFEST_20261024.csv",
+    "manifest_sha256": "dfc07558eb87002c3f54bb88671644519b77dfc38daf3971026f43686d4c2ed8",
+    "script_path": "research/wind-tower/experiments/T077/recovery/s10_azimuth_grid_convergence.py",
+    "script_sha256": "57d8802f3ad60b968840e548922145967b19b5de275ecf87f71a5604a816b760",
+    "full_table_gzip_path": "research/wind-tower/experiments/T077/recovery/S10_4ETM_31SEG_AZIMUTH_GRID_CONVERGENCE_20261105.csv.gz",
+    "full_table_gzip_sha256": "ce0ff94a60b945931ae75a707114efdbcc2955250a703b5a018ed9effaa5c2cb",
+    "full_table_uncompressed_sha256": "1eacf29f513aea0bad86313680fb9ed32a6a1b0a0c68334839ce4e635dffc278",
+    "rows": 124,
+    "cases": {
+      "U09p343881_ETM_S06": {
+        "m4": 0.0595461,
+        "m10": 0.00015431,
+        "segment": "CSEG_31",
+        "max_m4_MPa": 7.098137353,
+        "max_m4_segment": "CSEG_05",
+        "nonzero_m4": 7,
+        "nonzero_m10": 1
+      },
+      "U11p4_ETM_S04": {
+        "m4": 0,
+        "m10": 0,
+        "segment": "CSEG_01",
+        "max_m4_MPa": 7.169089135,
+        "max_m4_segment": "CSEG_04",
+        "nonzero_m4": 0,
+        "nonzero_m10": 0
+      },
+      "U19p202140_ETM_S04": {
+        "m4": 0,
+        "m10": 0,
+        "segment": "CSEG_01",
+        "max_m4_MPa": 6.423760919,
+        "max_m4_segment": "CSEG_03",
+        "nonzero_m4": 0,
+        "nonzero_m10": 0
+      },
+      "U19p202140_ETM_S06": {
+        "m4": 0.545289819,
+        "m10": 0.77225433,
+        "segment": "CSEG_31",
+        "max_m4_MPa": 6.265865265,
+        "max_m4_segment": "CSEG_04",
+        "nonzero_m4": 31,
+        "nonzero_m10": 31
+      }
+    },
+    "baseline_regression": "Previously reported U09p343881_ETM_S06 31 rows match at key metrics: CSEG05 max m4 DEL 7.098137353 MPa; CSEG31 max m4 angular gap 0.0595461%. Original 31-row CSV preserved as historical baseline.",
+    "assumptions": "Source-frame tension-positive sigma(MPa)=1e-3*(Fz/A+(Mx*r*sin(theta)-My*r*cos(theta))/I); Nref=600 (1Hz x 600s), m=4/10 only diagnostic, 64 angles finite-grid comparator, no mean-stress fatigue material laws.",
+    "error_budget": "Observed maximum N16->N64 relative gap m4=0.545289819%, m10=0.77225433% (U19p202140_ETM_S06, CSEG31). This is only discrete angular-grid sensitivity, not continuous-angle upper error bound; section geometry rounded, source coordinate/inertia and PT state unverified, statistical/physical uncertainty unbounded.",
+    "failure_record": "Corrupted manifest copy rejected with MANIFEST_SHA_MISMATCH; byte-tampered U11p4_ETM_S04/A ZIP copy rejected with ZIP_SHA_MISMATCH; authentic originals untouched.",
+    "HOLD": "4 independent ETM batch identities and reference-frame/force ownership still not physically unified; missing DLC1.2 low-wind NTM bins and native local material stress, effective PT and licensed standards. S06 PARTIAL; S07/S10 BLOCKED; 0/12; formal DLC1.2 0/126; E/WE=0.",
+    "stage_pass": false
   }
 }
