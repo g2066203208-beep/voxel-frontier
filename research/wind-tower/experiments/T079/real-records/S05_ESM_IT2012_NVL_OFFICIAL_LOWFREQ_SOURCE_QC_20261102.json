@@ -1385,5 +1385,58 @@
       "S05": false
     },
     "HOLD": "Original HG 2012 sample data or operator signed axis correction/processing record required for ESM HN waveform mapping; low-frequency reliability and site target remain unaccepted."
+  },
+  "esm_cv_mp_official_processing_axis_crosscheck_20261104_2306": {
+    "classification": "S05_NEW_CV_MP_PROCESSING_AXIS_QC_PENDING_NATIVE_HTTP_NOT_HG_OR_DESIGN_PASS",
+    "SOURCE": {
+      "reading_level": "ESM 3.0 official event-data query-options webpage read 2026-11-04; no CV original bytes acquired at receipt writing",
+      "official_document": "https://esm-db.eu/esmws/eventdata/1/query-options.html",
+      "cv_query": "https://esm-db.eu/esmws/eventdata/1/query?eventid=IT-2012-0008&network=IT&station=NVL&processing-type=CV&data-type=ACC&format=ascii",
+      "mp_query": "https://esm-db.eu/esmws/eventdata/1/query?eventid=IT-2012-0008&network=IT&station=NVL&processing-type=MP&data-type=ACC&format=ascii",
+      "previous_mp_zip_sha256": "d382e3f7bd6e4d0d8c4dfac3f59eda9b928e8530185ed8cb8f857d221c33576b",
+      "new_cv_zip_sha256": "PENDING_ACTIONS_SOURCE_HTTP",
+      "script_git_blob_sha1": "TO_BE_REMOTE_VERIFIED",
+      "script_sha256": "PENDING_ACTIONS_SHA256SUM"
+    },
+    "REF": "ESM v3 DOI 10.13127/esm.3; CV physical-unit conversion vs MP manually processed as defined in official API",
+    "STANDARD": "No new IEC/GB/NB authorized clauses; ESM API is data service, not structural design standard",
+    "OFFICIAL": [
+      "https://esm-db.eu/esmws/eventdata/1/query-options.html",
+      "https://ran.protezionecivile.it/IT/sharing.php"
+    ],
+    "RUN": {
+      "source_program": "experiments/T079/s05_esm_cv_mp_axis_qc.py",
+      "workflow": ".github/workflows/s05-ground-motion-pair-qc.yml",
+      "actions_run": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41854682076",
+      "native_job": "QUEUED_AT_RECEIPT_WRITE",
+      "native_E_WE_runs": 0
+    },
+    "FIG": 0,
+    "TAB": "3x3 signed CV/MP correlation plus per-axis best match only if source grids match; official source result pending",
+    "assumptions": [
+      "CV and MP are both ESM processed-level products, NOT original RAN HG digitizer data",
+      "2s symmetric moving-mean highpass is diagnostic, not official ESM processing recreation",
+      "0.90 signed-correlation threshold is exploratory, NOT a scientific acceptance bound"
+    ],
+    "error_budget": {
+      "byte_integrity": "SHA256 once official ZIP captured",
+      "numeric_correlation": "floating point; independent source/time alignment required",
+      "CV_MP_source_polarity": "PENDING_REAL_WAVEFORM",
+      "HG_to_HN_mapping": "UNVERIFIED",
+      "low_frequency_band": "UNVERIFIED",
+      "site_design_spectrum": "NOT_DEFINED"
+    },
+    "failures": [
+      "Container direct ESM HTTP failed DNS lookup; GitHub Actions official fetch pending"
+    ],
+    "PASS": {
+      "script_committed": true,
+      "synthetic_tests_native": false,
+      "official_CV_source_captured": false,
+      "CV_MP_axis_mapping": false,
+      "raw_HG_to_HN": false,
+      "S05": false
+    },
+    "HOLD": "Await actual CV+MP official bytes and grid/polarity comparison; even positive CV/MP does not establish original HG sign or design-wave reliability"
   }
 }
