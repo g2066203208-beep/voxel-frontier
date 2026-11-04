@@ -8,12 +8,12 @@
   "max_DEL4": {
     "DEL_m10_MPa": 14.537117957290361,
     "DEL_m4_MPa": 7.169089049140665,
-    "azimuth_deg": 0.0,
+    "azimuth_deg": 0,
     "case": "U11p4_ETM_S04",
     "delta_z_m": 0.026955506818106656,
     "gage_z_m": 12.766955556818107,
     "n_samples": 12001,
-    "rainflow_equivalent_cycles": 628.0,
+    "rainflow_equivalent_cycles": 628,
     "rainflow_full_cycles": 621,
     "rainflow_half_cycles": 14,
     "section_z_m": 12.74000005,
@@ -29,7 +29,7 @@
   "max_tension": {
     "DEL_m10_MPa": 17.040793412716468,
     "DEL_m4_MPa": 7.037161800717715,
-    "azimuth_deg": 180.0,
+    "azimuth_deg": 180,
     "case": "U09p343881_ETM_S06",
     "delta_z_m": -0.03427785889257251,
     "gage_z_m": 60.02572219110743,
@@ -183,5 +183,46 @@
   "source_rows": 1488124,
   "source_zip_count": 16,
   "status": "REAL_4CASE_31SEG_16AZ_SYNC_GROSS_RAINFLOW_NUMERIC_ONLY",
-  "summary_sha256": "36c0a8a97db36885159fff79cc61daced9c939ab688f98ce1c6b860a89ac91d3"
+  "summary_sha256": "36c0a8a97db36885159fff79cc61daced9c939ab688f98ce1c6b860a89ac91d3",
+  "azimuth_grid_convergence_20261105": {
+    "stage": "S10 independent source-level azimuth discretization sensitivity; PARTIAL / NOT MATERIAL PASS",
+    "SOURCE": "Library /WindTower original four ETM ZIP batches A-D for U09p343881_ETM_S06, direct ZIP bytes + gzip CSV; 31 gross sections from existing T077 source-locked nominal stress geometry (rounded excerpt).",
+    "READING_LEVEL": "Four original ZIP payloads read; 31*12001 sample rows, three synchronous source-frame load channels per section, 64 azimuth rainflow series per section; 496 old 16-angle rows independently compared at section maxima.",
+    "REF": "Existing T077 S10_4CASE_31SEG_16AZ_SYNC_GROSS_RAINFLOW_20261030.csv and He2024 31-section gross geometry; no new journal full text.",
+    "STANDARD": "No IEC/GB licensed clause newly read; no code acceptance.",
+    "OFFICIAL": "Original OpenFAST-derived CSV archive identity verified against existing S06_RECOVERED_16_ARTIFACT_SHA256_MANIFEST_20261024.csv; native OUTB absent.",
+    "RUN": "Local CPython+NumPy+Pandas, no OpenFAST/Abaqus solver. 7 analytic checks, 3 invalid-signal rejects, 1 byte-tampered original ZIP rejected (ZIP_SHA_MISMATCH_A). No new GitHub Actions CI run.",
+    "FIG": "0",
+    "TAB": "31 rows, 16/32/64 angular grid max m4/m10 load-equivalent nominal stress DEL for ONE ETM case",
+    "case": "U09p343881_ETM_S06",
+    "script_path": "research/wind-tower/experiments/T077/recovery/s10_azimuth_grid_convergence.py",
+    "script_sha256": "813220d94f978dddded206506e5d8a182b54287df1f38a83c7c57838a2d0a8dd",
+    "output_path": "research/wind-tower/experiments/T077/recovery/S10_ETM_31SEG_AZIMUTH_GRID_CONVERGENCE_20261105.csv",
+    "output_sha256": "d3cf44fef6f1944eab84922d2ecbd278fc94e9db4e1554f429d401ed923d581f",
+    "zip_sha256": {
+      "A": "ebccacd12a6f5fb3e6098c5130a7ca355409c4f7d5be4169ab23e4b265cd477f",
+      "B": "5acbb25968ce43892157545cded26973623f22b5a137839e5154b293aef167db",
+      "C": "f202176ca1b1849f2de2b278c5cc1aab2a70892bfbee5163c70950f36920b9ab",
+      "D": "8ac68a5cdc2da3eceadbc2ca6507ae2ded953610fcc4d21f58169a0775fa17ab"
+    },
+    "input_geometry_upstream_sha256": "fff6dfcc6bc094353ebee042392033e8df47e7fb792ccc1812c0962c9c43f800",
+    "result": {
+      "max_m4_gap_N16_to_N64_pct": 0.0595461,
+      "max_m4_gap_N32_to_N64_pct": 0.0595461,
+      "max_m10_gap_N16_to_N64_pct": 0.00015431,
+      "max_m10_gap_N32_to_N64_pct": 0.00015431,
+      "worst_m4_segment": "CSEG_31",
+      "worst_m4_theta_N64_deg": 354.375,
+      "max_m4_64_MPa": 7.098137353,
+      "max_m4_64_segment": "CSEG_05",
+      "max_m4_64_theta_deg": 0,
+      "old_16az_max_abs_difference_m4_MPa": 2.2981000036281785e-7,
+      "old_16az_max_abs_difference_m10_MPa": 5.41700000411538e-7
+    },
+    "assumptions": "Gross circular elastic annulus, tension-positive Fz/A, Mx*y/I-My*x/I, local source axes; 64-angle finite-grid comparator is NOT continuous optimum; Nref=600 cycles (600s*1Hz); m4/m10 diagnostic exponents, NOT concrete/steel/PT SN curves.",
+    "ERROR_BUDGET": "Independent old 16-angle maximum discrepancy <=2.30e-7 MPa (m4), <=5.42e-7 MPa (m10), consistent with rounded 31-row geometry excerpt. Largest observed 16-vs-64 angular discretization increment 0.0595461% (m4) in this case; NOT a bound on true continuous-azimuth optimum or physical/model/statistical error.",
+    "FAILURE_RECORD": "One source ZIP single-byte modification was rejected before parsing; all four authentic source ZIP/GZIP/CSV byte hashes match inherited original manifest. No source identity claim beyond recovered CSV archive.",
+    "HOLD": "Four historical ETM batches lack fully verified same-state original OUTB/coordinate ownership, low-wind DLC1.2 normal-operation inputs and local material/PT mean stress. No material fatigue life, no S10 PASS.",
+    "stage_passed": 0
+  }
 }
