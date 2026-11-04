@@ -896,5 +896,399 @@
       "CI_channel_discovery_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41826917661/job/126563897876",
       "CI_response_artifact_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41827155106/artifacts/13320165857"
     }
+  },
+  "ran_2012_full_response_stages_20261104_2110": {
+    "classification": "S05_OFFICIAL_FULL_STAGE_METADATA_AND_EVALRESP_NUMERIC_QC_PASS_NOT_RECORD_RELIABILITY",
+    "SOURCE": {
+      "network": "IT",
+      "station": "NVL",
+      "event_epoch_utc": "2012-05-20T02:00:00Z",
+      "original_ran_zip_sha256": "6e1ba14be8060c4f1074e82a6c03fe87c776f476042af9e4d5eb82f79f913fcc",
+      "original_zip_bytes": 5132264,
+      "original_member": "NVL.IT.dataless",
+      "member_sha256": "422cdcf7da861fb99e572c4a601f76b7c736ea83a8c4414bc5b1fcce06a25a06",
+      "member_bytes": 28672,
+      "reading_level": "RAN original dataless bytes via GitHub Actions; ObsPy full SEED Inventory + evalresp; exact stdout and original ZIP in artifact"
+    },
+    "REF": "ObsPy 1.4.2 SEED response stage parser and evalresp (software implementation); ESM3 DOI 10.13127/esm.3 retained; not new paper full-text",
+    "STANDARD": "IEC 2025/GB/NB authorized clause pages not newly read; no design-code acceptance",
+    "OFFICIAL": "https://ran.protezionecivile.it/IT/download_metadata.php?net=IT&tipo_file=DL",
+    "RUN": {
+      "workflow_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41836013853",
+      "job_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41836013853/job/126594979754",
+      "artifact_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41836013853/artifacts/13325178056",
+      "workflow_jobs_success": 11,
+      "workflow_jobs_total": 11,
+      "obspy_version": "1.4.2",
+      "python_version": "3.11",
+      "source_negative_stage_sequence_tests_passed": 4,
+      "native_Abaqus_E_WE_runs": 0
+    },
+    "FIG": 0,
+    "TAB": "3 HG orientations; 9-stage source response and 6-frequency evalresp table; full coefficients remain in original official dataless",
+    "response_stages_shared_by_three_channels": [
+      {
+        "number": 1,
+        "type": "PolesZerosResponseStage",
+        "gain": 0.510002,
+        "gain_frequency_hz": 0.03,
+        "input_units": "M/S**2",
+        "output_units": "V",
+        "decimation_input_hz": null,
+        "decimation_factor": null,
+        "decimation_delay_s": null,
+        "decimation_correction_s": null,
+        "poles_count": 4,
+        "poles_sha256": "03f3aa64eff0c7a2220e90a10e839062f0bcaad6c397ceb08353a96c650f69af",
+        "zeros_count": 0,
+        "zeros_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      {
+        "number": 2,
+        "type": "CoefficientsTypeResponseStage",
+        "gain": 629330,
+        "gain_frequency_hz": 0.03,
+        "input_units": "V",
+        "output_units": "COUNTS",
+        "decimation_input_hz": 102400,
+        "decimation_factor": 1,
+        "decimation_delay_s": 0,
+        "decimation_correction_s": 0,
+        "numerator_count": 0,
+        "numerator_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "denominator_count": 0,
+        "denominator_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      {
+        "number": 3,
+        "type": "CoefficientsTypeResponseStage",
+        "gain": 1,
+        "gain_frequency_hz": 0.03,
+        "input_units": "COUNTS",
+        "output_units": "COUNTS",
+        "decimation_input_hz": 102400,
+        "decimation_factor": 8,
+        "decimation_delay_s": 0.00013672,
+        "decimation_correction_s": 0.00013672,
+        "numerator_count": 29,
+        "numerator_sha256": "36c15e590f2fa7d2934e016fcedaaa266d34554f91f95719798c3e1788b30bd7",
+        "denominator_count": 0,
+        "denominator_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      {
+        "number": 4,
+        "type": "CoefficientsTypeResponseStage",
+        "gain": 1,
+        "gain_frequency_hz": 0.03,
+        "input_units": "COUNTS",
+        "output_units": "COUNTS",
+        "decimation_input_hz": 12800,
+        "decimation_factor": 2,
+        "decimation_delay_s": 0.00046875,
+        "decimation_correction_s": 0.00046875,
+        "numerator_count": 13,
+        "numerator_sha256": "3d73d85c3d6ed3f3b2c492b50d8f930c84251a656a45843e25c53201fb9fe324",
+        "denominator_count": 0,
+        "denominator_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      {
+        "number": 5,
+        "type": "CoefficientsTypeResponseStage",
+        "gain": 1,
+        "gain_frequency_hz": 0.03,
+        "input_units": "COUNTS",
+        "output_units": "COUNTS",
+        "decimation_input_hz": 6400,
+        "decimation_factor": 2,
+        "decimation_delay_s": 0.0009375,
+        "decimation_correction_s": 0.0009375,
+        "numerator_count": 13,
+        "numerator_sha256": "3d73d85c3d6ed3f3b2c492b50d8f930c84251a656a45843e25c53201fb9fe324",
+        "denominator_count": 0,
+        "denominator_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      {
+        "number": 6,
+        "type": "CoefficientsTypeResponseStage",
+        "gain": 1,
+        "gain_frequency_hz": 0.03,
+        "input_units": "COUNTS",
+        "output_units": "COUNTS",
+        "decimation_input_hz": 3200,
+        "decimation_factor": 2,
+        "decimation_delay_s": 0.001875,
+        "decimation_correction_s": 0.001875,
+        "numerator_count": 13,
+        "numerator_sha256": "3d73d85c3d6ed3f3b2c492b50d8f930c84251a656a45843e25c53201fb9fe324",
+        "denominator_count": 0,
+        "denominator_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      {
+        "number": 7,
+        "type": "CoefficientsTypeResponseStage",
+        "gain": 1,
+        "gain_frequency_hz": 0.03,
+        "input_units": "COUNTS",
+        "output_units": "COUNTS",
+        "decimation_input_hz": 1600,
+        "decimation_factor": 2,
+        "decimation_delay_s": 0.00375,
+        "decimation_correction_s": 0.00375,
+        "numerator_count": 13,
+        "numerator_sha256": "3d73d85c3d6ed3f3b2c492b50d8f930c84251a656a45843e25c53201fb9fe324",
+        "denominator_count": 0,
+        "denominator_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      {
+        "number": 8,
+        "type": "CoefficientsTypeResponseStage",
+        "gain": 1,
+        "gain_frequency_hz": 0.03,
+        "input_units": "COUNTS",
+        "output_units": "COUNTS",
+        "decimation_input_hz": 800,
+        "decimation_factor": 2,
+        "decimation_delay_s": 0.0075,
+        "decimation_correction_s": 0.0075,
+        "numerator_count": 13,
+        "numerator_sha256": "3d73d85c3d6ed3f3b2c492b50d8f930c84251a656a45843e25c53201fb9fe324",
+        "denominator_count": 0,
+        "denominator_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      {
+        "number": 9,
+        "type": "CoefficientsTypeResponseStage",
+        "gain": 1,
+        "gain_frequency_hz": 0.03,
+        "input_units": "COUNTS",
+        "output_units": "COUNTS",
+        "decimation_input_hz": 400,
+        "decimation_factor": 2,
+        "decimation_delay_s": 0.125,
+        "decimation_correction_s": 0.125,
+        "numerator_count": 101,
+        "numerator_sha256": "536ee56d717d4f7700637c1ec495533d63f35275230cbb060b49c22bb27fbd1f",
+        "denominator_count": 0,
+        "denominator_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      }
+    ],
+    "response_stage_count_per_channel": 9,
+    "digital_coefficient_stages_with_numerators": [
+      {
+        "stage": 3,
+        "numerator_count": 29,
+        "numerator_sha256": "36c15e590f2fa7d2934e016fcedaaa266d34554f91f95719798c3e1788b30bd7",
+        "decimation_factor": 8,
+        "decimation_input_hz": 102400
+      },
+      {
+        "stage": 4,
+        "numerator_count": 13,
+        "numerator_sha256": "3d73d85c3d6ed3f3b2c492b50d8f930c84251a656a45843e25c53201fb9fe324",
+        "decimation_factor": 2,
+        "decimation_input_hz": 12800
+      },
+      {
+        "stage": 5,
+        "numerator_count": 13,
+        "numerator_sha256": "3d73d85c3d6ed3f3b2c492b50d8f930c84251a656a45843e25c53201fb9fe324",
+        "decimation_factor": 2,
+        "decimation_input_hz": 6400
+      },
+      {
+        "stage": 6,
+        "numerator_count": 13,
+        "numerator_sha256": "3d73d85c3d6ed3f3b2c492b50d8f930c84251a656a45843e25c53201fb9fe324",
+        "decimation_factor": 2,
+        "decimation_input_hz": 3200
+      },
+      {
+        "stage": 7,
+        "numerator_count": 13,
+        "numerator_sha256": "3d73d85c3d6ed3f3b2c492b50d8f930c84251a656a45843e25c53201fb9fe324",
+        "decimation_factor": 2,
+        "decimation_input_hz": 1600
+      },
+      {
+        "stage": 8,
+        "numerator_count": 13,
+        "numerator_sha256": "3d73d85c3d6ed3f3b2c492b50d8f930c84251a656a45843e25c53201fb9fe324",
+        "decimation_factor": 2,
+        "decimation_input_hz": 800
+      },
+      {
+        "stage": 9,
+        "numerator_count": 101,
+        "numerator_sha256": "536ee56d717d4f7700637c1ec495533d63f35275230cbb060b49c22bb27fbd1f",
+        "decimation_factor": 2,
+        "decimation_input_hz": 400
+      }
+    ],
+    "total_digital_numerator_coefficients_per_channel": 195,
+    "sample_rate_decimation_chain_hz": [
+      102400,
+      12800,
+      6400,
+      3200,
+      1600,
+      800,
+      400,
+      200
+    ],
+    "channels": {
+      "IT.NVL..HGE": {
+        "orientation_epoch": {
+          "azimuth_deg": 270,
+          "dip_deg": 0,
+          "latitude_deg": 44.843,
+          "longitude_deg": 10.7315
+        },
+        "full_response_relative_to_1Hz": [
+          {
+            "frequency_hz": 0.1,
+            "amplitude_ratio": 0.9999468302703354,
+            "phase_shift_deg": 1.1988759570931171
+          },
+          {
+            "frequency_hz": 0.125,
+            "amplitude_ratio": 0.9999471489595215,
+            "phase_shift_deg": 1.1656021074705034
+          },
+          {
+            "frequency_hz": 0.16666666666666666,
+            "amplitude_ratio": 0.9999478368251121,
+            "phase_shift_deg": 1.1101445147735065
+          },
+          {
+            "frequency_hz": 0.2,
+            "amplitude_ratio": 0.9999485277112439,
+            "phase_shift_deg": 1.0657771123777926
+          },
+          {
+            "frequency_hz": 0.25,
+            "amplitude_ratio": 0.9999497971854482,
+            "phase_shift_deg": 0.9992232359585724
+          },
+          {
+            "frequency_hz": 1,
+            "amplitude_ratio": 1,
+            "phase_shift_deg": 0
+          }
+        ],
+        "evalresp_status": "NUMERIC_TRANSFER_COMPUTED_NOT_CALIBRATION_PASS",
+        "stage_count": 9
+      },
+      "IT.NVL..HGN": {
+        "orientation_epoch": {
+          "azimuth_deg": 180,
+          "dip_deg": 0,
+          "latitude_deg": 44.843,
+          "longitude_deg": 10.7315
+        },
+        "full_response_relative_to_1Hz": [
+          {
+            "frequency_hz": 0.1,
+            "amplitude_ratio": 0.9999468302703354,
+            "phase_shift_deg": 1.1988759570931171
+          },
+          {
+            "frequency_hz": 0.125,
+            "amplitude_ratio": 0.9999471489595215,
+            "phase_shift_deg": 1.1656021074705034
+          },
+          {
+            "frequency_hz": 0.16666666666666666,
+            "amplitude_ratio": 0.9999478368251121,
+            "phase_shift_deg": 1.1101445147735065
+          },
+          {
+            "frequency_hz": 0.2,
+            "amplitude_ratio": 0.9999485277112439,
+            "phase_shift_deg": 1.0657771123777926
+          },
+          {
+            "frequency_hz": 0.25,
+            "amplitude_ratio": 0.9999497971854482,
+            "phase_shift_deg": 0.9992232359585724
+          },
+          {
+            "frequency_hz": 1,
+            "amplitude_ratio": 1,
+            "phase_shift_deg": 0
+          }
+        ],
+        "evalresp_status": "NUMERIC_TRANSFER_COMPUTED_NOT_CALIBRATION_PASS",
+        "stage_count": 9
+      },
+      "IT.NVL..HGZ": {
+        "orientation_epoch": {
+          "azimuth_deg": 0,
+          "dip_deg": 90,
+          "latitude_deg": 44.843,
+          "longitude_deg": 10.7315
+        },
+        "full_response_relative_to_1Hz": [
+          {
+            "frequency_hz": 0.1,
+            "amplitude_ratio": 0.9999468302703354,
+            "phase_shift_deg": 1.1988759570931171
+          },
+          {
+            "frequency_hz": 0.125,
+            "amplitude_ratio": 0.9999471489595215,
+            "phase_shift_deg": 1.1656021074705034
+          },
+          {
+            "frequency_hz": 0.16666666666666666,
+            "amplitude_ratio": 0.9999478368251121,
+            "phase_shift_deg": 1.1101445147735065
+          },
+          {
+            "frequency_hz": 0.2,
+            "amplitude_ratio": 0.9999485277112439,
+            "phase_shift_deg": 1.0657771123777926
+          },
+          {
+            "frequency_hz": 0.25,
+            "amplitude_ratio": 0.9999497971854482,
+            "phase_shift_deg": 0.9992232359585724
+          },
+          {
+            "frequency_hz": 1,
+            "amplitude_ratio": 1,
+            "phase_shift_deg": 0
+          }
+        ],
+        "evalresp_status": "NUMERIC_TRANSFER_COMPUTED_NOT_CALIBRATION_PASS",
+        "stage_count": 9
+      }
+    },
+    "all_three_HG_stage_metadata_identical": true,
+    "new_orientation_identity_warning": "RAN HGE azimuth 270 deg (west), HGN 180 deg (south), HGZ dip +90 deg (down); ESM HNE/HNN/HNZ processing/axis sign correspondence is NOT proven; do not map raw HG into E/N/up without explicit orientation transformation and waveform evidence.",
+    "assumptions": [
+      "Obspy SEED epoch selection corresponds to NVL 2012-05-20T02:00Z; no independent installed serial calibration verified",
+      "Response normalized to 1 Hz in ACC units is an instrument-metadata transfer ratio, not a measured station frequency reliability/SNR or ESM Butterworth processing response",
+      "Digital coefficient stages and decimation metadata are those published in the Dataless; no independent firmware verification"
+    ],
+    "error_budget": {
+      "source_sha256": "exact byte-level source identity (SHA256); coefficient arrays summarized by SHA256 of their string representations",
+      "evalresp_numerics": "ObsPy floating point output, not independently cross-validated full chain; no quantified solver convergence",
+      "physical_sensor_noise_and_calibration": "NEED_INDEPENDENT_CALIBRATION",
+      "HG_to_HN_axis_processing": "NEED_PROOF",
+      "site_design_spectrum": "NOT_DEFINED"
+    },
+    "failures": [
+      "Four intentionally invalid synthetic stage sequences rejected",
+      "Initial workflow run #41835922186 computed stages but did not print them in logs; follow-up #41836013853 emitted and archived full data; neither is a structural solver"
+    ],
+    "PASS": {
+      "official_dataless_metadata_read": true,
+      "nine_stage_inventory_and_evalresp_numeric": true,
+      "instrument_0p1_to_0p2hz_usable_band": false,
+      "HG_HN_axis_mapping": false,
+      "site_target_spectrum": false,
+      "S05": false
+    },
+    "HOLD": "HG raw axes vs ESM HN processed axes sign/rotation and real waveform mapping; independent usable-band SNR/calibration; site target spectrum; no seismic design-wave acceptance"
   }
 }
