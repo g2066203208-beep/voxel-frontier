@@ -13,12 +13,16 @@
   "FIG": "No new physical-response figures",
   "TAB": "3 control points x 3 conditional mean scenarios; equivalent cycle counts and m4-proxy fractions; 9 domain groups and 4 material admission contracts",
   "script_path": "research/wind-tower/experiments/T077/recovery/s10_cycle_sign_m4_partition.cjs",
-  "script_sha256": "5e58e0d985ac61e804661ba558c4dee41824a89c214d349b64bf08f2ab51e04a",
-  "script_git_blob": "ad039b894100871299cedd78a1bed9e23e46a20e",
+  "script_sha256": null,
+  "script_git_blob": "412b609fd35eb1938db6b2991cc0e7ea0345b9bf",
   "tests": {
     "known_answers": 4,
     "negative_rejections": 4,
-    "corrupted_csv_rejections": 3
+    "corrupted_csv_rejections": 3,
+    "material_domain_synthetic_known_answers": 5,
+    "material_domain_full_real_rows": 1574,
+    "material_domain_material_scenario_diagnostics": 18888,
+    "material_domain_admitted": 0
   },
   "ALGORITHM": "For each rainflow cycle, endpoints mean +/- range/2; classify compression/reversing/tension, sum count*range^4 per class, normalize by total. Pe/P0 shifts are conditional, not verified native equilibrium.",
   "ERROR_BUDGET": "Source decimal roundoff ~1e-10 MPa; smallest observed endpoint-zero margin across 9 scenario/groups 0.001796467 MPa (P0 CSEG16), so classification robust to CSV serialization; physics/PT uncertainty unestimated; m4 is NOT material damage.",
@@ -436,5 +440,7 @@
     "SCRIPT_SHA256": "NOT_COMPUTED_IN_CONNECTOR_V8; Git blob SHA and full source retained; native CI SHA pending",
     "physical_pass": false,
     "stage_pass_count": 0
-  }
+  },
+  "previous_script_sha256": "5e58e0d985ac61e804661ba558c4dee41824a89c214d349b64bf08f2ab51e04a",
+  "script_sha256_status": "PENDING_NATIVE_HASH_AFTER_11H_UPDATE; Git blob SHA is available"
 }
