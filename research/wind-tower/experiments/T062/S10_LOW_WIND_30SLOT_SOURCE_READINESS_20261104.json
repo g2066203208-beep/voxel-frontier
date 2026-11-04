@@ -1,0 +1,71 @@
+{
+  "SOURCE": "Direct GitHub-branch ERA5 derived 31-bin CSV, 126-slot source matrix, original 18 NTM controller/input CSV and original 18 NTM FST/OUTB identity CSV; scoped REST Git tree/release/Actions metadata inventory",
+  "READING_LEVEL": "Derived CSV direct bytes and inherited original-OUTB SHA receipts; Git tree path names, release asset names and recent 100 Actions run titles only. No 4-8m/s original BTS/OUTB read or recovered; full historical Actions artifact scan NOT DONE.",
+  "REF": "T062 original 18NTM source contract; 12-stage critical path and prior S10 conditional-load-m4 diagnostic",
+  "STANDARD": "IEC 61400-1/6 2025 licensed text NOT READ; 1m/s centers, six seeds, cut-in and operating regime are candidate research design NOT clause acceptance",
+  "OFFICIAL": "GitHub REST repository tree, releases and Actions metadata; OpenFAST/TurbSim source identities inherited, NOT native controller or formal IEC validation",
+  "RUN": "Node source-only deterministic 30-slot construction with 6 tamper rejection tests; no TurbSim, OpenFAST or Abaqus production run",
+  "FIG": "0",
+  "TAB": "30 proposed source-missing low-wind NTM slots; no wind-field or material response figures",
+  "input_sha256": {
+    "era": "e4058620a36b23bb218103875d4dc5b0711fc45d418b23a2208c2fc9c16c9102",
+    "coverage": "d4e25023f343ea76f2de5ce90c7d24dd985df770ec9f4747d203391010431e67",
+    "controller": "be58d33306e6ac101d42b42c7f4d24ea5743662d1a9355aff9862b5a7e0aad45",
+    "identity": "d57ff9e71b58b531b1aaa357ad7a57a86daf529e061f9d8996cf2453b04a7da5"
+  },
+  "inventory_snapshot": {
+    "read_date": "2026-11-04",
+    "tree_ref": "28bb857b95b89c1343daee75e37b41aade269a88",
+    "tree_api_sha256": "79fcc0fd4ad27d81ea1793519627f09e167910762ccc013f04418b0572bd894f",
+    "tree_entries": 3278,
+    "tree_truncated": false,
+    "tree_lowwind_named_path_hits": 0,
+    "release_api_sha256": "89ed6a82bddc8f78786f66f26d50c13c59f60a6f6253158526d9c7f1edd24ccc",
+    "releases_count": 2,
+    "s06_draft_release_tag": "windtower-s06-t071-t072-source-archive-20261027",
+    "s06_draft_release_asset_count": 17,
+    "s06_original_ETM_ZIP_assets": 16,
+    "s06_release_lowwind_named_assets": 0,
+    "actions_recent_page_sha256": "aee0a6bb600a4bae93946f3658ddefd32c2eef84c42419e9a425245dd57b05a9",
+    "actions_recent_page_rows": 100,
+    "actions_total_reported": 11756,
+    "actions_recent_page_lowwind_named_runs": 0,
+    "actions_history_exhausted": false,
+    "scope_note": "Git tree path names + both release asset name lists + only the latest 100 Actions run titles; does not inspect all 11756 run artifacts or archived ZIP members. Absence is scoped, NOT repository-wide proof."
+  },
+  "results": {
+    "bins": [
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "slot_count": 30,
+    "unique_candidate_seed1": [
+      "104729",
+      "130363",
+      "155921",
+      "181081",
+      "206369",
+      "231701"
+    ],
+    "era5_21y_hours": 95402,
+    "diagnostic_operating_hours": 106900,
+    "share_of_diagnostic_operating_hours": 0.8924415341440599,
+    "original_lowwind_outb_found_in_checked_sources": 0,
+    "formal_dlc12_verified_slots": 0,
+    "original_controller_source_configs_checked": 18,
+    "original_18ntm_gage_count": 9
+  },
+  "assumptions": "Candidate lowwind centers 4.5..8.5m/s; historical seed1 reused across speeds ONLY as a proposed paired design; original 51x51/0.025s/700s and FST 0.0125s/0.05s settings are historical metadata, not approved lowwind inputs. Controller binary and below/near cut-in operating state unverified.",
+  "ERROR_BUDGET": "Integer ERA5 hours exact; conditional probability prior 12-digit decimal rounded <=0.5e-12 per bin; proposed wind centers differ from physical turbulent realizations; physical/control/turbulence model errors NOT ESTIMATED. Git tree/release/Actions name search cannot prove missing archive members.",
+  "HOLD": "No verified 4-8m/s 158m NTM original OUTB/BTS, original BTS bytes unarchived even for 18 prior cases; lowwind controller cut-in, wind-bin IEC2025, source input versions, 31-segment full time series, material stress and DLC1.2 unresolved.",
+  "tests": {
+    "negative_rejections": 6,
+    "source_locked": true,
+    "physical_pass": false,
+    "material_fatigue_pass": false
+  },
+  "stage_passed": 0
+}
