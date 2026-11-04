@@ -96,25 +96,39 @@ def corr(x, y):
 
 def crosscheck(cv, mp, cvmeta, mpmeta):
     names_cv, names_mp = sorted(cv), sorted(mp)
-    same_grid = (set(cv) == set(mp) == set(COMP)
-        and len({(v["dt"],v["n"],v["first"]) for v in cvmeta.values()}) == 1
-        and len({(v["dt"],v["n"],v["first"]) for v in mpmeta.values()}) == 1
-        and next(iter(cvmeta.values()))["dt"] == next(iter(mpmeta.values()))["dt"]
-        and next(iter(cvmeta.values()))["n"] == next(iter(mpmeta.values()))["n"]
-        and next(iter(cvmeta.values()))["first"] == next(iter(mpmeta.values()))["first"])
+    valid_names = set(cv) == set(mp) == set(COMP)
+    grids = list(cvmeta.values()) + list(mpmeta.values())
+    common_grid = (valid_names and len(grids) == 6
+        and len({v["dt"] for v in grids}) == 1
+        and len({v["first"] for v in grids}) == 1
+        and all(v["n"] == len(trace) for v,trace in
+                list(zip((cvmeta[k] for k in COMP),(cv[k] for k in COMP))) +
+                list(zip((mpmeta[k] for k in COMP),(mp[k] for k in COMP)))))
+    same_grid = (common_grid and len({v["n"] for v in grids}) == 1)
     result = {"cv_streams":names_cv,"mp_streams":names_mp,
-              "grid_exact_match":same_grid, "correlation_matrix":{},
+              "grid_exact_match":same_grid,
+              "common_start_dt_grid_compatible":common_grid,
+              "correlation_matrix":{},
               "same_axis_signed_correlation":{}, "best_cv_match_for_mp":{},
               "CV_to_MP_same_axis_candidate":False,
               "original_RAN_HG_to_ESM_HN_mapping_verified":False,
               "S05_PASS":False,"native_E_WE_runs":0}
-    if not same_grid:
-        result["status"] = "HOLD_CV_MP_TIME_OR_STREAM_GRID"
+    if not common_grid:
+        result["status"] = "HOLD_CV_MP_START_DT_OR_STREAM_IDENTITY"
         return result
-    dt = cvmeta["HNE"]["dt"]
+    n = min(v["n"] for v in grids)
+    result["common_overlap_samples"] = n
+    result["common_overlap_duration_s"] = (n-1)*grids[0]["dt"]
+    result["tail_samples_excluded"] = {
+        "CV":{k:cvmeta[k]["n"]-n for k in COMP},
+        "MP":{k:mpmeta[k]["n"]-n for k in COMP}}
+    if n < 1000:
+        result["status"] = "HOLD_TOO_SHORT_COMMON_OVERLAP"
+        return result
+    dt = grids[0]["dt"]
     window = max(3,round(2.0/dt))
-    filtered_cv = {k:highpass(v,window) for k,v in cv.items()}
-    filtered_mp = {k:highpass(v,window) for k,v in mp.items()}
+    filtered_cv = {k:highpass(v[:n],window) for k,v in cv.items()}
+    filtered_mp = {k:highpass(v[:n],window) for k,v in mp.items()}
     for m in COMP:
         result["correlation_matrix"][m] = {
             c:corr(filtered_cv[c],filtered_mp[m]) for c in COMP}
@@ -124,11 +138,12 @@ def crosscheck(cv, mp, cvmeta, mpmeta):
     result["CV_to_MP_same_axis_candidate"] = all(
         result["best_cv_match_for_mp"][m] == m and
         result["same_axis_signed_correlation"][m] > 0.90 for m in COMP)
-    result["status"] = ("CV_MP_SAME_AXIS_POSITIVE_CORRELATION_CANDIDATE_NOT_HG_PROOF"
+    result["status"] = ("CV_MP_COMMON_OVERLAP_SAME_AXIS_POSITIVE_CORRELATION_CANDIDATE_NOT_HG_PROOF"
         if result["CV_to_MP_same_axis_candidate"] else
         "HOLD_CV_MP_POLARITY_OR_PROCESSING_DIFFERENCE")
-    result["diagnostic"] = ("2-second centered moving-mean removed; threshold 0.90 "
-        "is an exploratory processing check, not a scientific acceptance tolerance.")
+    result["diagnostic"] = ("2-second centered moving-mean removed; CV/MP only "
+        "overlap at common start and dt; extra CV/MP tail samples excluded. "
+        "Threshold 0.90 is exploratory, not a scientific acceptance tolerance.")
     return result
 
 def synthetic_tests():
