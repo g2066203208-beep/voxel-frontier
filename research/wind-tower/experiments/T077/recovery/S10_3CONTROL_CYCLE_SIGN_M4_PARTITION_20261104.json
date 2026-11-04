@@ -1,0 +1,239 @@
+{
+  "timestamp_local": "2026-11-04 10:08 Asia/Shanghai",
+  "stage": "S10 independent numeric preparation, 0/12 stage PASS",
+  "SOURCE": "Direct PR #42 1574-row nominal rainflow CSV; original OpenFAST OUTB/ZIP source SHA inherited from T077 2026-10-30 receipts, not re-downloaded",
+  "READING_LEVEL": "Full 280249-byte CSV, all 1574 rows parsed, 3 exact case/segment/azimuth identities and half/full-cycle counts checked",
+  "source_path": "research/wind-tower/experiments/T077/recovery/S10_3CONTROL_REAL_GROSS_CYCLES_20261030.csv",
+  "source_git_blob": "4b05ec4214c1ff38df71f1e5eb80cbec5a81c38d",
+  "source_sha256": "646065838456b6465e321c4c6fd24966f180f275df99c615000577557219ff83",
+  "REF": "REF018 Huang et al. 2025 Engineering Structures 334:120295, p6 Eq.(1)-(2) Fig.10 previously visually read; no new original pages this run",
+  "STANDARD": "IEC 61400-1/6:2025 licensed clauses not read; no clause acceptance",
+  "OFFICIAL": "GitHub Git Blob, inherited native OpenFAST provenance; no new OpenFAST/Abaqus solver",
+  "RUN": "Actual V8 full-data numeric evaluation and 4 known-answer/4 negative synthetic plus 3 corrupted-source negative tests; Node CLI --check/self-test available; native CI not yet confirmed",
+  "FIG": "No new physical-response figures",
+  "TAB": "3 control points x 3 conditional mean scenarios; equivalent cycle counts and m4-proxy fractions",
+  "script_path": "research/wind-tower/experiments/T077/recovery/s10_cycle_sign_m4_partition.cjs",
+  "script_sha256": "5e58e0d985ac61e804661ba558c4dee41824a89c214d349b64bf08f2ab51e04a",
+  "script_git_blob": "ad039b894100871299cedd78a1bed9e23e46a20e",
+  "tests": {
+    "known_answers": 4,
+    "negative_rejections": 4,
+    "corrupted_csv_rejections": 3
+  },
+  "ALGORITHM": "For each rainflow cycle, endpoints mean +/- range/2; classify compression/reversing/tension, sum count*range^4 per class, normalize by total. Pe/P0 shifts are conditional, not verified native equilibrium.",
+  "ERROR_BUDGET": "Source decimal roundoff ~1e-10 MPa; smallest observed endpoint-zero margin across 9 scenario/groups 0.001796467 MPa (P0 CSEG16), so classification robust to CSV serialization; physics/PT uncertainty unestimated; m4 is NOT material damage.",
+  "FAILURES": "No new test failures; earlier T077 source failures remain in historical process log",
+  "HOLD": "ETM not DLC1.2, only three nominal sections; 4–8m/s NTM original BTS/OUTB missing, local material stress and native PT not validated; annual Miner life remains 0; S10 BLOCKED, S06 PARTIAL, 0/12",
+  "results": [
+    {
+      "case": "U09p343881_ETM_S06",
+      "segment": "CSEG_16",
+      "azimuth_deg": 180,
+      "cycle_rows": 413,
+      "equivalent_cycles": 407.5,
+      "uniform_PT_shift_hypotheses_MPa": {
+        "Pe": 6.47501042349,
+        "P0": 8.40610769802
+      },
+      "scenarios": {
+        "gross": {
+          "row_counts": {
+            "compression": 0,
+            "reversing": 4,
+            "tension": 409
+          },
+          "equivalent_cycle_counts": {
+            "compression": 0,
+            "reversing": 2,
+            "tension": 405.5
+          },
+          "m4_proxy_fractions": {
+            "compression": 0,
+            "reversing": 0.896703217659,
+            "tension": 0.103296782341
+          },
+          "m4_proxy_total_MPa4_cycles": 1484501.82314,
+          "minimum_endpoint_zero_margin_MPa": 0.052107444719
+        },
+        "Pe": {
+          "row_counts": {
+            "compression": 45,
+            "reversing": 14,
+            "tension": 354
+          },
+          "equivalent_cycle_counts": {
+            "compression": 44.5,
+            "reversing": 10.5,
+            "tension": 352.5
+          },
+          "m4_proxy_fractions": {
+            "compression": 0.0000720303976253,
+            "reversing": 0.988758761225,
+            "tension": 0.0111692083772
+          },
+          "m4_proxy_total_MPa4_cycles": 1484501.82314,
+          "minimum_endpoint_zero_margin_MPa": 0.0253532046628
+        },
+        "P0": {
+          "row_counts": {
+            "compression": 80,
+            "reversing": 20,
+            "tension": 313
+          },
+          "equivalent_cycle_counts": {
+            "compression": 79.5,
+            "reversing": 15.5,
+            "tension": 312.5
+          },
+          "m4_proxy_fractions": {
+            "compression": 0.0000937501851883,
+            "reversing": 0.997651019529,
+            "tension": 0.00225523028595
+          },
+          "m4_proxy_total_MPa4_cycles": 1484501.82314,
+          "minimum_endpoint_zero_margin_MPa": 0.00179646713763
+        }
+      }
+    },
+    {
+      "case": "U09p343881_ETM_S06",
+      "segment": "CSEG_17",
+      "azimuth_deg": 180,
+      "cycle_rows": 526,
+      "equivalent_cycles": 520.5,
+      "uniform_PT_shift_hypotheses_MPa": {
+        "Pe": 6.55467487633,
+        "P0": 8.50953115628
+      },
+      "scenarios": {
+        "gross": {
+          "row_counts": {
+            "compression": 1,
+            "reversing": 5,
+            "tension": 520
+          },
+          "equivalent_cycle_counts": {
+            "compression": 1,
+            "reversing": 3,
+            "tension": 516.5
+          },
+          "m4_proxy_fractions": {
+            "compression": 7.67668915104e-15,
+            "reversing": 0.891953893367,
+            "tension": 0.108046106633
+          },
+          "m4_proxy_total_MPa4_cycles": 1471436.06597,
+          "minimum_endpoint_zero_margin_MPa": 0.0060392926215
+        },
+        "Pe": {
+          "row_counts": {
+            "compression": 65,
+            "reversing": 17,
+            "tension": 444
+          },
+          "equivalent_cycle_counts": {
+            "compression": 64.5,
+            "reversing": 13.5,
+            "tension": 442.5
+          },
+          "m4_proxy_fractions": {
+            "compression": 0.0000773079603023,
+            "reversing": 0.987788292493,
+            "tension": 0.0121343995468
+          },
+          "m4_proxy_total_MPa4_cycles": 1471436.06597,
+          "minimum_endpoint_zero_margin_MPa": 0.034757446128
+        },
+        "P0": {
+          "row_counts": {
+            "compression": 112,
+            "reversing": 21,
+            "tension": 393
+          },
+          "equivalent_cycle_counts": {
+            "compression": 111.5,
+            "reversing": 16.5,
+            "tension": 392.5
+          },
+          "m4_proxy_fractions": {
+            "compression": 0.0000999610334494,
+            "reversing": 0.997379520834,
+            "tension": 0.00252051813225
+          },
+          "m4_proxy_total_MPa4_cycles": 1471436.06597,
+          "minimum_endpoint_zero_margin_MPa": 0.029294855337
+        }
+      }
+    },
+    {
+      "case": "U11p4_ETM_S04",
+      "segment": "CSEG_04",
+      "azimuth_deg": 0,
+      "cycle_rows": 635,
+      "equivalent_cycles": 628,
+      "uniform_PT_shift_hypotheses_MPa": {
+        "Pe": 6.0039155514,
+        "P0": 7.7945142068
+      },
+      "scenarios": {
+        "gross": {
+          "row_counts": {
+            "compression": 635,
+            "reversing": 0,
+            "tension": 0
+          },
+          "equivalent_cycle_counts": {
+            "compression": 628,
+            "reversing": 0,
+            "tension": 0
+          },
+          "m4_proxy_fractions": {
+            "compression": 1,
+            "reversing": 0,
+            "tension": 0
+          },
+          "m4_proxy_total_MPa4_cycles": 1584919.28556,
+          "minimum_endpoint_zero_margin_MPa": 1.73010085665
+        },
+        "Pe": {
+          "row_counts": {
+            "compression": 635,
+            "reversing": 0,
+            "tension": 0
+          },
+          "equivalent_cycle_counts": {
+            "compression": 628,
+            "reversing": 0,
+            "tension": 0
+          },
+          "m4_proxy_fractions": {
+            "compression": 1,
+            "reversing": 0,
+            "tension": 0
+          },
+          "m4_proxy_total_MPa4_cycles": 1584919.28556,
+          "minimum_endpoint_zero_margin_MPa": 7.73401640805
+        },
+        "P0": {
+          "row_counts": {
+            "compression": 635,
+            "reversing": 0,
+            "tension": 0
+          },
+          "equivalent_cycle_counts": {
+            "compression": 628,
+            "reversing": 0,
+            "tension": 0
+          },
+          "m4_proxy_fractions": {
+            "compression": 1,
+            "reversing": 0,
+            "tension": 0
+          },
+          "m4_proxy_total_MPa4_cycles": 1584919.28556,
+          "minimum_endpoint_zero_margin_MPa": 9.52461506345
+        }
+      }
+    }
+  ]
+}
