@@ -104,7 +104,7 @@ def self_test():
         try:orientation_gate(bad)
         except ValueError as exc:require(str(exc)==code,'WRONG_NEGATIVE_TEST_ERROR')
         else:raise AssertionError('NEGATIVE_TEST_NOT_REJECTED '+code)
-    print('RAN_AXIS_5_NEGATIVE_TESTS_AND_GEOMETRY_SELFTEST_PASS')
+    print('RAN_AXIS_5_NEGATIVE_TESTS_AND_GEOMETRY_SELFTEST_PASS', file=sys.stderr)
 
 
 if __name__=='__main__':
