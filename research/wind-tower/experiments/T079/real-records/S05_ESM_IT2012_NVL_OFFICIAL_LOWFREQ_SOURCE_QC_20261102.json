@@ -779,7 +779,7 @@
       "dataless_content_status": "Official ZIP CRC PASS; ObsPy 1.4.2 Python3.11 parsed NVL.IT.dataless member: 28672 bytes, 1 station, 4 channels; PAZ 2012 extraction attempts not yet shown in stdout; still HOLD",
       "CI_workflow": ".github/workflows/s05-ground-motion-pair-qc.yml",
       "CI_job": "s05-ran-nvl-official-dataless-source",
-      "CI_status": "Native official RAN dataless source + 2012 HG three-channel PAZ extraction PASS, but physical calibration and design HOLD",
+      "CI_status": "Actions #41827155106 completed/success 11/11; official source HTTP200, 3/3 2012 HG PAZ extracted, 5-frequency PZ-only calculation",
       "local_failure": "Container direct GET failed with DNS NameResolutionError; not a negative official-server result",
       "SOURCE": "Official station row, not 2012 calibration document",
       "REF": "Inherited ESM3 DOI 10.13127/esm.3; no new article full text",
@@ -789,8 +789,8 @@
       "FIG": 0,
       "TAB": "NVL one-row equipment registry",
       "assumptions": "Registry equipment epoch is not independently tied to 2012 maintenance log",
-      "error_budget": "SHA-256 exact for official ZIP and 28672-byte NVL member; station response amplitude/phase uncertainty not yet quantifiable",
-      "HOLD": "Need raw HG->ESM processed HN mapping and independent 2012 installed chain calibration including FIR/ADC, long-period noise/usable band and Jiayu target spectrum",
+      "error_budget": "Original official ZIP/member exact SHA256; 5-frequency analog PZ numerical complex arithmetic roundoff ~1e-15; real instrument response/noise and site uncertainty NOT quantified",
+      "HOLD": "Analog PAZ flatness does not establish full installed chain/ESM processed HG->HN mapping, noise floor/usable 0.1-0.2Hz, or Jiayu site target spectrum",
       "S05_PASS": false,
       "native_E_WE_runs": 0,
       "station_registry_raw_html_sha256": "cc45118d1428591f855d5c05a81ffb65731d4ee5b47862ad7bb78d43b0845011",
@@ -854,11 +854,47 @@
           "three_channels_exact_same_values": true,
           "source_level": "OFFICIAL PCM-DPC RAN Dataless SEED via ObsPy1.4.2 get_paz, NOT independent in-situ calibration",
           "limits": "get_paz may omit FIR/ADC stage details; ESM processed HN mapping to raw HG not proven; 0.1–0.2Hz low-frequency usability not proven"
+        },
+        "paz_only_relative_to_dc_5freq": {
+          "algorithm": "H(j2πf)=gain*product(j2πf-zero)/product(j2πf-pole), normalize H(f)/H(0); ObsPy official SEED get_paz poles rad/s; Python3.11 cmath; all 3 HG channels exactly identical",
+          "rows": [
+            {
+              "frequency_hz": 0.1,
+              "amplitude_ratio_to_dc": 1.0000000209257118,
+              "phase_shift_deg": -0.13435045864631529
+            },
+            {
+              "frequency_hz": 0.125,
+              "amplitude_ratio_to_dc": 1.0000000326965082,
+              "phase_shift_deg": -0.16793808572931093
+            },
+            {
+              "frequency_hz": 0.16666666666666666,
+              "amplitude_ratio_to_dc": 1.0000000581274457,
+              "phase_shift_deg": -0.22391748342104945
+            },
+            {
+              "frequency_hz": 0.2,
+              "amplitude_ratio_to_dc": 1.000000083703986,
+              "phase_shift_deg": -0.2687010232891226
+            },
+            {
+              "frequency_hz": 0.25,
+              "amplitude_ratio_to_dc": 1.0000001307888133,
+              "phase_shift_deg": -0.33587637848387264
+            }
+          ],
+          "source_run_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41827155106/job/126564702722",
+          "source_artifact_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41827155106/artifacts/13320165857",
+          "independent_check": "Separate JavaScript complex-product computation agrees to roundoff (amplitude within ~3e-16; phase within ~1e-15 deg)",
+          "physical_scope": "ONLY analog PZ shape relative to DC; not full digital FIR, actual station noise or ESM processed record transfer; NOT low-frequency acceptance",
+          "S05_PASS": false
         }
       },
-      "CI_response_run_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41826812595",
+      "CI_response_run_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41827155106",
       "CI_response_job_id": 126563531913,
-      "CI_channel_discovery_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41826917661/job/126563897876"
+      "CI_channel_discovery_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41826917661/job/126563897876",
+      "CI_response_artifact_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41827155106/artifacts/13320165857"
     }
   }
 }
