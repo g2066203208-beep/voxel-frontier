@@ -9,11 +9,11 @@
   "REF": "REF018 Huang et al. 2025 Engineering Structures 334:120295, p6 Eq.(1)-(2) Fig.10 previously visually read; no new original pages this run",
   "STANDARD": "IEC 61400-1/6:2025 licensed clauses not read; no clause acceptance",
   "OFFICIAL": "GitHub Git Blob, inherited native OpenFAST provenance; no new OpenFAST/Abaqus solver",
-  "RUN": "Actual V8 full-data numeric evaluation and 4 known-answer/4 negative synthetic plus 3 corrupted-source negative tests; Node CLI --check/self-test available; native CI not yet confirmed; 2026-11-04 11h V8 full-source material-domain evaluation 18888 diagnostics, 5 synthetic checks, legacy regression matched; no native CI yet",
+  "RUN": "Actual V8 full-data numeric evaluation and 4 known-answer/4 negative synthetic plus 3 corrupted-source negative tests; Node CLI --check/self-test available; native CI not yet confirmed; 2026-11-04 11h V8 full-source material-domain evaluation 18888 diagnostics, 5 synthetic checks, legacy regression matched; no native CI yet; Native Ubuntu CI #41765664590 job #126363319929 completed/success, node --self-test/--check and sha256sum; not physical PASS",
   "FIG": "No new physical-response figures",
   "TAB": "3 control points x 3 conditional mean scenarios; equivalent cycle counts and m4-proxy fractions; 9 domain groups and 4 material admission contracts",
   "script_path": "research/wind-tower/experiments/T077/recovery/s10_cycle_sign_m4_partition.cjs",
-  "script_sha256": null,
+  "script_sha256": "294a628cbb883053a15baf812cb8b50b8ac274a826ebaa3829fe5994020b724a",
   "script_git_blob": "412b609fd35eb1938db6b2991cc0e7ea0345b9bf",
   "tests": {
     "known_answers": 4,
@@ -430,17 +430,21 @@
     "READING_LEVEL": "Full 1574 rows read and 9 scenario/section groups calculated; 18888 material-scenario diagnostics, NOT independent observations",
     "REF": "Existing s10_local_stress_rainflow_gate.py cites Paulson/Frank/Breen 1983 FHWA/TX-82/54+300-1 printed pp57-62 (previously read); no new original paper page this run",
     "STANDARD": "IEC 2025 authorized fatigue clauses not read; no clause acceptance",
-    "OFFICIAL": "GitHub connector read of locked CSV and code; no new solver",
-    "RUN": "Actual V8 1574-row domain evaluation; 5 synthetic known-answer checks; existing 1574-row m4 regression matched; patched JS function evaluated against full source",
+    "OFFICIAL": "GitHub Actions native Ubuntu job #126363319929, original OpenFAST source provenance inherited; no new solver",
+    "RUN": "Native GitHub Actions #41765664590 job #126363319929 completed/success: node --self-test and --check; 1574 rows, 18888 material checks, 0 admitted, plus legacy S10 source regressions",
     "FIG": "None",
     "TAB": "Nine scenario/section stress-sign and conditional R-domain rows; four material missing-input contracts",
     "ERROR_BUDGET": "Source decimal serialization ~1e-10 MPa (inherited); conditional R unstable near zero stress endpoint, no material-model or PT uncertainty quantified. PT primary range comparison is deliberately a non-physical gross-section diagnostic.",
     "FAILURES": "First in-tool eval rejected shebang (SyntaxError); removed hashbang for V8 test only, retained it in GitHub Node script. No data/test assertion failures.",
     "HOLD": "All 1574 cycles are gross nominal, not verified local material stress. Concrete strength/branch, rebar grade/S-N, PT actual strand stress and tested domain, steel detail S-N and complete DLC1.2 absent; zero Miner or life admissible.",
-    "SCRIPT_SHA256": "NOT_COMPUTED_IN_CONNECTOR_V8; Git blob SHA and full source retained; native CI SHA pending",
+    "SCRIPT_SHA256": "294a628cbb883053a15baf812cb8b50b8ac274a826ebaa3829fe5994020b724a",
     "physical_pass": false,
-    "stage_pass_count": 0
+    "stage_pass_count": 0,
+    "NATIVE_LOG": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41765664590/job/126363319929",
+    "RECEIPT_SHA256_FROM_CI": "8b91c7e822691e36e30c310a8a2251dfc8007f4be6b5d53120f01df76eb51445",
+    "RECEIPT_SHA256_NOTE": "CI hash applies to previous receipt bytes before this metadata-only update; do not mislabel new JSON bytes",
+    "TESTS": "4 legacy known answers, 4 legacy negative rejections, 5 new domain known-answer checks, 1574-row full-source check, 18888 conditional diagnostics; native CI PASS for code, not physical material fatigue"
   },
   "previous_script_sha256": "5e58e0d985ac61e804661ba558c4dee41824a89c214d349b64bf08f2ab51e04a",
-  "script_sha256_status": "PENDING_NATIVE_HASH_AFTER_11H_UPDATE; Git blob SHA is available"
+  "script_sha256_status": "VERIFIED_NATIVE_UBUNTU_ACTIONS_41765664590"
 }
