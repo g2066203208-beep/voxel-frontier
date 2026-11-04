@@ -3,6 +3,8 @@ on:
   push:
     branches: [research/t080-seismic-integration-gates-20261022]
     paths:
+      - 'research/wind-tower/experiments/T077/recovery/s10_cycle_sign_m4_partition.cjs'
+      - 'research/wind-tower/experiments/T077/recovery/S10_3CONTROL_CYCLE_SIGN_M4_PARTITION_20261104.json'
       - 'research/wind-tower/experiments/T062/s10_era5_ntm_partial_m4_and_seed_subset.py'
       - 'research/wind-tower/experiments/T062/s10_channel_aware_m4_priority.cjs'
       - 'research/wind-tower/experiments/T062/s10_low_wind_30slot_source_readiness.cjs'
@@ -22,7 +24,18 @@ jobs:
         with:
           sparse-checkout: |
             research/wind-tower/experiments/T062
+            research/wind-tower/experiments/T077/recovery/s10_cycle_sign_m4_partition.cjs
+            research/wind-tower/experiments/T077/recovery/S10_3CONTROL_CYCLE_SIGN_M4_PARTITION_20261104.json
+            research/wind-tower/experiments/T077/recovery/S10_3CONTROL_REAL_GROSS_CYCLES_20261030.csv
           sparse-checkout-cone-mode: false
+      - name: Verify 1574 real nominal cycles material applicability (no solver)
+        shell: bash
+        run: |
+          set -euo pipefail
+          p=research/wind-tower/experiments/T077/recovery
+          node "$p/s10_cycle_sign_m4_partition.cjs" --self-test
+          node "$p/s10_cycle_sign_m4_partition.cjs" --check
+          sha256sum "$p/s10_cycle_sign_m4_partition.cjs" "$p/S10_3CONTROL_REAL_GROSS_CYCLES_20261030.csv" "$p/S10_3CONTROL_CYCLE_SIGN_M4_PARTITION_20261104.json"
       - name: Verify source-locked channel-aware wind-bin ranking (no solver)
         shell: bash
         run: |
