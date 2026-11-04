@@ -120,6 +120,16 @@ def calculate(us_bytes, esm_bytes):
             vv = [spectra[pair, t] for pair in sorted(provenance) if pair[0] == event]
             per_event[event] = math.exp(sum(math.log(v) for v in vv) / len(vv))
         event_gm = math.exp(sum(math.log(per_event[e]) for e in event_ids) / len(event_ids))
+        # Remove one independent EVENT, not one station. Three stations of
+        # Ridgecrest must leave together; this is a sensitivity envelope,
+        # NOT a confidence interval, bootstrap or design spectrum.
+        leave_one_event_out = {
+            excluded: math.exp(math.fsum(math.log(per_event[e])
+                for e in event_ids if e != excluded) / (len(event_ids) - 1))
+            for excluded in event_ids
+        }
+        loo_min = min(leave_one_event_out.values())
+        loo_max = max(leave_one_event_out.values())
         ridge = [spectra[pair, t] for pair in sorted(provenance) if pair[0] == "ci38457511"]
         rows.append({
             "period_s": t,
@@ -129,6 +139,11 @@ def calculate(us_bytes, esm_bytes):
             "ridgecrest_station_max_over_min": max(ridge) / min(ridge),
             "independent_events": len(event_ids),
             "horizontal_pairs": len(provenance),
+            "per_event_station_balanced_gm_m_s2": per_event,
+            "leave_one_event_out_gm_m_s2": leave_one_event_out,
+            "leave_one_event_out_min_m_s2": loo_min,
+            "leave_one_event_out_max_m_s2": loo_max,
+            "leave_one_event_out_max_over_min": loo_max / loo_min,
             "interpretation": "HETEROGENEOUS_PROCESSING_DIAGNOSTIC_NOT_DESIGN_TARGET",
         })
     return {
@@ -186,6 +201,20 @@ def self_test():
         assert math.isclose(row["event_weighted_gm_m_s2"], .5, rel_tol=1e-12)
         assert math.isclose(row["pair_weighted_gm_m_s2"], .5, rel_tol=1e-12)
         assert row["event_over_pair_ratio"] == 1
+        assert set(row["leave_one_event_out_gm_m_s2"]) == {
+            "IT-2012-0008", "ci38457511", "ci39493944"}
+        assert all(math.isclose(v, .5, rel_tol=1e-12)
+            for v in row["leave_one_event_out_gm_m_s2"].values())
+        assert math.isclose(row["leave_one_event_out_max_over_min"], 1, rel_tol=1e-12)
+    # A single independent event with an anomalous spectrum must affect
+    # both of the LOO pairs that retain it, and not the one excluding it.
+    uu = u.replace(b"ci39493944", b"ci38457511", 1)
+    try:
+        calculate(uu, e)
+    except ValueError as exc:
+        assert str(exc) in ("PERIOD_OR_DUPLICATE", "INCOMPLETE_3_EVENT_5_PAIR_4_PERIOD")
+    else:
+        raise AssertionError("DUPLICATE_EVENT_RELABELLING_ACCEPTED")
     checks = [
         (u.replace(b"0.5", b"nan", 1), e, "NONPOSITIVE_OR_NONFINITE_PSA"),
         (u.replace(b"ci39493944", b"ci38457511"), e, "PERIOD_OR_DUPLICATE"),
