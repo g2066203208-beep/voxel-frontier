@@ -579,5 +579,90 @@
       "stdout_marker": "S05_ESM3_96120_SAMPLES_EXACT_CURRENT_VS_HISTORY_PASS_NOT_DESIGN_OR_NATIVE",
       "scientific_pass": false
     }
+  },
+  "instrument_chain_source_pages_20261104": {
+    "classification": "MANUFACTURER_AUTHORED_DOCUMENT_PAGE_READ_NOT_STATION_SPECIFIC_CALIBRATION_NOT_SEISMIC_DESIGN_PASS",
+    "SOURCE": {
+      "record_identity": "IT-2012-0008/NVL, ESM v3.0; official archived waveform identity 96120/96120 unchanged; reuse earlier locked sources",
+      "source_zip_sha256_reused": "d382e3f7bd6e4d0d8c4dfac3f59eda9b928e8530185ed8cb8f857d221c33576b",
+      "manufacturer_pdf_binary_sha256": "NOT_OBTAINED_web_PDF_render_only_no_local_bytes"
+    },
+    "OFFICIAL": [
+      {
+        "document": "SYSCOM Instruments SA, MS2007+ Force Balance Servo Accelerometer, technical specification MS2007+-e/74700134/02.2013",
+        "authorship": "manufacturer-authored, third-party mirror NOT manufacturer-hosted",
+        "url": "https://juhani.ee/failid/Upload/files/SYSCOM-MS2007plus_1E.pdf",
+        "reading_level": "DIRECT_WEB_PDF_PAGE_SCREENSHOT_AND_EXTRACTED_TEXT",
+        "pdf_page_1_based": 2,
+        "reported_sensor_frequency_response": "DC to 80 Hz (-3 dB)",
+        "reported_dynamic_range": ">135 dB RMS (0.1 to 80 Hz)",
+        "reported_noise": "typ. 50 ng/sqrt(Hz) over 1 to 80 Hz",
+        "limitation": "No calibrated per-frequency amplitude/phase at 0.1-0.2 Hz for this specific installed sensor; DC coupling is not a station-specific usable-low-frequency proof."
+      },
+      {
+        "document": "Refraction Technology, REF TEK 130-01 Operations, rev 3.2.9, 2011-01-19",
+        "authorship": "manufacturer-authored, university-hosted mirror NOT manufacturer-hosted",
+        "url": "https://nappe.wustl.edu/SPREE/instrument-other-documentation/from-RefTek/130_startup_01.pdf",
+        "reading_level": "DIRECT_WEB_PDF_EXTRACTED_ORIGINAL_MANUAL",
+        "printed_pages": "3 and 18",
+        "reported_130_01_3": "3-channel 24-bit ADC; sample rates include 200 samples/s; RT505 or RT649 ADC board; digital anti-alias filters described in hardware modularity",
+        "limitation": "Installed NVL board revision, firmware, per-channel analog/digital transfer function, gain and calibration not evidenced; other 130-MC manuals are not substitutes for 130-01/3."
+      }
+    ],
+    "REF": "ESM official 2026 waveform SNR metadata already source-locked in this JSON; sensor manufacturer spec and recorder manual are equipment class references, not site-specific acceptance.",
+    "STANDARD": "IEC 61400-1:2019+A1:2025 / IEC 61400-6:2020+A1:2025 / GB/NB authorized clause originals NOT read in this round; no normative acceptance.",
+    "RUN": {
+      "algorithm": "f=1/T; ratio=f/0.09 and f/0.1",
+      "software": "ECMAScript V8 in GitHub connector orchestration",
+      "real_record_metadata_low_frequency_cutoff_hz": 0.09,
+      "sensor_dynamic_range_characterization_lower_frequency_hz": 0.1,
+      "table": [
+        {
+          "period_s": 4,
+          "frequency_hz": 0.25,
+          "ratio_to_record_snr_lc": 2.77777778,
+          "ratio_to_sensor_datasheet_dynamic_range_lower_bound": 2.5,
+          "within_datasheet_stated_0p1_to_80_dynamic_range_frequency_span": true
+        },
+        {
+          "period_s": 6,
+          "frequency_hz": 0.166666666667,
+          "ratio_to_record_snr_lc": 1.85185185,
+          "ratio_to_sensor_datasheet_dynamic_range_lower_bound": 1.66666667,
+          "within_datasheet_stated_0p1_to_80_dynamic_range_frequency_span": true
+        },
+        {
+          "period_s": 8,
+          "frequency_hz": 0.125,
+          "ratio_to_record_snr_lc": 1.38888889,
+          "ratio_to_sensor_datasheet_dynamic_range_lower_bound": 1.25,
+          "within_datasheet_stated_0p1_to_80_dynamic_range_frequency_span": true
+        },
+        {
+          "period_s": 10,
+          "frequency_hz": 0.1,
+          "ratio_to_record_snr_lc": 1.11111111,
+          "ratio_to_sensor_datasheet_dynamic_range_lower_bound": 1,
+          "within_datasheet_stated_0p1_to_80_dynamic_range_frequency_span": true
+        }
+      ],
+      "tests": {
+        "known_value_10s_frequency_0p1_hz": "PASS",
+        "four_rows_monotonic_frequency": "PASS",
+        "all_above_reported_snr_cutoff": "PASS",
+        "negative_input_guard": "NOT_A_NEW_PARSER"
+      },
+      "native_structure_runs": 0
+    },
+    "FIG": "SYSCOM technical specification PDF page 2 instrument table (source figure, not manuscript-generated figure); manuscript FIG 0",
+    "TAB": "Four rows period-to-frequency versus sensor characterization range and record-specific SNR low cutoff; these are distinct quantities.",
+    "assumptions": [
+      "0.09 Hz is the archived ESM SNR reported low cutoff for three channels, not the manufacturer's analog sensor response threshold.",
+      "0.1 Hz is the lower frequency of the datasheet dynamic-range characterization interval, not a verified hard cutoff.",
+      "2013 generic MS2007+ and 2011 REF TEK 130-01 documents may not exactly match 2012 NVL unit configuration."
+    ],
+    "error_budget": "f=1/T arithmetic exact for listed decimal periods to floating-point tolerance; no transfer-function magnitude/phase uncertainty bound, noise uncertainty, processing filter response, site target-spectrum error or station-specific calibration obtained.",
+    "HOLD": "NO_INSTALLED_SENSOR_DIGITIZER_CHAIN_RESPONSE_OR_STATION_SPECIFIC_CALIBRATION_AT_0p1_TO_0p2_HZ; NO_TARGET_SPECTRUM; S05_PARTIAL; S08_BLOCKED; E_WE_ZERO; STAGES_0_OF_12",
+    "provenance_failure": "PDF binaries could not be fetched into local container (DNS failure), hence no source PDF SHA256; source pages read via web PDF page view. Do not claim native instrument response test or official manufacturer-hosted download."
   }
 }
