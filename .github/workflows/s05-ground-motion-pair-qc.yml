@@ -1075,3 +1075,91 @@ jobs:
           print('S05_ESM3_96120_SAMPLES_EXACT_CURRENT_VS_HISTORY_PASS_NOT_DESIGN_OR_NATIVE')
           PY
           cat /tmp/esm-current-identity.json
+
+  s05-ran-nvl-official-dataless-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - name: RAN official NVL equipment registry and dataless archive with source hashes (NOT calibration PASS)
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p ran-official
+          python3 - <<'PY'
+          import datetime,hashlib,html,io,json,pathlib,re,urllib.request,zipfile
+          out=pathlib.Path('ran-official')
+          urls={
+            'station_registry':'https://ran.protezionecivile.it/IT/stazioni.php',
+            'dataless':'https://ran.protezionecivile.it/IT/download_metadata.php?net=IT&tipo_file=DL',
+          }
+          def zip_scan(raw):
+              if not zipfile.is_zipfile(io.BytesIO(raw)):
+                  raise ValueError('NOT_ZIP')
+              with zipfile.ZipFile(io.BytesIO(raw)) as z:
+                  if z.testzip() is not None: raise ValueError('BAD_CRC')
+                  files=z.infolist()
+                  if len(files)>1000: raise ValueError('TOO_MANY_MEMBERS')
+                  matches=[]
+                  for f in files:
+                      if f.file_size>25000000: continue
+                      b=z.read(f)
+                      if b'NVL' in b or b'NVL' in f.filename.encode():
+                          matches.append({'member':f.filename,'bytes':len(b),'sha256':hashlib.sha256(b).hexdigest(),
+                              'NVL_occurrences':b.count(b'NVL')})
+                  return {'member_count':len(files),'member_names':[x.filename for x in files[:80]],
+                      'NVL_candidate_members':matches[:40]}
+          synthetic=io.BytesIO()
+          with zipfile.ZipFile(synthetic,'w') as z:z.writestr('synthetic.seed',b'IT NVL response TEST')
+          assert zip_scan(synthetic.getvalue())['NVL_candidate_members'][0]['NVL_occurrences']==1
+          try:zip_scan(b'not zip')
+          except ValueError as e:assert str(e)=='NOT_ZIP'
+          else:raise AssertionError('NEGATIVE_NONZIP_ACCEPTED')
+          manifest={'source_level':'PCM-DPC/RAN official live webpage + raw dataless archive attempt',
+              'retrieved_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),
+              'source_locked_historical_ESM3_DYNA_sha256':'dec0f0bf59bea4e6a5049c824b6656c7e7798eb5379beba5162aff7304b113c6',
+              'source_tests':'synthetic ZIP/NVL positive + non-ZIP negative PASS',
+              'OFFICIAL':urls,'STANDARD':'No IEC/GB/NB authorized clauses newly checked',
+              'REF':'ESM3 DOI 10.13127/esm.3 (inherited, not re-read)',
+              'RUN':'HTTP metadata source fetch only; no structure solver',
+              'FIG':0,'TAB':'NVL equipment row and ZIP member manifest',
+              'assumptions':'Current station registry may not prove 2012 sensor serial, epoch or transfer function',
+              'error_budget':'Exact HTTP bytes SHA256; physical amplitude/phase calibration unknown',
+              'S05_PASS':False,'native_E_WE_runs':0,'HOLD':'2012 installed serial-specific response, 0.1-0.2Hz usable band, site target spectrum',
+              'requests':{}}
+          for key,url in urls.items():
+              item={'url':url,'http_status':None,'bytes':0,'sha256':None,'error':None}
+              try:
+                  req=urllib.request.Request(url,headers={'User-Agent':'Academic-research-source-audit/1.0'})
+                  with urllib.request.urlopen(req,timeout=25) as response:
+                      item['http_status']=response.status
+                      raw=response.read(25000001)
+                      if len(raw)>25000000:raise ValueError('SOURCE_TOO_LARGE_GT25MB')
+                  item['bytes']=len(raw);item['sha256']=hashlib.sha256(raw).hexdigest()
+                  if key=='station_registry':
+                      out.joinpath('station_registry.html').write_bytes(raw)
+                      s=raw.decode('utf-8',errors='replace')
+                      rows=re.findall(r'<tr\\b[^>]*>.*?</tr>',s,re.I|re.S)
+                      candidates=[x for x in rows if re.search(r'\\bNVL\\b',re.sub('<[^>]+>',' ',x))]
+                      item['NVL_row_count']=len(candidates)
+                      if candidates:
+                          item['NVL_row_text']=html.unescape(re.sub(r'\\s+',' ',re.sub('<[^>]+>',' ',candidates[0]))).strip()
+                  else:
+                      item.update(zip_scan(raw))
+                      out.joinpath('ran_it_dataless.zip').write_bytes(raw)
+              except Exception as e:
+                  item['error']=type(e).__name__+': '+str(e)[:500]
+              manifest['requests'][key]=item
+              print('RAN_OFFICIAL_SOURCE',key,item['http_status'],item['bytes'],item['sha256'],item['error'])
+              if key=='station_registry':print('RAN_NVL_ROW',item.get('NVL_row_text','NOT_PARSED'))
+              if key=='dataless':print('RAN_DATALESS_NVL_CANDIDATES',len(item.get('NVL_candidate_members',[])))
+          out.joinpath('source_manifest.json').write_text(json.dumps(manifest,indent=2,ensure_ascii=False)+'\\n')
+          print('S05_RAN_SOURCE_CAPTURE_COMPLETE_NOT_CALIBRATION_OR_DESIGN_PASS')
+          PY
+      - name: Archive exact official HTTP source and failure manifest (no restricted standard)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s05-ran-nvl-dataless-source-not-design-pass
+          path: ran-official/
+          if-no-files-found: warn
+          retention-days: 90
