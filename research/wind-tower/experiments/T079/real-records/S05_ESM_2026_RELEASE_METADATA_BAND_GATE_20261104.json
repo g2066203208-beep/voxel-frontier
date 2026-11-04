@@ -1,0 +1,225 @@
+{
+  "status": "S05_SOURCE_METADATA_DIAGNOSTIC_HOLD_NOT_DESIGN_PASS",
+  "independent_events": 3,
+  "horizontal_pairs": 5,
+  "periods_s": [
+    4,
+    6,
+    8,
+    10
+  ],
+  "official_metadata_source": "ESM 3.0 waveform-details/settings/quality; COSMOS CP-2005/01 p.2-3",
+  "processing_release_for_archived_esm": "NOT_VERIFIED",
+  "metadata_eligible_rows": 0,
+  "design_eligible_rows": 0,
+  "S05_PASS": false,
+  "native_E_WE_runs": 0,
+  "rows": [
+    {
+      "pair": "ci38457511/CI.CLC",
+      "period_s": 4,
+      "frequency_hz": 0.25,
+      "reported_corner_hz": null,
+      "frequency_over_reported_corner": null,
+      "metadata_band_eligible": false,
+      "decision": "HOLD_RECORD_SPECIFIC_METADATA_MISSING",
+      "design_wave": false
+    },
+    {
+      "pair": "ci38457511/CI.CLC",
+      "period_s": 6,
+      "frequency_hz": 0.16666666666666666,
+      "reported_corner_hz": null,
+      "frequency_over_reported_corner": null,
+      "metadata_band_eligible": false,
+      "decision": "HOLD_RECORD_SPECIFIC_METADATA_MISSING",
+      "design_wave": false
+    },
+    {
+      "pair": "ci38457511/CI.CLC",
+      "period_s": 8,
+      "frequency_hz": 0.125,
+      "reported_corner_hz": null,
+      "frequency_over_reported_corner": null,
+      "metadata_band_eligible": false,
+      "decision": "HOLD_RECORD_SPECIFIC_METADATA_MISSING",
+      "design_wave": false
+    },
+    {
+      "pair": "ci38457511/CI.CLC",
+      "period_s": 10,
+      "frequency_hz": 0.1,
+      "reported_corner_hz": null,
+      "frequency_over_reported_corner": null,
+      "metadata_band_eligible": false,
+      "decision": "HOLD_RECORD_SPECIFIC_METADATA_MISSING",
+      "design_wave": false
+    },
+    {
+      "pair": "ci38457511/CI.PASC",
+      "period_s": 4,
+      "frequency_hz": 0.25,
+      "reported_corner_hz": null,
+      "frequency_over_reported_corner": null,
+      "metadata_band_eligible": false,
+      "decision": "HOLD_RECORD_SPECIFIC_METADATA_MISSING",
+      "design_wave": false
+    },
+    {
+      "pair": "ci38457511/CI.PASC",
+      "period_s": 6,
+      "frequency_hz": 0.16666666666666666,
+      "reported_corner_hz": null,
+      "frequency_over_reported_corner": null,
+      "metadata_band_eligible": false,
+      "decision": "HOLD_RECORD_SPECIFIC_METADATA_MISSING",
+      "design_wave": false
+    },
+    {
+      "pair": "ci38457511/CI.PASC",
+      "period_s": 8,
+      "frequency_hz": 0.125,
+      "reported_corner_hz": null,
+      "frequency_over_reported_corner": null,
+      "metadata_band_eligible": false,
+      "decision": "HOLD_RECORD_SPECIFIC_METADATA_MISSING",
+      "design_wave": false
+    },
+    {
+      "pair": "ci38457511/CI.PASC",
+      "period_s": 10,
+      "frequency_hz": 0.1,
+      "reported_corner_hz": null,
+      "frequency_over_reported_corner": null,
+      "metadata_band_eligible": false,
+      "decision": "HOLD_RECORD_SPECIFIC_METADATA_MISSING",
+      "design_wave": false
+    },
+    {
+      "pair": "ci38457511/CI.RVR",
+      "period_s": 4,
+      "frequency_hz": 0.25,
+      "reported_corner_hz": null,
+      "frequency_over_reported_corner": null,
+      "metadata_band_eligible": false,
+      "decision": "HOLD_RECORD_SPECIFIC_METADATA_MISSING",
+      "design_wave": false
+    },
+    {
+      "pair": "ci38457511/CI.RVR",
+      "period_s": 6,
+      "frequency_hz": 0.16666666666666666,
+      "reported_corner_hz": null,
+      "frequency_over_reported_corner": null,
+      "metadata_band_eligible": false,
+      "decision": "HOLD_RECORD_SPECIFIC_METADATA_MISSING",
+      "design_wave": false
+    },
+    {
+      "pair": "ci38457511/CI.RVR",
+      "period_s": 8,
+      "frequency_hz": 0.125,
+      "reported_corner_hz": null,
+      "frequency_over_reported_corner": null,
+      "metadata_band_eligible": false,
+      "decision": "HOLD_RECORD_SPECIFIC_METADATA_MISSING",
+      "design_wave": false
+    },
+    {
+      "pair": "ci38457511/CI.RVR",
+      "period_s": 10,
+      "frequency_hz": 0.1,
+      "reported_corner_hz": null,
+      "frequency_over_reported_corner": null,
+      "metadata_band_eligible": false,
+      "decision": "HOLD_RECORD_SPECIFIC_METADATA_MISSING",
+      "design_wave": false
+    },
+    {
+      "pair": "ci39493944/CI.CLC",
+      "period_s": 4,
+      "frequency_hz": 0.25,
+      "reported_corner_hz": null,
+      "frequency_over_reported_corner": null,
+      "metadata_band_eligible": false,
+      "decision": "HOLD_RECORD_SPECIFIC_METADATA_MISSING",
+      "design_wave": false
+    },
+    {
+      "pair": "ci39493944/CI.CLC",
+      "period_s": 6,
+      "frequency_hz": 0.16666666666666666,
+      "reported_corner_hz": null,
+      "frequency_over_reported_corner": null,
+      "metadata_band_eligible": false,
+      "decision": "HOLD_RECORD_SPECIFIC_METADATA_MISSING",
+      "design_wave": false
+    },
+    {
+      "pair": "ci39493944/CI.CLC",
+      "period_s": 8,
+      "frequency_hz": 0.125,
+      "reported_corner_hz": null,
+      "frequency_over_reported_corner": null,
+      "metadata_band_eligible": false,
+      "decision": "HOLD_RECORD_SPECIFIC_METADATA_MISSING",
+      "design_wave": false
+    },
+    {
+      "pair": "ci39493944/CI.CLC",
+      "period_s": 10,
+      "frequency_hz": 0.1,
+      "reported_corner_hz": null,
+      "frequency_over_reported_corner": null,
+      "metadata_band_eligible": false,
+      "decision": "HOLD_RECORD_SPECIFIC_METADATA_MISSING",
+      "design_wave": false
+    },
+    {
+      "pair": "IT-2012-0008/IT.NVL",
+      "period_s": 4,
+      "frequency_hz": 0.25,
+      "reported_corner_hz": 0.04,
+      "frequency_over_reported_corner": 6.25,
+      "metadata_band_eligible": false,
+      "decision": "HOLD_RECORD_SPECIFIC_METADATA_MISSING",
+      "design_wave": false
+    },
+    {
+      "pair": "IT-2012-0008/IT.NVL",
+      "period_s": 6,
+      "frequency_hz": 0.16666666666666666,
+      "reported_corner_hz": 0.04,
+      "frequency_over_reported_corner": 4.16666666667,
+      "metadata_band_eligible": false,
+      "decision": "HOLD_RECORD_SPECIFIC_METADATA_MISSING",
+      "design_wave": false
+    },
+    {
+      "pair": "IT-2012-0008/IT.NVL",
+      "period_s": 8,
+      "frequency_hz": 0.125,
+      "reported_corner_hz": 0.04,
+      "frequency_over_reported_corner": 3.125,
+      "metadata_band_eligible": false,
+      "decision": "HOLD_RECORD_SPECIFIC_METADATA_MISSING",
+      "design_wave": false
+    },
+    {
+      "pair": "IT-2012-0008/IT.NVL",
+      "period_s": 10,
+      "frequency_hz": 0.1,
+      "reported_corner_hz": 0.04,
+      "frequency_over_reported_corner": 2.5,
+      "metadata_band_eligible": false,
+      "decision": "HOLD_RECORD_SPECIFIC_METADATA_MISSING",
+      "design_wave": false
+    }
+  ],
+  "SOURCE": {
+    "path": "s05-source.csv",
+    "sha256": "bbd02ad8f1d0bb4e37671f2f1b24d5558ab05b63c2ebd5c7919301155fa79231",
+    "read_level": "FULL_20_ROW_DERIVED_SOURCE_NOT_ORIGINAL_WAVEFORM"
+  },
+  "metadata_input": "NONE_NOT_VERIFIED"
+}
