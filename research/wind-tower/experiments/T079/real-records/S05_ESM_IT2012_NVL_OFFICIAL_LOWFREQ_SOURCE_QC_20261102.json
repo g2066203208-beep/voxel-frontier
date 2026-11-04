@@ -554,7 +554,7 @@
       "falsified download timestamp"
     ],
     "software": "Python 3 stdlib zipfile/hashlib/json, exact text-line and float comparisons; existing T079 source parser",
-    "RUN": "local original ZIP read and full 96120-sample comparison PASS; new GitHub Actions comparator step added, its native CI result not yet confirmed",
+    "RUN": "GitHub Actions #41805274333 completed/success 10/10 jobs; native Python source identity job #126490614122 success; stdout S05_ESM3_96120_SAMPLES_EXACT_CURRENT_VS_HISTORY_PASS_NOT_DESIGN_OR_NATIVE; 96120 samples exact and four negative tests",
     "SOURCE": "Historical artifact #12843169066 and newly official-fetched artifact #13306595926; original inner ZIPs retained in Actions, not copied to Git",
     "REF": "ESM3 DOI 10.13127/esm.3, existing COSMOS 2005 p2-3 guidance (not newly read this run)",
     "STANDARD": "No newly read authorized IEC/GB/NB clauses; no compliance acceptance",
@@ -566,6 +566,18 @@
     "HOLD": "Instrument usable low-frequency range around 0.1-0.2 Hz and justified Chinese site target spectrum remain unverified",
     "S05_PASS": false,
     "S08_E_WE_native_runs": 0,
-    "stages_passed": 0
+    "stages_passed": 0,
+    "native_ci": {
+      "run_id": 41805274333,
+      "run_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41805274333",
+      "job_id": 126490614122,
+      "job_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41805274333/job/126490614122",
+      "status": "completed",
+      "conclusion": "success",
+      "all_jobs": "10/10 success",
+      "script_sha256": "9d8ecc2ac89bc6c40f2c23e1bdad19d539082926757a7aadbca06cee594bfaaa",
+      "stdout_marker": "S05_ESM3_96120_SAMPLES_EXACT_CURRENT_VS_HISTORY_PASS_NOT_DESIGN_OR_NATIVE",
+      "scientific_pass": false
+    }
   }
 }
