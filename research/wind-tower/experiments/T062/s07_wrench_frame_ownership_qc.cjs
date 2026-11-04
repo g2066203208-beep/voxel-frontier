@@ -35,6 +35,17 @@ function transport(F,M,rA,rB,Q){
  const f=mul(Q,F),m=add(mul(Q,M),cross(sub(rA,rB),f));
  return {F:f,M:m,delta_moment:cross(sub(rA,rB),f)};
 }
+// Rigorous algebraic upper bound for a hypothetical global-y frame rotation.
+// ||(Ry(theta)-I)v|| = 2 sin(|theta|/2) hypot(v_x,v_z).
+// Delta M_B = (Ry-I)M + (rA-rB) cross (Ry-I)F, so triangle inequality
+// bounds moment drift. TP origins are in a common inertial frame.
+function rotationBoundY(F,M,rA,rB,deg){
+ vec(F);vec(M);vec(rA);vec(rB);Ry(deg);
+ const q=2*Math.sin(Math.abs(deg)*Math.PI/360);
+ const f=q*Math.hypot(F[0],F[2]);
+ const m=q*Math.hypot(M[0],M[2])+norm(sub(rA,rB))*f;
+ return {force_bound_kN:f,moment_bound_kNm:m};
+}
 function back(result,rA,rB,Q){
  orthogonal(Q);
  const inv=transpose(Q),f=mul(inv,result.F);
@@ -65,24 +76,35 @@ function audit(data){
   const base=transport(F,M,rA,rB,Ry(0));
   for(const deg of angles){
    const Q=Ry(deg),v=transport(F,M,rA,rB,Q),rev=back(v,rA,rB,Q);
+   const bound=rotationBoundY(F,M,rA,rB,deg);
+   const driftF=norm(sub(v.F,base.F)),driftM=norm(sub(v.M,base.M));
+   ck(driftF<=bound.force_bound_kN+1e-8,"ROTATION_FORCE_BOUND");
+   ck(driftM<=bound.moment_bound_kNm+1e-8,"ROTATION_MOMENT_BOUND");
    ck(close(rev.F,F)&&close(rev.M,M),"ROUNDTRIP");
    ck(Math.abs(norm(v.F)-norm(F))<1e-8,"FORCE_NORM");
    ck(Math.abs(dot(v.F,v.M)-dot(F,M))<1e-5,"WRENCH_PITCH");
    out.push({time_s:row.time_s,hypothetical_Ry_deg:deg,force_global_kN:v.F,moment_origin_kNm:v.M,
     delta_force_vs_identity_kN:norm(sub(v.F,base.F)),
-    delta_moment_vs_identity_kNm:norm(sub(v.M,base.M))});
+    delta_moment_vs_identity_kNm:driftM,
+    analytic_force_upper_kN:bound.force_bound_kN,
+    analytic_moment_upper_kNm:bound.moment_bound_kNm,
+    moment_bound_utilization:bound.moment_bound_kNm===0?0:driftM/bound.moment_bound_kNm});
   }
   summaries.push({time_s:row.time_s,force_local_norm_kN:norm(F),moment_local_norm_kNm:norm(M),
    transport_only_delta_moment_norm_kNm:norm(base.delta_moment),
    moment_origin_identity_kNm:base.M,
    max_half_degree_force_delta_kN:Math.max(...out.filter(x=>x.time_s===row.time_s).map(x=>x.delta_force_vs_identity_kN)),
-   max_half_degree_moment_delta_kNm:Math.max(...out.filter(x=>x.time_s===row.time_s).map(x=>x.delta_moment_vs_identity_kNm))});
+   max_half_degree_moment_delta_kNm:Math.max(...out.filter(x=>x.time_s===row.time_s).map(x=>x.delta_moment_vs_identity_kNm)),
+   half_degree_force_upper_kN:rotationBoundY(F,M,rA,rB,0.5).force_bound_kN,
+   half_degree_moment_upper_kNm:rotationBoundY(F,M,rA,rB,0.5).moment_bound_kNm,
+   max_moment_bound_utilization:Math.max(...out.filter(x=>x.time_s===row.time_s).map(x=>x.moment_bound_utilization))});
  }
  return {stage:"S06/S07",status:"REAL_NATIVE_INPUT_CONDITIONAL_MATH_QC_PASS__PHYSICAL_HOLD",
   native_source:{original_artifact_sha256:ZIP_SHA,original_outb_batch1_sha256:OUTB_SHA,
    bts_sha256:data.bts_sha256,pose_receipt_git_blob_sha1:"0121256cde457417a10d4635e299d6b16608e02c",
    official_elastodyn_f90_sha256:SOURCE_SHA,official_source_lines:"L1165-L1206",read_level:"RAW_OUTB_DERIVED_3_NATIVE_SNAPSHOTS_PLUS_OFFICIAL_SOURCE_LINES"},
   test_scope:"3 real native 0/1/2 s node220 snapshots x 5 assumed Ry frames = 15 conditional scenarios",
+  bound_derivation:"For Ry(theta), norm((R-I)v)=2sin(abs(theta)/2)*hypot(vx,vz); deltaM=(R-I)M+r cross (R-I)F. Moment bound=2sin(abs(theta)/2)*(hypot(Mx,Mz)+norm(r)*hypot(Fx,Fz)). Valid only for specified hypothetical global-y rotation and fixed inertial lever.",
   summary:summaries,scenarios:out,
   SOURCE:"OpenFAST native FileID4 OUTB snapshots in existing SHA-locked T062 receipt; no new solver run",
   REF:"Existing T062 method and T071/T072 source, no new journal pages",
@@ -100,13 +122,21 @@ function selftest(){
  ck(close(a.M,[25,23,13]),"TRANSPORT_SIGN");
  ck(close(mul(R,[1,0,0]),[0,0,-1]),"ROTATION_ORIENTATION");
  ck(close(back(a,[0,0,10],[0,0,4],I).M,[7,11,13]),"INVERSE");
+ const pure=rotationBoundY([1,0,0],[0,0,0],[0,0,0],[0,0,0],90);
+ ck(Math.abs(pure.force_bound_kN-Math.SQRT2)<1e-12&&pure.moment_bound_kNm===0,"ANALYTIC_90DEG");
+ const axis=rotationBoundY([0,2,0],[0,5,0],[0,0,0],[0,0,0],45);
+ ck(axis.force_bound_kN===0&&axis.moment_bound_kNm===0,"AXIS_ALIGNED_ZERO");
+ const zero=rotationBoundY([3,4,5],[6,7,8],[0,0,2],[0,0,0],0);
+ ck(zero.force_bound_kN===0&&zero.moment_bound_kNm===0,"ZERO_ROTATION_BOUND");
  let rejects=0;
  const bad=[
  ()=>orthogonal([[1,0,0],[0,1,0],[0,0,-1]]),
  ()=>orthogonal([[1,0,0],[0,1,0],[0.01,0,1]]),
  ()=>transport([NaN,0,0],[0,0,0],[0,0,0],[0,0,0],I),
  ()=>Ry(Infinity),()=>gate({}),()=>gate({stage:"S06/S07",case:"U09p343881_ETM_S06",bts_sha256:"wrong"}),
- ()=>transport([0,0,0],[0,0,0],[0,0,0],[0,0,0],[[1,0,0],[0,0,1],[0,1,0]])
+ ()=>transport([0,0,0],[0,0,0],[0,0,0],[0,0,0],[[1,0,0],[0,0,1],[0,1,0]]),
+ ()=>rotationBoundY([1,0,0],[0,0,0],[0,0,0],[0,0,0],NaN),
+ ()=>rotationBoundY([1,0,0],[0,0,0],[0,0,0],[0,0,0],181)
  ];
  for(const fn of bad){try{fn()}catch(e){rejects++;continue}throw Error("BAD_INPUT_ACCEPTED");}
  ck(rejects===bad.length,"NEGATIVE_COUNT");
@@ -119,5 +149,5 @@ function main(argv){
  const input=JSON.parse(fs.readFileSync(argv[1],"utf8"));
  console.log(JSON.stringify(audit(input),null,2));
 }
-module.exports={audit,selftest,transport,back,Ry,gate};
+module.exports={audit,selftest,transport,back,Ry,gate,rotationBoundY};
 if(typeof require!=="undefined"&&require.main===module)main(process.argv.slice(2));
