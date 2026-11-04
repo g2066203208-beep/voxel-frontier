@@ -625,6 +625,38 @@ jobs:
                   assert math.isclose(float(a[key]),b[key],rel_tol=1e-10,abs_tol=1e-12),(key,a[key],b[key])
           print("REAL_3_EVENT_5_PAIR_4_PERIOD_COMMITTED_CSV_CROSSCHECK_PASS")
           PY
+      - name: Real 3-event independent-event LOO spectrum sensitivity against committed receipt (NO design PASS)
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }}/research/wind-tower/experiments/T079/real-records"
+          curl -fLsS --retry 3 -o loo-receipt.json "$base/S05_THREE_EVENT_FIVE_PAIR_LOO_20261104.json"
+          curl -fLsS --retry 3 -o loo-source.csv "$base/S05_THREE_EVENT_FIVE_PAIR_20ROW_SOURCE_SCREEN_20261030.csv"
+          echo 'bbd02ad8f1d0bb4e37671f2f1b24d5558ab05b63c2ebd5c7919301155fa79231  loo-source.csv' | sha256sum --check
+          python3 - <<'PY'
+          import hashlib,json,math
+          r=json.load(open('loo-receipt.json'))
+          d=json.load(open('s05-event-balance.json'))
+          assert r['SOURCE']['source_sha256']==hashlib.sha256(open('loo-source.csv','rb').read()).hexdigest()
+          assert r['SOURCE']['inherited_original_source_tables_sha256']['USGS_4pair']==d['us_csv_sha256']
+          assert r['SOURCE']['inherited_original_source_tables_sha256']['ESM_1pair']==d['esm_csv_sha256']
+          assert r['PASS_HOLD']['S05']=='PARTIAL_HOLD' and r['PASS_HOLD']['native_E']==0
+          assert len(r['data'])==len(d['rows'])==4
+          for x,y in zip(r['data'],d['rows']):
+              assert x['period_s']==y['period_s']
+              for a,b in (
+                  ('full_event_weighted_gm_m_s2','event_weighted_gm_m_s2'),
+                  ('leave_one_event_out_min_m_s2','leave_one_event_out_min_m_s2'),
+                  ('leave_one_event_out_max_m_s2','leave_one_event_out_max_m_s2'),
+                  ('leave_one_event_out_max_over_min','leave_one_event_out_max_over_min')):
+                  assert math.isclose(x[a],y[b],rel_tol=2e-9,abs_tol=1e-12),(x['period_s'],a,x[a],y[b])
+              for key in ('per_event_station_balanced_gm_m_s2','leave_one_event_out_gm_m_s2'):
+                  assert set(x[key])==set(y[key])=={'IT-2012-0008','ci38457511','ci39493944'}
+                  for event in x[key]:
+                      assert math.isclose(x[key][event],y[key][event],rel_tol=2e-9,abs_tol=1e-12),(x['period_s'],key,event)
+          assert r['data'][-1]['leave_one_event_out_max_over_min']>5.8
+          print('S05_REAL_3EVENT_LOO_4PERIOD_24CELL_CROSS_SOURCE_PASS_NOT_DESIGN_WAVE')
+          PY
       - name: Reference-paper Eq1 and real 20-row PSA mismatch oracle (NOT Jiayu target)
         shell: bash
         run: |
