@@ -117,5 +117,75 @@
     "failure_record": "Local reconstruction of original manifest initially SHA-mismatched due manual transcription; corrected to original repository SHA before calculation. All 16 actual ZIP/GZIP/CSV hashes then passed. No solver run. Two additional real-byte tamper tests changed one byte in a copy of the original manifest or one original ZIP; both exited nonzero with MANIFEST_SHA/ZIP_SHA respectively; originals unchanged.",
     "HOLD": "Cross-batch J09/J18/J27 still cannot be spliced; missing shared native RP/TP/DCM and load ownership. Correlation is NOT native physics or formal DLC1.2 PASS.",
     "stage_pass": false
+  },
+  "split_half_load_del_20261105": {
+    "stage": "S06/S10_INDEPENDENT_ETM_LOAD_DEL_SPLIT_HALF_DIAGNOSTIC__NOT_DLC12_OR_MATERIAL_PASS",
+    "timestamp_local": "2026-11-05 01:07 Asia/Shanghai",
+    "read_base_sha": "cf0fc3fc7e7230b7c31f571c3612e71ccc68bebd",
+    "SOURCE": {
+      "reading_level": "DIRECT_16_ORIGINAL_USER_LIBRARY_T071_T072_ZIP_BYTES; 16 ZIP/GZIP/CSV triple SHA verified; 4 cases x 31 stations x 12001 samples x 6 local force/moment channels; NOT native OUTB",
+      "library_folder": "/WindTower/S06_T071_T072_Source_Archives_20261101",
+      "original_manifest_path": "research/wind-tower/experiments/T077/recovery/S06_RECOVERED_16_ARTIFACT_SHA256_MANIFEST_20261024.csv",
+      "original_manifest_sha256": "dfc07558eb87002c3f54bb88671644519b77dfc38daf3971026f43686d4c2ed8",
+      "original_zip_count": 16,
+      "original_sha_layers": "See manifest for each of 16 ZIP, inner GZIP, uncompressed CSV SHA256",
+      "original_parent_rainflow_git_blob_sha1": "66668fefc13f89ec7be918a26613db3d8aac60b6",
+      "parent_rainflow_path": "research/wind-tower/experiments/T077/recovery/s06_31gage_rainflow_load_screen.py"
+    },
+    "REF": "Existing original ASTM E1049 stack rainflow implementation in s06_31gage_rainflow_load_screen.py; no new paper full text or ASTM authorized standard page read.",
+    "STANDARD": "NO newly read authorized IEC/GB/NB/ASTM original clauses; no compliance or DLC1.2 acceptance.",
+    "OFFICIAL": "Historical source-derived OpenFAST exports archived in user Library; no new native OpenFAST solver execution.",
+    "RUN": {
+      "environment": "local CPython 3.13.5, NumPy 2.3.5, pandas 2.2.3",
+      "program": "research/wind-tower/experiments/T077/recovery/s06_etm_split_half_del_qc.py",
+      "program_sha256": "e089bc306387480a9992acb28869e9fd42cc0d271ddd597746dc9f8e06e68dd2",
+      "independent_full_600s_baseline": "Six CSEG_01 m4 anchor values from existing 20261027 DEL table were also independently reproduced using first standalone implementation; final reuse-of-parent program yielded byte-identical 48-row summary and 1488-row detail.",
+      "synthetic_positive": 4,
+      "synthetic_negative_rejected": 4,
+      "real_byte_tamper_tests": "Changed first manifest SHA digit in a copy: nonzero ZIP_SHA; changed one byte in first original ZIP copy: nonzero ZIP_SHA. Original files unchanged.",
+      "source_archives_verified": 16,
+      "source_csv_rows": 1488124,
+      "channel_gage_series": 744,
+      "del_exponents": [
+        4,
+        10
+      ],
+      "full_and_half_evaluations": 1488,
+      "solver_runs": 0,
+      "github_actions_ci": "NOT_RUN_THIS_ROUND__LOCAL_SOURCE_DATA_QC_ONLY",
+      "physics_pass": false
+    },
+    "FIG": "0; no physical thesis response figures",
+    "TAB": {
+      "summary_path": "research/wind-tower/experiments/T077/recovery/S06_S10_4ETM_SPLIT_HALF_RAINFLOW_DEL_SUMMARY_20261105.csv",
+      "summary_sha256": "9279d27c7b2633934d45ba74189c55dfbd0b2ee38f7b9ef340b0686872e03ae1",
+      "summary_rows": 48,
+      "regenerated_full_detail_rows": 1488,
+      "regenerated_full_detail_sha256": "dcd3914162416ee43cad8808320832b69d1e7514a9dc12c157c33b0b2f431e27",
+      "full_detail_persistence": "NOT_COMMITTED__GENERATE_FROM_COMMITTED_SCRIPT_AND_ORIGINAL_LIBRARY_ZIPS; exact local SHA retained for replay",
+      "m4_half_imbalance_gt20pct_gage_channels": 76,
+      "m10_half_imbalance_gt20pct_gage_channels": 186,
+      "max_m4_half_imbalance_pct": 55.436221,
+      "max_m4_half_case": "U09p343881_ETM_S06",
+      "max_m4_half_channel": "My_kNm",
+      "max_m4_half_gage": "CSEG_14",
+      "max_m10_half_imbalance_pct": 60.679161,
+      "max_m10_half_case": "U09p343881_ETM_S06",
+      "max_m10_half_channel": "Fx_kN",
+      "max_m10_half_gage": "CSEG_28",
+      "max_m4_boundary_split_gap_pct": 5.084714,
+      "max_m10_boundary_split_gap_pct": 9.366261,
+      "example_m4_U09_S06_CSEG14_My_kNm": {
+        "full_600s": 60606.26465,
+        "first_300s": 39411.78701,
+        "last_300s": 69638.4532,
+        "half_imbalance_pct": 55.436221
+      }
+    },
+    "assumptions": "Historical 100–700s ETM samples per station valid for single-channel source-level load screening; both 300s windows include t=400s once as a shared endpoint (6001 samples each). Nref=600 cycles for 600s, 300 cycles for each 300s; no artificial closure of residual half cycles. m4 and m10 are screening exponents, not validated material S-N laws. Separate station channels do not imply simultaneous across-batch 31-gage physical state.",
+    "error_budget": "Original SHA256 byte equality and time grid |dt|<2e-8s; IEEE float64 plus CSV summary rounding to 6 decimals. Rainflow split-window residual cycle closure causes max full-vs-half power-aggregate gaps 5.084714% (m4) and 9.366261% (m10), not pure physical stationarity error. Seed/statistical convergence and frame/inertia errors unbounded.",
+    "failure_record": "First local manually transcribed manifest had an accidental 75-character CSV SHA in U11p4_ETM_S04/B and was rejected with CSV_SHA; corrected from original GitHub manifest, whose SHA256 then matched dfc07558..., before all 16 archive checks passed. Two deliberate real-byte corruption copies rejected. No original archive modified.",
+    "HOLD": "Half-window load-DEL variability (especially U09 S06) cannot support stationarity/20-year material fatigue conclusions; only four ETM cases, no validated DLC1.2 NTM bins, no material stress. S06 remains PARTIAL, S07/S10 remain BLOCKED; 31-gage long-window RP/TP/DCM and common native OUTB/ownership still absent; formal DLC1.2=0/126; E/WE=0; stages 0/12.",
+    "stage_pass": false
   }
 }
