@@ -292,11 +292,52 @@ def compare_current_artifact(historical_path,current_path):
     report['current_outer_artifact_sha256']=sha(current)
     return report
 
+
+def compare_snr_utc_artifacts(previous_path, current_path):
+    """Compare genuine ESM SNR JSON across server timezone serialization changes.
+    Never turn source equivalence into instrument or design PASS.
+    """
+    from datetime import datetime, timezone
+    expected = (
+        '4b1dc4b4d9d818b500e8c8c8fbfad0e30fad53837ec6288cd86c8c5bd575da3f',
+        'c70f595c6beb4279490179fca45699a7f6cce11821ec215427665476ac375a18',
+    )
+    data = []
+    for path, digest in zip((previous_path, current_path), expected):
+        with zipfile.ZipFile(path) as z:
+            require(z.testzip() is None, 'SNR_ARTIFACT_CRC')
+            raw = z.read('waveform-snr.body')
+        require(hashlib.sha256(raw).hexdigest() == digest, 'SNR_SOURCE_HASH')
+        data.append(json.loads(raw))
+    old, new = data
+    keys = ('start_noise', 'end_noise', 'start_signal', 'end_signal')
+    def normalize(obj):
+        obj = json.loads(json.dumps(obj))
+        for k in keys:
+            dt = datetime.fromisoformat(obj['signal_noise_windows_fd'][k])
+            require(dt.tzinfo is not None, 'SNR_TIMESTAMP_MISSING_TZ')
+            obj['signal_noise_windows_fd'][k] = dt.astimezone(timezone.utc).isoformat()
+        return obj
+    require(normalize(old) == normalize(new), 'SNR_PHYSICAL_FIELDS_DIFFER')
+    require(any(old['signal_noise_windows_fd'][k] != new['signal_noise_windows_fd'][k] for k in keys),
+            'EXPECTED_TIMESTAMP_SERIALIZATION_DRIFT_MISSING')
+    corrupted = json.loads(json.dumps(new))
+    corrupted['U'] = None
+    require(normalize(old) != normalize(corrupted), 'SNR_NUMERIC_TAMPER_NOT_REJECTED')
+    return {'status': 'S05_SNR_UTC_EQUIVALENT_NOT_INSTRUMENT_OR_DESIGN_PASS',
+            'previous_raw_sha256': expected[0], 'current_raw_sha256': expected[1],
+            'utc_equivalent_timestamp_fields': list(keys),
+            'all_other_json_fields_exact': True,
+            'negative_numeric_mutation_rejected': True,
+            'S05_PASS': False, 'native_E_WE_runs': 0}
+
 if __name__ == '__main__':
     if len(sys.argv) == 2:
         main(sys.argv[1])
     elif len(sys.argv) == 3:
         compare_historical(sys.argv[1], sys.argv[2])
+    elif len(sys.argv) == 4 and sys.argv[1] == '--compare-snr-utc':
+        print(json.dumps(compare_snr_utc_artifacts(sys.argv[2], sys.argv[3]), indent=2))
     elif len(sys.argv) == 4 and sys.argv[1] == '--compare-current':
         print(json.dumps(compare_current_artifact(sys.argv[2],sys.argv[3]),indent=2,ensure_ascii=False))
     else:
