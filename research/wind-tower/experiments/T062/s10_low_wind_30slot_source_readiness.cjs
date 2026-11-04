@@ -11,9 +11,9 @@ const HASH={
  controller:"be58d33306e6ac101d42b42c7f4d24ea5743662d1a9355aff9862b5a7e0aad45",
  identity:"d57ff9e71b58b531b1aaa357ad7a57a86daf529e061f9d8996cf2453b04a7da5"
 };
-function build(eraText,coverageText,ctrlText,idText){
+function build(eraText,coverageText,ctrlText,idText,expectedHashes=HASH){
  const input={era:eraText,coverage:coverageText,controller:ctrlText,identity:idText};
- for(const k of Object.keys(HASH))ok(sha256(input[k])===HASH[k],"SOURCE_SHA256_MISMATCH_"+k);
+ for(const k of Object.keys(HASH))ok(sha256(input[k])===expectedHashes[k],"SOURCE_SHA256_MISMATCH_"+k);
  const era=parseCsv(eraText),coverage=parseCsv(coverageText),ctrl=parseCsv(ctrlText),ids=parseCsv(idText);
  ok(era.length===31&&coverage.length===126&&ctrl.length===18&&ids.length===18,"SOURCE_COUNTS");
  const eraBy=new Map(era.map(x=>[Number(x.bin_lower_mps),x]));
@@ -79,7 +79,7 @@ function negativeTests(era,coverage,controller,identity){
   [era,coverage,controller,identity.replace(",12001,9,",",12000,9,")],
   [era,coverage.split("\n").filter(x=>!x.startsWith("4,5,4.5,26927,0.146278791830,0.251889616464,1281.402216428,S06,")).join("\n"),controller,identity]
  ];
- cases.forEach((x,i)=>{ok(x.some((s,j)=>s!==[era,coverage,controller,identity][j]),"MUTATION_NOOP_"+i);let rejected=false;try{build(...x);}catch(e){rejected=true;}ok(rejected,"NEGATIVE_ACCEPTED_"+i);});
+ cases.forEach((x,i)=>{ok(x.some((s,j)=>s!==[era,coverage,controller,identity][j]),"MUTATION_NOOP_"+i);let rejected=false;try{if(i===0)build(...x);else{const keys=["era","coverage","controller","identity"],unlocked=Object.fromEntries(keys.map((k,j)=>[k,sha256(x[j])]));build(...x,unlocked);}}catch(e){rejected=true;}ok(rejected,"NEGATIVE_ACCEPTED_"+i);});
  return cases.length;
 }
 module.exports={build,negativeTests};
