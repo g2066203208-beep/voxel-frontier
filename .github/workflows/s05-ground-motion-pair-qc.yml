@@ -940,3 +940,44 @@ jobs:
           if(j.rows.filter(r=>r.pair==='IT-2012-0008/IT.NVL').length!==4)throw Error('ESM_FOUR_PERIODS');
           console.log('S05_ESM_2026_METADATA_20ROW_SOURCE_QC_PASS_NOT_INSTRUMENT_BAND_OR_DESIGN_PASS');
           JS
+
+  s05-esm-official-nvl-live-metadata:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Fetch exact PR-head ESM metadata source
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fLsS --retry 3 -o s05_esm_provenance_band_gate.cjs \
+            "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }}/research/wind-tower/experiments/T079/s05_esm_provenance_band_gate.cjs"
+          sha256sum s05_esm_provenance_band_gate.cjs
+          node --check s05_esm_provenance_band_gate.cjs
+          node s05_esm_provenance_band_gate.cjs --self-test-official
+      - name: Query five official ESM endpoints and preserve exact raw response SHA
+        shell: bash
+        run: |
+          set -euo pipefail
+          node s05_esm_provenance_band_gate.cjs --fetch-official --output-dir esm-nvl-official
+          python3 - <<'PY'
+          import json,pathlib,hashlib
+          root=pathlib.Path('esm-nvl-official')
+          m=json.loads((root/'S05_ESM_NVL_OFFICIAL_QUERY_MANIFEST.json').read_text())
+          assert m['S05_PASS'] is False and m['native_E_WE_runs']==0
+          assert len(m['queries'])==5 and m['archived_zip_re_downloaded'] is False
+          for q in m['queries']:
+              f=root/(q['service']+'.body')
+              if q['response_sha256']:
+                  assert f.is_file() and hashlib.sha256(f.read_bytes()).hexdigest()==q['response_sha256']
+              print('OFFICIAL_ESM',q['service'],'status',q['http_status'],'json',q['json_parsed'],'sha256',q['response_sha256'],'error',q['error'])
+              for x in q['diagnostic_fields'][:20]: print('OFFICIAL_FIELD',q['service'],x['path'],x['value'])
+          print('S05_OFFICIAL_ESM_NVL_RAW_RESPONSE_QC_COMPLETE_NOT_DESIGN_PASS')
+          PY
+      - name: Archive official ESM response bodies, errors and SHA manifest
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s05-esm-nvl-five-official-endpoints-not-design-pass
+          path: esm-nvl-official/
+          if-no-files-found: warn
+          retention-days: 90
