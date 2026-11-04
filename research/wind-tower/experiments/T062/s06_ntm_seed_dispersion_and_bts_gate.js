@@ -94,6 +94,66 @@ function test(){
  const cs=convergenceTest();
  console.log("SELFTEST_PASS sample_SD_and_invalid_CSV; EXACT_SUBSET_ENUMERATION_PASS "+cs);
 }
+
+function allChannelConvergence(rows,receipt,sourceSha){
+ const bins=["U09p343881_NTM","U11p4_NTM","U19p202140_NTM"], expectedSeeds=["S01","S02","S03","S04","S05","S06"];
+ const check=(v,m)=>{if(!v)throw Error("ALL_CHANNEL_"+m)};
+ check(receipt.result_sha256===sourceSha&&receipt.original_outb_count===18&&receipt.result_rows===1080&&receipt.sources.length===18,"RECEIPT_IDENTITY");
+ const srcMap=new Map(receipt.sources.map(s=>[s.case,s.outb_sha256]));
+ check(srcMap.size===18,"RECEIPT_DUPLICATE_CASE");
+ const seen=new Set(), perCase=new Map(), groups=new Map(), channels=new Map();
+ for(const r of rows){
+  const match=/^(U(?:09p343881|11p4|19p202140)_NTM)_(S0[1-6])$/.exec(r.case);
+  check(match,"BAD_CASE");
+  const key=r.case+"|"+r.channel;check(!seen.has(key),"DUPLICATE_CASE_CHANNEL");seen.add(key);
+  check(srcMap.get(r.case)===r.outb_sha256,"OUTB_SHA_NOT_RECEIPT");
+  check(r.n_samples==="12001"&&r.t0_s==="100"&&r.t1_s==="700"&&r.dt_s==="0.05","TIME_GRID");
+  const isForce=/^(TwrBsF[xyz]t|TwHt[1-9]FL[xyz]t)$/.test(r.channel);
+  const isMoment=/^(TwrBsM[xyz]t|TwHt[1-9]ML[xyz]t)$/.test(r.channel);
+  check(isForce||isMoment,"CHANNEL_IDENTITY");
+  check(r.unit===(isForce?"(kN)":"(kN-m)"),"UNIT");
+  if(channels.has(r.channel))check(channels.get(r.channel)===r.unit,"UNIT_CONFLICT");else channels.set(r.channel,r.unit);
+  for(const k of ["DEL_m4_Nref600","DEL_m10_Nref600"])check(Number.isFinite(+r[k])&&+r[k]>0,"BAD_"+k);
+  perCase.set(r.case,(perCase.get(r.case)||0)+1);
+  const groupKey=match[1]+"|"+r.channel;
+  if(!groups.has(groupKey))groups.set(groupKey,new Map());
+  const g=groups.get(groupKey);check(!g.has(match[2]),"DUPLICATE_SEED");g.set(match[2],r);
+ }
+ check(rows.length===1080&&seen.size===1080&&perCase.size===18&&[...perCase.values()].every(n=>n===60),"CASE_CHANNEL_COVERAGE");
+ check(channels.size===60&&groups.size===180,"GROUP_COVERAGE");
+ const pow=(a,m)=>{const scale=Math.max(...a);return scale*Math.pow(a.reduce((s,x)=>s+Math.pow(x/scale,m),0)/a.length,1/m)};
+ const subset=(a,m,n)=>{const out=[];const rec=(start,acc)=>{if(acc.length===n){out.push(pow(acc,m));return}for(let i=start;i<=a.length-(n-acc.length);i++)rec(i+1,[...acc,a[i]])};rec(0,[]);return out};
+ const fmt=(v,n=9)=>{check(Number.isFinite(v),"NONFINITE_RESULT");return v.toFixed(n)};
+ const head="wind_case,channel,unit,m,seed_count,arithmetic_mean_DEL,seed_sample_sd,seed_CV_percent,six_seed_power_mean_DEL,three_seed_subset_min_DEL,three_seed_subset_max_DEL,three_seed_worst_abs_shift_percent,five_seed_LOO_worst_abs_shift_percent,seed_max_min_ratio,source_csv_sha256";
+ const output=[head], summary={source_rows:1080,source_cases:18,channels:60,wind_bins:3,seed_groups:180,exponent_groups:360,three_of_six_subsets_per_group:20,physical_pass:false,material_damage_pass:false,max_seed_cv:{},max_three_seed_shift:{}};
+ for(const wind of bins)for(const channel of [...channels.keys()].sort()){
+  const g=groups.get(wind+"|"+channel);check(g&&g.size===6,"MISSING_GROUP");
+  const six=expectedSeeds.map(seed=>g.get(seed));check(six.every(Boolean),"MISSING_SEED");
+  for(const m of [4,10]){
+   const values=six.map(r=>+r["DEL_m"+m+"_Nref600"]);
+   const mean=values.reduce((s,x)=>s+x,0)/6,sd=Math.sqrt(values.reduce((s,x)=>s+(x-mean)**2,0)/5);
+   const full=pow(values,m),triplets=subset(values,m,3),loo=subset(values,m,5);
+   check(triplets.length===20&&loo.length===6,"SUBSET_COUNTS");
+   const cv=100*sd/mean,worst3=100*Math.max(...triplets.map(x=>Math.abs(x/full-1))),worst5=100*Math.max(...loo.map(x=>Math.abs(x/full-1)));
+   const tag="m"+m;if(!summary.max_seed_cv[tag]||cv>summary.max_seed_cv[tag].percent)summary.max_seed_cv[tag]={wind,channel,percent:cv};
+   if(!summary.max_three_seed_shift[tag]||worst3>summary.max_three_seed_shift[tag].percent)summary.max_three_seed_shift[tag]={wind,channel,percent:worst3};
+   output.push([wind,channel,channels.get(channel),m,6,fmt(mean),fmt(sd),fmt(cv,6),fmt(full),fmt(Math.min(...triplets)),fmt(Math.max(...triplets)),fmt(worst3,6),fmt(worst5,6),fmt(Math.max(...values)/Math.min(...values),9),sourceSha].join(","));
+  }
+ }
+ check(output.length===361,"OUTPUT_ROWS");
+ return {csv:output.join("\n")+"\n",summary};
+}
+function allChannelNegativeTests(rows,receipt,sourceSha){
+ const tests=[
+  ["DUPLICATE",x=>{x[1]={...x[1],case:x[0].case,channel:x[0].channel}}],
+  ["M10_ZERO",x=>{x[0]={...x[0],DEL_m10_Nref600:"0"}}],
+  ["OUTB_SHA",x=>{x[0]={...x[0],outb_sha256:"0".repeat(64)}}],
+  ["TIME_GRID",x=>{x[0]={...x[0],dt_s:"0.06"}}]
+ ];
+ for(const [name,mutate] of tests){const copy=rows.map(x=>({...x}));mutate(copy);let refused=false;try{allChannelConvergence(copy,receipt,sourceSha)}catch{refused=true}if(!refused)throw Error("ALL_CHANNEL_NEGATIVE_ACCEPTED_"+name)}
+ return tests.length;
+}
+
 function main(){
  if(process.argv.includes("--self-test"))return test();
  const a=process.argv.slice(2),o={};for(let i=0;i<a.length;i+=2)o[a[i]]=a[i+1];
@@ -107,6 +167,16 @@ function main(){
  must(!requested||(o["--convergence-summary"]&&o["--convergence-subsets"]),"CONVERGENCE_OUTPUT_PAIR_REQUIRED");
  let extra={};
  if(requested){const c=convergence(rows);fs.writeFileSync(o["--convergence-summary"],c.summary);fs.writeFileSync(o["--convergence-subsets"],c.subsets);extra={convergence_summary_sha256:sha(Buffer.from(c.summary)),convergence_subsets_sha256:sha(Buffer.from(c.subsets)),convergence_groups:30,convergence_subset_rows:180,max_subset_deviation:c.max_deviation};}
- console.log(JSON.stringify({...r.summary,source_sha256:SRC,manifest_sha256:MAN,output_sha256:sha(Buffer.from(r.csv)),...extra}));
+ let allExtra={};
+ if(o["--all-channel-summary"]){
+  must(o["--source-receipt"],"ALL_CHANNEL_SOURCE_RECEIPT_REQUIRED");
+  const receiptBytes=fs.readFileSync(o["--source-receipt"]);
+  const receipt=JSON.parse(receiptBytes.toString("utf8"));
+  const result=allChannelConvergence(rows,receipt,SRC);
+  const rejected=allChannelNegativeTests(rows,receipt,SRC);
+  fs.writeFileSync(o["--all-channel-summary"],result.csv);
+  allExtra={all_channel_output_sha256:sha(Buffer.from(result.csv)),all_channel_script_sha256:sha(fs.readFileSync(__filename)),source_receipt_sha256:sha(receiptBytes),negative_tests_rejected:rejected,all_channel_summary:result.summary};
+ }
+ console.log(JSON.stringify({...r.summary,source_sha256:SRC,manifest_sha256:MAN,output_sha256:sha(Buffer.from(r.csv)),...extra,...allExtra}));
 }
 if(require.main===module)main();

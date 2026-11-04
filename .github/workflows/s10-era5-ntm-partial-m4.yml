@@ -11,6 +11,8 @@ on:
       - 'research/wind-tower/experiments/T062/S10_LOW_WIND_30SLOT_SOURCE_READINESS_20261104.csv'
       - 'research/wind-tower/experiments/T062/S10_LOW_WIND_30SLOT_SOURCE_READINESS_20261104.json'
       - 'research/wind-tower/experiments/T062/S10_CHANNEL_AWARE_M4_INTERPOLATION_PRIORITY_20261104.json'
+      - 'research/wind-tower/experiments/T062/s06_ntm_seed_dispersion_and_bts_gate.js'
+      - 'research/wind-tower/experiments/T062/S06_18NTM_ALL_CHANNEL_SEED_CONVERGENCE_20261105.csv'
       - '.github/workflows/s10-era5-ntm-partial-m4.yml'
   workflow_dispatch:
 permissions:
@@ -24,10 +26,38 @@ jobs:
         with:
           sparse-checkout: |
             research/wind-tower/experiments/T062
+            research/wind-tower/archive/local-assets-20261004/file-manifest.json
             research/wind-tower/experiments/T077/recovery/s10_cycle_sign_m4_partition.cjs
             research/wind-tower/experiments/T077/recovery/S10_3CONTROL_CYCLE_SIGN_M4_PARTITION_20261104.json
             research/wind-tower/experiments/T077/recovery/S10_3CONTROL_REAL_GROSS_CYCLES_20261030.csv
           sparse-checkout-cone-mode: false
+      - name: Reproduce all 360 historical 18NTM 60-channel m4/m10 seed convergence rows (NO SOLVER)
+        shell: bash
+        run: |
+          set -euo pipefail
+          root=research/wind-tower/experiments/T062
+          node --check "$root/s06_ntm_seed_dispersion_and_bts_gate.js"
+          node "$root/s06_ntm_seed_dispersion_and_bts_gate.js" --self-test
+          node "$root/s06_ntm_seed_dispersion_and_bts_gate.js" \
+            --source "$root/S06_18NTM_ORIGINAL_9GAGE_LOAD_DEL_20261031.csv" \
+            --manifest research/wind-tower/archive/local-assets-20261004/file-manifest.json \
+            --out "$RUNNER_TEMP/low_gage.csv" \
+            --source-receipt "$root/S06_18NTM_ORIGINAL_LOAD_DEL_RECEIPT_20261031.json" \
+            --all-channel-summary "$RUNNER_TEMP/all_channel.csv"
+          cmp "$RUNNER_TEMP/all_channel.csv" "$root/S06_18NTM_ALL_CHANNEL_SEED_CONVERGENCE_20261105.csv"
+          python3 - "$RUNNER_TEMP/all_channel.csv" "$root/S10_18NTM_6SEED_LOAD_DEL_CONVERGENCE_SUMMARY_20261031.csv" <<'PY'
+          import csv,sys
+          new=list(csv.DictReader(open(sys.argv[1],newline='')))
+          old=list(csv.DictReader(open(sys.argv[2],newline='')))
+          assert len(new)==360 and len(old)==30
+          index={(r['wind_case'],r['channel']):r for r in new if r['m']=='4'}
+          for r in old:
+              v=index[(r['wind_case'],r['channel'])]
+              assert abs(float(v['arithmetic_mean_DEL'])-float(r['arithmetic_mean_DEL_m4_kNm']))<1e-6
+              assert abs(float(v['six_seed_power_mean_DEL'])-float(r['equal_duration_power_mean_m4_kNm']))<1e-6
+          print('REAL_18NTM_360_GROUPS_30_OLD_M4_ORACLES_MATCH_4_NEGATIVE_TESTS_NO_MATERIAL_DAMAGE')
+          PY
+          sha256sum "$root/s06_ntm_seed_dispersion_and_bts_gate.js" "$RUNNER_TEMP/all_channel.csv" "$root/S06_18NTM_ORIGINAL_LOAD_DEL_RECEIPT_20261031.json"
       - name: Verify 1574 real nominal cycles material applicability (no solver)
         shell: bash
         run: |
