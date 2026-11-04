@@ -11,6 +11,7 @@
     "read_level": "RAW_OUTB_DERIVED_3_NATIVE_SNAPSHOTS_PLUS_OFFICIAL_SOURCE_LINES"
   },
   "test_scope": "3 real native 0/1/2 s node220 snapshots x 5 assumed Ry frames = 15 conditional scenarios",
+  "bound_derivation": "For Ry(theta), norm((R-I)v)=2sin(abs(theta)/2)*hypot(vx,vz); deltaM=(R-I)M+r cross (R-I)F. Moment bound=2sin(abs(theta)/2)*(hypot(Mx,Mz)+norm(r)*hypot(Fx,Fz)). Valid only for specified hypothetical global-y rotation and fixed inertial lever.",
   "summary": [
     {
       "time_s": 0,
@@ -23,7 +24,10 @@
         -168.291156751709
       ],
       "max_half_degree_force_delta_kN": 175.31840717997187,
-      "max_half_degree_moment_delta_kNm": 5428.760088465889
+      "max_half_degree_moment_delta_kNm": 5428.760088465889,
+      "half_degree_force_upper_kN": 175.3184071799719,
+      "half_degree_moment_upper_kNm": 5430.231437474116,
+      "max_moment_bound_utilization": 0.9997290448804679
     },
     {
       "time_s": 1,
@@ -36,7 +40,10 @@
         6167.318398066134
       ],
       "max_half_degree_force_delta_kN": 177.85843450469662,
-      "max_half_degree_moment_delta_kNm": 5508.005508540835
+      "max_half_degree_moment_delta_kNm": 5508.005508540835,
+      "half_degree_force_upper_kN": 177.85843450469662,
+      "half_degree_moment_upper_kNm": 5588.984177183503,
+      "max_moment_bound_utilization": 0.9855132257449533
     },
     {
       "time_s": 2,
@@ -49,7 +56,10 @@
         8381.939338305738
       ],
       "max_half_degree_force_delta_kN": 178.9319575484669,
-      "max_half_degree_moment_delta_kNm": 5519.7807691811595
+      "max_half_degree_moment_delta_kNm": 5519.7807691811595,
+      "half_degree_force_upper_kN": 178.93195754846698,
+      "half_degree_moment_upper_kNm": 5692.30254368944,
+      "max_moment_bound_utilization": 0.9696920932813838
     }
   ],
   "scenarios": [
@@ -67,7 +77,10 @@
         -168.291156751709
       ],
       "delta_force_vs_identity_kN": 0,
-      "delta_moment_vs_identity_kNm": 0
+      "delta_moment_vs_identity_kNm": 0,
+      "analytic_force_upper_kN": 0,
+      "analytic_moment_upper_kNm": 0,
+      "moment_bound_utilization": 0
     },
     {
       "time_s": 0,
@@ -83,7 +96,10 @@
         -168.33384756729794
       ],
       "delta_force_vs_identity_kN": 175.31840717997184,
-      "delta_moment_vs_identity_kNm": 5428.760088465889
+      "delta_moment_vs_identity_kNm": 5428.760088465889,
+      "analytic_force_upper_kN": 175.3184071799719,
+      "analytic_moment_upper_kNm": 5430.231437474116,
+      "moment_bound_utilization": 0.9997290448804679
     },
     {
       "time_s": 0,
@@ -99,7 +115,10 @@
         -168.31410438846748
       ],
       "delta_force_vs_identity_kN": 87.65941220384043,
-      "delta_moment_vs_identity_kNm": 2714.3852710512274
+      "delta_moment_vs_identity_kNm": 2714.3852710512274,
+      "analytic_force_upper_kN": 87.65941220384042,
+      "analytic_moment_upper_kNm": 2715.122180246314,
+      "moment_bound_utilization": 0.999728590779285
     },
     {
       "time_s": 0,
@@ -115,7 +134,10 @@
         -168.26500509391244
       ],
       "delta_force_vs_identity_kN": 87.65941220384042,
-      "delta_moment_vs_identity_kNm": 2714.3440467077717
+      "delta_moment_vs_identity_kNm": 2714.3440467077717,
+      "analytic_force_upper_kN": 87.65941220384042,
+      "analytic_moment_upper_kNm": 2715.122180246314,
+      "moment_bound_utilization": 0.9997134075423184
     },
     {
       "time_s": 0,
@@ -131,7 +153,10 @@
         -168.2356499129677
       ],
       "delta_force_vs_identity_kN": 175.31840717997187,
-      "delta_moment_vs_identity_kNm": 5428.595191876925
+      "delta_moment_vs_identity_kNm": 5428.595191876925,
+      "analytic_force_upper_kN": 175.3184071799719,
+      "analytic_moment_upper_kNm": 5430.231437474116,
+      "moment_bound_utilization": 0.999698678478803
     },
     {
       "time_s": 1,
@@ -147,7 +172,10 @@
         6167.318398066134
       ],
       "delta_force_vs_identity_kN": 0,
-      "delta_moment_vs_identity_kNm": 0
+      "delta_moment_vs_identity_kNm": 0,
+      "analytic_force_upper_kN": 0,
+      "analytic_moment_upper_kNm": 0,
+      "moment_bound_utilization": 0
     },
     {
       "time_s": 1,
@@ -163,7 +191,10 @@
         6228.336208430852
       ],
       "delta_force_vs_identity_kN": 177.85843450469662,
-      "delta_moment_vs_identity_kNm": 5507.8975123522905
+      "delta_moment_vs_identity_kNm": 5507.8975123522905,
+      "analytic_force_upper_kN": 177.85843450469662,
+      "analytic_moment_upper_kNm": 5588.984177183503,
+      "moment_bound_utilization": 0.985491698981321
     },
     {
       "time_s": 1,
@@ -179,7 +210,10 @@
         6197.88631500932
       ],
       "delta_force_vs_identity_kN": 88.92942888861727,
-      "delta_moment_vs_identity_kNm": 2753.9884674395093
+      "delta_moment_vs_identity_kNm": 2753.9884674395093,
+      "analytic_force_upper_kN": 88.92942888861725,
+      "analytic_moment_upper_kNm": 2794.49873900314,
+      "moment_bound_utilization": 0.9855035641998243
     },
     {
       "time_s": 1,
@@ -195,7 +229,10 @@
         6136.633039570369
       ],
       "delta_force_vs_identity_kN": 88.92942888861725,
-      "delta_moment_vs_identity_kNm": 2754.015466615189
+      "delta_moment_vs_identity_kNm": 2754.015466615189,
+      "analytic_force_upper_kN": 88.92942888861725,
+      "analytic_moment_upper_kNm": 2794.49873900314,
+      "moment_bound_utilization": 0.9855132257449533
     },
     {
       "time_s": 1,
@@ -211,7 +248,10 @@
         6105.8308237270185
       ],
       "delta_force_vs_identity_kN": 177.85843450469662,
-      "delta_moment_vs_identity_kNm": 5508.005508540835
+      "delta_moment_vs_identity_kNm": 5508.005508540835,
+      "analytic_force_upper_kN": 177.85843450469662,
+      "analytic_moment_upper_kNm": 5588.984177183503,
+      "moment_bound_utilization": 0.9855110220255667
     },
     {
       "time_s": 2,
@@ -227,7 +267,10 @@
         8381.939338305738
       ],
       "delta_force_vs_identity_kN": 0,
-      "delta_moment_vs_identity_kNm": 0
+      "delta_moment_vs_identity_kNm": 0,
+      "analytic_force_upper_kN": 0,
+      "analytic_moment_upper_kNm": 0,
+      "moment_bound_utilization": 0
     },
     {
       "time_s": 2,
@@ -243,7 +286,10 @@
         8514.648907344379
       ],
       "delta_force_vs_identity_kN": 178.93195754846678,
-      "delta_moment_vs_identity_kNm": 5515.175308796057
+      "delta_moment_vs_identity_kNm": 5515.175308796057,
+      "analytic_force_upper_kN": 178.93195754846698,
+      "analytic_moment_upper_kNm": 5692.30254368944,
+      "moment_bound_utilization": 0.9688830251846419
     },
     {
       "time_s": 2,
@@ -259,7 +305,10 @@
         8448.374594939929
       ],
       "delta_force_vs_identity_kN": 89.46619168790284,
-      "delta_moment_vs_identity_kNm": 2758.189580607788
+      "delta_moment_vs_identity_kNm": 2758.189580607788,
+      "analytic_force_upper_kN": 89.46619168790271,
+      "analytic_moment_upper_kNm": 2846.1580451960963,
+      "moment_bound_utilization": 0.9690922066900725
     },
     {
       "time_s": 2,
@@ -275,7 +324,10 @@
         8315.34440227333
       ],
       "delta_force_vs_identity_kN": 89.46619168790296,
-      "delta_moment_vs_identity_kNm": 2759.3409511904556
+      "delta_moment_vs_identity_kNm": 2759.3409511904556,
+      "analytic_force_upper_kN": 89.46619168790271,
+      "analytic_moment_upper_kNm": 2846.1580451960963,
+      "moment_bound_utilization": 0.9694967417033726
     },
     {
       "time_s": 2,
@@ -291,7 +343,10 @@
         8248.591054714287
       ],
       "delta_force_vs_identity_kN": 178.9319575484669,
-      "delta_moment_vs_identity_kNm": 5519.7807691811595
+      "delta_moment_vs_identity_kNm": 5519.7807691811595,
+      "analytic_force_upper_kN": 178.93195754846698,
+      "analytic_moment_upper_kNm": 5692.30254368944,
+      "moment_bound_utilization": 0.9696920932813838
     }
   ],
   "SOURCE": "OpenFAST native FileID4 OUTB snapshots in existing SHA-locked T062 receipt; no new solver run",
@@ -307,20 +362,30 @@
   "physical_pass": false,
   "earthquake_runs": 0,
   "material_life_results": 0,
-  "test": {
-    "status": "SYNTHETIC_MATH_TEST_PASS",
-    "positive": 3,
-    "negative_rejections": 7,
+  "analytic_bound_receipt_20261105": {
+    "SOURCE": {
+      "reading_level": "Previously native OUTB-derived 0/1/2s three snapshots in existing committed pose receipt; original OUTB bytes NOT reread in this turn",
+      "pose_receipt_git_blob_sha1": "0121256cde457417a10d4635e299d6b16608e02c",
+      "pose_receipt_sha256": "d4427612da71affcebd00e4bcf36cb38aa543daa63153fa44bbfefe2cb304e2e",
+      "original_artifact_sha256": "7fcae2bf57be571cacc6d3d9b82f1a254257ce59fdb946a1cfb56d3639eb9f1b",
+      "original_outb_batch1_sha256": "c3f40b400f827fbcdd49e9a63f5bb2295a5c0f368a9644b90b591d66b7bb0242"
+    },
+    "REF": "Analytic rigid-wrench reference-point transport identity and Euclidean rotation norm; no new paper full text",
+    "STANDARD": "NONE: no newly read authorized IEC/GB clauses",
+    "OFFICIAL": "OpenFAST v3.5.3 ElastoDyn source semantics inherited from original T062 receipt; no new official source page read",
+    "RUN": {
+      "environment": "V8 JS eval of exact updated Node CommonJS source, no Node CLI or native solver",
+      "synthetic_positive": 3,
+      "synthetic_negative_rejections": 9,
+      "real_snapshot_count": 3,
+      "hypothetical_rotation_scenarios": 15,
+      "analytic_bound_checks": 30
+    },
+    "FIG": "NONE",
+    "TAB": "3 original-derived snapshots x 5 assumed rotations; each scenario now carries analytic force/moment upper bound",
+    "assumptions": "Ry ±0.5deg is a sensitivity scenario, NOT a measured frame error or probabilistic uncertainty",
+    "error_budget": "Floating-point invariant tolerance 1e-8; analytic bounds valid for specified Ry only; true 31-station DCM, inertia, gravity and ownership error unbounded",
+    "HOLD": "No verified synchronous 31-station DCM or free-body aerodynamic external-load ownership; no Abaqus export, no physics PASS",
     "physical_pass": false
-  },
-  "program_git_blob_sha1": "ada4a7b31f7d477e460873ec96fb08ffc3533438",
-  "input_pose_receipt_git_blob_sha1": "0121256cde457417a10d4635e299d6b16608e02c",
-  "failure_records": [
-    "No new OpenFAST/Abaqus run attempted; no native DCM data in current 3-snapshot JSON.",
-    "Seven intentionally malformed synthetic inputs rejected; all 15 conditional scenarios passed inversion and invariants."
-  ],
-  "acceptance": "MATH_AND_PROVENANCE_ONLY_PASS__EXTERNAL_WIND_MAPPING_HOLD",
-  "program_sha256": "67b53228293bcb032122143d2b2a3e45f1a764bb74fd5a9d128abba58ea6e060",
-  "pose_receipt_sha256": "d4427612da71affcebd00e4bcf36cb38aa543daa63153fa44bbfefe2cb304e2e",
-  "sha256_algorithm": "SHA-256 (pure JS verified against NIST abc known answer; UTF-8 ASCII source and JSON)"
+  }
 }
