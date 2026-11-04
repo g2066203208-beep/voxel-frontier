@@ -974,6 +974,24 @@ jobs:
               for x in q['diagnostic_fields'][:20]: print('OFFICIAL_FIELD',q['service'],x['path'],x['value'])
           print('S05_OFFICIAL_ESM_NVL_RAW_RESPONSE_QC_COMPLETE_NOT_DESIGN_PASS')
           PY
+      - name: Query 2012 NVL station epoch and FDSN channel (NOT instrument response PASS)
+        shell: bash
+        run: |
+          set -euo pipefail
+          node s05_esm_provenance_band_gate.cjs --self-test-station
+          node s05_esm_provenance_band_gate.cjs --fetch-station --output-dir esm-nvl-official
+          python3 - <<'PY'
+          import json,pathlib,hashlib
+          p=pathlib.Path('esm-nvl-official')
+          m=json.loads((p/'S05_NVL_STATION_EPOCH_MANIFEST.json').read_text())
+          assert m['S05_PASS'] is False and m['station_installed_transfer_function_verified'] is False
+          assert len(m['queries'])==2 and m['source_locked_dyna_zip_sha256']=='dec0f0bf59bea4e6a5049c824b6656c7e7798eb5379beba5162aff7304b113c6'
+          for q in m['queries']:
+              if q['sha256']:
+                  assert hashlib.sha256((p/(q['name']+'.body')).read_bytes()).hexdigest()==q['sha256']
+              print('S05_STATION_EPOCH',q['name'],q['status'],q['bytes'],q['sha256'],q['error'])
+          print('S05_STATION_EPOCH_HASH_QC_COMPLETE_NOT_TRANSFER_FUNCTION_PASS')
+          PY
       - name: Archive official ESM response bodies, errors and SHA manifest
         if: always()
         uses: actions/upload-artifact@v4
