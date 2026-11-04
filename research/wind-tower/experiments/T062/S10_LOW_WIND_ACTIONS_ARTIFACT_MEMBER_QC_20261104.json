@@ -1,0 +1,113 @@
+{
+  "timestamp_local": "2026-11-04 09:00 Asia/Shanghai",
+  "stage": "S06/S10 source recovery; PARTIAL preparation, NOT PASS",
+  "SOURCE": "Direct GitHub REST Actions runs pages 1..21 and 13 selected per-run artifact lists; three real GitHub Actions ZIP artifacts downloaded, CRC-tested and members parsed. T062 historical original OUTB SHA is inherited from a member receipt, not freshly re-hashed original OUTB bytes.",
+  "READING_LEVEL": "Actions 2100 run names (not all 11759); 13 per-run artifact inventories; 3 downloaded ZIPs and all 16 ZIP member names/CRC; parsed 1 ETM 12001-row gzip CSV, 18NTM DEL 1080-row CSV and 18NTM TurbSim controller 18-row CSV; no 4-8m/s original OUTB/BTS bytes recovered.",
+  "REF": "T062 18NTM source identity and original S06 GAGE geometry receipts; no new journal original pages read",
+  "STANDARD": "IEC 61400-1/6 2025 licensed clauses not read; no clause acceptance",
+  "OFFICIAL": "GitHub REST Actions runs and workflow-run artifacts endpoints, links below; original OpenFAST identity inherited from archived member receipts",
+  "RUN": "Local CPython 3 source-only ZIP SHA256/CRC, gzip CSV time window, case-set and 3 synthetic negative-case rejections; NO OpenFAST/TurbSim/Abaqus solver run",
+  "FIG": "0",
+  "TAB": "3 ZIP artifact member manifests, 18 NTM cases, 1 ETM original-series case",
+  "script_path": "research/wind-tower/experiments/T062/s10_low_wind_artifact_member_qc.py",
+  "script_sha256": "013eb7cd135d1dc66afdc2e56616710d54bfb1274b9ae477027c4ac15b57a002",
+  "github_runs_inventory": {
+    "repo_total_at_scan": 11759,
+    "run_pages_scanned": "1..21",
+    "per_page": 100,
+    "run_titles_scanned": 2100,
+    "oldest_in_scope": "2026-10-28T16:12:43Z",
+    "newest_in_scope": "2026-11-04T00:11:08Z",
+    "run_titles_explicit_lowwind_4_to_8_hits": 0,
+    "inspected_artifact_run_ids": [
+      41242545218,
+      41209475823,
+      41296326404,
+      41397641326,
+      41179994253,
+      40812158057,
+      41435041898,
+      41391433429,
+      41227804671,
+      41296337995,
+      37755224772,
+      37212366726,
+      37211871303
+    ],
+    "inspected_artifact_run_count": 13,
+    "history_exhausted": false,
+    "note": "Title and artifact-name search cannot exclude unnamed or nested historical data. Some earlier daily created-date queries inspected only first page; not claimed exhaustive."
+  },
+  "verified_zip_artifacts": [
+    {
+      "run_id": 41179994253,
+      "artifact_id": 13034720958,
+      "name": "s06-t062-one-original-outb-full-native-series-qc",
+      "size_bytes": 8538873,
+      "zip_sha256": "1592cfcf36c2ac1b4850008e8d3d5af049d408f52944dc2dfdab728024a19de6",
+      "members": 3,
+      "crc": "PASS",
+      "case": "U09p343881_ETM_S01",
+      "original_outb_sha256_inherited": "0d6f0d9dfd067a3495ec65d69db0afda2a903699eaa5988914ab45089d1c126c",
+      "gz_member_sha256": "f8ff5debe64b2afb8bdb38cd1b903b82f5cc0d060ab548807a1c75f6a8bab680",
+      "series_rows": 12001,
+      "t0_s": 100,
+      "t1_s": 700,
+      "gage_count": 9,
+      "gage_z_span_m": 2.680356759,
+      "not_lowwind_NTM": true
+    },
+    {
+      "run_id": 41179994253,
+      "artifact_id": 13034298419,
+      "name": "s06-18-original-ntm-9gage-rainflow-20261031",
+      "size_bytes": 220643,
+      "zip_sha256": "efb73c935440e4545d16724e5191a2b79a25cc76e5a2acf987fa048ea9f3f82a",
+      "members": 5,
+      "crc": "PASS",
+      "ntm_del_rows": 1080,
+      "unique_ntm_cases": 18,
+      "wind_speeds_mps": [
+        9.343881,
+        11.4,
+        19.20214
+      ]
+    },
+    {
+      "run_id": 41242545218,
+      "artifact_id": 13057922721,
+      "name": "s07-original-18ntm-turbsim-controller-source-qc",
+      "size_bytes": 20201,
+      "zip_sha256": "5320dc6f983aad81305933d91438fd416cd57bbe26a6b9ca81de9220fa2ca9a5",
+      "members": 8,
+      "crc": "PASS",
+      "controller_rows": 18,
+      "unique_ntm_cases": 18,
+      "wind_speeds_mps": [
+        9.343881,
+        11.4,
+        19.20214
+      ]
+    }
+  ],
+  "original_lowwind_NTM_4_to_8_found_in_downloaded_artifact_members": 0,
+  "test_results": {
+    "zip_sha256": "3/3 PASS",
+    "zip_crc": "3/3 PASS",
+    "member_count": "3+5+8=16",
+    "ntm_case_identity": "18/18 PASS",
+    "synthetic_negative_rejections": "3/3 PASS",
+    "etm_window": "12001 rows, 100-700s PASS",
+    "native_physics_pass": false
+  },
+  "ERROR_BUDGET": "ZIP byte SHA256 and CRC are exact; CSV time values are decimal serialized from upstream native data and original OUTB was NOT rehashed this run; gage geometry inherited from source member receipt. Physical wind/control/turbulence/long-term fatigue uncertainty NOT ESTIMATED.",
+  "HOLD": "No verified 4-8m/s 158m NTM original BTS/OUTB in inspected ZIPs; full Actions history (11759 runs) and nested archives not exhausted; ETM 9 gages span 2.680m only and cannot replace 31-segment full-tower time histories; DLC1.2 and local material stress unresolved.",
+  "stage_passed": 0,
+  "links": {
+    "run_41179994253": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41179994253",
+    "run_41242545218": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41242545218",
+    "artifact_13034720958": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41179994253/artifacts/13034720958",
+    "artifact_13034298419": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41179994253/artifacts/13034298419",
+    "artifact_13057922721": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41242545218/artifacts/13057922721"
+  }
+}
