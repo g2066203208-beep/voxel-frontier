@@ -32,3 +32,16 @@
 4. 本页修正**官方标准版本元信息**和科研方法叙述，不代替有授权的整份标准原文核对；没有重分配任何阶段为PASS，也不开展Abaqus工作。
 
 **唯一下一可执行的非Abaqus动作：** 先对现有的18 NTM三分箱开展**输入法线/控制器工作状态与跨seed重复性**的实证对照；只有当用户许可并且完整风速bin源输入验证完成后，才考虑补充缺失低风速工况的有限高价值仿真。本助手不承诺替用户操作任何Abaqus。
+
+
+## 2026-11-05 02:15｜18组原始NTM全部60载荷通道、m=4/10的六seed离散及穷举三seed收敛诊断（仅源级）
+
+**增量区别**：此前已有30组（3风速×10个My通道）的m=4六seed/子集统计。本轮**没有重复**那30组作为新结果，而是直接复用其已验证程序，扩展至18个NTM原始OUTB派生CSV的全部60通道、m=4和m=10，共**3风速×60通道×2指数=360组**。每组穷举C(6,3)=20种三seed子集及6种留一（五seed）子集；总计7200个三seed子集比较、2160个留一比较。全部为载荷DEL诊断，不是材料S-N指数选择或材料寿命。
+
+- **SOURCE / 输入SHA256 / 阅读层级**：直接读取仓库已归档的[18原始NTM×60通道统计DEL CSV](S06_18NTM_ORIGINAL_9GAGE_LOAD_DEL_20261031.csv)（1080行；SHA256 `95de6578cf379d1b2e1d99a68c26954a68e93cc8bfc4bdcd63dd324ae2999a0f`）、[18 OUTB原始来源收据](S06_18NTM_ORIGINAL_LOAD_DEL_RECEIPT_20261031.json)（本轮实际文件SHA256 `c0a061e5895c580de413dfa02ab828dbc8be09e05ead8c57ba45445b72581125`）及历史TurbSim manifest（SHA256 `c9da25b3a967c9ed3b3a859666263c6964d8480798185e6e031539c38e4c3302`）。**本轮未重新逐字节下载18份原始OUTB**；原始OUTB SHA与解码由此前S06源级原生RUN提供，本轮验证每个case的OUTB SHA与该收据一致。
+- **RUN / 软件 / 可复算程序**：[复用扩展的Node.js程序](s06_ntm_seed_dispersion_and_bts_gate.js)，SHA256 `6849649dad6e97d87625b7b502583bd413e31a601d57e5aa06de9b2dd00c70d4`；[Actions #41885296998/job #126768010439](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41885296998/job/126768010439) `completed/success`。工作流为Ubuntu runner、setup-node@v4要求Node20（日志未独立打印node --version）。真实1080行源哈希/18个OUTB身份/时间网格/单位/360组完整性核验通过，4/4真实数据复制异常拒绝（重复case-channel、m10=0、OUTB SHA篡改、dt篡改）；新结果逐字节与仓库CSV `cmp`一致，且30个历史My m4算术/四次幂均值交叉核验差<1e-6。同期[Actions #41885296924](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41885296924)原有源级作业亦成功。没有OpenFAST/TurbSim/Abaqus新生产RUN。
+- **TAB**：[360行真实统计表](S06_18NTM_ALL_CHANNEL_SEED_CONVERGENCE_20261105.csv)，SHA256 `266c3d953a01eec0443cb9c336c661fd102b2e0d762ac22634714f8ca58f8691`；m4的180组中90组seed样本CV>10%，30组三seed最不利偏差>10%，最大10.889278%（U09p343881_NTM / TwHt9MLyt）；m10的180组中110组seed CV>10%，70组三seed最不利偏差>10%，10组>15%，最大19.655559%（U11p4_NTM / TwHt9MLyt）。m4/m10最大五seed留一偏差分别4.097932%/9.322496%。这里的偏差均以同一六seed幂均值作有限样本参照，**不是六seed对真实总体的收敛证明，也不是置信区间**。
+- **算法 / 假设**：对等时长600s载荷DEL `D_s`，同一通道/风速六seed幂均值 `(Σ D_s^m/6)^(1/m)`；对所有三seed子集用相同公式比较六seed参考，样本标准差使用n−1；m=4/10为**诊断敏感性**，不能擅认是任何一种材料的S-N指数。输入均为100–700s、12001点、dt=0.05s、Nref=600的**历史九测高OpenFAST载荷**，不是31站同态重跑、不是局部材料应力。
+- **误差预算 / 失败**：打印误差：DEL九位小数、百分数六位小数；原OUTB打包量化half-step逐行保存在上游CSV；三seed子集跨度仅描述六个已见seed的有限样本敏感性，**不覆盖总体采样误差**、ERA5外推、风速分箱、控制器/模型差异、缺失18个bin、材料局部应力与疲劳参数。四项负例均按预期被拒绝；本轮无新的失败CI。
+- **REF / STANDARD / OFFICIAL / FIG**：REF沿用本文件先前原刊/方法分级，不新增声称全文阅读；STANDARD=本轮没有新增2025 IEC/GB/NB授权条款核验；OFFICIAL=OpenFAST历史OUTB来源回证（非规范适用证明）；FIG=0，只有可复算TAB；SOURCE/统计程序级PASS，**S06 PARTIAL、S07/S10 BLOCKED、正式DLC1.2 0/126、E/WE原生0、12阶段0/12**。
+- **HOLD**：九测高历史载荷DEL的seed散布不能替代31站同态六分量、完整DLC1.2风速bin/气候权重或分材料局部应力与寿命。原manifest显示36个BTS原始二进制均为此前延期保留状态（`original_bts_available=0`，`original_bts_deferred=36`），不能把108个inp/sum/dat辅助文件当成36个已归档BTS。
