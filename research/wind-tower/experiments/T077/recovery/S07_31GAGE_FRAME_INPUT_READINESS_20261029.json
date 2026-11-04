@@ -89,7 +89,13 @@
       "source_csv_rows": 1488124,
       "phase_correlations": 72,
       "zero_lag_best_of_pm3": 72,
-      "solver_runs": 0
+      "solver_runs": 0,
+      "real_archive_tamper_rejections": {
+        "tampered_manifest_sha_rejected": true,
+        "tampered_original_zip_sha_rejected": true,
+        "actual_archive_data_recomputed": true,
+        "ci": "LOCAL_PYTHON_ONLY_NO_GITHUB_ACTIONS_RUN"
+      }
     },
     "FIG": "NONE",
     "TAB": {
@@ -108,7 +114,7 @@
     },
     "assumptions": "Same nominal clock and wind seed; first-difference Pearson correlation is only a phase fingerprint, NOT proof of identical initial states, timewise synchronized cross-run section resultants, common DCM or external wind-load ownership.",
     "error_budget": "Input ZIP/GZIP/CSV SHA exact; time grid tolerance 2e-8 s; double precision correlation and 12-digit CSV rounding; physical frame and cross-run phase errors unbounded; +/-3 lag scan is diagnostic, not a correction.",
-    "failure_record": "Local reconstruction of original manifest initially SHA-mismatched due manual transcription; corrected to original repository SHA before calculation. All 16 actual ZIP/GZIP/CSV hashes then passed. No solver run.",
+    "failure_record": "Local reconstruction of original manifest initially SHA-mismatched due manual transcription; corrected to original repository SHA before calculation. All 16 actual ZIP/GZIP/CSV hashes then passed. No solver run. Two additional real-byte tamper tests changed one byte in a copy of the original manifest or one original ZIP; both exited nonzero with MANIFEST_SHA/ZIP_SHA respectively; originals unchanged.",
     "HOLD": "Cross-batch J09/J18/J27 still cannot be spliced; missing shared native RP/TP/DCM and load ownership. Correlation is NOT native physics or formal DLC1.2 PASS.",
     "stage_pass": false
   }
