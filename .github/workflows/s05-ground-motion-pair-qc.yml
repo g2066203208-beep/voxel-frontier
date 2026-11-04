@@ -1292,6 +1292,12 @@ jobs:
               if x.get('paz_metadata'):
                   print('RAN_NVL_PAZ_METADATA',x['seed_id'],x['paz_metadata'])
                   print('RAN_NVL_PAZ_ONLY_RELATIVE_DC',x['seed_id'],x['paz_only_relative_to_dc'])
+              if x.get('complete_response_stages'):
+                  print('RAN_NVL_FULL_STAGES',x['seed_id'],json.dumps(x['complete_response_stages'],ensure_ascii=False))
+                  print('RAN_NVL_ORIENTATION_EPOCH',x['seed_id'],x.get('orientation_epoch'))
+                  print('RAN_NVL_FULL_EVALRESP',x['seed_id'],x.get('full_response_evalresp_status'),x.get('full_response_relative_to_1Hz'))
+              else:
+                  print('RAN_NVL_FULL_STAGES_HOLD',x['seed_id'],x.get('error','NO_STAGES'))
           # Fail closed on a deliberately malformed stage sequence; this does not
           # establish that the real response has passed a physics acceptance test.
           def check_sequence(seq):
