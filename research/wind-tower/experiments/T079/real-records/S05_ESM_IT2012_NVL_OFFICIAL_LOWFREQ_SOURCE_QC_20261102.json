@@ -697,6 +697,53 @@
     "HOLD": "NO_NVl_2012_STATION_INSTALLED_CHAIN_RESPONSE_OR_CALIBRATION; S05_PARTIAL; S08_BLOCKED; E_WE_0; DLC1p2_0_OF_126; STAGES_0_OF_12",
     "script_sha256": "PENDING_ACTIONS_SHA256",
     "S05_PASS": false,
-    "native_E_WE_runs": 0
+    "native_E_WE_runs": 0,
+    "actual": {
+      "source_level": "Downloaded Actions raw artifact and inspected official HTTP200 bodies",
+      "CI": "41819487797 10/10 success",
+      "artifact_id": 13316073030,
+      "artifact_zip_sha256": "ce5730ef25b9feb96d27807c67f47596dff6c2d67e7b1cfe563c3fbfbfbdbd37",
+      "node_script_sha256": "a1b1114a649dbcfa8b24ae2029324f34fbba8b96755f809197d48ede9f612983",
+      "station": {
+        "name": "Novellara",
+        "network": "IT",
+        "code": "NVL",
+        "lat": 44.843,
+        "lon": 10.7315,
+        "elevation_m": 22,
+        "bytes": 230,
+        "sha256": "85018a4522075a291e6bab644c3fc2701381ff3433a2b543be5f575bdcfa97b6"
+      },
+      "channels": {
+        "codes": [
+          "HNE",
+          "HNN",
+          "HNZ"
+        ],
+        "depth_m": 0,
+        "bytes": 476,
+        "sha256": "67b76b8985810744488dac52df29fbdd1d2566d0bb71591fd177f01225430351"
+      },
+      "HOLD": "No serial, installed transfer response or 2012 calibration"
+    },
+    "snr_timezone_drift": {
+      "previous_sha256": "4b1dc4b4d9d818b500e8c8c8fbfad0e30fad53837ec6288cd86c8c5bd575da3f",
+      "current_sha256": "c70f595c6beb4279490179fca45699a7f6cce11821ec215427665476ac375a18",
+      "different_fields": [
+        "start_noise",
+        "end_noise",
+        "start_signal",
+        "end_signal"
+      ],
+      "utc_delta_s": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "all_other_json_exact": true,
+      "comparison_script": "s05_esm_five_endpoint_artifact_qc.py --compare-snr-utc previous.zip current.zip",
+      "new_mode_CI": "NOT_RUN"
+    }
   }
 }
