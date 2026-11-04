@@ -779,7 +779,7 @@
       "dataless_content_status": "Official ZIP CRC PASS; ObsPy 1.4.2 Python3.11 parsed NVL.IT.dataless member: 28672 bytes, 1 station, 4 channels; PAZ 2012 extraction attempts not yet shown in stdout; still HOLD",
       "CI_workflow": ".github/workflows/s05-ground-motion-pair-qc.yml",
       "CI_job": "s05-ran-nvl-official-dataless-source",
-      "CI_status": "Actions #41826812595 NVL job success, ObsPy Python3.11 parser inventory 1 station/4 channels; no 2012 PAZ yet proven",
+      "CI_status": "Actions #41826917661 native job parsed NVL 4 channel IDs; 9/9 processed HN aliases rejected; corrected HG extraction submitted",
       "local_failure": "Container direct GET failed with DNS NameResolutionError; not a negative official-server result",
       "SOURCE": "Official station row, not 2012 calibration document",
       "REF": "Inherited ESM3 DOI 10.13127/esm.3; no new article full text",
@@ -790,7 +790,7 @@
       "TAB": "NVL one-row equipment registry",
       "assumptions": "Registry equipment epoch is not independently tied to 2012 maintenance log",
       "error_budget": "SHA-256 exact for official ZIP and 28672-byte NVL member; station response amplitude/phase uncertainty not yet quantifiable",
-      "HOLD": "2012 sensor and digitizer serials/epoch-specific response, phase and usable low frequency, Jiayu target spectrum",
+      "HOLD": "Raw HG channel response metadata and mapping to ESM processed HN channels, 2012 serial-specific calibration and 0.1–0.2Hz reliability, site target spectrum",
       "S05_PASS": false,
       "native_E_WE_runs": 0,
       "station_registry_raw_html_sha256": "cc45118d1428591f855d5c05a81ffb65731d4ee5b47862ad7bb78d43b0845011",
@@ -807,11 +807,23 @@
         "inventory_station_count": 1,
         "inventory_channel_count": 4,
         "epoch_requested": "2012-05-20",
-        "paz_status": "NOT_YET_CONFIRMED",
-        "S05_PASS": false
+        "paz_status": "RETRY_CORRECT_RAW_HGE_HGN_HGZ_PENDING",
+        "S05_PASS": false,
+        "inventory_channel_ids": [
+          "IT.NVL..HGE",
+          "IT.NVL..HGN",
+          "IT.NVL..HGZ",
+          "IT.NVL..LOG"
+        ],
+        "epoch_start_utc": "2010-03-16T12:00:00Z",
+        "epoch_end_display": "",
+        "sample_rate_Hz_for_three_HG": 200,
+        "processed_vs_raw_channel_name_discrepancy": "RAN Dataless HGE/HGN/HGZ vs ESM processed HNE/HNN/HNZ; mapping NOT YET VERIFIED",
+        "initial_paz_attempts": "9/9 HNE/HNN/HNZ aliases rejected with No channel found; parser valid, requested wrong channel IDs"
       },
       "CI_response_run_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41826812595",
-      "CI_response_job_id": 126563531913
+      "CI_response_job_id": 126563531913,
+      "CI_channel_discovery_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41826917661/job/126563897876"
     }
   }
 }
