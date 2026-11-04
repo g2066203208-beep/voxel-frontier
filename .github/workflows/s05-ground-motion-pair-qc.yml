@@ -1155,6 +1155,10 @@ jobs:
           out.joinpath('source_manifest.json').write_text(json.dumps(manifest,indent=2,ensure_ascii=False)+'\n')
           print('S05_RAN_SOURCE_CAPTURE_COMPLETE_NOT_CALIBRATION_OR_DESIGN_PASS')
           PY
+      - name: Select ObsPy-supported Python for official dataless parsing
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
       - name: Attempt epoch-specific NVL SEED poles/zeros extraction from official dataless (NOT calibration PASS)
         shell: bash
         run: |
