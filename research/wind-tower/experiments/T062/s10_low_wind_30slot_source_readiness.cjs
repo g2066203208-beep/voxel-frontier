@@ -63,12 +63,27 @@ function build(eraText,coverageText,ctrlText,idText,expectedHashes=HASH){
   FIG:"0",TAB:"30 proposed source-missing low-wind NTM slots; no wind-field or material response figures",
   input_sha256:HASH,inventory_snapshot:INVENTORY,
   results:{bins:[4,5,6,7,8],slot_count:30,unique_candidate_seed1:[...seeds.values()],era5_21y_hours:95402,diagnostic_operating_hours:106900,share_of_diagnostic_operating_hours:95402/106900,original_lowwind_outb_found_in_checked_sources:0,formal_dlc12_verified_slots:0,original_controller_source_configs_checked:18,original_18ntm_gage_count:9},
+  cut_in_sensitivity:{status:"SCENARIO_ONLY_NOT_ACTUAL_CONTROLLER_CUT_IN",bin_policy:"Whole 1m/s ERA5 bins with hypothetical integer cut-in k=4..9; no within-bin interpolation, no controller or IEC approval",scenarios:cutInSensitivity(era)},
   assumptions:"Candidate lowwind centers 4.5..8.5m/s; historical seed1 reused across speeds ONLY as a proposed paired design; original 51x51/0.025s/700s and FST 0.0125s/0.05s settings are historical metadata, not approved lowwind inputs. Controller binary and below/near cut-in operating state unverified.",
   ERROR_BUDGET:"Integer ERA5 hours exact; conditional probability prior 12-digit decimal rounded <=0.5e-12 per bin; proposed wind centers differ from physical turbulent realizations; physical/control/turbulence model errors NOT ESTIMATED. Git tree/release/Actions name search cannot prove missing archive members.",
   HOLD:"No verified 4-8m/s 158m NTM original OUTB/BTS, original BTS bytes unarchived even for 18 prior cases; lowwind controller cut-in, wind-bin IEC2025, source input versions, 31-segment full time series, material stress and DLC1.2 unresolved.",
   tests:{negative_rejections:6,source_locked:true,physical_pass:false,material_fatigue_pass:false},stage_passed:0
  };
  return {csv,receipt:JSON.stringify(receipt,null,2)+"\n"};
+}
+function cutInSensitivity(era){
+ const expectedEligible=[106900,79973,55204,35210,20743,11498];
+ const expectedMissing=[95402,68475,43706,23712,9245,0];
+ const result=[];
+ for(let k=4;k<=9;k++){
+  const eligible=era.filter(r=>Number(r.bin_lower_mps)>=k&&Number(r.bin_lower_mps)<25).reduce((s,r)=>s+Number(r.hours),0);
+  const missing=era.filter(r=>Number(r.bin_lower_mps)>=k&&Number(r.bin_lower_mps)<=8).reduce((s,r)=>s+Number(r.hours),0);
+  ok(eligible===expectedEligible[k-4]&&missing===expectedMissing[k-4],"CUT_IN_SOURCE_HOURS_ORACLE_"+k);
+  ok(eligible>0&&missing<=eligible,"CUT_IN_DENOMINATOR_"+k);
+  result.push({hypothetical_cut_in_mps_NONNORMATIVE:k,eligible_era5_hours_4_to_25:eligible,uncovered_lowwind_hours_4_to_8:missing,uncovered_share_of_eligible:missing/eligible,uncovered_candidate_slots:6*Math.max(0,9-k)});
+ }
+ ok(result.length===6&&result[0].uncovered_share_of_eligible>result[5].uncovered_share_of_eligible,"CUT_IN_SCENARIO_ORDER");
+ return result;
 }
 function negativeTests(era,coverage,controller,identity){
  const cases=[
