@@ -664,5 +664,39 @@
     "error_budget": "f=1/T arithmetic exact for listed decimal periods to floating-point tolerance; no transfer-function magnitude/phase uncertainty bound, noise uncertainty, processing filter response, site target-spectrum error or station-specific calibration obtained.",
     "HOLD": "NO_INSTALLED_SENSOR_DIGITIZER_CHAIN_RESPONSE_OR_STATION_SPECIFIC_CALIBRATION_AT_0p1_TO_0p2_HZ; NO_TARGET_SPECTRUM; S05_PARTIAL; S08_BLOCKED; E_WE_ZERO; STAGES_0_OF_12",
     "provenance_failure": "PDF binaries could not be fetched into local container (DNS failure), hence no source PDF SHA256; source pages read via web PDF page view. Do not claim native instrument response test or official manufacturer-hosted download."
+  },
+  "station_epoch_operator_response_route_20261104": {
+    "classification": "OFFICIAL_NETWORK_OPERATOR_AND_STATION_EPOCH_RETRIEVAL; NOT CALIBRATION OR DESIGN PASS",
+    "source_reading_level": "FDSN network IT registry and ESM station/FDSN station query-options pages read directly; live HTTP result pending",
+    "SOURCE": {
+      "event": "IT-2012-0008",
+      "network": "IT",
+      "station": "NVL",
+      "historical_ESM3_DYNA_zip_sha256": "dec0f0bf59bea4e6a5049c824b6656c7e7798eb5379beba5162aff7304b113c6",
+      "script_git_blob_sha1": "4fb6722f6a11fb6ee80c7dcaf32649941a304a07"
+    },
+    "REF": "FDSN IT network DOI 10.7914/SN/IT; ESM 3.0 DOI 10.13127/esm.3",
+    "STANDARD": "No newly read authorized IEC/GB/NB clauses; NOT STANDARD PASS",
+    "OFFICIAL": [
+      "https://www.fdsn.org/networks/detail/IT/",
+      "https://esm-db.eu/esmws/station/1/query-options.html",
+      "https://esm-db.eu/fdsnws/station/1/query-options.html",
+      "https://esm-db.eu/fdsnws/station/1/"
+    ],
+    "operator_finding": "IT is the Italian Strong Motion Network (RAN), operated by Italian Civil Protection PCM-DPC, distinct from INGV IV; do not substitute IV/NOVE for IT/NVL.",
+    "endpoint_limitation": "ESM FDSN station docs list network/station/channel levels, not response. A channel inventory cannot establish NVL's installed 2012 instrument serial, sensitivity, transfer function or calibration.",
+    "RUN": "V8 JavaScript syntax parsing of updated script passed. Native Node --self-test-station and live two-endpoint retrieval added to existing S05 Actions workflow; results PENDING.",
+    "FIG": 0,
+    "TAB": "Two official station/epoch endpoint URLs; raw response SHA256 to be generated in Actions manifest",
+    "assumptions": [
+      "2012-05-20..21 query window refers to earthquake epoch, not verified installation period",
+      "FDSN network operator identity does not imply instrument response calibration"
+    ],
+    "error_budget": "Raw HTTP bytes and SHA256 to be checked when obtained; no 0.1-0.2Hz amplitude/phase/noise uncertainty quantified",
+    "failure": "Local container esm-db.eu DNS resolution failed; no live station response read in this run before Actions artifact.",
+    "HOLD": "NO_NVl_2012_STATION_INSTALLED_CHAIN_RESPONSE_OR_CALIBRATION; S05_PARTIAL; S08_BLOCKED; E_WE_0; DLC1p2_0_OF_126; STAGES_0_OF_12",
+    "script_sha256": "PENDING_ACTIONS_SHA256",
+    "S05_PASS": false,
+    "native_E_WE_runs": 0
   }
 }
