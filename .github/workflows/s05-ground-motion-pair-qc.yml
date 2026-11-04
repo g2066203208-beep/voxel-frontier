@@ -11,6 +11,7 @@ on:
       - 'research/wind-tower/experiments/T079/s05_ground_motion_pair_qc.py'
       - 'research/wind-tower/experiments/T079/s05_event_balanced_spectrum_gate.py'
       - 'research/wind-tower/experiments/T079/s05_esm_provenance_band_gate.cjs'
+      - 'research/wind-tower/experiments/T079/s05_esm_five_endpoint_artifact_qc.py'
       - 'research/wind-tower/experiments/T079/s05_parametric_target_spectrum_fit.py'
       - 'research/wind-tower/experiments/T079/real-records/S05_ESM_ROTD50_VS_HYPOTHETICAL_6DEG_12PERIOD_20261030.csv'
       - 'research/wind-tower/experiments/T079/real-records/S05_THREE_EVENT_FIVE_PAIR_20ROW_SOURCE_SCREEN_20261030.csv'
@@ -981,3 +982,48 @@ jobs:
           path: esm-nvl-official/
           if-no-files-found: warn
           retention-days: 90
+
+  s05-historical-esm3-dyna-identity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Retrieve exact two existing archived source artifacts (no solver)
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          curl --fail --location --silent --show-error --retry 3 \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            -o /tmp/esm-history-actions.zip \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/artifacts/12843169066/zip"
+          curl --fail --location --silent --show-error --retry 3 \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            -o /tmp/esm-official-actions.zip \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/artifacts/13300511449/zip"
+          echo 'e811eb290f1aa4a97b8205b46fe0f72feccff2b5d75dc072ee14abe8168aca48  /tmp/esm-history-actions.zip' | sha256sum -c -
+          echo '343497094c5d2dc2070c1ce6b74284de913f834532b8c71a083e3bf6e40ccbb7  /tmp/esm-official-actions.zip' | sha256sum -c -
+      - name: Native Python source-version/header/3x32040 and 4 negative tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          p=research/wind-tower/experiments/T079/s05_esm_five_endpoint_artifact_qc.py
+          python3 -m py_compile "$p"
+          python3 "$p" /tmp/esm-official-actions.zip /tmp/esm-history-actions.zip > /tmp/esm-concordance.json
+          python3 - <<'PY'
+          import json
+          r=json.load(open('/tmp/esm-concordance.json'))
+          assert r['status']=='HISTORICAL_ESM3_HEADER_AND_OFFICIAL_METADATA_CONCORDANCE_PASS_NOT_WAVEFORM_BYTE_EQUIVALENCE'
+          assert len(r['member_checks'])==3 and all(x['npts']==32040 for x in r['member_checks'])
+          assert r['negative_tests_passed']==4 and r['S05_PASS'] is False
+          assert r['current_official_waveform_bytes_compared'] is False
+          print('S05_ESM3_ARCHIVED_DYNA_DECLARED_VERSION_METADATA_QC_PASS_NOT_WAVEFORM_EQUIVALENCE_OR_DESIGN_PASS')
+          PY
+          sha256sum "$p"
+          cat /tmp/esm-concordance.json
