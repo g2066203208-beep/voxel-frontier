@@ -450,7 +450,7 @@
     "REF": "ESM original DYNA DATA_CITATION explicitly says ESM version 3.0 DOI 10.13127/esm.3; COSMOS 2005 p2-3 remains method reference, not code clause.",
     "STANDARD": "No authorized IEC 2025 or GB/NB full-text clause checked; NOT_STANDARD_PASS",
     "OFFICIAL": "Current ESM 2026-11-04 waveform-details JSON: IT-2012-0008 / IT.NVL / HN, Syscom MS2007+ Reftek 130-01/3, 0.005s, MP bandpass order 2, 0.04-30Hz, quality BEST, SNR lc 0.09Hz separate.",
-    "RUN": "Python3 offline original two-ZIP read: 3 x 32040 numeric samples; 4/4 deliberately tampered version/filter/event/instrument semantic cases rejected. Original source SHA and CRC checks passed. New GitHub script not yet native-CI executed.",
+    "RUN": "GitHub Actions #41797816620 job #126466013487 completed/success; optimized Actions #41797959345 job #126466481004 completed/success, source script SHA256 11808e51c2090ecdb196973e424fa24f77fe7df37ceecb772a2fddbdba8e7885, 3x32040 numeric samples and 4/4 negative tests. Entire optimized workflow was still in_progress at logging time; no physical or design PASS.",
     "FIG": 0,
     "TAB": "3 component header/metadata concordance and PGA 47.522846 / 51.205727 / 28.926626 cm/s2",
     "component_download_timestamps": [
@@ -479,6 +479,17 @@
     "PASS": "SOURCE_DECLARED_ESM3_AND_METADATA_CONCORDANCE_ONLY",
     "HOLD": "No new current official DYNA waveform bytes to establish sample-by-sample equivalence; no independently verified 0.1-0.2Hz instrument usable band or site target; S05 PARTIAL and E/WE=0.",
     "S05_PASS": false,
-    "native_E_WE_runs": 0
+    "native_E_WE_runs": 0,
+    "program_sha256": "11808e51c2090ecdb196973e424fa24f77fe7df37ceecb772a2fddbdba8e7885",
+    "native_CI": {
+      "first_run": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41797816620",
+      "first_job_id": 126466013487,
+      "optimized_run": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41797959345",
+      "optimized_job_id": 126466481004,
+      "optimized_job_status": "completed/success",
+      "source_script_sha256": "11808e51c2090ecdb196973e424fa24f77fe7df37ceecb772a2fddbdba8e7885",
+      "source_checks": "Both archived Actions ZIP SHA256 checked, original 3x32040 data and four semantic negative tests passed",
+      "full_workflow_status_at_record": "in_progress (do not claim all jobs success)"
+    }
   }
 }
