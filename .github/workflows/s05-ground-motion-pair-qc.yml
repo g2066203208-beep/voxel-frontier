@@ -1195,6 +1195,7 @@ jobs:
                           inv=parser.get_inventory()
                           row['inventory_station_count']=len(inv.get('stations',[]))
                           row['inventory_channel_count']=len(inv.get('channels',[]))
+                          row['NVL_channel_candidates']=[str(x)[:500] for x in inv.get('channels',[]) if 'NVL' in str(x)][:12]
                           row['NVL_station_candidates']=[str(x)[:400] for x in inv.get('stations',[])
                               if 'NVL' in str(x)][:10]
                           for stream in ('HNE','HNN','HNZ'):
@@ -1217,7 +1218,8 @@ jobs:
           print('RAN_DATALESS_SOURCE_SHA256',result['zip_sha256'])
           for x in result['members']:print('RAN_NVl_DATALESS_MEMBER',x)
           for x in result['channel_response_attempts']:
-              if x['status'].startswith('PAZ_'):print('RAN_NVL_PA Z_METADATA',x['seed_id'],x['paz_metadata'])
+              print('RAN_NVL_RESPONSE_ATTEMPT',x['seed_id'],x['status'],x.get('error','NONE'))
+              if x.get('paz_metadata'):print('RAN_NVL_PAZ_METADATA',x['seed_id'],x['paz_metadata'])
           print('S05_RAN_DATALESS_RESPONSE_ATTEMPT_NOT_CALIBRATION_PASS')
           PY
       - name: Archive exact official HTTP source and failure manifest (no restricted standard)
