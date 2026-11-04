@@ -9,7 +9,7 @@
     "archived_processed_acceleration_csv_sha256": "a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34",
     "archived_MP_DYNA_filter_low_high_Hz": [
       0.04,
-      30.0
+      30
     ]
   },
   "REF": "ESM v3 DOI 10.13127/esm.3; Boore & Bommer 2005 and Douglas & Boore 2011 (abstract-level, NOT filter acceptance rules)",
@@ -145,9 +145,9 @@
                 0.04
               ],
               "high_cut": [
-                30.0,
-                30.0,
-                30.0
+                30,
+                30,
+                30
               ]
             }
           },
@@ -157,9 +157,9 @@
             0.04
           ],
           "reported_high_cut_Hz": [
-            30.0,
-            30.0,
-            30.0
+            30,
+            30,
+            30
           ],
           "same_corners_as_archived_MP_DYNA": true
         }
@@ -282,9 +282,9 @@
             0.09
           ],
           "hc": [
-            57.0,
-            57.0,
-            57.0
+            57,
+            57,
+            57
           ]
         },
         "official_signal_noise_windows": {
@@ -316,5 +316,119 @@
       "matches_archived_MP_DYNA_filter_corners": true
     }
   ],
-  "HOLD": "No native Abaqus, no authorized site target, no accepted long-period reliability criterion; if official v3 corners differ from archived source, require reprocessed waveform identity before comparing. SNR values alone are not an engineering PASS."
+  "HOLD": "No native Abaqus, no authorized site target, no accepted long-period reliability criterion; if official v3 corners differ from archived source, require reprocessed waveform identity before comparing. SNR values alone are not an engineering PASS.",
+  "five_endpoint_actions_20261104": {
+    "classification": "NEW_ACTIONS_RUN_EVIDENCE_AND_5ENDPOINT_SOURCE_QC_NOT_DESIGN_PASS",
+    "run_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41783712298",
+    "job_id": 126420906444,
+    "artifact_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41783712298/artifacts/13300511449",
+    "artifact_zip_sha256": "343497094c5d2dc2070c1ce6b74284de913f834532b8c71a083e3bf6e40ccbb7",
+    "manifest_sha256": "373a8a82eabbb5e38477a1c445570a891630e67d990626f95d0c87be0a52c718",
+    "script_path": "research/wind-tower/experiments/T079/s05_esm_five_endpoint_artifact_qc.py",
+    "script_sha256": "7dcc7f3af573800a77996123cdd65c3f24c4559acaf228dc1d4faf4590bd1d73",
+    "script_git_blob": "bd79bc4feb615b795a178b72e19de2d596995cb9",
+    "reproducible_command": "python3 research/wind-tower/experiments/T079/s05_esm_five_endpoint_artifact_qc.py s05-official-esm-nvl-20261104.zip",
+    "source_reading_level": "Downloaded actual Actions artifact, inspected five official HTTP 200 JSON bodies, verified exact raw bytes/SHA256; historical DYNA ZIP NOT re-downloaded.",
+    "official_response_sha256": {
+      "event-ids": "c0368b9ce6b159dad3c170b1ac3a02fe29585d57ad3b9cd4810a29764296e045",
+      "waveform-details": "91d2bb349521b34f925b9d8d46f13f05a7f538aa12a58ced3cbabf75a33cd37c",
+      "waveform-band-instrument": "798c8cb945cf24a523c08951d2c040d6b7d463ba3952ba869cea1febe9a13349",
+      "waveform-snr": "4b1dc4b4d9d818b500e8c8c8fbfad0e30fad53837ec6288cd86c8c5bd575da3f",
+      "waveform-quality": "af11d50b715b839ec130f259f6caa81ce683ba3697905ae69f972fbf95eff6f4"
+    },
+    "official_event_ids": {
+      "internal": "IT-2012-0008",
+      "emsc": "20120520_0000001",
+      "ingv": "772691",
+      "isc": "601025379",
+      "usgs": "usp000jkn8"
+    },
+    "official_instrument": "sensor = MS2007+ [Syscom] | digitizer = 130-01/3 [Reftek]",
+    "official_station": {
+      "station": "NVL",
+      "network": "IT",
+      "ec8_site_class": "C",
+      "vs30_m_s": "190"
+    },
+    "official_quality": "BEST/no warnings detected",
+    "official_dt_s": 0.005,
+    "official_MP_filter_hz": {
+      "low": [
+        0.04,
+        0.04,
+        0.04
+      ],
+      "high": [
+        30,
+        30,
+        30
+      ]
+    },
+    "official_SNR_reported_cutoff_hz": {
+      "lc": [
+        0.09,
+        0.09,
+        0.09
+      ],
+      "hc": [
+        57,
+        57,
+        57
+      ]
+    },
+    "period_screen": [
+      {
+        "T_s": 4,
+        "f_hz": 0.25,
+        "ratio_to_reported_lc": 2.7777777777777777,
+        "bracket_min_UVW": [
+          2405.91090711604,
+          1914.62690066405,
+          651.815851652279
+        ]
+      },
+      {
+        "T_s": 6,
+        "f_hz": 0.16666666666666666,
+        "ratio_to_reported_lc": 1.8518518518518519,
+        "bracket_min_UVW": [
+          1558.19106742571,
+          1093.54233685381,
+          2302.71212131021
+        ]
+      },
+      {
+        "T_s": 8,
+        "f_hz": 0.125,
+        "ratio_to_reported_lc": 1.3888888888888888,
+        "bracket_min_UVW": [
+          2032.59539455858,
+          1628.51653042164,
+          595.06914471008
+        ]
+      },
+      {
+        "T_s": 10,
+        "f_hz": 0.1,
+        "ratio_to_reported_lc": 1.1111111111111112,
+        "bracket_min_UVW": [
+          1432.3896838753,
+          5626.13378907804,
+          193.75035696508
+        ]
+      }
+    ],
+    "run_tests": "Original GitHub Actions job completed/success, Node official 5/5 HTTP 200 and raw SHA; downloaded ZIP CRC + 5 SHA PASS; independent local Python 4-period calculation PASS and 3/3 tampered-response negative tests rejected (local earlier equivalent implementation). New GitHub Python QC script has NOT yet been executed in native CI.",
+    "REF": "Existing COSMOS 2005 printed p2-3, ESM official metadata; no new journal full-text reading.",
+    "STANDARD": "IEC 2025 and GB/NB authorized clause originals NOT read; no code PASS.",
+    "OFFICIAL": "https://esm-db.eu/esmws/waveform-details/1/ ; https://esm-db.eu/esmws/waveform-snr/1/ ; https://esm-db.eu/esmws/waveform-quality/1/",
+    "RUN": "Actions #41783712298 job #126420906444; downloaded original 10994-byte artifact; local offline Python source-QC and 3 negative mutation checks.",
+    "FIG": "none",
+    "TAB": "four-period 4/6/8/10 s official SNR bracket diagnostic above",
+    "error_budget": "frequency grid bracketing only; no SNR measurement uncertainty/validated physical cutoff/ground-motion processing uncertainty or site-target error quantified.",
+    "failure": "No new HTTP failures in Actions. Historical MP ZIP bytes not re-downloaded, ESM 3.0 processing-version equivalence not demonstrated; current 0.04 Hz filter and reported SNR lc=0.09 Hz differ and must not be conflated.",
+    "HOLD": "Quality BEST and SNR numbers do not prove reliable 0.1-0.2Hz seismic design input; site target spectrum and archival processing-version identity remain missing.",
+    "S05_PASS": false,
+    "native_E_WE_runs": 0
+  }
 }
