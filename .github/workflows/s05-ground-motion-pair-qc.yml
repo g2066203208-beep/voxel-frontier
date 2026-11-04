@@ -990,7 +990,13 @@ jobs:
       contents: read
       actions: read
     steps:
-      - uses: actions/checkout@v4
+      - name: Fetch only the exact PR-head Python source (avoid large checkout)
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --silent --show-error --retry 3 \
+            -o s05_esm_five_endpoint_artifact_qc.py \
+            "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/research/wind-tower/experiments/T079/s05_esm_five_endpoint_artifact_qc.py"
       - name: Retrieve exact two existing archived source artifacts (no solver)
         shell: bash
         env:
@@ -1013,7 +1019,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          p=research/wind-tower/experiments/T079/s05_esm_five_endpoint_artifact_qc.py
+          p=s05_esm_five_endpoint_artifact_qc.py
           python3 -m py_compile "$p"
           python3 "$p" /tmp/esm-official-actions.zip /tmp/esm-history-actions.zip > /tmp/esm-concordance.json
           python3 - <<'PY'
