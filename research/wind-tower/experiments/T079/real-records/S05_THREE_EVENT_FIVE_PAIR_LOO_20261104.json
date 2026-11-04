@@ -1,0 +1,121 @@
+{
+  "status": "S05_REAL_3EVENT_5PAIR_LEAVE_ONE_INDEPENDENT_EVENT_OUT_NUMERIC_DIAGNOSTIC_ONLY_NOT_DESIGN_PASS",
+  "date": "2026-11-04",
+  "SOURCE": {
+    "source_path": "research/wind-tower/experiments/T079/real-records/S05_THREE_EVENT_FIVE_PAIR_20ROW_SOURCE_SCREEN_20261030.csv",
+    "source_sha256": "bbd02ad8f1d0bb4e37671f2f1b24d5558ab05b63c2ebd5c7919301155fa79231",
+    "source_git_blob_sha": "30eae037aa177693250eb759a0233843a2fbc2ba",
+    "source_read_level": "Direct read of 20-row archived derived real spectral source table; original miniSEED/ESM ZIP NOT re-downloaded in this run",
+    "inherited_original_source_tables_sha256": {
+      "USGS_4pair": "45c71c29677dd0918e68c281e6552cedf6d1370a13f6abbf319349cdc1f5fc80",
+      "ESM_1pair": "4fd1ecf5f3010524e2c5c54dae4072e1187718344f3a64bec46490e9ec617def"
+    }
+  },
+  "REF": "No new journal full-text read; geometric mean and delete-one-independent-event sensitivity (not confidence interval)",
+  "STANDARD": "No new licensed IEC 2025/GB/NB seismic clauses; no site-specific target response spectrum",
+  "OFFICIAL": "Inherited USGS/SCEDC and ESM processed record source receipts, not newly verified instrument low-frequency passband",
+  "RUN": "V8 independent full 20-row derived-source calculation; Python source-level algorithm updated in existing T079 script; native CI pending",
+  "FIG": "None newly generated",
+  "TAB": "Four long-period rows, each with three per-event GMs and three leave-one-event-out GMs",
+  "method": "For each event, geometric mean of its stations; for all three events, geometric mean of three event GMs. Delete each independent event (all its stations together), recompute geometric mean of remaining two events. Ratio=max/min across three delete-one estimates.",
+  "periods_s": [
+    4,
+    6,
+    8,
+    10
+  ],
+  "event_count": 3,
+  "horizontal_pair_count": 5,
+  "data": [
+    {
+      "period_s": 4,
+      "full_event_weighted_gm_m_s2": 0.028007321061231407,
+      "per_event_station_balanced_gm_m_s2": {
+        "IT-2012-0008": 0.03769254763760001,
+        "ci38457511": 0.08266571976200661,
+        "ci39493944": 0.007050724834589999
+      },
+      "leave_one_event_out_gm_m_s2": {
+        "IT-2012-0008": 0.024142353723181947,
+        "ci38457511": 0.01630214040264017,
+        "ci39493944": 0.05582008222965929
+      },
+      "leave_one_event_out_min_m_s2": 0.01630214040264017,
+      "leave_one_event_out_max_m_s2": 0.05582008222965929,
+      "leave_one_event_out_max_over_min": 3.424095293684202
+    },
+    {
+      "period_s": 6,
+      "full_event_weighted_gm_m_s2": 0.019183490154092257,
+      "per_event_station_balanced_gm_m_s2": {
+        "IT-2012-0008": 0.028605371089800005,
+        "ci38457511": 0.07445988390168157,
+        "ci39493944": 0.003314461125970001
+      },
+      "leave_one_event_out_gm_m_s2": {
+        "IT-2012-0008": 0.015709690978385385,
+        "ci38457511": 0.00973711407302432,
+        "ci39493944": 0.04615140962431188
+      },
+      "leave_one_event_out_min_m_s2": 0.00973711407302432,
+      "leave_one_event_out_max_m_s2": 0.04615140962431188,
+      "leave_one_event_out_max_over_min": 4.739742112313302
+    },
+    {
+      "period_s": 8,
+      "full_event_weighted_gm_m_s2": 0.010531353789134282,
+      "per_event_station_balanced_gm_m_s2": {
+        "IT-2012-0008": 0.013251522267800001,
+        "ci38457511": 0.05089791038272905,
+        "ci39493944": 0.0017317567319100001
+      },
+      "leave_one_event_out_gm_m_s2": {
+        "IT-2012-0008": 0.009388439643808916,
+        "ci38457511": 0.00479045017668673,
+        "ci39493944": 0.02597065252975409
+      },
+      "leave_one_event_out_min_m_s2": 0.00479045017668673,
+      "leave_one_event_out_max_m_s2": 0.02597065252975409,
+      "leave_one_event_out_max_over_min": 5.421338615761671
+    },
+    {
+      "period_s": 10,
+      "full_event_weighted_gm_m_s2": 0.006313187134330152,
+      "per_event_station_balanced_gm_m_s2": {
+        "IT-2012-0008": 0.0083110740101,
+        "ci38457511": 0.032292701754263846,
+        "ci39493944": 0.0009375284532129999
+      },
+      "leave_one_event_out_gm_m_s2": {
+        "IT-2012-0008": 0.005502301947889056,
+        "ci38457511": 0.00279139183226358,
+        "ci39493944": 0.016382522219297403
+      },
+      "leave_one_event_out_min_m_s2": 0.00279139183226358,
+      "leave_one_event_out_max_m_s2": 0.016382522219297403,
+      "leave_one_event_out_max_over_min": 5.868943954748402
+    }
+  ],
+  "assumptions": [
+    "USGS 20s pre-event mean removal unvalidated; ESM MP 0.04 Hz high-pass, heterogeneous processing",
+    "Three event IDs treated independent for descriptive sensitivity only; not a representative ground-motion suite",
+    "All five horizontal pairs remain HOLD; no local Jiayu site response spectrum or low-frequency instrument qualification",
+    "This sensitivity is not a bootstrap, confidence interval, response spectrum match or seismic design acceptance"
+  ],
+  "error_budget": {
+    "numerical": "Float64 rounding negligible compared with source CSV ~12 significant-digit serialization; CI compare relative tolerance 2e-9",
+    "source": "20-row source is derived; original raw record hash inherited not rechecked this run",
+    "physical": "Unbounded due to instrument low-frequency fidelity, preprocessing heterogeneity, event selection and missing target spectrum"
+  },
+  "failures": "No V8 parsing failure; Python native CI not yet confirmed",
+  "PASS_HOLD": {
+    "numeric_derived_source": "V8_COMPUTED_NEEDS_NATIVE_CI",
+    "S05": "PARTIAL_HOLD",
+    "S08": "BLOCKED",
+    "design_wave": "HOLD",
+    "native_E": 0,
+    "native_WE": 0,
+    "stages_passed": 0
+  },
+  "next_single_action": "Confirm actual Python CI replay against this receipt, then prioritize independent, uniformly processed, long-period-reliable records and a justified site target instead of more algebraic LOO iterations."
+}
