@@ -195,7 +195,7 @@ function stationEpochValidate(q){
  }else throw Error('UNKNOWN_SERVICE');
 }
 function stationResponseCandidate(s){
- return /<Response[\s>]/.test(s)&&/<InstrumentSensitivity[\s>]/.test(s)&&/<(?:PolesZeros|Coefficients|FIR)[\s>]/.test(s);
+ return /<Response[\s\/>]/.test(s)&&/<InstrumentSensitivity[\s\/>]/.test(s)&&/<(?:PolesZeros|Coefficients|FIR)[\s\/>]/.test(s);
 }
 function stationEpochSelfTest(){
  const q=stationEpochQueries();if(q.length!==2)throw Error('COUNT');q.forEach(stationEpochValidate);
