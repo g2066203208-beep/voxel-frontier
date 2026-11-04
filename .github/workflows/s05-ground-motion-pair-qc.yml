@@ -7,6 +7,7 @@ on:
       - '.github/workflows/s05-ground-motion-pair-qc.yml'
       - 'research/wind-tower/experiments/T079/s05_esm_public_processed_pair.py'
       - 'research/wind-tower/experiments/T079/s05_ran_axis_gate.py'
+      - 'research/wind-tower/experiments/T079/s05_esm_cv_mp_axis_qc.py'
       - 'research/wind-tower/experiments/T079/s05_stationxml_transfer_response_qc.py'
       - 'research/wind-tower/experiments/T079/real-records/S05_USGS_CLC_STATIONXML_F1_TRANSFER_4CHANNEL_20261102.csv'
       - 'research/wind-tower/experiments/T079/s05_ground_motion_pair_qc.py'
@@ -14,6 +15,7 @@ on:
       - 'research/wind-tower/experiments/T079/s05_esm_provenance_band_gate.cjs'
       - 'research/wind-tower/experiments/T079/s05_esm_five_endpoint_artifact_qc.py'
       - 'research/wind-tower/experiments/T079/s05_ran_axis_gate.py'
+      - 'research/wind-tower/experiments/T079/s05_esm_cv_mp_axis_qc.py'
       - 'research/wind-tower/experiments/T079/s05_parametric_target_spectrum_fit.py'
       - 'research/wind-tower/experiments/T079/real-records/S05_ESM_ROTD50_VS_HYPOTHETICAL_6DEG_12PERIOD_20261030.csv'
       - 'research/wind-tower/experiments/T079/real-records/S05_THREE_EVENT_FIVE_PAIR_20ROW_SOURCE_SCREEN_20261030.csv'
@@ -1349,3 +1351,28 @@ jobs:
           assert d['S05_PASS'] is False and d['native_E_WE_runs']==0
           print('S05_REAL_RAN_METADATA_AXIS_GEOMETRY_PASS_ESM_MAPPING_HOLD')
           PY
+
+  s05-esm-nvl-cv-mp-axis-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Fetch exact PR-head ESM CV-MP source
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fLsS --retry 3 -o s05_esm_cv_mp_axis_qc.py \
+            "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }}/research/wind-tower/experiments/T079/s05_esm_cv_mp_axis_qc.py"
+          sha256sum s05_esm_cv_mp_axis_qc.py
+          python3 -m py_compile s05_esm_cv_mp_axis_qc.py
+      - name: Synthetic sign permutation and grid rejection
+        run: python3 s05_esm_cv_mp_axis_qc.py --self-test
+      - name: REAL official ESM3 IT-2012-0008 NVL CV vs MP source and 3-axis QC
+        run: python3 s05_esm_cv_mp_axis_qc.py --fetch --output-dir s05-cv-mp-source
+      - name: Archive original official source bytes and exact failure receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s05-esm-nvl-cv-mp-official-source-not-design-pass
+          path: s05-cv-mp-source/
+          if-no-files-found: warn
+          retention-days: 90
