@@ -520,7 +520,7 @@ jobs:
           curl -fLsS --retry 3 -o s05_esm_rotd_real.py "$base/s05_esm_rotd_real.py"
           curl -fLsS --retry 3 -o esm-public-processed/committed_rotd.csv "$base/real-records/S05_ESM_IT2012_NVL_MP_RotD_16PERIOD_20261030.csv"
           curl -fLsS --retry 3 -o esm-public-processed/committed_rotd_receipt.json "$base/real-records/S05_ESM_IT2012_NVL_MP_RotD_RECEIPT_20261030.json"
-          echo "d315ea8a9501bdf5c7542c0b454809ef5b9db7f18e69515cb1ba6e946fd98571  s05_esm_rotd_real.py" | sha256sum -c -
+          echo "f7457ca63b34d7feb54234e776d55b2e54e1d1054b22c21fc1b3c336e376c8c3  s05_esm_rotd_real.py" | sha256sum -c -
           echo "6f03869384193a4e00b27a11af6470ff3d11fcb73ebb08f0f19332b4edbe0205  esm-public-processed/committed_rotd.csv" | sha256sum -c -
           echo "abd7554a07f8be499469443d9199de19b135f9c3703a06ea3ea833747ed9d63f  esm-public-processed/committed_rotd_receipt.json" | sha256sum -c -
           python3 -m py_compile s05_esm_rotd_real.py
