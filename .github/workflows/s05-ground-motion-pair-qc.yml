@@ -6,12 +6,14 @@ on:
     paths:
       - '.github/workflows/s05-ground-motion-pair-qc.yml'
       - 'research/wind-tower/experiments/T079/s05_esm_public_processed_pair.py'
+      - 'research/wind-tower/experiments/T079/s05_ran_axis_gate.py'
       - 'research/wind-tower/experiments/T079/s05_stationxml_transfer_response_qc.py'
       - 'research/wind-tower/experiments/T079/real-records/S05_USGS_CLC_STATIONXML_F1_TRANSFER_4CHANNEL_20261102.csv'
       - 'research/wind-tower/experiments/T079/s05_ground_motion_pair_qc.py'
       - 'research/wind-tower/experiments/T079/s05_event_balanced_spectrum_gate.py'
       - 'research/wind-tower/experiments/T079/s05_esm_provenance_band_gate.cjs'
       - 'research/wind-tower/experiments/T079/s05_esm_five_endpoint_artifact_qc.py'
+      - 'research/wind-tower/experiments/T079/s05_ran_axis_gate.py'
       - 'research/wind-tower/experiments/T079/s05_parametric_target_spectrum_fit.py'
       - 'research/wind-tower/experiments/T079/real-records/S05_ESM_ROTD50_VS_HYPOTHETICAL_6DEG_12PERIOD_20261030.csv'
       - 'research/wind-tower/experiments/T079/real-records/S05_THREE_EVENT_FIVE_PAIR_20ROW_SOURCE_SCREEN_20261030.csv'
@@ -1322,3 +1324,28 @@ jobs:
           path: ran-official/
           if-no-files-found: warn
           retention-days: 90
+
+  s05-ran-nvl-axis-geometry:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Fetch exact PR script and existing real official-source receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }}/research/wind-tower/experiments/T079"
+          curl -fLsS --retry 3 -o s05_ran_axis_gate.py "$root/s05_ran_axis_gate.py"
+          curl -fLsS --retry 3 -o source.json "$root/real-records/S05_ESM_IT2012_NVL_OFFICIAL_LOWFREQ_SOURCE_QC_20261102.json"
+          sha256sum s05_ran_axis_gate.py source.json
+          python3 -m py_compile s05_ran_axis_gate.py
+          python3 s05_ran_axis_gate.py source.json | tee axis-gate.json
+          python3 - <<'PY'
+          import json
+          d=json.load(open('axis-gate.json'))
+          assert d['status']=='RAN_AXIS_GEOMETRY_PASS__ESM_HN_WAVEFORM_MAPPING_HOLD'
+          assert d['HG_from_ENU_direction_cosines']==[[-1.,0.,0.],[0.,-1.,0.],[0.,0.,-1.]]
+          assert d['max_orthogonality_error']<1e-12
+          assert d['ESM_HNE_HNN_HNZ_processed_sample_mapping_verified'] is False
+          assert d['S05_PASS'] is False and d['native_E_WE_runs']==0
+          print('S05_REAL_RAN_METADATA_AXIS_GEOMETRY_PASS_ESM_MAPPING_HOLD')
+          PY
