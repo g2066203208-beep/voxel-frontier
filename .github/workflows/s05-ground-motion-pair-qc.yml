@@ -1138,11 +1138,11 @@ jobs:
                   if key=='station_registry':
                       out.joinpath('station_registry.html').write_bytes(raw)
                       s=raw.decode('utf-8',errors='replace')
-                      rows=re.findall(r'<tr\\b[^>]*>.*?</tr>',s,re.I|re.S)
-                      candidates=[x for x in rows if re.search(r'\\bNVL\\b',re.sub('<[^>]+>',' ',x))]
+                      rows=re.findall(r'<tr\b[^>]*>.*?</tr>',s,re.I|re.S)
+                      candidates=[x for x in rows if re.search(r'\bNVL\b',re.sub('<[^>]+>',' ',x))]
                       item['NVL_row_count']=len(candidates)
                       if candidates:
-                          item['NVL_row_text']=html.unescape(re.sub(r'\\s+',' ',re.sub('<[^>]+>',' ',candidates[0]))).strip()
+                          item['NVL_row_text']=html.unescape(re.sub(r'\s+',' ',re.sub('<[^>]+>',' ',candidates[0]))).strip()
                   else:
                       item.update(zip_scan(raw))
                       out.joinpath('ran_it_dataless.zip').write_bytes(raw)
@@ -1152,7 +1152,7 @@ jobs:
               print('RAN_OFFICIAL_SOURCE',key,item['http_status'],item['bytes'],item['sha256'],item['error'])
               if key=='station_registry':print('RAN_NVL_ROW',item.get('NVL_row_text','NOT_PARSED'))
               if key=='dataless':print('RAN_DATALESS_NVL_CANDIDATES',len(item.get('NVL_candidate_members',[])))
-          out.joinpath('source_manifest.json').write_text(json.dumps(manifest,indent=2,ensure_ascii=False)+'\\n')
+          out.joinpath('source_manifest.json').write_text(json.dumps(manifest,indent=2,ensure_ascii=False)+'\n')
           print('S05_RAN_SOURCE_CAPTURE_COMPLETE_NOT_CALIBRATION_OR_DESIGN_PASS')
           PY
       - name: Archive exact official HTTP source and failure manifest (no restricted standard)
