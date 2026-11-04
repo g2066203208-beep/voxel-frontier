@@ -1198,17 +1198,17 @@ jobs:
                           row['NVL_channel_candidates']=[str(x)[:500] for x in inv.get('channels',[]) if 'NVL' in str(x)][:12]
                           row['NVL_station_candidates']=[str(x)[:400] for x in inv.get('stations',[])
                               if 'NVL' in str(x)][:10]
-                          for stream in ('HNE','HNN','HNZ'):
-                              for location in ('','00','01'):
+                          for stream in ('HGE','HGN','HGZ'):
+                              for location in ('',):
                                   seedid=f'IT.NVL.{location}.{stream}'
                                   item={'seed_id':seedid,'date':'2012-05-20','status':'HOLD'}
                                   try:
                                       paz=parser.get_paz(seedid,datetime=UTCDateTime('2012-05-20T02:00:00'))
-                                      item['status']='PAZ_METADATA_EXTRACTED_NOT_CALIBRATION_PASS'
                                       item['paz_metadata']={k:(
                                           [[float(c.real),float(c.imag)] for c in v] if k in ('poles','zeros')
                                           else float(v) if isinstance(v,(float,int,complex)) and not isinstance(v,bool)
                                           else str(v)[:300]) for k,v in paz.items()}
+                                      item['status']='PAZ_METADATA_EXTRACTED_NOT_CALIBRATION_PASS'
                                   except Exception as e:
                                       item['error']=type(e).__name__+': '+str(e)[:250]
                                   result['channel_response_attempts'].append(item)
