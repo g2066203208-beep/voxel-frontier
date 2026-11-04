@@ -80,7 +80,121 @@ def main(path):
         result = check(z)
     print(json.dumps(result, indent=2, ensure_ascii=False))
 
+
+# Historical 2026-10-28 original DYNA source comparison, not a design-wave acceptance.
+import io
+HISTORICAL_MEMBERS = {
+    'HNE': 'e90c7d02fe59acf7df8dc9842ea8a461d51a9be114a6d085fe13a2077970f761',
+    'HNN': 'a4ecdfbc952387d75cba320fdf7dcca8068966560f98de0359dab6af0e9be5fa',
+    'HNZ': 'ebe372b7c3a782a15439de6c85b3a400311f86df214eeadc1edbf39f205e5e8c',
+}
+INNER_ZIP_NAME = 'ESM_IT-2012-0008_NVL_MP_ACC_original.zip'
+EXPECTED_CITATION = 'Engineering Strong Motion Database (ESM), version 3.0.'
+EXPECTED_DOI = 'https://doi.org/10.13127/esm.3'
+
+def parse_dyna(raw):
+    lines = raw.decode('utf-8').splitlines()
+    header, first = {}, None
+    for idx, line in enumerate(lines):
+        if ': ' not in line:
+            first = idx
+            break
+        key, val = line.split(': ', 1)
+        require(key not in header, 'DUPLICATE_DYNA_HEADER_' + key)
+        header[key] = val
+    require(first is not None, 'DYNA_NUMERIC_START_MISSING')
+    numeric = lines[first:]
+    require(len(numeric) == 32040, 'DYNA_SAMPLE_COUNT')
+    values = [float(s) for s in numeric]
+    require(all(math.isfinite(v) for v in values), 'DYNA_NONFINITE')
+    return header, values
+
+def check_historical_zip(z, official_details, *, source_lock=True):
+    require(z.testzip() is None, 'HISTORICAL_OUTER_ZIP_CRC')
+    inner_bytes = z.read(INNER_ZIP_NAME)
+    inner_sha = hashlib.sha256(inner_bytes).hexdigest()
+    if source_lock:
+        require(inner_sha == ARCHIVE_SHA, 'HISTORICAL_INNER_SHA256')
+    with zipfile.ZipFile(io.BytesIO(inner_bytes)) as inner:
+        require(inner.testzip() is None, 'HISTORICAL_INNER_ZIP_CRC')
+        names = inner.namelist()
+        require(len(names) == 3, 'HISTORICAL_MEMBER_COUNT')
+        results = []
+        for stream in ('HNE', 'HNN', 'HNZ'):
+            name = f'IT.NVL..{stream}.D.IT-2012-0008.ACC.MP.ASC'
+            require(name in names, 'HISTORICAL_MISSING_' + stream)
+            raw = inner.read(name)
+            if source_lock:
+                require(hashlib.sha256(raw).hexdigest() == HISTORICAL_MEMBERS[stream], 'HISTORICAL_MEMBER_SHA256_' + stream)
+            h, values = parse_dyna(raw)
+            require(h['EVENT_ID'] == 'IT-2012-0008' and h['NETWORK'] == 'IT' and h['STATION_CODE'] == 'NVL', 'DYNA_EVENT_STATION')
+            require(h['STREAM'] == stream and h['UNITS'] == 'cm/s^2', 'DYNA_STREAM_UNITS')
+            require(EXPECTED_CITATION in h['DATA_CITATION'] and EXPECTED_DOI in h['DATA_CITATION'], 'DYNA_ESM3_CITATION')
+            require(h['DATABASE_VERSION'] == 'HEADER_FORMAT: DYNA 1.2', 'DYNA_HEADER_FORMAT')
+            require(h['DATA_TIMESTAMP_YYYYMMDD_HHMMSS'].startswith('20261028_'), 'DYNA_DOWNLOAD_TIMESTAMP')
+            require(h['INSTRUMENT'] == official_details['asdf-instrument']['instrument'], 'DYNA_INSTRUMENT')
+            require(h['DATE_TIME_FIRST_SAMPLE_YYYYMMDD_HHMMSS'] == official_details['asdf-instrument']['date_time_first_sample_yyyymmdd_hhmmss'], 'DYNA_FIRST_SAMPLE')
+            require(h['SAMPLING_INTERVAL_S'] == official_details['asdf-instrument']['sampling_interval_s'], 'DYNA_DT')
+            require(int(h['NDATA']) == 32040 and float(h['DURATION_S']) == 160.2, 'DYNA_GRID')
+            filt = official_details['settings']['fourier_spectrum_filter']
+            require(h['FILTER_TYPE'] == 'BUTTERWORTH' and int(h['FILTER_ORDER']) == filt['order'], 'DYNA_FILTER')
+            require(float(h['LOW_CUT_FREQUENCY_HZ']) == filt['low_cut'][0] and float(h['HIGH_CUT_FREQUENCY_HZ']) == filt['high_cut'][0], 'DYNA_FILTER_CORNERS')
+            require(abs(max(map(abs, values)) - abs(float(h['PGA_CM/S^2']))) < 2e-6, 'DYNA_PGA_HEADER')
+            results.append({'stream':stream,'member_sha256':hashlib.sha256(raw).hexdigest(),
+                'data_timestamp':h['DATA_TIMESTAMP_YYYYMMDD_HHMMSS'], 'declared_esm_version':'3.0',
+                'dyna_header_format':'1.2', 'npts':len(values), 'dt_s':float(h['SAMPLING_INTERVAL_S']),
+                'pga_abs_cm_s2':max(map(abs, values))})
+    return {'status':'HISTORICAL_ESM3_HEADER_AND_OFFICIAL_METADATA_CONCORDANCE_PASS_NOT_WAVEFORM_BYTE_EQUIVALENCE',
+        'archive_zip_sha256':inner_sha,'historical_data_citation_version':'ESM 3.0',
+        'historical_download_date':'2026-10-28','current_official_metadata_compatible':True,
+        'member_checks':results,'current_official_waveform_bytes_compared':False,
+        'independent_instrument_lowfreq_acceptance':False,'site_target_verified':False,'S05_PASS':False}
+
+def historical_negative_tests(outer, details):
+    original = outer.read(INNER_ZIP_NAME)
+    with zipfile.ZipFile(io.BytesIO(original)) as inner:
+        members = {n:inner.read(n) for n in inner.namelist()}
+    name = 'IT.NVL..HNE.D.IT-2012-0008.ACC.MP.ASC'
+    cases = [
+        (b'version 3.0.',b'version 2.0.', 'DYNA_ESM3_CITATION'),
+        (b'LOW_CUT_FREQUENCY_HZ: 0.040',b'LOW_CUT_FREQUENCY_HZ: 0.080','DYNA_FILTER_CORNERS'),
+        (b'EVENT_ID: IT-2012-0008',b'EVENT_ID: IT-2012-0009','DYNA_EVENT_STATION'),
+        (b'INSTRUMENT: sensor = MS2007+',b'INSTRUMENT: sensor = MS9999+','DYNA_INSTRUMENT'),
+    ]
+    for before, after, expected in cases:
+        require(before in members[name], 'NEGATIVE_FIXTURE_NOT_FOUND')
+        changed = dict(members)
+        changed[name] = members[name].replace(before,after,1)
+        memory = io.BytesIO()
+        with zipfile.ZipFile(memory,'w',compression=zipfile.ZIP_DEFLATED) as zi:
+            for n,b in changed.items():
+                zi.writestr(n,b)
+        wrapped = io.BytesIO()
+        with zipfile.ZipFile(wrapped,'w',compression=zipfile.ZIP_DEFLATED) as zo:
+            zo.writestr(INNER_ZIP_NAME,memory.getvalue())
+        try:
+            with zipfile.ZipFile(io.BytesIO(wrapped.getvalue())) as zo:
+                check_historical_zip(zo,details,source_lock=False)
+        except ValueError as e:
+            require(str(e) == expected, 'WRONG_NEGATIVE_REASON_'+str(e))
+        else:
+            raise AssertionError('NEGATIVE_ACCEPTED_'+expected)
+    return len(cases)
+
+def compare_historical(official_path, historical_path):
+    with zipfile.ZipFile(official_path) as oz:
+        require(oz.testzip() is None, 'OFFICIAL_ZIP_CRC')
+        check(oz)
+        details = json.loads(oz.read('waveform-details.body'))
+    with zipfile.ZipFile(historical_path) as hz:
+        result = check_historical_zip(hz, details)
+        result['negative_tests_passed'] = historical_negative_tests(hz, details)
+    print(json.dumps(result, indent=2, ensure_ascii=False))
+
 if __name__ == '__main__':
-    if len(sys.argv) != 2:
-        raise SystemExit('Usage: python s05_esm_five_endpoint_artifact_qc.py <artifact.zip>')
-    main(sys.argv[1])
+    if len(sys.argv) == 2:
+        main(sys.argv[1])
+    elif len(sys.argv) == 3:
+        compare_historical(sys.argv[1], sys.argv[2])
+    else:
+        raise SystemExit('Usage: python s05_esm_five_endpoint_artifact_qc.py <official-five-endpoint.zip> [historical-MP-actions.zip]')

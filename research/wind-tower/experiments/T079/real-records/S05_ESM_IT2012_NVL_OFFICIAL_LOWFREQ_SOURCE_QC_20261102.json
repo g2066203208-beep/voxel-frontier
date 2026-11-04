@@ -430,5 +430,55 @@
     "HOLD": "Quality BEST and SNR numbers do not prove reliable 0.1-0.2Hz seismic design input; site target spectrum and archival processing-version identity remain missing.",
     "S05_PASS": false,
     "native_E_WE_runs": 0
+  },
+  "historical_dyna_direct_recheck_20261104": {
+    "classification": "S05_HISTORICAL_ESM3_HEADER_OFFICIAL_METADATA_CONCORDANCE_PASS_NOT_WAVEFORM_BYTE_EQUIVALENCE",
+    "source_read_level": "Actually downloaded and decompressed 2026-10-29 historical Actions ZIP and 2026-11-04 five-endpoint official Actions ZIP; parsed all three 63-line DYNA headers and 32040 numeric acceleration samples per component; compared current official waveform-details JSON.",
+    "SOURCE": {
+      "historical_actions_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40751645932/artifacts/12843169066",
+      "historical_actions_zip_sha256": "e811eb290f1aa4a97b8205b46fe0f72feccff2b5d75dc072ee14abe8168aca48",
+      "historical_inner_zip_sha256": "dec0f0bf59bea4e6a5049c824b6656c7e7798eb5379beba5162aff7304b113c6",
+      "official_actions_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41783712298/artifacts/13300511449",
+      "official_actions_zip_sha256": "343497094c5d2dc2070c1ce6b74284de913f834532b8c71a083e3bf6e40ccbb7",
+      "official_details_raw_sha256": "91d2bb349521b34f925b9d8d46f13f05a7f538aa12a58ced3cbabf75a33cd37c",
+      "member_sha256": {
+        "HNE": "e90c7d02fe59acf7df8dc9842ea8a461d51a9be114a6d085fe13a2077970f761",
+        "HNN": "a4ecdfbc952387d75cba320fdf7dcca8068966560f98de0359dab6af0e9be5fa",
+        "HNZ": "ebe372b7c3a782a15439de6c85b3a400311f86df214eeadc1edbf39f205e5e8c"
+      }
+    },
+    "REF": "ESM original DYNA DATA_CITATION explicitly says ESM version 3.0 DOI 10.13127/esm.3; COSMOS 2005 p2-3 remains method reference, not code clause.",
+    "STANDARD": "No authorized IEC 2025 or GB/NB full-text clause checked; NOT_STANDARD_PASS",
+    "OFFICIAL": "Current ESM 2026-11-04 waveform-details JSON: IT-2012-0008 / IT.NVL / HN, Syscom MS2007+ Reftek 130-01/3, 0.005s, MP bandpass order 2, 0.04-30Hz, quality BEST, SNR lc 0.09Hz separate.",
+    "RUN": "Python3 offline original two-ZIP read: 3 x 32040 numeric samples; 4/4 deliberately tampered version/filter/event/instrument semantic cases rejected. Original source SHA and CRC checks passed. New GitHub script not yet native-CI executed.",
+    "FIG": 0,
+    "TAB": "3 component header/metadata concordance and PGA 47.522846 / 51.205727 / 28.926626 cm/s2",
+    "component_download_timestamps": [
+      "20261028_200024.936",
+      "20261028_200024.988",
+      "20261028_200025.036"
+    ],
+    "historical_header_format": "DYNA 1.2 is HEADER_FORMAT, NOT ESM database release",
+    "historical_data_citation_release": "ESM 3.0 explicitly present in each of three DYNA source headers",
+    "header_fields_matching_official": [
+      "event",
+      "network",
+      "station",
+      "instrument",
+      "first_sample",
+      "dt",
+      "processing_filter_type",
+      "filter_order",
+      "low_high_cut"
+    ],
+    "assumptions": "Version 3.0 in DATA_CITATION is source-declared provenance; identical metadata does not establish current waveform byte identity.",
+    "error_budget": "PGA recomputation vs 6-decimal DYNA header absolute tolerance 2e-6 cm/s2; exact SHA/CRC and string field matching; unquantified physical instrument/long-period and target-spectrum uncertainty.",
+    "failures": [
+      "Initial local isolated snippet test lacked injected require and zipfile globals; corrected test harness then real archive and 4/4 negative cases passed."
+    ],
+    "PASS": "SOURCE_DECLARED_ESM3_AND_METADATA_CONCORDANCE_ONLY",
+    "HOLD": "No new current official DYNA waveform bytes to establish sample-by-sample equivalence; no independently verified 0.1-0.2Hz instrument usable band or site target; S05 PARTIAL and E/WE=0.",
+    "S05_PASS": false,
+    "native_E_WE_runs": 0
   }
 }
