@@ -779,7 +779,7 @@
       "dataless_content_status": "Official ZIP CRC PASS; ObsPy 1.4.2 Python3.11 parsed NVL.IT.dataless member: 28672 bytes, 1 station, 4 channels; PAZ 2012 extraction attempts not yet shown in stdout; still HOLD",
       "CI_workflow": ".github/workflows/s05-ground-motion-pair-qc.yml",
       "CI_job": "s05-ran-nvl-official-dataless-source",
-      "CI_status": "Actions #41826917661 native job parsed NVL 4 channel IDs; 9/9 processed HN aliases rejected; corrected HG extraction submitted",
+      "CI_status": "Native official RAN dataless source + 2012 HG three-channel PAZ extraction PASS, but physical calibration and design HOLD",
       "local_failure": "Container direct GET failed with DNS NameResolutionError; not a negative official-server result",
       "SOURCE": "Official station row, not 2012 calibration document",
       "REF": "Inherited ESM3 DOI 10.13127/esm.3; no new article full text",
@@ -790,7 +790,7 @@
       "TAB": "NVL one-row equipment registry",
       "assumptions": "Registry equipment epoch is not independently tied to 2012 maintenance log",
       "error_budget": "SHA-256 exact for official ZIP and 28672-byte NVL member; station response amplitude/phase uncertainty not yet quantifiable",
-      "HOLD": "Raw HG channel response metadata and mapping to ESM processed HN channels, 2012 serial-specific calibration and 0.1–0.2Hz reliability, site target spectrum",
+      "HOLD": "Need raw HG->ESM processed HN mapping and independent 2012 installed chain calibration including FIR/ADC, long-period noise/usable band and Jiayu target spectrum",
       "S05_PASS": false,
       "native_E_WE_runs": 0,
       "station_registry_raw_html_sha256": "cc45118d1428591f855d5c05a81ffb65731d4ee5b47862ad7bb78d43b0845011",
@@ -807,7 +807,7 @@
         "inventory_station_count": 1,
         "inventory_channel_count": 4,
         "epoch_requested": "2012-05-20",
-        "paz_status": "RETRY_CORRECT_RAW_HGE_HGN_HGZ_PENDING",
+        "paz_status": "2012-05-20 PAZ_METADATA_EXTRACTED for HGE/HGN/HGZ, all three equal; NOT complete chain calibration",
         "S05_PASS": false,
         "inventory_channel_ids": [
           "IT.NVL..HGE",
@@ -819,7 +819,42 @@
         "epoch_end_display": "",
         "sample_rate_Hz_for_three_HG": 200,
         "processed_vs_raw_channel_name_discrepancy": "RAN Dataless HGE/HGN/HGZ vs ESM processed HNE/HNN/HNZ; mapping NOT YET VERIFIED",
-        "initial_paz_attempts": "9/9 HNE/HNN/HNZ aliases rejected with No channel found; parser valid, requested wrong channel IDs"
+        "initial_paz_attempts": "9/9 HNE/HNN/HNZ aliases rejected with No channel found; parser valid, requested wrong channel IDs",
+        "paz_source_run": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41827024848/job/126564255919",
+        "paz_metadata": {
+          "channels": [
+            "IT.NVL..HGE",
+            "IT.NVL..HGN",
+            "IT.NVL..HGZ"
+          ],
+          "epoch_query": "2012-05-20T02:00:00Z",
+          "zeros": [],
+          "poles_rad_s": [
+            [
+              -1144,
+              0
+            ],
+            [
+              -676,
+              0
+            ],
+            [
+              -278,
+              571
+            ],
+            [
+              -278,
+              -571
+            ]
+          ],
+          "gain": 311909000000,
+          "seismometer_gain": 0.510002,
+          "digitizer_gain": 629330,
+          "sensitivity": 320958,
+          "three_channels_exact_same_values": true,
+          "source_level": "OFFICIAL PCM-DPC RAN Dataless SEED via ObsPy1.4.2 get_paz, NOT independent in-situ calibration",
+          "limits": "get_paz may omit FIR/ADC stage details; ESM processed HN mapping to raw HG not proven; 0.1–0.2Hz low-frequency usability not proven"
+        }
       },
       "CI_response_run_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41826812595",
       "CI_response_job_id": 126563531913,
