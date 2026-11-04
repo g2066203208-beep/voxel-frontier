@@ -1155,6 +1155,67 @@ jobs:
           out.joinpath('source_manifest.json').write_text(json.dumps(manifest,indent=2,ensure_ascii=False)+'\n')
           print('S05_RAN_SOURCE_CAPTURE_COMPLETE_NOT_CALIBRATION_OR_DESIGN_PASS')
           PY
+      - name: Attempt epoch-specific NVL SEED poles/zeros extraction from official dataless (NOT calibration PASS)
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ ! -f ran-official/ran_it_dataless.zip ]]; then
+            echo 'RAN_DATALESS_NOT_DOWNLOADED; extraction HOLD'
+            exit 0
+          fi
+          python3 -m pip install --quiet 'obspy==1.4.2' || { echo 'OBSPY_INSTALL_FAILED; response extraction HOLD'; exit 0; }
+          python3 - <<'PY'
+          import hashlib,io,json,pathlib,tempfile,zipfile
+          from obspy import UTCDateTime
+          from obspy.io.xseed import Parser
+          root=pathlib.Path('ran-official')
+          source=root/'ran_it_dataless.zip'
+          raw=source.read_bytes()
+          result={'OFFICIAL':'https://ran.protezionecivile.it/IT/download_metadata.php?net=IT&tipo_file=DL',
+              'zip_sha256':hashlib.sha256(raw).hexdigest(),'epoch_requested':'2012-05-20',
+              'S05_PASS':False,'instrument_0p1_to_0p2Hz_calibration_pass':False,
+              'HOLD':'Dataless response metadata must be matched to installed serial/maintenance epoch and validated low-frequency calibration',
+              'members':[],'channel_response_attempts':[]}
+          with zipfile.ZipFile(io.BytesIO(raw)) as z:
+              for info in z.infolist():
+                  if info.file_size>25000000:continue
+                  data=z.read(info)
+                  if b'NVL' not in data:continue
+                  row={'member':info.filename,'member_sha256':hashlib.sha256(data).hexdigest(),
+                      'bytes':len(data),'NVL_ascii_occurrences':data.count(b'NVL')}
+                  result['members'].append(row)
+                  with tempfile.NamedTemporaryFile(suffix='.seed') as tmp:
+                      tmp.write(data);tmp.flush()
+                      try:
+                          parser=Parser(tmp.name)
+                          inv=parser.get_inventory()
+                          row['inventory_station_count']=len(inv.get('stations',[]))
+                          row['inventory_channel_count']=len(inv.get('channels',[]))
+                          row['NVL_station_candidates']=[str(x)[:400] for x in inv.get('stations',[])
+                              if 'NVL' in str(x)][:10]
+                          for stream in ('HNE','HNN','HNZ'):
+                              for location in ('','00','01'):
+                                  seedid=f'IT.NVL.{location}.{stream}'
+                                  item={'seed_id':seedid,'date':'2012-05-20','status':'HOLD'}
+                                  try:
+                                      paz=parser.get_paz(seedid,datetime=UTCDateTime('2012-05-20T02:00:00'))
+                                      item['status']='PAZ_METADATA_EXTRACTED_NOT_CALIBRATION_PASS'
+                                      item['paz_metadata']={k:(
+                                          [[float(c.real),float(c.imag)] for c in v] if k in ('poles','zeros')
+                                          else float(v) if isinstance(v,(float,int,complex)) and not isinstance(v,bool)
+                                          else str(v)[:300]) for k,v in paz.items()}
+                                  except Exception as e:
+                                      item['error']=type(e).__name__+': '+str(e)[:250]
+                                  result['channel_response_attempts'].append(item)
+                      except Exception as e:
+                          row['parse_error']=type(e).__name__+': '+str(e)[:500]
+          (root/'nvl_dataless_response_attempt.json').write_text(json.dumps(result,indent=2,ensure_ascii=False)+'\n')
+          print('RAN_DATALESS_SOURCE_SHA256',result['zip_sha256'])
+          for x in result['members']:print('RAN_NVl_DATALESS_MEMBER',x)
+          for x in result['channel_response_attempts']:
+              if x['status'].startswith('PAZ_'):print('RAN_NVL_PA Z_METADATA',x['seed_id'],x['paz_metadata'])
+          print('S05_RAN_DATALESS_RESPONSE_ATTEMPT_NOT_CALIBRATION_PASS')
+          PY
       - name: Archive exact official HTTP source and failure manifest (no restricted standard)
         if: always()
         uses: actions/upload-artifact@v4
