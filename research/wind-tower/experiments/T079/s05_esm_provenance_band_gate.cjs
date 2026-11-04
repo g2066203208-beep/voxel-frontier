@@ -95,4 +95,86 @@ function main(){const args=process.argv.slice(2);if(args.includes('--self-test')
   else fs.writeFileSync(args[out+1],payload);
   console.log('S05_ESM_PROVENANCE_20ROW_QC_PASS_NOT_BAND_OR_DESIGN_PASS metadata_eligible='+result.metadata_eligible_rows+' design_eligible=0');
 }
-try{main();}catch(e){console.error(e.stack||e);process.exitCode=1;}
+
+/* Official ESM record-level retrieval: raw response + SHA receipt, never auto-promote a design wave.
+   Endpoint options checked against ESM official query-options pages 2026-11-04.
+   GitHub Actions is the acquisition environment; --self-test-official is network-free. */
+const ESM_HOST='https://esm-db.eu';
+const ESM_NVL_SOURCE_ZIP_SHA256='dec0f0bf59bea4e6a5049c824b6656c7e7798eb5379beba5162aff7304b113c6';
+function officialQueries(){
+  const common={eventid:'IT-2012-0008',network:'IT',station:'NVL',location:'',instrument:'HN',indent:'true'};
+  const names=['event-ids','waveform-details','waveform-band-instrument','waveform-snr','waveform-quality'];
+  return names.map(name=>{
+    const params=name==='event-ids'?{eventid:common.eventid,indent:'true'}:
+      name==='waveform-details'?{...common,processing:'MP',ptarget:'mp',group:'all'}:
+      name==='waveform-band-instrument'?{...common,group:'all'}:common;
+    const url=new URL(ESM_HOST+'/esmws/'+name+'/1/query');
+    for(const [k,v] of Object.entries(params))url.searchParams.set(k,v);
+    return {name,url:url.toString()};
+  });
+}
+function extractDiagnosticFields(json){
+  const hits=[];const matcher=/instrument|response|frequency|high.pass|low.pass|filter|snr|noise|processing|software|quality|workflow|band|version|corner/i;
+  function visit(obj,path,depth){
+    if(depth>7||hits.length>=80||obj===null)return;
+    if(Array.isArray(obj)){for(let i=0;i<Math.min(obj.length,5);i++)visit(obj[i],path+'['+i+']',depth+1);return;}
+    if(typeof obj!=='object')return;
+    for(const [k,v] of Object.entries(obj)){
+      if(hits.length>=80)break;
+      const p=path?path+'.'+k:k;
+      if(matcher.test(k)&&['string','number','boolean'].includes(typeof v))hits.push({path:p,value:String(v).slice(0,180)});
+      else if(v&&typeof v==='object')visit(v,p,depth+1);
+    }
+  }
+  visit(json,'',0);return hits;
+}
+function officialFetchSelfTest(){
+  const q=officialQueries();
+  if(q.length!==5||new Set(q.map(x=>x.name)).size!==5)throw Error('OFFICIAL_ENDPOINT_COUNT');
+  for(const x of q){const u=new URL(x.url);if(u.origin!==ESM_HOST||u.searchParams.get('eventid')!=='IT-2012-0008')throw Error('OFFICIAL_ID_OR_HOST');}
+  const d=q.find(x=>x.name==='waveform-details');
+  if(new URL(d.url).searchParams.get('processing')!=='MP'||new URL(d.url).searchParams.get('station')!=='NVL')throw Error('OFFICIAL_PROCESSING_ID');
+  const fields=extractDiagnosticFields({nested:{low_cut_frequency_hz:0.04,processing:'MP',station:'NVL'}});
+  if(fields.length!==2||fields[0].value!=='0.04')throw Error('OFFICIAL_METADATA_DIAGNOSTIC');
+  console.log('S05_ESM_OFFICIAL_5ENDPOINT_SCHEMA_SYNTHETIC_PASS_NO_REAL_METADATA');
+}
+async function fetchOfficialNvl(){
+  const args=process.argv.slice(2),at=args.indexOf('--output-dir');
+  if(at<0||!args[at+1])throw Error('REQUIRE_OUTPUT_DIR');
+  const outdir=args[at+1];fs.mkdirSync(outdir,{recursive:true});
+  const manifest={status:'OFFICIAL_ENDPOINT_PROBE_ONLY_NOT_DESIGN_PASS',
+    event_id:'IT-2012-0008',network:'IT',station:'NVL',instrument:'HN',processing_requested:'MP',
+    archived_original_zip_sha256_from_existing_receipt:ESM_NVL_SOURCE_ZIP_SHA256,
+    archived_zip_re_downloaded:false,version_equivalence_verified:false,verified_lowest_usable_frequency_hz:null,
+    instrument_response_verified:false,site_target_verified:false,S05_PASS:false,native_E_WE_runs:0,
+    retrieval_utc:new Date().toISOString(),node_version:process.version,queries:[]};
+  for(const q of officialQueries()){
+    const row={service:q.name,url:q.url,http_status:null,content_type:null,response_bytes:0,response_sha256:null,json_parsed:false,diagnostic_fields:[],error:null};
+    try{
+      const response=await fetch(q.url,{signal:AbortSignal.timeout(18000),
+        headers:{'User-Agent':'wind-tower-source-provenance/1.0 (academic research)','Accept':'application/json'}});
+      row.http_status=response.status;row.content_type=response.headers.get('content-type');
+      const buffer=Buffer.from(await response.arrayBuffer());
+      if(buffer.length>2000000)throw Error('RESPONSE_TOO_LARGE');
+      row.response_bytes=buffer.length;row.response_sha256=sha(buffer);
+      fs.writeFileSync(outdir+'/'+q.name+'.body',buffer);
+      try{const j=JSON.parse(buffer.toString('utf8'));row.json_parsed=true;
+        row.json_root_type=Array.isArray(j)?'array':typeof j;
+        row.json_top_keys=j&&typeof j==='object'&&!Array.isArray(j)?Object.keys(j).slice(0,60):[];
+        row.diagnostic_fields=extractDiagnosticFields(j);
+      }catch(e){row.error='JSON_PARSE_OR_NON_JSON_RESPONSE: '+String(e.message).slice(0,160);}
+      if(!response.ok)row.error=(row.error?row.error+'; ':'')+'HTTP_'+response.status;
+    }catch(e){row.error=(e.name||'Error')+': '+String(e.message).slice(0,180);}
+    manifest.queries.push(row);
+    console.log('S05_ESM_OFFICIAL_QUERY',JSON.stringify(row));
+  }
+  manifest.http_200_json_count=manifest.queries.filter(q=>q.http_status===200&&q.json_parsed).length;
+  manifest.all_endpoint_responses_available=manifest.http_200_json_count===5;
+  manifest.decision='HOLD_NO_VERIFIED_PROCESSING_RELEASE_INSTRUMENT_BAND_OR_SITE_TARGET';
+  fs.writeFileSync(outdir+'/S05_ESM_NVL_OFFICIAL_QUERY_MANIFEST.json',JSON.stringify(manifest,null,2)+'\n');
+  console.log('S05_ESM_NVL_OFFICIAL_PROBE_FINISHED',JSON.stringify({http_200_json_count:manifest.http_200_json_count,endpoint_count:5,design_wave:false}));
+}
+
+if(process.argv.includes('--self-test-official')){try{officialFetchSelfTest();}catch(e){console.error(e);process.exitCode=1;}}
+else if(process.argv.includes('--fetch-official')){fetchOfficialNvl().catch(e=>{console.error(e);process.exitCode=1;});}
+else try{main();}catch(e){console.error(e.stack||e);process.exitCode=1;}
