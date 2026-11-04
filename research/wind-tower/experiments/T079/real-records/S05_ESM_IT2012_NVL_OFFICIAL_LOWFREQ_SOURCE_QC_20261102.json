@@ -493,5 +493,79 @@
       "optimized_full_workflow_final": "completed/success",
       "full_workflow_final_readback_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41797959345"
     }
+  },
+  "current_vs_historical_official_waveform_exact_identity_20261104": {
+    "status": "ESM3_CURRENT_VS_HISTORICAL_96120_SAMPLES_EXACT_MATCH_NOT_DESIGN_PASS",
+    "reading_level": "Downloaded and unzipped original 2026-10-28 GitHub Actions historical DYNA artifact and 2026-11-04 GitHub Actions newly fetched official ESM3 MP DYNA artifact; exact 3x32040 float and line-by-line comparison; no instrument or site target verification",
+    "source_urls": [
+      "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/40751645932/artifacts/12843169066",
+      "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41797959345/artifacts/13306595926"
+    ],
+    "historical_outer_artifact_sha256": "e811eb290f1aa4a97b8205b46fe0f72feccff2b5d75dc072ee14abe8168aca48",
+    "current_outer_artifact_sha256": "2596d80c5e6a219e7fd51f097c63842b09855627154bb718975c8fcd4c859d05",
+    "historical_inner_zip_sha256": "dec0f0bf59bea4e6a5049c824b6656c7e7798eb5379beba5162aff7304b113c6",
+    "current_inner_zip_sha256": "d382e3f7bd6e4d0d8c4dfac3f59eda9b928e8530185ed8cb8f857d221c33576b",
+    "npts_each": 32040,
+    "total_samples_compared": 96120,
+    "sample_dt_s": 0.005,
+    "member_sha256_historical": {
+      "HNE": "e90c7d02fe59acf7df8dc9842ea8a461d51a9be114a6d085fe13a2077970f761",
+      "HNN": "a4ecdfbc952387d75cba320fdf7dcca8068966560f98de0359dab6af0e9be5fa",
+      "HNZ": "ebe372b7c3a782a15439de6c85b3a400311f86df214eeadc1edbf39f205e5e8c"
+    },
+    "member_sha256_current": {
+      "HNE": "91ee0957b20427017ddb3c070800b13f060ba1fd5c02449d3d85e205a22a537f",
+      "HNN": "95da73448fd2d32fe550ec69c0ab7e60b07f4a5ae3af662ccd616c58c77dee7c",
+      "HNZ": "e6d16930d29e712b41270f29c08c54ed323b3823b170a9ac852226799b9dcb4f"
+    },
+    "normalized_numeric_sha256_identical": {
+      "HNE": "f1c06ee4b201276657c3da627b24121e2b05377936ecc3adc11d78f7f3d3242a",
+      "HNN": "bfef0cf1623fbbd8c15f95ec49bb7a714d300fb98fea11d03b159a4e77ede275",
+      "HNZ": "69443ba0a689d39ed202de7d40487a62ef39c969dc2605170cf9a211bce4fd81"
+    },
+    "different_line_numbers": {
+      "HNE": [
+        51
+      ],
+      "HNN": [
+        51
+      ],
+      "HNZ": [
+        51
+      ]
+    },
+    "only_changed_field": "DATA_TIMESTAMP_YYYYMMDD_HHMMSS",
+    "old_timestamps": {
+      "HNE": "20261028_200024.936",
+      "HNN": "20261028_200024.988",
+      "HNZ": "20261028_200025.036"
+    },
+    "new_timestamps": {
+      "HNE": "20261104_090549.015",
+      "HNN": "20261104_090549.071",
+      "HNZ": "20261104_090549.121"
+    },
+    "max_abs_sample_difference_cm_s2": 0,
+    "negative_tests_passed": 4,
+    "negative_cases": [
+      "modified acceleration sample",
+      "modified filter low cutoff",
+      "missing horizontal stream",
+      "falsified download timestamp"
+    ],
+    "software": "Python 3 stdlib zipfile/hashlib/json, exact text-line and float comparisons; existing T079 source parser",
+    "RUN": "local original ZIP read and full 96120-sample comparison PASS; new GitHub Actions comparator step added, its native CI result not yet confirmed",
+    "SOURCE": "Historical artifact #12843169066 and newly official-fetched artifact #13306595926; original inner ZIPs retained in Actions, not copied to Git",
+    "REF": "ESM3 DOI 10.13127/esm.3, existing COSMOS 2005 p2-3 guidance (not newly read this run)",
+    "STANDARD": "No newly read authorized IEC/GB/NB clauses; no compliance acceptance",
+    "OFFICIAL": "2026-11-04 ESM3 MP DYNA downloaded by existing GitHub Actions source job, source-level verified",
+    "FIG": "none",
+    "TAB": "3 component hashes, 96120 exact samples, 4 rejection tests in existing T079 receipt",
+    "assumptions": "Two explicitly source-locked ESM MP downloads at the same station/event and processing settings; exact sample text identity is necessary but insufficient for long-period physical reliability",
+    "error_budget": "0/96120 numeric differences at DYNA printed precision; cannot bound original sensor response/low-frequency accuracy, ground-motion representativeness, or site spectrum uncertainty",
+    "HOLD": "Instrument usable low-frequency range around 0.1-0.2 Hz and justified Chinese site target spectrum remain unverified",
+    "S05_PASS": false,
+    "S08_E_WE_native_runs": 0,
+    "stages_passed": 0
   }
 }

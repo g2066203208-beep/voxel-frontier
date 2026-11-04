@@ -191,10 +191,113 @@ def compare_historical(official_path, historical_path):
         result['negative_tests_passed'] = historical_negative_tests(hz, details)
     print(json.dumps(result, indent=2, ensure_ascii=False))
 
+
+# Source-level 2026-11-04 ESM3 official MP DYNA re-download vs 2026-10-28 historical source.
+CURRENT_ESM3_INNER_SHA = 'd382e3f7bd6e4d0d8c4dfac3f59eda9b928e8530185ed8cb8f857d221c33576b'
+CURRENT_ESM3_MEMBERS = {
+    'HNE': '91ee0957b20427017ddb3c070800b13f060ba1fd5c02449d3d85e205a22a537f',
+    'HNN': '95da73448fd2d32fe550ec69c0ab7e60b07f4a5ae3af662ccd616c58c77dee7c',
+    'HNZ': 'e6d16930d29e712b41270f29c08c54ed323b3823b170a9ac852226799b9dcb4f',
+}
+CURRENT_ESM3_NUMERIC_SHA = {
+    'HNE': 'f1c06ee4b201276657c3da627b24121e2b05377936ecc3adc11d78f7f3d3242a',
+    'HNN': 'bfef0cf1623fbbd8c15f95ec49bb7a714d300fb98fea11d03b159a4e77ede275',
+    'HNZ': '69443ba0a689d39ed202de7d40487a62ef39c969dc2605170cf9a211bce4fd81',
+}
+
+def compare_current_dyna_inner(historical_bytes, current_bytes, *, source_lock=True):
+    sha = lambda b: hashlib.sha256(b).hexdigest()
+    if source_lock:
+        require(sha(historical_bytes) == ARCHIVE_SHA, 'HISTORICAL_INNER_SHA256')
+        require(sha(current_bytes) == CURRENT_ESM3_INNER_SHA, 'CURRENT_INNER_SHA256')
+    rows = []
+    with zipfile.ZipFile(io.BytesIO(historical_bytes)) as old, zipfile.ZipFile(io.BytesIO(current_bytes)) as new:
+        require(old.testzip() is None and new.testzip() is None, 'INNER_ZIP_CRC')
+        names = {f'IT.NVL..{s}.D.IT-2012-0008.ACC.MP.ASC' for s in ('HNE','HNN','HNZ')}
+        require(set(old.namelist()) == names, 'HISTORICAL_THREE_MEMBERS')
+        require(set(new.namelist()) == names, 'CURRENT_THREE_MEMBERS')
+        for stream in ('HNE','HNN','HNZ'):
+            name = f'IT.NVL..{stream}.D.IT-2012-0008.ACC.MP.ASC'
+            oldraw, newraw = old.read(name), new.read(name)
+            if source_lock:
+                require(sha(oldraw) == HISTORICAL_MEMBERS[stream], 'HISTORICAL_MEMBER_SHA_'+stream)
+                require(sha(newraw) == CURRENT_ESM3_MEMBERS[stream], 'CURRENT_MEMBER_SHA_'+stream)
+            oh, ov = parse_dyna(oldraw)
+            nh, nv = parse_dyna(newraw)
+            require(len(ov) == len(nv) == 32040, 'CURRENT_SAMPLE_COUNT_'+stream)
+            require(oh.get('DATA_TIMESTAMP_YYYYMMDD_HHMMSS') != nh.get('DATA_TIMESTAMP_YYYYMMDD_HHMMSS'), 'TIMESTAMP_NOT_CHANGED_'+stream)
+            require(oh.get('DATA_TIMESTAMP_YYYYMMDD_HHMMSS','').startswith('20261028_') and nh.get('DATA_TIMESTAMP_YYYYMMDD_HHMMSS','').startswith('20261104_'), 'TIMESTAMP_IDENTITY_'+stream)
+            changed = [k for k in sorted(set(oh)|set(nh)) if oh.get(k) != nh.get(k)]
+            require(changed == ['DATA_TIMESTAMP_YYYYMMDD_HHMMSS'], 'NON_TIMESTAMP_HEADER_CHANGED_'+stream)
+            require(ov == nv, 'NUMERIC_SAMPLES_CHANGED_'+stream)
+            oldlines, newlines = oldraw.decode('utf-8').splitlines(), newraw.decode('utf-8').splitlines()
+            diff = [i+1 for i,(a,b) in enumerate(zip(oldlines,newlines)) if a != b]
+            require(len(oldlines) == len(newlines) and diff == [51], 'NON_TIMESTAMP_TEXT_CHANGED_'+stream)
+            first = next(i for i,s in enumerate(oldlines) if ': ' not in s)
+            normalized = ('\n'.join(oldlines[first:])+'\n').encode('utf-8')
+            require(sha(normalized) == CURRENT_ESM3_NUMERIC_SHA[stream], 'NUMERIC_SOURCE_SHA_'+stream)
+            rows.append({'stream':stream,'samples_compared':len(ov),
+                'historical_member_sha256':sha(oldraw),'current_member_sha256':sha(newraw),
+                'numeric_source_sha256_both':sha(normalized),'different_text_line_numbers':diff,
+                'only_changed_header':'DATA_TIMESTAMP_YYYYMMDD_HHMMSS',
+                'historical_timestamp':oh['DATA_TIMESTAMP_YYYYMMDD_HHMMSS'],
+                'current_timestamp':nh['DATA_TIMESTAMP_YYYYMMDD_HHMMSS'],
+                'max_abs_numeric_difference_cm_s2':0.0})
+    return {'status':'ESM3_CURRENT_VS_HISTORICAL_96120_SAMPLES_EXACT_MATCH_NOT_DESIGN_PASS',
+        'historical_inner_zip_sha256':sha(historical_bytes),
+        'current_inner_zip_sha256':sha(current_bytes),
+        'members':rows,'total_samples_compared':sum(x['samples_compared'] for x in rows),
+        'current_official_waveform_samples_compared':True,
+        'source_numeric_equivalence':True,'only_timestamp_headers_differ':True,
+        'instrument_0p1_to_0p2Hz_usable_band_verified':False,
+        'site_target_spectrum_verified':False,'native_E_WE_runs':0,'S05_PASS':False}
+
+def current_comparison_negative_tests(oldbytes, newbytes):
+    with zipfile.ZipFile(io.BytesIO(newbytes)) as z:
+        original = {n:z.read(n) for n in z.namelist()}
+    name = 'IT.NVL..HNE.D.IT-2012-0008.ACC.MP.ASC'
+    def zip_bytes(d):
+        out=io.BytesIO()
+        with zipfile.ZipFile(out,'w',compression=zipfile.ZIP_DEFLATED) as z:
+            for n,b in d.items(): z.writestr(n,b)
+        return out.getvalue()
+    lines=original[name].decode().splitlines(keepends=True)
+    first=next(i for i,s in enumerate(lines) if ': ' not in s)
+    tampered=list(lines)
+    tampered[first]=format(float(lines[first].strip())+0.125,'.9f')+'\n'
+    cases=[('numeric',dict(original,**{name:''.join(tampered).encode()}),'NUMERIC_SAMPLES_CHANGED_HNE'),
+           ('filter',dict(original,**{name:original[name].replace(b'LOW_CUT_FREQUENCY_HZ: 0.040',b'LOW_CUT_FREQUENCY_HZ: 0.080',1)}),'NON_TIMESTAMP_HEADER_CHANGED_HNE'),
+           ('missing_stream',{k:v for k,v in original.items() if '..HNN.' not in k},'CURRENT_THREE_MEMBERS'),
+           ('timestamp',dict(original,**{name:original[name].replace(b'20261104_',b'20261028_',1)}),'TIMESTAMP_IDENTITY_HNE')]
+    for label, data, expected in cases:
+        try: compare_current_dyna_inner(oldbytes,zip_bytes(data),source_lock=False)
+        except ValueError as exc: require(str(exc)==expected,'WRONG_NEGATIVE_REASON_'+label+'_'+str(exc))
+        else: raise AssertionError('NEGATIVE_ACCEPTED_'+label)
+    return len(cases)
+
+def compare_current_artifact(historical_path,current_path):
+    sha=lambda b:hashlib.sha256(b).hexdigest()
+    with open(historical_path,'rb') as f: historic=f.read()
+    with open(current_path,'rb') as f: current=f.read()
+    require(sha(historic)=='e811eb290f1aa4a97b8205b46fe0f72feccff2b5d75dc072ee14abe8168aca48','HISTORICAL_OUTER_ARTIFACT_SHA')
+    require(sha(current)=='2596d80c5e6a219e7fd51f097c63842b09855627154bb718975c8fcd4c859d05','CURRENT_OUTER_ARTIFACT_SHA')
+    with zipfile.ZipFile(io.BytesIO(historic)) as hz,zipfile.ZipFile(io.BytesIO(current)) as cz:
+        require(hz.testzip() is None and cz.testzip() is None,'OUTER_ARTIFACT_CRC')
+        old=hz.read(INNER_ZIP_NAME);new=cz.read(INNER_ZIP_NAME)
+    report=compare_current_dyna_inner(old,new)
+    report['negative_tests_passed']=current_comparison_negative_tests(old,new)
+    report['historical_actions_artifact_id']=12843169066
+    report['current_actions_artifact_id']=13306595926
+    report['historical_outer_artifact_sha256']=sha(historic)
+    report['current_outer_artifact_sha256']=sha(current)
+    return report
+
 if __name__ == '__main__':
     if len(sys.argv) == 2:
         main(sys.argv[1])
     elif len(sys.argv) == 3:
         compare_historical(sys.argv[1], sys.argv[2])
+    elif len(sys.argv) == 4 and sys.argv[1] == '--compare-current':
+        print(json.dumps(compare_current_artifact(sys.argv[2],sys.argv[3]),indent=2,ensure_ascii=False))
     else:
-        raise SystemExit('Usage: python s05_esm_five_endpoint_artifact_qc.py <official-five-endpoint.zip> [historical-MP-actions.zip]')
+        raise SystemExit('Usage: python s05_esm_five_endpoint_artifact_qc.py <official-five-endpoint.zip> [historical-MP-actions.zip] | --compare-current historical-actions.zip current-actions.zip')

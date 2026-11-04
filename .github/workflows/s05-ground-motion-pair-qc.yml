@@ -1033,3 +1033,27 @@ jobs:
           PY
           sha256sum "$p"
           cat /tmp/esm-concordance.json
+      - name: Exact CURRENT ESM3 official DYNA vs historical 96120-sample and four-negative source comparison
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          curl --fail --location --silent --show-error --retry 3 \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            -o /tmp/esm-current-actions.zip \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/artifacts/13306595926/zip"
+          echo '2596d80c5e6a219e7fd51f097c63842b09855627154bb718975c8fcd4c859d05  /tmp/esm-current-actions.zip' | sha256sum -c -
+          python3 s05_esm_five_endpoint_artifact_qc.py --compare-current \
+            /tmp/esm-history-actions.zip /tmp/esm-current-actions.zip > /tmp/esm-current-identity.json
+          python3 - <<'PY'
+          import json
+          x=json.load(open('/tmp/esm-current-identity.json'))
+          assert x['total_samples_compared']==96120
+          assert x['negative_tests_passed']==4
+          assert x['source_numeric_equivalence'] and x['only_timestamp_headers_differ']
+          assert x['S05_PASS'] is False and x['native_E_WE_runs']==0
+          print('S05_ESM3_96120_SAMPLES_EXACT_CURRENT_VS_HISTORY_PASS_NOT_DESIGN_OR_NATIVE')
+          PY
+          cat /tmp/esm-current-identity.json
