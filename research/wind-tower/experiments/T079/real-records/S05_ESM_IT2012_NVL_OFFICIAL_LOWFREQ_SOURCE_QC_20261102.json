@@ -1387,16 +1387,39 @@
     "HOLD": "Original HG 2012 sample data or operator signed axis correction/processing record required for ESM HN waveform mapping; low-frequency reliability and site target remain unaccepted."
   },
   "esm_cv_mp_official_processing_axis_crosscheck_20261104_2306": {
-    "classification": "S05_NEW_CV_MP_PROCESSING_AXIS_QC_PENDING_NATIVE_HTTP_NOT_HG_OR_DESIGN_PASS",
+    "classification": "S05_ESM3_OFFICIAL_CV_MP_COMMON_WINDOW_AXIS_CORRELATION_SOURCE_QC_PASS_NOT_HG_OR_DESIGN_PASS",
     "SOURCE": {
       "reading_level": "ESM 3.0 official event-data query-options webpage read 2026-11-04; no CV original bytes acquired at receipt writing",
       "official_document": "https://esm-db.eu/esmws/eventdata/1/query-options.html",
       "cv_query": "https://esm-db.eu/esmws/eventdata/1/query?eventid=IT-2012-0008&network=IT&station=NVL&processing-type=CV&data-type=ACC&format=ascii",
       "mp_query": "https://esm-db.eu/esmws/eventdata/1/query?eventid=IT-2012-0008&network=IT&station=NVL&processing-type=MP&data-type=ACC&format=ascii",
       "previous_mp_zip_sha256": "d382e3f7bd6e4d0d8c4dfac3f59eda9b928e8530185ed8cb8f857d221c33576b",
-      "new_cv_zip_sha256": "PENDING_ACTIONS_SOURCE_HTTP",
-      "script_git_blob_sha1": "TO_BE_REMOTE_VERIFIED",
-      "script_sha256": "PENDING_ACTIONS_SHA256SUM"
+      "new_cv_zip_sha256": "bd21f0836109411ab010c2f3d773a7b06b967a1bc61983868f8d9e81091a3916",
+      "script_git_blob_sha1": "FETCH_FROM_GITHUB_CONTENTS_SHA",
+      "script_sha256": "159d41cc581f03538d12a69645ce8b9a675021213768449d5280a330aa739f03",
+      "new_mp_zip_sha256": "2a9c510df0f03f09ea178547d3207d966b68bf0559bf09757c020421218c31e0",
+      "cv_npts": {
+        "HNE": 31544,
+        "HNN": 31541,
+        "HNZ": 31540
+      },
+      "mp_npts": {
+        "HNE": 32040,
+        "HNN": 32040,
+        "HNZ": 32040
+      },
+      "first_sample_all": "20120520_020336.000",
+      "dt_s_all": 0.005,
+      "cv_numeric_sha256": {
+        "HNE": "45a32934e85121a05b123bafa6cccf7ba73062ab2ad3417ada614d1520e777de",
+        "HNN": "66b7d658d174faab3e01d344642c29347e3994eb5d0405cfb83f12f22413fed6",
+        "HNZ": "07e45dd10c6045e6af992c86b84b5ce7aa9ac2b4de9ff8a26b15299ad77646d5"
+      },
+      "mp_numeric_sha256": {
+        "HNE": "f1c06ee4b201276657c3da627b24121e2b05377936ecc3adc11d78f7f3d3242a",
+        "HNN": "bfef0cf1623fbbd8c15f95ec49bb7a714d300fb98fea11d03b159a4e77ede275",
+        "HNZ": "69443ba0a689d39ed202de7d40487a62ef39c969dc2605170cf9a211bce4fd81"
+      }
     },
     "REF": "ESM v3 DOI 10.13127/esm.3; CV physical-unit conversion vs MP manually processed as defined in official API",
     "STANDARD": "No new IEC/GB/NB authorized clauses; ESM API is data service, not structural design standard",
@@ -1407,12 +1430,57 @@
     "RUN": {
       "source_program": "experiments/T079/s05_esm_cv_mp_axis_qc.py",
       "workflow": ".github/workflows/s05-ground-motion-pair-qc.yml",
-      "actions_run": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41854682076",
-      "native_job": "QUEUED_AT_RECEIPT_WRITE",
+      "native_run_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41854911808",
+      "native_job_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41854911808/job/126660796419",
+      "artifact_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41854911808/artifacts/13337001850",
+      "artifact_id": 13337001850,
+      "artifact_download_zip_sha256": "977148e07100641811116a8c56557fa5132455420101cf7fa9bc331c78ad3de9",
+      "original_receipt_sha256": "18ad975e1bb62b878d78c39c7a0528b450f3e16ec71ee2320b103f8ee8d1b57c",
+      "synthetic_negative_tests_passed": 4,
+      "real_cv_mp_http_200": true,
+      "native_job": "completed/success",
       "native_E_WE_runs": 0
     },
     "FIG": 0,
-    "TAB": "3x3 signed CV/MP correlation plus per-axis best match only if source grids match; official source result pending",
+    "TAB": {
+      "common_start_dt_grid_compatible": true,
+      "grid_exact_match": false,
+      "common_overlap_samples": 31540,
+      "common_overlap_duration_s": 157.695,
+      "tail_excluded_cv": {
+        "HNE": 4,
+        "HNN": 1,
+        "HNZ": 0
+      },
+      "tail_excluded_mp": {
+        "HNE": 500,
+        "HNN": 500,
+        "HNZ": 500
+      },
+      "signed_highpass_correlation_rows_mp_columns_cv": {
+        "HNE": {
+          "HNE": 0.9994857608249033,
+          "HNN": -0.1881020776357557,
+          "HNZ": -0.026363847078666763
+        },
+        "HNN": {
+          "HNE": -0.18813579928729549,
+          "HNN": 0.9995537123932051,
+          "HNZ": -0.0010912448047773456
+        },
+        "HNZ": {
+          "HNE": -0.02652466995963525,
+          "HNN": -0.0010901015956188437,
+          "HNZ": 0.999169151949455
+        }
+      },
+      "best_cv_match_for_mp": {
+        "HNE": "HNE",
+        "HNN": "HNN",
+        "HNZ": "HNZ"
+      },
+      "interpretation": "ESM converted-unit CV and manually processed MP show positive same-axis strong correlation on aligned common window; does NOT establish raw RAN HG digitizer polarity or absolute ENU sign."
+    },
     "assumptions": [
       "CV and MP are both ESM processed-level products, NOT original RAN HG digitizer data",
       "2s symmetric moving-mean highpass is diagnostic, not official ESM processing recreation",
@@ -1424,19 +1492,27 @@
       "CV_MP_source_polarity": "PENDING_REAL_WAVEFORM",
       "HG_to_HN_mapping": "UNVERIFIED",
       "low_frequency_band": "UNVERIFIED",
-      "site_design_spectrum": "NOT_DEFINED"
+      "site_design_spectrum": "NOT_DEFINED",
+      "overlap_alignment": "Same official first timestamp and 0.005s dt, common 31540 points; CV 31540-31544 vs MP 32040; excluded tails explicit",
+      "diagnostic_filter": "2s centered moving mean, differs from official ESM 0.04-30Hz Butterworth; correlations not uncertainty estimates",
+      "signed_correlation": "0.99917-0.99955 on three diagonal entries; 0.90 exploratory threshold not scientific acceptance",
+      "raw_HG_polarity": "UNVERIFIED",
+      "site_spectrum": "NOT_DEFINED"
     },
     "failures": [
-      "Container direct ESM HTTP failed DNS lookup; GitHub Actions official fetch pending"
+      "Container direct official ESM HTTP failed DNS; native Actions fetched HTTP 200",
+      "Initial real CV vs MP comparison HOLD because CV channel lengths 31544/31541/31540 differ from MP 32040; fixed by explicit common-time 31540-point overlap, not silent padding",
+      "Original RAN HG source samples still absent; CV is already normalized HN, not raw HG"
     ],
     "PASS": {
-      "script_committed": true,
-      "synthetic_tests_native": false,
-      "official_CV_source_captured": false,
-      "CV_MP_axis_mapping": false,
+      "source_http_200": true,
+      "source_sha256_recorded": true,
+      "native_synthetic_negative_tests_4": true,
+      "cv_mp_common_window_axis_candidate": true,
       "raw_HG_to_HN": false,
+      "site_target": false,
       "S05": false
     },
-    "HOLD": "Await actual CV+MP official bytes and grid/polarity comparison; even positive CV/MP does not establish original HG sign or design-wave reliability"
+    "HOLD": "Raw HG→HN polarity remains unproven; CV/MP comparison is downstream processing consistency only. Independent low-frequency usability and Jiayu site target also HOLD."
   }
 }
