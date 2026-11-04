@@ -10,6 +10,7 @@ on:
       - 'research/wind-tower/experiments/T079/real-records/S05_USGS_CLC_STATIONXML_F1_TRANSFER_4CHANNEL_20261102.csv'
       - 'research/wind-tower/experiments/T079/s05_ground_motion_pair_qc.py'
       - 'research/wind-tower/experiments/T079/s05_event_balanced_spectrum_gate.py'
+      - 'research/wind-tower/experiments/T079/s05_esm_provenance_band_gate.cjs'
       - 'research/wind-tower/experiments/T079/s05_parametric_target_spectrum_fit.py'
       - 'research/wind-tower/experiments/T079/real-records/S05_ESM_ROTD50_VS_HYPOTHETICAL_6DEG_12PERIOD_20261030.csv'
       - 'research/wind-tower/experiments/T079/real-records/S05_THREE_EVENT_FIVE_PAIR_20ROW_SOURCE_SCREEN_20261030.csv'
@@ -21,6 +22,7 @@ on:
       - 'research/wind-tower/experiments/T079/real-records/S08_ESM_IT2012_NVL_HORIZONTAL_ORIENTATION_20261029.csv'
   pull_request:
     paths:
+      - 'research/wind-tower/experiments/T079/s05_esm_provenance_band_gate.cjs'
       - 'research/wind-tower/experiments/T079/s05_ground_motion_pair_qc.py'
       - 'research/wind-tower/experiments/T079/s05_event_balanced_spectrum_gate.py'
       - 'research/wind-tower/experiments/T079/real-records/S05_ISHIHARA_REFERENCE_PAPER_FOUR_PERIOD_DIAGNOSTIC_20261029.csv'
@@ -908,3 +910,33 @@ jobs:
           print('S05_SCEDC_REAL_STATIONXML_FOUR_CHANNEL_PZ_FIR_NUMERIC_PASS',n,'numeric cells')
           print('S05_STATIONXML_SOURCE_SHA_TAMPER_REJECTED; SNR_PROCESSING_TARGET_SPECTRUM_HOLD; ABAQUS_E_WE_ZERO')
           PY
+
+  s05-esm-2026-release-metadata-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - name: Fetch source-locked S05 program, 20-row derived source and receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.event.pull_request.head.sha || github.sha }}/research/wind-tower/experiments/T079"
+          curl -fLsS --retry 3 -o s05_esm_provenance_band_gate.cjs "$root/s05_esm_provenance_band_gate.cjs"
+          curl -fLsS --retry 3 -o s05-source.csv "$root/real-records/S05_THREE_EVENT_FIVE_PAIR_20ROW_SOURCE_SCREEN_20261030.csv"
+          curl -fLsS --retry 3 -o committed.json "$root/real-records/S05_ESM_2026_RELEASE_METADATA_BAND_GATE_20261104.json"
+          echo 'bbd02ad8f1d0bb4e37671f2f1b24d5558ab05b63c2ebd5c7919301155fa79231  s05-source.csv' | sha256sum -c -
+          sha256sum s05_esm_provenance_band_gate.cjs committed.json
+      - name: Synthetic release/instrument/band adversarial tests and REAL 20-row replay
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check s05_esm_provenance_band_gate.cjs
+          node s05_esm_provenance_band_gate.cjs --self-test
+          node s05_esm_provenance_band_gate.cjs --source s05-source.csv --output committed.json --check
+          node s05_esm_provenance_band_gate.cjs --source s05-source.csv --output recomputed.json
+          cmp committed.json recomputed.json
+          node - <<'JS'
+          const j=require('./committed.json');
+          if(j.rows.length!==20||j.metadata_eligible_rows!==0||j.design_eligible_rows!==0||j.S05_PASS!==false||j.native_E_WE_runs!==0)throw Error('SOURCE_GATE_EXPECTED_HOLD');
+          if(j.rows.filter(r=>r.pair==='IT-2012-0008/IT.NVL').length!==4)throw Error('ESM_FOUR_PERIODS');
+          console.log('S05_ESM_2026_METADATA_20ROW_SOURCE_QC_PASS_NOT_INSTRUMENT_BAND_OR_DESIGN_PASS');
+          JS
