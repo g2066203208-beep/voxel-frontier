@@ -9,9 +9,9 @@
   "REF": "REF018 Huang et al. 2025 Engineering Structures 334:120295, p6 Eq.(1)-(2) Fig.10 previously visually read; no new original pages this run",
   "STANDARD": "IEC 61400-1/6:2025 licensed clauses not read; no clause acceptance",
   "OFFICIAL": "GitHub Git Blob, inherited native OpenFAST provenance; no new OpenFAST/Abaqus solver",
-  "RUN": "Actual V8 full-data numeric evaluation and 4 known-answer/4 negative synthetic plus 3 corrupted-source negative tests; Node CLI --check/self-test available; native CI not yet confirmed",
+  "RUN": "Actual V8 full-data numeric evaluation and 4 known-answer/4 negative synthetic plus 3 corrupted-source negative tests; Node CLI --check/self-test available; native CI not yet confirmed; 2026-11-04 11h V8 full-source material-domain evaluation 18888 diagnostics, 5 synthetic checks, legacy regression matched; no native CI yet",
   "FIG": "No new physical-response figures",
-  "TAB": "3 control points x 3 conditional mean scenarios; equivalent cycle counts and m4-proxy fractions",
+  "TAB": "3 control points x 3 conditional mean scenarios; equivalent cycle counts and m4-proxy fractions; 9 domain groups and 4 material admission contracts",
   "script_path": "research/wind-tower/experiments/T077/recovery/s10_cycle_sign_m4_partition.cjs",
   "script_sha256": "5e58e0d985ac61e804661ba558c4dee41824a89c214d349b64bf08f2ab51e04a",
   "script_git_blob": "ad039b894100871299cedd78a1bed9e23e46a20e",
@@ -23,7 +23,7 @@
   "ALGORITHM": "For each rainflow cycle, endpoints mean +/- range/2; classify compression/reversing/tension, sum count*range^4 per class, normalize by total. Pe/P0 shifts are conditional, not verified native equilibrium.",
   "ERROR_BUDGET": "Source decimal roundoff ~1e-10 MPa; smallest observed endpoint-zero margin across 9 scenario/groups 0.001796467 MPa (P0 CSEG16), so classification robust to CSV serialization; physics/PT uncertainty unestimated; m4 is NOT material damage.",
   "FAILURES": "No new test failures; earlier T077 source failures remain in historical process log",
-  "HOLD": "ETM not DLC1.2, only three nominal sections; 4–8m/s NTM original BTS/OUTB missing, local material stress and native PT not validated; annual Miner life remains 0; S10 BLOCKED, S06 PARTIAL, 0/12",
+  "HOLD": "ETM not DLC1.2, only three nominal sections; 4–8m/s NTM original BTS/OUTB missing, local material stress and native PT not validated; annual Miner life remains 0; S10 BLOCKED, S06 PARTIAL, 0/12; new material applicability 0/18888 admitted, no Miner",
   "results": [
     {
       "case": "U09p343881_ETM_S06",
@@ -235,5 +235,206 @@
         }
       }
     }
-  ]
+  ],
+  "material_applicability": {
+    "status": "CONDITIONAL_GROSS_STRESS_DOMAIN_SCREEN_NOT_LOCAL_MATERIAL_OR_MINER",
+    "source_owner": "NOMINAL_ELASTIC_SECTION_STRESS_NOT_VERIFIED_LOCAL_MATERIAL_STRESS",
+    "source_cycle_rows": 1574,
+    "counterfactual_scenarios": 3,
+    "material_classes": 4,
+    "diagnostic_material_checks": 18888,
+    "admitted_material_cycles": 0,
+    "gross_stress_range_MPa": {
+      "minimum": 0.0000036955951277,
+      "maximum": 33.7989163687
+    },
+    "paulson1983_primary_A_dataset": {
+      "source": "FHWA/TX-82/54+300-1 printed pp57-62; previously read in s10_local_stress_rainflow_gate.py",
+      "raw_range_ksi": [
+        22,
+        81
+      ],
+      "raw_range_MPa": [
+        151.68466045,
+        558.475340747
+      ],
+      "nominal_gross_cycles_in_raw_range_domain": 0,
+      "minimum_strand_stress_ksi": [
+        75,
+        165
+      ],
+      "minimum_strand_stress_evaluated": false,
+      "note": "0/1574 nominal gross-section ranges match primary strand-test range; NOT a PT strand stress test or physical rejection of real PT fatigue."
+    },
+    "material_admission": {
+      "concrete": {
+        "admitted": 0,
+        "missing": [
+          "verified local concrete stress/strain and crack state",
+          "concrete strength and compressive/tensile fatigue model",
+          "validated mean-stress/R applicability"
+        ]
+      },
+      "ordinary_rebar": {
+        "admitted": 0,
+        "missing": [
+          "verified local HRB-grade rebar stress history",
+          "bar detail and grade-specific S-N parameters",
+          "validated mean-stress/R applicability"
+        ]
+      },
+      "prestressing_strand": {
+        "admitted": 0,
+        "missing": [
+          "verified actual strand stress and effective PT",
+          "strand diameter/anchorage and fatigue test-domain match",
+          "validated mean-stress treatment"
+        ]
+      },
+      "steel_tower": {
+        "admitted": 0,
+        "missing": [
+          "verified local steel/weld hotspot stress history",
+          "weld/detail S-N category and thickness effects",
+          "validated mean-stress rule and extraction"
+        ]
+      }
+    },
+    "by_group": [
+      {
+        "case": "U09p343881_ETM_S06",
+        "segment": "CSEG_16",
+        "scenario": "gross",
+        "rows": 413,
+        "compression": 0,
+        "reversing": 4,
+        "tension": 409,
+        "compression_R_min": null,
+        "compression_R_max": null,
+        "tension_R_min": 0.0537717223701,
+        "tension_R_max": 0.999999265424
+      },
+      {
+        "case": "U09p343881_ETM_S06",
+        "segment": "CSEG_16",
+        "scenario": "Pe",
+        "rows": 413,
+        "compression": 45,
+        "reversing": 14,
+        "tension": 354,
+        "compression_R_min": 0.402765740168,
+        "compression_R_max": 0.999957933135,
+        "tension_R_min": 0.0248557586787,
+        "tension_R_max": 0.999998459535
+      },
+      {
+        "case": "U09p343881_ETM_S06",
+        "segment": "CSEG_16",
+        "scenario": "P0",
+        "rows": 413,
+        "compression": 80,
+        "reversing": 20,
+        "tension": 313,
+        "compression_R_min": 0.00970989418677,
+        "compression_R_max": 0.999985776259,
+        "tension_R_min": 0.10872784083,
+        "tension_R_max": 0.999997710397
+      },
+      {
+        "case": "U09p343881_ETM_S06",
+        "segment": "CSEG_17",
+        "scenario": "gross",
+        "rows": 526,
+        "compression": 1,
+        "reversing": 5,
+        "tension": 520,
+        "compression_R_min": 0.955357550205,
+        "compression_R_max": 0.955357550205,
+        "tension_R_min": 0.119617680076,
+        "tension_R_max": 0.999999738053
+      },
+      {
+        "case": "U09p343881_ETM_S06",
+        "segment": "CSEG_17",
+        "scenario": "Pe",
+        "rows": 526,
+        "compression": 65,
+        "reversing": 17,
+        "tension": 444,
+        "compression_R_min": 0.435673942977,
+        "compression_R_max": 0.999956931126,
+        "tension_R_min": 0.0458393097552,
+        "tension_R_max": 0.999999510743
+      },
+      {
+        "case": "U09p343881_ETM_S06",
+        "segment": "CSEG_17",
+        "scenario": "P0",
+        "rows": 526,
+        "compression": 112,
+        "reversing": 21,
+        "tension": 393,
+        "compression_R_min": 0.018897048007,
+        "compression_R_max": 0.99997036631,
+        "tension_R_min": 0.0542169003518,
+        "tension_R_max": 0.999999339911
+      },
+      {
+        "case": "U11p4_ETM_S04",
+        "segment": "CSEG_04",
+        "scenario": "gross",
+        "rows": 635,
+        "compression": 635,
+        "reversing": 0,
+        "tension": 0,
+        "compression_R_min": 0.0611683972923,
+        "compression_R_max": 0.999976247081,
+        "tension_R_min": null,
+        "tension_R_max": null
+      },
+      {
+        "case": "U11p4_ETM_S04",
+        "segment": "CSEG_04",
+        "scenario": "Pe",
+        "rows": 635,
+        "compression": 635,
+        "reversing": 0,
+        "tension": 0,
+        "compression_R_min": 0.225559501038,
+        "compression_R_max": 0.999982372369,
+        "tension_R_min": null,
+        "tension_R_max": null
+      },
+      {
+        "case": "U11p4_ETM_S04",
+        "segment": "CSEG_04",
+        "scenario": "P0",
+        "rows": 635,
+        "compression": 635,
+        "reversing": 0,
+        "tension": 0,
+        "compression_R_min": 0.263995212919,
+        "compression_R_max": 0.99998363126,
+        "tension_R_min": null,
+        "tension_R_max": null
+      }
+    ]
+  },
+  "material_domain_run": {
+    "timestamp_local": "2026-11-04 11:09 Asia/Shanghai",
+    "SOURCE": "Same GitHub 1574-row nominal ETM rainflow CSV; SHA256 646065838456b6465e321c4c6fd24966f180f275df99c615000577557219ff83, blob 4b05ec4214c1ff38df71f1e5eb80cbec5a81c38d",
+    "READING_LEVEL": "Full 1574 rows read and 9 scenario/section groups calculated; 18888 material-scenario diagnostics, NOT independent observations",
+    "REF": "Existing s10_local_stress_rainflow_gate.py cites Paulson/Frank/Breen 1983 FHWA/TX-82/54+300-1 printed pp57-62 (previously read); no new original paper page this run",
+    "STANDARD": "IEC 2025 authorized fatigue clauses not read; no clause acceptance",
+    "OFFICIAL": "GitHub connector read of locked CSV and code; no new solver",
+    "RUN": "Actual V8 1574-row domain evaluation; 5 synthetic known-answer checks; existing 1574-row m4 regression matched; patched JS function evaluated against full source",
+    "FIG": "None",
+    "TAB": "Nine scenario/section stress-sign and conditional R-domain rows; four material missing-input contracts",
+    "ERROR_BUDGET": "Source decimal serialization ~1e-10 MPa (inherited); conditional R unstable near zero stress endpoint, no material-model or PT uncertainty quantified. PT primary range comparison is deliberately a non-physical gross-section diagnostic.",
+    "FAILURES": "First in-tool eval rejected shebang (SyntaxError); removed hashbang for V8 test only, retained it in GitHub Node script. No data/test assertion failures.",
+    "HOLD": "All 1574 cycles are gross nominal, not verified local material stress. Concrete strength/branch, rebar grade/S-N, PT actual strand stress and tested domain, steel detail S-N and complete DLC1.2 absent; zero Miner or life admissible.",
+    "SCRIPT_SHA256": "NOT_COMPUTED_IN_CONNECTOR_V8; Git blob SHA and full source retained; native CI SHA pending",
+    "physical_pass": false,
+    "stage_pass_count": 0
+  }
 }
