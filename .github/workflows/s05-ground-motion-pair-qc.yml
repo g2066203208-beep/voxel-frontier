@@ -1170,7 +1170,7 @@ jobs:
           python3 -m pip install --quiet 'obspy==1.4.2' || { echo 'OBSPY_INSTALL_FAILED; response extraction HOLD'; exit 0; }
           python3 - <<'PY'
           import hashlib,io,json,pathlib,tempfile,zipfile
-          from obspy import UTCDateTime
+          from obspy import UTCDateTime, read_inventory
           from obspy.io.xseed import Parser
           root=pathlib.Path('ran-official')
           source=root/'ran_it_dataless.zip'
@@ -1193,6 +1193,8 @@ jobs:
                       try:
                           parser=Parser(tmp.name)
                           inv=parser.get_inventory()
+                          response_inv=read_inventory(io.BytesIO(data),format='SEED',level='response')
+                          row['full_response_inventory_network_count']=len(response_inv.networks)
                           row['inventory_station_count']=len(inv.get('stations',[]))
                           row['inventory_channel_count']=len(inv.get('channels',[]))
                           row['NVL_channel_candidates']=[str(x)[:500] for x in inv.get('channels',[]) if 'NVL' in str(x)][:12]
@@ -1225,6 +1227,58 @@ jobs:
                                           for f in (0.1,0.125,1/6,0.2,0.25)]
                                       item['paz_scope']='ANALOG_POLES_ZEROS_ONLY; NOT complete FIR/ADC/ESM processed response or calibrated usable frequency'
                                       item['status']='PAZ_METADATA_EXTRACTED_NOT_CALIBRATION_PASS'
+                                      # Full response stages are distinct from the PAZ-only analog approximation.
+                                      # No physical band PASS can be inferred from metadata or evalresp alone.
+                                      epoch=UTCDateTime('2012-05-20T02:00:00')
+                                      response=response_inv.get_response(seedid,epoch)
+                                      meta=response_inv.get_channel_metadata(seedid,epoch)
+                                      item['orientation_epoch']={
+                                          'azimuth_deg':float(meta['azimuth']),
+                                          'dip_deg':float(meta['dip']),
+                                          'latitude_deg':float(meta['latitude']),
+                                          'longitude_deg':float(meta['longitude'])}
+                                      stages=[]
+                                      for stage in response.response_stages:
+                                          coeff={}
+                                          for key in ('coefficients','numerator','denominator','poles','zeros'):
+                                              values=getattr(stage,key,None)
+                                              if values is not None:
+                                                  vals=[str(v) for v in values]
+                                                  coeff[key+'_count']=len(vals)
+                                                  coeff[key+'_sha256']=hashlib.sha256(
+                                                      json.dumps(vals,ensure_ascii=False,separators=(',',':')).encode()).hexdigest()
+                                          stages.append({
+                                              'number':int(stage.stage_sequence_number),
+                                              'type':type(stage).__name__,
+                                              'gain':float(stage.stage_gain) if stage.stage_gain is not None else None,
+                                              'gain_frequency_hz':float(stage.stage_gain_frequency) if stage.stage_gain_frequency is not None else None,
+                                              'input_units':stage.input_units,'output_units':stage.output_units,
+                                              'decimation_input_hz':float(stage.decimation_input_sample_rate) if stage.decimation_input_sample_rate is not None else None,
+                                              'decimation_factor':int(stage.decimation_factor) if stage.decimation_factor is not None else None,
+                                              'decimation_delay_s':float(stage.decimation_delay) if stage.decimation_delay is not None else None,
+                                              'decimation_correction_s':float(stage.decimation_correction) if stage.decimation_correction is not None else None,
+                                              **coeff})
+                                      seq=[x['number'] for x in stages]
+                                      if not seq or seq!=sorted(set(seq)) or any(n<1 for n in seq):
+                                          raise ValueError('MISSING_OR_DUPLICATE_RESPONSE_STAGE')
+                                      item['complete_response_stages']=stages
+                                      item['full_stage_count']=len(stages)
+                                      item['full_stage_types']=[x['type'] for x in stages]
+                                      item['has_explicit_FIR']=any('FIR' in x['type'] for x in stages)
+                                      item['has_decimation_metadata']=any(x['decimation_factor'] is not None for x in stages)
+                                      item['full_response_scope']='METADATA_ONLY; NOT installed serial calibration, HG-HN processing identity, SNR or site spectrum'
+                                      try:
+                                          fs=[0.1,0.125,1/6,0.2,0.25,1.0]
+                                          h=response.get_evalresp_response_for_frequencies(fs,output='ACC')
+                                          if len(h)!=len(fs) or abs(h[-1])==0:
+                                              raise ValueError('FULL_RESPONSE_REFERENCE_INVALID')
+                                          item['full_response_relative_to_1Hz']=[
+                                              {'frequency_hz':f,'amplitude_ratio':float(abs(v/h[-1])),
+                                               'phase_shift_deg':float(math.degrees(cmath.phase(v/h[-1])))}
+                                              for f,v in zip(fs,h)]
+                                          item['full_response_evalresp_status']='NUMERIC_TRANSFER_COMPUTED_NOT_CALIBRATION_PASS'
+                                      except Exception as e:
+                                          item['full_response_evalresp_status']='HOLD_'+type(e).__name__+': '+str(e)[:180]
                                   except Exception as e:
                                       item['error']=type(e).__name__+': '+str(e)[:250]
                                   result['channel_response_attempts'].append(item)
@@ -1238,6 +1292,20 @@ jobs:
               if x.get('paz_metadata'):
                   print('RAN_NVL_PAZ_METADATA',x['seed_id'],x['paz_metadata'])
                   print('RAN_NVL_PAZ_ONLY_RELATIVE_DC',x['seed_id'],x['paz_only_relative_to_dc'])
+          # Fail closed on a deliberately malformed stage sequence; this does not
+          # establish that the real response has passed a physics acceptance test.
+          def check_sequence(seq):
+              if not seq or seq!=sorted(set(seq)) or any(n<1 for n in seq):
+                  raise ValueError('MISSING_OR_DUPLICATE_RESPONSE_STAGE')
+          check_sequence([1,2,3])
+          rejected=0
+          for bad in ([],[1,1],[2,1],[0,1]):
+              try:check_sequence(bad)
+              except ValueError:rejected+=1
+          assert rejected==4
+          result['synthetic_stage_negative_tests_passed']=rejected
+          (root/'nvl_dataless_response_attempt.json').write_text(json.dumps(result,indent=2,ensure_ascii=False)+'\\n')
+          print('RAN_NVL_FULL_STAGE_NEGATIVE_TESTS',rejected)
           print('S05_RAN_DATALESS_RESPONSE_ATTEMPT_NOT_CALIBRATION_PASS')
           PY
       - name: Archive exact official HTTP source and failure manifest (no restricted standard)
