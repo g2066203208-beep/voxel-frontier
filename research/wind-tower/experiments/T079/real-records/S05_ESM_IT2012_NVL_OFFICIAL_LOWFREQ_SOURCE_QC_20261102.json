@@ -1290,5 +1290,100 @@
       "S05": false
     },
     "HOLD": "HG raw axes vs ESM HN processed axes sign/rotation and real waveform mapping; independent usable-band SNR/calibration; site target spectrum; no seismic design-wave acceptance"
+  },
+  "ran_2012_hg_to_enu_geometry_20261104_2204": {
+    "classification": "S05_RAN_HG_AXIS_GEOMETRY_CONDITIONAL_PASS_ESM_HN_SAMPLE_MAPPING_HOLD",
+    "SOURCE": {
+      "reading_level": "Original official RAN Dataless response source previously captured via Actions #41836013853; directly read existing T079 JSON full 9-stage orientation metadata; new FDSN convention read from IRIS orientation guideline and FDSN SEED Manual search excerpt",
+      "ran_zip_sha256": "6e1ba14be8060c4f1074e82a6c03fe87c776f476042af9e4d5eb82f79f913fcc",
+      "nvl_member_sha256": "422cdcf7da861fb99e572c4a601f76b7c736ea83a8c4414bc5b1fcce06a25a06",
+      "prior_receipt_git_blob_sha1": "9d2775becf764a2a434e72a8ad7edf6658531f07",
+      "python_script_sha256": "4fca144836df395f34907a3c42bfcdb9420bf51954d2c23210a5558c6860ddd3",
+      "python_git_blob_sha1": "88b6b486a421b62ba3bd7b92c69bc1dda9209c50"
+    },
+    "REF": "FDSN SEED Reference Manual v2.4, Appendix A orientation convention; IRIS StationXML orientation guideline (2020); ESM3 DOI 10.13127/esm.3 (previously archived processed metadata)",
+    "STANDARD": "No newly obtained authorized IEC61400/GB/NB clauses; FDSN orientation convention is a data-format convention, NOT structural design standard acceptance.",
+    "OFFICIAL": [
+      "https://www.fdsn.org/pdf/SEEDManual_V2.4.pdf",
+      "https://iris-edu.github.io/stationxml-validator/orientation.html",
+      "https://www.fdsn.org/networks/detail/IT/",
+      "https://ran.protezionecivile.it/IT/download_metadata.php?net=IT&tipo_file=DL"
+    ],
+    "RUN": {
+      "local_python": "Python3.13.5 on official-metadata-field excerpt, source metadata fields identical to existing GitHub JSON; 5 synthetic negative tests and geometry self-test PASS; full existing JSON remote Actions test pending",
+      "CI": "Existing S05 workflow extended with real T079 JSON fetch, Python compile, geometry and explicit HOLD assertions; not yet confirmed successful",
+      "no_native_solver": true,
+      "native_E_WE_runs": 0
+    },
+    "FIG": 0,
+    "TAB": {
+      "HG_order": [
+        "HGE",
+        "HGN",
+        "HGZ"
+      ],
+      "reference": [
+        "E",
+        "N",
+        "Up"
+      ],
+      "raw_sensitive_axis_direction_cosines": [
+        [
+          -1,
+          0,
+          0
+        ],
+        [
+          0,
+          -1,
+          0
+        ],
+        [
+          0,
+          0,
+          -1
+        ]
+      ],
+      "conditional_ENU_from_raw_HG": [
+        [
+          -1,
+          0,
+          0
+        ],
+        [
+          0,
+          -1,
+          0
+        ],
+        [
+          0,
+          0,
+          -1
+        ]
+      ],
+      "determinant": -1,
+      "max_orthogonality_error": 6.123233995736766e-17,
+      "max_canonical_axis_error": 1.8369701987210297e-16
+    },
+    "assumptions": [
+      "FDSN SEED positive motion is along instrument sensitive axis; azimuth clockwise from geographic north; dip positive down",
+      "HG raw amplitudes must be measured with reported polarity; ESM processed HN channels are NOT proven to be these same raw samples",
+      "ESM HNZ 'Z' code alone does not certify positive-up sample sign"
+    ],
+    "error_budget": {
+      "metadata_orientation": "Given exact integer angles and floating point trig: Gram max 6.13e-17; axis mismatch 1.84e-16, acceptance 1e-12",
+      "processing_polarity_and_raw_waveform": "UNBOUNDED_WITHOUT_RAW_HG_AND_PROCESSING_MAPPING",
+      "site_design_spectrum": "NOT_DEFINED"
+    },
+    "failures": [
+      "FDSN IT raw waveform network availability listing reports no data currently through FDSN services; no raw 2012 HG recovered this run",
+      "Synthetic corrupt SHA/station/azimuth/stage/nonfinite metadata rejected 5/5"
+    ],
+    "PASS": {
+      "RAN_geometry_conditional": true,
+      "ESM_processed_HN_polarity_and_waveform_mapping": false,
+      "S05": false
+    },
+    "HOLD": "Original HG 2012 sample data or operator signed axis correction/processing record required for ESM HN waveform mapping; low-frequency reliability and site target remain unaccepted."
   }
 }
