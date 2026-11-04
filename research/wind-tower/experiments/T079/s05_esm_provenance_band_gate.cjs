@@ -175,6 +175,60 @@ async function fetchOfficialNvl(){
   console.log('S05_ESM_NVL_OFFICIAL_PROBE_FINISHED',JSON.stringify({http_200_json_count:manifest.http_200_json_count,endpoint_count:5,design_wave:false}));
 }
 
-if(process.argv.includes('--self-test-official')){try{officialFetchSelfTest();}catch(e){console.error(e);process.exitCode=1;}}
+
+/* S05: network IT is PCM-DPC/RAN; ESM station channel metadata is not
+   station-installed transfer-function calibration. */
+function stationEpochQueries(){
+ const a=new URL('https://esm-db.eu/esmws/station/1/query');
+ for(const [k,v] of Object.entries({eventid:'IT-2012-0008',network:'IT',station:'NVL',group:'all',indent:'true'}))a.searchParams.set(k,v);
+ const b=new URL('https://esm-db.eu/fdsnws/station/1/query');
+ for(const [k,v] of Object.entries({network:'IT',station:'NVL',level:'channel',format:'text',starttime:'2012-05-20',endtime:'2012-05-21'}))b.searchParams.set(k,v);
+ return [{name:'esm-station-epoch',url:a.toString(),format:'json'},{name:'esm-fdsn-channel-epoch',url:b.toString(),format:'text'}];
+}
+function stationEpochValidate(q){
+ const u=new URL(q.url);
+ if(u.origin!=='https://esm-db.eu'||u.searchParams.get('network')!=='IT'||u.searchParams.get('station')!=='NVL')throw Error('WRONG_NETWORK_STATION');
+ if(q.name==='esm-station-epoch'){
+  if(u.pathname!=='/esmws/station/1/query'||u.searchParams.get('eventid')!=='IT-2012-0008'||u.searchParams.get('group')!=='all')throw Error('STATION_EVENT_INVALID');
+ }else if(q.name==='esm-fdsn-channel-epoch'){
+  if(u.pathname!=='/fdsnws/station/1/query'||u.searchParams.get('level')!=='channel'||u.searchParams.get('format')!=='text'||u.searchParams.get('starttime')!=='2012-05-20'||u.searchParams.get('endtime')!=='2012-05-21')throw Error('FDSN_EPOCH_INVALID');
+ }else throw Error('UNKNOWN_SERVICE');
+}
+function stationResponseCandidate(s){
+ return /<Response[\s>]/.test(s)&&/<InstrumentSensitivity[\s>]/.test(s)&&/<(?:PolesZeros|Coefficients|FIR)[\s>]/.test(s);
+}
+function stationEpochSelfTest(){
+ const q=stationEpochQueries();if(q.length!==2)throw Error('COUNT');q.forEach(stationEpochValidate);
+ const bad=[{...q[0],url:q[0].url.replace('network=IT','network=IV')},{...q[0],url:q[0].url.replace('station=NVL','station=NOVE')},{...q[1],url:q[1].url.replace('level=channel','level=response')},{...q[1],url:q[1].url.replace('2012-05-20','2026-05-20')}];
+ for(const x of bad){let rejected=false;try{stationEpochValidate(x)}catch(_){rejected=true}if(!rejected)throw Error('NEGATIVE_ACCEPTED')}
+ if(stationResponseCandidate('<Channel><Sensor>MS2007+</Sensor></Channel>')||!stationResponseCandidate('<Response><InstrumentSensitivity/><Stage><PolesZeros/></Stage></Response>'))throw Error('RESPONSE_CLASSIFIER');
+ console.log('S05_STATION_EPOCH_SYNTHETIC_PASS_4_NEGATIVE_2_CLASSIFIERS_NO_CALIBRATION_PASS');
+}
+async function fetchStationEpoch(){
+ const args=process.argv.slice(2),i=args.indexOf('--output-dir');if(i<0||!args[i+1])throw Error('REQUIRE_OUTPUT_DIR');
+ const dir=args[i+1];fs.mkdirSync(dir,{recursive:true});
+ const manifest={classification:'SOURCE_PROBE_NOT_CALIBRATION_PASS',event:'IT-2012-0008',network:'IT',station:'NVL',operator:'PCM-DPC/RAN',
+ source_locked_dyna_zip_sha256:ESM_NVL_SOURCE_ZIP_SHA256,station_installed_transfer_function_verified:false,S05_PASS:false,native_E_WE_runs:0,
+ source_urls:['https://www.fdsn.org/networks/detail/IT/','https://esm-db.eu/esmws/station/1/query-options.html','https://esm-db.eu/fdsnws/station/1/query-options.html'],
+ retrieval_utc:new Date().toISOString(),node_version:process.version,queries:[]};
+ for(const q of stationEpochQueries()){
+  stationEpochValidate(q);const row={name:q.name,url:q.url,status:null,bytes:0,sha256:null,parsed:false,response_stage_candidate:false,error:null};
+  try{
+   const r=await fetch(q.url,{signal:AbortSignal.timeout(18000),headers:{'User-Agent':'wind-tower-source-provenance/1.0','Accept':'application/json,text/plain,application/xml'}});
+   row.status=r.status;const b=Buffer.from(await r.arrayBuffer());if(b.length>2000000)throw Error('TOO_LARGE');
+   row.bytes=b.length;row.sha256=sha(b);fs.writeFileSync(dir+'/'+q.name+'.body',b);
+   if(r.status===200&&b.length){const s=b.toString('utf8');if(q.format==='json')JSON.parse(s);row.parsed=true;row.response_stage_candidate=q.format==='text'&&stationResponseCandidate(s)}
+   else row.error='HTTP_'+r.status+'_OR_EMPTY';
+  }catch(e){row.error=(e.name||'Error')+': '+String(e.message).slice(0,160)}
+  manifest.queries.push(row);console.log('S05_STATION_SOURCE',JSON.stringify(row));
+ }
+ manifest.http200_parsed=manifest.queries.filter(x=>x.status===200&&x.parsed).length;
+ manifest.HOLD='NO_NVl_2012_INSTALLED_CHAIN_RESPONSE_OR_CALIBRATION_AT_0p1_0p2_HZ';
+ fs.writeFileSync(dir+'/S05_NVL_STATION_EPOCH_MANIFEST.json',JSON.stringify(manifest,null,2)+'\n');
+}
+
+if(process.argv.includes('--self-test-station')){try{stationEpochSelfTest();}catch(e){console.error(e);process.exitCode=1;}}
+else if(process.argv.includes('--fetch-station')){fetchStationEpoch().catch(e=>{console.error(e);process.exitCode=1;});}
+else if(process.argv.includes('--self-test-official')){try{officialFetchSelfTest();}catch(e){console.error(e);process.exitCode=1;}}
 else if(process.argv.includes('--fetch-official')){fetchOfficialNvl().catch(e=>{console.error(e);process.exitCode=1;});}
 else try{main();}catch(e){console.error(e.stack||e);process.exitCode=1;}
