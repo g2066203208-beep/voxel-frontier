@@ -17,6 +17,7 @@ const PT_KSI_MPA=6.894757293168361;
 function materialApplicability(csv){
   const rows=parse(csv),scenarios=[["gross","mean_gross_MPa"],["Pe","mean_Pe_hypothesis_MPa"],["P0","mean_P0_hypothesis_MPa"]];
   const groups=new Map();let maxRange=0,minRange=Infinity,ptRangeMatches=0;
+  const materialRejections={concrete:0,ordinary_rebar:0,prestressing_strand:0,steel_tower:0};
   for(const x of rows){
     const rg=x.range_MPa;maxRange=Math.max(maxRange,rg);minRange=Math.min(minRange,rg);
     if(rg/PT_KSI_MPA>=22&&rg/PT_KSI_MPA<=81)ptRangeMatches++;
@@ -24,6 +25,10 @@ function materialApplicability(csv){
       const key=[x.case,x.segment,scenario].join("/");
       if(!groups.has(key))groups.set(key,{case:x.case,segment:x.segment,scenario,rows:0,compression:0,reversing:0,tension:0,compression_R_min:Infinity,compression_R_max:-Infinity,tension_R_min:Infinity,tension_R_max:-Infinity});
       const g=groups.get(key),lo=x[col]-rg/2,hi=x[col]+rg/2;g.rows++;
+      for(const material of Object.keys(materialRejections)){
+        check(x.status!=="VERIFIED_LOCAL_MATERIAL_STRESS","UNEXPECTED_LOCAL_MATERIAL_SOURCE_"+material);
+        materialRejections[material]++;
+      }
       if(hi<=0){const R=hi/lo;check(R>=0&&R<=1,"COMPRESSION_R_DOMAIN");g.compression++;g.compression_R_min=Math.min(g.compression_R_min,R);g.compression_R_max=Math.max(g.compression_R_max,R)}
       else if(lo>=0){const R=lo/hi;check(R>=0&&R<=1,"TENSION_R_DOMAIN");g.tension++;g.tension_R_min=Math.min(g.tension_R_min,R);g.tension_R_max=Math.max(g.tension_R_max,R)}
       else g.reversing++;
@@ -36,11 +41,12 @@ function materialApplicability(csv){
   });
   check(rows.length===1574&&out.length===9&&out.every(g=>g.rows>0),"DOMAIN_GROUP_IDENTITY");
   check(ptRangeMatches===0&&maxRange<22*PT_KSI_MPA,"PT_RAW_RANGE_GUARD");
+  check(Object.values(materialRejections).every(n=>n===rows.length*scenarios.length),"MATERIAL_REJECTION_COUNTS");
   return {
     status:"CONDITIONAL_GROSS_STRESS_DOMAIN_SCREEN_NOT_LOCAL_MATERIAL_OR_MINER",
     source_owner:"NOMINAL_ELASTIC_SECTION_STRESS_NOT_VERIFIED_LOCAL_MATERIAL_STRESS",
     source_cycle_rows:rows.length,counterfactual_scenarios:3,material_classes:4,
-    diagnostic_material_checks:rows.length*3*4,admitted_material_cycles:0,
+    diagnostic_material_checks:Object.values(materialRejections).reduce((a,b)=>a+b,0),material_source_rejections:materialRejections,admitted_material_cycles:0,
     gross_stress_range_MPa:{minimum:round(minRange),maximum:round(maxRange)},
     paulson1983_primary_A_dataset:{
       source:"FHWA/TX-82/54+300-1 printed pp57-62; previously read in s10_local_stress_rainflow_gate.py",
