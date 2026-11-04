@@ -14,7 +14,7 @@
   "REF": "No new journal full-text read; geometric mean and delete-one-independent-event sensitivity (not confidence interval)",
   "STANDARD": "No new licensed IEC 2025/GB/NB seismic clauses; no site-specific target response spectrum",
   "OFFICIAL": "Inherited USGS/SCEDC and ESM processed record source receipts, not newly verified instrument low-frequency passband",
-  "RUN": "V8 independent full 20-row derived-source calculation; Python source-level algorithm updated in existing T079 script; native CI pending",
+  "RUN": "V8 20-row derived-source independent calculation; Python 3.x native GitHub Actions job #126380751398 on run #41771111586 completed/success, real 4-period receipt cross-source numeric regression PASS, synthetic 4 positive + 8 negative tests PASS; whole workflow failure is separate ESM public source job",
   "FIG": "None newly generated",
   "TAB": "Four long-period rows, each with three per-event GMs and three leave-one-event-out GMs",
   "method": "For each event, geometric mean of its stations; for all three events, geometric mean of three event GMs. Delete each independent event (all its stations together), recompute geometric mean of remaining two events. Ratio=max/min across three delete-one estimates.",
@@ -107,9 +107,9 @@
     "source": "20-row source is derived; original raw record hash inherited not rechecked this run",
     "physical": "Unbounded due to instrument low-frequency fidelity, preprocessing heterogeneity, event selection and missing target spectrum"
   },
-  "failures": "No V8 parsing failure; Python native CI not yet confirmed",
+  "failures": "Initial JS receipt SHA attempt rejected non-ASCII source before any write; UTF-8 hashing corrected. Existing unrelated ESM public-processed CI job failed in same workflow; LOO native job passed.",
   "PASS_HOLD": {
-    "numeric_derived_source": "V8_COMPUTED_NEEDS_NATIVE_CI",
+    "numeric_derived_source": "PASS_NATIVE_PYTHON_AND_V8_CROSS_SOURCE_ONLY_NOT_PHYSICS",
     "S05": "PARTIAL_HOLD",
     "S08": "BLOCKED",
     "design_wave": "HOLD",
@@ -117,5 +117,19 @@
     "native_WE": 0,
     "stages_passed": 0
   },
-  "next_single_action": "Confirm actual Python CI replay against this receipt, then prioritize independent, uniformly processed, long-period-reliable records and a justified site target instead of more algebraic LOO iterations."
+  "next_single_action": "Confirm actual Python CI replay against this receipt, then prioritize independent, uniformly processed, long-period-reliable records and a justified site target instead of more algebraic LOO iterations.",
+  "script_path": "research/wind-tower/experiments/T079/s05_event_balanced_spectrum_gate.py",
+  "script_sha256": "21529b632eacf68e29d84158cfa46abfe4ba1ed6dc4fe8393058b4cbf96db60c",
+  "CI": {
+    "run_id": 41771111586,
+    "run_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41771111586",
+    "commit_sha": "25b8cf84840b8ce7e19053989dcbb04e64ca40d5",
+    "job_id": 126380751398,
+    "job_name": "event-balanced-source-diagnostic",
+    "job_conclusion": "success",
+    "whole_workflow_conclusion": "failure",
+    "unrelated_failure": "esm-public-processed-accelerogram-source: s05_esm_rotd_real.py FAILED; not attributed to LOO; source or processing mismatch needs independent investigation",
+    "log_marker": "S05_REAL_3EVENT_LOO_4PERIOD_24CELL_CROSS_SOURCE_PASS_NOT_DESIGN_WAVE",
+    "synthetic_tests": "4 positive + 8 negative source/event-balance tests"
+  }
 }
