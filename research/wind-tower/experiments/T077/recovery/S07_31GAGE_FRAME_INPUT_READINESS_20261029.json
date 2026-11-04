@@ -39,8 +39,8 @@
     "sample_dt_s": 0.05,
     "samples_per_gage": 12001,
     "source_artifacts": 16,
-    "time_end_s": 700.0,
-    "time_start_s": 100.0,
+    "time_end_s": 700,
+    "time_start_s": 100,
     "total_six_component_time_rows": 1488124
   },
   "archival_recovery": {
@@ -67,5 +67,49 @@
     "manifest_count": "exact integer checks, no numerical rounding",
     "material_fatigue": "NOT_COMPUTED"
   },
-  "stage": "S07_SOURCE_31GAGE_PROVENANCE_CHECKED_DCM_UNAVAILABLE_HOLD"
+  "stage": "S07_SOURCE_31GAGE_PROVENANCE_CHECKED_DCM_UNAVAILABLE_HOLD",
+  "cross_batch_phase_fingerprint_20261105": {
+    "stage": "S06/S07_INDEPENDENT_SOURCE_NUMERIC_DIAGNOSTIC__NOT_SYNC_OR_PHYSICS_PASS",
+    "SOURCE": {
+      "reading_level": "DIRECT_ORIGINAL_16_SHA_LOCKED_T071_T072_ACTIONS_ZIP_BYTES_FROM_USER_LIBRARY; each ZIP/GZIP/CSV SHA verified; 4 cases x 31 stations x 12001 samples x 6 components; NOT original OUTB, RP/TP/DCM",
+      "manifest_sha256": "dfc07558eb87002c3f54bb88671644519b77dfc38daf3971026f43686d4c2ed8",
+      "library_folder": "/WindTower/S06_T071_T072_Source_Archives_20261101",
+      "input_original_zip_count": 16
+    },
+    "REF": "Existing OpenFAST v3.5.3 T062/T077 FL/ML section-resultant ownership and S07 frame contracts; no new journal full-text read",
+    "STANDARD": "No newly read authorized IEC/GB/NB clauses; no IEC DLC1.2 acceptance",
+    "OFFICIAL": "Original archived OpenFAST-derived CSV.gz bytes; no native solver or official standards re-run",
+    "RUN": {
+      "software": "CPython 3 + NumPy",
+      "program": "research/wind-tower/experiments/T077/recovery/s06_s07_cross_batch_phase_qc.py",
+      "program_sha256": "13bfb927b50098d5aebe60af7c1e8a3cd46e202a754dd28ed772df0ad4a2ce8d",
+      "synthetic_positive": 3,
+      "negative_rejections": 2,
+      "source_archive_checks": 16,
+      "source_csv_rows": 1488124,
+      "phase_correlations": 72,
+      "zero_lag_best_of_pm3": 72,
+      "solver_runs": 0
+    },
+    "FIG": "NONE",
+    "TAB": {
+      "path": "research/wind-tower/experiments/T077/recovery/S06_S07_4ETM_CROSS_BATCH_PHASE_FINGERPRINT_SUMMARY_20261105.csv",
+      "sha256": "d9af1becb491612343084bec571af6c94c49b030563c635e105b9d9a0a15af17",
+      "rows": 12,
+      "components": 6,
+      "boundaries_per_case": 3,
+      "min_first_difference_pearson": 0.9055749952335213,
+      "median_first_difference_pearson": 0.9994786746781055,
+      "max_first_difference_pearson": 0.999999958357,
+      "all_zero_lag_optima": true,
+      "lowest_case": "U09p343881_ETM_S06",
+      "lowest_boundary": "J27",
+      "lowest_component": "Fy_kN"
+    },
+    "assumptions": "Same nominal clock and wind seed; first-difference Pearson correlation is only a phase fingerprint, NOT proof of identical initial states, timewise synchronized cross-run section resultants, common DCM or external wind-load ownership.",
+    "error_budget": "Input ZIP/GZIP/CSV SHA exact; time grid tolerance 2e-8 s; double precision correlation and 12-digit CSV rounding; physical frame and cross-run phase errors unbounded; +/-3 lag scan is diagnostic, not a correction.",
+    "failure_record": "Local reconstruction of original manifest initially SHA-mismatched due manual transcription; corrected to original repository SHA before calculation. All 16 actual ZIP/GZIP/CSV hashes then passed. No solver run.",
+    "HOLD": "Cross-batch J09/J18/J27 still cannot be spliced; missing shared native RP/TP/DCM and load ownership. Correlation is NOT native physics or formal DLC1.2 PASS.",
+    "stage_pass": false
+  }
 }
