@@ -1,3 +1,11 @@
+## 2026-11-04 10时｜S10真实1574循环按均值/PT假设分域的四次矩贡献（非材料寿命）
+
+- **SOURCE/READING_LEVEL**：直接完整读取本目录[S10真实1574循环CSV](S10_3CONTROL_REAL_GROSS_CYCLES_20261030.csv)280249字节，SHA256 `646065838456b6465e321c4c6fd24966f180f275df99c615000577557219ff83`、Git Blob `4b05ec4214c1ff38df71f1e5eb80cbec5a81c38d`。原始OUTB/ZIP的SHA继承2026-10-30归档收据，**本轮未重下载原件**。
+- **RUN/TAB**：以每循环 `sigma_min/max=mean∓range/2`，按全压/拉压变号/全拉分类；`sum(count*range^4)`作为**描述性m4循环谱代理**，绝不是材料Miner损伤。U09 ETM S06 CSEG16/17在条件Pe均值下分别仅14/413、17/526行循环变号，却贡献**98.875876%/98.778829%**的m4代理；条件P0下为99.765102%/99.737952%；U11 ETM S04 CSEG04全部635行循环始终受压，变号贡献0%。Pe/P0常量偏置不改变总m4，只改变符号域；因此单独的load-DEL无法表达不同均值下的循环材料受力域。
+- **程序/原始结果**：[可复算Node程序](s10_cycle_sign_m4_partition.cjs) SHA256 `5e58e0d985ac61e804661ba558c4dee41824a89c214d349b64bf08f2ab51e04a`；[3×3分域数值与来源收据](S10_3CONTROL_CYCLE_SIGN_M4_PARTITION_20261104.json)。实际V8运行1574行、4项已知解、4项非法参数拒绝、3项损坏CSV拒绝通过；Node CLI `--self-test`/`--check`可在仓库执行，**本轮尚无原生Actions成功日志**。
+- **REF/STANDARD/OFFICIAL/FIG**：REF018 Huang2025 p6 Eq1/2、Fig10沿用已读原页，不是新全文核读；IEC2025授权条文未读，不能条款验收；OFFICIAL为GitHub Git Blob及继承OpenFAST来源；FIG=0新物理图，TAB=9组条件分域。
+- **误差/失败/HOLD**：CSV十进制序列化约1e-10MPa；九组端点距零最小0.001796467MPa，分类不受该舍入影响。原生PT、材料局部应力、风速长期概率和材料S–N均未闭合，**不能把m4代理当疲劳损伤**；ETM非DLC1.2，正式0/126、E/WE=0、S06 PARTIAL/S10 BLOCKED、0/12未晋级。本轮无新失败、无昂贵求解、无Abaqus，冻结母本与main不动。
+
 **2026-11-02 22:39｜S10固定角源级12行真实CI收尾回证**：[GitHub Actions #41463791579/job #125339245922](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41463791579/job/125339245922) `completed/success`；实际Node 22源级重算三份SHA锁定CSV，12行输出与已提交CSV经`cmp`逐字节一致，CSV SHA256=`594c48ad65c84f9aade20d9b75e7caf609d67997308c7a00d5a8a67f5d75562b`；`S10_FIXED_AZIMUTH_SELFTEST_PASS`、故意篡改连续方位源后`INPUT_SHA256_MISMATCH`及`S10_TAMPER_REJECT_PASS`均在原生runner stdout可见。源级程序与CSV验收通过，**不等于物理/材料/规范PASS**；S10 BLOCKED、0/12未晋级、E/WE原生0。
 
 ## 2026-11-02 22:34｜S10 CSEG16/17/28固定参考角度与原生候选单元对照（SOURCE JOIN；非材料疲劳PASS）
