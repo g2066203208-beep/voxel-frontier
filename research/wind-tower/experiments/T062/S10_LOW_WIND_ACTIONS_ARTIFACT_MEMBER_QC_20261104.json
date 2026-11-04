@@ -117,5 +117,78 @@
     "zipfile": "Python standard library",
     "diagnostic_stdout_json_sha256": "9fc4c0fa2b9ba1a154789bfa20b9a312702c80b448c0298282732e4f35ccc42b"
   },
-  "CI_status": "Local source-only Python execution passed; no new GitHub Actions CI run was requested or verified for this Python script."
+  "CI_status": "Local source-only Python execution passed; no new GitHub Actions CI run was requested or verified for this Python script.",
+  "github_runs_inventory_extended_20261105": {
+    "date_local": "2026-11-05 04:05 Asia/Shanghai (scheduled read-only audit)",
+    "stage": "S06/S10 SOURCE_DISCOVERY_PARTIAL; NOT PHYSICS PASS",
+    "SOURCE": "GitHub REST GET /repos/g2066203208-beep/voxel-frontier/actions/runs?per_page=100&page=22..119; 11 targeted GET workflow-run artifacts inventories; Library /WindTower recursive metadata listing (29 entries). No new ZIP payload downloaded.",
+    "READING_LEVEL": "9,728 workflow-run metadata records from 98 pages; 11 per-run artifact-name/size lists; 29 Library file/folder metadata entries; no newly downloaded archive bytes, no ZIP member CRC, no 4-8 m/s original BTS/OUTB.",
+    "REF": "Existing T062 S06_18NTM_INPUT_SOURCE_IDENTITY_20261031.csv and S10_LOW_WIND_30SLOT_SOURCE_READINESS_20261104.json; existing 2026-11-04 artifact-member receipt, Git blob 7d850198f4e6e52cfe41cac21542efa59b65bc25",
+    "STANDARD": "No new licensed IEC 61400-1/6:2025 or GB/NB original clauses read; no clause acceptance",
+    "OFFICIAL": "GitHub REST API and GitHub Actions workflow-run artifact inventories; Library folder metadata is not native OpenFAST evidence",
+    "RUN": "Read-only remote API metadata enumeration; no new solver, no native Abaqus, no new GitHub Actions CI; no local archive CRC/SHA claimed",
+    "FIG": "0",
+    "TAB": "98 page metadata scan; 11 selected run artifact inventories; 16 known ETM 31-segment artifact names from T071/T072; 29 Library items inspected by name",
+    "source_ref_branch_head_at_start": "71770618dea2e6d1113cf0ca41e8c1e1e0d35aa6",
+    "source_receipt_git_blob_sha": "7d850198f4e6e52cfe41cac21542efa59b65bc25",
+    "api_reported_total_at_scan": 11828,
+    "run_pages_this_round": "22..119",
+    "run_metadata_entries_returned": 9728,
+    "page_range_utc": {
+      "newest_in_scope": "2026-10-28T17:07:10Z",
+      "oldest_in_scope": "2026-09-02T14:00:39Z"
+    },
+    "explicit_lowwind_4_to_8_title_hits": 0,
+    "title_filter": "case-insensitive U0[4-8], low.wind, turb.?sim, wind.?bin, ntm, bts, outb, openfast, t071, t072; zero means no explicit 4-8 m/s title, not absence in payload",
+    "new_selected_artifact_inventories": {
+      "run_ids": [
+        37487274310,
+        37259575746,
+        37582521146,
+        37622366681,
+        37574886087,
+        37571444298,
+        37571714059,
+        37574771384,
+        37575813709,
+        37599483065,
+        37621894504
+      ],
+      "total_checked": 11,
+      "runs_with_artifacts": [
+        37582521146,
+        37622366681
+      ],
+      "artifact_count": 16,
+      "artifact_names_case_scope": "T071 U09p343881_ETM_S06 A-D (4); T072 U11p4_ETM_S04 A-D and U19p202140_ETM_S04/S06 A-D (12)",
+      "explicit_4_to_8_NTM_artifact_name_hits": 0,
+      "runs_with_empty_artifact_lists": 9,
+      "no_archive_member_content_read": true
+    },
+    "library_folder_scan": {
+      "path": "/WindTower",
+      "recursive": true,
+      "items_returned": 29,
+      "next_cursor": false,
+      "explicit_4_to_8_NTM_BTS_OUTB_name_hits": 0,
+      "note": "metadata-only filename search; binary archive members not inspected in this round"
+    },
+    "test_results": {
+      "api_pages_returned": "98/98",
+      "metadata_entries": 9728,
+      "artifact_lists": "11/11",
+      "library_list": "1/1",
+      "native_physics_pass": false
+    },
+    "input_sha256": {
+      "github_api_response_bytes": "NOT_CAPTURED (mutable paginated API)",
+      "library_list_response_bytes": "NOT_CAPTURED (metadata only)",
+      "new_archive_bytes": "NONE",
+      "existing_source_sha": "see verified original 2026-11-04 receipt; no new raw byte rehash"
+    },
+    "ERROR_BUDGET": "GitHub run pagination is mutable and scan is non-atomic; adjacent pages can shift, so 9728 entries are page responses not a proven set of unique IDs. Title and artifact-name search cannot exclude unnamed/nested files; 11 inventories are selected, not exhaustive across 11828 runs. Library scan only checks names. No numerical/physics uncertainty newly estimated.",
+    "FAILURE_RECORD": "GitHub connector rejected actions/workflows endpoint with HTTP 400; fallback to supported actions/runs pagination succeeded. Initial oversized parallel batch was rejected by orchestration call limit; reran in eight-page batches, all 98 pages returned.",
+    "HOLD": "No verified 4-8 m/s NTM BTS/OUTB found within checked metadata; cannot assert original source never existed. Low-wind DLC1.2 30 slots and material stress source still absent; no official production or fatigue PASS.",
+    "NEXT_ONE_ACTION": "Search named historical off-Actions originals in local D-drive / additional Library archives for 4-8m/s BTS/OUTB with byte SHA256 and full input identity; if absent, document source loss before any approved minimal new generation."
+  }
 }

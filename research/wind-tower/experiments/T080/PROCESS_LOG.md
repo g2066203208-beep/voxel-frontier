@@ -965,3 +965,10 @@ b14fc9c6bb7679e665b30c050d43ae32cf5f86a107e09eac90a199897b83e957  /mnt/data/s07_
 - **误差预算：** 原始源码SHA严格逐字节；合成整数力矩为解析已知解；历史OUTB量化预算仍按每通道packed半LSB。真实姿态、DCM重建、惯性所有权、100–700s跨批同态、S03/S04身份冲突均NEED_ESTIMATE。RP只提供角位置分量，严格DCM需从内部CoordSys%t1/t2/t3或运动网格姿态提取并独立验证。
 - **失败记录：** 首版内联JS动态编译SyntaxError，未提交；改独立CJS后上述正反例通过。首次收据更新误用不存在的derived_input_sha256字段而失败；回读原生收据四批ED SHA后成功写入。
 - **REF/STANDARD/HOLD：** REF=既有T062测点契约，未新增期刊全文；STANDARD=无新增IEC/GB/NB授权条款，不能称规范PASS；OFFICIAL/RUN/FIG/TAB见上。S06 PARTIAL、S07 BLOCKED、12阶段0/12未晋级，地震E/WE原生0、真实材料寿命0。单一最大HOLD=缺31站同刻精确DCM及惯性归属。下一唯一动作=用已锁定的四批2s ED原件执行最小姿态OutList补采，先检查220接口RP/TP/AL与FL/ML的同态，再决定是否需在v3.5.3源码内加t轴仪表；不启动700s生产。
+
+
+### 2026-11-05 04时｜S06/S10低风速历史Actions元数据扩展追索（0/12）
+- START：本轮read_base_sha=`71770618dea2e6d1113cf0ca41e8c1e1e0d35aa6`；main核为`58c1e545f67b645417d5957189f5dad693d975bb`；PR #42 Open/Draft。已读取AGENTS、README、00_STATUS、00_WORKSPACE_MASTER、T079审查、T080.1/.2/.3、12阶段计划、COMMAND_ROOM与既有T062低风速来源收据。只扩展历史原始归档追索，不重算风场、配筋、雨流或Abaqus。
+- SOURCE/OFFICIAL：GitHub REST Actions run pages 22–119（98页、9728条运行元数据，UTC 2026-09-02至10-28），11个特定历史run的artifact列表，及Library /WindTower递归29项文件名；此前2026-11-04已扫pages 1–21但不是本轮同一时间快照。98/98页与11/11 artifact列表读取成功；明确的U04–U08/low-wind标题0，11个run中仅T071/T072两次有artifact（16件全部为ETM），其余9次空列表。无新原始4–8m/s NTM BTS/OUTB。GitHub工作流清单API HTTP400，改为run分页成功；过大并行调用失败后改8页批次，失败不抹除。
+- REF：继承T062 18NTM原始身份与30槽位缺源表；STANDARD：未读2025 IEC/GB授权条款；RUN：只读远端元数据，无原生solver/CI；FIG=0；TAB=98页/11列表/29 Library条目。输入GitHub分支SHA=`71770618dea2e6d1113cf0ca41e8c1e1e0d35aa6`，原T062来源收据Git blob=`7d850198f4e6e52cfe41cac21542efa59b65bc25`；本轮未下载新ZIP，API可变响应原始字节SHA256=NOT_CAPTURED，禁止伪造hash。误差预算：分页非原子、标题/文件名不可检索ZIP内成员、所选11个artifact列表不是全历史列表。不能宣称11828个run全部artifact穷尽或低风速源永久不存在。
+- END：更新原T062 JSON收据、本T080过程、论文00_STATUS与COMMAND_ROOM；12阶段**0/12未晋级**，S06 PARTIAL/HOLD、S07/S10 BLOCKED，DLC1.2正式0/126，E/WE原生0；冻结T057/T070/main不动，PR仍Draft，不合并，无高成本RUN。唯一下一动作：在Actions以外的D盘/其他历史Library归档逐件寻找4–8m/s BTS/OUTB原件，找到后按字节SHA256、FST/ED/控制器/seed身份验收。
