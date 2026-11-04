@@ -45,3 +45,25 @@
 - **误差预算 / 失败**：打印误差：DEL九位小数、百分数六位小数；原OUTB打包量化half-step逐行保存在上游CSV；三seed子集跨度仅描述六个已见seed的有限样本敏感性，**不覆盖总体采样误差**、ERA5外推、风速分箱、控制器/模型差异、缺失18个bin、材料局部应力与疲劳参数。四项负例均按预期被拒绝；本轮无新的失败CI。
 - **REF / STANDARD / OFFICIAL / FIG**：REF沿用本文件先前原刊/方法分级，不新增声称全文阅读；STANDARD=本轮没有新增2025 IEC/GB/NB授权条款核验；OFFICIAL=OpenFAST历史OUTB来源回证（非规范适用证明）；FIG=0，只有可复算TAB；SOURCE/统计程序级PASS，**S06 PARTIAL、S07/S10 BLOCKED、正式DLC1.2 0/126、E/WE原生0、12阶段0/12**。
 - **HOLD**：九测高历史载荷DEL的seed散布不能替代31站同态六分量、完整DLC1.2风速bin/气候权重或分材料局部应力与寿命。原manifest显示36个BTS原始二进制均为此前延期保留状态（`original_bts_available=0`，`original_bts_deferred=36`），不能把108个inp/sum/dat辅助文件当成36个已归档BTS。
+
+
+## 2026-11-05 03时｜4–8 m/s缺源风箱：切入风速未知的条件概率敏感性（源级计算，0/12）
+
+**本次增量**：复用已存在的[30槽位来源门禁](s10_low_wind_30slot_source_readiness.cjs)及[原收据](S10_LOW_WIND_30SLOT_SOURCE_READINESS_20261104.json)，不再创建新的缺源清单。前次“4–8m/s占89.244%运行小时”只在**假设4m/s为运行下界**的诊断集合[4,25)m/s成立；实际风机控制器切入速度尚无验证，不能把这89.244%写成实际运行时数或疲劳损伤贡献。为定量显示这一条件，新增六个**非规范、非控制器实测**的整数切入速度场景，严格按已有1m/s ERA5分箱统计，不在箱内插值：
+
+| 假设切入速度(m/s) | 诊断合格风速小时（21年） | 其中4–8m/s缺源小时 | 缺源比例 | 对应缺源候选槽位 |
+|---:|---:|---:|---:|---:|
+| 4 | 106900 | 95402 | 89.2441534% | 30 |
+| 5 | 79973 | 68475 | 85.6226476% | 24 |
+| 6 | 55204 | 43706 | 79.1717991% | 18 |
+| 7 | 35210 | 23712 | 67.3445044% | 12 |
+| 8 | 20743 | 9245 | 44.5692523% | 6 |
+| 9 | 11498 | 0 | 0% | 0 |
+
+**SOURCE/输入SHA256/阅读层级**：本轮直接读取[31行ERA5派生分箱](S10_ERA5_2005_2025_HUB_1MS_BINS_20261031.csv)，SHA256=`e4058620a36b23bb218103875d4dc5b0711fc45d418b23a2208c2fc9c16c9102`；[126行来源覆盖矩阵](S10_ERA5_21BIN_6SEED_NTM_SOURCE_COVERAGE_20261031.csv)，SHA256=`d4e25023f343ea76f2de5ce90c7d24dd985df770ec9f4747d203391010431e67`；继承[18组控制器输入](S07_18NTM_ORIGINAL_TURBSIM_CONTROLLER_INPUTS_20261031.csv) SHA256=`be58d33306e6ac101d42b42c7f4d24ea5743662d1a9355aff9862b5a7e0aad45`、[18组输入身份](S06_18NTM_INPUT_SOURCE_IDENTITY_20261031.csv) SHA256=`d57ff9e71b58b531b1aaa357ad7a57a86daf529e061f9d8996cf2453b04a7da5`；后两者本轮仅继承既有程序源锁，**没有恢复任何新BTS/OUTB**。先前[36风场manifest](../../archive/local-assets-20261004/file-manifest.json)仅列36个旧BTS延期/无原件SHA，不代表4–8m/s风场存在；2026-11-04 REST树/Release/最近100个Actions名称扫描的范围限制沿用原收据，不扩大为全库不存在证明。
+
+**RUN/TAB**：既有Node脚本增加`cutInSensitivity`六场景源小时整数oracle（预期eligible=[106900,79973,55204,35210,20743,11498]、missing=[95402,68475,43706,23712,9245,0]），保留原六项异常输入拒绝；六场景数值在原JSON `cut_in_sensitivity.scenarios`，不新建同类文件。上述整数分箱求和已在本轮独立计算核对；新增Node `--check`的GitHub Actions原生日志待回读，不提前声称CI通过。FIG=0；没有TurbSim/OpenFAST生产RUN、没有材料寿命结果。
+
+**REF/STANDARD/OFFICIAL**：REF沿用本文件既有ERA5/风疲劳文献阅读层级；STANDARD=没有新增IEC 61400-1/6授权2025正文/2026勘误核读，不作条款验收；OFFICIAL=历史OpenFAST/TurbSim来源身份登记及GitHub范围有限的库存元数据，不是新风场原件。**假设/误差预算**：整数边界下小时计数精确；切入速度仅为场景而非已确认控制器参数，箱内阈值、机组停机/重启滞回、控制器动态状态、ERA5地形与高度外推、材料局部应力及缺失风载响应误差均未估计，故比例不能转化为疲劳损伤或实际发电小时。**HOLD**：缺4–8m/s原始BTS/OUTB、实际cut-in和运行状态、31站同态载荷、IEC正式DLC1.2及材料局部应力；S06 PARTIAL、S07/S10 BLOCKED、正式DLC1.2 0/126、地震E/WE=0、12阶段0/12。
+
+**下一唯一动作**：按历史Actions原始归档索引进一步查找4–8m/s可恢复的BTS/OUTB或FST/TurbSim输入（优先检查ZIP成员与完整artifact列表，而非仅名称）；找不到则保留明确资源缺口，不启动昂贵求解。
