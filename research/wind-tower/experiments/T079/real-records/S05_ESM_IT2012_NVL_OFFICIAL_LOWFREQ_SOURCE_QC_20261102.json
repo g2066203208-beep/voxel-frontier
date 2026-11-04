@@ -489,7 +489,9 @@
       "optimized_job_status": "completed/success",
       "source_script_sha256": "11808e51c2090ecdb196973e424fa24f77fe7df37ceecb772a2fddbdba8e7885",
       "source_checks": "Both archived Actions ZIP SHA256 checked, original 3x32040 data and four semantic negative tests passed",
-      "full_workflow_status_at_record": "in_progress (do not claim all jobs success)"
+      "full_workflow_status_at_record": "in_progress at earlier log; FINAL completed/success verified",
+      "optimized_full_workflow_final": "completed/success",
+      "full_workflow_final_readback_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41797959345"
     }
   }
 }
