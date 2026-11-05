@@ -30,6 +30,27 @@ jobs:
           echo "FIRST LINES"
           sed -n '1,25p' "$f"
 
+      - name: Validate exact original DISCON low-wind shutdown and reference clamp (NO solver)
+        shell: bash
+        run: |
+          set -euo pipefail
+          f=/tmp/supp/CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN
+          python3 research/wind-tower/experiments/T062/s07_ntm18_original_control_input_gate.py \
+            --self-test \
+            --discon-lowwind-source "$f" \
+            --discon-lowwind-receipt original_discon_lowwind_receipt.json
+          python3 - <<'PY'
+          import json
+          r=json.load(open('original_discon_lowwind_receipt.json'))
+          assert r['original_discon_sha256']=='8f5d7546420ee34838e66b63e4b26d64460be5d5492f99c60b6d1ef977ffc61a'
+          assert r['original_discon_bytes']==17600
+          assert r['original_SD_Mode']==0 and r['original_PS_Mode']==1
+          assert r['original_VS_ControlMode']==2 and r['original_WE_Mode']==2
+          assert r['cut_in_verdict']=='NOT_ESTABLISHED_FROM_DISCON_OR_SERVODYN'
+          assert not r['physical_pass'] and r['stage_passed']==0
+          print('S07_ORIGINAL_DISCON_SHA_SHUTDOWN_SOURCE_PASS_NOT_CUTIN')
+          PY
+          sha256sum original_discon_lowwind_receipt.json
       - name: Read exact original 158m ServoDyn startup card (SOURCE ONLY)
         shell: bash
         run: |
@@ -47,5 +68,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: s07-original-servo-startup-source-qc
-          path: original_servo_startup_receipt.json
+          path: |
+            original_servo_startup_receipt.json
+            original_discon_lowwind_receipt.json
           retention-days: 7
