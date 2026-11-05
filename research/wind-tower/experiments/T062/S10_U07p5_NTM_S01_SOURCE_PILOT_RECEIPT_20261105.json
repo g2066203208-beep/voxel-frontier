@@ -866,7 +866,7 @@
   },
   "lowwind_45_s01_exact_inflow_rebind_20261106": {
     "SOURCE": "Exact 6248-byte original 158m U09p343881_NTM_S01 InflowWind member in static openfast-36-r2 part-001 ZIP; exact original 18NTM identity CSV",
-    "READING_LEVEL": "Full original archived InflowWind card bytes directly read and SHA256 verified by GitHub runner; historical CSV cross-checked; new BTS/OUTB and original controller DLL bytes NOT read or generated",
+    "READING_LEVEL": "Full original archived InflowWind card bytes directly read and SHA256 verified; historical CSV cross-checked; new BTS/OUTB and original controller DLL bytes NOT read or generated",
     "REF": "Existing T062 18NTM source/ROSCO methods; no new paper original pages",
     "STANDARD": "IEC 61400-1/6 2025 authorized clauses NOT READ; NOT DLC1.2 normative acceptance",
     "OFFICIAL": "Original OpenFAST source card, not an official site wind or controller runtime certificate",
