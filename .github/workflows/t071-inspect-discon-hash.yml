@@ -12,6 +12,8 @@ jobs:
           lfs: true
           sparse-checkout: |
             research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip
+            research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip
+            research/wind-tower/experiments/T062/s07_ntm18_original_control_input_gate.py
             research/wind-tower/archive/local-assets-20261004/file-manifest.json
             research/wind-tower/archive/local-assets-20261004-supplement/file-manifest.json
           sparse-checkout-cone-mode: false
@@ -26,3 +28,23 @@ jobs:
           sha256sum "$f"
           echo "FIRST LINES"
           sed -n '1,25p' "$f"
+
+      - name: Read exact original 158m ServoDyn startup card (SOURCE ONLY)
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/original_servo
+          unzip -p research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip \
+            CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_ServoDyn.dat \
+            > /tmp/original_servo/DTU_10MW_RWT_ServoDyn.dat
+          python research/wind-tower/experiments/T062/s07_ntm18_original_control_input_gate.py \
+            --self-test \
+            --servo-startup-source /tmp/original_servo/DTU_10MW_RWT_ServoDyn.dat \
+            --servo-startup-receipt original_servo_startup_receipt.json
+          sha256sum /tmp/original_servo/DTU_10MW_RWT_ServoDyn.dat original_servo_startup_receipt.json
+          cat original_servo_startup_receipt.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: s07-original-servo-startup-source-qc
+          path: original_servo_startup_receipt.json
+          retention-days: 7

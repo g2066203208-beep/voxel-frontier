@@ -75,6 +75,83 @@ def parse_keys(raw, keys):
     require("\ufffd" not in text, "UNDECODABLE_SOURCE_INPUT")
     return {key: parse_key(text, key) for key in keys}
 
+
+# Historical 158m source ServoDyn: exact bytes are inside static part-001.zip,
+# NOT the v3.3 reference file. This checks a source card, not actual cut-in.
+ORIGINAL_SERVO_SHA = "103e7bd71209a095b833ca4ba62627ae7724870615112fdccfbff502076c966e"
+ORIGINAL_SERVO_BYTES = 12108
+STARTUP_KEYS = ("PCMode", "VSContrl", "GenTiStr", "GenTiStp",
+                "SpdGenOn", "TimGenOn", "TimGenOf", "DLL_FileName")
+
+def inspect_servo_startup(raw, expected_sha=ORIGINAL_SERVO_SHA,
+                          expected_bytes=ORIGINAL_SERVO_BYTES):
+    import math
+    require(len(raw) == expected_bytes, "SERVO_ORIGINAL_BYTE_COUNT")
+    require(sha(raw) == expected_sha, "SERVO_ORIGINAL_SHA256")
+    fields = parse_keys(raw, STARTUP_KEYS)
+    require(all(fields.values()), "SERVO_MISSING_REQUIRED_FIELD")
+    require(fields["PCMode"] == "5" and fields["VSContrl"] == "5",
+            "SERVO_ORIGINAL_CONTROLLER_MODE_NOT_5_5")
+    require(fields["GenTiStr"].lower() in ("true", "false") and
+            fields["GenTiStp"].lower() in ("true", "false"),
+            "SERVO_BOOLEAN_FLAG")
+    for key in ("SpdGenOn", "TimGenOn", "TimGenOf"):
+        require(re.fullmatch(r"[+-]?(?:\\d+\\.?\\d*|\\.\\d+)(?:[EeDd][+-]?\\d+)?",
+                             fields[key]) is not None, "SERVO_NUMERIC_" + key)
+        number = float(fields[key].replace("D", "E").replace("d", "e"))
+        require(math.isfinite(number) and number >= 0, "SERVO_FINITE_NONNEG_" + key)
+    require(Path(fields["DLL_FileName"]).name.lower() in ("libdiscon.dll", "libdiscon.so"),
+            "SERVO_DLL_NAME")
+    return {
+        "SOURCE": "Original historical 158m OpenFAST ServoDyn member from SHA-locked static ZIP",
+        "READING_LEVEL": "Original member bytes, not reference-card or derived CSV",
+        "REF": "T062 18NTM original-input gate and 12-stage critical path",
+        "STANDARD": "IEC 61400-1/6:2025 licensed clauses NOT READ; no normative cut-in inference",
+        "OFFICIAL": "OpenFAST ServoDyn field labels in original source card; not ROSCO runtime validation",
+        "RUN": "Python source-only SHA/field/semantic checks; no OpenFAST/Abaqus production run",
+        "FIG": "0", "TAB": "8 original source-card fields",
+        "source_member_sha256": sha(raw), "source_member_bytes": len(raw),
+        "fields": fields,
+        "field_semantics": {
+            "GenTiStr": "True: generator start by TimGenOn; False: by SpdGenOn generator rpm",
+            "GenTiStp": "True: stop by TimGenOf; False: when generator power zero",
+            "SpdGenOn": "HSS generator speed in rpm, not wind speed m/s",
+            "TimGenOn": "generator startup time s; not wind-speed cut-in",
+            "TimGenOf": "generator stop time s; not wind-speed cut-out",
+            "PCMode_VSContrl": "5/5 external DLL; source timers do not validate DLL internal control states"
+        },
+        "cut_in_verdict": "WIND_SPEED_CUT_IN_NOT_ESTABLISHED",
+        "error_budget": "Byte length/SHA exact; field tokens exact; physical cut-in, hysteresis, controller runtime and wind-bin relevance NOT ESTIMATED",
+        "HOLD": "Original controller DLL state and 4-8m/s operating validity not certified; no IEC2025/DLC1.2 or material fatigue PASS",
+        "physical_pass": False, "stage_passed": 0
+    }
+
+def servo_startup_self_test():
+    template = ("5 PCMode\n5 VSContrl\nTrue GenTiStr\nFalse GenTiStp\n"
+                "9999.9 SpdGenOn\n0 TimGenOn\n9999.9 TimGenOf\n"
+                '"libdiscon.dll" DLL_FileName\n')
+    raw = template.encode()
+    good = inspect_servo_startup(raw, sha(raw), len(raw))
+    assert good["cut_in_verdict"] == "WIND_SPEED_CUT_IN_NOT_ESTABLISHED"
+    bad = [
+        (raw, "0"*64, len(raw)),
+        (raw, sha(raw), len(raw)+1),
+        (raw.replace(b"5 PCMode", b"0 PCMode"), None, None),
+        (raw.replace(b"True GenTiStr", b"maybe GenTiStr"), None, None),
+        (raw.replace(b"9999.9 SpdGenOn", b"NaN SpdGenOn"), None, None),
+        (raw.replace(b"0 TimGenOn", b"-1 TimGenOn"), None, None),
+        (raw.replace(b"9999.9 TimGenOf", b"9999.9 TimGenOf\\n1 TimGenOf"), None, None),
+        (raw.replace(b"False GenTiStp\\n", b""), None, None)
+    ]
+    for b, h, n in bad:
+        try:
+            inspect_servo_startup(b, h or sha(b), n or len(b))
+        except ValueError:
+            pass
+        else:
+            raise AssertionError("SERVO_BAD_SOURCE_ACCEPTED")
+    print("S07_ORIGINAL_SERVO_STARTUP_SELFTEST_PASS: 1 positive, 8 negative")
+
 def nominal(case):
     match = re.fullmatch(r"U(09p343881|11p4|19p202140)_NTM_S0[1-6]", case)
     require(match is not None, "UNEXPECTED_CASE:" + case)
@@ -262,11 +339,21 @@ def main():
     p.add_argument("--out", type=Path)
     p.add_argument("--receipt", type=Path)
     p.add_argument("--self-test", action="store_true")
+    p.add_argument("--servo-startup-source", type=Path)
+    p.add_argument("--servo-startup-receipt", type=Path)
     args = p.parse_args()
     if args.self_test:
         self_test()
-        if not args.repo_root:
+        servo_startup_self_test()
+        if not args.repo_root and not args.servo_startup_source:
             return
+    if args.servo_startup_source:
+        require(args.servo_startup_receipt is not None, "SERVO_RECEIPT_PATH_REQUIRED")
+        record = inspect_servo_startup(args.servo_startup_source.read_bytes())
+        args.servo_startup_receipt.parent.mkdir(parents=True, exist_ok=True)
+        args.servo_startup_receipt.write_text(json.dumps(record, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        print("S07_ORIGINAL_SERVO_SOURCE_PASS_NOT_CUTIN", json.dumps(record["fields"], sort_keys=True))
+        return
     require(args.repo_root and args.out and args.receipt, "REQUIRED_ROOT_OUT_RECEIPT")
     data, receipt = build(args.repo_root)
     args.out.parent.mkdir(parents=True, exist_ok=True)
