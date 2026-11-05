@@ -543,14 +543,14 @@
     "REF": "Inherited T077 ASTM-style reversal-stack convention from s10_control_cycle_export_compact.py; no new original literature pages",
     "STANDARD": "No new licensed IEC/GB/NB clauses read; no material fatigue clause PASS",
     "OFFICIAL": "GitHub Actions artifact IDs 11465219800 and 11483249910; original historical OpenFAST provenance inherited",
-    "RUN": "Native GitHub Actions #42081433701 job 127435196509 completed/success: both archived ZIP SHA OK; tracked original Python module self-test; 3x12001 real numerical oracle and endpoint tests; Python stdlib no structural solver",
+    "RUN": "Native GitHub Actions #42081709639 completed/success, native receipt uploaded artifact 13440432467; independently downloaded artifact and verified JSON SHA d6b686b55a0aaa323ec325707b0cbedb053face3df78e43c903cff889f6caa09; Python 3.14.4 original tracked dependency + two SHA-locked ZIPs, 3x12001 true source-level histories",
     "FIG": "0",
     "TAB": "3 controls: open residual vs assumed periodic boundary vs deliberately invalid half-cycle deletion",
     "script_path": "research/wind-tower/experiments/T077/recovery/s10_rainflow_endpoint_boundary_qc.py",
     "script_sha256": "123dc1f3094dea57cfef594a552e5b4bd1ae811f070832d01835030525abe81c",
     "source_original_script_registered_sha256": "4f69b9d6dac90afcfd0e8a7bb5c1c9d5336efb4c12df75790914fa7ae33d8147",
     "source_original_script_git_blob": "944af6c5c5dd8dd8987b66961e0b4d558072f5c4",
-    "local_run_source_module_note": "Local test reconstituted imported source module from repository source; local module SHA differs from registered original. GitHub native CI executes original tracked module; do not claim CI success until checked.",
+    "local_run_source_module_note": "Local 3.13.5 reconstructed module differed bytewise from tracked source; superseded by verified native GitHub Python 3.14.4 run with original module SHA 4f69b9d6dac90afcfd0e8a7bb5c1c9d5336efb4c12df75790914fa7ae33d8147. Native receipt retained as Actions artifact for 90 days; full numeric 3-control summary is persisted in this JSON.",
     "source_sha256": {
       "U09p343881_ETM_S06": {
         "zip": "5acbb25968ce43892157545cded26973623f22b5a137839e5154b293aef167db",
@@ -646,14 +646,24 @@
       }
     ],
     "native_ci": {
-      "run_id": 42081433701,
-      "job_id": 127435196509,
+      "run_id": 42081709639,
+      "job_id": null,
       "status": "completed",
       "conclusion": "success",
-      "run_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/42081433701",
+      "run_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/42081709639",
+      "prior_run_id": 42081433701,
+      "prior_job_id": 127435196509,
       "script_sha256": "123dc1f3094dea57cfef594a552e5b4bd1ae811f070832d01835030525abe81c",
+      "tracked_source_module_sha256": "4f69b9d6dac90afcfd0e8a7bb5c1c9d5336efb4c12df75790914fa7ae33d8147",
       "runner_receipt_sha256": "d6b686b55a0aaa323ec325707b0cbedb053face3df78e43c903cff889f6caa09",
-      "artifact_upload": "Second run triggered by workflow update, ID pending"
+      "artifact_id": 13440432467,
+      "artifact_name": "s10-real-endpoint-qc-native-receipt",
+      "artifact_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/42081709639/artifacts/13440432467",
+      "artifact_retention_days": 90,
+      "verified_artifact_zip_download": true,
+      "verified_native_json_sha256": true,
+      "verified_native_receipt_rows": 3,
+      "python_native_version": "3.14.4"
     }
   }
 }
