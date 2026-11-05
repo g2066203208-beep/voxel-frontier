@@ -1,0 +1,421 @@
+{
+  "status": "S05_REAL_2EVENT_4COMP_PREWINDOW_SENSITIVITY_NUMERICAL_QC_NOT_DESIGN_PASS",
+  "date": "2026-11-05",
+  "test": "S05_PREWINDOW_SELFTEST_PASS_SHIFT_ZERO_3_NEGATIVE",
+  "source_level": "Direct GitHub blob UTF8 reading of four existing 20001-point source-derived acceleration CSVs; original miniSEED/StationXML NOT redownloaded or decoded this run",
+  "SOURCE": [
+    {
+      "event_id": "ci38457511",
+      "station": "CI.CLC",
+      "axis": "HNE",
+      "original_derived_csv_sha256_inherited": "fb0c91fe588ccb4f6bed3d4ac77c4bc148231d8e5df6be19aa9cf3bc3d4c25ef",
+      "git_blob_sha": "82a19fca825aabd7726bdef8c21dfebc5e4b11aa",
+      "source_path": "research/wind-tower/experiments/T079/real-records/USGS_ci38457511/CI_CLC/CI_CLC_HNE_accel_mps2.csv"
+    },
+    {
+      "event_id": "ci38457511",
+      "station": "CI.CLC",
+      "axis": "HNN",
+      "original_derived_csv_sha256_inherited": "d6250274d578b87e4310eadcca5a910dd38cd69ad639dbca435af8e8a0d81e30",
+      "git_blob_sha": "75a0c80d29e41c8fbae9e48a19bc03633d23d5eb",
+      "source_path": "research/wind-tower/experiments/T079/real-records/USGS_ci38457511/CI_CLC/CI_CLC_HNN_accel_mps2.csv"
+    },
+    {
+      "event_id": "ci39493944",
+      "station": "CI.CLC",
+      "axis": "HNE",
+      "original_derived_csv_sha256_inherited": "60a1201a67da19c30c2bfc1e2889b6c492c03d0a5133c296dc4fc68bee3426ae",
+      "git_blob_sha": "adcd9d6d37a47bb162f15a0bae0c84aa15a46a2f",
+      "source_path": "research/wind-tower/experiments/T079/real-records/USGS_ci39493944/CI_CLC/CI_CLC_HNE_accel_mps2.csv"
+    },
+    {
+      "event_id": "ci39493944",
+      "station": "CI.CLC",
+      "axis": "HNN",
+      "original_derived_csv_sha256_inherited": "e54bc509e573daecb31254cdc694d7678aa3460dab5460882e8d1abf97e91e12",
+      "git_blob_sha": "6b1171b06c238f989f32c3eaf028391c11772173",
+      "source_path": "research/wind-tower/experiments/T079/real-records/USGS_ci39493944/CI_CLC/CI_CLC_HNN_accel_mps2.csv"
+    }
+  ],
+  "REF": "Existing T079 method plan and prior baseline 20s analysis; no new journal full-text read",
+  "STANDARD": "No licensed 2025 IEC/GB/NB clause read; no site spectrum",
+  "OFFICIAL": "Existing SCEDC/EarthScope FDSN source receipts; usable low-frequency instrument band not established",
+  "RUN": "V8 JavaScript executed complete 4x20001 real source diagnostic, 5/10/20 s pre-window DC removal and raw, 5 periods, Newmark average acceleration; no native Abaqus/OpenFAST solver; no native Node CI this run",
+  "FIG": "None",
+  "TAB": "4 components x 5 periods x 4 preprocessing cases; two T1 geometric-mean rows",
+  "method": "For each acceleration component subtract mean of [0,5),[0,10),[0,20) seconds; compute 5% damped zero-initial-condition Newmark beta=1/4 gamma=1/2 pseudoSa; no filter or scaling",
+  "assumptions": [
+    "First 20 s treated as candidate pre-event interval for sensitivity ONLY; event onset not independently picked",
+    "Raw CSV derived using response sensitivity only, no instrument deconvolution or passband verification",
+    "Conditional 6.230957762865167 s T1 is 35-element elastic beam proxy, not native verified modal frequency",
+    "No extrapolation to Jiayu site; not a representative independent-event suite"
+  ],
+  "numerical_error_budget": "Double-precision recurrence; time-step and input-processing uncertainties not bounded by this sweep; NEED_DT_CONVERGENCE and independent waveform processing validation",
+  "HOLD": "Low-frequency instrument validity, source waveform processing, site target and code applicability; 0/12 stage PASS",
+  "max_pre5_vs_pre20_relative_by_component": {
+    "ci38457511_HNE": 9.426851987325869e-7,
+    "ci38457511_HNN": 0.000015911255803100267,
+    "ci39493944_HNE": 0.000052189509221913386,
+    "ci39493944_HNN": 0.00140237087498746
+  },
+  "components": [
+    {
+      "event_id": "ci38457511",
+      "station": "CI.CLC",
+      "component": "HNE",
+      "source_sha256_inherited": "fb0c91fe588ccb4f6bed3d4ac77c4bc148231d8e5df6be19aa9cf3bc3d4c25ef",
+      "npts": 20001,
+      "dt_s": 0.01,
+      "baseline_offsets_m_s2": {
+        "raw": 0,
+        "pre5": -0.17817396059735807,
+        "pre10": -0.17817486269837243,
+        "pre20": -0.1781737409147306
+      },
+      "end_drift": {
+        "raw": {
+          "end_velocity_m_s": -35.594264413752335,
+          "end_displacement_m": -3559.7901888839856
+        },
+        "pre5": {
+          "end_velocity_m_s": 0.04052770571913411,
+          "end_displacement_m": 3.6890230631858767
+        },
+        "pre10": {
+          "end_velocity_m_s": 0.04070812592200664,
+          "end_displacement_m": 3.7070650834731143
+        },
+        "pre20": {
+          "end_velocity_m_s": 0.04048376919363827,
+          "end_displacement_m": 3.6846294106362967
+        }
+      },
+      "spectra": [
+        {
+          "period_s": 4,
+          "raw_psa_m_s2": 0.5080675869114878,
+          "pre5_psa_m_s2": 0.3314529955086517,
+          "pre10_psa_m_s2": 0.33145210130856323,
+          "pre20_psa_m_s2": 0.3314532132672195,
+          "raw_vs_pre20_relative": 0.5328485788486859,
+          "pre5_vs_pre20_relative": 6.569813146242124e-7,
+          "pre10_vs_pre20_relative": 0.0000033547982392528505
+        },
+        {
+          "period_s": 6,
+          "raw_psa_m_s2": 0.4312398839845364,
+          "pre5_psa_m_s2": 0.24438848446392245,
+          "pre10_psa_m_s2": 0.2443875384287311,
+          "pre20_psa_m_s2": 0.24438871484554667,
+          "raw_vs_pre20_relative": 0.7645654557211424,
+          "pre5_vs_pre20_relative": 9.426851987325869e-7,
+          "pre10_vs_pre20_relative": 0.000004813711698255672
+        },
+        {
+          "period_s": 6.230957762865167,
+          "raw_psa_m_s2": 0.45266658319398845,
+          "pre5_psa_m_s2": 0.27721564000645094,
+          "pre10_psa_m_s2": 0.27721475218784847,
+          "pre20_psa_m_s2": 0.27721585621097933,
+          "raw_vs_pre20_relative": 0.6329029276358553,
+          "pre5_vs_pre20_relative": 7.799140040063387e-7,
+          "pre10_vs_pre20_relative": 0.000003982539620749098
+        },
+        {
+          "period_s": 8,
+          "raw_psa_m_s2": 0.48932422284226346,
+          "pre5_psa_m_s2": 0.28981470511859075,
+          "pre10_psa_m_s2": 0.2898136951860942,
+          "pre20_psa_m_s2": 0.2898149510606975,
+          "raw_vs_pre20_relative": 0.6884022754912381,
+          "pre5_vs_pre20_relative": 8.486177329211594e-7,
+          "pre10_vs_pre20_relative": 0.000004333367201090247
+        },
+        {
+          "period_s": 10,
+          "raw_psa_m_s2": 0.4046841678478639,
+          "pre5_psa_m_s2": 0.18863908452140785,
+          "pre10_psa_m_s2": 0.18863980032509975,
+          "pre20_psa_m_s2": 0.1886389102065214,
+          "raw_vs_pre20_relative": 1.1452846997727917,
+          "pre5_vs_pre20_relative": 9.240664412823903e-7,
+          "pre10_vs_pre20_relative": 0.000004718637196167423
+        }
+      ]
+    },
+    {
+      "event_id": "ci38457511",
+      "station": "CI.CLC",
+      "component": "HNN",
+      "source_sha256_inherited": "d6250274d578b87e4310eadcca5a910dd38cd69ad639dbca435af8e8a0d81e30",
+      "npts": 20001,
+      "dt_s": 0.01,
+      "baseline_offsets_m_s2": {
+        "raw": 0,
+        "pre5": -0.18917318728398413,
+        "pre10": -0.189174258333378,
+        "pre20": -0.18917525688815973
+      },
+      "end_drift": {
+        "raw": {
+          "end_velocity_m_s": -37.81860092419031,
+          "end_displacement_m": -3783.4953134959787
+        },
+        "pre5": {
+          "end_velocity_m_s": 0.01603653260678472,
+          "end_displacement_m": -0.03156781626568868
+        },
+        "pre10": {
+          "end_velocity_m_s": 0.016250742485558814,
+          "end_displacement_m": -0.0101468283882627
+        },
+        "pre20": {
+          "end_velocity_m_s": 0.016450453441903785,
+          "end_displacement_m": 0.00982426724626562
+        }
+      },
+      "spectra": [
+        {
+          "period_s": 4,
+          "raw_psa_m_s2": 0.959387664224878,
+          "pre5_psa_m_s2": 0.9154083681932865,
+          "pre10_psa_m_s2": 0.9154094111134257,
+          "pre20_psa_m_s2": 0.9154103834428942,
+          "raw_vs_pre20_relative": 0.048041055222231094,
+          "pre5_vs_pre20_relative": 0.0000022014712134406703,
+          "pre10_vs_pre20_relative": 0.0000010621787627523349
+        },
+        {
+          "period_s": 6,
+          "raw_psa_m_s2": 0.6542713284554473,
+          "pre5_psa_m_s2": 0.5532862986670406,
+          "pre10_psa_m_s2": 0.553287441082762,
+          "pre20_psa_m_s2": 0.5532885061733975,
+          "raw_vs_pre20_relative": 0.18251386239786146,
+          "pre5_vs_pre20_relative": 0.00000398979254458045,
+          "pre10_vs_pre20_relative": 0.0000019250185458273767
+        },
+        {
+          "period_s": 6.230957762865167,
+          "raw_psa_m_s2": 0.6068708688727498,
+          "pre5_psa_m_s2": 0.4927761730014671,
+          "pre10_psa_m_s2": 0.4927773050907571,
+          "pre20_psa_m_s2": 0.4927783605539131,
+          "raw_vs_pre20_relative": 0.23152905535581897,
+          "pre5_vs_pre20_relative": 0.000004439221810716808,
+          "pre10_vs_pre20_relative": 0.000002141861819579875
+        },
+        {
+          "period_s": 8,
+          "raw_psa_m_s2": 0.37744190575359315,
+          "pre5_psa_m_s2": 0.17593003701248294,
+          "pre10_psa_m_s2": 0.17592890330677685,
+          "pre20_psa_m_s2": 0.1759278463366139,
+          "raw_vs_pre20_relative": 1.145435834139694,
+          "pre5_vs_pre20_relative": 0.000012452126906896064,
+          "pre10_vs_pre20_relative": 0.000006007975343066996
+        },
+        {
+          "period_s": 10,
+          "raw_psa_m_s2": 0.3508107708866473,
+          "pre5_psa_m_s2": 0.11544644682745382,
+          "pre10_psa_m_s2": 0.11544549622194542,
+          "pre20_psa_m_s2": 0.11544460995873368,
+          "raw_vs_pre20_relative": 2.038779991651811,
+          "pre5_vs_pre20_relative": 0.000015911255803100267,
+          "pre10_vs_pre20_relative": 0.000007676956178833144
+        }
+      ]
+    },
+    {
+      "event_id": "ci39493944",
+      "station": "CI.CLC",
+      "component": "HNE",
+      "source_sha256_inherited": "60a1201a67da19c30c2bfc1e2889b6c492c03d0a5133c296dc4fc68bee3426ae",
+      "npts": 20001,
+      "dt_s": 0.01,
+      "baseline_offsets_m_s2": {
+        "raw": 0,
+        "pre5": -0.1877872084006274,
+        "pre10": -0.18778731116690373,
+        "pre20": -0.18778734853645887
+      },
+      "end_drift": {
+        "raw": {
+          "end_velocity_m_s": -37.55717768756881,
+          "end_displacement_m": -3755.720974753286
+        },
+        "pre5": {
+          "end_velocity_m_s": 0.000263992556575748,
+          "end_displacement_m": 0.0231932592509727
+        },
+        "pre10": {
+          "end_velocity_m_s": 0.0002845458118401511,
+          "end_displacement_m": 0.025248584777413496
+        },
+        "pre20": {
+          "end_velocity_m_s": 0.00029201972286910623,
+          "end_displacement_m": 0.025995975880308983
+        }
+      },
+      "spectra": [
+        {
+          "period_s": 4,
+          "raw_psa_m_s2": 0.3482448415664112,
+          "pre5_psa_m_s2": 0.012182718920932974,
+          "pre10_psa_m_s2": 0.012182821172933397,
+          "pre20_psa_m_s2": 0.012182858355479132,
+          "raw_vs_pre20_relative": 27.584822330286,
+          "pre5_vs_pre20_relative": 0.000011445142189864098,
+          "pre10_vs_pre20_relative": 0.000003052037924938717
+        },
+        {
+          "period_s": 6,
+          "raw_psa_m_s2": 0.3482439541621292,
+          "pre5_psa_m_s2": 0.006585843739232822,
+          "pre10_psa_m_s2": 0.006585944548011515,
+          "pre20_psa_m_s2": 0.006585981205749328,
+          "raw_vs_pre20_relative": 51.87654842654647,
+          "pre5_vs_pre20_relative": 0.00002087259471464302,
+          "pre10_vs_pre20_relative": 0.0000055660252689856155
+        },
+        {
+          "period_s": 6.230957762865167,
+          "raw_psa_m_s2": 0.34824514159606296,
+          "pre5_psa_m_s2": 0.006407602244160854,
+          "pre10_psa_m_s2": 0.006407703424549004,
+          "pre20_psa_m_s2": 0.006407740217417527,
+          "raw_vs_pre20_relative": 53.347574929686225,
+          "pre5_vs_pre20_relative": 0.00002153228002252828,
+          "pre10_vs_pre20_relative": 0.000005741941351288789
+        },
+        {
+          "period_s": 8,
+          "raw_psa_m_s2": 0.34824364427008836,
+          "pre5_psa_m_s2": 0.004119967140644511,
+          "pre10_psa_m_s2": 0.004120072034315103,
+          "pre20_psa_m_s2": 0.004120110177468175,
+          "raw_vs_pre20_relative": 83.52289605616458,
+          "pre5_vs_pre20_relative": 0.00003471674724776367,
+          "pre10_vs_pre20_relative": 0.000009257799289269512
+        },
+        {
+          "period_s": 10,
+          "raw_psa_m_s2": 0.3482445200812167,
+          "pre5_psa_m_s2": 0.002357114792026633,
+          "pre10_psa_m_s2": 0.002357024584514192,
+          "pre20_psa_m_s2": 0.0023569917817823018,
+          "raw_vs_pre20_relative": 146.74956907905823,
+          "pre5_vs_pre20_relative": 0.000052189509221913386,
+          "pre10_vs_pre20_relative": 0.000013917202488223994
+        }
+      ]
+    },
+    {
+      "event_id": "ci39493944",
+      "station": "CI.CLC",
+      "component": "HNN",
+      "source_sha256_inherited": "e54bc509e573daecb31254cdc694d7678aa3460dab5460882e8d1abf97e91e12",
+      "npts": 20001,
+      "dt_s": 0.01,
+      "baseline_offsets_m_s2": {
+        "raw": 0,
+        "pre5": -0.2032740521918441,
+        "pre10": -0.20327344454769888,
+        "pre20": -0.2032734866153779
+      },
+      "end_drift": {
+        "raw": {
+          "end_velocity_m_s": -40.6543669282633,
+          "end_displacement_m": -4065.4440075624616
+        },
+        "pre5": {
+          "end_velocity_m_s": 0.00044351010573627893,
+          "end_displacement_m": 0.03703627446077505
+        },
+        "pre10": {
+          "end_velocity_m_s": 0.00032198127669168686,
+          "end_displacement_m": 0.02488339155631584
+        },
+        "pre20": {
+          "end_velocity_m_s": 0.00033039481249307545,
+          "end_displacement_m": 0.02572474513645444
+        }
+      },
+      "spectra": [
+        {
+          "period_s": 4,
+          "raw_psa_m_s2": 0.3769650755454549,
+          "pre5_psa_m_s2": 0.0040799780892211675,
+          "pre10_psa_m_s2": 0.004080588837641094,
+          "pre20_psa_m_s2": 0.004080546555050733,
+          "raw_vs_pre20_relative": 91.38102554640946,
+          "pre5_vs_pre20_relative": 0.00013931119811920096,
+          "pre10_vs_pre20_relative": 0.000010361991902516758
+        },
+        {
+          "period_s": 6,
+          "raw_psa_m_s2": 0.37696454173935356,
+          "pre5_psa_m_s2": 0.0016686022072881586,
+          "pre10_psa_m_s2": 0.0016679936911166947,
+          "pre20_psa_m_s2": 0.001668035819166767,
+          "raw_vs_pre20_relative": 224.99307365453248,
+          "pre5_vs_pre20_relative": 0.00033955393216587425,
+          "pre10_vs_pre20_relative": 0.000025256082386370248
+        },
+        {
+          "period_s": 6.230957762865167,
+          "raw_psa_m_s2": 0.3769658412951154,
+          "pre5_psa_m_s2": 0.0015824925905436856,
+          "pre10_psa_m_s2": 0.0015819052585360996,
+          "pre20_psa_m_s2": 0.0015819459199899436,
+          "raw_vs_pre20_relative": 237.29249567362692,
+          "pre5_vs_pre20_relative": 0.0003455684210402643,
+          "pre10_vs_pre20_relative": 0.00002570344114177574
+        },
+        {
+          "period_s": 8,
+          "raw_psa_m_s2": 0.37696436743834055,
+          "pre5_psa_m_s2": 0.0007284217415471226,
+          "pre10_psa_m_s2": 0.0007278489838299117,
+          "pre20_psa_m_s2": 0.0007278886362942441,
+          "raw_vs_pre20_relative": 516.8874193688541,
+          "pre5_vs_pre20_relative": 0.0007323994719749975,
+          "pre10_vs_pre20_relative": 0.00005447600409630266
+        },
+        {
+          "period_s": 10,
+          "raw_psa_m_s2": 0.3769650793720813,
+          "pre5_psa_m_s2": 0.00037239288656760636,
+          "pre10_psa_m_s2": 0.0003729547512280332,
+          "pre20_psa_m_s2": 0.0003729158528985324,
+          "raw_vs_pre20_relative": 1009.8582846292959,
+          "pre5_vs_pre20_relative": 0.00140237087498746,
+          "pre10_vs_pre20_relative": 0.00010430859723046854
+        }
+      ]
+    }
+  ],
+  "conditional_proxy_T1_pair_gm": [
+    {
+      "event_id": "ci38457511",
+      "period_s": 6.230957762865167,
+      "raw_gm_psa_m_s2": 0.5241280021641609,
+      "pre5_gm_psa_m_s2": 0.36960149103937784,
+      "pre10_gm_psa_m_s2": 0.36960132374564086,
+      "pre20_gm_psa_m_s2": 0.36960245554270293,
+      "pre5_vs_pre20_relative": 0.0000026095695810912645,
+      "pre10_vs_pre20_relative": 0.0000030622011436554075
+    },
+    {
+      "event_id": "ci39493944",
+      "period_s": 6.230957762865167,
+      "raw_gm_psa_m_s2": 0.362321021717891,
+      "pre5_gm_psa_m_s2": 0.0031843340080047575,
+      "pre10_gm_psa_m_s2": 0.003183768167193372,
+      "pre20_gm_psa_m_s2": 0.0031838182255428983,
+      "pre5_vs_pre20_relative": 0.00016200122787202176,
+      "pre10_vs_pre20_relative": 0.00001572274105499094
+    }
+  ]
+}
