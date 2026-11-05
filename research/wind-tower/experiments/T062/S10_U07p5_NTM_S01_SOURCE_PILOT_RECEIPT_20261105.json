@@ -85,5 +85,54 @@
     "historical_runtime_equivalence_verified": false,
     "verdict": "REFERENCE_DLL_AVAILABLE_AND_SHA_VERIFIED__HISTORICAL_36_DLL_BYTES_NOT_ARCHIVED",
     "HOLD": "Original 36 DLL files excluded from archived ZIPs; matching size and generator script do not prove identical binary; 7.5m/s BTS/OUTB not generated."
+  },
+  "lowwind_45_s01_exact_inflow_rebind_20261106": {
+    "SOURCE": "Exact 6248-byte original 158m U09p343881_NTM_S01 InflowWind member in static openfast-36-r2 part-001 ZIP; exact original 18NTM identity CSV",
+    "READING_LEVEL": "Full original archived InflowWind card bytes directly read and SHA256 verified; historical CSV cross-checked; new BTS/OUTB and original controller DLL bytes NOT read or generated",
+    "REF": "Existing T062 18NTM source/ROSCO methods; no new paper original pages",
+    "STANDARD": "IEC 61400-1/6 2025 authorized clauses NOT READ; NOT DLC1.2 normative acceptance",
+    "OFFICIAL": "Original OpenFAST source card, not an official site wind or controller runtime certificate",
+    "RUN": "Python stdlib ZIP source read, exact one-token BTS reference replacement, reverse-byte test; no TurbSim/OpenFAST/CAE execution",
+    "FIG": 0,
+    "TAB": "One source/child SHA pair, one old/new path, 1 positive and 8 negative synthetic tests",
+    "input_sha256": {
+      "archive_zip": "ddfa02734274ad5bd36e84d975d18544bb5360554e25d71d8689f32313a95267",
+      "source_inflow_card": "d204329f881836ffe0895b7d81aa28cae7540d5df56c754880db3d6c5c11d3a9",
+      "historical_18ntm_csv": "be58d33306e6ac101d42b42c7f4d24ea5743662d1a9355aff9862b5a7e0aad45"
+    },
+    "parent_member": "CASES/U09p343881_NTM_S01/DTU_10MW_InflowWind.dat",
+    "parent_bytes": 6248,
+    "parent_original_absolute_bts_path": "C:\\Users\\tt\\Documents\\Codex\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U09p343881_NTM_S01.bts",
+    "candidate_case_NOT_RUN": "U04p5_NTM_S01",
+    "candidate_card_path": "research/wind-tower/experiments/T062/S07_U04p5_NTM_S01_InflowWind_NOT_RUN.dat",
+    "candidate_card_bytes": 6153,
+    "candidate_card_sha256": "2ee0f78812f675448967a4bbf6d536310d995f5c219a45cf8e4cc488d675ad55",
+    "candidate_relative_bts_path_NOT_PRESENT": "inputs/U04p5_NTM_S01.bts",
+    "changed_fields": [
+      "FileName_BTS"
+    ],
+    "unchanged_fields": [
+      "WindType",
+      "Filename",
+      "RefHt",
+      "HWindSpeed"
+    ],
+    "tests": {
+      "parent_sha_and_size": "PASS",
+      "original_18ntm_csv_identity": "PASS",
+      "unique_token": "PASS",
+      "byte_exact_reverse": "PASS",
+      "synthetic_positive": 1,
+      "synthetic_negative_rejected": 8
+    },
+    "assumptions": "A future staged OpenFAST case may place the new BTS at inputs/U04p5_NTM_S01.bts relative to the applicable runtime base directory. OpenFAST path resolution and FST/ServoDyn/DISCON/DLL wiring have NOT been executed or verified.",
+    "error_budget": "Original and child bytes are SHA256 locked; inverse is byte-exact; runtime relative-path semantics, controller operating state, wind/structure and material-fatigue uncertainties NEED_ESTIMATE",
+    "HOLD": "Candidate BTS does not exist; FST path/runtime base, DLL binary identity, control state, IEC2025 clauses and material local stresses remain unverified",
+    "candidate_BTS_sha256": null,
+    "candidate_OUTB_sha256": null,
+    "physical_pass": false,
+    "formal_dlc12_verified_slots": 0,
+    "stages_passed": 0,
+    "status": "SOURCE_ONLY_CANDIDATE_NOT_RUN"
   }
 }
