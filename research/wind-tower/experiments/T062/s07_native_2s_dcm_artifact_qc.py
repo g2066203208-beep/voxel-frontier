@@ -195,7 +195,7 @@ def paired_native_rp_dcm_bundle(raw):
         raise ValueError('PAIR_OUTB_DESC')
     f.read(desc_len)
     def names():
-        return [f.read(nlen).decode('ascii').strip('\\x00 ').strip() for _ in range(nch+1)]
+        return [f.read(nlen).decode('ascii').replace(chr(0),'').strip() for _ in range(nch+1)]
     channels=names(); units=names(); start=f.tell()
     if len(outb)-start!=nt*nch*2:
         raise ValueError('PAIR_OUTB_PAYLOAD')
