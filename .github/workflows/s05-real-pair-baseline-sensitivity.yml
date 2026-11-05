@@ -118,7 +118,7 @@ jobs:
       - name: Native real-waveform full response removal and PSA
         run: |
           set -euo pipefail
-          python s05_clc_full_response_waveform_qc.py --sensitivity --source-dir source --output "$RUNNER_TEMP/S05_CLC_FULL_RESPONSE_REMOVAL_RECEIPT_20261105.json"
+          python s05_clc_full_response_waveform_qc.py --sensitivity --snr --source-dir source --output "$RUNNER_TEMP/S05_CLC_FULL_RESPONSE_REMOVAL_RECEIPT_20261105.json"
           sha256sum "$RUNNER_TEMP/S05_CLC_FULL_RESPONSE_REMOVAL_RECEIPT_20261105.json" s05_clc_full_response_waveform_qc.py
       - name: Preserve numeric receipt and logs as workflow artifact
         if: always()
@@ -158,11 +158,14 @@ jobs:
                   if a['period_s']!=b['period_s'] or abs(a['full_response_psa_m_s2']-b['full_response_psa_m_s2'])>1e-9*max(1,abs(a['full_response_psa_m_s2'])):
                       raise RuntimeError('BASELINE_SPECTRUM_CHANGED')
           existing['parameter_sensitivity']=computed['parameter_sensitivity']
+          if computed.get('low_frequency_snr',{}).get('status')!='S05_REAL_PREORIGIN_CHRONOLOGY_AND_LOW_FREQ_POWER_QC_NOT_BAND_PASS':
+              raise RuntimeError('LOW_FREQUENCY_SNR_MISSING')
+          existing['low_frequency_snr']=computed['low_frequency_snr']
           data=(json.dumps(existing,ensure_ascii=False,indent=2)+'\n').encode()
           blob=hashlib.sha1(b'blob '+str(len(data)).encode()+bytes([0])+data).hexdigest()
           if meta['sha']==blob:
               print('EXISTING_IDENTICAL_SENSITIVITY_RECEIPT',path);raise SystemExit(0)
-          payload={'message':'research(S05): persist original-waveform response processing sensitivity',
+          payload={'message':'research(S05): persist original-waveform response sensitivity and pre-origin 0.1-0.25Hz QC',
                    'branch':branch,'sha':meta['sha'],'content':base64.b64encode(data).decode()}
           up=subprocess.run(['gh','api','--method','PUT',f'repos/{repo}/contents/{path}','--input','-'],input=json.dumps(payload),capture_output=True,text=True)
           if up.returncode:raise RuntimeError(up.stderr)
