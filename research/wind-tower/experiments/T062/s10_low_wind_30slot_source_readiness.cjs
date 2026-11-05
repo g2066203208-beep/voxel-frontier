@@ -170,9 +170,58 @@ function negativeTests(era,coverage,controller,identity){
  cases.forEach((x,i)=>{ok(x.some((s,j)=>s!==[era,coverage,controller,identity][j]),"MUTATION_NOOP_"+i);let rejected=false;try{if(i===0)build(...x);else{const keys=["era","coverage","controller","identity"],unlocked=Object.fromEntries(keys.map((k,j)=>[k,sha256(x[j])]));build(...x,unlocked);}}catch(e){rejected=true;}ok(rejected,"NEGATIVE_ACCEPTED_"+i);});
  return cases.length;
 }
-module.exports={build,negativeTests,controllerCutInAudit,controllerNegativeTests};
+
+function originalOperatingFloorAudit(csvText,expectedHash="0f577f3197870a1350c740c2e0c118073fb9b6f796b4c471765c6f616d5a1b04",hashFn=sha256){
+ ok(hashFn(csvText)===expectedHash,"OPERATING_SOURCE_SHA256_MISMATCH");
+ const rows=parseCsv(csvText), refRpm=36.6*60/(2*Math.PI);
+ ok(rows.length===18,"OPERATING_EXPECT_18_CASES");
+ const groups={},seen=new Set();
+ for(const row of rows){
+  ok(!seen.has(row.case),"OPERATING_DUPLICATE_CASE");seen.add(row.case);
+  const match=/^(U09p343881|U11p4|U19p202140)_NTM_S(0[1-6])$/.exec(row.case);
+  ok(match,"OPERATING_CASE_ID");
+  ok(row.formal_DLC12_reuse==="HOLD_NOT_VERIFIED","OPERATING_FORMAL_STATUS");
+  ok(Number(row.n_samples)===12001&&Number(row.dt_s)===0.05&&Number(row.first_time_s)===100&&Number(row.last_time_s)===700&&Number(row.source_channel_count)===295,"OPERATING_SOURCE_GRID");
+  ok(/^[a-f0-9]{64}$/.test(row.source_outb_sha256),"OPERATING_OUTB_SHA");
+  const numeric=["GenSpeed_min","GenSpeed_p05","GenSpeed_mean","GenSpeed_p95","GenSpeed_max","GenPwr_min","BldPitch1_mean","power_rotor_active_fraction","median_positive_speed_ratio"];
+  ok(numeric.every(k=>row[k]!==""&&Number.isFinite(Number(row[k]))),"OPERATING_NONFINITE");
+  ok(Number(row.GenSpeed_min)<=Number(row.GenSpeed_p05)&&Number(row.GenSpeed_p05)<=Number(row.GenSpeed_mean)&&Number(row.GenSpeed_mean)<=Number(row.GenSpeed_max),"OPERATING_SPEED_ORDER");
+  ok(Number(row.power_rotor_active_fraction)>=0&&Number(row.power_rotor_active_fraction)<=1,"OPERATING_ACTIVITY_RANGE");
+  const g=groups[match[1]]??={cases:[],p05_below_reference_floor:0,min_below_reference_floor:0,all_heuristically_active:true,minimum_generator_power_kW:Infinity,minimum_gen_speed_rpm:Infinity,maximum_gen_speed_min_rpm:-Infinity};
+  g.cases.push(row.case);
+  if(Number(row.GenSpeed_p05)<refRpm)g.p05_below_reference_floor++;
+  if(Number(row.GenSpeed_min)<refRpm)g.min_below_reference_floor++;
+  g.all_heuristically_active&&=Number(row.power_rotor_active_fraction)===1;
+  g.minimum_generator_power_kW=Math.min(g.minimum_generator_power_kW,Number(row.GenPwr_min));
+  g.minimum_gen_speed_rpm=Math.min(g.minimum_gen_speed_rpm,Number(row.GenSpeed_min));
+  g.maximum_gen_speed_min_rpm=Math.max(g.maximum_gen_speed_min_rpm,Number(row.GenSpeed_min));
+ }
+ ok(Object.keys(groups).length===3&&Object.values(groups).every(g=>g.cases.length===6),"OPERATING_GROUP_COUNTS");
+ return {reference_speed_floor_rpm:refRpm,reference_speed_floor_source:"VS_MinOMSpd=36.6rad/s, not wind cut-in",window_s:[100,700],dt_s:0.05,source_cases:18,source_outb_channel_count:295,groups,interpretation:"At 9.343881m/s all 6 seeds have GenSpeed_p05 below reference floor while GenPwr>1kW and RotSpeed>0.1rpm at every sample. Controller reference speed lower bound is NOT an enforced stop/cut-in boundary. p05 evidence implies at least 601 sampled points per seed below floor, not necessarily contiguous.",formal_DLC12_pass:false};
+}
+
+module.exports={build,negativeTests,controllerCutInAudit,controllerNegativeTests,originalOperatingFloorAudit};
 if(require.main===module){
  const fs=require("fs"),path=require("path"),dir=__dirname;
+
+ if(process.argv.includes("--floor-check")){
+  const csvText=fs.readFileSync(path.join(dir,"S07_18NTM_ORIGINAL_OPERATING_STATE_QC_20261101.csv"),"utf8");
+  const result=originalOperatingFloorAudit(csvText);
+  const receipt=JSON.parse(fs.readFileSync(path.join(dir,"S07_18NTM_ORIGINAL_OPERATING_STATE_RECEIPT_20261101.json"),"utf8"));
+  ok(JSON.stringify(result)===JSON.stringify(receipt.speed_floor_crosscheck_20261105),"OPERATING_FLOOR_RECEIPT_DRIFT");
+  const mutations=[
+   csvText.replace("U09p343881_NTM_S02","U09p343881_NTM_S01"),
+   csvText.replace(",334.133091698,",",NaN,"),
+   csvText.replace("U09p343881_NTM_S02","U09p343881_NTM_S07"),
+   csvText.replace("HOLD_NOT_VERIFIED","PASS"),
+   csvText.split("\n").slice(0,-2).join("\n")
+  ];
+  mutations.forEach((mut,i)=>{let rejected=false;try{originalOperatingFloorAudit(mut,sha256(mut));}catch(e){rejected=true;}ok(rejected,"OPERATING_FLOOR_NEGATIVE_ACCEPTED_"+i);});
+  let rejected=false;try{originalOperatingFloorAudit(csvText,"0".repeat(64));}catch(e){rejected=true;}ok(rejected,"OPERATING_FLOOR_SHA_TAMPER_ACCEPTED");
+  console.log("S10_OPERATING_FLOOR_SOURCE_QC_PASS_NOT_CUTIN",JSON.stringify({reference_speed_floor_rpm:result.reference_speed_floor_rpm,p05_below_floor_9mps:result.groups.U09p343881.p05_below_reference_floor,negative_tests:6,formal_DLC12_pass:false}));
+  process.exit(0);
+ }
+
  const names=["S10_ERA5_2005_2025_HUB_1MS_BINS_20261031.csv","S10_ERA5_21BIN_6SEED_NTM_SOURCE_COVERAGE_20261031.csv","S07_18NTM_ORIGINAL_TURBSIM_CONTROLLER_INPUTS_20261031.csv","S06_18NTM_INPUT_SOURCE_IDENTITY_20261031.csv"];
  const inputs=names.map(n=>fs.readFileSync(path.join(dir,n),"utf8"));
   const disconReceiptText=fs.readFileSync(path.join(dir,"S07_18NTM_DISCON_VS_OPERATING_RECEIPT_20261101.json"),"utf8");
