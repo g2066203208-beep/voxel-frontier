@@ -854,5 +854,127 @@
       }
     ],
     "HOLD": "Cannot infer reliable 4-10s signal band from a single 20s pre-event window; site target spectrum and instrument self-noise still absent; S05 PARTIAL, E/WE=0, 0/12"
+  },
+  "noise_window_qc": {
+    "status": "S05_PRE_EVENT_VARIABILITY_CANDIDATE_TRIGGER_NOT_SITE_PASS",
+    "SOURCE": {
+      "mseed_sha256": "9bfcd3ab44ade97a5ec1d586d0e4240c9b2d14347ff2ec3d86e8c75df0dd58ab",
+      "stationxml_sha256": "31aff27345c4795d37b10d1affce7e2a3504e5d5a93cd0758bc8781a4da32e4c",
+      "csv_sha256": {
+        "CI.CLC..HNE": "fb0c91fe588ccb4f6bed3d4ac77c4bc148231d8e5df6be19aa9cf3bc3d4c25ef",
+        "CI.CLC..HNN": "d6250274d578b87e4310eadcca5a910dd38cd69ad639dbca435af8e8a0d81e30"
+      }
+    },
+    "OFFICIAL": "SCEDC original SHA-checked by parent process",
+    "REF": "Hann periodogram; demeaned short-window RMS; 1s first-difference energy heuristic",
+    "STANDARD": "IEC2025/GB/NB licensed clauses and Jiayu site spectrum not checked",
+    "RUN": "Native source-level QC, no structural E/WE",
+    "FIG": 0,
+    "TAB": "2 channels x 4 pre-5s + 3 overlapping pre-10s + 5 overlapping shaking-20s",
+    "event_origin_from_record_start_s": 33.0017,
+    "parameters": {
+      "dt_s": 0.01,
+      "band_hz": [
+        0.1,
+        0.25
+      ],
+      "pre10s_resolution_hz": 0.1,
+      "pre20s_resolution_hz": 0.05,
+      "trigger_rms_window_s": 1,
+      "trigger_threshold_ratio": 8,
+      "trigger_sustain_s": 0.5,
+      "trigger_search_start_s": 20
+    },
+    "assumptions": [
+      "Only 20s pre-origin; 10s windows overlap, 0.1Hz has ONE cycle",
+      "Shaking windows overlap, their range is NOT a confidence interval",
+      "Difference trigger is NOT verified P/S phase onset",
+      "Sensitivity-only CSV, not fully deconvolved; self-noise unverified"
+    ],
+    "error_budget": "Double precision; 10s 0.1Hz bin spacing; inadequate low-frequency degrees of freedom; no approved acceptance threshold",
+    "test": "3_POSITIVE_3_NEGATIVE_PASS",
+    "channels": [
+      {
+        "pre5s_demeaned_rms_m_s2": [
+          0.00023583857709567785,
+          9.273149931418789e-05,
+          0.00012413765364769147,
+          6.0780265742876066e-05
+        ],
+        "pre5s_rms_cv": 0.5933584002454709,
+        "pre10s_overlapping_power_m2_s4": [
+          2.800312020768404e-11,
+          2.177302960403772e-11,
+          1.0662532092104954e-12
+        ],
+        "pre10s_power_max_min_ratio": 26.263105204080823,
+        "pre20s_bandpower_m2_s4": 2.4553879030029925e-11,
+        "shaking_20s_overlapping_power_m2_s4": [
+          0.0018085228652244335,
+          0.0005814309957368593,
+          7.217093653971508e-05,
+          5.325663022409497e-05,
+          2.191019785681013e-05
+        ],
+        "shaking_over_pre20_db": [
+          78.67203892067529,
+          73.7437806816257,
+          64.68242229171538,
+          63.36253571426957,
+          59.50526187543949
+        ],
+        "shaking_db_min_max": [
+          59.50526187543949,
+          78.67203892067529
+        ],
+        "difference_baseline_rms_m_s2_per_sample": 0.00021206573347632899,
+        "trigger_threshold_m_s2_per_sample": 0.0016965258678106319,
+        "candidate_1s_window_start_trigger_s": 32.97,
+        "candidate_trigger_is_confirmed_phase": false,
+        "channel": "HNE",
+        "trigger_relative_to_catalog_origin_s": -0.03170000000000073
+      },
+      {
+        "pre5s_demeaned_rms_m_s2": [
+          0.0002859153618234329,
+          0.000107358656644499,
+          0.00013501777239574255,
+          7.130344420504668e-05
+        ],
+        "pre5s_rms_cv": 0.6294608666834066,
+        "pre10s_overlapping_power_m2_s4": [
+          4.655182045166773e-11,
+          4.527079439459842e-11,
+          2.5021796482283683e-11
+        ],
+        "pre10s_power_max_min_ratio": 1.8604507667795982,
+        "pre20s_bandpower_m2_s4": 4.5451513143512027e-11,
+        "shaking_20s_overlapping_power_m2_s4": [
+          0.0010126244632120852,
+          0.000128942661156951,
+          0.00014820348250588162,
+          2.5654741297916513e-05,
+          5.817641754103984e-06
+        ],
+        "shaking_over_pre20_db": [
+          73.47900068901933,
+          64.5284828300564,
+          65.13310062814384,
+          57.51619293532988,
+          51.07198628154421
+        ],
+        "shaking_db_min_max": [
+          51.07198628154421,
+          73.47900068901933
+        ],
+        "difference_baseline_rms_m_s2_per_sample": 0.00026374029103286615,
+        "trigger_threshold_m_s2_per_sample": 0.002109922328262929,
+        "candidate_1s_window_start_trigger_s": 32.8,
+        "candidate_trigger_is_confirmed_phase": false,
+        "channel": "HNN",
+        "trigger_relative_to_catalog_origin_s": -0.20170000000000243
+      }
+    ],
+    "HOLD": "Noise stationarity and usable 4-10s band unproven; no Jiayu target spectrum; S05 PARTIAL E/WE=0 0/12"
   }
 }
