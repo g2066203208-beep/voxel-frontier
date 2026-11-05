@@ -340,11 +340,74 @@
   "stages_passed": 0,
   "status": "S07_18_ORIGINAL_NTM_OPERATING_STATE_SOURCE_NUMERIC_QC_NOT_DLC12",
   "summary": {
-    "active_heuristic_fraction_max": 1.0,
-    "active_heuristic_fraction_min": 1.0,
+    "active_heuristic_fraction_max": 1,
+    "active_heuristic_fraction_min": 1,
     "formal_dlc12_approved": 0,
     "max_active_transitions": 0,
-    "max_pitch_spread_deg": 0.0,
+    "max_pitch_spread_deg": 0,
     "total_quantization_ambiguous_samples": 0
+  },
+  "speed_floor_crosscheck_20261105": {
+    "reference_speed_floor_rpm": 349.50425502980215,
+    "reference_speed_floor_source": "VS_MinOMSpd=36.6rad/s, not wind cut-in",
+    "window_s": [
+      100,
+      700
+    ],
+    "dt_s": 0.05,
+    "source_cases": 18,
+    "source_outb_channel_count": 295,
+    "groups": {
+      "U09p343881": {
+        "cases": [
+          "U09p343881_NTM_S01",
+          "U09p343881_NTM_S02",
+          "U09p343881_NTM_S03",
+          "U09p343881_NTM_S04",
+          "U09p343881_NTM_S05",
+          "U09p343881_NTM_S06"
+        ],
+        "p05_below_reference_floor": 6,
+        "min_below_reference_floor": 6,
+        "all_heuristically_active": true,
+        "minimum_generator_power_kW": 1048.43638981,
+        "minimum_gen_speed_rpm": 320.163245265,
+        "maximum_gen_speed_min_rpm": 335.152138615
+      },
+      "U11p4": {
+        "cases": [
+          "U11p4_NTM_S01",
+          "U11p4_NTM_S02",
+          "U11p4_NTM_S03",
+          "U11p4_NTM_S04",
+          "U11p4_NTM_S05",
+          "U11p4_NTM_S06"
+        ],
+        "p05_below_reference_floor": 0,
+        "min_below_reference_floor": 3,
+        "all_heuristically_active": true,
+        "minimum_generator_power_kW": 2342.18992892,
+        "minimum_gen_speed_rpm": 328.48248293,
+        "maximum_gen_speed_min_rpm": 379.889213255
+      },
+      "U19p202140": {
+        "cases": [
+          "U19p202140_NTM_S01",
+          "U19p202140_NTM_S02",
+          "U19p202140_NTM_S03",
+          "U19p202140_NTM_S04",
+          "U19p202140_NTM_S05",
+          "U19p202140_NTM_S06"
+        ],
+        "p05_below_reference_floor": 0,
+        "min_below_reference_floor": 0,
+        "all_heuristically_active": true,
+        "minimum_generator_power_kW": 4943.8760262,
+        "minimum_gen_speed_rpm": 358.091488383,
+        "maximum_gen_speed_min_rpm": 410.947480913
+      }
+    },
+    "interpretation": "At 9.343881m/s all 6 seeds have GenSpeed_p05 below reference floor while GenPwr>1kW and RotSpeed>0.1rpm at every sample. Controller reference speed lower bound is NOT an enforced stop/cut-in boundary. p05 evidence implies at least 601 sampled points per seed below floor, not necessarily contiguous.",
+    "formal_DLC12_pass": false
   }
 }
