@@ -232,7 +232,25 @@ if(require.main===module){
  ok(n===6,"NEGATIVE_COUNT");
  if(process.argv.includes("--check")){
   ok(fs.readFileSync(path.join(dir,"S10_LOW_WIND_30SLOT_SOURCE_READINESS_20261104.csv"),"utf8")===v.csv,"COMMITTED_CSV_MISMATCH");
-  ok(fs.readFileSync(path.join(dir,"S10_LOW_WIND_30SLOT_SOURCE_READINESS_20261104.json"),"utf8")===v.receipt,"COMMITTED_RECEIPT_MISMATCH");
+  // The committed receipt intentionally carries later, independently SHA-locked
+  // original ServoDyn/DISCON provenance appended after this generator's first run.
+  // Check generated numerical/core source fields exactly; verify append-only source
+  // identity explicitly rather than rejecting legitimate extra provenance.
+  const current=JSON.parse(fs.readFileSync(path.join(dir,"S10_LOW_WIND_30SLOT_SOURCE_READINESS_20261104.json"),"utf8"));
+  const generated=JSON.parse(v.receipt);
+  for(const key of ["inventory_snapshot","results","cut_in_sensitivity","tests","stage_passed"]){
+   ok(JSON.stringify(current[key])===JSON.stringify(generated[key]),"COMMITTED_CORE_RECEIPT_MISMATCH_"+key);
+  }
+  for(const [key,value] of Object.entries(generated.input_sha256)){
+   ok(current.input_sha256[key]===value,"COMMITTED_SOURCE_HASH_MISMATCH_"+key);
+  }
+  ok(current.input_sha256.original_servodyn_full_card==="103e7bd71209a095b833ca4ba62627ae7724870615112fdccfbff502076c966e","COMMITTED_ORIGINAL_SERVO_SHA");
+  ok(current.controller_cutin_evidence.verdict===generated.controller_cutin_evidence.verdict,"COMMITTED_CUTIN_VERDICT_DRIFT");
+  ok(current.controller_cutin_evidence.original_discon_sha256===generated.controller_cutin_evidence.original_discon_sha256,"COMMITTED_DISCON_IDENTITY_DRIFT");
+  ok(current.controller_cutin_evidence.original_servodyn_source_card_20261105?.fields?.PCMode==="5"&&current.controller_cutin_evidence.original_servodyn_source_card_20261105?.fields?.VSContrl==="5","COMMITTED_ORIGINAL_SERVO_MODE_DRIFT");
+  ok(current.controller_cutin_evidence.original_discon_lowwind_source_20261105?.physical_pass===false,"COMMITTED_ORIGINAL_DISCON_PHYSICAL_HOLD");
+  ok(current.stage_passed===0&&current.tests.physical_pass===false&&current.results.formal_dlc12_verified_slots===0,"COMMITTED_FALSE_PASS");
+
  }else{process.stdout.write(v.csv);}
  console.log("S10_LOW_WIND_30SLOT_SOURCE_READINESS_QC_PASS_NOT_DLC12 negative_tests="+(n+cn)+" source_missing=30");
 }
