@@ -1,3 +1,13 @@
+
+## 2026-11-05 16:10｜S05 两事件四分量真实时程前段去均值敏感性
+
+- **SOURCE**：已归档SCEDC/EarthScope FDSN ci38457511/ci39493944，CI.CLC HNE/HNN四件20001点dt=0.01s派生加速度CSV，原件SHA256（沿用登记）与本轮直接读取Git blob SHA逐件列于[JSON收据](real-records/S05_USGS_TWO_EVENT_CLC_PREWINDOW_QC_20261105.json)。本轮未重新下载或解码miniSEED/StationXML。
+- **REF/STANDARD/OFFICIAL**：沿用T079方法与原FDSN收据；未新读论文全文或授权IEC2025/GB/NB条文；仪器低频可用性仍未知。
+- **RUN/TAB**：[源级程序](s05_pre_event_window_qc.cjs)在V8实际计算4分量×5周期×4处理方案=80项PSA，5%阻尼Newmark平均加速度法；程序含Node本地复现时的SHA256拒绝门禁，本轮未执行Node CLI/Actions。1项常数平移不变性、零响应及3项异常拒绝通过。2019条件性T1水平GM：raw=0.5241280021641609，pre5=0.36960149103937784，pre10=0.36960132374564086，pre20=0.36960245554270293 m/s²；2020相应raw=0.362321021717891，pre5=0.0031843340080047575，pre10=0.003183768167193372，pre20=0.0031838182255428983 m/s²。四分量×五周期最大pre5/pre20相对差=0.00140237087498746（0.140237%）。完整谱值、去均值offset、积分末端漂移和分量源哈希在JSON；FIG=未新增。
+- **误差预算/假设**：前5/10/20s均视作*候选*前段，未独立拾取初至；该测试只研究常数DC处理窗，不是滤波、基线漂移修正、仪器去卷积、dt收敛或场址谱匹配。T1=6.230957762865167s来自未经原生验证的梁代理。数值积分dt与原始仪器低频不确定性未定量，NEED_ESTIMATE。
+- **HOLD/状态**：S05 PARTIAL，S08/S09 BLOCKED，E/WE=0，0/12阶段PASS；未经验证的raw大差异不能由prewindow稳定性消除。未运行高成本求解，不碰冻结T057/T070或main。
+- **下一唯一动作**：复用四条时程，检查Newmark dt降采样对长周期PSA的离散误差，分开报告采样数值稳定与仪器低频有效性。
+
 ### 2026-11-04 23:10｜S05 ESM3 NVL官方CV↔MP三轴同窗相关性源级实算（0/12）
 - **START / SOURCE / OFFICIAL / 阅读层级**：继承本轮指挥室23:06开工回执（初始read_base_sha=`911297367c7e05a0af3337159c565193a53fcae6`）。直接读[ESM eventdata官方query-options](https://esm-db.eu/esmws/eventdata/1/query-options.html)：CV是转换为cm/s²的波形、MP是人工处理波形；二者都**不是RAN原始HG采集样本**。原RAN[SeedLink共享说明](https://ran.protezionecivile.it/IT/sharing.php)描述实时数据服务及申请/访问限制，不能将它当作2012历史HG档案。新程序[CV↔MP源级脚本](s05_esm_cv_mp_axis_qc.py)在GitHub Actions [#41854911808](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41854911808)从官方ESM3 HTTP实际取得CV/MP两份DYNA ZIP，HTTP 200；原ZIP SHA256分别`bd21f0836109411ab010c2f3d773a7b06b967a1bc61983868f8d9e81091a3916`、`2a9c510df0f03f09ea178547d3207d966b68bf0559bf09757c020421218c31e0`；各分量数值SHA见[既有来源收据](real-records/S05_ESM_IT2012_NVL_OFFICIAL_LOWFREQ_SOURCE_QC_20261102.json)。原始字节/JSON在[artifact #13337001850](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41854911808/artifacts/13337001850)，外层artifact SHA256=`977148e07100641811116a8c56557fa5132455420101cf7fa9bc331c78ad3de9`，JSON SHA256=`18ad975e1bb62b878d78c39c7a0528b450f3e16ec71ee2320b103f8ee8d1b57c`。大型ZIP不入PR源码。
 - **真实失败→修复**：首轮[Actions #41854682076](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41854682076)虽源获取成功，但CV三分量样本数分别31544/31541/31540，而MP均32040；原程序严禁非完全同长并正确返回`HOLD_CV_MP_TIME_OR_STREAM_GRID`。本轮不填充或臆造样本，修订为共同首时刻`20120520_020336.000`、dt=0.005s下**31540点/157.695s的共同前缀**；CV排除尾部4/1/0点，MP每分量排除尾部500点。新程序SHA256=`159d41cc581f03538d12a69645ce8b9a675021213768449d5280a330aa739f03`。
