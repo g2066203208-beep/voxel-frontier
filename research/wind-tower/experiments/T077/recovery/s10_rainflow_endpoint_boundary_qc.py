@@ -147,7 +147,7 @@ def full_grid_selftest():
     assert abs(stats(left)['m4_MPa4_cycles'] + stats(right)['m4_MPa4_cycles'] - 217.) < 1e-12
     assert abs((217. / 272.) ** .25 - 0.9450889979585868) < 1e-12
     assert len(a[:3]) + len(a[2:]) - 1 == len(a)
-    for bad in ([(1., 0., .5)], [(float('nan'), 0., .5)], [(1., 0., .75)]):
+    for bad in ([(0., 0., .5)], [(float('nan'), 0., .5)], [(1., 0., .75)]):
         try:
             stats(bad)
         except ValueError:
