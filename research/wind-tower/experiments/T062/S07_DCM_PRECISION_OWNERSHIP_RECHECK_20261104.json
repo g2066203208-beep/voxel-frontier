@@ -320,7 +320,7 @@
     "OFFICIAL": "Native probe writes m%CoordSys%t1,-t3,t2 at node220; independently archived packed OUTB TwHt9RPxi/yi/zi; source probe and audit verified by SHA/CRC",
     "RUN": {
       "kind": "READ_ONLY_PYTHON_SOURCE_BYTE_REPLAY_NOT_SOLVER",
-      "local_python_version": "3.11+ standard library; local CPython checked",
+      "local_python_version": "CPython 3.13.5 (local equivalent helper; stdlib)",
       "existing_script": "research/wind-tower/experiments/T062/s07_native_2s_dcm_artifact_qc.py",
       "committed_script_sha256": "05109ac914073ac88df99beb028c99ef4037afa17d9887b3c6c44c4b32b9eb87",
       "local_equivalent_helper_sha256": "ecb06f6266a1ce9b9136eb910921264e72ea353c238be917e528799a5f08434c",
