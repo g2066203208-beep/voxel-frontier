@@ -1,3 +1,8 @@
+## 2026-11-06 00时｜S05 CI.CLC震前噪声短窗变异与候选触发：源级原生QC（0/12）
+- **SOURCE/OFFICIAL/阅读层级**：沿用2019 Ridgecrest ci38457511 CI.CLC官方原始miniSEED（SHA256 `9bfcd3ab44ade97a5ec1d586d0e4240c9b2d14347ff2ec3d86e8c75df0dd58ab`）、StationXML（`31aff27345c4795d37b10d1affce7e2a3504e5d5a93cd0758bc8781a4da32e4c`）及已核SHA的双水平派生CSV，原生Actions执行前再次校验原字节；本轮未下载新规范/期刊原页。
+- **REF/STANDARD/RUN**：SciPy Hann periodogram、5s去均值RMS、10s低频功率、1s一阶差分RMS阈值（8倍、连续0.5s）仅为候选瞬态触发，不是P/S震相识别；IEC2025/GB/NB授权条款及嘉鱼目标谱未新增核读；原生非生产QC由现有S05 Actions自动运行，工作流提交`28eb2328ec50162f8ee1960b5326c1d33b9f004c`，程序提交`30229b076bd1ce0a84dc6824f0cb96ab006f92e9`。原生RUN状态/实测数值需从CI及原收据回读，不以提交成功冒充计算PASS。
+- **FIG/TAB/假设/误差预算/HOLD**：FIG=0；TAB目标为2通道×(4个5s震前窗+3个重叠10s震前窗+5个重叠20s震动窗)；震前只有20s，10s窗在0.1Hz仅1周期、窗间相关，谱方差大且仪器自噪声未知，不能检验0.1Hz可靠频带或称严格平稳性；S05 PARTIAL、E/WE=0、0/12未晋级。不涉及Abaqus/冻结T057/T070，不合并PR。
+
 ## 2026-11-05 23时｜S05 Ridgecrest真实原波前20秒震前历时与0.1–0.25Hz观测功率比QC（0/12）
 - **SOURCE/OFFICIAL/阅读层级**：直接复用SCEDC ci38457511 CI.CLC原始miniSEED SHA256=`9bfcd3ab44ade97a5ec1d586d0e4240c9b2d14347ff2ec3d86e8c75df0dd58ab`、StationXML=`31aff27345c4795d37b10d1affce7e2a3504e5d5a93cd0758bc8781a4da32e4c`，以及HNE/HNN灵敏度换算CSV SHA256=`fb0c91fe588ccb4f6bed3d4ac77c4bc148231d8e5df6be19aa9cf3bc3d4c25ef`/`d6250274d578b87e4310eadcca5a910dd38cd69ad639dbca435af8e8a0d81e30`。既有程序在原生Actions读取原件并检查4/4 SHA，未从未校准记录推定绝对仪器噪声。官方源收据给出事件发震2019-07-06T03:19:53Z，200.01s共同起点03:19:19.998300Z：发震相对起点33.0017s，0–20s候选震前窗口终点距发震**13.0017s**；这是**事件时间先后证据**，不是实测震相起跳/背景噪声平稳性验证。
 - **REF/方法**：既有[原始波形程序](s05_clc_full_response_waveform_qc.py)中新增`--snr`：原始CSV的20s Hann单窗periodogram，线性去趋势，100Hz采样，20s窗频率分辨率0.05Hz，统计0.1/0.15/0.2/0.25Hz四个频点；噪声窗0–20s，**事先固定**信号+噪声窗40–60/60–80/80–100s，晚窗120–180s。计算的是信号窗/震前窗**观测频带功率比**，未扣除仪器噪声，未做完整去响应/谱匹配，不能作为校准SNR、设计波PASS或可靠长周期频带的充分证明。
