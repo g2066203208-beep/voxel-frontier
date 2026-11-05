@@ -76,6 +76,14 @@ jobs:
         run: |
           set -euo pipefail
           node research/wind-tower/experiments/T062/s10_low_wind_30slot_source_readiness.cjs --check
+      - name: Verify original 18NTM reference speed floor against operating channels (no solver)
+        shell: bash
+        run: |
+          set -euo pipefail
+          root=research/wind-tower/experiments/T062
+          node --check "$root/s10_low_wind_30slot_source_readiness.cjs"
+          node "$root/s10_low_wind_30slot_source_readiness.cjs" --floor-check
+          sha256sum "$root/S07_18NTM_ORIGINAL_OPERATING_STATE_QC_20261101.csv" "$root/S07_18NTM_ORIGINAL_OPERATING_STATE_RECEIPT_20261101.json"
       - name: Verify 21-year wind-bin source + 18 original NTM source + 126-slot coverage
         shell: bash
         run: |
