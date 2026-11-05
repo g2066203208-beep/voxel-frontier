@@ -96,7 +96,7 @@ def inspect_servo_startup(raw, expected_sha=ORIGINAL_SERVO_SHA,
             fields["GenTiStp"].lower() in ("true", "false"),
             "SERVO_BOOLEAN_FLAG")
     for key in ("SpdGenOn", "TimGenOn", "TimGenOf"):
-        require(re.fullmatch(r"[+-]?(?:\\d+\\.?\\d*|\\.\\d+)(?:[EeDd][+-]?\\d+)?",
+        require(re.fullmatch(r"[+-]?(?:\d+\.?\d*|\.\d+)(?:[EeDd][+-]?\d+)?",
                              fields[key]) is not None, "SERVO_NUMERIC_" + key)
         number = float(fields[key].replace("D", "E").replace("d", "e"))
         require(math.isfinite(number) and number >= 0, "SERVO_FINITE_NONNEG_" + key)

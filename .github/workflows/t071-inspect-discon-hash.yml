@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - '.github/workflows/t071-inspect-discon-hash.yml'
+      - 'research/wind-tower/experiments/T062/s07_ntm18_original_control_input_gate.py'
 jobs:
   inspect:
     runs-on: ubuntu-latest
