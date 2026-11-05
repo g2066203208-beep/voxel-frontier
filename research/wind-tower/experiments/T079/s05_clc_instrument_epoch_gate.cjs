@@ -49,4 +49,83 @@ function selfTest(){
  return "S05_CLC_EPOCH_STAGE1_QC_PASS_3_POSITIVE_6_NEGATIVE_NOT_BANDWIDTH_PASS";
 }
 if(typeof module!=="undefined")module.exports={epoch,channel,stage1Ratio,compute,selfTest};
-if(typeof require==="function"&&typeof module!=="undefined"&&require.main===module){console.log(JSON.stringify({test:selfTest(),result:compute()},null,2));}
+
+/* S05: full response from immutable original SCEDC StationXML; no seismic solver.
+ * Relative gain/phase is normalized to 1 Hz. NOT a sensor bandwidth/noise PASS.
+ */
+function xmlTag(s,t){const m=s.match(new RegExp("<"+t+"(?:\\s[^>]*)?>([^<]+)</"+t+">"));if(!m)throw Error("XML_MISSING_"+t);return m[1].trim()}
+function xmlChannel(xml,axis,utc){
+ if(!["HNE","HNN"].includes(axis))throw Error("XML_BAD_AXIS");
+ const matches=[...xml.matchAll(new RegExp('<Channel code="'+axis+'"([^>]*)>([\\s\\S]*?)</Channel>','g'))].filter(m=>/locationCode=""/.test(m[1]));
+ if(matches.length!==1)throw Error("XML_LOCATION_AMBIGUOUS");
+ const attr=matches[0][1],c=matches[0][2],start=attr.match(/startDate="([^"]+)"/),end=attr.match(/endDate="([^"]+)"/);
+ if(!start||!end||!Number.isFinite(Date.parse(utc))||!(Date.parse(start[1])<=Date.parse(utc)&&Date.parse(utc)<Date.parse(end[1])))throw Error("XML_EPOCH_MISMATCH");
+ const stages=[...c.matchAll(/<Stage number="(\d+)">([\s\S]*?)<\/Stage>/g)],by=Object.fromEntries(stages.map(m=>[+m[1],m[2]]));
+ if(stages.length!==4||[1,2,3,4].some(i=>!by[i]))throw Error("XML_STAGE_COUNT");
+ const poles=[...by[1].matchAll(/<Pole number="(\d+)">([\s\S]*?)<\/Pole>/g)].map(m=>({i:+m[1],re:+xmlTag(m[2],"Real"),im:+xmlTag(m[2],"Imaginary")}));
+ const coeff=[...by[4].matchAll(/<NumeratorCoefficient i="(\d+)">([^<]+)<\/NumeratorCoefficient>/g)].map(m=>({i:+m[1],v:+m[2]}));
+ if(poles.length!==4||poles.some((p,i)=>p.i!==i||!Number.isFinite(p.re)||!Number.isFinite(p.im))||
+    coeff.length<2||coeff.some((p,i)=>p.i!==i||!Number.isFinite(p.v)))throw Error("XML_COEFFICIENT_INDEX");
+ if(xmlTag(by[4],"Symmetry")!=="NONE")throw Error("XML_UNSUPPORTED_FIR_SYMMETRY");
+ if(+xmlTag(by[4],"InputSampleRate")!==100||+xmlTag(by[4],"Factor")!==1)throw Error("XML_BAD_DECIMATION");
+ if(/<Numerator>|<Denominator>/.test(by[3]))throw Error("XML_STAGE3_NONUNITY");
+ const gains=[1,2,3,4].map(i=>+xmlTag(by[i],"Value"));
+ if(gains.some(x=>!Number.isFinite(x)||x<=0))throw Error("XML_BAD_GAIN");
+ const sens=c.match(/<InstrumentSensitivity>([\s\S]*?)<\/InstrumentSensitivity>/);
+ if(!sens)throw Error("XML_NO_SENSITIVITY");
+ return {axis,start:start[1],end:end[1],poles,coeff:coeff.map(x=>x.v),fs:100,gains,
+  delay:+xmlTag(by[4],"Delay"),correction:+xmlTag(by[4],"Correction"),
+  sensitivity:+xmlTag(sens[1],"Value"),reference_hz:+xmlTag(sens[1],"Frequency")};
+}
+function xmlTransfer(x,f){
+ if(!Number.isFinite(f)||f<=0||f>=x.fs/2)throw Error("XML_BAD_FREQUENCY");
+ const w=2*Math.PI*f;let logmag=0,phase=0;
+ for(const p of x.poles){const re=-p.re,im=w-p.im;logmag-=Math.log(Math.hypot(re,im));phase-=Math.atan2(im,re)}
+ let re=0,im=0;for(let k=0;k<x.coeff.length;k++){const a=-w*k/x.fs;re+=x.coeff[k]*Math.cos(a);im+=x.coeff[k]*Math.sin(a)}
+ const fir=Math.hypot(re,im);if(!(fir>0))throw Error("XML_ZERO_FIR");
+ return {logmag:logmag+Math.log(fir),phase:phase+Math.atan2(im,re),fir};
+}
+function wrap(x){return Math.atan2(Math.sin(x),Math.cos(x))}
+function xmlSpectrum(x){
+ const ref=xmlTransfer(x,1);
+ return {axis:x.axis,epoch_start:x.start,epoch_end:x.end,fir_taps:x.coeff.length,
+  gains:x.gains,stage4_delay_s:x.delay,stage4_correction_s:x.correction,
+  sensitivity:x.sensitivity,sensitivity_reference_hz:x.reference_hz,
+  frequencies:[0.1,1/6.230957762865167,0.25,1].map(f=>{const h=xmlTransfer(x,f);
+   return {frequency_hz:f,period_s:1/f,full_relative_gain_percent:100*Math.expm1(h.logmag-ref.logmag),
+    full_relative_phase_deg:wrap(h.phase-ref.phase)*180/Math.PI,
+    fir_relative_gain_percent:100*(h.fir/ref.fir-1),
+    phase_with_stage4_correction_deg:wrap(h.phase-ref.phase+2*Math.PI*(f-1)*x.correction)*180/Math.PI};
+  })};
+}
+function xmlSelfTest(xml,axis,utc){
+ const x=xmlChannel(xml,axis,utc),v=xmlSpectrum(x).frequencies[3];
+ if(Math.abs(v.full_relative_gain_percent)>1e-10||Math.abs(v.full_relative_phase_deg)>1e-10)throw Error("XML_REFERENCE_IDENTITY");
+ const bad=[
+  [()=>xmlChannel(xml,"HNZ",utc),"XML_BAD_AXIS"],
+  [()=>xmlChannel(xml,axis,"2000-01-01T00:00:00Z"),"XML_EPOCH_MISMATCH"],
+  [()=>xmlTransfer(x,0),"XML_BAD_FREQUENCY"],
+  [()=>xmlTransfer(x,50),"XML_BAD_FREQUENCY"]
+ ];
+ for(const [fn,code] of bad){try{fn();throw Error("NEGATIVE_ACCEPTED")}catch(e){if(e.message!==code)throw e}}
+ return "3_POSITIVE_4_NEGATIVE_PASS_NOT_BANDWIDTH_PASS";
+}
+if(typeof module!=="undefined")Object.assign(module.exports,{xmlChannel,xmlTransfer,xmlSpectrum,xmlSelfTest});
+if(typeof require==="function"&&typeof module!=="undefined"&&require.main===module){
+ if(process.argv.includes("--full-xml")){
+  const fs=require("fs"),crypto=require("crypto"),path=require("path"),root=process.argv[process.argv.indexOf("--full-xml")+1];
+  if(!root)throw Error("NEED_REPO_ROOT");
+  const records=[];
+  for(const id of ["ci38457511","ci39493944"]){
+   const dir=path.join(root,"research/wind-tower/experiments/T079/real-records","USGS_"+id,"CI_CLC");
+   const bytes=fs.readFileSync(path.join(dir,"original/CI_station_response.xml"));
+   const receipt=JSON.parse(fs.readFileSync(path.join(dir,"source_receipt.json"),"utf8"));
+   const sha=crypto.createHash("sha256").update(bytes).digest("hex");
+   if(sha!==receipt.files_SHA256["original/CI_station_response.xml"])throw Error("SOURCE_SHA256_MISMATCH");
+   for(const axis of ["HNE","HNN"]){const xml=bytes.toString("latin1");
+    records.push({event_id:id,axis,source_sha256:sha,test:xmlSelfTest(xml,axis,receipt.event_utc),
+     response:xmlSpectrum(xmlChannel(xml,axis,receipt.event_utc))});}
+  }
+  console.log(JSON.stringify({status:"S05_FULL_STATIONXML_QC_NOT_LOWFREQ_PASS",records},null,2));
+ }else console.log(JSON.stringify({test:selfTest(),result:compute()},null,2));
+}
