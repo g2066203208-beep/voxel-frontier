@@ -143,7 +143,7 @@ jobs:
           repo=os.environ['GH_REPO'];branch='research/t080-seismic-integration-gates-20261022'
           path='research/wind-tower/experiments/T079/real-records/S05_CLC_FULL_RESPONSE_REMOVAL_RECEIPT_20261105.json'
           old=subprocess.run(['gh','api',f'repos/{repo}/contents/{path}','-f',f'ref={branch}'],capture_output=True,text=True)
-          blob=hashlib.sha1(b'blob '+str(len(data)).encode()+b'\\x00'+data).hexdigest()
+          blob=hashlib.sha1(b'blob '+str(len(data)).encode()+bytes([0])+data).hexdigest()
           if old.returncode==0:
               assert json.loads(old.stdout)['sha']==blob,'CONFLICTING_RECEIPT_EXISTS'
               print('EXISTING_IDENTICAL_RECEIPT',path);raise SystemExit(0)
