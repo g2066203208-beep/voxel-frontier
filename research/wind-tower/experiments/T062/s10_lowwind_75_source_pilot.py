@@ -219,13 +219,160 @@ def selftest():
     dll_source_selftest()
     print("S10_75_SOURCE_PILOT_SELFTEST_PASS_1_POSITIVE_9_NEGATIVE_NO_SOLVER")
 
+
+# Source-only extension: 30 low-wind bin/seed candidates from the SHA-locked
+# U07p5 S01 pilot. These are derived candidates, NOT historical per-seed INP bytes.
+GRID_PILOT_SHA = "e403ace85b2915fd4c9976e3cab0d9153da8c0b172b79a1544ce02098a198b33"
+GRID_SOURCE_CSV = "S10_LOW_WIND_30SLOT_SOURCE_READINESS_20261104.csv"
+GRID_RECEIPT_JSON = JSON_NAME
+
+def _replace_unique_token(raw, key, old, new):
+    lines = raw.splitlines(keepends=True)
+    expr = re.compile(rb"^(\\s*)(\\S+)(\\s+" + key.encode("ascii") + rb"\\b.*)$")
+    indices = []
+    for i, line in enumerate(lines):
+        body = line.rstrip(b"\\r\\n")
+        if expr.match(body):
+            indices.append(i)
+    require(len(indices) == 1, "GRID_FIELD_NOT_UNIQUE_" + key)
+    i = indices[0]
+    body = lines[i].rstrip(b"\\r\\n")
+    suffix = lines[i][len(body):]
+    match = expr.match(body)
+    require(match is not None and match.group(2) == old.encode("ascii"),
+            "GRID_UNEXPECTED_FIELD_" + key)
+    lines[i] = match.group(1) + new.encode("ascii") + match.group(3) + suffix
+    return b"".join(lines)
+
+def build_lowwind_grid(repo_root, pilot_override=None, csv_override=None, config_override=None):
+    root = repo_root / ROOT / "experiments/T062"
+    pilot = pilot_override if pilot_override is not None else (root / INP_NAME).read_bytes()
+    grid_raw = csv_override if csv_override is not None else (root / GRID_SOURCE_CSV).read_bytes()
+    config_raw = config_override if config_override is not None else (root / "S07_18NTM_ORIGINAL_TURBSIM_CONTROLLER_INPUTS_20261031.csv").read_bytes()
+    require(sha(pilot) == GRID_PILOT_SHA, "GRID_PILOT_SHA")
+    require(sha(config_raw) == CONFIG_SHA, "GRID_CONFIG_SHA")
+    pilot_fields = gate.parse_keys(pilot, tuple(FIELDS))
+    require(pilot_fields == {**FIELDS, "URef": "7.5"}, "GRID_PILOT_FIELDS")
+    rows = list(csv.DictReader(io.StringIO(grid_raw.decode("utf-8-sig"))))
+    config_rows = list(csv.DictReader(io.StringIO(config_raw.decode("utf-8-sig"))))
+    seed_source = {}
+    for row in config_rows:
+        match = re.fullmatch(r"U09p343881_NTM_(S0[1-6])", row["case"])
+        if match:
+            require(match.group(1) not in seed_source, "GRID_DUPLICATE_HISTORICAL_SEED")
+            seed_source[match.group(1)] = row["turb_seed1"]
+    require(len(seed_source) == 6, "GRID_SIX_HISTORICAL_SEEDS")
+    require(len(rows) == 30 and len({r["candidate_case_NOT_RUN"] for r in rows}) == 30,
+            "GRID_30_UNIQUE_SLOTS")
+    entries = []
+    for row in rows:
+        case = row["candidate_case_NOT_RUN"]
+        match = re.fullmatch(r"U0([4-8])p5_NTM_(S0[1-6])", case)
+        require(match is not None, "GRID_BAD_CASE")
+        lower, seed_label = int(match.group(1)), match.group(2)
+        uref = f"{lower}.5"
+        seed = seed_source[seed_label]
+        require(row["bin_lower_mps"] == str(lower)
+                and row["bin_center_mps_NONNORMATIVE"] == uref
+                and row["seed_label"] == seed_label
+                and row["historical_seed1_CANDIDATE_ONLY"] == seed,
+                "GRID_ROW_SOURCE_DRIFT")
+        require(not row["new_BTS_sha256"] and not row["new_OUTB_sha256"]
+                and not row["source_OUTB_sha256"], "GRID_FALSE_NATIVE_OUTPUT")
+        candidate = _replace_unique_token(pilot, "URef", "7.5", uref)
+        candidate = _replace_unique_token(candidate, "RandSeed1", "104729", seed)
+        fields = gate.parse_keys(candidate, tuple(FIELDS))
+        require(fields == {**FIELDS, "URef": uref, "RandSeed1": seed},
+                "GRID_UNEXPECTED_INPUT_MUTATION")
+        restored = _replace_unique_token(candidate, "URef", uref, "7.5")
+        restored = _replace_unique_token(restored, "RandSeed1", seed, "104729")
+        require(restored == pilot, "GRID_NOT_BYTE_REVERSIBLE")
+        entries.append({"candidate_case_NOT_RUN": case, "URef_mps": uref,
+                        "RandSeed1": seed, "derived_input_sha256": sha(candidate),
+                        "input_bytes": len(candidate), "reverse_to_pilot": True,
+                        "BTS_sha256": None, "OUTB_sha256": None,
+                        "native_controller_state": "NOT_RUN"})
+    require(len({x["derived_input_sha256"] for x in entries}) == 30,
+            "GRID_NONUNIQUE_CANDIDATE_BYTES")
+    require(next(x["derived_input_sha256"] for x in entries
+                 if x["candidate_case_NOT_RUN"] == "U07p5_NTM_S01") == GRID_PILOT_SHA,
+            "GRID_75_PILOT_REGRESSION")
+    return {
+        "SOURCE": "SHA-locked 7.5m/s S01 pilot derived from original 9.343881m/s S01 TurbSim INP; 30-slot planning CSV; original 18-case controller source CSV",
+        "READING_LEVEL": "Exact existing pilot bytes and both existing CSV files directly read. Original five other seed-specific TurbSim INP bytes NOT read for this grid; seed labels are inherited metadata, not per-seed byte equivalence.",
+        "REF": "Existing T062 18NTM source/ROSCO study and 21-year ERA5 bin plan; no new paper fulltext",
+        "STANDARD": "IEC 61400-1/6 2025 authorized clauses NOT READ; 4.5..8.5m/s and six seeds NONNORMATIVE proposed coverage",
+        "OFFICIAL": "Historical GitHub source archive receipt and original OpenFAST input identity, not controller/DLC certification",
+        "RUN": "Python standard-library source-only byte patch and reverse checks; no TurbSim/OpenFAST/Abaqus execution",
+        "FIG": 0, "TAB": "30 source-derived candidate INP SHA256 rows (in-memory, no 30-file proliferation)",
+        "input_sha256": {"pilot_inp": GRID_PILOT_SHA, "planning_csv": sha(grid_raw),
+                         "original_18case_config_csv": CONFIG_SHA},
+        "assumptions": "Each candidate inherits ALL pilot TurbSim settings except URef and RandSeed1; other seeds are hypothetical paired designs, not exact original seed-specific parent inputs. Actual cut-in and DLL binary provenance unknown.",
+        "error_budget": "Exact SHA256 and reverse byte identity; no physical, controller, IEC, low-frequency wind or site error budget established",
+        "tests": {"30_unique": True, "5_bins_x_6_seeds": True,
+                  "byte_reversal": "30/30", "pilot_75_regression": True},
+        "entries": entries,
+        "HOLD": "No actual 4-8m/s BTS/OUTB, no verified historical 36 DLL binary identity, no lowwind operating state or authorized IEC2025 DLC1.2 acceptance",
+        "physical_pass": False, "formal_dlc12_verified_slots": 0, "stages_passed": 0
+    }
+
+def grid_negative_tests(repo_root):
+    root = repo_root / ROOT / "experiments/T062"
+    pilot = (root / INP_NAME).read_bytes()
+    grid = (root / GRID_SOURCE_CSV).read_bytes()
+    config = (root / "S07_18NTM_ORIGINAL_TURBSIM_CONTROLLER_INPUTS_20261031.csv").read_bytes()
+    mutations = [
+        {"pilot_override": pilot.replace(b"7.5", b"7.6", 1)},
+        {"pilot_override": pilot + b"tamper"},
+        {"csv_override": grid.replace(b"104729", b"104730", 1)},
+        {"csv_override": grid.replace(b"U04p5_NTM_S01", b"U04p5_NTM_S02", 1)},
+        {"csv_override": grid.replace(b"U04p5_NTM_S01", b"U03p5_NTM_S01", 1)},
+        {"csv_override": grid.replace(b"NEED_TURBSIM_BTS_CONTROLLER_CUTIN_AND_DLC12_VALIDATION",
+                                      b"PASS", 1).replace(b",,,,", b",fake,,,", 1)},
+        {"config_override": config + b"tamper"},
+        {"pilot_override": pilot.replace(b"RandSeed1", b"RandSeedX", 1)},
+    ]
+    for i, change in enumerate(mutations):
+        try:
+            build_lowwind_grid(repo_root, **change)
+        except (ValueError, KeyError, AssertionError):
+            pass
+        else:
+            raise AssertionError("GRID_NEGATIVE_ACCEPTED_" + str(i))
+    return len(mutations)
+
+def grid_command(repo_root, write):
+    grid = build_lowwind_grid(repo_root)
+    count = grid_negative_tests(repo_root)
+    path = repo_root / ROOT / "experiments/T062" / GRID_RECEIPT_JSON
+    receipt = json.loads(path.read_text(encoding="utf-8"))
+    require(receipt["output_turbsim_inp_sha256"] == GRID_PILOT_SHA
+            and receipt["status"] == "SOURCE_ONLY_CANDIDATE_NOT_RUN"
+            and receipt["physical_pass"] is False, "GRID_PARENT_RECEIPT_DRIFT")
+    if write:
+        receipt["lowwind_30slot_candidate_grid_20261106"] = grid
+        path.write_text(json.dumps(receipt, indent=2, ensure_ascii=False) + "\\n", encoding="utf-8")
+    else:
+        require(receipt.get("lowwind_30slot_candidate_grid_20261106") == grid,
+                "GRID_COMMITTED_RECEIPT_DRIFT")
+    print("S10_LOWWIND_30_SOURCE_ONLY_GRID_PASS_NOT_DLC12",
+          "30/30", "negative_tests=" + str(count),
+          "pilot_sha=" + GRID_PILOT_SHA,
+          "receipt_sha=" + sha(path.read_bytes()))
+
 def main():
     parser=argparse.ArgumentParser()
     parser.add_argument("--selftest",action="store_true")
+    parser.add_argument("--grid-write",action="store_true")
+    parser.add_argument("--grid-check",action="store_true")
     parser.add_argument("--repo-root",type=Path,default=Path("."))
     parser.add_argument("--out-dir",type=Path)
     args=parser.parse_args()
     if args.selftest: selftest(); return
+    if args.grid_write or args.grid_check:
+        require(not (args.grid_write and args.grid_check), 'GRID_MODE_CONFLICT')
+        grid_command(args.repo_root, args.grid_write)
+        return
     require(args.out_dir is not None,"OUT_DIR_REQUIRED")
     receipt=prepare(args.repo_root,args.out_dir)
     print("S10_75_PILOT_INPUT_PREPARED_NOT_RUN",receipt["output_turbsim_inp_sha256"])
