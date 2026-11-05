@@ -142,12 +142,68 @@ function selftest(){
  ck(rejects===bad.length,"NEGATIVE_COUNT");
  return {status:"SYNTHETIC_MATH_TEST_PASS",positive:3,negative_rejections:rejects,physical_pass:false};
 }
+
+function historyBoundAudit(d){
+ ck(d&&d.stage==="S07_REAL_ORIGINAL_ETM_9GAGE_SYNCHRONOUS_SOURCE_FRAME_CANDIDATE_QC","HISTORY_STAGE");
+ ck(d.case==="U09p343881_ETM_S01"&&d.source_outb_sha256==="0d6f0d9dfd067a3495ec65d69db0afda2a903699eaa5988914ab45089d1c126c","HISTORY_SOURCE_SHA");
+ ck(d.time_grid&&d.time_grid.n===12001&&d.time_grid.dt_s===0.05&&d.time_grid.start_s===100&&d.time_grid.end_s===700&&d.gage_count===9,"HISTORY_GRID");
+ ck(Array.isArray(d.summary)&&d.summary.length===9&&Array.isArray(d.selected_native_samples)&&d.selected_native_samples.length===6,"HISTORY_ROWS");
+ const maxRp=Math.max(...d.summary.map((s,i)=>{ck(s.gage===i+1&&Number.isFinite(s.max_RP_abs_deg)&&s.max_RP_abs_deg>=0,"HISTORY_RP_SUMMARY");return s.max_RP_abs_deg;}));
+ const rows=d.selected_native_samples.map((r,i)=>{
+  ck(r.gage===(i<3?1:9)&&r.time_s===[100,400,700][i%3],"HISTORY_SAMPLE_ID");
+  for(const k of ["native_F_N","native_M_Nm","native_TP_m","native_RP_deg","candidate_F_global_N","candidate_M_at_origin_Nm"])vec(r[k]);
+  const rpRad=norm(r.native_RP_deg)*Math.PI/180;
+  ck(rpRad<=0.4,"HISTORY_RP_DOMAIN");
+  // Conditional SmllRotTrans353 candidate: angle=atan(||RP_rad||), not an independently measured DCM.
+  const factor=2*Math.sin(Math.atan(rpRad)/2);
+  const F=r.native_F_N,M=r.native_M_Nm,lever=r.native_TP_m;
+  const identityM=add(M,cross(lever,F));
+  const driftF=norm(sub(r.candidate_F_global_N,F));
+  const driftM=norm(sub(r.candidate_M_at_origin_Nm,identityM));
+  const forceBound=factor*norm(F),momentBound=factor*(norm(M)+norm(lever)*norm(F));
+  ck(driftF<=forceBound+0.001&&driftM<=momentBound+0.001,"HISTORY_SO3_BOUND");
+  return {gage:r.gage,time_s:r.time_s,RP_norm_deg:norm(r.native_RP_deg),
+   candidate_force_rotation_delta_N:driftF,candidate_force_rotation_bound_N:forceBound,
+   candidate_origin_moment_rotation_delta_Nm:driftM,candidate_origin_moment_rotation_bound_Nm:momentBound,
+   force_bound_utilization:forceBound===0?0:driftF/forceBound,
+   moment_bound_utilization:momentBound===0?0:driftM/momentBound};
+ });
+ ck(maxRp<0.4*180/Math.PI,"HISTORY_RP_MAX_DOMAIN");
+ return {status:"SIX_ORIGINAL_SAMPLES_CONDITIONAL_SO3_BOUND_PASS_PHYSICAL_HOLD",
+  case:d.case,source_outb_sha256:d.source_outb_sha256,
+  source_read_level:"EXISTING_SHA_LOCKED_FULL_OUTB_QC_RECEIPT__SIX_ROUNDED_NATIVE_SAMPLES_NOT_NEW_OUTB_BYTE_READ",
+  nine_gage_full_history_max_RP_norm_deg:maxRp,
+  hypothetical_half_degree_to_max_native_RP_ratio:0.5/maxRp,
+  samples_checked:rows.length,rows,physical_pass:false,
+  limitation:"RP->t-axis remains a candidate; original nine gages are near-base, not 31-station DLC1.2; sectional FL/ML include gravity and inertia."};
+}
+function historyBoundSelftest(d){
+ const ok=historyBoundAudit(d);
+ ck(ok.rows.length===6&&ok.rows.every(x=>x.force_bound_utilization<=1.0001&&x.moment_bound_utilization<=1.0001),"HISTORY_TEST_PASS");
+ const copy=()=>JSON.parse(JSON.stringify(d));
+ const rejects=[
+  x=>{x.source_outb_sha256="0".repeat(64);},
+  x=>{x.time_grid.n=12000;},
+  x=>{x.selected_native_samples[0].native_RP_deg[0]=NaN;},
+  x=>{x.selected_native_samples[0].native_RP_deg[0]=30;},
+  x=>{x.selected_native_samples[0].candidate_F_global_N[0]+=10000;},
+  x=>{x.selected_native_samples[0].candidate_M_at_origin_Nm[0]+=1000000;},
+  x=>{x.selected_native_samples.pop();},
+  x=>{x.summary[0].gage=2;}
+ ];
+ let caught=0;
+ for(const mutate of rejects){let x=copy();mutate(x);try{historyBoundAudit(x);}catch(e){caught++;continue;}throw Error("HISTORY_BAD_INPUT_ACCEPTED");}
+ ck(caught===rejects.length,"HISTORY_NEGATIVE_COUNT");
+ return {positive:1,negative_rejections:caught,real_samples:ok.samples_checked};
+}
+
 function main(argv){
  const fs=require("fs");
  if(argv.length===1&&argv[0]==="--selftest"){console.log(JSON.stringify(selftest()));return;}
- ck(argv.length===2&&argv[0]==="--qc","USAGE: --selftest | --qc existing_pose_receipt.json");
+ if(argv.length===2&&argv[0]==="--history"){const d=JSON.parse(fs.readFileSync(argv[1],"utf8"));const out=historyBoundAudit(d);out.tests=historyBoundSelftest(d);console.log(JSON.stringify(out,null,2));return;}
+ ck(argv.length===2&&argv[0]==="--qc","USAGE: --selftest | --qc existing_pose_receipt.json | --history existing_9gage_receipt.json");
  const input=JSON.parse(fs.readFileSync(argv[1],"utf8"));
  console.log(JSON.stringify(audit(input),null,2));
 }
-module.exports={audit,selftest,transport,back,Ry,gate,rotationBoundY};
+module.exports={audit,selftest,transport,back,Ry,gate,rotationBoundY,historyBoundAudit,historyBoundSelftest};
 if(typeof require!=="undefined"&&require.main===module)main(process.argv.slice(2));
