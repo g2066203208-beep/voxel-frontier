@@ -1,0 +1,137 @@
+{
+  "status": "S05_REAL_MINISEED_FULL_RESPONSE_REMOVAL_NUMERICAL_QC_NOT_SITE_PASS",
+  "event_id": "ci38457511",
+  "station": "CI.CLC",
+  "source_level": "Original raw miniSEED and StationXML bytes, hash-matched to existing official SCEDC receipts",
+  "SOURCE": {
+    "mseed_sha256": "9bfcd3ab44ade97a5ec1d586d0e4240c9b2d14347ff2ec3d86e8c75df0dd58ab",
+    "stationxml_sha256": "31aff27345c4795d37b10d1affce7e2a3504e5d5a93cd0758bc8781a4da32e4c",
+    "csv_sha256": {
+      "CI.CLC..HNE": "fb0c91fe588ccb4f6bed3d4ac77c4bc148231d8e5df6be19aa9cf3bc3d4c25ef",
+      "CI.CLC..HNN": "d6250274d578b87e4310eadcca5a910dd38cd69ad639dbca435af8e8a0d81e30"
+    }
+  },
+  "REF": "ObsPy Trace.remove_response output=ACC, FFT frequency-domain inverse instrument transfer; Newmark beta=1/4 gamma=1/2 PSA",
+  "STANDARD": "2025 IEC/GB/NB licensed clauses not checked; no site spectrum",
+  "OFFICIAL": "SCEDC FDSN originals stored under T079",
+  "RUN": "Native Python/ObsPy real waveform response removal and two-component numerical PSA; no structural solver",
+  "FIG": 0,
+  "TAB": "2 horizontal channels x 5 periods",
+  "parameters": {
+    "pre_filt_hz": [
+      0.02,
+      0.04,
+      20.0,
+      25.0
+    ],
+    "water_level_db": 60.0,
+    "output_units": "m/s^2",
+    "damping": 0.05,
+    "prewindow_s": 20,
+    "npts": 20001,
+    "dt_s": 0.01,
+    "response_zero_mean": false,
+    "response_taper": false
+  },
+  "assumptions": [
+    "200s stored window, not complete event",
+    "First 20s is a candidate baseline only",
+    "FFT response removal affected by edges and pre-filter; no low-frequency noise PSD",
+    "No time-shift correction or site spectrum matching"
+  ],
+  "error_budget": "Raw counts CSV equivalence <= 1e-8 m/s2 + 5e-8 relative; floating point double; deconvolution regularization and 200s window edge error unbounded; instrument low-frequency SNR unknown",
+  "HOLD": "Pre-filter/water-level sensitivity, noise and low-frequency usable band, event onset and Jiayu target spectrum not validated; S05 PARTIAL, E/WE=0, 0/12 stage PASS",
+  "test": "3_POSITIVE_3_NEGATIVE_PASS",
+  "channels": [
+    {
+      "channel": "HNE",
+      "raw_trace_id": "CI.CLC..HNE",
+      "raw_trace_npts": 20001,
+      "aligned_start_utc": "2019-07-06T03:19:19.998300Z",
+      "aligned_index": 0,
+      "sensitivity_counts_per_m_s2": 213945.0,
+      "raw_vs_csv_max_abs_m_s2": 4.978017997814277e-12,
+      "pre20_sensitivity_offset_m_s2": -0.17817374091472998,
+      "pre20_full_response_offset_m_s2": -0.014977044004398875,
+      "full_response_pre20_pga_m_s2": 3.234464948897796,
+      "full_response_candidate_samples_sha256": "93771f71ae143a08edb8820432bf2163b129be565437e287210d44b8a4b245fc",
+      "spectra": [
+        {
+          "period_s": 4.0,
+          "sensitivity_only_psa_m_s2": 0.3314532132672203,
+          "full_response_psa_m_s2": 0.33431819677506636,
+          "relative_change_percent": 0.8643704128269425
+        },
+        {
+          "period_s": 6.0,
+          "sensitivity_only_psa_m_s2": 0.24438871484554775,
+          "full_response_psa_m_s2": 0.260379450592748,
+          "relative_change_percent": 6.543156363544145
+        },
+        {
+          "period_s": 6.230957762865167,
+          "sensitivity_only_psa_m_s2": 0.27721585621098027,
+          "full_response_psa_m_s2": 0.2895536891130785,
+          "relative_change_percent": 4.450623088712602
+        },
+        {
+          "period_s": 8.0,
+          "sensitivity_only_psa_m_s2": 0.2898149510606981,
+          "full_response_psa_m_s2": 0.31272453174288284,
+          "relative_change_percent": 7.904899522380626
+        },
+        {
+          "period_s": 10.0,
+          "sensitivity_only_psa_m_s2": 0.18863891020652096,
+          "full_response_psa_m_s2": 0.22368731282442977,
+          "relative_change_percent": 18.579625263705136
+        }
+      ]
+    },
+    {
+      "channel": "HNN",
+      "raw_trace_id": "CI.CLC..HNN",
+      "raw_trace_npts": 20001,
+      "aligned_start_utc": "2019-07-06T03:19:19.998300Z",
+      "aligned_index": 0,
+      "sensitivity_counts_per_m_s2": 213809.0,
+      "raw_vs_csv_max_abs_m_s2": 4.9960036108132044e-12,
+      "pre20_sensitivity_offset_m_s2": -0.18917525688816,
+      "pre20_full_response_offset_m_s2": -0.016728643342355607,
+      "full_response_pre20_pga_m_s2": 4.7923770961448,
+      "full_response_candidate_samples_sha256": "cdc88a998bb5ff1dba3ccab90ebd0cde5b9ae9a352cf13eae3f555cb3fce2e6b",
+      "spectra": [
+        {
+          "period_s": 4.0,
+          "sensitivity_only_psa_m_s2": 0.9154103834428948,
+          "full_response_psa_m_s2": 0.9315509030566622,
+          "relative_change_percent": 1.7632004077845709
+        },
+        {
+          "period_s": 6.0,
+          "sensitivity_only_psa_m_s2": 0.5532885061733978,
+          "full_response_psa_m_s2": 0.5628511692749938,
+          "relative_change_percent": 1.728332144062139
+        },
+        {
+          "period_s": 6.230957762865167,
+          "sensitivity_only_psa_m_s2": 0.49277836055391333,
+          "full_response_psa_m_s2": 0.501497363510716,
+          "relative_change_percent": 1.7693558919677388
+        },
+        {
+          "period_s": 8.0,
+          "sensitivity_only_psa_m_s2": 0.17592784633661393,
+          "full_response_psa_m_s2": 0.19246331330464866,
+          "relative_change_percent": 9.399004940011825
+        },
+        {
+          "period_s": 10.0,
+          "sensitivity_only_psa_m_s2": 0.11544460995873362,
+          "full_response_psa_m_s2": 0.11297655477450093,
+          "relative_change_percent": -2.137869568024797
+        }
+      ]
+    }
+  ]
+}
