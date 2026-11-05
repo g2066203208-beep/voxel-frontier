@@ -1,5 +1,5 @@
 {
-  "status": "S05_REAL_2EVENT_4COMP_PREWINDOW_SENSITIVITY_NUMERICAL_QC_NOT_DESIGN_PASS",
+  "status": "S05_REAL_2EVENT_4COMP_PREWINDOW_DT_ANTIALIAS_NUMERICAL_QC_NOT_DESIGN_PASS",
   "date": "2026-11-05",
   "test": "S05_PREWINDOW_SELFTEST_PASS_SHIFT_ZERO_3_NEGATIVE",
   "source_level": "Direct GitHub blob UTF8 reading of four existing 20001-point source-derived acceleration CSVs; original miniSEED/StationXML NOT redownloaded or decoded this run",
@@ -40,9 +40,9 @@
   "REF": "Existing T079 method plan and prior baseline 20s analysis; no new journal full-text read",
   "STANDARD": "No licensed 2025 IEC/GB/NB clause read; no site spectrum",
   "OFFICIAL": "Existing SCEDC/EarthScope FDSN source receipts; usable low-frequency instrument band not established",
-  "RUN": "V8 JavaScript executed complete 4x20001 real source diagnostic, 5/10/20 s pre-window DC removal and raw, 5 periods, Newmark average acceleration; no native Abaqus/OpenFAST solver; no native Node CI this run",
+  "RUN": "V8 JavaScript executed complete 4x20001 real source diagnostic, 5/10/20 s pre-window DC removal and raw, 5 periods, Newmark average acceleration; no native Abaqus/OpenFAST solver; no native Node CI this run; 2026-11-05 18h V8 real 4x20001 source anti-alias FIR + Newmark 20 spectra x 4 configurations; native Node/Actions NOT run",
   "FIG": "None",
-  "TAB": "4 components x 5 periods x 4 preprocessing cases; two T1 geometric-mean rows",
+  "TAB": "4 components x 5 periods x 4 preprocessing cases; two T1 geometric-mean rows; 20 additional rows / 80 anti-alias PSA values",
   "method": "For each acceleration component subtract mean of [0,5),[0,10),[0,20) seconds; compute 5% damped zero-initial-condition Newmark beta=1/4 gamma=1/2 pseudoSa; no filter or scaling",
   "assumptions": [
     "First 20 s treated as candidate pre-event interval for sensitivity ONLY; event onset not independently picked",
@@ -50,7 +50,7 @@
     "Conditional 6.230957762865167 s T1 is 35-element elastic beam proxy, not native verified modal frequency",
     "No extrapolation to Jiayu site; not a representative independent-event suite"
   ],
-  "numerical_error_budget": "Double-precision recurrence; time-step and input-processing uncertainties not bounded by this sweep; NEED_DT_CONVERGENCE and independent waveform processing validation",
+  "numerical_error_budget": "Double-precision recurrence; time-step and input-processing uncertainties not bounded by this sweep; NEED_DT_CONVERGENCE and independent waveform processing validation; FIR filter 9Hz/201 taps with measured stopband transfer; filter effect vs decimation difference reported separately, but instrument low-frequency uncertainty and site target remain unbounded",
   "HOLD": "Low-frequency instrument validity, source waveform processing, site target and code applicability; 0/12 stage PASS",
   "max_pre5_vs_pre20_relative_by_component": {
     "ci38457511_HNE": 9.426851987325869e-7,
@@ -418,8 +418,8 @@
       "pre10_vs_pre20_relative": 0.00001572274105499094
     }
   ],
-  "script_sha256_direct_recomputed": "bf94f7744df4f572efc23ab0bcc81965331402639dfe424d654ba71a8025e2b4",
-  "script_git_blob_sha": "fac9ebc23cb07648e2f3b768006f72fc79427219",
+  "script_sha256_direct_recomputed": "47414a74239d41a667dbdeb9f532c9b7db1fe8dfe6fcc3820cd13531bc928b2c",
+  "script_git_blob_sha": "49215e184652aa4d300e87cd24dd410dd0997530",
   "source_sha256_direct_recomputed": [
     "fb0c91fe588ccb4f6bed3d4ac77c4bc148231d8e5df6be19aa9cf3bc3d4c25ef",
     "d6250274d578b87e4310eadcca5a910dd38cd69ad639dbca435af8e8a0d81e30",
@@ -754,5 +754,412 @@
         "relative_04_vs_005": 2.344839609448907
       }
     ]
+  },
+  "script_sha256_previous": "bf94f7744df4f572efc23ab0bcc81965331402639dfe424d654ba71a8025e2b4",
+  "anti_alias_decimation_qc": {
+    "status": "NUMERICAL_QC_ONLY_NOT_DESIGN_WAVE_PASS",
+    "date": "2026-11-05",
+    "test": "S05_ANTIALIAS_SELFTEST_PASS_5_POSITIVE_6_NEGATIVE",
+    "source_level": "Direct UTF8 GitHub blob reading, SHA256 verified for four previously FDSN-derived CSVs; not independent miniSEED or instrument response reprocessing",
+    "SOURCE": [
+      {
+        "event_id": "ci38457511",
+        "component": "HNE",
+        "source_sha256_inherited": "fb0c91fe588ccb4f6bed3d4ac77c4bc148231d8e5df6be19aa9cf3bc3d4c25ef",
+        "npts": 20001,
+        "dt_s": 0.01,
+        "pre20_offset_m_s2": -0.1781737409147306,
+        "filtered_npts": 5001,
+        "sha256_verified_direct": true
+      },
+      {
+        "event_id": "ci38457511",
+        "component": "HNN",
+        "source_sha256_inherited": "d6250274d578b87e4310eadcca5a910dd38cd69ad639dbca435af8e8a0d81e30",
+        "npts": 20001,
+        "dt_s": 0.01,
+        "pre20_offset_m_s2": -0.18917525688815973,
+        "filtered_npts": 5001,
+        "sha256_verified_direct": true
+      },
+      {
+        "event_id": "ci39493944",
+        "component": "HNE",
+        "source_sha256_inherited": "60a1201a67da19c30c2bfc1e2889b6c492c03d0a5133c296dc4fc68bee3426ae",
+        "npts": 20001,
+        "dt_s": 0.01,
+        "pre20_offset_m_s2": -0.18778734853645887,
+        "filtered_npts": 5001,
+        "sha256_verified_direct": true
+      },
+      {
+        "event_id": "ci39493944",
+        "component": "HNN",
+        "source_sha256_inherited": "e54bc509e573daecb31254cdc694d7678aa3460dab5460882e8d1abf97e91e12",
+        "npts": 20001,
+        "dt_s": 0.01,
+        "pre20_offset_m_s2": -0.2032734866153779,
+        "filtered_npts": 5001,
+        "sha256_verified_direct": true
+      }
+    ],
+    "REF": "Existing T079 Newmark 5% damping method, no new journal full-text",
+    "STANDARD": "2025 IEC/GB/NB licensed clauses not read; site target spectrum unknown",
+    "OFFICIAL": "SCEDC/EarthScope FDSN original provenance inherited; CI.CLC instrument low-frequency passband not independently established",
+    "RUN": "V8 complete four 20001-point CSV computations and six negative tests, no native Node CI, no Abaqus/OpenFAST",
+    "FIG": "None",
+    "TAB": "4 components x 5 periods x 4 filtering/decimation configurations = 80 PSA values (20 rows)",
+    "assumptions": [
+      "20s pre-event mean candidate, not verified P-wave onset",
+      "FIR cutoff 9 Hz Blackman 201 taps, centered reflection endpoints; gain at 12.5 Hz below 1e-3",
+      "0.04s direct decimation without filter is deliberately invalid control",
+      "0.01s filtered reference is not independent instrumental ground truth",
+      "T1=6.230957762865167 s remains conditional beam proxy"
+    ],
+    "error_budget": "Differences filtered0.04 vs filtered0.01 mix remaining bandlimited forcing interpolation and Newmark time integration; filter0.01 vs raw0.01 isolates chosen low-pass processing; neither bounds instrument transfer or baseline long-period error",
+    "HOLD": "Site design spectrum, original waveform response correction, verified usable low-frequency band; S05 PARTIAL, S08/S09 BLOCKED, 0/12",
+    "program_sha256": "47414a74239d41a667dbdeb9f532c9b7db1fe8dfe6fcc3820cd13531bc928b2c",
+    "program_git_blob_sha": "49215e184652aa4d300e87cd24dd410dd0997530",
+    "source_sha256_direct_recomputed": {
+      "ci38457511_HNE": "fb0c91fe588ccb4f6bed3d4ac77c4bc148231d8e5df6be19aa9cf3bc3d4c25ef",
+      "ci38457511_HNN": "d6250274d578b87e4310eadcca5a910dd38cd69ad639dbca435af8e8a0d81e30",
+      "ci39493944_HNE": "60a1201a67da19c30c2bfc1e2889b6c492c03d0a5133c296dc4fc68bee3426ae",
+      "ci39493944_HNN": "e54bc509e573daecb31254cdc694d7678aa3460dab5460882e8d1abf97e91e12"
+    },
+    "source": [
+      {
+        "event_id": "ci38457511",
+        "component": "HNE",
+        "source_sha256_inherited": "fb0c91fe588ccb4f6bed3d4ac77c4bc148231d8e5df6be19aa9cf3bc3d4c25ef",
+        "npts": 20001,
+        "dt_s": 0.01,
+        "pre20_offset_m_s2": -0.1781737409147306,
+        "filtered_npts": 5001
+      },
+      {
+        "event_id": "ci38457511",
+        "component": "HNN",
+        "source_sha256_inherited": "d6250274d578b87e4310eadcca5a910dd38cd69ad639dbca435af8e8a0d81e30",
+        "npts": 20001,
+        "dt_s": 0.01,
+        "pre20_offset_m_s2": -0.18917525688815973,
+        "filtered_npts": 5001
+      },
+      {
+        "event_id": "ci39493944",
+        "component": "HNE",
+        "source_sha256_inherited": "60a1201a67da19c30c2bfc1e2889b6c492c03d0a5133c296dc4fc68bee3426ae",
+        "npts": 20001,
+        "dt_s": 0.01,
+        "pre20_offset_m_s2": -0.18778734853645887,
+        "filtered_npts": 5001
+      },
+      {
+        "event_id": "ci39493944",
+        "component": "HNN",
+        "source_sha256_inherited": "e54bc509e573daecb31254cdc694d7678aa3460dab5460882e8d1abf97e91e12",
+        "npts": 20001,
+        "dt_s": 0.01,
+        "pre20_offset_m_s2": -0.2032734866153779,
+        "filtered_npts": 5001
+      }
+    ],
+    "method": {
+      "fs_hz": 100,
+      "cutoff_hz": 9,
+      "taps": 201,
+      "window": "Blackman",
+      "kernel": "symmetric DC-normalized sinc",
+      "boundary": "reflect",
+      "phase": "centered zero-phase",
+      "decimation_factor": 4,
+      "dt_original_s": 0.01,
+      "dt_decimated_s": 0.04,
+      "gain_2hz": 1.0000020030101524,
+      "gain_4hz": 1.0000120908754566,
+      "gain_9hz": 0.49999731428356536,
+      "gain_12p5hz": 0.00004670208288863515,
+      "gain_20hz": 0.0000016037214700545019
+    },
+    "rows": [
+      {
+        "event_id": "ci38457511",
+        "component": "HNE",
+        "period_s": 4,
+        "psa_unfiltered_01_m_s2": 0.3314532132672195,
+        "psa_filtered_01_m_s2": 0.33144222962272896,
+        "psa_filtered_04_m_s2": 0.33143674230205494,
+        "psa_unfiltered_04_m_s2": 0.5834040496337081,
+        "filter_effect_relative": 0.00003313784284142418,
+        "filtered04_vs_filtered01_relative": 0.00001655588872984115,
+        "unfiltered04_vs_unfiltered01_relative": 0.7601399723446469
+      },
+      {
+        "event_id": "ci38457511",
+        "component": "HNE",
+        "period_s": 6,
+        "psa_unfiltered_01_m_s2": 0.24438871484554667,
+        "psa_filtered_01_m_s2": 0.2443985435443479,
+        "psa_filtered_04_m_s2": 0.24445217820232773,
+        "psa_unfiltered_04_m_s2": 0.378332589581206,
+        "filter_effect_relative": 0.000040217482249360614,
+        "filtered04_vs_filtered01_relative": 0.00021945571852444168,
+        "unfiltered04_vs_unfiltered01_relative": 0.548077168048908
+      },
+      {
+        "event_id": "ci38457511",
+        "component": "HNE",
+        "period_s": 6.230957762865167,
+        "psa_unfiltered_01_m_s2": 0.27721585621097933,
+        "psa_filtered_01_m_s2": 0.2772190487372337,
+        "psa_filtered_04_m_s2": 0.27718941109681294,
+        "psa_unfiltered_04_m_s2": 0.3499765744505326,
+        "filter_effect_relative": 0.000011516391226651379,
+        "filtered04_vs_filtered01_relative": 0.00010691054801514888,
+        "unfiltered04_vs_unfiltered01_relative": 0.26246953992479294
+      },
+      {
+        "event_id": "ci38457511",
+        "component": "HNE",
+        "period_s": 8,
+        "psa_unfiltered_01_m_s2": 0.2898149510606975,
+        "psa_filtered_01_m_s2": 0.2898571267906597,
+        "psa_filtered_04_m_s2": 0.2896832005058095,
+        "psa_unfiltered_04_m_s2": 0.3575784096614197,
+        "filter_effect_relative": 0.00014552641196696747,
+        "filtered04_vs_filtered01_relative": 0.0006000414299830448,
+        "unfiltered04_vs_unfiltered01_relative": 0.23381629675320004
+      },
+      {
+        "event_id": "ci38457511",
+        "component": "HNE",
+        "period_s": 10,
+        "psa_unfiltered_01_m_s2": 0.1886389102065214,
+        "psa_filtered_01_m_s2": 0.18859365533297065,
+        "psa_filtered_04_m_s2": 0.18854175615313445,
+        "psa_unfiltered_04_m_s2": 0.24797032462124927,
+        "filter_effect_relative": 0.00023990211511082382,
+        "filtered04_vs_filtered01_relative": 0.0002751904868939503,
+        "unfiltered04_vs_unfiltered01_relative": 0.31452373399407363
+      },
+      {
+        "event_id": "ci38457511",
+        "component": "HNN",
+        "period_s": 4,
+        "psa_unfiltered_01_m_s2": 0.9154103834428942,
+        "psa_filtered_01_m_s2": 0.9158560298962237,
+        "psa_filtered_04_m_s2": 0.9146576754360798,
+        "psa_unfiltered_04_m_s2": 1.148687694350129,
+        "filter_effect_relative": 0.00048682695913226937,
+        "filtered04_vs_filtered01_relative": 0.00130845288017567,
+        "unfiltered04_vs_unfiltered01_relative": 0.2548335862543636
+      },
+      {
+        "event_id": "ci38457511",
+        "component": "HNN",
+        "period_s": 6,
+        "psa_unfiltered_01_m_s2": 0.5532885061733975,
+        "psa_filtered_01_m_s2": 0.5532951774432794,
+        "psa_filtered_04_m_s2": 0.5526884662021325,
+        "psa_unfiltered_04_m_s2": 0.7539202559093022,
+        "filter_effect_relative": 0.000012057488647299053,
+        "filtered04_vs_filtered01_relative": 0.0010965417120576415,
+        "unfiltered04_vs_unfiltered01_relative": 0.3626168761818229
+      },
+      {
+        "event_id": "ci38457511",
+        "component": "HNN",
+        "period_s": 6.230957762865167,
+        "psa_unfiltered_01_m_s2": 0.4927783605539131,
+        "psa_filtered_01_m_s2": 0.49270629593581045,
+        "psa_filtered_04_m_s2": 0.49214608570555446,
+        "psa_unfiltered_04_m_s2": 0.7191077579280517,
+        "filter_effect_relative": 0.00014624144213970514,
+        "filtered04_vs_filtered01_relative": 0.001137006437459842,
+        "unfiltered04_vs_unfiltered01_relative": 0.45929248419052016
+      },
+      {
+        "event_id": "ci38457511",
+        "component": "HNN",
+        "period_s": 8,
+        "psa_unfiltered_01_m_s2": 0.1759278463366139,
+        "psa_filtered_01_m_s2": 0.17591564438517204,
+        "psa_filtered_04_m_s2": 0.17582707563707461,
+        "psa_unfiltered_04_m_s2": 0.5258480894940581,
+        "filter_effect_relative": 0.00006935770371740979,
+        "filtered04_vs_filtered01_relative": 0.0005034728344199824,
+        "unfiltered04_vs_unfiltered01_relative": 1.9889986175805259
+      },
+      {
+        "event_id": "ci38457511",
+        "component": "HNN",
+        "period_s": 10,
+        "psa_unfiltered_01_m_s2": 0.11544460995873368,
+        "psa_filtered_01_m_s2": 0.11544267414922647,
+        "psa_filtered_04_m_s2": 0.1153893045028717,
+        "psa_unfiltered_04_m_s2": 0.39079842560445965,
+        "filter_effect_relative": 0.00001676829700314464,
+        "filtered04_vs_filtered01_relative": 0.0004623043146573247,
+        "unfiltered04_vs_unfiltered01_relative": 2.3851595647830828
+      },
+      {
+        "event_id": "ci39493944",
+        "component": "HNE",
+        "period_s": 4,
+        "psa_unfiltered_01_m_s2": 0.012182858355479132,
+        "psa_filtered_01_m_s2": 0.012182642171904358,
+        "psa_filtered_04_m_s2": 0.012176527244377695,
+        "psa_unfiltered_04_m_s2": 0.01148680131513868,
+        "filter_effect_relative": 0.000017744897664151438,
+        "filtered04_vs_filtered01_relative": 0.0005019377110792034,
+        "unfiltered04_vs_unfiltered01_relative": 0.05713413223977981
+      },
+      {
+        "event_id": "ci39493944",
+        "component": "HNE",
+        "period_s": 6,
+        "psa_unfiltered_01_m_s2": 0.006585981205749328,
+        "psa_filtered_01_m_s2": 0.006586093658009611,
+        "psa_filtered_04_m_s2": 0.006583246262150304,
+        "psa_unfiltered_04_m_s2": 0.0057859792272156275,
+        "filter_effect_relative": 0.00001707448848842219,
+        "filtered04_vs_filtered01_relative": 0.0004323345532513123,
+        "unfiltered04_vs_unfiltered01_relative": 0.12147043144236835
+      },
+      {
+        "event_id": "ci39493944",
+        "component": "HNE",
+        "period_s": 6.230957762865167,
+        "psa_unfiltered_01_m_s2": 0.006407740217417527,
+        "psa_filtered_01_m_s2": 0.006407574705077318,
+        "psa_filtered_04_m_s2": 0.00640417732935413,
+        "psa_unfiltered_04_m_s2": 0.005675414545799782,
+        "filter_effect_relative": 0.000025830064046550305,
+        "filtered04_vs_filtered01_relative": 0.0005302124250686768,
+        "unfiltered04_vs_unfiltered01_relative": 0.11428766566209037
+      },
+      {
+        "event_id": "ci39493944",
+        "component": "HNE",
+        "period_s": 8,
+        "psa_unfiltered_01_m_s2": 0.004120110177468175,
+        "psa_filtered_01_m_s2": 0.004120122458247054,
+        "psa_filtered_04_m_s2": 0.004118430358249412,
+        "psa_unfiltered_04_m_s2": 0.004665236359362554,
+        "filter_effect_relative": 0.000002980691862664031,
+        "filtered04_vs_filtered01_relative": 0.00041069167598528633,
+        "unfiltered04_vs_unfiltered01_relative": 0.13230864186000013
+      },
+      {
+        "event_id": "ci39493944",
+        "component": "HNE",
+        "period_s": 10,
+        "psa_unfiltered_01_m_s2": 0.0023569917817823018,
+        "psa_filtered_01_m_s2": 0.0023570412242190897,
+        "psa_filtered_04_m_s2": 0.0023563217138867333,
+        "psa_unfiltered_04_m_s2": 0.002929602238599947,
+        "filter_effect_relative": 0.000020976923708504458,
+        "filtered04_vs_filtered01_relative": 0.000305259969559879,
+        "unfiltered04_vs_unfiltered01_relative": 0.24294121907571986
+      },
+      {
+        "event_id": "ci39493944",
+        "component": "HNN",
+        "period_s": 4,
+        "psa_unfiltered_01_m_s2": 0.004080546555050733,
+        "psa_filtered_01_m_s2": 0.004080918278465329,
+        "psa_filtered_04_m_s2": 0.004066888418588082,
+        "psa_unfiltered_04_m_s2": 0.005113155201467676,
+        "filter_effect_relative": 0.00009109647680305422,
+        "filtered04_vs_filtered01_relative": 0.003437917380331168,
+        "unfiltered04_vs_unfiltered01_relative": 0.25305645517971675
+      },
+      {
+        "event_id": "ci39493944",
+        "component": "HNN",
+        "period_s": 6,
+        "psa_unfiltered_01_m_s2": 0.001668035819166767,
+        "psa_filtered_01_m_s2": 0.0016682205552508156,
+        "psa_filtered_04_m_s2": 0.001665701735883353,
+        "psa_unfiltered_04_m_s2": 0.002011921158508286,
+        "filter_effect_relative": 0.00011075066969534753,
+        "filtered04_vs_filtered01_relative": 0.0015098839056588709,
+        "unfiltered04_vs_unfiltered01_relative": 0.20616184340291932
+      },
+      {
+        "event_id": "ci39493944",
+        "component": "HNN",
+        "period_s": 6.230957762865167,
+        "psa_unfiltered_01_m_s2": 0.0015819459199899436,
+        "psa_filtered_01_m_s2": 0.0015816180298553453,
+        "psa_filtered_04_m_s2": 0.0015800249629030517,
+        "psa_unfiltered_04_m_s2": 0.0018291909973044062,
+        "filter_effect_relative": 0.00020727012880461526,
+        "filtered04_vs_filtered01_relative": 0.0010072387404683747,
+        "unfiltered04_vs_unfiltered01_relative": 0.15629173803617413
+      },
+      {
+        "event_id": "ci39493944",
+        "component": "HNN",
+        "period_s": 8,
+        "psa_unfiltered_01_m_s2": 0.0007278886362942441,
+        "psa_filtered_01_m_s2": 0.0007279611292801919,
+        "psa_filtered_04_m_s2": 0.0007264420389158932,
+        "psa_unfiltered_04_m_s2": 0.0012842751816271182,
+        "filter_effect_relative": 0.00009959351243193915,
+        "filtered04_vs_filtered01_relative": 0.0020867740092122,
+        "unfiltered04_vs_unfiltered01_relative": 0.7643841620683836
+      },
+      {
+        "event_id": "ci39493944",
+        "component": "HNN",
+        "period_s": 10,
+        "psa_unfiltered_01_m_s2": 0.0003729158528985324,
+        "psa_filtered_01_m_s2": 0.00037290759973086475,
+        "psa_filtered_04_m_s2": 0.0003724310523240674,
+        "psa_unfiltered_04_m_s2": 0.0012474343462179794,
+        "filter_effect_relative": 0.00002213144762674979,
+        "filtered04_vs_filtered01_relative": 0.0012779235583862958,
+        "unfiltered04_vs_unfiltered01_relative": 2.3450826413576924
+      }
+    ],
+    "max": {
+      "filter_effect_relative": {
+        "event_id": "ci38457511",
+        "component": "HNN",
+        "period_s": 4,
+        "psa_unfiltered_01_m_s2": 0.9154103834428942,
+        "psa_filtered_01_m_s2": 0.9158560298962237,
+        "psa_filtered_04_m_s2": 0.9146576754360798,
+        "psa_unfiltered_04_m_s2": 1.148687694350129,
+        "filter_effect_relative": 0.00048682695913226937,
+        "filtered04_vs_filtered01_relative": 0.00130845288017567,
+        "unfiltered04_vs_unfiltered01_relative": 0.2548335862543636
+      },
+      "filtered04_vs_filtered01_relative": {
+        "event_id": "ci39493944",
+        "component": "HNN",
+        "period_s": 4,
+        "psa_unfiltered_01_m_s2": 0.004080546555050733,
+        "psa_filtered_01_m_s2": 0.004080918278465329,
+        "psa_filtered_04_m_s2": 0.004066888418588082,
+        "psa_unfiltered_04_m_s2": 0.005113155201467676,
+        "filter_effect_relative": 0.00009109647680305422,
+        "filtered04_vs_filtered01_relative": 0.003437917380331168,
+        "unfiltered04_vs_unfiltered01_relative": 0.25305645517971675
+      },
+      "unfiltered04_vs_unfiltered01_relative": {
+        "event_id": "ci38457511",
+        "component": "HNN",
+        "period_s": 10,
+        "psa_unfiltered_01_m_s2": 0.11544460995873368,
+        "psa_filtered_01_m_s2": 0.11544267414922647,
+        "psa_filtered_04_m_s2": 0.1153893045028717,
+        "psa_unfiltered_04_m_s2": 0.39079842560445965,
+        "filter_effect_relative": 0.00001676829700314464,
+        "filtered04_vs_filtered01_relative": 0.0004623043146573247,
+        "unfiltered04_vs_unfiltered01_relative": 2.3851595647830828
+      }
+    }
   }
 }
