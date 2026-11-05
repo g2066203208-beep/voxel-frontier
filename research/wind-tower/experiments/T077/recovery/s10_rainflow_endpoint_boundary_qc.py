@@ -126,18 +126,249 @@ def compute(root):
             'results': results}
 
 
+
+# Four-ETM 31-section source-only extension.  Existing 3-control mode unchanged.
+FULL_MANIFEST_SHA = 'dfc07558eb87002c3f54bb88671644519b77dfc38daf3971026f43686d4c2ed8'
+FULL_GEOMETRY_SHA = 'fff6dfcc6bc094353ebee042392033e8df47e7fb792ccc1812c0962c9c43f800'
+FULL_BASELINE_SHA = '16c9864ef7a344e5b97338c31ce26de6adb86c0f0f64942ef894fe9983926b2b'
+FULL_CASES = ('U09p343881_ETM_S06', 'U11p4_ETM_S04',
+              'U19p202140_ETM_S04', 'U19p202140_ETM_S06')
+FULL_BATCHES = {'A': range(1, 10), 'B': range(10, 19),
+                'C': range(19, 28), 'D': range(28, 32)}
+
+
+def full_grid_selftest():
+    """Independent exact m4 partition and invalid-cycle checks; not physical V&V."""
+    a = [0., 4., 1., 3., 0.]
+    open_c = prior.rainflow(a)
+    left = prior.rainflow(a[:3])
+    right = prior.rainflow(a[2:])
+    assert abs(stats(open_c)['m4_MPa4_cycles'] - 272.) < 1e-12
+    assert abs(stats(left)['m4_MPa4_cycles'] + stats(right)['m4_MPa4_cycles'] - 272.) < 1e-12
+    assert abs((stats(left)['m4_MPa4_cycles'] / 2) ** .25 -
+               (stats(left)['m4_MPa4_cycles'] / 2) ** .25) < 1e-12
+    assert len(a[:3]) + len(a[2:]) - 1 == len(a)
+    for bad in ([(1., 0., .5)], [(float('nan'), 0., .5)], [(1., 0., .75)]):
+        try:
+            stats(bad)
+        except ValueError:
+            pass
+        else:
+            raise AssertionError('BAD_CYCLE_ACCEPTED')
+    return {'known_answer_and_partition': 4, 'negative_rejections': 3}
+
+
+def compute_full_grid(root, manifest_path, geometry_path, baseline_path):
+    """124 fixed-azimuth section series, 16 source ZIPs, 12001 points each.
+
+    The two 300s intervals share exactly one boundary *sample*, not an
+    overlapping time increment. Summed m4 is normalized by 600 cycles.
+    """
+    import csv
+    import gzip
+    import io
+    import zipfile
+
+    tests = full_grid_selftest()
+    def locked_rows(path, expected, label):
+        raw = Path(path).read_bytes()
+        check(hashlib.sha256(raw).hexdigest() == expected, label + '_SHA')
+        return list(csv.DictReader(io.StringIO(raw.decode('utf-8-sig'))))
+
+    manifest_rows = locked_rows(manifest_path, FULL_MANIFEST_SHA, 'MANIFEST')
+    geometry_rows = locked_rows(geometry_path, FULL_GEOMETRY_SHA, 'GEOMETRY')
+    baseline_rows = locked_rows(baseline_path, FULL_BASELINE_SHA, 'BASELINE')
+    check(len(manifest_rows) == 16 and len(geometry_rows) == 31 and
+          len(baseline_rows) == 1984, 'SOURCE_ROW_COUNTS')
+    manifest = {(r['case'], r['batch']): r for r in manifest_rows}
+    check(len(manifest) == 16 and
+          set(manifest) == {(c, b) for c in FULL_CASES for b in FULL_BATCHES},
+          'SOURCE_MANIFEST_GRID')
+    geom = {}
+    for g in geometry_rows:
+        seg = g['segment']
+        check(seg not in geom, 'DUPLICATE_GEOMETRY')
+        area, inertia, radius = float(g['A_m2']), float(g['I_m4']), float(g['D_m']) / 2
+        check(all(math.isfinite(v) and v > 0 for v in (area, inertia, radius)),
+              'BAD_GEOMETRY')
+        geom[seg] = (area, inertia, radius)
+    check(set(geom) == {f'CSEG_{k:02d}' for k in range(1, 32)}, 'GEOMETRY_GRID')
+    selected, counts = {}, {}
+    for r in baseline_rows:
+        case, seg = r['case'], r['segment']
+        key = (case, seg)
+        check(case in FULL_CASES and seg in geom, 'BASELINE_ID')
+        check(int(r['n_samples']) == 12001, 'BASELINE_SAMPLES')
+        az, d4 = float(r['azimuth_deg']), float(r['DEL_m4_MPa'])
+        check(math.isfinite(az) and math.isfinite(d4) and d4 > 0,
+              'BAD_BASELINE_DEL')
+        counts[key] = counts.get(key, 0) + 1
+        if key not in selected or d4 > selected[key][1]:
+            selected[key] = (az, d4)
+    check(len(selected) == 124 and all(counts[k] == 16 for k in selected),
+          'BASELINE_16AZ_GRID')
+
+    out, sources = [], []
+    for case in FULL_CASES:
+        for batch, segnums in FULL_BATCHES.items():
+            meta = manifest[(case, batch)]
+            zpath = Path(root) / f'S06_{case}_{batch}_original.zip'
+            raw = zpath.read_bytes()
+            check(hashlib.sha256(raw).hexdigest() == meta['zip_sha256'],
+                  'ZIP_SHA:' + case + ':' + batch)
+            with zipfile.ZipFile(io.BytesIO(raw)) as z:
+                check(z.testzip() is None, 'ZIP_CRC')
+                members = [name for name in z.namelist()
+                           if name.endswith('_31seg.csv.gz')]
+                check(len(members) == 1, 'ZIP_MEMBER')
+                gz = z.read(members[0])
+            check(hashlib.sha256(gz).hexdigest() == meta['gzip_sha256'],
+                  'GZIP_SHA')
+            decoded = gzip.decompress(gz)
+            check(hashlib.sha256(decoded).hexdigest() ==
+                  meta['uncompressed_csv_sha256'], 'CSV_SHA')
+            groups = {f'CSEG_{k:02d}': [] for k in segnums}
+            count = 0
+            for row in csv.DictReader(io.StringIO(decoded.decode('utf-8-sig'))):
+                count += 1
+                check(row['case'] == case and row['batch'] == batch,
+                      'CASE_BATCH_ID')
+                seg = row['segment']
+                check(seg in groups, 'BATCH_SEGMENT_ID')
+                values = tuple(float(row[col]) for col in
+                               ('time_s', 'Fz_kN', 'Mx_kNm', 'My_kNm'))
+                check(all(map(math.isfinite, values)), 'NONFINITE_SOURCE')
+                groups[seg].append(values)
+            check(count == int(meta['rows']) == 12001 * len(segnums),
+                  'SOURCE_BATCH_ROWS')
+            sources.append({'case': case, 'batch': batch,
+                            'artifact_id': int(meta['artifact_id']),
+                            'zip_sha256': meta['zip_sha256'],
+                            'gzip_sha256': meta['gzip_sha256'],
+                            'csv_sha256': meta['uncompressed_csv_sha256'],
+                            'source_rows': count})
+            for seg in groups:
+                rows = groups[seg]
+                check(len(rows) == 12001, 'SECTION_SAMPLE_COUNT')
+                check(all(abs(row[0] - (100. + i * .05)) <= 1e-7
+                          for i, row in enumerate(rows)), 'TIME_GRID')
+                az, oracle = selected[(case, seg)]
+                a, I, radius = geom[seg]
+                theta = math.radians(az)
+                s, c = math.sin(theta), math.cos(theta)
+                xs = [.001 * (row[1] / a +
+                              radius / I * (s * row[2] - c * row[3]))
+                      for row in rows]
+                opened = stats(prior.rainflow(xs))
+                periodic, imax = periodic_assumption(xs)
+                closed = stats(periodic)
+                first = stats(prior.rainflow(xs[:6001]))
+                second = stats(prior.rainflow(xs[6000:]))
+                check(abs(opened['DEL4_MPa'] - oracle) < 1e-7,
+                      'BASELINE_16AZ_DEL4_ORACLE:' + case + ':' + seg)
+                check(closed['half_rows'] == 0, 'CLOSED_RESIDUAL_HALF')
+                split_m4 = first['m4_MPa4_cycles'] + second['m4_MPa4_cycles']
+                split_d4 = (split_m4 / 600.) ** .25
+                out.append({
+                    'case': case, 'segment': seg,
+                    'fixed_azimuth_deg_from_16az_max_m4': az,
+                    'time_start_s': 100., 'time_split_s': 400., 'time_end_s': 700.,
+                    'samples': 12001,
+                    'open_DEL4_MPa': opened['DEL4_MPa'],
+                    'historical_16az_oracle_DEL4_MPa': oracle,
+                    'open_half_cycle_rows': opened['half_rows'],
+                    'open_half_m4_fraction': opened['half_m4_fraction'],
+                    'assumed_periodic_DEL4_MPa': closed['DEL4_MPa'],
+                    'assumed_periodic_vs_open_pct':
+                        100 * (closed['DEL4_MPa'] / opened['DEL4_MPa'] - 1),
+                    'split_two_300s_DEL4_MPa': split_d4,
+                    'split_two_300s_vs_open_pct':
+                        100 * (split_d4 / opened['DEL4_MPa'] - 1),
+                    'first_300s_DEL4_Nref300_MPa':
+                        (first['m4_MPa4_cycles'] / 300.) ** .25,
+                    'second_300s_DEL4_Nref300_MPa':
+                        (second['m4_MPa4_cycles'] / 300.) ** .25,
+                    'first_half_rows': first['half_rows'],
+                    'second_half_rows': second['half_rows'],
+                    'unobserved_boundary_jump_MPa': xs[-1] - xs[0],
+                    'periodic_rotation_max_index': imax})
+    check(len(out) == 124 and len(sources) == 16, 'FULL_GRID_RESULT_COUNT')
+    summary = {}
+    for case in FULL_CASES:
+        subset = [r for r in out if r['case'] == case]
+        check(len(subset) == 31, 'CASE_SEGMENTS')
+        worst_periodic = max(subset,
+                             key=lambda r: abs(r['assumed_periodic_vs_open_pct']))
+        worst_split = max(subset,
+                          key=lambda r: abs(r['split_two_300s_vs_open_pct']))
+        summary[case] = {
+            'sections': len(subset),
+            'max_abs_periodic_vs_open_pct':
+                abs(worst_periodic['assumed_periodic_vs_open_pct']),
+            'periodic_worst_segment': worst_periodic['segment'],
+            'max_abs_split_vs_open_pct':
+                abs(worst_split['split_two_300s_vs_open_pct']),
+            'split_worst_segment': worst_split['segment'],
+            'max_abs_open_oracle_MPa':
+                max(abs(r['open_DEL4_MPa'] -
+                        r['historical_16az_oracle_DEL4_MPa']) for r in subset)}
+    return {
+        'status': 'FOUR_REAL_ETM_31_SECTION_FIXED_AZIMUTH_BOUNDARY_QC_NOT_MATERIAL_FATIGUE',
+        'SOURCE': '16 SHA-locked historical GitHub Actions ZIP/GZIP/CSV exports; not original OUTB',
+        'REF': 'T077 historical ASTM-style reversal-stack rainflow; no new paper full text',
+        'STANDARD': 'No newly read licensed IEC/GB/NB clauses; no compliance decision',
+        'OFFICIAL': 'GitHub Actions historical source archive; 2025 IEC clause HOLD',
+        'RUN': 'Non-solver Python source-level rainflow, 124x12001 observed samples',
+        'FIG': 0, 'TAB': '124 section-case JSON rows',
+        'manifest_sha256': FULL_MANIFEST_SHA,
+        'geometry_sha256': FULL_GEOMETRY_SHA,
+        'baseline_16az_sha256': FULL_BASELINE_SHA,
+        'source_files': sources,
+        'algorithm': 'fixed azimuth selected from preexisting 16-angle m4 maximum; open half cycles n=0.5; hypothetical cyclic wrap; two independently rainflow-counted 300s windows sharing one boundary sample, summed m4/Nref600',
+        'assumptions': 'linear gross annulus nominal stress, historical OpenFAST local axes assumed fixed, ETM only, no PT or material mean-stress correction, Nref=600, m=4',
+        'ERROR_BUDGET': 'ZIP/GZIP/CSV SHA exact, historical 16az DEL4 oracle abs <1e-7MPa, time abs 1e-7s; boundary true continuation, physical axes, local materials, long-term probability unquantified',
+        'HOLD': 'Neither hypothetical cyclic closure nor 300s splitting is physical truth; cross-batch state, original OUTB, DLC1.2, material local stresses, annual Miner and earthquake all unvalidated',
+        'FAILURES': 'No failure claimed until native CI logs inspected',
+        'software': sys.version.split()[0],
+        'tests': {**tests, 'source_zip_gzip_csv_sha': 16,
+                  'historical_16az_oracle': 124},
+        'physical_PASS': False, 'stage_PASS_count': 0,
+        'case_summary': summary, 'results': out}
+
+
+
+
 if __name__ == '__main__':
     p = argparse.ArgumentParser()
-    p.add_argument('--zip-dir', type=Path, required=True)
-    p.add_argument('--receipt', type=Path, required=True)
+    p.add_argument('--zip-dir', type=Path)
+    p.add_argument('--receipt', type=Path)
     p.add_argument('--self-test', action='store_true')
+    p.add_argument('--full-grid', action='store_true')
+    p.add_argument('--manifest', type=Path)
+    p.add_argument('--geometry', type=Path)
+    p.add_argument('--baseline', type=Path)
     args = p.parse_args()
-    receipt = compute(args.zip_dir)
-    args.receipt.write_text(json.dumps(receipt, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
-    print(json.dumps({'status': receipt['status'], 'tests': receipt['tests'],
-                      'results': [{'case': r['case'], 'segment': r['segment'],
-                                   'open_DEL4': r['open']['DEL4_MPa'],
-                                   'periodic_DEL4': r['assumed_periodic']['DEL4_MPa'],
-                                   'periodic_vs_open_pct': r['periodic_vs_open_DEL4_pct'],
-                                   'drop_half_vs_open_pct': r['drop_half_vs_open_DEL4_pct']}
-                                  for r in receipt['results']]}, ensure_ascii=False))
+    if args.self_test and not args.zip_dir:
+        print(json.dumps({'original': selftest(), 'full_grid': full_grid_selftest()}))
+        sys.exit(0)
+    if not args.zip_dir or not args.receipt:
+        p.error('--zip-dir and --receipt are required for source calculation')
+    if args.full_grid:
+        if not all((args.manifest, args.geometry, args.baseline)):
+            p.error('--full-grid requires --manifest, --geometry and --baseline')
+        receipt = compute_full_grid(args.zip_dir, args.manifest,
+                                    args.geometry, args.baseline)
+        summary = {'status': receipt['status'], 'case_summary': receipt['case_summary'],
+                   'rows': len(receipt['results']), 'tests': receipt['tests']}
+    else:
+        receipt = compute(args.zip_dir)
+        summary = {'status': receipt['status'], 'tests': receipt['tests'],
+                   'results': [{'case': r['case'], 'segment': r['segment'],
+                                'open_DEL4': r['open']['DEL4_MPa'],
+                                'periodic_DEL4': r['assumed_periodic']['DEL4_MPa'],
+                                'periodic_vs_open_pct': r['periodic_vs_open_DEL4_pct'],
+                                'drop_half_vs_open_pct': r['drop_half_vs_open_DEL4_pct']}
+                               for r in receipt['results']]}
+    args.receipt.write_text(json.dumps(receipt, indent=2, ensure_ascii=False) + '\n',
+                            encoding='utf-8')
+    print(json.dumps(summary, ensure_ascii=False))
