@@ -467,16 +467,111 @@ def low_frequency_snr(source_dir: Path, baseline: dict):
     }
 
 
+
+def _noise_window_metrics(values):
+    """Pre-event variability and heuristic transient trigger, NOT seismic phase picking."""
+    import numpy as np
+    from scipy.signal import periodogram
+    x = np.asarray(values, dtype=np.float64)
+    if x.size != NPTS or not np.isfinite(x).all():
+        raise ValueError("BAD_NOISE_WINDOW_INPUT")
+    rms5 = [float(np.std(x[i:i+500])) for i in (0,500,1000,1500)]
+    cv5 = float(np.std(rms5, ddof=1)/np.mean(rms5)) if np.mean(rms5)>0 else None
+    power10 = []
+    for i in (0,500,1000):
+        f,p = periodogram(x[i:i+1000],fs=100,window="hann",detrend="linear",scaling="density")
+        mask = np.isclose(f,0.1) | np.isclose(f,0.2)
+        if int(mask.sum()) != 2: raise ValueError("BAD_TEN_SECOND_FREQUENCY_GRID")
+        power10.append(float(np.sum(p[mask])*0.1))
+    p20 = _band_power_20s(x[:2000])
+    shake = [_band_power_20s(x[i:i+2000]) for i in (4000,5000,6000,7000,8000)]
+    db = [10*math.log10(v/p20) if v>0 and p20>0 else None for v in shake]
+    # Difference-energy trigger: 1s moving RMS >= 8x first-20s RMS for 0.5s.
+    dx = np.diff(x,prepend=x[0])
+    baseline = float(np.sqrt(np.mean(dx[:2000]**2)))
+    moving = np.sqrt(np.convolve(dx**2,np.ones(100)/100,mode="valid"))
+    hold = np.convolve((moving>=max(8*baseline,1e-12)).astype(int),np.ones(50,dtype=int),mode="valid")
+    hits = np.flatnonzero(hold[2000:]>=50)
+    trigger = float((int(hits[0])+2000)*DT) if hits.size else None
+    return {"pre5s_demeaned_rms_m_s2":rms5,"pre5s_rms_cv":cv5,
+            "pre10s_overlapping_power_m2_s4":power10,
+            "pre10s_power_max_min_ratio":max(power10)/min(power10) if min(power10)>0 else None,
+            "pre20s_bandpower_m2_s4":p20,
+            "shaking_20s_overlapping_power_m2_s4":shake,
+            "shaking_over_pre20_db":db,
+            "shaking_db_min_max":[min(v for v in db if v is not None),max(v for v in db if v is not None)]
+                if any(v is not None for v in db) else None,
+            "difference_baseline_rms_m_s2_per_sample":baseline,
+            "trigger_threshold_m_s2_per_sample":max(8*baseline,1e-12),
+            "candidate_1s_window_start_trigger_s":trigger,
+            "candidate_trigger_is_confirmed_phase":False}
+
+
+def noise_window_self_test():
+    import numpy as np
+    t=np.arange(NPTS)*DT
+    x=0.0001*np.sin(2*np.pi*3*t)
+    x[t>=45]+=0.3*np.sin(2*np.pi*3*t[t>=45])
+    q=_noise_window_metrics(x)
+    assert 43<=q["candidate_1s_window_start_trigger_s"]<=46
+    r=_noise_window_metrics(x+5)
+    assert abs(q["pre5s_rms_cv"]-r["pre5s_rms_cv"])<1e-8
+    assert _noise_window_metrics(np.zeros(NPTS))["candidate_1s_window_start_trigger_s"] is None
+    for bad in (np.zeros(100),np.full(NPTS,np.nan),np.full(NPTS,np.inf)):
+        try:_noise_window_metrics(bad)
+        except ValueError as e:assert str(e)=="BAD_NOISE_WINDOW_INPUT"
+        else:raise AssertionError("BAD_NOISE_WINDOW_ACCEPTED")
+    return "3_POSITIVE_3_NEGATIVE_PASS"
+
+
+def noise_window_qc(source_dir:Path,baseline:dict):
+    from datetime import datetime,timezone
+    r=json.loads((source_dir/"source_receipt.json").read_text(encoding="utf-8"))
+    origin=datetime.fromisoformat(r["event_utc"].replace("Z","+00:00"))
+    start=datetime.fromisoformat(r["common_start_utc"].replace("Z","+00:00"))
+    if origin.tzinfo is None or start.tzinfo is None:raise ValueError("NOISE_NAIVE_TIME")
+    origin_s=(origin.astimezone(timezone.utc)-start.astimezone(timezone.utc)).total_seconds()
+    if baseline.get("event_id")!="ci38457511" or not 20<origin_s<40:
+        raise ValueError("NOISE_EVENT_IDENTITY")
+    rows=[]
+    for c in baseline["channels"]:
+        axis=c["channel"]
+        q=_noise_window_metrics(load_csv(source_dir/f"CI_CLC_{axis}_accel_mps2.csv"))
+        q["channel"]=axis
+        t=q["candidate_1s_window_start_trigger_s"]
+        q["trigger_relative_to_catalog_origin_s"]=t-origin_s if t is not None else None
+        rows.append(q)
+    return {"status":"S05_PRE_EVENT_VARIABILITY_CANDIDATE_TRIGGER_NOT_SITE_PASS",
+            "SOURCE":baseline["SOURCE"],"OFFICIAL":"SCEDC original SHA-checked by parent process",
+            "REF":"Hann periodogram; demeaned short-window RMS; 1s first-difference energy heuristic",
+            "STANDARD":"IEC2025/GB/NB licensed clauses and Jiayu site spectrum not checked",
+            "RUN":"Native source-level QC, no structural E/WE","FIG":0,
+            "TAB":"2 channels x 4 pre-5s + 3 overlapping pre-10s + 5 overlapping shaking-20s",
+            "event_origin_from_record_start_s":origin_s,
+            "parameters":{"dt_s":DT,"band_hz":[0.1,0.25],"pre10s_resolution_hz":0.1,
+                          "pre20s_resolution_hz":0.05,"trigger_rms_window_s":1,
+                          "trigger_threshold_ratio":8,"trigger_sustain_s":0.5,
+                          "trigger_search_start_s":20},
+            "assumptions":["Only 20s pre-origin; 10s windows overlap, 0.1Hz has ONE cycle",
+                           "Shaking windows overlap, their range is NOT a confidence interval",
+                           "Difference trigger is NOT verified P/S phase onset",
+                           "Sensitivity-only CSV, not fully deconvolved; self-noise unverified"],
+            "error_budget":"Double precision; 10s 0.1Hz bin spacing; inadequate low-frequency degrees of freedom; no approved acceptance threshold",
+            "test":noise_window_self_test(),"channels":rows,
+            "HOLD":"Noise stationarity and usable 4-10s band unproven; no Jiayu target spectrum; S05 PARTIAL E/WE=0 0/12"}
+
+
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--self-test", action="store_true")
     p.add_argument("--sensitivity", action="store_true", help="run original miniSEED response parameter/edge QC")
     p.add_argument("--snr", action="store_true", help="pre-origin chronology and observed 0.1-0.25Hz power QC")
+    p.add_argument("--noise-qc", action="store_true", help="pre-event variability and candidate transient trigger")
     p.add_argument("--source-dir", type=Path)
     p.add_argument("--output", type=Path)
     args = p.parse_args()
     if args.self_test:
-        print(self_test(), snr_self_test())
+        print(self_test(), snr_self_test(), noise_window_self_test())
         return
     if not args.source_dir or not args.output:
         p.error("--source-dir and --output required")
@@ -485,6 +580,8 @@ def main():
         result["parameter_sensitivity"] = response_sensitivity(args.source_dir, result)
     if args.snr:
         result["low_frequency_snr"] = low_frequency_snr(args.source_dir, result)
+    if args.noise_qc:
+        result["noise_window_qc"] = noise_window_qc(args.source_dir, result)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({"status": result["status"], "test": result["test"],
