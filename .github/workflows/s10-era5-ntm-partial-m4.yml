@@ -87,6 +87,8 @@ jobs:
           python3 -m py_compile "$root/s10_lowwind_75_source_pilot.py"
           python3 "$root/s10_lowwind_75_source_pilot.py" --grid-write --repo-root .
           python3 "$root/s10_lowwind_75_source_pilot.py" --grid-check --repo-root .
+          python3 "$root/s10_lowwind_75_source_pilot.py" --dependency-write --repo-root .
+          python3 "$root/s10_lowwind_75_source_pilot.py" --dependency-check --repo-root .
           sha256sum "$root/s10_lowwind_75_source_pilot.py" "$root/S10_U07p5_NTM_S01_SOURCE_PILOT_RECEIPT_20261105.json"
       - name: Verify original 18NTM reference speed floor against operating channels (no solver)
         shell: bash
