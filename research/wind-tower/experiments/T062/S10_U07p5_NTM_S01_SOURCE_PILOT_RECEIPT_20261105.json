@@ -1,0 +1,69 @@
+{
+  "SOURCE": "Original 158m TurbSim .inp member from SHA-pinned historical ZIP; original 18-case source identity CSV",
+  "READING_LEVEL": "Original TurbSim input member bytes and parent SHA checked in this run; historical FST/ServoDyn/DISCON SHA inherited from original source CSV, not reread",
+  "REF": "T062 existing 18NTM source, operating-state and ROSCO v2.6.0 analysis; no new full-text paper",
+  "STANDARD": "IEC 61400-1/6 2025 authorized clauses NOT READ; candidate is NOT normative DLC1.2",
+  "OFFICIAL": "Historical TurbSim input-card syntax, not controller DLL binary identity or IEC certification",
+  "RUN": "Python stdlib source-only one-field reversible patch; no TurbSim/OpenFAST/Abaqus/controller run",
+  "FIG": "0",
+  "TAB": "One original-source candidate TurbSim input and source/acceptance receipt",
+  "parent_case": "U09p343881_NTM_S01",
+  "candidate_case_NOT_RUN": "U07p5_NTM_S01",
+  "parent_archive": "research/wind-tower/archive/local-assets-20261004/turbSim-36/part-004.zip",
+  "parent_member": "inputs/U09p343881_NTM_S01.inp",
+  "input_sha256": {
+    "static_manifest": "c9da25b3a967c9ed3b3a859666263c6964d8480798185e6e031539c38e4c3302",
+    "historical_config_csv": "be58d33306e6ac101d42b42c7f4d24ea5743662d1a9355aff9862b5a7e0aad45",
+    "parent_turbsim_inp": "260769db45090a9f24dc3d05a8d5b89d75279d06fe0898ce1c18b4be31de34a9",
+    "historical_fst": "5307e04d27721095ce6cbb6c125b8be1b4be71790af6c6258e3187343f5db605",
+    "historical_servodyn": "103e7bd71209a095b833ca4ba62627ae7724870615112fdccfbff502076c966e",
+    "historical_discon": "8f5d7546420ee34838e66b63e4b26d64460be5d5492f99c60b6d1ef977ffc61a"
+  },
+  "output_turbsim_inp_sha256": "e403ace85b2915fd4c9976e3cab0d9153da8c0b172b79a1544ce02098a198b33",
+  "changed_fields": {
+    "URef_mps": {
+      "from": 9.343881,
+      "to": 7.5
+    }
+  },
+  "unchanged_source_fields": {
+    "RandSeed1": "104729",
+    "TurbModel": "IECKAI",
+    "IEC_WindType": "NTM",
+    "NumGrid_Z": "51",
+    "NumGrid_Y": "51",
+    "TimeStep": "0.025",
+    "AnalysisTime": "700.0",
+    "HubHt": "161.368806",
+    "IECstandard": "1-ED3",
+    "IECturbc": "A"
+  },
+  "required_observables_NOT_YET_CAPTURED": [
+    "Time",
+    "RotSpeed",
+    "GenSpeed",
+    "GenPwr",
+    "GenTq",
+    "BldPitch1",
+    "BldPitch2",
+    "BldPitch3"
+  ],
+  "future_acceptance_NOT_EXECUTED": {
+    "source": "Before native pilot require exact new BTS, FST/ED/Inflow/ServoDyn/DISCON and actual DLL SHA256",
+    "time": "At DT_Out=0.05s require 100-700s 12001 finite monotonically sampled outputs",
+    "operating": "Report power, rotor/generator speed, torque and pitch min/p05/mean/p95/max, transient and state transitions",
+    "heuristic_only": "GenPwr>1kW and RotSpeed>0.1rpm is NOT controller cut-in certification",
+    "logs": "Retain original stdout, SrvD.sum, ROSCO banner, DLL hash, warnings/errors",
+    "decision": "No fixed cut-in, no physical PASS, no IEC DLC1.2 or fatigue damage conclusion without real outputs"
+  },
+  "tests": {
+    "source_sha": "EXACT",
+    "single_field_patch": "PASS",
+    "reverse_byte_identity": "PASS"
+  },
+  "ERROR_BUDGET": "Source byte SHA exact; source-field change deterministic; wind/physics/controller uncertainty NOT ESTIMATED",
+  "HOLD": "No 7.5m/s BTS/OUTB, runtime controller DLL SHA, operating-state evidence or licensed 2025 IEC clauses",
+  "status": "SOURCE_ONLY_CANDIDATE_NOT_RUN",
+  "physical_pass": false,
+  "stage_passed": 0
+}
