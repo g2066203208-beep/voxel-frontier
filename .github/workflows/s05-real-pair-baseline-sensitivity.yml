@@ -1,10 +1,17 @@
 name: S05 CI.CLC REAL ground motion baseline/drift/QC sensitivity (NOT site PASS)
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - research/t080-seismic-integration-gates-20261022
+    paths:
+      - research/wind-tower/experiments/T079/s05_clc_full_response_waveform_qc.py
+      - .github/workflows/s05-real-pair-baseline-sensitivity.yml
 permissions:
   contents: write
 jobs:
   baseline-real-pair:
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 12
     steps:
@@ -72,4 +79,77 @@ jobs:
                       time.sleep(2);continue
                   raise RuntimeError('UPLOAD_ERROR '+up.stderr[:400])
               else:raise RuntimeError('GIT_409_RETRIES_EXHAUSTED '+path)
+          PY
+
+  full-response-original-2019:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install native ObsPy and numeric libraries
+        run: python -m pip install 'obspy==1.5.1'
+      - name: Fetch exact commit program and immutable original SCEDC inputs
+        shell: bash
+        env:
+          GH_REPO: ${{ github.repository }}
+          SOURCE_COMMIT: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          base="https://raw.githubusercontent.com/$GH_REPO/$SOURCE_COMMIT/research/wind-tower/experiments/T079"
+          mkdir -p source/original
+          curl -fLsS --retry 3 --output s05_clc_full_response_waveform_qc.py "$base/s05_clc_full_response_waveform_qc.py"
+          root="$base/real-records/USGS_ci38457511/CI_CLC"
+          for f in source_receipt.json CI_CLC_HNE_accel_mps2.csv CI_CLC_HNN_accel_mps2.csv original/CI_station_response.xml original/CI_waveform_counts.mseed; do
+            curl -fLsS --retry 3 --output "source/$f" "$root/$f"
+          done
+          python -m py_compile s05_clc_full_response_waveform_qc.py
+          python s05_clc_full_response_waveform_qc.py --self-test
+          python - <<'PY'
+          import hashlib,json,pathlib
+          p=pathlib.Path('source');r=json.loads((p/'source_receipt.json').read_text())
+          for rel in ('original/CI_station_response.xml','original/CI_waveform_counts.mseed','CI_CLC_HNE_accel_mps2.csv','CI_CLC_HNN_accel_mps2.csv'):
+              got=hashlib.sha256((p/rel).read_bytes()).hexdigest()
+              assert got==r['files_SHA256'][rel],rel
+              print('ORIGINAL_BYTE_SHA256_PASS',rel,got)
+          PY
+      - name: Native real-waveform full response removal and PSA
+        run: |
+          set -euo pipefail
+          python s05_clc_full_response_waveform_qc.py --source-dir source --output "$RUNNER_TEMP/S05_CLC_FULL_RESPONSE_REMOVAL_RECEIPT_20261105.json"
+          sha256sum "$RUNNER_TEMP/S05_CLC_FULL_RESPONSE_REMOVAL_RECEIPT_20261105.json" s05_clc_full_response_waveform_qc.py
+      - name: Preserve numeric receipt and logs as workflow artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s05-clc-2019-full-response-original-qc-not-site-pass
+          path: ${{ runner.temp }}/S05_CLC_FULL_RESPONSE_REMOVAL_RECEIPT_20261105.json
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Persist original-data numeric QC receipt in PR 42 branch
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import base64,hashlib,json,os,pathlib,subprocess
+          f=pathlib.Path(os.environ['RUNNER_TEMP'])/'S05_CLC_FULL_RESPONSE_REMOVAL_RECEIPT_20261105.json'
+          data=f.read_bytes()
+          repo=os.environ['GH_REPO'];branch='research/t080-seismic-integration-gates-20261022'
+          path='research/wind-tower/experiments/T079/real-records/S05_CLC_FULL_RESPONSE_REMOVAL_RECEIPT_20261105.json'
+          old=subprocess.run(['gh','api',f'repos/{repo}/contents/{path}','-f',f'ref={branch}'],capture_output=True,text=True)
+          blob=hashlib.sha1(b'blob '+str(len(data)).encode()+b'\\x00'+data).hexdigest()
+          if old.returncode==0:
+              assert json.loads(old.stdout)['sha']==blob,'CONFLICTING_RECEIPT_EXISTS'
+              print('EXISTING_IDENTICAL_RECEIPT',path);raise SystemExit(0)
+          payload={'message':'research(S05): persist native original miniSEED full-response dual-axis QC',
+                   'branch':branch,'content':base64.b64encode(data).decode()}
+          up=subprocess.run(['gh','api','--method','PUT',f'repos/{repo}/contents/{path}','--input','-'],input=json.dumps(payload),capture_output=True,text=True)
+          if up.returncode:raise RuntimeError(up.stderr)
+          print('NATIVE_QC_RECEIPT_COMMIT',json.loads(up.stdout)['commit']['sha'],hashlib.sha256(data).hexdigest())
           PY
