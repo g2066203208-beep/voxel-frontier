@@ -11,12 +11,12 @@ on:
       - 'research/wind-tower/experiments/T077/recovery/S10_3CONTROL_CYCLE_SIGN_M4_PARTITION_20261104.json'
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
   actions: read
 jobs:
   source-only:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -84,3 +84,72 @@ jobs:
           name: s10-real-endpoint-qc-native-receipt
           path: ${{ runner.temp }}/s10_endpoint.json
           retention-days: 90
+
+      - name: Four ETM x 31 sections open / assumed-periodic / two-300s QC (NO SOLVER)
+        if: github.actor != 'github-actions[bot]'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          P=research/wind-tower/experiments/T077/recovery
+          TAG=windtower-s06-t071-t072-source-archive-20261027
+          test "$(gh release view "$TAG" --json isDraft --jq '.isDraft')" = true
+          mkdir -p "$RUNNER_TEMP/s10_16release" "$RUNNER_TEMP/s10_16input"
+          gh release download "$TAG" --pattern '*_original_actions.zip' --dir "$RUNNER_TEMP/s10_16release"
+          test "$(find "$RUNNER_TEMP/s10_16release" -maxdepth 1 -name '*_original_actions.zip' | wc -l)" -eq 16
+          for case in U09p343881_ETM_S06 U11p4_ETM_S04 U19p202140_ETM_S04 U19p202140_ETM_S06; do
+            for batch in A B C D; do
+              ln -s "$RUNNER_TEMP/s10_16release/${case}_batch${batch}_original_actions.zip" "$RUNNER_TEMP/s10_16input/S06_${case}_${batch}_original.zip"
+            done
+          done
+          python "$P/s10_rainflow_endpoint_boundary_qc.py" --self-test
+          python "$P/s10_rainflow_endpoint_boundary_qc.py" \
+            --zip-dir "$RUNNER_TEMP/s10_16input" --full-grid \
+            --manifest "$P/S06_RECOVERED_16_ARTIFACT_SHA256_MANIFEST_20261024.csv" \
+            --geometry research/wind-tower/experiments/T071/T071_input_geometry_31_segments.csv \
+            --baseline "$P/S10_4CASE_31SEG_16AZ_SYNC_GROSS_RAINFLOW_20261030.csv" \
+            --receipt "$RUNNER_TEMP/s10_four_case_31.json"
+          python - "$RUNNER_TEMP/s10_four_case_31.json" <<'PY'
+          import json,sys
+          r=json.load(open(sys.argv[1]))
+          assert len(r['results'])==124 and len(r['source_files'])==16
+          assert all(x['samples']==12001 for x in r['results'])
+          assert all(x['open_half_cycle_rows']>0 for x in r['results'])
+          assert max(v['max_abs_open_oracle_MPa'] for v in r['case_summary'].values()) < 1e-7
+          assert r['stage_PASS_count']==0 and not r['physical_PASS']
+          print('S10_4ETM_31SEG_124_REAL_SOURCE_ENDPOINT_AND_SPLIT_QC_PASS_NOT_MATERIAL_LIFE')
+          PY
+          sha256sum "$P/s10_rainflow_endpoint_boundary_qc.py" "$RUNNER_TEMP/s10_four_case_31.json"
+      - name: Persist all 124 source-derived rows into existing S10 receipt on Draft PR
+        if: github.actor != 'github-actions[bot]'
+        run: |
+          set -euo pipefail
+          P=research/wind-tower/experiments/T077/recovery
+          python - "$P/S10_3CONTROL_CYCLE_SIGN_M4_PARTITION_20261104.json" "$RUNNER_TEMP/s10_four_case_31.json" <<'PY'
+          import json,sys,pathlib
+          p=pathlib.Path(sys.argv[1])
+          old=json.loads(p.read_text(encoding='utf-8'))
+          new=json.loads(pathlib.Path(sys.argv[2]).read_text(encoding='utf-8'))
+          old['four_case_31_segment_endpoint_qc']=new
+          p.write_text(json.dumps(old,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
+          print('S10_PERSIST_124_REAL_ROWS_EXISTING_RECEIPT')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$P/S10_3CONTROL_CYCLE_SIGN_M4_PARTITION_20261104.json"
+          if git diff --cached --quiet; then
+            echo S10_FULL_GRID_RECEIPT_UNCHANGED
+          else
+            git commit -m 'data(S10): persist four-ETM 31-section endpoint and split-window source QC'
+            git pull --rebase origin research/t080-seismic-integration-gates-20261022
+            git push origin HEAD:research/t080-seismic-integration-gates-20261022
+          fi
+      - name: Preserve 124-row native full-grid receipt artifact
+        if: always() && github.actor != 'github-actions[bot]'
+        uses: actions/upload-artifact@v4
+        with:
+          name: s10-four-etm-31seg-real-endpoint-split-receipt
+          path: ${{ runner.temp }}/s10_four_case_31.json
+          retention-days: 90
+          if-no-files-found: warn
