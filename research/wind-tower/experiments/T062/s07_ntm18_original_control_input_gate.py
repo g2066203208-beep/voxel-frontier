@@ -333,6 +333,123 @@ def self_test():
         raise AssertionError("DUPLICATE_MANIFEST_ACCEPTED")
     print("S07_NTM18_CONFIG_SELFTEST_PASS: positive parser and 4 negative rejection classes")
 
+
+# S06/S10 original DISCON low-wind controller source gate.
+# The tagged ROSCO-v2.6.0 source has no automatic wind-speed cut-in
+# implication from VS_MinOMSpd or the pitch shutdown switch.
+import math
+ORIGINAL_DISCON_SHA = "8f5d7546420ee34838e66b63e4b26d64460be5d5492f99c60b6d1ef977ffc61a"
+ORIGINAL_DISCON_BYTES = 17600
+LOWWIND_DISCON_KEYS = (
+    "SD_Mode", "SD_MaxPit", "SD_CornerFreq", "PS_Mode", "PS_BldPitchMin_N",
+    "PS_WindSpeeds", "PS_BldPitchMin", "VS_ControlMode", "WE_Mode",
+    "VS_MinOMSpd", "VS_RefSpd", "VS_TSRopt", "WE_GearboxRatio",
+    "WE_BladeRadius", "VS_MinTq", "PC_MaxRat",
+)
+DISCON_NUMBER = re.compile(r"[+-]?(?:(?:\d+\.?\d*|\.\d+)(?:[EeDd][+-]?\d+)?)")
+
+def inspect_discon_lowwind(raw, expected_sha=ORIGINAL_DISCON_SHA,
+                           expected_bytes=ORIGINAL_DISCON_BYTES):
+    require(len(raw) == expected_bytes, "DISCON_LOW_WIND_BYTE_COUNT")
+    require(sha(raw) == expected_sha, "DISCON_LOW_WIND_SHA256")
+    txt = raw.decode("utf-8-sig", errors="strict")
+    entries = {}
+    for line_number, line in enumerate(txt.splitlines(), 1):
+        if "!" not in line:
+            continue
+        val, comment = line.split("!", 1)
+        match = re.match(r"\s*([A-Za-z][A-Za-z0-9_]*)\b", comment)
+        if not match or not val.strip():
+            continue
+        key = match.group(1)
+        if key not in LOWWIND_DISCON_KEYS:
+            continue
+        require(key not in entries, "DISCON_LOW_WIND_DUPLICATE:" + key)
+        tokens = val.replace(",", " ").split()
+        require(tokens and all(DISCON_NUMBER.fullmatch(v) for v in tokens),
+                "DISCON_LOW_WIND_NONNUMERIC:" + key)
+        numbers = [float(v.replace("D", "E").replace("d", "e")) for v in tokens]
+        require(all(math.isfinite(v) for v in numbers), "DISCON_LOW_WIND_NONFINITE:" + key)
+        entries[key] = {"line": line_number, "raw": val.strip(), "values": numbers}
+    required = ("SD_Mode", "PS_Mode", "VS_ControlMode", "WE_Mode",
+                "VS_MinOMSpd", "VS_TSRopt", "WE_GearboxRatio")
+    require(all(k in entries for k in required), "DISCON_LOW_WIND_MISSING_REQUIRED")
+    def scalar(k):
+        require(len(entries[k]["values"]) == 1, "DISCON_LOW_WIND_NONSCALAR:" + k)
+        return entries[k]["values"][0]
+    require(scalar("SD_Mode") in (0, 1), "DISCON_LOW_WIND_SD_MODE")
+    require(scalar("PS_Mode") in (0, 1), "DISCON_LOW_WIND_PS_MODE")
+    require(scalar("VS_ControlMode") in (0, 1, 2, 3), "DISCON_LOW_WIND_VS_MODE")
+    require(scalar("WE_Mode") in (0, 1, 2), "DISCON_LOW_WIND_WE_MODE")
+    for key in ("VS_MinOMSpd", "VS_TSRopt", "WE_GearboxRatio"):
+        require(scalar(key) > 0, "DISCON_LOW_WIND_NONPOSITIVE:" + key)
+    boundary = None
+    if "WE_BladeRadius" in entries:
+        require(scalar("WE_BladeRadius") > 0, "DISCON_LOW_WIND_RADIUS")
+        boundary = (scalar("VS_MinOMSpd") * scalar("WE_BladeRadius") /
+                    (scalar("VS_TSRopt") * scalar("WE_GearboxRatio")))
+    return {
+        "SOURCE": "Original 158m 17600-byte DISCON.IN supplementary ZIP member",
+        "READING_LEVEL": "Exact original bytes/SHA and tagged ROSCO-v2.6.0 executable source lines",
+        "REF": "T062 existing original DISCON and 18NTM controller source receipts",
+        "STANDARD": "IEC 61400-1/6:2025 licensed clauses NOT READ",
+        "OFFICIAL": {
+            "Controllers.f90": "v2.6.0 lines 92-95: Shutdown called only when SD_Mode=1",
+            "ControllerBlocks.f90": "v2.6.0 lines 52-54: TSR generator speed reference clamp; lines 401-416: pitch-triggered shutdown",
+            "ReadSetParameters.f90": "v2.6.0 lines 231-245 and 360-363: actual controller flags and shutdown parameters",
+        },
+        "RUN": "Python original member parsing and negative tests, NO production solver",
+        "FIG": "0", "TAB": "original low-wind controller keys and conditional five-bin diagnostic",
+        "original_discon_sha256": sha(raw), "original_discon_bytes": len(raw),
+        "parameters": entries,
+        "original_SD_Mode": scalar("SD_Mode"),
+        "original_PS_Mode": scalar("PS_Mode"),
+        "original_VS_ControlMode": scalar("VS_ControlMode"),
+        "original_WE_Mode": scalar("WE_Mode"),
+        "rosco_pitch_shutdown_branch_enabled": scalar("SD_Mode") == 1,
+        "conditional_tsr_min_reference_boundary_mps_NOT_CUTIN": boundary,
+        "diagnostic_bins": [
+            {"center_mps": u, "below_reference_clamp_boundary_IF_WIND_ESTIMATE_EQUALS_CENTER":
+             u < boundary if boundary is not None else None}
+            for u in (4.5, 5.5, 6.5, 7.5, 8.5)
+        ],
+        "cut_in_verdict": "NOT_ESTABLISHED_FROM_DISCON_OR_SERVODYN",
+        "assumptions": "Conditional TSR reference clamp uses estimated wind equal to bin center; not actual wind-speed cut-in. SD_Mode=0 disables only ROSCO pitch shutdown branch, not other OpenFAST stop/brake logic.",
+        "ERROR_BUDGET": "SHA and numeric tokens exact, algebraic floating roundoff negligible; DLL identity, wind estimator bias, turbulence and physical cut-in unknown",
+        "HOLD": "4-8m/s original BTS/OUTB, controller DLL identity/runtime state, IEC2025 clauses and S01-S04 physics unverified",
+        "physical_pass": False, "stage_passed": 0,
+    }
+
+def discon_lowwind_self_test():
+    template = ("0 ! SD_Mode - no shutdown\n1 ! PS_Mode\n2 ! VS_ControlMode\n"
+                "2 ! WE_Mode\n36.6 ! VS_MinOMSpd\n7.5 ! VS_TSRopt\n"
+                "50 ! WE_GearboxRatio\n89.15 ! WE_BladeRadius\n0.9 ! SD_MaxPit\n")
+    raw = template.encode()
+    good = inspect_discon_lowwind(raw, sha(raw), len(raw))
+    assert not good["rosco_pitch_shutdown_branch_enabled"]
+    assert abs(good["conditional_tsr_min_reference_boundary_mps_NOT_CUTIN"] -
+               36.6 * 89.15 / (7.5 * 50)) < 1e-12
+    bad = [
+        (raw, "0" * 64, len(raw)),
+        (raw, sha(raw), len(raw) + 1),
+        (raw.replace(b"0 ! SD_Mode", b"2 ! SD_Mode"), None, None),
+        (raw.replace(b"2 ! VS_ControlMode", b"NaN ! VS_ControlMode"), None, None),
+        (raw.replace(b"2 ! WE_Mode", b"4 ! WE_Mode"), None, None),
+        (raw.replace(b"50 ! WE_GearboxRatio", b"0 ! WE_GearboxRatio"), None, None),
+        (raw + b"1 ! SD_Mode\n", None, None),
+        (raw.replace(b"0 ! SD_Mode - no shutdown\n", b""), None, None),
+        (raw.replace(b"89.15 ! WE_BladeRadius", b"-1 ! WE_BladeRadius"), None, None),
+    ]
+    for source, digest, length in bad:
+        try:
+            inspect_discon_lowwind(source, digest if digest is not None else sha(source),
+                                   length if length is not None else len(source))
+        except ValueError:
+            pass
+        else:
+            raise AssertionError("DISCON_LOW_WIND_BAD_SOURCE_ACCEPTED")
+    print("S07_ORIGINAL_DISCON_LOWWIND_SELFTEST_PASS: 1 positive, 9 negative")
+
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--repo-root", type=Path)
@@ -341,11 +458,14 @@ def main():
     p.add_argument("--self-test", action="store_true")
     p.add_argument("--servo-startup-source", type=Path)
     p.add_argument("--servo-startup-receipt", type=Path)
+    p.add_argument("--discon-lowwind-source", type=Path)
+    p.add_argument("--discon-lowwind-receipt", type=Path)
     args = p.parse_args()
     if args.self_test:
         self_test()
         servo_startup_self_test()
-        if not args.repo_root and not args.servo_startup_source:
+        discon_lowwind_self_test()
+        if not args.repo_root and not args.servo_startup_source and not args.discon_lowwind_source:
             return
     if args.servo_startup_source:
         require(args.servo_startup_receipt is not None, "SERVO_RECEIPT_PATH_REQUIRED")
@@ -353,6 +473,19 @@ def main():
         args.servo_startup_receipt.parent.mkdir(parents=True, exist_ok=True)
         args.servo_startup_receipt.write_text(json.dumps(record, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
         print("S07_ORIGINAL_SERVO_SOURCE_PASS_NOT_CUTIN", json.dumps(record["fields"], sort_keys=True))
+        return
+    if args.discon_lowwind_source:
+        require(args.discon_lowwind_receipt is not None, "DISCON_LOWWIND_RECEIPT_REQUIRED")
+        record = inspect_discon_lowwind(args.discon_lowwind_source.read_bytes())
+        args.discon_lowwind_receipt.parent.mkdir(parents=True, exist_ok=True)
+        args.discon_lowwind_receipt.write_text(json.dumps(record, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        print("S07_ORIGINAL_DISCON_LOWWIND_SOURCE_QC_PASS_NOT_CUTIN",
+              json.dumps({"SD_Mode": record["original_SD_Mode"],
+                          "PS_Mode": record["original_PS_Mode"],
+                          "VS_ControlMode": record["original_VS_ControlMode"],
+                          "WE_Mode": record["original_WE_Mode"],
+                          "tsr_reference_clamp_mps_NOT_CUTIN": record["conditional_tsr_min_reference_boundary_mps_NOT_CUTIN"],
+                          "diagnostic_bins": record["diagnostic_bins"]}, sort_keys=True))
         return
     require(args.repo_root and args.out and args.receipt, "REQUIRED_ROOT_OUT_RECEIPT")
     data, receipt = build(args.repo_root)
