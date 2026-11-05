@@ -140,8 +140,8 @@ def servo_startup_self_test():
         (raw.replace(b"True GenTiStr", b"maybe GenTiStr"), None, None),
         (raw.replace(b"9999.9 SpdGenOn", b"NaN SpdGenOn"), None, None),
         (raw.replace(b"0 TimGenOn", b"-1 TimGenOn"), None, None),
-        (raw.replace(b"9999.9 TimGenOf", b"9999.9 TimGenOf\\n1 TimGenOf"), None, None),
-        (raw.replace(b"False GenTiStp\\n", b""), None, None)
+        (raw.replace(b"9999.9 TimGenOf", b"9999.9 TimGenOf\n1 TimGenOf"), None, None),
+        (raw.replace(b"False GenTiStp\n", b""), None, None)
     ]
     for b, h, n in bad:
         try:
