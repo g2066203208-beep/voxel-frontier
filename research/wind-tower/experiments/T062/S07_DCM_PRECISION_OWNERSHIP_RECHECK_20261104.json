@@ -303,5 +303,62 @@
     "failure_record": "Earlier CI 41691760295 failed; new run 41700508640 completed/success. Original t=0.1875s Mx numerical threshold still exceeded; cannot infer missing physical force.",
     "HOLD": "Inertia/gravity/wind wrench ownership unclosed; DLC1.2 0/126; E/WE native 0; 0/12 strict.",
     "physical_pass": false
+  },
+  "native_rp_dcm_paired_source_20261105": {
+    "status": "REAL_ORIGINAL_2S_NATIVE_TAXIS_RP_TRANSPOSE_PAIR_NUMERIC_QC_PASS__NOT_PHYSICS_PASS",
+    "SOURCE": {
+      "read_level": "LIBRARY_ORIGINAL_ZIP_COMPLETE_BYTES_CRC_GZIP_OUTB_FILEID4_AND_G_TAGGED_NATIVE_DCM; 41 time-aligned pairs, 161 native DCM G records",
+      "library_path": "/WindTower/S07_Native_2S_20261103.zip",
+      "zip_sha256": "30ad5d9821af7c21999d2fbdf07271504cb202d1b36584d0a2a5c60348fa6251",
+      "native_probe_uncompressed_sha256": "238eb41bd4567e5c13bfc03759ac3945789742f71e23f5396aedefe15022aa48",
+      "native_outb_uncompressed_sha256": "ca2b1e961520782b90f32de905b3597e3eee3543922259949d32c898a752f555",
+      "native_audit_json_sha256": "a49efaa80fd64f9b51986bbac0dbf36522c50fbc54a9b51b4f71df694a59e924",
+      "source_model": "U09p343881_ETM_S06; Linux derived OpenFAST v3.5.3, diagnostic ROSCO v2.9.0 substituted, 2s startup; gage9=node220"
+    },
+    "REF": "Existing T062 OpenFAST v3.5.3 ElastoDyn.f90 native t1/-t3/t2 and NWTC SmllRotTrans353 method; no new journal full-text",
+    "STANDARD": "No authorized 2025 IEC/GB/NB clause newly read; no compliance conclusion",
+    "OFFICIAL": "Native probe writes m%CoordSys%t1,-t3,t2 at node220; independently archived packed OUTB TwHt9RPxi/yi/zi; source probe and audit verified by SHA/CRC",
+    "RUN": {
+      "kind": "READ_ONLY_PYTHON_SOURCE_BYTE_REPLAY_NOT_SOLVER",
+      "local_python_version": "3.11+ standard library; local CPython checked",
+      "existing_script": "research/wind-tower/experiments/T062/s07_native_2s_dcm_artifact_qc.py",
+      "committed_script_sha256": "05109ac914073ac88df99beb028c99ef4037afa17d9887b3c6c44c4b32b9eb87",
+      "local_equivalent_helper_sha256": "ecb06f6266a1ce9b9136eb910921264e72ea353c238be917e528799a5f08434c",
+      "local_equivalent_helper_result_sha256": "978d256301fbb5ede2e312982ef509263a6d4f93a70bb57e3cecb9d94a83ab86",
+      "tests": "1 full original ZIP positive; 2 byte-tamper SHA rejects; 2 invalid matrix rejects; source-vs-audit 161 exact Q matches; candidate sign oracle 41",
+      "committed_script_exact_execution": "NOT_YET_EXECUTED_AS_CHECKED_OUT_FILE; local equivalent helper executed; CI NOT CLAIMED",
+      "native_solver_runs": 0
+    },
+    "FIG": 0,
+    "TAB": {
+      "native_dcm_samples": 161,
+      "rp_dcm_time_pairs": 41,
+      "time_window_s": [
+        0,
+        2
+      ],
+      "dt_output_s": 0.05,
+      "gage_node": 220,
+      "max_rp_norm_deg": 0.24480230401980785,
+      "max_abs_matrix_component_native_vs_transposed_SmllRotTrans353": 3.204634713323273e-8,
+      "max_abs_matrix_component_native_vs_direct_SmllRotTrans353": 0.008540398006578156,
+      "direct_exceeding_quant_screen": 40,
+      "transpose_exceeding_quant_screen": 0,
+      "max_native_raw_vs_derived_Q_error": 0
+    },
+    "assumptions": "Native internal basis [t1,-t3,t2] mapped to IEC x,-z,y; packed TwHt9RP (deg) is same-run output, candidate R=SmllRotTrans353(RP_rad), compare R and R^T; only local 2s source identity, not historical Windows ETM/NTM or 31 stations.",
+    "error_budget": {
+      "rp_half_lsb_rad": [
+        3.4158874601949596e-9,
+        3.2579827431717214e-8,
+        4.597578198756345e-11
+      ],
+      "conservative_local_candidate_component_screen": 6.55168850417576e-8,
+      "ratio_observed_to_screen": 0.4891311165481661,
+      "note": "2||half-LSB RP_rad|| is a conservative small-angle diagnostic screening allowance, NOT a proven full-system uncertainty bound; actual RP/DCM spatial/model error beyond this short run unbounded."
+    },
+    "failure_log": "No original byte/CRC failure; direct R rather than transpose disagrees with native t-axes in 40/41 paired instants beyond RP packed-quantization screen. No evidence of missing physical force from this test.",
+    "HOLD": "Only node220 2s Linux derived startup, not 100-700s historical Windows 9/31-station same-state DCM; controller substituted; FL/ML contain gravity/inertia, so no external wind-load ownership; DLC1.2 0/126, E/WE 0, S07 BLOCKED.",
+    "physical_pass": false
   }
 }
