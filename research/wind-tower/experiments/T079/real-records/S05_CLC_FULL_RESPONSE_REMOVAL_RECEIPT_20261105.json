@@ -133,5 +133,575 @@
         }
       ]
     }
-  ]
+  ],
+  "parameter_sensitivity": {
+    "status": "S05_REAL_WAVEFORM_PROCESSING_PARAMETER_SENSITIVITY_NOT_SITE_PASS",
+    "SOURCE": {
+      "mseed_sha256": "9bfcd3ab44ade97a5ec1d586d0e4240c9b2d14347ff2ec3d86e8c75df0dd58ab",
+      "stationxml_sha256": "31aff27345c4795d37b10d1affce7e2a3504e5d5a93cd0758bc8781a4da32e4c",
+      "csv_sha256": {
+        "CI.CLC..HNE": "fb0c91fe588ccb4f6bed3d4ac77c4bc148231d8e5df6be19aa9cf3bc3d4c25ef",
+        "CI.CLC..HNN": "d6250274d578b87e4310eadcca5a910dd38cd69ad639dbca435af8e8a0d81e30"
+      }
+    },
+    "REF": "ObsPy 1.5.1 remove_response + Newmark 5% PSA; shared real miniSEED and StationXML",
+    "STANDARD": "No new licensed IEC/GB/NB clause read; no Jiayu site spectrum",
+    "OFFICIAL": "SCEDC source bytes hash-verified by parent process",
+    "RUN": "Native original-waveform non-production QC (requires CI execution)",
+    "FIG": 0,
+    "TAB": "2 channels x 6 scenarios x 5 periods = 60 PSA",
+    "parameters": {
+      "baseline_prefilt_hz": [
+        0.02,
+        0.04,
+        20.0,
+        25.0
+      ],
+      "baseline_water_level_db": 60.0,
+      "sensitivity_prefilt_hz": [
+        [
+          0.01,
+          0.02,
+          20,
+          25
+        ],
+        [
+          0.04,
+          0.08,
+          20,
+          25
+        ]
+      ],
+      "sensitivity_water_level_db": [
+        40,
+        80
+      ],
+      "edge_trim_s_each_side": 10,
+      "dt_s": 0.01,
+      "damping": 0.05,
+      "prewindow_s": 20,
+      "response_zero_mean": false,
+      "response_taper": false
+    },
+    "assumptions": [
+      "20s prewindow is an unvalidated baseline candidate; full event onset not established",
+      "Edge experiment uses the same 10..190s evaluation samples; deconvolution window differs",
+      "Relative changes are processing sensitivity, not instrument calibration error",
+      "Water level and pre-filter sweeps do not establish usable long-period SNR"
+    ],
+    "error_budget": "64-bit numeric; exact source hash via parent process; baseline regression tolerance 1e-9*max(1,PSA) m/s2; parameter/edge variation quantified but no physical uncertainty threshold preapproved",
+    "HOLD": "No long-period noise/SNR, event-onset, station/site transfer, target-spectrum or structural verification; S05 PARTIAL, E/WE=0, 0/12",
+    "test": "2_POSITIVE_7_NEGATIVE_PASS",
+    "rows": [
+      {
+        "channel": "HNE",
+        "scenario": "baseline",
+        "pre_filt_hz": [
+          0.02,
+          0.04,
+          20.0,
+          25.0
+        ],
+        "water_level_db": 60.0,
+        "npts": 20001,
+        "reference": "same original full-record baseline",
+        "periods_s": [
+          4.0,
+          6.0,
+          6.230957762865167,
+          8.0,
+          10.0
+        ],
+        "psa_m_s2": [
+          0.33431819677506636,
+          0.260379450592748,
+          0.2895536891130785,
+          0.31272453174288284,
+          0.22368731282442977
+        ],
+        "baseline_psa_m_s2": [
+          0.33431819677506636,
+          0.260379450592748,
+          0.2895536891130785,
+          0.31272453174288284,
+          0.22368731282442977
+        ],
+        "relative_change_percent": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "max_abs_change_percent": 0.0
+      },
+      {
+        "channel": "HNE",
+        "scenario": "prefilter_lower_corner",
+        "pre_filt_hz": [
+          0.01,
+          0.02,
+          20.0,
+          25.0
+        ],
+        "water_level_db": 60.0,
+        "npts": 20001,
+        "reference": "same original full-record baseline",
+        "periods_s": [
+          4.0,
+          6.0,
+          6.230957762865167,
+          8.0,
+          10.0
+        ],
+        "psa_m_s2": [
+          0.35731018723153934,
+          0.28603589796267254,
+          0.31124994164324654,
+          0.3319724524573519,
+          0.2429063665261479
+        ],
+        "baseline_psa_m_s2": [
+          0.33431819677506636,
+          0.260379450592748,
+          0.2895536891130785,
+          0.31272453174288284,
+          0.22368731282442977
+        ],
+        "relative_change_percent": [
+          6.877277599083942,
+          9.853483948721076,
+          7.492998136761808,
+          6.15491231442451,
+          8.591928374946756
+        ],
+        "max_abs_change_percent": 9.853483948721076
+      },
+      {
+        "channel": "HNE",
+        "scenario": "prefilter_higher_corner",
+        "pre_filt_hz": [
+          0.04,
+          0.08,
+          20.0,
+          25.0
+        ],
+        "water_level_db": 60.0,
+        "npts": 20001,
+        "reference": "same original full-record baseline",
+        "periods_s": [
+          4.0,
+          6.0,
+          6.230957762865167,
+          8.0,
+          10.0
+        ],
+        "psa_m_s2": [
+          0.3251915710676613,
+          0.25789906737571444,
+          0.2832881602186201,
+          0.3015956746013919,
+          0.21713902127993187
+        ],
+        "baseline_psa_m_s2": [
+          0.33431819677506636,
+          0.260379450592748,
+          0.2895536891130785,
+          0.31272453174288284,
+          0.22368731282442977
+        ],
+        "relative_change_percent": [
+          -2.7299219113536943,
+          -0.952603291614218,
+          -2.1638573881238132,
+          -3.5586773699739283,
+          -2.927430913186213
+        ],
+        "max_abs_change_percent": 3.5586773699739283
+      },
+      {
+        "channel": "HNE",
+        "scenario": "water_level_40dB",
+        "pre_filt_hz": [
+          0.02,
+          0.04,
+          20.0,
+          25.0
+        ],
+        "water_level_db": 40.0,
+        "npts": 20001,
+        "reference": "same original full-record baseline",
+        "periods_s": [
+          4.0,
+          6.0,
+          6.230957762865167,
+          8.0,
+          10.0
+        ],
+        "psa_m_s2": [
+          0.33431819677506636,
+          0.260379450592748,
+          0.2895536891130785,
+          0.31272453174288284,
+          0.22368731282442977
+        ],
+        "baseline_psa_m_s2": [
+          0.33431819677506636,
+          0.260379450592748,
+          0.2895536891130785,
+          0.31272453174288284,
+          0.22368731282442977
+        ],
+        "relative_change_percent": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "max_abs_change_percent": 0.0
+      },
+      {
+        "channel": "HNE",
+        "scenario": "water_level_80dB",
+        "pre_filt_hz": [
+          0.02,
+          0.04,
+          20.0,
+          25.0
+        ],
+        "water_level_db": 80.0,
+        "npts": 20001,
+        "reference": "same original full-record baseline",
+        "periods_s": [
+          4.0,
+          6.0,
+          6.230957762865167,
+          8.0,
+          10.0
+        ],
+        "psa_m_s2": [
+          0.33431819677506636,
+          0.260379450592748,
+          0.2895536891130785,
+          0.31272453174288284,
+          0.22368731282442977
+        ],
+        "baseline_psa_m_s2": [
+          0.33431819677506636,
+          0.260379450592748,
+          0.2895536891130785,
+          0.31272453174288284,
+          0.22368731282442977
+        ],
+        "relative_change_percent": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "max_abs_change_percent": 0.0
+      },
+      {
+        "channel": "HNE",
+        "scenario": "edge_trim_10s_each_side",
+        "pre_filt_hz": [
+          0.02,
+          0.04,
+          20.0,
+          25.0
+        ],
+        "water_level_db": 60.0,
+        "npts": 18001,
+        "edge_trim_s_each_side": 10.0,
+        "reference": "full-record deconvolution evaluated on identical 10s..190s interval",
+        "periods_s": [
+          4.0,
+          6.0,
+          6.230957762865167,
+          8.0,
+          10.0
+        ],
+        "psa_m_s2": [
+          0.33735832829728774,
+          0.2500480688308291,
+          0.2954275783703737,
+          0.30869652117677865,
+          0.22565631166655908
+        ],
+        "baseline_psa_m_s2": [
+          0.33557353242698673,
+          0.24806057306764384,
+          0.2818677626455216,
+          0.2937958846413582,
+          0.18866640387495107
+        ],
+        "relative_change_percent": [
+          0.5318643152195879,
+          0.801213888449448,
+          4.810701159147812,
+          5.071764893374842,
+          19.605985502392407
+        ],
+        "max_abs_change_percent": 19.605985502392407
+      },
+      {
+        "channel": "HNN",
+        "scenario": "baseline",
+        "pre_filt_hz": [
+          0.02,
+          0.04,
+          20.0,
+          25.0
+        ],
+        "water_level_db": 60.0,
+        "npts": 20001,
+        "reference": "same original full-record baseline",
+        "periods_s": [
+          4.0,
+          6.0,
+          6.230957762865167,
+          8.0,
+          10.0
+        ],
+        "psa_m_s2": [
+          0.9315509030566622,
+          0.5628511692749938,
+          0.501497363510716,
+          0.19246331330464866,
+          0.11297655477450093
+        ],
+        "baseline_psa_m_s2": [
+          0.9315509030566622,
+          0.5628511692749938,
+          0.501497363510716,
+          0.19246331330464866,
+          0.11297655477450093
+        ],
+        "relative_change_percent": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "max_abs_change_percent": 0.0
+      },
+      {
+        "channel": "HNN",
+        "scenario": "prefilter_lower_corner",
+        "pre_filt_hz": [
+          0.01,
+          0.02,
+          20.0,
+          25.0
+        ],
+        "water_level_db": 60.0,
+        "npts": 20001,
+        "reference": "same original full-record baseline",
+        "periods_s": [
+          4.0,
+          6.0,
+          6.230957762865167,
+          8.0,
+          10.0
+        ],
+        "psa_m_s2": [
+          0.9666799397048182,
+          0.5986962601750333,
+          0.537831618477089,
+          0.22224220742805334,
+          0.14596060790591395
+        ],
+        "baseline_psa_m_s2": [
+          0.9315509030566622,
+          0.5628511692749938,
+          0.501497363510716,
+          0.19246331330464866,
+          0.11297655477450093
+        ],
+        "relative_change_percent": [
+          3.7710270617406394,
+          6.3684847534760225,
+          7.245153735608145,
+          15.472504142266263,
+          29.19548502540954
+        ],
+        "max_abs_change_percent": 29.19548502540954
+      },
+      {
+        "channel": "HNN",
+        "scenario": "prefilter_higher_corner",
+        "pre_filt_hz": [
+          0.04,
+          0.08,
+          20.0,
+          25.0
+        ],
+        "water_level_db": 60.0,
+        "npts": 20001,
+        "reference": "same original full-record baseline",
+        "periods_s": [
+          4.0,
+          6.0,
+          6.230957762865167,
+          8.0,
+          10.0
+        ],
+        "psa_m_s2": [
+          0.9088356538286336,
+          0.5386256724963742,
+          0.4755031877816207,
+          0.19337184228870638,
+          0.10477071734430993
+        ],
+        "baseline_psa_m_s2": [
+          0.9315509030566622,
+          0.5628511692749938,
+          0.501497363510716,
+          0.19246331330464866,
+          0.11297655477450093
+        ],
+        "relative_change_percent": [
+          -2.438433493381187,
+          -4.30406794922793,
+          -5.183312539695917,
+          0.4720530725871974,
+          -7.263310026199421
+        ],
+        "max_abs_change_percent": 7.263310026199421
+      },
+      {
+        "channel": "HNN",
+        "scenario": "water_level_40dB",
+        "pre_filt_hz": [
+          0.02,
+          0.04,
+          20.0,
+          25.0
+        ],
+        "water_level_db": 40.0,
+        "npts": 20001,
+        "reference": "same original full-record baseline",
+        "periods_s": [
+          4.0,
+          6.0,
+          6.230957762865167,
+          8.0,
+          10.0
+        ],
+        "psa_m_s2": [
+          0.9315509030566622,
+          0.5628511692749938,
+          0.501497363510716,
+          0.19246331330464866,
+          0.11297655477450093
+        ],
+        "baseline_psa_m_s2": [
+          0.9315509030566622,
+          0.5628511692749938,
+          0.501497363510716,
+          0.19246331330464866,
+          0.11297655477450093
+        ],
+        "relative_change_percent": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "max_abs_change_percent": 0.0
+      },
+      {
+        "channel": "HNN",
+        "scenario": "water_level_80dB",
+        "pre_filt_hz": [
+          0.02,
+          0.04,
+          20.0,
+          25.0
+        ],
+        "water_level_db": 80.0,
+        "npts": 20001,
+        "reference": "same original full-record baseline",
+        "periods_s": [
+          4.0,
+          6.0,
+          6.230957762865167,
+          8.0,
+          10.0
+        ],
+        "psa_m_s2": [
+          0.9315509030566622,
+          0.5628511692749938,
+          0.501497363510716,
+          0.19246331330464866,
+          0.11297655477450093
+        ],
+        "baseline_psa_m_s2": [
+          0.9315509030566622,
+          0.5628511692749938,
+          0.501497363510716,
+          0.19246331330464866,
+          0.11297655477450093
+        ],
+        "relative_change_percent": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "max_abs_change_percent": 0.0
+      },
+      {
+        "channel": "HNN",
+        "scenario": "edge_trim_10s_each_side",
+        "pre_filt_hz": [
+          0.02,
+          0.04,
+          20.0,
+          25.0
+        ],
+        "water_level_db": 60.0,
+        "npts": 18001,
+        "edge_trim_s_each_side": 10.0,
+        "reference": "full-record deconvolution evaluated on identical 10s..190s interval",
+        "periods_s": [
+          4.0,
+          6.0,
+          6.230957762865167,
+          8.0,
+          10.0
+        ],
+        "psa_m_s2": [
+          0.9166761240429894,
+          0.5711268833839915,
+          0.4994786529055961,
+          0.19053874859348538,
+          0.10567720673099451
+        ],
+        "baseline_psa_m_s2": [
+          0.9034555343241767,
+          0.5437651562020123,
+          0.4821259845832086,
+          0.18662535372010472,
+          0.12809475834814815
+        ],
+        "relative_change_percent": [
+          1.4633359602697293,
+          5.0319015240127385,
+          3.5991979020563836,
+          2.096925629542201,
+          -17.50075639802925
+        ],
+        "max_abs_change_percent": 17.50075639802925
+      }
+    ],
+    "max_abs_prefilter_percent": 29.19548502540954,
+    "max_abs_water_level_percent": 0.0,
+    "max_abs_edge_percent": 19.605985502392407
+  }
 }
