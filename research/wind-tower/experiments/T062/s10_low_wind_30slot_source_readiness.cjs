@@ -11,7 +11,7 @@ const HASH={
  controller:"be58d33306e6ac101d42b42c7f4d24ea5743662d1a9355aff9862b5a7e0aad45",
  identity:"d57ff9e71b58b531b1aaa357ad7a57a86daf529e061f9d8996cf2453b04a7da5"
 };
-function build(eraText,coverageText,ctrlText,idText,expectedHashes=HASH){
+function build(eraText,coverageText,ctrlText,idText,expectedHashes=HASH,extras=null){
  const input={era:eraText,coverage:coverageText,controller:ctrlText,identity:idText};
  for(const k of Object.keys(HASH))ok(sha256(input[k])===expectedHashes[k],"SOURCE_SHA256_MISMATCH_"+k);
  const era=parseCsv(eraText),coverage=parseCsv(coverageText),ctrl=parseCsv(ctrlText),ids=parseCsv(idText);
@@ -61,13 +61,14 @@ function build(eraText,coverageText,ctrlText,idText,expectedHashes=HASH){
   OFFICIAL:"GitHub REST repository tree, releases and Actions metadata; OpenFAST/TurbSim source identities inherited, NOT native controller or formal IEC validation",
   RUN:"Node source-only deterministic 30-slot construction with 6 tamper rejection tests; no TurbSim, OpenFAST or Abaqus production run",
   FIG:"0",TAB:"30 proposed source-missing low-wind NTM slots; no wind-field or material response figures",
-  input_sha256:HASH,inventory_snapshot:INVENTORY,
+  input_sha256:extras?{...HASH,discon_receipt:CONTROLLER_AUDIT_HASH.discon_receipt,reference_servo:CONTROLLER_AUDIT_HASH.reference_servo}:HASH,inventory_snapshot:INVENTORY,
   results:{bins:[4,5,6,7,8],slot_count:30,unique_candidate_seed1:[...seeds.values()],era5_21y_hours:95402,diagnostic_operating_hours:106900,share_of_diagnostic_operating_hours:95402/106900,original_lowwind_outb_found_in_checked_sources:0,formal_dlc12_verified_slots:0,original_controller_source_configs_checked:18,original_18ntm_gage_count:9},
-  cut_in_sensitivity:{status:"SCENARIO_ONLY_NOT_ACTUAL_CONTROLLER_CUT_IN",bin_policy:"Whole 1m/s ERA5 bins with hypothetical integer cut-in k=4..9; no within-bin interpolation, no controller or IEC approval",scenarios:cutInSensitivity(era)},
+  controller_cutin_evidence:extras?controllerCutInAudit(eraText,ctrlText,extras.disconReceiptText,extras.referenceServoText):undefined,
+   cut_in_sensitivity:{status:"SCENARIO_ONLY_NOT_ACTUAL_CONTROLLER_CUT_IN",bin_policy:"Whole 1m/s ERA5 bins with hypothetical integer cut-in k=4..9; no within-bin interpolation, no controller or IEC approval",scenarios:cutInSensitivity(era)},
   assumptions:"Candidate lowwind centers 4.5..8.5m/s; historical seed1 reused across speeds ONLY as a proposed paired design; original 51x51/0.025s/700s and FST 0.0125s/0.05s settings are historical metadata, not approved lowwind inputs. Controller binary and below/near cut-in operating state unverified.",
   ERROR_BUDGET:"Integer ERA5 hours exact; conditional probability prior 12-digit decimal rounded <=0.5e-12 per bin; proposed wind centers differ from physical turbulent realizations; physical/control/turbulence model errors NOT ESTIMATED. Git tree/release/Actions name search cannot prove missing archive members.",
   HOLD:"No verified 4-8m/s 158m NTM original OUTB/BTS, original BTS bytes unarchived even for 18 prior cases; lowwind controller cut-in, wind-bin IEC2025, source input versions, 31-segment full time series, material stress and DLC1.2 unresolved.",
-  tests:{negative_rejections:6,source_locked:true,physical_pass:false,material_fatigue_pass:false},stage_passed:0
+  tests:{negative_rejections:extras?10:6,source_locked:true,physical_pass:false,material_fatigue_pass:false},stage_passed:0
  };
  return {csv,receipt:JSON.stringify(receipt,null,2)+"\n"};
 }
@@ -85,6 +86,78 @@ function cutInSensitivity(era){
  ok(result.length===6&&result[0].uncovered_share_of_eligible>result[5].uncovered_share_of_eligible,"CUT_IN_SCENARIO_ORDER");
  return result;
 }
+
+const CONTROLLER_AUDIT_HASH={
+ discon_receipt:"953d64614acca6278bba3cf79279c31c9adff8137734c190e29f2e376381e6c6",
+ reference_servo:"266fed7bd2ab3084594fab29c6aae437f8e244154fd6b1c3e3c48e8b5f969654"
+};
+function controllerCutInAudit(eraText,ctrlText,disconReceiptText,referenceServoText,locks=CONTROLLER_AUDIT_HASH){
+ ok(sha256(disconReceiptText)===locks.discon_receipt,"DISCON_RECEIPT_SHA");
+ ok(sha256(referenceServoText)===locks.reference_servo,"REFERENCE_SERVO_SHA");
+ ok(sha256(eraText)===HASH.era&&sha256(ctrlText)===HASH.controller,"SOURCE_CSV_SHA");
+ const d=JSON.parse(disconReceiptText),params=d.parsed_discon_parameters||{};
+ const cases=parseCsv(ctrlText),era=parseCsv(eraText);
+ ok(d.recognized_parameter_count===26&&Object.keys(params).length===26,"DISCON_PARSED_KEY_COUNT");
+ ok(cases.length===18&&era.length===31,"SOURCE_ROWS");
+ const ids=new Set(cases.map(x=>x.case));
+ ok(ids.size===18&&new Set(cases.map(x=>x.discon_sha256)).size===1,"DISCON_CASE_UNIQUENESS");
+ ok(cases.every(x=>x.discon_sha256===d.input_sha256.original_discon),"DISCON_SOURCE_MISMATCH");
+ ok(new Set(cases.map(x=>x.servo_sha256)).size===1&&new Set(cases.map(x=>x.fst_sha256)).size===1,"FST_SERVO_IDENTITY");
+ ok(cases.every(x=>x.servo_PCMode==="5"&&x.servo_VSContrl==="5"),"HISTORICAL_DLL_MODE");
+ ok(params.VS_MinOMSpd.raw==="36.60000000000"&&/rad\/s/.test(params.VS_MinOMSpd.comment),"MIN_OM_SPD_UNIT");
+ ok(params.WE_GearboxRatio.raw==="50.0"&&params.VS_TSRopt.raw==="7.50","REGION2_IDENTITY");
+ const knownCutInKeys=Object.keys(params).filter(k=>/cut.?in|cut.?out|wind.?start|wind.?stop/i.test(k));
+ ok(knownCutInKeys.length===0,"CUT_IN_KEY_IN_PARSED_SUBSET");
+ const ref={};
+ for(const line of referenceServoText.split(/\r?\n/)){
+  const m=line.match(/^\s*(\S+)\s+(PCMode|VSContrl|GenTiStr|GenTiStp|TimGenOn|TimGenOf)\b/);
+  if(m){ok(!(m[2] in ref),"REFERENCE_DUPLICATE_"+m[2]);ref[m[2]]=m[1];}
+ }
+ ok(ref.PCMode==="0"&&ref.VSContrl==="1"&&ref.GenTiStr==="True"&&ref.GenTiStp==="True"&&ref.TimGenOn==="0"&&ref.TimGenOf==="9999.9","REFERENCE_NOT_HISTORICAL_DLL_MODE");
+ const expected=[26927,24769,19994,14467,9245],bins=[];
+ for(let i=0;i<5;i++){
+  const row=era.find(x=>x.bin_lower_mps===String(i+4));
+  ok(row&&Number(row.hours)===expected[i],"ERA_LOW_BIN_"+i);
+  bins.push({bin_mps:String(i+4)+"-"+String(i+5),hours_2005_2025:expected[i],share_of_missing_lowwind_hours:expected[i]/95402,source_BTS_OUTB:"MISSING"});
+ }
+ ok(bins.reduce((s,x)=>s+x.hours_2005_2025,0)===95402,"LOW_BIN_SUM");
+ return {
+  verdict:"ACTUAL_CUT_IN_NOT_IDENTIFIED_FROM_ARCHIVED_18_CASE_INPUT_SUBSET",
+  source_reading_level:"Current GitHub derived ERA5 CSV + 18 original-input SHA receipt CSV + prior original 17600-byte DISCON parsed receipt (original DISCON bytes not reread this run) + direct DIFFERENT v3.3 reference ServoDyn text; no historical 18 ServoDyn raw ZIP bytes or controller DLL executed",
+  original_discon_sha256:d.input_sha256.original_discon,
+  original_18case_fst_sha256:cases[0].fst_sha256,
+  original_18case_servodyn_sha256:cases[0].servo_sha256,
+  original_18case_controller_mode:{PCMode:5,VSContrl:5},
+  original_discon_parsed_keys:26,explicit_wind_cut_in_keys_in_parsed_subset:knownCutInKeys,
+  VS_MinOMSpd_rad_s:Number(params.VS_MinOMSpd.raw),
+  WE_GearboxRatio:Number(params.WE_GearboxRatio.raw),
+  VS_TSRopt:Number(params.VS_TSRopt.raw),
+  WARNING:"VS_MinOMSpd is generator angular speed in an optimal-mode region, NOT wind-speed cut-in. No wind-speed cut-in, hysteresis, startup/shutdown threshold, or verified runtime state is established by these 26 parsed keys.",
+  different_reference_v330_servo_sha256:sha256(referenceServoText),
+  different_reference_modes:ref,
+  reference_identity_warning:"Archived v3.3 linearization reference has PCMode=0, VSContrl=1; historical v3.5 NTM has 5/5. Reference startup/shutdown timers MUST NOT be copied to historical NTM.",
+  missing_lowwind_bins_ranked_by_ERA5_hours:bins,
+  top_2_bin_hours:51696,top_2_share_of_missing:51696/95402,
+  top_3_bin_hours:71690,top_3_share_of_missing:71690/95402,
+  formal_DLC12_slots_passed:0,stage_passed:0,
+  HOLD:"Actual historical 158m ServoDyn generator startup/stop settings and DLL runtime wind-speed transition are not in available extracted fields; original 4-8m/s BTS/OUTB missing; no licensed IEC2025 clauses read."
+ };
+}
+function controllerNegativeTests(era,ctrl,discon,reference){
+ const mutate=(f)=>{const d=JSON.parse(discon);f(d);return JSON.stringify(d);};
+ const c1=mutate(d=>d.input_sha256.original_discon="0".repeat(64));
+ const c2=mutate(d=>d.parsed_discon_parameters.VS_MinOMSpd.raw="4.00000000000");
+ const c3=reference.replace(/^0(\s+PCMode\b)/m,"5$1").replace(/^1(\s+VSContrl\b)/m,"5$1");
+ const trials=[
+  ()=>controllerCutInAudit(era,ctrl,c1,reference,{discon_receipt:sha256(c1),reference_servo:sha256(reference)}),
+  ()=>controllerCutInAudit(era,ctrl,c2,reference,{discon_receipt:sha256(c2),reference_servo:sha256(reference)}),
+  ()=>controllerCutInAudit(era,ctrl,discon,c3,{discon_receipt:sha256(discon),reference_servo:sha256(c3)}),
+  ()=>controllerCutInAudit(era.replace("4,5,26927,","4,5,26928,"),ctrl,discon,reference)
+ ];
+ trials.forEach((f,i)=>{let rejected=false;try{f();}catch(e){rejected=true;}ok(rejected,"CONTROLLER_NEGATIVE_ACCEPTED_"+i);});
+ return trials.length;
+}
+
 function negativeTests(era,coverage,controller,identity){
  const cases=[
   [era.replace("4,5,26927,","4,5,26928,"),coverage,controller,identity],
@@ -97,15 +170,20 @@ function negativeTests(era,coverage,controller,identity){
  cases.forEach((x,i)=>{ok(x.some((s,j)=>s!==[era,coverage,controller,identity][j]),"MUTATION_NOOP_"+i);let rejected=false;try{if(i===0)build(...x);else{const keys=["era","coverage","controller","identity"],unlocked=Object.fromEntries(keys.map((k,j)=>[k,sha256(x[j])]));build(...x,unlocked);}}catch(e){rejected=true;}ok(rejected,"NEGATIVE_ACCEPTED_"+i);});
  return cases.length;
 }
-module.exports={build,negativeTests};
+module.exports={build,negativeTests,controllerCutInAudit,controllerNegativeTests};
 if(require.main===module){
  const fs=require("fs"),path=require("path"),dir=__dirname;
  const names=["S10_ERA5_2005_2025_HUB_1MS_BINS_20261031.csv","S10_ERA5_21BIN_6SEED_NTM_SOURCE_COVERAGE_20261031.csv","S07_18NTM_ORIGINAL_TURBSIM_CONTROLLER_INPUTS_20261031.csv","S06_18NTM_INPUT_SOURCE_IDENTITY_20261031.csv"];
- const inputs=names.map(n=>fs.readFileSync(path.join(dir,n),"utf8")),v=build(...inputs),n=negativeTests(...inputs);
+ const inputs=names.map(n=>fs.readFileSync(path.join(dir,n),"utf8"));
+  const disconReceiptText=fs.readFileSync(path.join(dir,"S07_18NTM_DISCON_VS_OPERATING_RECEIPT_20261101.json"),"utf8");
+  const referenceServoText=fs.readFileSync(path.join(dir,"../../references/baselines-and-site-20261004/openfast-v330-adaptation/0Linearization/Campbell_Servo/Control/DTU_10MW_RWT_ServoDyn_ws14.0.dat"),"utf8");
+  const v=build(...inputs,HASH,{disconReceiptText,referenceServoText});
+  const n=negativeTests(...inputs),cn=controllerNegativeTests(inputs[0],inputs[2],disconReceiptText,referenceServoText);
+  ok(cn===4,"CONTROLLER_NEGATIVE_COUNT");
  ok(n===6,"NEGATIVE_COUNT");
  if(process.argv.includes("--check")){
   ok(fs.readFileSync(path.join(dir,"S10_LOW_WIND_30SLOT_SOURCE_READINESS_20261104.csv"),"utf8")===v.csv,"COMMITTED_CSV_MISMATCH");
   ok(fs.readFileSync(path.join(dir,"S10_LOW_WIND_30SLOT_SOURCE_READINESS_20261104.json"),"utf8")===v.receipt,"COMMITTED_RECEIPT_MISMATCH");
  }else{process.stdout.write(v.csv);}
- console.log("S10_LOW_WIND_30SLOT_SOURCE_READINESS_QC_PASS_NOT_DLC12 negative_tests="+n+" source_missing=30");
+ console.log("S10_LOW_WIND_30SLOT_SOURCE_READINESS_QC_PASS_NOT_DLC12 negative_tests="+(n+cn)+" source_missing=30");
 }

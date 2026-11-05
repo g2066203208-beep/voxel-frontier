@@ -11,7 +11,9 @@
     "era": "e4058620a36b23bb218103875d4dc5b0711fc45d418b23a2208c2fc9c16c9102",
     "coverage": "d4e25023f343ea76f2de5ce90c7d24dd985df770ec9f4747d203391010431e67",
     "controller": "be58d33306e6ac101d42b42c7f4d24ea5743662d1a9355aff9862b5a7e0aad45",
-    "identity": "d57ff9e71b58b531b1aaa357ad7a57a86daf529e061f9d8996cf2453b04a7da5"
+    "identity": "d57ff9e71b58b531b1aaa357ad7a57a86daf529e061f9d8996cf2453b04a7da5",
+    "discon_receipt": "953d64614acca6278bba3cf79279c31c9adff8137734c190e29f2e376381e6c6",
+    "reference_servo": "266fed7bd2ab3084594fab29c6aae437f8e244154fd6b1c3e3c48e8b5f969654"
   },
   "inventory_snapshot": {
     "read_date": "2026-11-04",
@@ -57,6 +59,72 @@
     "formal_dlc12_verified_slots": 0,
     "original_controller_source_configs_checked": 18,
     "original_18ntm_gage_count": 9
+  },
+  "controller_cutin_evidence": {
+    "verdict": "ACTUAL_CUT_IN_NOT_IDENTIFIED_FROM_ARCHIVED_18_CASE_INPUT_SUBSET",
+    "source_reading_level": "Current GitHub derived ERA5 CSV + 18 original-input SHA receipt CSV + prior original 17600-byte DISCON parsed receipt (original DISCON bytes not reread this run) + direct DIFFERENT v3.3 reference ServoDyn text; no historical 18 ServoDyn raw ZIP bytes or controller DLL executed",
+    "original_discon_sha256": "8f5d7546420ee34838e66b63e4b26d64460be5d5492f99c60b6d1ef977ffc61a",
+    "original_18case_fst_sha256": "5307e04d27721095ce6cbb6c125b8be1b4be71790af6c6258e3187343f5db605",
+    "original_18case_servodyn_sha256": "103e7bd71209a095b833ca4ba62627ae7724870615112fdccfbff502076c966e",
+    "original_18case_controller_mode": {
+      "PCMode": 5,
+      "VSContrl": 5
+    },
+    "original_discon_parsed_keys": 26,
+    "explicit_wind_cut_in_keys_in_parsed_subset": [],
+    "VS_MinOMSpd_rad_s": 36.6,
+    "WE_GearboxRatio": 50,
+    "VS_TSRopt": 7.5,
+    "WARNING": "VS_MinOMSpd is generator angular speed in an optimal-mode region, NOT wind-speed cut-in. No wind-speed cut-in, hysteresis, startup/shutdown threshold, or verified runtime state is established by these 26 parsed keys.",
+    "different_reference_v330_servo_sha256": "266fed7bd2ab3084594fab29c6aae437f8e244154fd6b1c3e3c48e8b5f969654",
+    "different_reference_modes": {
+      "PCMode": "0",
+      "VSContrl": "1",
+      "GenTiStr": "True",
+      "GenTiStp": "True",
+      "TimGenOn": "0",
+      "TimGenOf": "9999.9"
+    },
+    "reference_identity_warning": "Archived v3.3 linearization reference has PCMode=0, VSContrl=1; historical v3.5 NTM has 5/5. Reference startup/shutdown timers MUST NOT be copied to historical NTM.",
+    "missing_lowwind_bins_ranked_by_ERA5_hours": [
+      {
+        "bin_mps": "4-5",
+        "hours_2005_2025": 26927,
+        "share_of_missing_lowwind_hours": 0.2822477516194629,
+        "source_BTS_OUTB": "MISSING"
+      },
+      {
+        "bin_mps": "5-6",
+        "hours_2005_2025": 24769,
+        "share_of_missing_lowwind_hours": 0.25962768076140963,
+        "source_BTS_OUTB": "MISSING"
+      },
+      {
+        "bin_mps": "6-7",
+        "hours_2005_2025": 19994,
+        "share_of_missing_lowwind_hours": 0.2095763191547347,
+        "source_BTS_OUTB": "MISSING"
+      },
+      {
+        "bin_mps": "7-8",
+        "hours_2005_2025": 14467,
+        "share_of_missing_lowwind_hours": 0.1516425232175426,
+        "source_BTS_OUTB": "MISSING"
+      },
+      {
+        "bin_mps": "8-9",
+        "hours_2005_2025": 9245,
+        "share_of_missing_lowwind_hours": 0.09690572524685018,
+        "source_BTS_OUTB": "MISSING"
+      }
+    ],
+    "top_2_bin_hours": 51696,
+    "top_2_share_of_missing": 0.5418754323808725,
+    "top_3_bin_hours": 71690,
+    "top_3_share_of_missing": 0.7514517515356072,
+    "formal_DLC12_slots_passed": 0,
+    "stage_passed": 0,
+    "HOLD": "Actual historical 158m ServoDyn generator startup/stop settings and DLL runtime wind-speed transition are not in available extracted fields; original 4-8m/s BTS/OUTB missing; no licensed IEC2025 clauses read."
   },
   "cut_in_sensitivity": {
     "status": "SCENARIO_ONLY_NOT_ACTUAL_CONTROLLER_CUT_IN",
@@ -110,7 +178,7 @@
   "ERROR_BUDGET": "Integer ERA5 hours exact; conditional probability prior 12-digit decimal rounded <=0.5e-12 per bin; proposed wind centers differ from physical turbulent realizations; physical/control/turbulence model errors NOT ESTIMATED. Git tree/release/Actions name search cannot prove missing archive members.",
   "HOLD": "No verified 4-8m/s 158m NTM original OUTB/BTS, original BTS bytes unarchived even for 18 prior cases; lowwind controller cut-in, wind-bin IEC2025, source input versions, 31-segment full time series, material stress and DLC1.2 unresolved.",
   "tests": {
-    "negative_rejections": 6,
+    "negative_rejections": 10,
     "source_locked": true,
     "physical_pass": false,
     "material_fatigue_pass": false
