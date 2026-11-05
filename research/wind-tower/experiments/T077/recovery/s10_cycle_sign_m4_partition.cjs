@@ -71,5 +71,68 @@ function materialDomainSelftest(){
   }
   return {known_answer_checks:5,physical_pass:false};
 }
-module.exports={analyze,parse,sign,selftest,materialApplicability,materialDomainSelftest};
-if(require.main===module){const fs=require("fs"),crypto=require("crypto"),path=require("path");if(process.argv.includes("--self-test")){console.log(JSON.stringify({...selftest(),...materialDomainSelftest()}));process.exit(0)}const b=fs.readFileSync(path.join(__dirname,SOURCE));check(crypto.createHash("sha256").update(b).digest("hex")===SOURCE_SHA,"SOURCE_SHA256");const result=analyze(b.toString("utf8"));if(process.argv.includes("--check")){const old=JSON.parse(fs.readFileSync(path.join(__dirname,RECEIPT),"utf8"));check(JSON.stringify(old.results)===JSON.stringify(result),"RECEIPT_MISMATCH");check(JSON.stringify(old.material_applicability)===JSON.stringify(materialApplicability(b.toString("utf8"))),"MATERIAL_DOMAIN_RECEIPT_MISMATCH");console.log("S10_REAL_CYCLE_MATERIAL_DOMAIN_QC_PASS_NOT_MATERIAL_DAMAGE rows=1574 material_checks=18888 admitted=0")}else console.log(JSON.stringify(result,null,2))}
+
+const SUMMARY="S10_3CONTROL_REAL_CYCLE_MEAN_SUMMARY_20261030.csv";
+const SUMMARY_HEADER="case,segment,azimuth_deg,cycle_rows,half_cycles,full_cycles,equivalent_cycles,DEL_m4_MPa,DEL_m10_MPa,conditional_Pe_mean_shift_MPa,conditional_P0_mean_shift_MPa,status";
+function concentration(cycles,Nref=600){
+  check(cycles.length>0&&Number.isFinite(Nref)&&Nref>0,"CONCENTRATION_INPUT");
+  const w=cycles.map(x=>{
+    check(Number.isFinite(x.range)&&x.range>0&&(x.count===0.5||x.count===1),"CONCENTRATION_CYCLE");
+    return {count:x.count,energy:x.count*x.range**4};
+  });
+  const m4=w.reduce((s,x)=>s+x.energy,0),half=w.filter(x=>x.count===0.5);
+  check(Number.isFinite(m4)&&m4>0,"CONCENTRATION_M4");
+  const hm4=half.reduce((s,x)=>s+x.energy,0),top=Math.ceil(w.length*.01);
+  const topm4=[...w].sort((a,b)=>b.energy-a.energy).slice(0,top).reduce((s,x)=>s+x.energy,0);
+  const d4=(m4/Nref)**.25,incorrect=((m4+hm4)/Nref)**.25;
+  return {cycle_rows:w.length,equivalent_cycles:w.reduce((s,x)=>s+x.count,0),
+    half_cycle_rows:half.length,half_cycle_m4_fraction:round(hm4/m4),
+    top_one_percent_rows:top,top_one_percent_m4_fraction:round(topm4/m4),
+    DEL4_MPa:round(d4),counterfactual_half_as_full_DEL4_MPa:round(incorrect),
+    counterfactual_half_as_full_DEL_bias_pct:round(100*(incorrect/d4-1))};
+}
+function cycleWeightAudit(csv,summary){
+  const rows=parse(csv), lines=summary.trimEnd().split(/\r?\n/);
+  check(lines.shift()===SUMMARY_HEADER,"SUMMARY_HEADER");
+  const keys=SUMMARY_HEADER.split(",");
+  const expected=lines.map(l=>Object.fromEntries(l.split(",").map((v,i)=>[keys[i],v])));
+  check(expected.length===3,"SUMMARY_CONTROL_COUNT");
+  const out=[];
+  for(const [c,s,a,n,eq] of KEYS){
+    const x=rows.filter(z=>z.case===c&&z.segment===s&&z.azimuth_deg===a);
+    check(x.length===n,"CONCENTRATION_GROUP_ROWS");
+    const audit=concentration(x.map(z=>({range:z.range_MPa,count:z.count})));
+    const oracle=expected.find(z=>z.case===c&&z.segment===s&&z.azimuth_deg===a);
+    check(oracle&&oracle.status==="GROSS_ELASTIC_REAL_12001STEP_RAINFLOW_NOT_LOCAL_MATERIAL_LIFE","SUMMARY_SOURCE_IDENTITY");
+    check(+oracle.cycle_rows===n&&+oracle.half_cycles===audit.half_cycle_rows&&
+      Math.abs(+oracle.equivalent_cycles-eq)<1e-9&&
+      Math.abs(+oracle.DEL_m4_MPa-audit.DEL4_MPa)<1e-8,"SUMMARY_ORACLE_MISMATCH");
+    out.push({case:c,segment:s,azimuth_deg:+a,...audit});
+  }
+  check(out.reduce((s,x)=>s+x.cycle_rows,0)===1574,"CONCENTRATION_TOTAL_ROWS");
+  return {status:"REAL_ETM_GROSS_NOMINAL_RAINFLOW_CONCENTRATION_NOT_MATERIAL_LIFE",
+    source_sha256:SOURCE_SHA,summary_git_blob:"d49cd44d642e914d1ea38e5744b0a59323f10c72",
+    Nref_cycles:600,cycle_rows:1574,controls:out,
+    material_cycle_admitted:0,design_life_years:null,
+    limitations:["3 control points from 2 ETM cases, not all 4 ETM or DLC1.2",
+      "gross elastic section stress, not local concrete/rebar/PT/steel material stress",
+      "m4 weighting is load/nominal screening, not material Miner damage",
+      "top 1 percent refers to sorted rainflow rows, not time fraction",
+      "half-as-full is a deliberately incorrect counterfactual; residual endpoint convention matters"]};
+}
+function cycleWeightSelftest(){
+  const c=concentration([{range:2,count:1},{range:4,count:.5}]);
+  check(c.cycle_rows===2&&c.equivalent_cycles===1.5&&c.half_cycle_rows===1,"WEIGHT_COUNT_KNOWN");
+  check(Math.abs(c.half_cycle_m4_fraction-128/144)<1e-11,"WEIGHT_M4_KNOWN");
+  check(Math.abs(c.top_one_percent_m4_fraction-128/144)<1e-11,"WEIGHT_TOP_KNOWN");
+  check(Math.abs(c.counterfactual_half_as_full_DEL_bias_pct-100*((272/144)**.25-1))<1e-9,"WEIGHT_BIAS_KNOWN");
+  let rejected=0;
+  for(const x of [{range:0,count:1},{range:-2,count:1},{range:2,count:.75},{range:NaN,count:1}]){
+    try{concentration([x])}catch(e){rejected++}
+  }
+  check(rejected===4,"WEIGHT_BAD_INPUT_REJECTIONS");
+  return {weight_known_answers:4,weight_negative_rejections:4};
+}
+
+module.exports={analyze,parse,sign,selftest,materialApplicability,materialDomainSelftest,concentration,cycleWeightAudit,cycleWeightSelftest};
+if(require.main===module){const fs=require("fs"),crypto=require("crypto"),path=require("path");if(process.argv.includes("--self-test")){console.log(JSON.stringify({...selftest(),...materialDomainSelftest(),...cycleWeightSelftest()}));process.exit(0)}const b=fs.readFileSync(path.join(__dirname,SOURCE));check(crypto.createHash("sha256").update(b).digest("hex")===SOURCE_SHA,"SOURCE_SHA256");const result=analyze(b.toString("utf8"));if(process.argv.includes("--check")){const old=JSON.parse(fs.readFileSync(path.join(__dirname,RECEIPT),"utf8"));check(JSON.stringify(old.results)===JSON.stringify(result),"RECEIPT_MISMATCH");check(JSON.stringify(old.material_applicability)===JSON.stringify(materialApplicability(b.toString("utf8"))),"MATERIAL_DOMAIN_RECEIPT_MISMATCH");check(JSON.stringify(old.cycle_weight_concentration)===JSON.stringify(cycleWeightAudit(b.toString("utf8"),fs.readFileSync(path.join(__dirname,SUMMARY),"utf8"))),"CYCLE_WEIGHT_RECEIPT_MISMATCH");console.log("S10_REAL_CYCLE_MATERIAL_DOMAIN_QC_PASS_NOT_MATERIAL_DAMAGE rows=1574 material_checks=18888 admitted=0 half_cycle_concentration=checked")}else console.log(JSON.stringify(result,null,2))}
