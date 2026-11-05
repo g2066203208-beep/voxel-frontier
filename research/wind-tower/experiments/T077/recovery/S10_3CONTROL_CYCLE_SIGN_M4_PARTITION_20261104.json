@@ -9,9 +9,9 @@
   "REF": "REF018 Huang et al. 2025 Engineering Structures 334:120295, p6 Eq.(1)-(2) Fig.10 previously visually read; no new original pages this run",
   "STANDARD": "IEC 61400-1/6:2025 licensed clauses not read; no clause acceptance",
   "OFFICIAL": "GitHub Git Blob, inherited native OpenFAST provenance; no new OpenFAST/Abaqus solver",
-  "RUN": "Actual V8 full-data numeric evaluation and 4 known-answer/4 negative synthetic plus 3 corrupted-source negative tests; Node CLI --check/self-test available; native CI not yet confirmed; 2026-11-04 11h V8 full-source material-domain evaluation 18888 diagnostics, 5 synthetic checks, legacy regression matched; no native CI yet; Native Ubuntu CI #41765664590 job #126363319929 completed/success, node --self-test/--check and sha256sum; not physical PASS; 2026-11-04 11:14 final explicit per-material predicates native CI #41765812932 PASS, previous intermediate #41765799121 failed due to paired receipt lag",
+  "RUN": "Actual V8 full-data numeric evaluation and 4 known-answer/4 negative synthetic plus 3 corrupted-source negative tests; Node CLI --check/self-test available; native CI not yet confirmed; 2026-11-04 11h V8 full-source material-domain evaluation 18888 diagnostics, 5 synthetic checks, legacy regression matched; no native CI yet; Native Ubuntu CI #41765664590 job #126363319929 completed/success, node --self-test/--check and sha256sum; not physical PASS; 2026-11-04 11:14 final explicit per-material predicates native CI #41765812932 PASS, previous intermediate #41765799121 failed due to paired receipt lag; 2026-11-06 01h V8 full 1574-cycle half-cycle and top1% m4 concentration audit, 3 oracle DEL4 matches, 4 known-answer/4 rejection synthetic checks in source; Node native CI not yet executed",
   "FIG": "No new physical-response figures",
-  "TAB": "3 control points x 3 conditional mean scenarios; equivalent cycle counts and m4-proxy fractions; 9 domain groups and 4 material admission contracts",
+  "TAB": "3 control points x 3 conditional mean scenarios; equivalent cycle counts and m4-proxy fractions; 9 domain groups and 4 material admission contracts; 3-control half-cycle/top1% weighted m4 and counterfactual residual-count bias",
   "script_path": "research/wind-tower/experiments/T077/recovery/s10_cycle_sign_m4_partition.cjs",
   "script_sha256": "9a27c44cc199a74bffc3b1e3741e2782161b0b1d7acd0eb341f076abf9c3f9c4",
   "script_git_blob": "95b88bb70df447ba0cbd89555b9fd5f89de3c2f5",
@@ -27,7 +27,7 @@
   "ALGORITHM": "For each rainflow cycle, endpoints mean +/- range/2; classify compression/reversing/tension, sum count*range^4 per class, normalize by total. Pe/P0 shifts are conditional, not verified native equilibrium.",
   "ERROR_BUDGET": "Source decimal roundoff ~1e-10 MPa; smallest observed endpoint-zero margin across 9 scenario/groups 0.001796467 MPa (P0 CSEG16), so classification robust to CSV serialization; physics/PT uncertainty unestimated; m4 is NOT material damage.",
   "FAILURES": "No new test failures; earlier T077 source failures remain in historical process log",
-  "HOLD": "ETM not DLC1.2, only three nominal sections; 4–8m/s NTM original BTS/OUTB missing, local material stress and native PT not validated; annual Miner life remains 0; S10 BLOCKED, S06 PARTIAL, 0/12; new material applicability 0/18888 admitted, no Miner",
+  "HOLD": "ETM not DLC1.2, only three nominal sections; 4–8m/s NTM original BTS/OUTB missing, local material stress and native PT not validated; annual Miner life remains 0; S10 BLOCKED, S06 PARTIAL, 0/12; new material applicability 0/18888 admitted, no Miner; half-cycle residual m4 65.03%-93.59%, top 1% cycle rows 72.64%-96.06%; ETM nominal only; no material life",
   "results": [
     {
       "case": "U09p343881_ETM_S06",
@@ -454,5 +454,65 @@
     "CI_RECEIPT_SHA256_SCOPE": "Hash of receipt at cc355b7 commit, not current metadata-updated bytes"
   },
   "previous_script_sha256": "5e58e0d985ac61e804661ba558c4dee41824a89c214d349b64bf08f2ab51e04a",
-  "script_sha256_status": "NATIVE_ACTIONS_41765812932_VERIFIED_AFTER_EXPLICIT_18888_CHECK_PATCH"
+  "script_sha256_status": "NATIVE_ACTIONS_41765812932_VERIFIED_AFTER_EXPLICIT_18888_CHECK_PATCH",
+  "cycle_weight_concentration": {
+    "status": "REAL_ETM_GROSS_NOMINAL_RAINFLOW_CONCENTRATION_NOT_MATERIAL_LIFE",
+    "source_sha256": "646065838456b6465e321c4c6fd24966f180f275df99c615000577557219ff83",
+    "summary_git_blob": "d49cd44d642e914d1ea38e5744b0a59323f10c72",
+    "Nref_cycles": 600,
+    "cycle_rows": 1574,
+    "controls": [
+      {
+        "case": "U09p343881_ETM_S06",
+        "segment": "CSEG_16",
+        "azimuth_deg": 180,
+        "cycle_rows": 413,
+        "equivalent_cycles": 407.5,
+        "half_cycle_rows": 11,
+        "half_cycle_m4_fraction": 0.935872913317,
+        "top_one_percent_rows": 5,
+        "top_one_percent_m4_fraction": 0.943257989557,
+        "DEL4_MPa": 7.05273183802,
+        "counterfactual_half_as_full_DEL4_MPa": 8.31910454476,
+        "counterfactual_half_as_full_DEL_bias_pct": 17.9557756601
+      },
+      {
+        "case": "U09p343881_ETM_S06",
+        "segment": "CSEG_17",
+        "azimuth_deg": 180,
+        "cycle_rows": 526,
+        "equivalent_cycles": 520.5,
+        "half_cycle_rows": 11,
+        "half_cycle_m4_fraction": 0.932603739228,
+        "top_one_percent_rows": 6,
+        "top_one_percent_m4_fraction": 0.960610076855,
+        "DEL4_MPa": 7.03716180071,
+        "counterfactual_half_as_full_DEL4_MPa": 8.29723213042,
+        "counterfactual_half_as_full_DEL_bias_pct": 17.9059451152
+      },
+      {
+        "case": "U11p4_ETM_S04",
+        "segment": "CSEG_04",
+        "azimuth_deg": 0,
+        "cycle_rows": 635,
+        "equivalent_cycles": 628,
+        "half_cycle_rows": 14,
+        "half_cycle_m4_fraction": 0.650340767944,
+        "top_one_percent_rows": 7,
+        "top_one_percent_m4_fraction": 0.726438262029,
+        "DEL4_MPa": 7.16908904915,
+        "counterfactual_half_as_full_DEL4_MPa": 8.12563634363,
+        "counterfactual_half_as_full_DEL_bias_pct": 13.3426616399
+      }
+    ],
+    "material_cycle_admitted": 0,
+    "design_life_years": null,
+    "limitations": [
+      "3 control points from 2 ETM cases, not all 4 ETM or DLC1.2",
+      "gross elastic section stress, not local concrete/rebar/PT/steel material stress",
+      "m4 weighting is load/nominal screening, not material Miner damage",
+      "top 1 percent refers to sorted rainflow rows, not time fraction",
+      "half-as-full is a deliberately incorrect counterfactual; residual endpoint convention matters"
+    ]
+  }
 }
