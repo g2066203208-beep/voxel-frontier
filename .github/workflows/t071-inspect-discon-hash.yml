@@ -4,6 +4,9 @@ on:
     paths:
       - '.github/workflows/t071-inspect-discon-hash.yml'
       - 'research/wind-tower/experiments/T062/s07_ntm18_original_control_input_gate.py'
+      - 'research/wind-tower/experiments/T062/s10_lowwind_75_source_pilot.py'
+permissions:
+  contents: write
 jobs:
   inspect:
     runs-on: ubuntu-latest
@@ -15,6 +18,10 @@ jobs:
             research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip
             research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip
             research/wind-tower/experiments/T062/s07_ntm18_original_control_input_gate.py
+            research/wind-tower/experiments/T062/s10_lowwind_75_source_pilot.py
+            research/wind-tower/experiments/T062/S07_18NTM_ORIGINAL_TURBSIM_CONTROLLER_INPUTS_20261031.csv
+            research/wind-tower/experiments/T062/S10_U07p5_NTM_S01_SOURCE_PILOT_RECEIPT_20261105.json
+            research/wind-tower/experiments/T062/S07_U04p5_NTM_S01_InflowWind_NOT_RUN.dat
             research/wind-tower/archive/local-assets-20261004/file-manifest.json
             research/wind-tower/archive/local-assets-20261004-supplement/file-manifest.json
           sparse-checkout-cone-mode: false
@@ -65,10 +72,39 @@ jobs:
             --servo-startup-receipt original_servo_startup_receipt.json
           sha256sum /tmp/original_servo/DTU_10MW_RWT_ServoDyn.dat original_servo_startup_receipt.json
           cat original_servo_startup_receipt.json
+      - name: Rebind exact original InflowWind 4.5 S01 (SOURCE ONLY; NOT RUN)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/wind-tower/experiments/T062/s10_lowwind_75_source_pilot.py --inflow-rebind-write
+          python3 research/wind-tower/experiments/T062/s10_lowwind_75_source_pilot.py --inflow-rebind-check
+          sha256sum research/wind-tower/experiments/T062/S07_U04p5_NTM_S01_InflowWind_NOT_RUN.dat
+          python3 - <<'PY'
+          import json
+          p='research/wind-tower/experiments/T062/S10_U07p5_NTM_S01_SOURCE_PILOT_RECEIPT_20261105.json'
+          r=json.load(open(p,encoding='utf-8'))['lowwind_45_s01_exact_inflow_rebind_20261106']
+          assert r['input_sha256']['source_inflow_card']=='d204329f881836ffe0895b7d81aa28cae7540d5df56c754880db3d6c5c11d3a9'
+          assert r['tests']['byte_exact_reverse']=='PASS' and r['tests']['synthetic_negative_rejected']==8
+          assert not r['physical_pass'] and r['candidate_BTS_sha256'] is None and r['stages_passed']==0
+          print('S07_ORIGINAL_INFLOW_45_S01_SOURCE_ONLY_NOT_DLC12',r['candidate_card_sha256'])
+          PY
+      - name: Persist exact source-derived candidate and receipt to existing Draft PR branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/wind-tower/experiments/T062/S07_U04p5_NTM_S01_InflowWind_NOT_RUN.dat \
+                  research/wind-tower/experiments/T062/S10_U07p5_NTM_S01_SOURCE_PILOT_RECEIPT_20261105.json
+          if ! git diff --cached --quiet; then
+            git commit -m "research(S07): persist original-byte-verified 4.5 S01 InflowWind candidate (NOT_RUN)"
+            git push origin "HEAD:$GITHUB_REF_NAME"
+          fi
       - uses: actions/upload-artifact@v4
         with:
           name: s07-original-servo-startup-source-qc
           path: |
             original_servo_startup_receipt.json
             original_discon_lowwind_receipt.json
+            research/wind-tower/experiments/T062/S07_U04p5_NTM_S01_InflowWind_NOT_RUN.dat
           retention-days: 7
