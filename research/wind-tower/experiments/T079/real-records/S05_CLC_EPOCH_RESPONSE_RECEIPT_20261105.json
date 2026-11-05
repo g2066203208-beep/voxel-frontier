@@ -1,108 +1,243 @@
 {
-  "test": "S05_CLC_EPOCH_STAGE1_QC_PASS_3_POSITIVE_6_NEGATIVE_NOT_BANDWIDTH_PASS",
-  "result": {
-    "status": "STAGE1_ANALOG_RESPONSE_METADATA_QC_NOT_LOWFREQ_CERTIFICATION",
-    "source_level": "Official MDA channel summary and FDSN RESP text directly read; raw StationXML/RESP bytes NOT saved or SHA256-verified",
-    "epoch_table": [
-      {
-        "event_id": "ci38457511",
-        "station": "CI.CLC",
-        "axis": "HNE",
-        "azimuth_deg": 90,
-        "epoch": "pre",
-        "epoch_boundary_utc": "2019-09-26T14:00:00Z",
-        "sensitivity_counts_per_m_s2": 213945.4273635581,
-        "sensitivity_reference_hz": 0.03,
-        "sample_rate_hz": 100
-      },
-      {
-        "event_id": "ci38457511",
-        "station": "CI.CLC",
-        "axis": "HNN",
-        "azimuth_deg": 0,
-        "epoch": "pre",
-        "epoch_boundary_utc": "2019-09-26T14:00:00Z",
-        "sensitivity_counts_per_m_s2": 213808.5679825483,
-        "sensitivity_reference_hz": 0.03,
-        "sample_rate_hz": 100
-      },
-      {
-        "event_id": "ci39493944",
-        "station": "CI.CLC",
-        "axis": "HNE",
-        "azimuth_deg": 90,
-        "epoch": "post",
-        "epoch_boundary_utc": "2019-09-26T14:00:00Z",
-        "sensitivity_counts_per_m_s2": 214077.95043858353,
-        "sensitivity_reference_hz": 1,
-        "sample_rate_hz": 100
-      },
-      {
-        "event_id": "ci39493944",
-        "station": "CI.CLC",
-        "axis": "HNN",
-        "azimuth_deg": 0,
-        "epoch": "post",
-        "epoch_boundary_utc": "2019-09-26T14:00:00Z",
-        "sensitivity_counts_per_m_s2": 213941.0062834973,
-        "sensitivity_reference_hz": 1,
-        "sample_rate_hz": 100
-      }
-    ],
-    "sensitivity_change_percent": {
-      "HNE": 0.061942466664755,
-      "HNN": 0.061942466664755
+  "status": "S05_FULL_STATIONXML_RESPONSE_QC_NOT_LOWFREQ_CERTIFICATION",
+  "date": "2026-11-05",
+  "source_level": "Direct reading of two original SCEDC FDSN StationXML files already stored in PR branch; SHA256 inherited from previously byte-verified source_receipt.json, Git blob re-read; Node CLI performs original-byte SHA256 validation when run",
+  "SOURCE": [
+    {
+      "event_id": "ci38457511",
+      "xml_path": "research/wind-tower/experiments/T079/real-records/USGS_ci38457511/CI_CLC/original/CI_station_response.xml",
+      "sha256": "31aff27345c4795d37b10d1affce7e2a3504e5d5a93cd0758bc8781a4da32e4c",
+      "git_blob_sha": "2d079a8ba0bf8d2d33c0f1b4cf4b44b8b3a61213"
     },
-    "stage1_poles_rad_s": [
-      [
-        -981,
-        1009
+    {
+      "event_id": "ci39493944",
+      "xml_path": "research/wind-tower/experiments/T079/real-records/USGS_ci39493944/CI_CLC/original/CI_station_response.xml",
+      "sha256": "9892557ccfb828dff034eb82faba8e2877460534c94ed0e9766955a89afeeec3",
+      "git_blob_sha": "be8db04cde1f20b695a9552ac7c6eb886fbd630d"
+    }
+  ],
+  "REF": "Stage 1 analog Laplace PZ, Stage 2 and 3 scalar gains, Stage 4 full FIR H(f)=sum b_k exp(-j2pi fk/fs); ratios to 1Hz. Stage 4 time correction shown separately, not proof of timing alignment",
+  "STANDARD": "Licensed 2025 IEC/GB/NB original clauses NOT read",
+  "OFFICIAL": "SCEDC StationXML source bytes already stored under T079; previous NSF SAGE RESP reading is secondary cross-check",
+  "RUN": "V8 4 channel full-XML calculations, each 3 positive and 4 negative tests; native Node CLI and physical solver NOT run",
+  "FIG": 0,
+  "TAB": "4 channel x 4 frequency values (full relative gain, relative phase, FIR-only gain, stage4-corrected phase)",
+  "assumptions": [
+    "Select locationCode empty and event-UTC-matching epoch",
+    "Stage 3 digital coefficient list empty, scalar gain only",
+    "Phase values are relative to 1Hz; no instrument response removal performed",
+    "Original CSV converted counts using sensitivity only, not full deconvolution"
+  ],
+  "error_budget": "Double precision complex transfer; raw original XML SHA256 from previously verified receipt, not rehashed in this V8 run; no bounds on low-frequency noise, baseline drift, time alignment or site spectrum",
+  "HOLD": "Sensor low-frequency noise and usable frequency range, waveform full response correction and site design target not validated",
+  "records": [
+    {
+      "event_id": "ci38457511",
+      "axis": "HNE",
+      "test": "3_POSITIVE_4_NEGATIVE_PASS_NOT_BANDWIDTH_PASS",
+      "epoch_start": "2012-04-13T17:28:00",
+      "epoch_end": "2019-09-26T14:00:00",
+      "fir_taps": 65,
+      "gains": [
+        0.510085,
+        1,
+        419430,
+        1
       ],
-      [
-        -981,
-        -1009
-      ],
-      [
-        -3290,
-        1263
-      ],
-      [
-        -3290,
-        -1263
+      "stage4_delay_s": 0.041607,
+      "stage4_correction_s": 0.041407,
+      "sensitivity": 213945,
+      "sensitivity_reference_hz": 0.03,
+      "frequencies": [
+        {
+          "frequency_hz": 0.1,
+          "period_s": 10,
+          "full_relative_gain_percent": -0.11287792715699388,
+          "full_relative_phase_deg": 12.859573412837005,
+          "fir_relative_gain_percent": -0.11305608041801696,
+          "phase_with_stage4_correction_deg": -0.5562945871629943
+        },
+        {
+          "frequency_hz": 0.1604889710470726,
+          "period_s": 6.230957762865167,
+          "full_relative_gain_percent": -0.11088975976305897,
+          "full_relative_phase_deg": 11.99678943206135,
+          "fir_relative_gain_percent": -0.11106508135592108,
+          "phase_with_stage4_correction_deg": -0.5173985112460412
+        },
+        {
+          "frequency_hz": 0.25,
+          "period_s": 4,
+          "full_relative_gain_percent": -0.1062791181081309,
+          "full_relative_phase_deg": 10.719875004316075,
+          "fir_relative_gain_percent": -0.10644783597403285,
+          "phase_with_stage4_correction_deg": -0.4600149956839258
+        },
+        {
+          "frequency_hz": 1,
+          "period_s": 1,
+          "full_relative_gain_percent": 0,
+          "full_relative_phase_deg": 0,
+          "fir_relative_gain_percent": 0,
+          "phase_with_stage4_correction_deg": 0
+        }
       ]
-    ],
-    "stage1_zeros": 0,
-    "stage1_analog_relative_gain_vs_1hz": [
-      {
-        "frequency_hz": 0.1,
-        "period_s": 10,
-        "ratio": 1.000001783549023,
-        "relative_percent": 0.00017835490229156648
-      },
-      {
-        "frequency_hz": 0.1604889710470726,
-        "period_s": 6.230957762865167,
-        "ratio": 1.0000017551653058,
-        "relative_percent": 0.00017551653057612526
-      },
-      {
-        "frequency_hz": 0.25,
-        "period_s": 4,
-        "ratio": 1.0000016889765373,
-        "relative_percent": 0.00016889765372951615
-      },
-      {
-        "frequency_hz": 1,
-        "period_s": 1,
-        "ratio": 1,
-        "relative_percent": 0
-      }
-    ],
-    "limits": [
-      "0.03/0.05 Hz in RESP is a gain-reference frequency, not a demonstrated low-frequency cutoff",
-      "Stage-1 analog PZ is not the full digitizer/FIR response or a record-specific noise and usable-bandwidth assessment",
-      "Event-specific response epoch must be selected; do not rescale already corrected m/s2 CSV by sensitivity ratio",
-      "No authorized site response spectrum, stationxml raw SHA256, or original waveform deconvolution audit"
-    ]
-  }
+    },
+    {
+      "event_id": "ci38457511",
+      "axis": "HNN",
+      "test": "3_POSITIVE_4_NEGATIVE_PASS_NOT_BANDWIDTH_PASS",
+      "epoch_start": "2012-04-13T17:28:00",
+      "epoch_end": "2019-09-26T14:00:00",
+      "fir_taps": 65,
+      "gains": [
+        0.509758,
+        1,
+        419430,
+        1
+      ],
+      "stage4_delay_s": 0.041607,
+      "stage4_correction_s": 0.041407,
+      "sensitivity": 213809,
+      "sensitivity_reference_hz": 0.03,
+      "frequencies": [
+        {
+          "frequency_hz": 0.1,
+          "period_s": 10,
+          "full_relative_gain_percent": -0.11287792715699388,
+          "full_relative_phase_deg": 12.859573412837005,
+          "fir_relative_gain_percent": -0.11305608041801696,
+          "phase_with_stage4_correction_deg": -0.5562945871629943
+        },
+        {
+          "frequency_hz": 0.1604889710470726,
+          "period_s": 6.230957762865167,
+          "full_relative_gain_percent": -0.11088975976305897,
+          "full_relative_phase_deg": 11.99678943206135,
+          "fir_relative_gain_percent": -0.11106508135592108,
+          "phase_with_stage4_correction_deg": -0.5173985112460412
+        },
+        {
+          "frequency_hz": 0.25,
+          "period_s": 4,
+          "full_relative_gain_percent": -0.1062791181081309,
+          "full_relative_phase_deg": 10.719875004316075,
+          "fir_relative_gain_percent": -0.10644783597403285,
+          "phase_with_stage4_correction_deg": -0.4600149956839258
+        },
+        {
+          "frequency_hz": 1,
+          "period_s": 1,
+          "full_relative_gain_percent": 0,
+          "full_relative_phase_deg": 0,
+          "fir_relative_gain_percent": 0,
+          "phase_with_stage4_correction_deg": 0
+        }
+      ]
+    },
+    {
+      "event_id": "ci39493944",
+      "axis": "HNE",
+      "test": "3_POSITIVE_4_NEGATIVE_PASS_NOT_BANDWIDTH_PASS",
+      "epoch_start": "2019-09-26T14:00:00",
+      "epoch_end": "3000-01-01T00:00:00",
+      "fir_taps": 71,
+      "gains": [
+        0.510085,
+        1,
+        419430,
+        1
+      ],
+      "stage4_delay_s": 0.04687,
+      "stage4_correction_s": 0.04687,
+      "sensitivity": 214078,
+      "sensitivity_reference_hz": 1,
+      "frequencies": [
+        {
+          "frequency_hz": 0.1,
+          "period_s": 10,
+          "full_relative_gain_percent": -0.06128946550801982,
+          "full_relative_phase_deg": 24.48829465047597,
+          "fir_relative_gain_percent": -0.061467710779439244,
+          "phase_with_stage4_correction_deg": 9.302414650475972
+        },
+        {
+          "frequency_hz": 0.1604889710470726,
+          "period_s": 6.230957762865167,
+          "full_relative_gain_percent": -0.06014597518928258,
+          "full_relative_phase_deg": 22.84374049077801,
+          "fir_relative_gain_percent": -0.060321385845918396,
+          "phase_with_stage4_correction_deg": 8.678502997049476
+        },
+        {
+          "frequency_hz": 0.25,
+          "period_s": 4,
+          "full_relative_gain_percent": -0.057501682712115205,
+          "full_relative_phase_deg": 20.40999397151694,
+          "fir_relative_gain_percent": -0.057670482961735825,
+          "phase_with_stage4_correction_deg": 7.755093971516941
+        },
+        {
+          "frequency_hz": 1,
+          "period_s": 1,
+          "full_relative_gain_percent": 0,
+          "full_relative_phase_deg": 0,
+          "fir_relative_gain_percent": 0,
+          "phase_with_stage4_correction_deg": 0
+        }
+      ]
+    },
+    {
+      "event_id": "ci39493944",
+      "axis": "HNN",
+      "test": "3_POSITIVE_4_NEGATIVE_PASS_NOT_BANDWIDTH_PASS",
+      "epoch_start": "2019-09-26T14:00:00",
+      "epoch_end": "3000-01-01T00:00:00",
+      "fir_taps": 71,
+      "gains": [
+        0.509758,
+        1,
+        419430,
+        1
+      ],
+      "stage4_delay_s": 0.04687,
+      "stage4_correction_s": 0.04687,
+      "sensitivity": 213941,
+      "sensitivity_reference_hz": 1,
+      "frequencies": [
+        {
+          "frequency_hz": 0.1,
+          "period_s": 10,
+          "full_relative_gain_percent": -0.06128946550801982,
+          "full_relative_phase_deg": 24.48829465047597,
+          "fir_relative_gain_percent": -0.061467710779439244,
+          "phase_with_stage4_correction_deg": 9.302414650475972
+        },
+        {
+          "frequency_hz": 0.1604889710470726,
+          "period_s": 6.230957762865167,
+          "full_relative_gain_percent": -0.06014597518928258,
+          "full_relative_phase_deg": 22.84374049077801,
+          "fir_relative_gain_percent": -0.060321385845918396,
+          "phase_with_stage4_correction_deg": 8.678502997049476
+        },
+        {
+          "frequency_hz": 0.25,
+          "period_s": 4,
+          "full_relative_gain_percent": -0.057501682712115205,
+          "full_relative_phase_deg": 20.40999397151694,
+          "fir_relative_gain_percent": -0.057670482961735825,
+          "phase_with_stage4_correction_deg": 7.755093971516941
+        },
+        {
+          "frequency_hz": 1,
+          "period_s": 1,
+          "full_relative_gain_percent": 0,
+          "full_relative_phase_deg": 0,
+          "fir_relative_gain_percent": 0,
+          "phase_with_stage4_correction_deg": 0
+        }
+      ]
+    }
+  ]
 }
