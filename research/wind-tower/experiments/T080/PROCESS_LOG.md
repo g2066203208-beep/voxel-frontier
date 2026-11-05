@@ -1,4 +1,14 @@
 
+### 2026-11-06 07:16｜S07 FST→InflowWind→BTS三基目录一致性程序（0/12，原生结果待验）
+- **START/来源**：先读PR #42 Open/Draft、最新main及本分支AGENTS/README/论文状态与母版/T079审查/T080.1–.3/12阶段计划/COMMAND_ROOM；继承06时原InflowWind源字节及候选。按AGENTS本助手不做Abaqus，且未运行TurbSim/OpenFAST。
+- **SOURCE/READING_LEVEL**：本轮从GitHub分支实际读取既有T062 Python、候选InflowWind卡和18NTM原输入身份CSV；源FST预期SHA256=`5307e04d27721095ce6cbb6c125b8be1b4be71790af6c6258e3187343f5db605`、源InflowWind SHA256=`d204329f881836ffe0895b7d81aa28cae7540d5df56c754880db3d6c5c11d3a9`、候选InflowWind SHA256=`2ee0f78812f675448967a4bbf6d536310d995f5c219a45cf8e4cc488d675ad55`均来自既有源级收据；**本轮尚未独立取得原FST字节重读结果和原生Actions stdout**，不得把预期SHA写成已重验。原始ZIP历史SHA256=`ddfa02734274ad5bd36e84d975d18544bb5360554e25d71d8689f32313a95267`。
+- **新增程序/真实可复核资产**：复用[既有T062 Python](../T062/s10_lowwind_75_source_pilot.py)，加入FST原件SHA校验、`CompInflow/InflowFile`与`WindType/FileName_BTS`解析、路径遍历/绝对路径拒绝、候选FST目录/Inflow目录/明确cwd三种词法解析对照，并挂入原`--inflow-rebind-write/check`流程；[代码提交604fce48](https://github.com/g2066203208-beep/voxel-frontier/commit/604fce48edd34854a2e1993c625b7b9600f919ae)。在独立Python合成复算中，`CASES/U04p5_NTM_S01/DTU_10MW_RWT.fst`、同目录`DTU_10MW_InflowWind.dat`及子目录`inputs/U04p5_NTM_S01.bts`的**条件性**路径收敛为`CASES/U04p5_NTM_S01/inputs/U04p5_NTM_S01.bts`；1正9负全部符合预期。该布局**未在仓库创建**，不能称原FST InflowFile真实值已验收，更不能称OpenFAST可运行。
+- **失败与恢复**：并行旧S07 bot提交[a44c222a](https://github.com/g2066203208-beep/voxel-frontier/commit/a44c222a2ec2cbed9a15807e2581980bab5c16e9)覆盖既有JSON收据，删除30槽和Inflow两个旧子节；已从代码提交前的原始版本恢复完整子节，[修复提交caffc4fb](https://github.com/g2066203208-beep/voxel-frontier/commit/caffc4fbee33f2449559f4bc2d1ad04d612320f9)，远端回读三个旧节均在。原生FST新节仍未写回，不能宣称CI成功。
+- **REF/STANDARD/OFFICIAL/RUN/FIG/TAB**：REF=原T062 18NTM与源卡；STANDARD=2025 IEC/GB授权条款未核；OFFICIAL=仓库历史FST身份及OpenFAST公开InflowWind手册（说明BTS可用相对/绝对路径，未提供本版本相对基目录的原生验证）；RUN=本地独立Python合成路径算法测试，GitHub原FST CI待回读；FIG=0；TAB=1三基目录词法对照。**误差预算**=SHA和纯词法布局设计为精确检查，原始FST字段、运行时路径规则、BTS缺失、DLL/控制状态及物理误差NEED_ESTIMATE。
+- **HOLD/状态**：原FST SHA重读及原生日志尚未回收；BTS/OUTB仍为0，DLC1.2=0/126、材料Miner=0、E/WE=0，S06 PARTIAL、S07/S10 BLOCKED，严格0/12；未改冻结T057/T070或main，PR未合并。
+- **下一唯一动作**：取得现有t071 Actions的原FST字段/收据原生输出，核对`InflowFile`是否与拟议共目录布局一致；不跑生产求解。
+
+
 ### 2026-11-06 06时｜S07 U04p5 NTM S01 原始InflowWind字节恢复与可逆替换（0/12）
 - **START/继承**：读取本分支AGENTS（2026-11-02本助手禁Abaqus）、README、论文00_STATUS/母版、T079学术审查、T080.1–.3、12阶段计划、COMMAND_ROOM与T062原pilot及30槽收据。main仍为历史 `58c1e545`，本轮仅在Draft PR #42分支增量写入。
 - **SOURCE/READING_LEVEL**：原始 `archive/local-assets-20261004/openfast-36-r2/part-001.zip` 经GitHub Actions runner打开，ZIP SHA256=`ddfa02734274ad5bd36e84d975d18544bb5360554e25d71d8689f32313a95267`；读取原始成员 `CASES/U09p343881_NTM_S01/DTU_10MW_InflowWind.dat`，6248字节，SHA256=`d204329f881836ffe0895b7d81aa28cae7540d5df56c754880db3d6c5c11d3a9`，与原18NTM源身份CSV SHA256=`be58d33306e6ac101d42b42c7f4d24ea5743662d1a9355aff9862b5a7e0aad45`交叉一致。未读取新BTS/OUTB或原历史DLL二进制。
