@@ -417,5 +417,14 @@
       "pre5_vs_pre20_relative": 0.00016200122787202176,
       "pre10_vs_pre20_relative": 0.00001572274105499094
     }
-  ]
+  ],
+  "script_sha256_direct_recomputed": "bf94f7744df4f572efc23ab0bcc81965331402639dfe424d654ba71a8025e2b4",
+  "script_git_blob_sha": "fac9ebc23cb07648e2f3b768006f72fc79427219",
+  "source_sha256_direct_recomputed": [
+    "fb0c91fe588ccb4f6bed3d4ac77c4bc148231d8e5df6be19aa9cf3bc3d4c25ef",
+    "d6250274d578b87e4310eadcca5a910dd38cd69ad639dbca435af8e8a0d81e30",
+    "60a1201a67da19c30c2bfc1e2889b6c492c03d0a5133c296dc4fc68bee3426ae",
+    "e54bc509e573daecb31254cdc694d7678aa3460dab5460882e8d1abf97e91e12"
+  ],
+  "sha256_validation": "V8 pure JS SHA-256 tested on abc and directly recalculated from all four complete GitHub UTF8 CSV contents; all four match original archived SHA256"
 }
