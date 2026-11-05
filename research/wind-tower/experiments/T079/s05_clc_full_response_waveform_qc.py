@@ -178,9 +178,171 @@ def process(source_dir: Path):
     }
 
 
+
+def _validate_response_config(pre_filt, water_level, npts=NPTS):
+    if len(pre_filt) != 4 or not all(math.isfinite(float(x)) for x in pre_filt):
+        raise ValueError("BAD_PREFILT")
+    if not (0 < pre_filt[0] < pre_filt[1] < pre_filt[2] < pre_filt[3] < 0.5 / DT):
+        raise ValueError("BAD_PREFILT")
+    if not math.isfinite(float(water_level)) or not (0 <= water_level <= 200):
+        raise ValueError("BAD_WATER_LEVEL")
+    if npts < 4001:
+        raise ValueError("INSUFFICIENT_RESPONSE_WINDOW")
+
+
+def sensitivity_self_test():
+    _validate_response_config(PREFILT_HZ, WATER_LEVEL_DB)
+    _validate_response_config((0.01, 0.02, 20.0, 25.0), 40)
+    rejected = 0
+    for filt, wl, n in (
+        ((0.02, 0.02, 20, 25), 60, NPTS),
+        ((0.04, 0.02, 20, 25), 60, NPTS),
+        ((0.02, 0.04, 25, 20), 60, NPTS),
+        ((0.02, 0.04, 20, 55), 60, NPTS),
+        (PREFILT_HZ, float("nan"), NPTS),
+        (PREFILT_HZ, -1, NPTS),
+        (PREFILT_HZ, 60, 3000),
+    ):
+        try:
+            _validate_response_config(filt, wl, n)
+        except ValueError:
+            rejected += 1
+        else:
+            raise AssertionError("INVALID_SENSITIVITY_CONFIG_ACCEPTED")
+    assert rejected == 7
+    return "2_POSITIVE_7_NEGATIVE_PASS"
+
+
+def response_sensitivity(source_dir: Path, baseline: dict):
+    """Sensitivity of real waveform PSA, not a low-frequency or site validation.
+
+    Full-record pre-filter and water-level variations share the same input.
+    Edge experiment compares full-record response trimmed to [10s,190s] with
+    response removal performed on that identical 180.01s raw-data window.
+    """
+    import numpy as np
+    from obspy import UTCDateTime, read, read_inventory
+
+    sensitivity_self_test()
+    inv = read_inventory(str(source_dir / "original/CI_station_response.xml"))
+    stream = read(str(source_dir / "original/CI_waveform_counts.mseed"))
+    receipt = json.loads((source_dir / "source_receipt.json").read_text(encoding="utf-8"))
+    t0 = UTCDateTime(receipt["common_start_utc"])
+    variants = (
+        ("baseline", PREFILT_HZ, WATER_LEVEL_DB),
+        ("prefilter_lower_corner", (0.01, 0.02, 20.0, 25.0), WATER_LEVEL_DB),
+        ("prefilter_higher_corner", (0.04, 0.08, 20.0, 25.0), WATER_LEVEL_DB),
+        ("water_level_40dB", PREFILT_HZ, 40.0),
+        ("water_level_80dB", PREFILT_HZ, 80.0),
+    )
+    result_rows = []
+    for base_channel in baseline["channels"]:
+        axis = base_channel["channel"]
+        candidates = []
+        for tr in stream.select(network="CI", station="CLC", channel=axis, location=""):
+            offset = int(round(float(t0 - tr.stats.starttime) / DT))
+            if abs(float(tr.stats.delta) - DT) < 1e-9 and offset >= 0 and offset + NPTS <= int(tr.stats.npts):
+                if abs(float(tr.stats.starttime + offset * DT - t0)) < 1e-5:
+                    candidates.append((tr, offset))
+        if len(candidates) != 1:
+            raise ValueError("SENSITIVITY_TRACE_IDENTITY:" + axis)
+        tr, offset = candidates[0]
+        series = {}
+        for label, filt, water in variants:
+            _validate_response_config(filt, water)
+            corrected = tr.copy()
+            corrected.remove_response(inventory=inv, output="ACC",
+                                      pre_filt=filt, water_level=water,
+                                      zero_mean=False, taper=False)
+            x = np.asarray(corrected.data[offset:offset + NPTS], dtype=np.float64)
+            if x.size != NPTS or not np.isfinite(x).all():
+                raise ValueError("INVALID_SENSITIVITY_WAVEFORM:" + label)
+            series[label] = x
+        reference, _ = pre20(series["baseline"])
+        reference_psa = [spectrum(reference, T) for T in PERIODS]
+        for j, original in enumerate(base_channel["spectra"]):
+            if abs(reference_psa[j] - original["full_response_psa_m_s2"]) > 1e-9 * max(1.0, reference_psa[j]):
+                raise ValueError("BASELINE_REGRESSION_MISMATCH:" + axis)
+        for label, filt, water in variants:
+            corrected, _ = pre20(series[label])
+            psa = [spectrum(corrected, T) for T in PERIODS]
+            changes = [100 * (v / ref - 1) if ref > 1e-12 else None
+                       for v, ref in zip(psa, reference_psa)]
+            result_rows.append({
+                "channel": axis, "scenario": label, "pre_filt_hz": list(filt),
+                "water_level_db": water, "npts": NPTS,
+                "reference": "same original full-record baseline",
+                "periods_s": list(PERIODS), "psa_m_s2": psa,
+                "baseline_psa_m_s2": reference_psa,
+                "relative_change_percent": changes,
+                "max_abs_change_percent": max(abs(x) for x in changes if x is not None),
+            })
+
+        # Edge effect: identical evaluation interval, different deconvolution
+        # input length. This isolates a processing-window dependence, not SNR.
+        edge_n = 1000
+        short = tr.copy()
+        short.data = np.asarray(tr.data[offset + edge_n:offset + NPTS - edge_n]).copy()
+        short.stats.starttime = t0 + edge_n * DT
+        _validate_response_config(PREFILT_HZ, WATER_LEVEL_DB, int(short.stats.npts))
+        short.remove_response(inventory=inv, output="ACC",
+                              pre_filt=PREFILT_HZ, water_level=WATER_LEVEL_DB,
+                              zero_mean=False, taper=False)
+        x_short = np.asarray(short.data, dtype=np.float64)
+        x_full_common = series["baseline"][edge_n:-edge_n]
+        if x_short.size != NPTS - 2 * edge_n or not np.isfinite(x_short).all():
+            raise ValueError("EDGE_WINDOW_INVALID")
+        short_pre, _ = pre20(x_short)
+        common_pre, _ = pre20(x_full_common)
+        short_psa = [spectrum(short_pre, T) for T in PERIODS]
+        common_psa = [spectrum(common_pre, T) for T in PERIODS]
+        changes = [100 * (v / ref - 1) if ref > 1e-12 else None
+                   for v, ref in zip(short_psa, common_psa)]
+        result_rows.append({
+            "channel": axis, "scenario": "edge_trim_10s_each_side",
+            "pre_filt_hz": list(PREFILT_HZ), "water_level_db": WATER_LEVEL_DB,
+            "npts": NPTS - 2 * edge_n, "edge_trim_s_each_side": 10.0,
+            "reference": "full-record deconvolution evaluated on identical 10s..190s interval",
+            "periods_s": list(PERIODS), "psa_m_s2": short_psa,
+            "baseline_psa_m_s2": common_psa, "relative_change_percent": changes,
+            "max_abs_change_percent": max(abs(x) for x in changes if x is not None),
+        })
+    return {
+        "status": "S05_REAL_WAVEFORM_PROCESSING_PARAMETER_SENSITIVITY_NOT_SITE_PASS",
+        "SOURCE": baseline["SOURCE"],
+        "REF": "ObsPy 1.5.1 remove_response + Newmark 5% PSA; shared real miniSEED and StationXML",
+        "STANDARD": "No new licensed IEC/GB/NB clause read; no Jiayu site spectrum",
+        "OFFICIAL": "SCEDC source bytes hash-verified by parent process",
+        "RUN": "Native original-waveform non-production QC (requires CI execution)",
+        "FIG": 0, "TAB": "2 channels x 6 scenarios x 5 periods = 60 PSA",
+        "parameters": {
+            "baseline_prefilt_hz": list(PREFILT_HZ),
+            "baseline_water_level_db": WATER_LEVEL_DB,
+            "sensitivity_prefilt_hz": [[0.01, 0.02, 20, 25], [0.04, 0.08, 20, 25]],
+            "sensitivity_water_level_db": [40, 80],
+            "edge_trim_s_each_side": 10, "dt_s": DT, "damping": 0.05,
+            "prewindow_s": 20, "response_zero_mean": False, "response_taper": False,
+        },
+        "assumptions": [
+            "20s prewindow is an unvalidated baseline candidate; full event onset not established",
+            "Edge experiment uses the same 10..190s evaluation samples; deconvolution window differs",
+            "Relative changes are processing sensitivity, not instrument calibration error",
+            "Water level and pre-filter sweeps do not establish usable long-period SNR",
+        ],
+        "error_budget": "64-bit numeric; exact source hash via parent process; baseline regression tolerance 1e-9*max(1,PSA) m/s2; parameter/edge variation quantified but no physical uncertainty threshold preapproved",
+        "HOLD": "No long-period noise/SNR, event-onset, station/site transfer, target-spectrum or structural verification; S05 PARTIAL, E/WE=0, 0/12",
+        "test": sensitivity_self_test(),
+        "rows": result_rows,
+        "max_abs_prefilter_percent": max(r["max_abs_change_percent"] for r in result_rows if r["scenario"].startswith("prefilter_")),
+        "max_abs_water_level_percent": max(r["max_abs_change_percent"] for r in result_rows if r["scenario"].startswith("water_level_")),
+        "max_abs_edge_percent": max(r["max_abs_change_percent"] for r in result_rows if r["scenario"].startswith("edge_trim_")),
+    }
+
+
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--self-test", action="store_true")
+    p.add_argument("--sensitivity", action="store_true", help="run original miniSEED response parameter/edge QC")
     p.add_argument("--source-dir", type=Path)
     p.add_argument("--output", type=Path)
     args = p.parse_args()
@@ -190,9 +352,12 @@ def main():
     if not args.source_dir or not args.output:
         p.error("--source-dir and --output required")
     result = process(args.source_dir)
+    if args.sensitivity:
+        result["parameter_sensitivity"] = response_sensitivity(args.source_dir, result)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({"status": result["status"], "test": result["test"],
+                      "sensitivity": result.get("parameter_sensitivity", {}).get("status"),
                       "rows": [(x["channel"], x["raw_vs_csv_max_abs_m_s2"],
                                 [round(s["relative_change_percent"], 6) for s in x["spectra"]])
                                for x in result["channels"]]}, ensure_ascii=False))
