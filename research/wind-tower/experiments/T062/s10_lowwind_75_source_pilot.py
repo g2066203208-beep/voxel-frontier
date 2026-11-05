@@ -508,6 +508,148 @@ def dependency_command(repo_root, write):
           "negative_tests=" + str(computed["negative_tests_rejected"]),
           "candidate_BTS=0", "DLC12_PASS=0")
 
+
+# S07 source-only: recover the exact archived 9.343881 m/s S01 InflowWind
+# card, rebind ONE BTS filename, and prove a byte-exact inverse. NOT RUN.
+INFLOW_SOURCE_ZIP = "research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip"
+INFLOW_SOURCE_MEMBER = "CASES/U09p343881_NTM_S01/DTU_10MW_InflowWind.dat"
+INFLOW_SOURCE_SHA = "d204329f881836ffe0895b7d81aa28cae7540d5df56c754880db3d6c5c11d3a9"
+INFLOW_SOURCE_BYTES = 6248
+INFLOW_CHILD_FILE = "S07_U04p5_NTM_S01_InflowWind_NOT_RUN.dat"
+INFLOW_RECEIPT_KEY = "lowwind_45_s01_exact_inflow_rebind_20261106"
+INFLOW_NEW_BTS = "inputs/U04p5_NTM_S01.bts"
+
+def rebind_exact_inflow(raw, old_path, new_path=INFLOW_NEW_BTS,
+                        expected_sha=INFLOW_SOURCE_SHA, expected_size=INFLOW_SOURCE_BYTES):
+    require(len(raw) == expected_size, "INFLOW_SOURCE_SIZE_MISMATCH")
+    require(sha(raw) == expected_sha, "INFLOW_SOURCE_SHA_MISMATCH")
+    fields = gate.parse_keys(raw, ("WindType", "FileName_BTS", "Filename", "RefHt", "HWindSpeed"))
+    require(fields["WindType"] == "3", "INFLOW_WINDTYPE_NOT_BTS")
+    require(fields["FileName_BTS"] == old_path, "INFLOW_ORIGINAL_BTS_PATH_DRIFT")
+    require(old_path.endswith("\\U09p343881_NTM_S01.bts")
+            and re.match(r"^[A-Za-z]:\\", old_path), "INFLOW_ORIGINAL_NOT_ABSOLUTE")
+    require(new_path == INFLOW_NEW_BTS and
+            re.fullmatch(r"inputs/U04p5_NTM_S01[.]bts", new_path),
+            "INFLOW_CANDIDATE_PATH_UNAPPROVED")
+    old = old_path.encode("utf-8")
+    new = new_path.encode("utf-8")
+    require(raw.count(old) == 1, "INFLOW_SOURCE_PATH_NOT_UNIQUE")
+    child = raw.replace(old, new)
+    after = gate.parse_keys(child, tuple(fields))
+    require(after == {**fields, "FileName_BTS": new_path},
+            "INFLOW_OTHER_FIELDS_CHANGED")
+    require(child.count(new) == 1 and child.replace(new, old) == raw,
+            "INFLOW_NOT_BYTE_REVERSIBLE")
+    return child
+
+def inflow_rebind_selftest():
+    old = "C:" + chr(92) + "historical" + chr(92) + "inputs" + chr(92) + "U09p343881_NTM_S01.bts"
+    raw = ('3 WindType\n"' + old + '" FileName_BTS ! historical\n'
+           '161.368806 RefHt\n9.343881 HWindSpeed\n').encode()
+    child = rebind_exact_inflow(raw, old, expected_sha=sha(raw), expected_size=len(raw))
+    require(b"inputs/U04p5_NTM_S01.bts" in child and
+            child.replace(INFLOW_NEW_BTS.encode(), old.encode()) == raw,
+            "INFLOW_SELFTEST_POSITIVE")
+    bads = [
+        (raw, old, INFLOW_NEW_BTS, "0"*64, len(raw)),
+        (raw, old, INFLOW_NEW_BTS, sha(raw), len(raw)+1),
+        (raw.replace(b"3 WindType", b"1 WindType"), old, INFLOW_NEW_BTS, None, None),
+        (raw + b'"x" FileName_BTS\n', old, INFLOW_NEW_BTS, None, None),
+        (raw.replace(b"FileName_BTS", b"WrongKey"), old, INFLOW_NEW_BTS, None, None),
+        (raw, old.replace("S01", "S02"), INFLOW_NEW_BTS, None, None),
+        (raw, old, "../inputs/U04p5_NTM_S01.bts", None, None),
+        (raw, old, r"C:\inputs\U04p5_NTM_S01.bts", None, None),
+    ]
+    for i, (source, old_ref, new_ref, hash_override, size_override) in enumerate(bads):
+        try:
+            rebind_exact_inflow(source, old_ref, new_ref,
+                                hash_override or sha(source),
+                                size_override if size_override is not None else len(source))
+        except (ValueError, KeyError):
+            pass
+        else:
+            raise AssertionError("INFLOW_NEGATIVE_ACCEPTED_" + str(i))
+    print("S07_INFLOW_REBIND_SELFTEST_PASS_1_POSITIVE_8_NEGATIVE")
+
+def inflow_rebind_command(repo_root, write):
+    import zipfile
+    source_zip = repo_root / INFLOW_SOURCE_ZIP
+    require(source_zip.is_file(), "INFLOW_ARCHIVE_NOT_AVAILABLE")
+    with zipfile.ZipFile(source_zip) as archive:
+        require(INFLOW_SOURCE_MEMBER in archive.namelist(), "INFLOW_MEMBER_MISSING")
+        raw = archive.read(INFLOW_SOURCE_MEMBER)
+    require(len(raw) == INFLOW_SOURCE_BYTES and sha(raw) == INFLOW_SOURCE_SHA,
+            "INFLOW_ORIGINAL_BYTES_NOT_VERIFIED")
+    config_raw = gate.read_pinned(
+        repo_root / ROOT / "experiments/T062/S07_18NTM_ORIGINAL_TURBSIM_CONTROLLER_INPUTS_20261031.csv",
+        CONFIG_SHA)
+    originals = list(csv.DictReader(io.StringIO(config_raw.decode("utf-8-sig"))))
+    parent = next((r for r in originals if r["case"] == PARENT), None)
+    require(parent is not None and parent["inflow_sha256"] == INFLOW_SOURCE_SHA
+            and parent["inflow_WindType"] == "3", "INFLOW_PARENT_IDENTITY")
+    old_path = parent["inflow_FileName_BTS"]
+    child = rebind_exact_inflow(raw, old_path)
+    inflow_rebind_selftest()
+    root = repo_root / ROOT / "experiments/T062"
+    output = root / INFLOW_CHILD_FILE
+    receipt_path = root / GRID_RECEIPT_JSON
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    require(receipt["status"] == "SOURCE_ONLY_CANDIDATE_NOT_RUN"
+            and receipt["physical_pass"] is False, "INFLOW_RECEIPT_PARENT_STATE")
+    result = {
+        "SOURCE": "Exact 6248-byte original 158m U09p343881_NTM_S01 InflowWind member in static openfast-36-r2 part-001 ZIP; exact original 18NTM identity CSV",
+        "READING_LEVEL": "Full original archived InflowWind card bytes directly read and SHA256 verified; historical CSV cross-checked; new BTS/OUTB and original controller DLL bytes NOT read or generated",
+        "REF": "Existing T062 18NTM source/ROSCO methods; no new paper original pages",
+        "STANDARD": "IEC 61400-1/6 2025 authorized clauses NOT READ; NOT DLC1.2 normative acceptance",
+        "OFFICIAL": "Original OpenFAST source card, not an official site wind or controller runtime certificate",
+        "RUN": "Python stdlib ZIP source read, exact one-token BTS reference replacement, reverse-byte test; no TurbSim/OpenFAST/CAE execution",
+        "FIG": 0,
+        "TAB": "One source/child SHA pair, one old/new path, 1 positive and 8 negative synthetic tests",
+        "input_sha256": {
+            "archive_zip": sha(source_zip.read_bytes()),
+            "source_inflow_card": INFLOW_SOURCE_SHA,
+            "historical_18ntm_csv": CONFIG_SHA
+        },
+        "parent_member": INFLOW_SOURCE_MEMBER,
+        "parent_bytes": len(raw),
+        "parent_original_absolute_bts_path": old_path,
+        "candidate_case_NOT_RUN": "U04p5_NTM_S01",
+        "candidate_card_path": str(output.relative_to(repo_root)),
+        "candidate_card_bytes": len(child),
+        "candidate_card_sha256": sha(child),
+        "candidate_relative_bts_path_NOT_PRESENT": INFLOW_NEW_BTS,
+        "changed_fields": ["FileName_BTS"],
+        "unchanged_fields": ["WindType", "Filename", "RefHt", "HWindSpeed"],
+        "tests": {"parent_sha_and_size": "PASS", "original_18ntm_csv_identity": "PASS",
+                  "unique_token": "PASS", "byte_exact_reverse": "PASS",
+                  "synthetic_positive": 1, "synthetic_negative_rejected": 8},
+        "assumptions": "A future staged OpenFAST case may place the new BTS at inputs/U04p5_NTM_S01.bts relative to the applicable runtime base directory. OpenFAST path resolution and FST/ServoDyn/DISCON/DLL wiring have NOT been executed or verified.",
+        "error_budget": "Original and child bytes are SHA256 locked; inverse is byte-exact; runtime relative-path semantics, controller operating state, wind/structure and material-fatigue uncertainties NEED_ESTIMATE",
+        "HOLD": "Candidate BTS does not exist; FST path/runtime base, DLL binary identity, control state, IEC2025 clauses and material local stresses remain unverified",
+        "candidate_BTS_sha256": None,
+        "candidate_OUTB_sha256": None,
+        "physical_pass": False, "formal_dlc12_verified_slots": 0,
+        "stages_passed": 0, "status": "SOURCE_ONLY_CANDIDATE_NOT_RUN"
+    }
+    if write:
+        require(not output.exists() or output.read_bytes() == child,
+                "INFLOW_EXISTING_CHILD_CONFLICT")
+        output.write_bytes(child)
+        receipt[INFLOW_RECEIPT_KEY] = result
+        receipt_path.write_text(json.dumps(receipt, indent=2, ensure_ascii=False) + "\n",
+                                encoding="utf-8")
+    else:
+        require(output.is_file() and output.read_bytes() == child,
+                "INFLOW_COMMITTED_CHILD_DRIFT")
+        require(receipt.get(INFLOW_RECEIPT_KEY) == result,
+                "INFLOW_COMMITTED_RECEIPT_DRIFT")
+    print("S07_INFLOW_SOURCE_REBIND_SOURCE_ONLY_NOT_RUN",
+          "parent_sha=" + INFLOW_SOURCE_SHA,
+          "child_sha=" + sha(child),
+          "parent_bytes=" + str(len(raw)), "child_bytes=" + str(len(child)),
+          "synthetic_negative=8", "BTS=0", "DLC12_PASS=0")
+
+
 def main():
     parser=argparse.ArgumentParser()
     parser.add_argument("--selftest",action="store_true")
@@ -515,10 +657,16 @@ def main():
     parser.add_argument("--grid-check",action="store_true")
     parser.add_argument("--dependency-write",action="store_true")
     parser.add_argument("--dependency-check",action="store_true")
+    parser.add_argument("--inflow-rebind-write",action="store_true")
+    parser.add_argument("--inflow-rebind-check",action="store_true")
     parser.add_argument("--repo-root",type=Path,default=Path("."))
     parser.add_argument("--out-dir",type=Path)
     args=parser.parse_args()
     if args.selftest: selftest(); return
+    if args.inflow_rebind_write or args.inflow_rebind_check:
+        require(not (args.inflow_rebind_write and args.inflow_rebind_check), "INFLOW_REBIND_MODE_CONFLICT")
+        inflow_rebind_command(args.repo_root, args.inflow_rebind_write)
+        return
     if args.dependency_write or args.dependency_check:
         require(not (args.dependency_write and args.dependency_check),
                 'DEPENDENCY_MODE_CONFLICT')
