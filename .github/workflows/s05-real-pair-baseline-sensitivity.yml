@@ -118,7 +118,7 @@ jobs:
       - name: Native real-waveform full response removal and PSA
         run: |
           set -euo pipefail
-          python s05_clc_full_response_waveform_qc.py --sensitivity --snr --source-dir source --output "$RUNNER_TEMP/S05_CLC_FULL_RESPONSE_REMOVAL_RECEIPT_20261105.json"
+          python s05_clc_full_response_waveform_qc.py --sensitivity --snr --noise-qc --source-dir source --output "$RUNNER_TEMP/S05_CLC_FULL_RESPONSE_REMOVAL_RECEIPT_20261105.json"
           sha256sum "$RUNNER_TEMP/S05_CLC_FULL_RESPONSE_REMOVAL_RECEIPT_20261105.json" s05_clc_full_response_waveform_qc.py
       - name: Preserve numeric receipt and logs as workflow artifact
         if: always()
@@ -161,6 +161,9 @@ jobs:
           if computed.get('low_frequency_snr',{}).get('status')!='S05_REAL_PREORIGIN_CHRONOLOGY_AND_LOW_FREQ_POWER_QC_NOT_BAND_PASS':
               raise RuntimeError('LOW_FREQUENCY_SNR_MISSING')
           existing['low_frequency_snr']=computed['low_frequency_snr']
+          if computed.get('noise_window_qc',{}).get('status')!='S05_PRE_EVENT_VARIABILITY_CANDIDATE_TRIGGER_NOT_SITE_PASS':
+              raise RuntimeError('NOISE_WINDOW_QC_MISSING')
+          existing['noise_window_qc']=computed['noise_window_qc']
           data=(json.dumps(existing,ensure_ascii=False,indent=2)+'\n').encode()
           blob=hashlib.sha1(b'blob '+str(len(data)).encode()+bytes([0])+data).hexdigest()
           if meta['sha']==blob:
