@@ -1,3 +1,7 @@
+## 2026-11-05 17:04｜S05 两事件四分量长周期谱时间步/抽点混叠敏感性
+
+- PR #42开工read_base_sha=`30ca621113d832289c1bc603fca32d28334ffb64`，Open/Draft；读取AGENTS（本助手禁Abaqus）、README、论文00_STATUS/00_WORKSPACE_MASTER、T079学术审查、T080.1/.2/.3、12阶段计划及COMMAND_ROOM，继承16:10的四件实测源派生CSV，不重复前段去均值研究。直接读取CI.CLC 2019 Ridgecrest ci38457511和2020 Lone Pine ci39493944 HNE/HNN各20001点（dt=0.01s），原SHA256及Git blob见[原S05收据](../experiments/T079/real-records/S05_USGS_TWO_EVENT_CLC_PREWINDOW_QC_20261105.json)。使用20s候选前段常数去均值，5%阻尼Newmark平均加速度法；以0.01s样本**线性插值**构造0.005s计算参考（不新增仪器频带），并以**不作反混叠滤波**的0.02/0.04s抽点作敏感性测试。4分量×5周期×4步长=**80项真实PSA**，20行表已追加同一JSON；0.01相对0.005最大**0.0140985%**（2020 HNN, T=4s），0.02最大**0.0958084%**（2020 HNN, T=10s），0.04最大**238.510809%**（2019 HNN, T=10s，PSA 0.115446→0.390798 m/s²）。0.01计算逐项与上一轮pre20谱20/20误差<1e-12；3正4负测试通过，实际V8全源数值执行，**没有原生Node CI、没有生产RUN**。0.04大差异包含抽点混叠/输入表征改变与积分误差，**不是纯Newmark步长误差，更不能声称仪器低频或场址谱通过**。脚本SHA256=`dec99e25fd55af928216cac7ab3b64922ee843ea49fd6318ae75ca0979a5ce11`，收据SHA256=`985118c4e40a8df64c46004eb2d450c5373b564f287360135de897330dd5d137`；SOURCE=四CSV Git原件字节+继承SHA；REF=T079既有Newmark方法；STANDARD=IEC/GB/NB授权条款未读；OFFICIAL=沿用SCEDC/EarthScope原始FDSN来源收据，未重新解码miniSEED；RUN=V8真实数值QC；FIG=0；TAB=80项谱值/20行；误差预算=插值参考并非独立真解、无反混叠、源处理与仪器低频NEED_ESTIMATE；HOLD=场址目标谱、原波处理与低频可靠频带。S05 PARTIAL，S08/S09 BLOCKED，E/WE=0，**0/12未晋级**。冻结T057/T070/main不改、PR不合并。下一唯一动作：在同四件源记录上实现有明确滤波参数的反混叠0.04s重采样，并与当前无滤波结果逐项对照，拆分混叠与时间离散敏感性。
+
 
 ## 2026-11-05 16:10｜S05 两事件四分量真实时程前段去均值敏感性
 
