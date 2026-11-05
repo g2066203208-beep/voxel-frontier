@@ -6,6 +6,8 @@ on:
       - '.github/workflows/s10-three-section-fixed-azimuth-qc.yml'
       - 'research/wind-tower/experiments/T077/recovery/s10_three_section_fixed_azimuth_crosswalk.cjs'
       - 'research/wind-tower/experiments/T077/recovery/S10_3CONTROL_FIXED_AZIMUTH_SOURCE_CROSSWALK_20261102.csv'
+      - 'research/wind-tower/experiments/T077/recovery/s10_cycle_sign_m4_partition.cjs'
+      - 'research/wind-tower/experiments/T077/recovery/S10_3CONTROL_CYCLE_SIGN_M4_PARTITION_20261104.json'
   workflow_dispatch:
 permissions:
   contents: read
@@ -37,3 +39,19 @@ jobs:
           if node "$P/s10_three_section_fixed_azimuth_crosswalk.cjs" --input-dir "$RUNNER_TEMP/tamper" --out "$RUNNER_TEMP/should_not_exist.csv"; then exit 1; fi
           test ! -e "$RUNNER_TEMP/should_not_exist.csv"
           echo S10_TAMPER_REJECT_PASS
+      - name: S10 real 1574-cycle residual weighting and concentration (no solver)
+        run: |
+          set -euo pipefail
+          P=research/wind-tower/experiments/T077/recovery
+          node --check "$P/s10_cycle_sign_m4_partition.cjs"
+          node "$P/s10_cycle_sign_m4_partition.cjs" --self-test
+          printf '%s\n' '646065838456b6465e321c4c6fd24966f180f275df99c615000577557219ff83  research/wind-tower/experiments/T077/recovery/S10_3CONTROL_REAL_GROSS_CYCLES_20261030.csv' | sha256sum -c -
+          node "$P/s10_cycle_sign_m4_partition.cjs" --check
+          mkdir -p "$RUNNER_TEMP/cycle_negative"
+          cp "$P/s10_cycle_sign_m4_partition.cjs" "$P/S10_3CONTROL_REAL_GROSS_CYCLES_20261030.csv" "$P/S10_3CONTROL_REAL_CYCLE_MEAN_SUMMARY_20261030.csv" "$P/S10_3CONTROL_CYCLE_SIGN_M4_PARTITION_20261104.json" "$RUNNER_TEMP/cycle_negative/"
+          printf '\nTAMPER\n' >> "$RUNNER_TEMP/cycle_negative/S10_3CONTROL_REAL_GROSS_CYCLES_20261030.csv"
+          if node "$RUNNER_TEMP/cycle_negative/s10_cycle_sign_m4_partition.cjs" --check >"$RUNNER_TEMP/cycle_negative/negative.log" 2>&1; then
+            echo "ERROR: tampered cycle source accepted"; exit 1
+          fi
+          grep -q 'SOURCE_SHA256' "$RUNNER_TEMP/cycle_negative/negative.log"
+          echo S10_REAL_CYCLE_TAMPER_REJECTED_NO_MATERIAL_LIFE
