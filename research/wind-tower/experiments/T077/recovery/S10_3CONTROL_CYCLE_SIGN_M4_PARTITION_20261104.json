@@ -9,12 +9,12 @@
   "REF": "REF018 Huang et al. 2025 Engineering Structures 334:120295, p6 Eq.(1)-(2) Fig.10 previously visually read; no new original pages this run",
   "STANDARD": "IEC 61400-1/6:2025 licensed clauses not read; no clause acceptance",
   "OFFICIAL": "GitHub Git Blob, inherited native OpenFAST provenance; no new OpenFAST/Abaqus solver",
-  "RUN": "Actual V8 full-data numeric evaluation and 4 known-answer/4 negative synthetic plus 3 corrupted-source negative tests; Node CLI --check/self-test available; native CI not yet confirmed; 2026-11-04 11h V8 full-source material-domain evaluation 18888 diagnostics, 5 synthetic checks, legacy regression matched; no native CI yet; Native Ubuntu CI #41765664590 job #126363319929 completed/success, node --self-test/--check and sha256sum; not physical PASS; 2026-11-04 11:14 final explicit per-material predicates native CI #41765812932 PASS, previous intermediate #41765799121 failed due to paired receipt lag; 2026-11-06 01h V8 full 1574-cycle half-cycle and top1% m4 concentration audit, 3 oracle DEL4 matches, 4 known-answer/4 rejection synthetic checks in source; Node native CI not yet executed",
+  "RUN": "Actual V8 full-data numeric evaluation and 4 known-answer/4 negative synthetic plus 3 corrupted-source negative tests; Node CLI --check/self-test available; native CI not yet confirmed; 2026-11-04 11h V8 full-source material-domain evaluation 18888 diagnostics, 5 synthetic checks, legacy regression matched; no native CI yet; Native Ubuntu CI #41765664590 job #126363319929 completed/success, node --self-test/--check and sha256sum; not physical PASS; 2026-11-04 11:14 final explicit per-material predicates native CI #41765812932 PASS, previous intermediate #41765799121 failed due to paired receipt lag; 2026-11-06 01h V8 full 1574-cycle half-cycle and top1% m4 concentration audit, 3 oracle DEL4 matches, 4 known-answer/4 rejection synthetic checks in source; Native Node22 CI #42072714926 and #42072989322 completed/success after sparse checkout fix; no solver",
   "FIG": "No new physical-response figures",
   "TAB": "3 control points x 3 conditional mean scenarios; equivalent cycle counts and m4-proxy fractions; 9 domain groups and 4 material admission contracts; 3-control half-cycle/top1% weighted m4 and counterfactual residual-count bias",
   "script_path": "research/wind-tower/experiments/T077/recovery/s10_cycle_sign_m4_partition.cjs",
-  "script_sha256": "9a27c44cc199a74bffc3b1e3741e2782161b0b1d7acd0eb341f076abf9c3f9c4",
-  "script_git_blob": "95b88bb70df447ba0cbd89555b9fd5f89de3c2f5",
+  "script_sha256": "90a93832804c2d7699f3956d9304ed57cea6359b09b8f4b75556826df22168bd",
+  "script_git_blob": "7be3cd887883597be60da1dfcdb2125b985953a4",
   "tests": {
     "known_answers": 4,
     "negative_rejections": 4,
@@ -22,11 +22,15 @@
     "material_domain_synthetic_known_answers": 5,
     "material_domain_full_real_rows": 1574,
     "material_domain_material_scenario_diagnostics": 18888,
-    "material_domain_admitted": 0
+    "material_domain_admitted": 0,
+    "weight_known_answers": 4,
+    "weight_negative_rejections": 4,
+    "real_control_oracle_matches": 3,
+    "cycle_source_tamper_rejected": 1
   },
   "ALGORITHM": "For each rainflow cycle, endpoints mean +/- range/2; classify compression/reversing/tension, sum count*range^4 per class, normalize by total. Pe/P0 shifts are conditional, not verified native equilibrium.",
   "ERROR_BUDGET": "Source decimal roundoff ~1e-10 MPa; smallest observed endpoint-zero margin across 9 scenario/groups 0.001796467 MPa (P0 CSEG16), so classification robust to CSV serialization; physics/PT uncertainty unestimated; m4 is NOT material damage.",
-  "FAILURES": "No new test failures; earlier T077 source failures remain in historical process log",
+  "FAILURES": "No new test failures; earlier T077 source failures remain in historical process log; 2026-11-06 01h CI #42072562895/#42072570831 failed ENOENT missing 3-control summary due sparse-checkout; fixed by c3916b39, native rerun #42072989322 success; no physical failure inferred",
   "HOLD": "ETM not DLC1.2, only three nominal sections; 4–8m/s NTM original BTS/OUTB missing, local material stress and native PT not validated; annual Miner life remains 0; S10 BLOCKED, S06 PARTIAL, 0/12; new material applicability 0/18888 admitted, no Miner; half-cycle residual m4 65.03%-93.59%, top 1% cycle rows 72.64%-96.06%; ETM nominal only; no material life",
   "results": [
     {
@@ -453,8 +457,8 @@
     "CI_RECEIPT_SHA256_BEFORE_THIS_METADATA_UPDATE": "e547d16bface420ec5b6267346c25dfd1a10fc073abaa2c0216d653db0d2a91a",
     "CI_RECEIPT_SHA256_SCOPE": "Hash of receipt at cc355b7 commit, not current metadata-updated bytes"
   },
-  "previous_script_sha256": "5e58e0d985ac61e804661ba558c4dee41824a89c214d349b64bf08f2ab51e04a",
-  "script_sha256_status": "NATIVE_ACTIONS_41765812932_VERIFIED_AFTER_EXPLICIT_18888_CHECK_PATCH",
+  "previous_script_sha256": "9a27c44cc199a74bffc3b1e3741e2782161b0b1d7acd0eb341f076abf9c3f9c4",
+  "script_sha256_status": "NATIVE_NODE22_SHA256SUM_VERIFIED_20261106",
   "cycle_weight_concentration": {
     "status": "REAL_ETM_GROSS_NOMINAL_RAINFLOW_CONCENTRATION_NOT_MATERIAL_LIFE",
     "source_sha256": "646065838456b6465e321c4c6fd24966f180f275df99c615000577557219ff83",
@@ -514,5 +518,21 @@
       "top 1 percent refers to sorted rainflow rows, not time fraction",
       "half-as-full is a deliberately incorrect counterfactual; residual endpoint convention matters"
     ]
+  },
+  "native_ci": {
+    "status": "completed/success",
+    "run_three_section": 42072714926,
+    "job_three_section": 127404652208,
+    "run_era5_ntm": 42072989322,
+    "job_era5_ntm": 127405603290,
+    "script_sha256": "90a93832804c2d7699f3956d9304ed57cea6359b09b8f4b75556826df22168bd",
+    "receipt_sha256_before_ci_receipt_update": "aaacba2f3c02e699f35d9fd62cad75c17cbf9d35cb7dc8f3f61e0639518db42a",
+    "initial_failed_era5_runs": [
+      42072562895,
+      42072570831
+    ],
+    "failure_cause": "S10 sparse checkout omitted pre-existing 3-control summary CSV",
+    "fix_commit": "c3916b39eed1d1618ef7edcda1d3cf9aa01bd898",
+    "physical_pass": false
   }
 }
