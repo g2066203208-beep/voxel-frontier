@@ -703,5 +703,156 @@
     "max_abs_prefilter_percent": 29.19548502540954,
     "max_abs_water_level_percent": 0.0,
     "max_abs_edge_percent": 19.605985502392407
+  },
+  "low_frequency_snr": {
+    "status": "S05_REAL_PREORIGIN_CHRONOLOGY_AND_LOW_FREQ_POWER_QC_NOT_BAND_PASS",
+    "SOURCE": {
+      "mseed_sha256": "9bfcd3ab44ade97a5ec1d586d0e4240c9b2d14347ff2ec3d86e8c75df0dd58ab",
+      "stationxml_sha256": "31aff27345c4795d37b10d1affce7e2a3504e5d5a93cd0758bc8781a4da32e4c",
+      "csv_sha256": {
+        "CI.CLC..HNE": "fb0c91fe588ccb4f6bed3d4ac77c4bc148231d8e5df6be19aa9cf3bc3d4c25ef",
+        "CI.CLC..HNN": "d6250274d578b87e4310eadcca5a910dd38cd69ad639dbca435af8e8a0d81e30"
+      }
+    },
+    "OFFICIAL": "SCEDC source event origin and raw CSV SHA-verified by process()",
+    "REF": "SciPy Hann periodogram 20s, linear detrend, 0.05Hz bin width, 0.1/0.15/0.2/0.25Hz; ObsPy waveform source identity",
+    "STANDARD": "No IEC/GB/NB licensed clause or Jiayu site spectrum verified",
+    "RUN": "Native non-production numerical PSD QC only; no structural E/WE",
+    "FIG": 0,
+    "TAB": "2 channels x (1 pre-event + 3 shaking + 3 late) 20s windows",
+    "event_origin_utc": "2019-07-06T03:19:53Z",
+    "record_start_utc": "2019-07-06T03:19:19.998300Z",
+    "origin_from_start_s": 33.0017,
+    "pre20_end_before_origin_s": 13.0017,
+    "chronology": "0..20s is before catalog origin, not independently verified stationary noise or onset",
+    "frequency_hz": [
+      0.1,
+      0.15,
+      0.2,
+      0.25
+    ],
+    "bin_width_hz": 0.05,
+    "parameters": {
+      "sample_dt_s": 0.01,
+      "segment_length_s": 20,
+      "window": "Hann",
+      "detrend": "linear",
+      "source": "sensitivity-only original acceleration CSV"
+    },
+    "assumptions": [
+      "Catalog origin precedes local arrivals; origin chronology does not prove pre-event stationarity",
+      "Only two 0.1Hz cycles per 20s segment; 0.05Hz resolution and single pre-event sample",
+      "40..100s windows are fixed in advance, not peak-picked; power includes background noise",
+      "No deconvolution applied to this spectral-power comparison; low-frequency instrument self-noise unverified"
+    ],
+    "error_budget": "Double precision and 0.05Hz frequency bins; single 20s noise periodogram has high statistical variance; no approved SNR acceptance threshold",
+    "test": "3_POSITIVE_7_NEGATIVE_PASS",
+    "channels": [
+      {
+        "channel": "HNE",
+        "noise_window_s": [
+          0,
+          20
+        ],
+        "signal_windows_s": [
+          [
+            40,
+            60
+          ],
+          [
+            60,
+            80
+          ],
+          [
+            80,
+            100
+          ]
+        ],
+        "late_windows_s": [
+          [
+            120,
+            140
+          ],
+          [
+            140,
+            160
+          ],
+          [
+            160,
+            180
+          ]
+        ],
+        "noise_bandpower_m2_s4": 2.4553879030029925e-11,
+        "signal_bandpowers_m2_s4": [
+          0.0018085228652244335,
+          7.217093653971508e-05,
+          2.191019785681013e-05
+        ],
+        "late_bandpowers_m2_s4": [
+          7.774444171473735e-07,
+          9.650694834136026e-07,
+          6.408325257294603e-07
+        ],
+        "observed_signal_plus_noise_over_pre_event_power_ratio": 25828967.082200915,
+        "observed_signal_plus_noise_over_pre_event_power_db": 74.1210703879159,
+        "observed_late_over_pre_event_power_ratio": 32355.32796230896,
+        "observed_late_over_pre_event_power_db": 45.09945806306246,
+        "pre20_rms_m_s2": 0.1781737993762845,
+        "signal40_100_rms_m_s2": 0.39980908694228257
+      },
+      {
+        "channel": "HNN",
+        "noise_window_s": [
+          0,
+          20
+        ],
+        "signal_windows_s": [
+          [
+            40,
+            60
+          ],
+          [
+            60,
+            80
+          ],
+          [
+            80,
+            100
+          ]
+        ],
+        "late_windows_s": [
+          [
+            120,
+            140
+          ],
+          [
+            140,
+            160
+          ],
+          [
+            160,
+            180
+          ]
+        ],
+        "noise_bandpower_m2_s4": 4.5451513143512027e-11,
+        "signal_bandpowers_m2_s4": [
+          0.0010126244632120852,
+          0.00014820348250588162,
+          5.817641754103984e-06
+        ],
+        "late_bandpowers_m2_s4": [
+          2.1636112553946125e-06,
+          2.534455806464434e-06,
+          6.872071341448697e-07
+        ],
+        "observed_signal_plus_noise_over_pre_event_power_ratio": 8555971.750881108,
+        "observed_signal_plus_noise_over_pre_event_power_db": 69.32269341998519,
+        "observed_late_over_pre_event_power_ratio": 39494.64549177968,
+        "observed_late_over_pre_event_power_db": 45.965382199048854,
+        "pre20_rms_m_s2": 0.1891753339456636,
+        "signal40_100_rms_m_s2": 0.5249560768577665
+      }
+    ],
+    "HOLD": "Cannot infer reliable 4-10s signal band from a single 20s pre-event window; site target spectrum and instrument self-noise still absent; S05 PARTIAL, E/WE=0, 0/12"
   }
 }
