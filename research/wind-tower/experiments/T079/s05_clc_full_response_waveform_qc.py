@@ -339,21 +339,152 @@ def response_sensitivity(source_dir: Path, baseline: dict):
     }
 
 
+
+def _band_power_20s(values, fs=100.0):
+    """One 20 s Hann periodogram; 0.05 Hz bin spacing, NOT a calibrated noise PSD."""
+    import numpy as np
+    from scipy.signal import periodogram
+    a = np.asarray(values, dtype=np.float64)
+    if a.size != 2000 or not np.isfinite(a).all():
+        raise ValueError("BAD_BAND_WINDOW")
+    freq, psd = periodogram(a, fs=fs, window="hann", detrend="linear",
+                            scaling="density", nfft=a.size)
+    mask = (freq >= 0.1 - 1e-12) & (freq <= 0.25 + 1e-12)
+    if int(mask.sum()) != 4:
+        raise ValueError("BAD_BAND_BINS")
+    power = float(psd[mask].sum() * (fs / a.size))
+    if not math.isfinite(power) or power < 0:
+        raise ValueError("BAD_BAND_POWER")
+    return power
+
+
+def _snr_ratio(noise_power, signal_powers):
+    if not math.isfinite(float(noise_power)) or noise_power <= 0:
+        raise ValueError("NO_NOISE_POWER")
+    if not signal_powers or not all(math.isfinite(float(v)) and v >= 0 for v in signal_powers):
+        raise ValueError("BAD_SIGNAL_POWER")
+    ratio = float(sum(signal_powers) / len(signal_powers) / noise_power)
+    if ratio <= 0:
+        raise ValueError("NO_SIGNAL_POWER")
+    return ratio, 10.0 * math.log10(ratio)
+
+
+def snr_self_test():
+    import numpy as np
+    t = np.arange(2000, dtype=float) * DT
+    base = np.sin(2 * np.pi * 0.2 * t)
+    p = _band_power_20s(base)
+    assert p > 0
+    ratio, db = _snr_ratio(p, [4*p, 4*p, 4*p])
+    assert abs(ratio - 4) < 1e-12 and abs(db - 6.020599913279624) < 1e-12
+    assert _band_power_20s(base + 10) > 0  # linear detrend removes constant offset
+    rejected = 0
+    for bad in (np.zeros(100), np.full(2000, np.nan), np.full(2000, np.inf)):
+        try:
+            _band_power_20s(bad)
+        except ValueError:
+            rejected += 1
+        else:
+            raise AssertionError("BAD_BAND_ACCEPTED")
+    for noise, signal in ((0, [1]), (-1, [1]), (1, [float("nan")]), (1, [])):
+        try:
+            _snr_ratio(noise, signal)
+        except ValueError:
+            rejected += 1
+        else:
+            raise AssertionError("BAD_SNR_ACCEPTED")
+    assert rejected == 7
+    return "3_POSITIVE_7_NEGATIVE_PASS"
+
+
+def low_frequency_snr(source_dir: Path, baseline: dict):
+    """Pre-origin chronology + observed 0.1-0.25 Hz window power ratios.
+
+    The first 20 s contains only 2 cycles at 0.1 Hz and is ONE noise sample.
+    Ratios are observed signal-plus-noise/noise, NOT intrinsic SNR or usable-band PASS.
+    Sensitivity-only original CSV is used to avoid deconvolution prefilter leakage.
+    """
+    import numpy as np
+    from datetime import datetime, timedelta, timezone
+    receipt = json.loads((source_dir / "source_receipt.json").read_text(encoding="utf-8"))
+    def utc(s):
+        d = datetime.fromisoformat(s.replace("Z", "+00:00"))
+        if d.tzinfo is None:
+            raise ValueError("NAIVE_UTC")
+        return d.astimezone(timezone.utc)
+    origin = utc(receipt["event_utc"])
+    start = utc(receipt["common_start_utc"])
+    origin_from_start_s = (origin - start).total_seconds()
+    pre_event_margin_s = (origin - (start + timedelta(seconds=20))).total_seconds()
+    if pre_event_margin_s <= 0 or not (20 < origin_from_start_s < 40):
+        raise ValueError("PREWINDOW_NOT_PREORIGIN")
+    if baseline.get("event_id") != "ci38457511" or receipt.get("station") != "CLC":
+        raise ValueError("SNR_EVENT_IDENTITY")
+    rows = []
+    for ch in baseline["channels"]:
+        axis = ch["channel"]
+        a = np.asarray(load_csv(source_dir / f"CI_CLC_{axis}_accel_mps2.csv"), dtype=float)
+        noise = _band_power_20s(a[0:2000])
+        signal = [_band_power_20s(a[i:i+2000]) for i in (4000, 6000, 8000)]
+        late = [_band_power_20s(a[i:i+2000]) for i in (12000, 14000, 16000)]
+        signal_ratio, signal_db = _snr_ratio(noise, signal)
+        late_ratio, late_db = _snr_ratio(noise, late)
+        rows.append({
+            "channel": axis,
+            "noise_window_s": [0, 20], "signal_windows_s": [[40, 60], [60, 80], [80, 100]],
+            "late_windows_s": [[120, 140], [140, 160], [160, 180]],
+            "noise_bandpower_m2_s4": noise,
+            "signal_bandpowers_m2_s4": signal, "late_bandpowers_m2_s4": late,
+            "observed_signal_plus_noise_over_pre_event_power_ratio": signal_ratio,
+            "observed_signal_plus_noise_over_pre_event_power_db": signal_db,
+            "observed_late_over_pre_event_power_ratio": late_ratio,
+            "observed_late_over_pre_event_power_db": late_db,
+            "pre20_rms_m_s2": float(np.sqrt(np.mean(a[:2000]**2))),
+            "signal40_100_rms_m_s2": float(np.sqrt(np.mean(a[4000:10000]**2))),
+        })
+    return {
+        "status": "S05_REAL_PREORIGIN_CHRONOLOGY_AND_LOW_FREQ_POWER_QC_NOT_BAND_PASS",
+        "SOURCE": baseline["SOURCE"], "OFFICIAL": "SCEDC source event origin and raw CSV SHA-verified by process()",
+        "REF": "SciPy Hann periodogram 20s, linear detrend, 0.05Hz bin width, 0.1/0.15/0.2/0.25Hz; ObsPy waveform source identity",
+        "STANDARD": "No IEC/GB/NB licensed clause or Jiayu site spectrum verified",
+        "RUN": "Native non-production numerical PSD QC only; no structural E/WE",
+        "FIG": 0, "TAB": "2 channels x (1 pre-event + 3 shaking + 3 late) 20s windows",
+        "event_origin_utc": receipt["event_utc"], "record_start_utc": receipt["common_start_utc"],
+        "origin_from_start_s": origin_from_start_s, "pre20_end_before_origin_s": pre_event_margin_s,
+        "chronology": "0..20s is before catalog origin, not independently verified stationary noise or onset",
+        "frequency_hz": [0.1, 0.15, 0.2, 0.25], "bin_width_hz": 0.05,
+        "parameters": {"sample_dt_s": DT, "segment_length_s": 20, "window": "Hann",
+                       "detrend": "linear", "source": "sensitivity-only original acceleration CSV"},
+        "assumptions": [
+            "Catalog origin precedes local arrivals; origin chronology does not prove pre-event stationarity",
+            "Only two 0.1Hz cycles per 20s segment; 0.05Hz resolution and single pre-event sample",
+            "40..100s windows are fixed in advance, not peak-picked; power includes background noise",
+            "No deconvolution applied to this spectral-power comparison; low-frequency instrument self-noise unverified"
+        ],
+        "error_budget": "Double precision and 0.05Hz frequency bins; single 20s noise periodogram has high statistical variance; no approved SNR acceptance threshold",
+        "test": snr_self_test(), "channels": rows,
+        "HOLD": "Cannot infer reliable 4-10s signal band from a single 20s pre-event window; site target spectrum and instrument self-noise still absent; S05 PARTIAL, E/WE=0, 0/12"
+    }
+
+
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--self-test", action="store_true")
     p.add_argument("--sensitivity", action="store_true", help="run original miniSEED response parameter/edge QC")
+    p.add_argument("--snr", action="store_true", help="pre-origin chronology and observed 0.1-0.25Hz power QC")
     p.add_argument("--source-dir", type=Path)
     p.add_argument("--output", type=Path)
     args = p.parse_args()
     if args.self_test:
-        print(self_test())
+        print(self_test(), snr_self_test())
         return
     if not args.source_dir or not args.output:
         p.error("--source-dir and --output required")
     result = process(args.source_dir)
     if args.sensitivity:
         result["parameter_sensitivity"] = response_sensitivity(args.source_dir, result)
+    if args.snr:
+        result["low_frequency_snr"] = low_frequency_snr(args.source_dir, result)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({"status": result["status"], "test": result["test"],
