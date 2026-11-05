@@ -1,10 +1,10 @@
 {
   "SOURCE": "Direct GitHub-branch ERA5 derived 31-bin CSV, 126-slot source matrix, original 18 NTM controller/input CSV and original 18 NTM FST/OUTB identity CSV; scoped REST Git tree/release/Actions metadata inventory",
-  "READING_LEVEL": "Derived CSV direct bytes and inherited original-OUTB SHA receipts; Git tree path names, release asset names and recent 100 Actions run titles only. No 4-8m/s original BTS/OUTB read or recovered; full historical Actions artifact scan NOT DONE.; 2026-11-05 original 158m ServoDyn exact member bytes read in GitHub Actions 41960401342 and SHA-verified (details in controller_cutin_evidence.original_servodyn_source_card_20261105)",
+  "READING_LEVEL": "Derived CSV direct bytes and inherited original-OUTB SHA receipts; Git tree path names, release asset names and recent 100 Actions run titles only. No 4-8m/s original BTS/OUTB read or recovered; full historical Actions artifact scan NOT DONE.; 2026-11-05 original 158m ServoDyn exact member bytes read in GitHub Actions 41960401342 and SHA-verified (details in controller_cutin_evidence.original_servodyn_source_card_20261105); 2026-11-05 original DISCON 17600 bytes independently re-read in native GitHub Actions #41966599763, original source parameter line numbers and tagged ROSCO executable source linked",
   "REF": "T062 original 18NTM source contract; 12-stage critical path and prior S10 conditional-load-m4 diagnostic",
   "STANDARD": "IEC 61400-1/6 2025 licensed text NOT READ; 1m/s centers, six seeds, cut-in and operating regime are candidate research design NOT clause acceptance",
   "OFFICIAL": "GitHub REST repository tree, releases and Actions metadata; OpenFAST/TurbSim source identities inherited, NOT native controller or formal IEC validation",
-  "RUN": "Node source-only deterministic 30-slot construction with 6 tamper rejection tests; no TurbSim, OpenFAST or Abaqus production run; 2026-11-05 original-source Python selftest and extraction GitHub Actions 41960401342 completed/success (no production solver)",
+  "RUN": "Node source-only deterministic 30-slot construction with 6 tamper rejection tests; no TurbSim, OpenFAST or Abaqus production run; 2026-11-05 original-source Python selftest and extraction GitHub Actions 41960401342 completed/success (no production solver); 2026-11-05 DISCON source gate #41966599763 successful (1 positive, 9 negative)",
   "FIG": "0",
   "TAB": "30 proposed source-missing low-wind NTM slots; no wind-field or material response figures",
   "input_sha256": {
@@ -181,6 +181,138 @@
       "HOLD": "4-8 m/s operating/cut-in and original BTS/OUTB remain unverified; no formal DLC1.2 or material fatigue PASS",
       "physical_pass": false,
       "stage_passed": 0
+    },
+    "original_discon_lowwind_source_20261105": {
+      "SOURCE": "Original 158m archived DISCON.IN member: research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip :: CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN",
+      "READING_LEVEL": "Original 17600 bytes SHA-checked by GitHub Actions 41966599763, 16 selected original parameter fields with exact line numbers; original 60-point PS arrays retained in reproducible CI artifact. Official ROSCO v2.6.0 tagged executable source lines read directly, not a claim of historical DLL binary equality.",
+      "original_discon_bytes": 17600,
+      "original_discon_sha256": "8f5d7546420ee34838e66b63e4b26d64460be5d5492f99c60b6d1ef977ffc61a",
+      "original_receipt_sha256": "17c0e3e1d89ce2ea245dbb8378840bbaf03a73c872abe4291f4f927eb3dc504e",
+      "source_ci_run": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41966599763",
+      "source_ci_artifact": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41966599763/artifacts/13386934449",
+      "SOURCE_FIELDS": [
+        {
+          "key": "SD_Mode",
+          "line": 17,
+          "value": 0,
+          "meaning": "ROSCO pitch-based Shutdown() call disabled"
+        },
+        {
+          "key": "PS_Mode",
+          "line": 16,
+          "value": 1,
+          "meaning": "pitch saturation branch enabled"
+        },
+        {
+          "key": "VS_ControlMode",
+          "line": 11,
+          "value": 2,
+          "meaning": "TSR tracking PI with constant torque"
+        },
+        {
+          "key": "WE_Mode",
+          "line": 15,
+          "value": 2,
+          "meaning": "EKF wind-speed estimator, not bin-center actual wind"
+        },
+        {
+          "key": "VS_MinOMSpd",
+          "line": 67,
+          "value": 36.6,
+          "unit": "rad/s generator speed"
+        },
+        {
+          "key": "VS_TSRopt",
+          "line": 75,
+          "value": 7.5,
+          "unit": "dimensionless TSR"
+        },
+        {
+          "key": "WE_BladeRadius",
+          "line": 82,
+          "value": 89.2,
+          "unit": "m"
+        },
+        {
+          "key": "WE_GearboxRatio",
+          "line": 86,
+          "value": 50,
+          "unit": "dimensionless"
+        },
+        {
+          "key": "PS_BldPitchMin_N",
+          "line": 110,
+          "value": 60,
+          "meaning": "60 original table points"
+        },
+        {
+          "key": "PS_WindSpeeds",
+          "line": 111,
+          "first": 4,
+          "last": 25,
+          "count": 60,
+          "unit": "m/s, original 60 values in CI artifact"
+        },
+        {
+          "key": "PS_BldPitchMin",
+          "line": 112,
+          "first": 0.04547814,
+          "last": 0.31944769,
+          "count": 60,
+          "unit": "rad, original 60 values in CI artifact"
+        },
+        {
+          "key": "SD_MaxPit",
+          "line": 115,
+          "value": 0.6981,
+          "unit": "rad, inactive when SD_Mode=0"
+        },
+        {
+          "key": "SD_CornerFreq",
+          "line": 116,
+          "value": 0.41888,
+          "unit": "rad/s, inactive shutdown branch"
+        }
+      ],
+      "REF": "T062 original DISCON 26-key source receipt, ROSCO v2.6.0 source (not newer registry semantics)",
+      "STANDARD": "IEC 61400-1/6:2025 authorized original clauses NOT READ",
+      "OFFICIAL": {
+        "tag": "https://github.com/NatLabRockies/ROSCO/tree/v2.6.0",
+        "controller": "https://github.com/NatLabRockies/ROSCO/blob/v2.6.0/ROSCO/src/Controllers.f90#L76-L95",
+        "blocks": "https://github.com/NatLabRockies/ROSCO/blob/v2.6.0/ROSCO/src/ControllerBlocks.f90#L50-L70",
+        "shutdown": "https://github.com/NatLabRockies/ROSCO/blob/v2.6.0/ROSCO/src/ControllerBlocks.f90#L383-L425",
+        "parser": "https://github.com/NatLabRockies/ROSCO/blob/v2.6.0/ROSCO/src/ReadSetParameters.f90#L231-L245"
+      },
+      "RUN": "GitHub Actions 41966599763 completed/success; exact original DISCON SHA+length; 1 synthetic positive and 9 negative tests; no OpenFAST/TurbSim/Abaqus run",
+      "FIG": "0",
+      "TAB": "13 selected original parameter fields; 5 conditional diagnostic wind-bin centers",
+      "conditional_reference_speed_clamp": {
+        "formula": "U_boundary=VS_MinOMSpd*WE_BladeRadius/(VS_TSRopt*WE_GearboxRatio)",
+        "numerator": "36.6*89.2",
+        "denominator": "7.5*50",
+        "value_mps": 8.70592,
+        "meaning": "TSR-based generator reference speed hits the VS_MinOMSpd lower clamp if EKF wind estimate equals this speed. NOT actual cut-in, cut-out, shutdown or power threshold.",
+        "bins_mps": [
+          4.5,
+          5.5,
+          6.5,
+          7.5,
+          8.5
+        ],
+        "bins_below_boundary": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "condition": "Assume estimated wind equals bin center; not established from timewise data."
+      },
+      "assumptions": "SD_Mode=0 disables only ROSCO pitch shutdown branch; PS_Mode=1 activates minimum pitch interpolation (4..25m/s table), not proof of operation. Generator time-based start/stop from original ServoDyn remains distinct. No controller DLL binary identity proof.",
+      "ERROR_BUDGET": "Source length/SHA and original numeric tokens exact; 8.70592 arithmetic double precision rounding <1e-12 m/s for decimal inputs; wind-estimator dynamics, controller state, 4-8m/s aerodynamics, DLC1.2 validity and physics errors unestimated.",
+      "HOLD": "No validated actual wind-speed cut-in/out or 4-8m/s BTS/OUTB; S06 PARTIAL, S07/S10 BLOCKED, DLC1.2 0/126, native earthquake 0, 0/12 stages",
+      "physical_pass": false,
+      "stages_passed": 0
     }
   },
   "cut_in_sensitivity": {
