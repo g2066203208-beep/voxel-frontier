@@ -94,7 +94,7 @@ def process(source_dir: Path):
     from obspy import UTCDateTime, read, read_inventory
     receipt_path = source_dir / "source_receipt.json"
     receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
-    if receipt.get("station") != "CLC" or receipt.get("event_id") != "ci38457511":
+    if receipt.get("station") != "CLC" or receipt.get("station_network") != "CI" or "ci38457511" not in receipt.get("event_catalog", ""):
         raise ValueError("EVENT_IDENTITY")
     for rel in ("original/CI_station_response.xml", "original/CI_waveform_counts.mseed",
                 "CI_CLC_HNE_accel_mps2.csv", "CI_CLC_HNN_accel_mps2.csv"):
@@ -155,7 +155,7 @@ def process(source_dir: Path):
                      "spectra": spectral})
     return {
         "status": "S05_REAL_MINISEED_FULL_RESPONSE_REMOVAL_NUMERICAL_QC_NOT_SITE_PASS",
-        "event_id": receipt["event_id"], "station": "CI.CLC",
+        "event_id": "ci38457511", "station": "CI.CLC",
         "source_level": "Original raw miniSEED and StationXML bytes, hash-matched to existing official SCEDC receipts",
         "SOURCE": {"mseed_sha256": receipt["raw_mseed_sha256"],
                    "stationxml_sha256": receipt["stationxml_sha256"],
