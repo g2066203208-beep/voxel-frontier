@@ -228,15 +228,15 @@ GRID_RECEIPT_JSON = JSON_NAME
 
 def _replace_unique_token(raw, key, old, new):
     lines = raw.splitlines(keepends=True)
-    expr = re.compile(rb"^(\\s*)(\\S+)(\\s+" + key.encode("ascii") + rb"\\b.*)$")
+    expr = re.compile(rb"^(\s*)(\S+)(\s+" + key.encode("ascii") + rb"\b.*)$")
     indices = []
     for i, line in enumerate(lines):
-        body = line.rstrip(b"\\r\\n")
+        body = line.rstrip(b"\r\n")
         if expr.match(body):
             indices.append(i)
     require(len(indices) == 1, "GRID_FIELD_NOT_UNIQUE_" + key)
     i = indices[0]
-    body = lines[i].rstrip(b"\\r\\n")
+    body = lines[i].rstrip(b"\r\n")
     suffix = lines[i][len(body):]
     match = expr.match(body)
     require(match is not None and match.group(2) == old.encode("ascii"),
@@ -351,7 +351,7 @@ def grid_command(repo_root, write):
             and receipt["physical_pass"] is False, "GRID_PARENT_RECEIPT_DRIFT")
     if write:
         receipt["lowwind_30slot_candidate_grid_20261106"] = grid
-        path.write_text(json.dumps(receipt, indent=2, ensure_ascii=False) + "\\n", encoding="utf-8")
+        path.write_text(json.dumps(receipt, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     else:
         require(receipt.get("lowwind_30slot_candidate_grid_20261106") == grid,
                 "GRID_COMMITTED_RECEIPT_DRIFT")
