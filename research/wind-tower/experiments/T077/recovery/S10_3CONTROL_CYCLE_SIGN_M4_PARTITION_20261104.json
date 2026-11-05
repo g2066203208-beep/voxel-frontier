@@ -534,5 +534,116 @@
     "failure_cause": "S10 sparse checkout omitted pre-existing 3-control summary CSV",
     "fix_commit": "c3916b39eed1d1618ef7edcda1d3cf9aa01bd898",
     "physical_pass": false
+  },
+  "endpoint_boundary_qc": {
+    "timestamp_local": "2026-11-06 02h Asia/Shanghai",
+    "status": "REAL_12001_POINT_OPEN_VS_ASSUMED_PERIODIC_QC_NOT_MATERIAL_LIFE",
+    "SOURCE": "Direct historical GitHub Actions artifact ZIP/GZIP/CSV raw bytes for U09 S06 batch B and U11 S04 batch A, 108009 source rows per batch, 3x12001 sample stress histories; ZIP/GZIP/CSV triple SHA validated",
+    "READING_LEVEL": "Full original archived ZIP/GZIP/CSV bytes; no new original OUTB; two batches not all 4 ETM",
+    "REF": "Inherited T077 ASTM-style reversal-stack convention from s10_control_cycle_export_compact.py; no new original literature pages",
+    "STANDARD": "No new licensed IEC/GB/NB clauses read; no material fatigue clause PASS",
+    "OFFICIAL": "GitHub Actions artifact IDs 11465219800 and 11483249910; original historical OpenFAST provenance inherited",
+    "RUN": "Native local Python 3.13.5 source-level numerical run, 5 synthetic known-answer/3 negative, 3 real oracle and 3 time-reversal; GitHub Actions native run 42081433701 triggered, completion status to be updated",
+    "FIG": "0",
+    "TAB": "3 controls: open residual vs assumed periodic boundary vs deliberately invalid half-cycle deletion",
+    "script_path": "research/wind-tower/experiments/T077/recovery/s10_rainflow_endpoint_boundary_qc.py",
+    "script_sha256": "123dc1f3094dea57cfef594a552e5b4bd1ae811f070832d01835030525abe81c",
+    "source_original_script_registered_sha256": "4f69b9d6dac90afcfd0e8a7bb5c1c9d5336efb4c12df75790914fa7ae33d8147",
+    "source_original_script_git_blob": "944af6c5c5dd8dd8987b66961e0b4d558072f5c4",
+    "local_run_source_module_note": "Local test reconstituted imported source module from repository source; local module SHA differs from registered original. GitHub native CI executes original tracked module; do not claim CI success until checked.",
+    "source_sha256": {
+      "U09p343881_ETM_S06": {
+        "zip": "5acbb25968ce43892157545cded26973623f22b5a137839e5154b293aef167db",
+        "gzip": "73ac606f43a1bf777fa303ca781a76a643dbe79bda52f7177886f417d07c5e20",
+        "csv": "43d4b07d6dbe63de3d6b12b5fc3093ce91ba8e0510eccc29aba0087732dcc734"
+      },
+      "U11p4_ETM_S04": {
+        "zip": "c66a8a22693af0ed5c9cb8f68f51c48a24c046ba4e60cacdb1115040dd0007a9",
+        "gzip": "1931fd91b7e7fc1304f928c404def83e7e7106f3359357642882b8101b55291d",
+        "csv": "3b6d048afdb86f955b413015e51a8b44fa662627f5cdb7eb92038b7c7fd30245"
+      }
+    },
+    "algorithm": "Open rainflow counts residuals at 0.5; assumed periodic rotates global maximum and wraps last to first then combines two equal residual halves as one full. Closure is hypothetical, NOT a real continuation. Drop-half scenario is deliberately wrong.",
+    "assumptions": {
+      "Nref_cycles": 600,
+      "m": 4,
+      "azimuth_fixed": true,
+      "PT_mean_shift_not_applied": true,
+      "structural_model_validated": false
+    },
+    "tests": {
+      "synthetic_known": 5,
+      "synthetic_rejected": 3,
+      "real_oracles": 3,
+      "real_time_reversal": 3,
+      "zip_sha": 2,
+      "gzip_sha": 2,
+      "csv_sha": 2
+    },
+    "ERROR_BUDGET": "Real open DEL4 matches historical independent oracle within 1e-8 MPa; time grid abs 1e-7 s; cyclic residual pair abs 1e-10 MPa; wrap-around physics not measured; no local stress, bin probability or fatigue curve uncertainty estimate",
+    "FAILURES": "No local numerical test failures; first attempt with test-only local shim has source module hash differing from actual GitHub original, explicitly documented; native CI status pending",
+    "HOLD": "Assumed periodic closure not physically validated; 3 nominal stress sections from 2 ETM cases, not DLC1.2/local 4-material fatigue. Annual Miner life 0, S10 BLOCKED, E/WE 0, 0/12 PASS",
+    "controls": [
+      {
+        "case": "U09p343881_ETM_S06",
+        "segment": "CSEG_16",
+        "azimuth_deg": 180,
+        "open_rows": 413,
+        "open_half_rows": 11,
+        "open_full_rows": 402,
+        "open_equivalent_cycles": 407.5,
+        "open_DEL4_MPa": 7.052731838018007,
+        "assumed_periodic_DEL4_MPa": 7.2486697656307335,
+        "drop_half_counterfactual_DEL4_MPa": 3.5490960161971965,
+        "periodic_vs_open_DEL4_pct": 2.778184852520793,
+        "drop_half_vs_open_DEL4_pct": -49.6777121587742,
+        "unobserved_boundary_jump_MPa": 3.1196477782196324,
+        "periodic_max_rotation_index": 11054,
+        "open_m4": 1484501.8231413974,
+        "assumed_periodic_m4": 1656473.5628209226,
+        "periodic_half_rows": 0,
+        "time_reverse_open_m4_abs_diff": 0
+      },
+      {
+        "case": "U09p343881_ETM_S06",
+        "segment": "CSEG_17",
+        "azimuth_deg": 180,
+        "open_rows": 526,
+        "open_half_rows": 11,
+        "open_full_rows": 515,
+        "open_equivalent_cycles": 520.5,
+        "open_DEL4_MPa": 7.037161800717715,
+        "assumed_periodic_DEL4_MPa": 7.2317054215596075,
+        "drop_half_counterfactual_DEL4_MPa": 3.5855558124798343,
+        "periodic_vs_open_DEL4_pct": 2.764518229807522,
+        "drop_half_vs_open_DEL4_pct": -49.04826812260951,
+        "unobserved_boundary_jump_MPa": 3.1706582361191256,
+        "periodic_max_rotation_index": 11055,
+        "open_m4": 1471436.0659781778,
+        "assumed_periodic_m4": 1641021.0765350014,
+        "periodic_half_rows": 0,
+        "time_reverse_open_m4_abs_diff": 0
+      },
+      {
+        "case": "U11p4_ETM_S04",
+        "segment": "CSEG_04",
+        "azimuth_deg": 0,
+        "open_rows": 635,
+        "open_half_rows": 14,
+        "open_full_rows": 621,
+        "open_equivalent_cycles": 628,
+        "open_DEL4_MPa": 7.169089049140665,
+        "assumed_periodic_DEL4_MPa": 7.186698930072504,
+        "drop_half_counterfactual_DEL4_MPa": 5.512837926985126,
+        "periodic_vs_open_DEL4_pct": 0.24563624208224777,
+        "drop_half_vs_open_DEL4_pct": -23.102671912745578,
+        "unobserved_boundary_jump_MPa": -0.28939608444567,
+        "periodic_max_rotation_index": 5262,
+        "open_m4": 1584919.2855596638,
+        "assumed_periodic_m4": 1600549.3019903915,
+        "periodic_half_rows": 0,
+        "time_reverse_open_m4_abs_diff": 0
+      }
+    ]
   }
 }
