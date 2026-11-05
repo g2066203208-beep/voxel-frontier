@@ -1,0 +1,108 @@
+{
+  "test": "S05_CLC_EPOCH_STAGE1_QC_PASS_3_POSITIVE_6_NEGATIVE_NOT_BANDWIDTH_PASS",
+  "result": {
+    "status": "STAGE1_ANALOG_RESPONSE_METADATA_QC_NOT_LOWFREQ_CERTIFICATION",
+    "source_level": "Official MDA channel summary and FDSN RESP text directly read; raw StationXML/RESP bytes NOT saved or SHA256-verified",
+    "epoch_table": [
+      {
+        "event_id": "ci38457511",
+        "station": "CI.CLC",
+        "axis": "HNE",
+        "azimuth_deg": 90,
+        "epoch": "pre",
+        "epoch_boundary_utc": "2019-09-26T14:00:00Z",
+        "sensitivity_counts_per_m_s2": 213945.4273635581,
+        "sensitivity_reference_hz": 0.03,
+        "sample_rate_hz": 100
+      },
+      {
+        "event_id": "ci38457511",
+        "station": "CI.CLC",
+        "axis": "HNN",
+        "azimuth_deg": 0,
+        "epoch": "pre",
+        "epoch_boundary_utc": "2019-09-26T14:00:00Z",
+        "sensitivity_counts_per_m_s2": 213808.5679825483,
+        "sensitivity_reference_hz": 0.03,
+        "sample_rate_hz": 100
+      },
+      {
+        "event_id": "ci39493944",
+        "station": "CI.CLC",
+        "axis": "HNE",
+        "azimuth_deg": 90,
+        "epoch": "post",
+        "epoch_boundary_utc": "2019-09-26T14:00:00Z",
+        "sensitivity_counts_per_m_s2": 214077.95043858353,
+        "sensitivity_reference_hz": 1,
+        "sample_rate_hz": 100
+      },
+      {
+        "event_id": "ci39493944",
+        "station": "CI.CLC",
+        "axis": "HNN",
+        "azimuth_deg": 0,
+        "epoch": "post",
+        "epoch_boundary_utc": "2019-09-26T14:00:00Z",
+        "sensitivity_counts_per_m_s2": 213941.0062834973,
+        "sensitivity_reference_hz": 1,
+        "sample_rate_hz": 100
+      }
+    ],
+    "sensitivity_change_percent": {
+      "HNE": 0.061942466664755,
+      "HNN": 0.061942466664755
+    },
+    "stage1_poles_rad_s": [
+      [
+        -981,
+        1009
+      ],
+      [
+        -981,
+        -1009
+      ],
+      [
+        -3290,
+        1263
+      ],
+      [
+        -3290,
+        -1263
+      ]
+    ],
+    "stage1_zeros": 0,
+    "stage1_analog_relative_gain_vs_1hz": [
+      {
+        "frequency_hz": 0.1,
+        "period_s": 10,
+        "ratio": 1.000001783549023,
+        "relative_percent": 0.00017835490229156648
+      },
+      {
+        "frequency_hz": 0.1604889710470726,
+        "period_s": 6.230957762865167,
+        "ratio": 1.0000017551653058,
+        "relative_percent": 0.00017551653057612526
+      },
+      {
+        "frequency_hz": 0.25,
+        "period_s": 4,
+        "ratio": 1.0000016889765373,
+        "relative_percent": 0.00016889765372951615
+      },
+      {
+        "frequency_hz": 1,
+        "period_s": 1,
+        "ratio": 1,
+        "relative_percent": 0
+      }
+    ],
+    "limits": [
+      "0.03/0.05 Hz in RESP is a gain-reference frequency, not a demonstrated low-frequency cutoff",
+      "Stage-1 analog PZ is not the full digitizer/FIR response or a record-specific noise and usable-bandwidth assessment",
+      "Event-specific response epoch must be selected; do not rescale already corrected m/s2 CSV by sensitivity ratio",
+      "No authorized site response spectrum, stationxml raw SHA256, or original waveform deconvolution audit"
+    ]
+  }
+}
