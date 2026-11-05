@@ -91,10 +91,55 @@ function selfTest(){
  try{corrected(a,300);throw Error("NEGATIVE_ACCEPTED")}catch(e){if(e.message!=="PREWINDOW")throw e}
  return "S05_PREWINDOW_SELFTEST_PASS_SHIFT_ZERO_3_NEGATIVE";
 }
-if(typeof module!=="undefined"&&module.exports)module.exports={parse,corrected,spectrum,drift,compute,selfTest,SOURCES,PERIODS};
+
+/* S05 independent numerical/input-decimation sensitivity, NOT design-wave QC.
+   The 0.005s reference is linearly interpolated from 0.01s measured samples:
+   it adds NO new instrumental bandwidth. 0.02/0.04s use raw phase-zero
+   decimation WITHOUT anti-alias filtering; deviations combine forcing
+   representation/aliasing and Newmark integration, NOT pure solver error. */
+function strideSamples(a,factor) {
+ if(!Array.isArray(a)||a.length<2||!a.every(Number.isFinite)||!Number.isInteger(factor)||factor<1||(a.length-1)%factor!==0)throw Error("DECIMATION_INPUT");
+ return a.filter((_,i)=>i%factor===0);
+}
+function linearHalfStep(a) {
+ if(!Array.isArray(a)||a.length<2||!a.every(Number.isFinite))throw Error("INTERPOLATION_INPUT");
+ const out=new Array(2*a.length-1);
+ for(let i=0;i<a.length;i++){out[2*i]=a[i];if(i+1<a.length)out[2*i+1]=(a[i]+a[i+1])/2;}
+ return out;
+}
+function timeStepQC(rawMap) {
+ const rows=[],sources=[];
+ for(const [event,axis,sha] of SOURCES){
+  const a=parse(rawMap[event+"_"+axis]);
+  const b=corrected(a,20);
+  const fine=linearHalfStep(b.a),coarse2=strideSamples(b.a,2),coarse4=strideSamples(b.a,4);
+  sources.push({event_id:event,component:axis,source_sha256_inherited:sha,npts:a.length,pre20_offset_m_s2:b.offset});
+  for(const T of PERIODS){
+   const s005=spectrum(fine,T,.005),s01=spectrum(b.a,T,.01),s02=spectrum(coarse2,T,.02),s04=spectrum(coarse4,T,.04);
+   if(!(s005>0))throw Error("REFERENCE_ZERO");
+   rows.push({event_id:event,component:axis,period_s:T,psa_005_m_s2:s005,psa_01_m_s2:s01,psa_02_m_s2:s02,psa_04_m_s2:s04,
+    relative_01_vs_005:Math.abs(s01/s005-1),relative_02_vs_005:Math.abs(s02/s005-1),relative_04_vs_005:Math.abs(s04/s005-1)});
+  }
+ }
+ const max={};
+ for(const key of ["relative_01_vs_005","relative_02_vs_005","relative_04_vs_005"])
+  max[key]=rows.reduce((a,b)=>a[key]>=b[key]?a:b);
+ return {sources,rows,max};
+}
+function selfTestTimeStep(){
+ const ramp=[0,1,2,3,4,5,6,7,8];
+ if(JSON.stringify(linearHalfStep(ramp))!==JSON.stringify(Array.from({length:17},(_,i)=>i/2)))throw Error("MIDPOINT_ORACLE");
+ if(JSON.stringify(strideSamples(ramp,2))!==JSON.stringify([0,2,4,6,8]))throw Error("STRIDE_ORACLE");
+ if(spectrum(linearHalfStep(Array(9).fill(0)),6,.005)!==0)throw Error("ZERO_ORACLE");
+ const bad=[[()=>strideSamples(ramp,0),"DECIMATION_INPUT"],[()=>strideSamples(ramp,3),"DECIMATION_INPUT"],[()=>strideSamples([0,NaN,2],2),"DECIMATION_INPUT"],[()=>linearHalfStep([0,Infinity]),"INTERPOLATION_INPUT"]];
+ for(const [fn,expected] of bad){try{fn();throw Error("NEGATIVE_ACCEPTED")}catch(e){if(e.message!==expected)throw e}}
+ return "S05_DT_QC_SELFTEST_PASS_3_POSITIVE_4_NEGATIVE";
+}
+
+if(typeof module!=="undefined"&&module.exports)module.exports={parse,corrected,spectrum,drift,compute,selfTest,timeStepQC,selfTestTimeStep,SOURCES,PERIODS};
 if(typeof require==="function"&&typeof module!=="undefined"&&require.main===module){
  const fs=require("fs"),path=require("path"),crypto=require("crypto");
- if(process.argv.includes("--self-test")){console.log(selfTest());process.exit(0)}
+ if(process.argv.includes("--self-test")){console.log(selfTest(),selfTestTimeStep());process.exit(0)}
  const root=process.argv[2];if(!root)throw Error("USAGE_NODE_SCRIPT_REAL_RECORDS_ROOT");
  const map={};
  for(const [ev,axis,expected] of SOURCES){
@@ -103,5 +148,5 @@ if(typeof require==="function"&&typeof module!=="undefined"&&require.main===modu
   if(actual!==expected)throw Error("SOURCE_SHA256_MISMATCH_"+ev+"_"+axis);
   map[ev+"_"+axis]=bytes.toString("utf8");
  }
- console.log(JSON.stringify({test:selfTest(),result:compute(map)},null,2));
+ console.log(JSON.stringify(process.argv.includes("--dt-qc")?{test:selfTestTimeStep(),result:timeStepQC(map)}:{test:selfTest(),result:compute(map)},null,2));
 }
