@@ -118,7 +118,7 @@ jobs:
       - name: Native real-waveform full response removal and PSA
         run: |
           set -euo pipefail
-          python s05_clc_full_response_waveform_qc.py --source-dir source --output "$RUNNER_TEMP/S05_CLC_FULL_RESPONSE_REMOVAL_RECEIPT_20261105.json"
+          python s05_clc_full_response_waveform_qc.py --sensitivity --source-dir source --output "$RUNNER_TEMP/S05_CLC_FULL_RESPONSE_REMOVAL_RECEIPT_20261105.json"
           sha256sum "$RUNNER_TEMP/S05_CLC_FULL_RESPONSE_REMOVAL_RECEIPT_20261105.json" s05_clc_full_response_waveform_qc.py
       - name: Preserve numeric receipt and logs as workflow artifact
         if: always()
@@ -143,13 +143,30 @@ jobs:
           repo=os.environ['GH_REPO'];branch='research/t080-seismic-integration-gates-20261022'
           path='research/wind-tower/experiments/T079/real-records/S05_CLC_FULL_RESPONSE_REMOVAL_RECEIPT_20261105.json'
           old=subprocess.run(['gh','api',f'repos/{repo}/contents/{path}','-f',f'ref={branch}'],capture_output=True,text=True)
+          if old.returncode:raise RuntimeError('BASELINE_RECEIPT_MISSING '+old.stderr)
+          meta=json.loads(old.stdout)
+          existing=json.loads(base64.b64decode(meta['content']))
+          computed=json.loads(data)
+          if existing['SOURCE']!=computed['SOURCE'] or existing['parameters']!=computed['parameters']:
+              raise RuntimeError('ORIGINAL_SOURCE_OR_PARAMETERS_CHANGED')
+          if len(existing['channels'])!=2 or len(computed['channels'])!=2:
+              raise RuntimeError('CHANNEL_COUNT_CHANGED')
+          for old_channel,new_channel in zip(existing['channels'],computed['channels']):
+              if old_channel['channel']!=new_channel['channel']:
+                  raise RuntimeError('CHANNEL_IDENTITY_CHANGED')
+              for a,b in zip(old_channel['spectra'],new_channel['spectra']):
+                  if a['period_s']!=b['period_s'] or abs(a['full_response_psa_m_s2']-b['full_response_psa_m_s2'])>1e-9*max(1,abs(a['full_response_psa_m_s2'])):
+                      raise RuntimeError('BASELINE_SPECTRUM_CHANGED')
+          existing['parameter_sensitivity']=computed['parameter_sensitivity']
+          data=(json.dumps(existing,ensure_ascii=False,indent=2)+'\\n').encode()
           blob=hashlib.sha1(b'blob '+str(len(data)).encode()+bytes([0])+data).hexdigest()
-          if old.returncode==0:
-              assert json.loads(old.stdout)['sha']==blob,'CONFLICTING_RECEIPT_EXISTS'
-              print('EXISTING_IDENTICAL_RECEIPT',path);raise SystemExit(0)
-          payload={'message':'research(S05): persist native original miniSEED full-response dual-axis QC',
-                   'branch':branch,'content':base64.b64encode(data).decode()}
+          if meta['sha']==blob:
+              print('EXISTING_IDENTICAL_SENSITIVITY_RECEIPT',path);raise SystemExit(0)
+          payload={'message':'research(S05): persist original-waveform response processing sensitivity',
+                   'branch':branch,'sha':meta['sha'],'content':base64.b64encode(data).decode()}
           up=subprocess.run(['gh','api','--method','PUT',f'repos/{repo}/contents/{path}','--input','-'],input=json.dumps(payload),capture_output=True,text=True)
           if up.returncode:raise RuntimeError(up.stderr)
-          print('NATIVE_QC_RECEIPT_COMMIT',json.loads(up.stdout)['commit']['sha'],hashlib.sha256(data).hexdigest())
+          remote=subprocess.run(['gh','api',f'repos/{repo}/contents/{path}','-f',f'ref={branch}'],capture_output=True,text=True,check=True)
+          assert json.loads(remote.stdout)['sha']==blob,'REMOTE_BLOB_MISMATCH'
+          print('NATIVE_SENSITIVITY_RECEIPT_COMMIT',json.loads(up.stdout)['commit']['sha'],hashlib.sha256(data).hexdigest())
           PY
