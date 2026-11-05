@@ -1,3 +1,14 @@
+
+### 2026-11-06 06时｜S07 U04p5 NTM S01 原始InflowWind字节恢复与可逆替换（0/12）
+- **START/继承**：读取本分支AGENTS（2026-11-02本助手禁Abaqus）、README、论文00_STATUS/母版、T079学术审查、T080.1–.3、12阶段计划、COMMAND_ROOM与T062原pilot及30槽收据。main仍为历史 `58c1e545`，本轮仅在Draft PR #42分支增量写入。
+- **SOURCE/READING_LEVEL**：原始 `archive/local-assets-20261004/openfast-36-r2/part-001.zip` 经GitHub Actions runner打开，ZIP SHA256=`ddfa02734274ad5bd36e84d975d18544bb5360554e25d71d8689f32313a95267`；读取原始成员 `CASES/U09p343881_NTM_S01/DTU_10MW_InflowWind.dat`，6248字节，SHA256=`d204329f881836ffe0895b7d81aa28cae7540d5df56c754880db3d6c5c11d3a9`，与原18NTM源身份CSV SHA256=`be58d33306e6ac101d42b42c7f4d24ea5743662d1a9355aff9862b5a7e0aad45`交叉一致。未读取新BTS/OUTB或原历史DLL二进制。
+- **真实产物**：复用原 `T062/s10_lowwind_75_source_pilot.py` 添加单字段 `FileName_BTS` 可逆字节替换；原Windows绝对 `U09p343881_NTM_S01.bts` 路径改为**拟议相对** `inputs/U04p5_NTM_S01.bts`，其余原卡字节保持一致。源级候选 `T062/S07_U04p5_NTM_S01_InflowWind_NOT_RUN.dat` 6153字节，SHA256=`2ee0f78812f675448967a4bbf6d536310d995f5c219a45cf8e4cc488d675ad55`；1项正例、8项坏输入拒绝，源SHA/长度与逐字节逆恢复PASS。新增单卡与结果嵌入**既有** `T062/S10_U07p5_NTM_S01_SOURCE_PILOT_RECEIPT_20261105.json` 的 `lowwind_45_s01_exact_inflow_rebind_20261106`，保留旧30槽网格及条件依赖收据。
+- **RUN/OFFICIAL**：仅GitHub Actions原生Python标准库源级程序，runner已产生并提交候选文件；当前未取得可独立回读的本次Actions run ID/job stdout，**不能宣称原生运行日志已独立核验**。本轮通过GitHub API远端回读候选卡73行、唯一 `FileName_BTS` 目标及持久收据。**不运行TurbSim/OpenFAST/控制器/Abaqus，不构成DLC1.2。**
+- **REF/STANDARD/FIG/TAB**：REF=继承T062/ROSCO既有源级研究，无新全文原页；STANDARD=IEC/GB/NB授权2025条款未新增阅读；FIG=0；TAB=1原卡/1候选、原路径/新路径、SHA与9项合成测试。
+- **失败/纠错**：并行pilot工作流一度将既有42339字符30槽收据覆盖为4880字符原pilot收据；已从先前提交恢复两个旧子节，再与新单卡子节合并。GitHub API条件写回，未改T057/T070冻结母本、main或合并PR。
+- **误差预算/HOLD**：源与子卡SHA逐字节、逆变换精确；相对路径在OpenFAST运行时的基目录、BTS是否存在、FST/ServoDyn/DISCON/DLL链、实际cut-in、2025 IEC适用性及四材料局部应力仍NEED_ESTIMATE/NOT_VERIFIED。候选InflowWind=1件源级NOT_RUN，BTS/OUTB=0，正式DLC1.2=0/126，地震E/WE=0，S06 PARTIAL、S07/S10 BLOCKED、严格0/12。
+- **下一唯一动作**：在不运行求解的前提下，检查同一4.5 S01的FST `InflowFile` 与拟议相对BTS路径的真实基目录解析，形成可复核的最小FST→InflowWind→BTS链（缺BTS则明确HOLD）。
+
 ## 2026-11-06 05:12｜S07低风速30槽OpenFAST InflowWind依赖闭合：发现30/30继承路径错误（0/12，非求解）
 - **START/读取**：本轮先读main分支、PR #42 Open/Draft（起始HEAD=`98c53ad4eff9d79fb0a0b66178c7f421c5ec735b`）、AGENTS/README、00_STATUS、00_WORKSPACE_MASTER、T079学术审查、T080.1/.2/.3、12阶段总计划及COMMAND_ROOM；依AGENTS 2026-11-02本助手不做Abaqus。本轮START未另行预提交，按实际情况合并记录；未触碰冻结T057/T070。
 - **SOURCE/阅读层级**：直接读取既有[T062 30槽计划CSV](../T062/S10_LOW_WIND_30SLOT_SOURCE_READINESS_20261104.csv) SHA256=`9d2e1403f9a230fc1cf97c191495ff7bdad552c6782b7403a6c8a1f7339fd475`、[18NTM原输入派生身份CSV](../T062/S07_18NTM_ORIGINAL_TURBSIM_CONTROLLER_INPUTS_20261031.csv) SHA256=`be58d33306e6ac101d42b42c7f4d24ea5743662d1a9355aff9862b5a7e0aad45`，并由既有30槽网格函数读取原7.5 S01 TurbSim INP SHA256=`e403ace85b2915fd4c9976e3cab0d9153da8c0b172b79a1544ce02098a198b33`。**本轮未重读原始ZIP中InflowWind/FST/DLL字节**；18NTM CSV此前有源级核验，不能说本轮重新原件核验。
