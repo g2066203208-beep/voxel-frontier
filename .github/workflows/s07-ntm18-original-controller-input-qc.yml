@@ -5,6 +5,7 @@ on:
     paths:
       - '.github/workflows/s07-ntm18-original-controller-input-qc.yml'
       - 'research/wind-tower/experiments/T062/s07_ntm18_original_control_input_gate.py'
+      - 'research/wind-tower/experiments/T062/s10_lowwind_75_source_pilot.py'
       - 'research/wind-tower/experiments/T062/s07_ntm18_controller_native_log_gate.py'
       - 'research/wind-tower/experiments/T062/s07_ntm18_discon_operating_contract.py'
   workflow_dispatch:
@@ -38,6 +39,7 @@ jobs:
             research/wind-tower/archive/local-assets-20261004/turbSim-36/part-018.zip
             research/wind-tower/experiments/T062/S06_18NTM_INPUT_SOURCE_IDENTITY_20261031.csv
             research/wind-tower/experiments/T062/s07_ntm18_original_control_input_gate.py
+            research/wind-tower/experiments/T062/s10_lowwind_75_source_pilot.py
             research/wind-tower/experiments/T062/S07_18NTM_ORIGINAL_TURBSIM_CONTROLLER_INPUTS_20261031.csv
             research/wind-tower/experiments/T062/S07_18NTM_ORIGINAL_TURBSIM_CONTROLLER_RECEIPT_20261031.json
             research/wind-tower/experiments/T062/s07_ntm18_controller_native_log_gate.py
@@ -69,6 +71,27 @@ jobs:
           print('S07_ORIGINAL_18_CONFIG_BYTES_SHA_VERIFIED_NO_DLC12_APPROVAL')
           PY
           sha256sum "$script" research/wind-tower/experiments/T062/S07_18NTM_ORIGINAL_TURBSIM_CONTROLLER_*
+      - name: Prepare source-locked 7.5m/s S01 TurbSim candidate (NO SOLVER)
+        shell: bash
+        run: |
+          set -euo pipefail
+          root=research/wind-tower/experiments/T062
+          python3 -m py_compile "$root/s10_lowwind_75_source_pilot.py"
+          python3 "$root/s10_lowwind_75_source_pilot.py" --selftest
+          python3 "$root/s10_lowwind_75_source_pilot.py" --repo-root . --out-dir "$root"
+          python3 - <<'PY'
+          import hashlib,json,pathlib
+          p=pathlib.Path("research/wind-tower/experiments/T062")
+          j=json.loads((p/"S10_U07p5_NTM_S01_SOURCE_PILOT_RECEIPT_20261105.json").read_text())
+          b=(p/"S10_U07p5_NTM_S01_TURBSIM_PILOT_20261105.inp").read_bytes()
+          assert hashlib.sha256(b).hexdigest()==j["output_turbsim_inp_sha256"]
+          assert j["candidate_case_NOT_RUN"]=="U07p5_NTM_S01"
+          assert j["status"]=="SOURCE_ONLY_CANDIDATE_NOT_RUN"
+          assert not j["physical_pass"] and j["stage_passed"]==0
+          assert j["changed_fields"]=={"URef_mps":{"from":9.343881,"to":7.5}}
+          print("S10_75_REAL_PARENT_SHA_AND_REVERSIBLE_INPUT_PASS_NOT_RUN")
+          PY
+          sha256sum "$root/s10_lowwind_75_source_pilot.py" "$root/S10_U07p5_NTM_S01_"*
       - name: Read original 18 NTM ServoDyn sums and OpenFAST stdout with exact SHA (no solver)
         shell: bash
         run: |
@@ -146,6 +169,8 @@ jobs:
           path: |
             research/wind-tower/experiments/T062/S07_18NTM_ORIGINAL_TURBSIM_CONTROLLER_INPUTS_20261031.csv
             research/wind-tower/experiments/T062/S07_18NTM_ORIGINAL_TURBSIM_CONTROLLER_RECEIPT_20261031.json
+            research/wind-tower/experiments/T062/S10_U07p5_NTM_S01_TURBSIM_PILOT_20261105.inp
+            research/wind-tower/experiments/T062/S10_U07p5_NTM_S01_SOURCE_PILOT_RECEIPT_20261105.json
             research/wind-tower/experiments/T062/S07_18NTM_NATIVE_CONTROLLER_LOG_QC_20261101.csv
             research/wind-tower/experiments/T062/S07_18NTM_NATIVE_CONTROLLER_LOG_RECEIPT_20261101.json
             research/wind-tower/experiments/T062/S07_18NTM_DISCON_VS_OPERATING_QC_20261101.csv
@@ -162,7 +187,9 @@ jobs:
           test "$GITHUB_REF_NAME" = research/t080-seismic-integration-gates-20261022
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add --sparse -- research/wind-tower/experiments/T062/S07_18NTM_ORIGINAL_TURBSIM_CONTROLLER_INPUTS_20261031.csv \
+          git add --sparse -- research/wind-tower/experiments/T062/S10_U07p5_NTM_S01_TURBSIM_PILOT_20261105.inp \
+            research/wind-tower/experiments/T062/S10_U07p5_NTM_S01_SOURCE_PILOT_RECEIPT_20261105.json \
+            research/wind-tower/experiments/T062/S07_18NTM_ORIGINAL_TURBSIM_CONTROLLER_INPUTS_20261031.csv \
             research/wind-tower/experiments/T062/S07_18NTM_ORIGINAL_TURBSIM_CONTROLLER_RECEIPT_20261031.json \
             research/wind-tower/experiments/T062/S07_18NTM_NATIVE_CONTROLLER_LOG_QC_20261101.csv \
             research/wind-tower/experiments/T062/S07_18NTM_NATIVE_CONTROLLER_LOG_RECEIPT_20261101.json \
