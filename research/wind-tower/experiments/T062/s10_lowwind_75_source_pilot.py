@@ -648,7 +648,159 @@ def inflow_rebind_command(repo_root, write):
           "child_sha=" + sha(child),
           "parent_bytes=" + str(len(raw)), "child_bytes=" + str(len(child)),
           "synthetic_negative=8", "BTS=0", "DLC12_PASS=0")
+    fst_inflow_bts_chain_command(repo_root, write)
 
+
+
+# S07: exact historical FST -> staged InflowWind -> proposed BTS path chain.
+# The three possible relative-path bases are made co-located by construction;
+# this is a source/layout contract, NOT an OpenFAST runtime or BTS existence test.
+FST_CHAIN_SOURCE_MEMBER = "CASES/U09p343881_NTM_S01/DTU_10MW_RWT.fst"
+FST_CHAIN_RECEIPT_KEY = "lowwind_45_s01_fst_inflow_bts_chain_20261106"
+FST_CHAIN_CASE_ROOT = "CASES/U04p5_NTM_S01"
+FST_CHAIN_FST_NAME = "DTU_10MW_RWT.fst"
+FST_CHAIN_INFLOW_NAME = "DTU_10MW_InflowWind.dat"
+FST_CHAIN_CHILD_SHA = "2ee0f78812f675448967a4bbf6d536310d995f5c219a45cf8e4cc488d675ad55"
+
+def _s07_safe_relative(value):
+    from pathlib import PurePosixPath
+    require(bool(value) and not re.match(r"^[A-Za-z]:", value),
+            "FST_CHAIN_WINDOWS_ABSOLUTE")
+    require(chr(92) not in value, "FST_CHAIN_BACKSLASH_NOT_PORTABLE")
+    p = PurePosixPath(value)
+    require(not p.is_absolute() and value == p.as_posix()
+            and all(x not in ("", ".", "..") for x in value.split("/")),
+            "FST_CHAIN_UNSAFE_RELATIVE")
+    return p
+
+def inspect_fst_inflow_layout(fst, inflow,
+                              fst_expected=FST_SHA,
+                              inflow_expected=FST_CHAIN_CHILD_SHA):
+    from pathlib import PurePosixPath
+    require(sha(fst) == fst_expected, "FST_CHAIN_FST_SHA")
+    require(sha(inflow) == inflow_expected, "FST_CHAIN_INFLOW_SHA")
+    f = gate.parse_keys(fst, ("CompInflow", "InflowFile", "CompAero", "CompServo"))
+    w = gate.parse_keys(inflow, ("WindType", "FileName_BTS"))
+    require(f["CompInflow"] == "1", "FST_CHAIN_INFLOW_DISABLED")
+    require(w["WindType"] == "3", "FST_CHAIN_NOT_TURBSIM_BTS")
+    in_ref = _s07_safe_relative(f["InflowFile"])
+    bts_ref = _s07_safe_relative(w["FileName_BTS"])
+    require(in_ref.as_posix() == FST_CHAIN_INFLOW_NAME,
+            "FST_CHAIN_INFLOW_MUST_COLOCATE_WITH_FST")
+    require(bts_ref.as_posix() == INFLOW_NEW_BTS,
+            "FST_CHAIN_BTS_REFERENCE_DRIFT")
+    root = PurePosixPath(FST_CHAIN_CASE_ROOT)
+    fst_path = root / FST_CHAIN_FST_NAME
+    inflow_path = fst_path.parent / in_ref
+    by_fst = fst_path.parent / bts_ref
+    by_inflow = inflow_path.parent / bts_ref
+    by_cwd = root / bts_ref
+    require(by_fst == by_inflow == by_cwd,
+            "FST_CHAIN_RELATIVE_BASES_DIVERGE")
+    return {
+        "source_FST_CompInflow": f["CompInflow"],
+        "source_FST_CompAero": f["CompAero"],
+        "source_FST_CompServo": f["CompServo"],
+        "source_FST_InflowFile": f["InflowFile"],
+        "candidate_Inflow_WindType": w["WindType"],
+        "candidate_Inflow_FileName_BTS": w["FileName_BTS"],
+        "staging_layout_NOT_CREATED": {
+            "working_directory": root.as_posix(),
+            "FST": fst_path.as_posix(),
+            "InflowWind_copy_from_committed_candidate": inflow_path.as_posix(),
+            "BTS_NOT_PRESENT": by_fst.as_posix()
+        },
+        "relative_BTS_from_FST_dir": by_fst.as_posix(),
+        "relative_BTS_from_InflowWind_dir": by_inflow.as_posix(),
+        "relative_BTS_from_explicit_cwd": by_cwd.as_posix(),
+        "all_three_lexical_paths_equal": True
+    }
+
+def fst_inflow_bts_chain_selftest():
+    fst = b'1 CompInflow\n"DTU_10MW_InflowWind.dat" InflowFile\n'
+    inflow = b'3 WindType\n"inputs/U04p5_NTM_S01.bts" FileName_BTS\n'
+    kw = {"fst_expected": sha(fst), "inflow_expected": sha(inflow)}
+    require(inspect_fst_inflow_layout(fst, inflow, **kw)
+            ["all_three_lexical_paths_equal"], "FST_CHAIN_POSITIVE")
+    negatives = [
+        (fst + b'"x" InflowFile\n', inflow),
+        (fst.replace(b"1 CompInflow", b"0 CompInflow"), inflow),
+        (fst.replace(b"DTU_10MW_InflowWind.dat", b"../DTU_10MW_InflowWind.dat"), inflow),
+        (fst.replace(b"DTU_10MW_InflowWind.dat", b"/tmp/DTU_10MW_InflowWind.dat"), inflow),
+        (fst.replace(b"DTU_10MW_InflowWind.dat", b"wind/DTU_10MW_InflowWind.dat"), inflow),
+        (fst.replace(b"DTU_10MW_InflowWind.dat", b"C:/DTU_10MW_InflowWind.dat"), inflow),
+        (fst, inflow.replace(b"3 WindType", b"1 WindType")),
+        (fst, inflow.replace(b"U04p5_NTM_S01.bts", b"U09p343881_NTM_S01.bts")),
+        (fst, inflow.replace(b"inputs/", b"../inputs/")),
+    ]
+    for i, (f, w) in enumerate(negatives):
+        try:
+            inspect_fst_inflow_layout(f, w, sha(f), sha(w))
+        except (ValueError, KeyError):
+            pass
+        else:
+            raise AssertionError("FST_CHAIN_NEGATIVE_ACCEPTED_" + str(i))
+    print("S07_FST_INFLOW_BTS_SELFTEST_PASS_1_POSITIVE_9_NEGATIVE")
+
+def fst_inflow_bts_chain_command(repo_root, write):
+    import zipfile
+    source_zip = repo_root / INFLOW_SOURCE_ZIP
+    require(source_zip.is_file(), "FST_CHAIN_ARCHIVE_MISSING")
+    with zipfile.ZipFile(source_zip) as archive:
+        fst = archive.read(FST_CHAIN_SOURCE_MEMBER)
+    require(sha(fst) == FST_SHA, "FST_CHAIN_ORIGINAL_SHA_MISMATCH")
+    root = repo_root / ROOT / "experiments/T062"
+    child = (root / INFLOW_CHILD_FILE).read_bytes()
+    layout = inspect_fst_inflow_layout(fst, child)
+    fst_inflow_bts_chain_selftest()
+    receipt_path = root / GRID_RECEIPT_JSON
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    previous = receipt.get(INFLOW_RECEIPT_KEY, {})
+    require(previous.get("candidate_card_sha256") == FST_CHAIN_CHILD_SHA,
+            "FST_CHAIN_PARENT_RECEIPT_DRIFT")
+    require(previous.get("input_sha256", {}).get("archive_zip") ==
+            "ddfa02734274ad5bd36e84d975d18544bb5360554e25d71d8689f32313a95267",
+            "FST_CHAIN_ZIP_RECEIPT_DRIFT")
+    result = {
+        "SOURCE": "Exact original 158m U09p343881_NTM_S01 FST bytes from SHA-pinned openfast-36-r2 part-001 ZIP, plus committed source-derived 4.5m/s S01 InflowWind candidate",
+        "READING_LEVEL": "Original FST member bytes read and SHA256 verified on GitHub runner; committed candidate InflowWind bytes re-read and SHA256 verified; BTS bytes absent; OpenFAST v3.3 runtime path resolution source not executed",
+        "REF": "Existing T062 original 18NTM source identity and InflowWind byte-exact patch; no new peer-reviewed full text",
+        "STANDARD": "2025 IEC/GB licensed original clauses NOT READ; no formal DLC1.2 acceptance",
+        "OFFICIAL": "Original archived OpenFAST v3.3.0-era FST input; staged path equality is a conditional lexical check, NOT OpenFAST executable validation",
+        "RUN": "Python3 stdlib source ZIP/FST/candidate byte read, SHA256, 1 positive and 9 negative synthetic path tests; NO TurbSim/OpenFAST/Abaqus solver run",
+        "FIG": 0, "TAB": "FST InflowFile and three candidate BTS lexical base resolutions",
+        "input_sha256": {
+            "source_archive_zip": previous["input_sha256"]["archive_zip"],
+            "original_fst": FST_SHA,
+            "original_inflow": INFLOW_SOURCE_SHA,
+            "committed_candidate_inflow": FST_CHAIN_CHILD_SHA
+        },
+        "source_FST_member": FST_CHAIN_SOURCE_MEMBER,
+        "layout": layout,
+        "tests": {"original_fst_sha256": "PASS",
+                  "candidate_inflow_sha256": "PASS",
+                  "synthetic_positive": 1, "synthetic_negative_rejected": 9,
+                  "three_lexical_bases_agree": "PASS"},
+        "assumptions": "For a future staged run, launch with cwd=CASES/U04p5_NTM_S01, put FST and its referenced InflowWind copy together in that directory, and put the BTS in its inputs/ child directory. This makes FST-dir, InflowWind-dir and cwd interpretations identical; does NOT establish which base OpenFAST v3.3 uses.",
+        "error_budget": "Source/candidate SHA exact, path equality exact under declared staging; executable path interpretation, missing BTS, DLL and operating-state errors NEED_ESTIMATE",
+        "HOLD": "Staging layout is a plan only; BTS and OUTB absent; OpenFAST runtime path resolution, controller DLL identity/operation and 2025 IEC/GB licensed clauses unverified",
+        "BTS_exists": False, "OUTB_exists": False,
+        "physical_pass": False, "formal_dlc12_verified_slots": 0,
+        "stages_passed": 0, "status": "SOURCE_LAYOUT_CONDITIONAL_NOT_RUN"
+    }
+    if write:
+        receipt[FST_CHAIN_RECEIPT_KEY] = result
+        receipt_path.write_text(json.dumps(receipt, indent=2, ensure_ascii=False) + "\n",
+                                encoding="utf-8")
+    else:
+        require(receipt.get(FST_CHAIN_RECEIPT_KEY) == result,
+                "FST_CHAIN_COMMITTED_RECEIPT_DRIFT")
+    print("S07_FST_INFLOW_BTS_SOURCE_LAYOUT_CONDITIONAL_NOT_RUN",
+          "fst_sha=" + FST_SHA, "inflow_sha=" + FST_CHAIN_CHILD_SHA,
+          "inflow_ref=" + layout["source_FST_InflowFile"],
+          "bts_ref=" + layout["candidate_Inflow_FileName_BTS"],
+          "three_bases_equal=1", "positive=1", "negative=9",
+          "BTS=0", "OUTB=0", "DLC12_PASS=0")
 
 def main():
     parser=argparse.ArgumentParser()
