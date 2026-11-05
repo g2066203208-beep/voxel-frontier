@@ -426,5 +426,333 @@
     "60a1201a67da19c30c2bfc1e2889b6c492c03d0a5133c296dc4fc68bee3426ae",
     "e54bc509e573daecb31254cdc694d7678aa3460dab5460882e8d1abf97e91e12"
   ],
-  "sha256_validation": "V8 pure JS SHA-256 tested on abc and directly recalculated from all four complete GitHub UTF8 CSV contents; all four match original archived SHA256"
+  "sha256_validation": "V8 pure JS SHA-256 tested on abc and directly recalculated from all four complete GitHub UTF8 CSV contents; all four match original archived SHA256",
+  "time_step_decimation_qc": {
+    "status": "S05_4_REAL_COMPONENTS_DT_AND_UNFILTERED_DECIMATION_DIAGNOSTIC_NOT_DESIGN_PASS",
+    "date": "2026-11-05",
+    "test": "S05_DT_QC_SELFTEST_PASS_3_POSITIVE_4_NEGATIVE",
+    "source_level": "Direct UTF8 GitHub blob reads of 4 source-derived acceleration CSVs, not original miniSEED redecoding",
+    "source_git_blobs": {
+      "ci38457511_HNE": "82a19fca825aabd7726bdef8c21dfebc5e4b11aa",
+      "ci38457511_HNN": "75a0c80d29e41c8fbae9e48a19bc03633d23d5eb",
+      "ci39493944_HNE": "adcd9d6d37a47bb162f15a0bae0c84aa15a46a2f",
+      "ci39493944_HNN": "6b1171b06c238f989f32c3eaf028391c11772173"
+    },
+    "source_sha256_inherited": [
+      {
+        "event_id": "ci38457511",
+        "component": "HNE",
+        "sha256": "fb0c91fe588ccb4f6bed3d4ac77c4bc148231d8e5df6be19aa9cf3bc3d4c25ef"
+      },
+      {
+        "event_id": "ci38457511",
+        "component": "HNN",
+        "sha256": "d6250274d578b87e4310eadcca5a910dd38cd69ad639dbca435af8e8a0d81e30"
+      },
+      {
+        "event_id": "ci39493944",
+        "component": "HNE",
+        "sha256": "60a1201a67da19c30c2bfc1e2889b6c492c03d0a5133c296dc4fc68bee3426ae"
+      },
+      {
+        "event_id": "ci39493944",
+        "component": "HNN",
+        "sha256": "e54bc509e573daecb31254cdc694d7678aa3460dab5460882e8d1abf97e91e12"
+      }
+    ],
+    "method": "Pre20 constant mean subtraction; 5% damping, Newmark average acceleration; dt=.005 linear-interpolated reference from .01s samples; .01 original; .02 and .04 phase-zero direct decimation WITHOUT anti-alias filtering; 4 events/components x 5 periods =20 rows, 80 PSA values",
+    "REF": "Existing T079 S05 prewindow receipt and Newmark implementation; no new journal full-text",
+    "STANDARD": "No authorized IEC/GB/NB clause checked",
+    "OFFICIAL": "Inherited SCEDC/EarthScope source provenance, instrument passband still unverified",
+    "RUN": "V8 executed real 4x20001 data, 20 rows/80 PSA, 3 positive+4 negative tests; no native Node/Actions or structural solver",
+    "FIG": "None",
+    "TAB": "20 component-period rows, four dt spectra each",
+    "assumptions": [
+      ".005s is interpolation-only and cannot independently validate high-frequency source content",
+      ".02/.04s direct decimation is deliberately unfiltered and subject to aliasing; not pure Newmark discretization convergence",
+      "20s pre-event interval unverified; conditional proxy T1=6.230957762865167s is not native modal period"
+    ],
+    "numerical_error_budget": "Original .01 vs interpolated .005 is a limited integration/representation check; .02/.04 errors combine aliasing/forcing and integration. Instrument low-frequency uncertainty, site hazard and spectrum matching NEED_SOURCE; no universal tolerance applied",
+    "HOLD": "No site target spectrum, authorized code clause, validated instrument low-frequency response, or real E/WE; S05 PARTIAL and 0/12 stage PASS",
+    "max": {
+      "relative_01_vs_005": {
+        "event_id": "ci39493944",
+        "component": "HNN",
+        "period_s": 4,
+        "psa_005_m_s2": 0.004081121931458632,
+        "psa_01_m_s2": 0.004080546555050733,
+        "psa_02_m_s2": 0.004078012957706348,
+        "psa_04_m_s2": 0.005113155201467676,
+        "relative_01_vs_005": 0.00014098486091862483,
+        "relative_02_vs_005": 0.0007617938901356425,
+        "relative_04_vs_005": 0.25287979318966003
+      },
+      "relative_02_vs_005": {
+        "event_id": "ci39493944",
+        "component": "HNN",
+        "period_s": 10,
+        "psa_005_m_s2": 0.00037294294850314383,
+        "psa_01_m_s2": 0.0003729158528985324,
+        "psa_02_m_s2": 0.0003725856376517209,
+        "psa_04_m_s2": 0.0012474343462179794,
+        "relative_01_vs_005": 0.00007265348418628026,
+        "relative_02_vs_005": 0.0009580844814388589,
+        "relative_04_vs_005": 2.344839609448907
+      },
+      "relative_04_vs_005": {
+        "event_id": "ci38457511",
+        "component": "HNN",
+        "period_s": 10,
+        "psa_005_m_s2": 0.11544636531548569,
+        "psa_01_m_s2": 0.11544460995873368,
+        "psa_02_m_s2": 0.11543495156311784,
+        "psa_04_m_s2": 0.39079842560445965,
+        "relative_01_vs_005": 0.000015204954674996607,
+        "relative_02_vs_005": 0.00009886627731114928,
+        "relative_04_vs_005": 2.385108093585333
+      }
+    },
+    "rows": [
+      {
+        "event_id": "ci38457511",
+        "component": "HNE",
+        "period_s": 4,
+        "psa_005_m_s2": 0.3314498711384608,
+        "psa_01_m_s2": 0.3314532132672195,
+        "psa_02_m_s2": 0.3314246874214162,
+        "psa_04_m_s2": 0.5834040496337081,
+        "relative_01_vs_005": 0.00001008336116470332,
+        "relative_02_vs_005": 0.00007598047016321718,
+        "relative_04_vs_005": 0.7601577204716885
+      },
+      {
+        "event_id": "ci38457511",
+        "component": "HNE",
+        "period_s": 6,
+        "psa_005_m_s2": 0.24438400506646704,
+        "psa_01_m_s2": 0.24438871484554667,
+        "psa_02_m_s2": 0.24440723858367314,
+        "psa_04_m_s2": 0.378332589581206,
+        "relative_01_vs_005": 0.00001927204310425701,
+        "relative_02_vs_005": 0.00009506971292894129,
+        "relative_04_vs_005": 0.5481070026588193
+      },
+      {
+        "event_id": "ci38457511",
+        "component": "HNE",
+        "period_s": 6.230957762865167,
+        "psa_005_m_s2": 0.2772125788395304,
+        "psa_01_m_s2": 0.27721585621097933,
+        "psa_02_m_s2": 0.27720236331776393,
+        "psa_04_m_s2": 0.3499765744505326,
+        "relative_01_vs_005": 0.000011822592837162915,
+        "relative_02_vs_005": 0.00003685085939897359,
+        "relative_04_vs_005": 0.26248446558813265
+      },
+      {
+        "event_id": "ci38457511",
+        "component": "HNE",
+        "period_s": 8,
+        "psa_005_m_s2": 0.2898172027287394,
+        "psa_01_m_s2": 0.2898149510606975,
+        "psa_02_m_s2": 0.28979608278050883,
+        "psa_04_m_s2": 0.3575784096614197,
+        "relative_01_vs_005": 0.000007769269804280832,
+        "relative_02_vs_005": 0.00007287334234029608,
+        "relative_04_vs_005": 0.23380671090150162
+      },
+      {
+        "event_id": "ci38457511",
+        "component": "HNE",
+        "period_s": 10,
+        "psa_005_m_s2": 0.18864239331979674,
+        "psa_01_m_s2": 0.1886389102065214,
+        "psa_02_m_s2": 0.18860083403845496,
+        "psa_04_m_s2": 0.24797032462124927,
+        "relative_01_vs_005": 0.000018464106683713233,
+        "relative_02_vs_005": 0.0002203072205054779,
+        "relative_04_vs_005": 0.31449946248761074
+      },
+      {
+        "event_id": "ci38457511",
+        "component": "HNN",
+        "period_s": 4,
+        "psa_005_m_s2": 0.9154163680269722,
+        "psa_01_m_s2": 0.9154103834428942,
+        "psa_02_m_s2": 0.9154199548910817,
+        "psa_04_m_s2": 1.148687694350129,
+        "relative_01_vs_005": 0.0000065375541524748115,
+        "relative_02_vs_005": 0.000003918287060145076,
+        "relative_04_vs_005": 0.25482538271184096
+      },
+      {
+        "event_id": "ci38457511",
+        "component": "HNN",
+        "period_s": 6,
+        "psa_005_m_s2": 0.553317361618657,
+        "psa_01_m_s2": 0.5532885061733975,
+        "psa_02_m_s2": 0.5531813285673308,
+        "psa_04_m_s2": 0.7539202559093022,
+        "relative_01_vs_005": 0.00005214990033031164,
+        "relative_02_vs_005": 0.0002458499601896147,
+        "relative_04_vs_005": 0.36254581584754164
+      },
+      {
+        "event_id": "ci38457511",
+        "component": "HNN",
+        "period_s": 6.230957762865167,
+        "psa_005_m_s2": 0.49279829952166876,
+        "psa_01_m_s2": 0.4927783605539131,
+        "psa_02_m_s2": 0.49260267456643664,
+        "psa_04_m_s2": 0.7191077579280517,
+        "relative_01_vs_005": 0.000040460707301570586,
+        "relative_02_vs_005": 0.0003969675938857442,
+        "relative_04_vs_005": 0.45923344018445
+      },
+      {
+        "event_id": "ci38457511",
+        "component": "HNN",
+        "period_s": 8,
+        "psa_005_m_s2": 0.1759313570699392,
+        "psa_01_m_s2": 0.1759278463366139,
+        "psa_02_m_s2": 0.1759153737017128,
+        "psa_04_m_s2": 0.5258480894940581,
+        "relative_01_vs_005": 0.00001995513127261983,
+        "relative_02_vs_005": 0.00009085002521769248,
+        "relative_04_vs_005": 1.9889389717207386
+      },
+      {
+        "event_id": "ci38457511",
+        "component": "HNN",
+        "period_s": 10,
+        "psa_005_m_s2": 0.11544636531548569,
+        "psa_01_m_s2": 0.11544460995873368,
+        "psa_02_m_s2": 0.11543495156311784,
+        "psa_04_m_s2": 0.39079842560445965,
+        "relative_01_vs_005": 0.000015204954674996607,
+        "relative_02_vs_005": 0.00009886627731114928,
+        "relative_04_vs_005": 2.385108093585333
+      },
+      {
+        "event_id": "ci39493944",
+        "component": "HNE",
+        "period_s": 4,
+        "psa_005_m_s2": 0.012182921874502444,
+        "psa_01_m_s2": 0.012182858355479132,
+        "psa_02_m_s2": 0.012180305519126581,
+        "psa_04_m_s2": 0.01148680131513868,
+        "relative_01_vs_005": 0.000005213775805645859,
+        "relative_02_vs_005": 0.0002147559840581792,
+        "relative_04_vs_005": 0.05713904813102921
+      },
+      {
+        "event_id": "ci39493944",
+        "component": "HNE",
+        "period_s": 6,
+        "psa_005_m_s2": 0.006586046568565268,
+        "psa_01_m_s2": 0.006585981205749328,
+        "psa_02_m_s2": 0.006585546420743682,
+        "psa_04_m_s2": 0.0057859792272156275,
+        "relative_01_vs_005": 0.000009924438775121835,
+        "relative_02_vs_005": 0.00007594052310111454,
+        "relative_04_vs_005": 0.12147915035528367
+      },
+      {
+        "event_id": "ci39493944",
+        "component": "HNE",
+        "period_s": 6.230957762865167,
+        "psa_005_m_s2": 0.0064078362624349315,
+        "psa_01_m_s2": 0.006407740217417527,
+        "psa_02_m_s2": 0.006407194610238431,
+        "psa_04_m_s2": 0.005675414545799782,
+        "relative_01_vs_005": 0.000014988681587779773,
+        "relative_02_vs_005": 0.00010013554813537162,
+        "relative_04_vs_005": 0.11430094132224822
+      },
+      {
+        "event_id": "ci39493944",
+        "component": "HNE",
+        "period_s": 8,
+        "psa_005_m_s2": 0.0041201640654286165,
+        "psa_01_m_s2": 0.004120110177468175,
+        "psa_02_m_s2": 0.004119379209124375,
+        "psa_04_m_s2": 0.004665236359362554,
+        "relative_01_vs_005": 0.000013079081217504118,
+        "relative_02_vs_005": 0.00019049151727401625,
+        "relative_04_vs_005": 0.13229383230331004
+      },
+      {
+        "event_id": "ci39493944",
+        "component": "HNE",
+        "period_s": 10,
+        "psa_005_m_s2": 0.0023570221782045894,
+        "psa_01_m_s2": 0.0023569917817823018,
+        "psa_02_m_s2": 0.0023567208693987857,
+        "psa_04_m_s2": 0.002929602238599947,
+        "relative_01_vs_005": 0.000012896112123517156,
+        "relative_02_vs_005": 0.00012783452297981945,
+        "relative_04_vs_005": 0.24292518996639578
+      },
+      {
+        "event_id": "ci39493944",
+        "component": "HNN",
+        "period_s": 4,
+        "psa_005_m_s2": 0.004081121931458632,
+        "psa_01_m_s2": 0.004080546555050733,
+        "psa_02_m_s2": 0.004078012957706348,
+        "psa_04_m_s2": 0.005113155201467676,
+        "relative_01_vs_005": 0.00014098486091862483,
+        "relative_02_vs_005": 0.0007617938901356425,
+        "relative_04_vs_005": 0.25287979318966003
+      },
+      {
+        "event_id": "ci39493944",
+        "component": "HNN",
+        "period_s": 6,
+        "psa_005_m_s2": 0.001668098294564635,
+        "psa_01_m_s2": 0.001668035819166767,
+        "psa_02_m_s2": 0.0016678747065985255,
+        "psa_04_m_s2": 0.002011921158508286,
+        "relative_01_vs_005": 0.00003745306740721155,
+        "relative_02_vs_005": 0.00013403764444697153,
+        "relative_04_vs_005": 0.20611666894209435
+      },
+      {
+        "event_id": "ci39493944",
+        "component": "HNN",
+        "period_s": 6.230957762865167,
+        "psa_005_m_s2": 0.001582014944386669,
+        "psa_01_m_s2": 0.0015819459199899436,
+        "psa_02_m_s2": 0.0015816076290505602,
+        "psa_04_m_s2": 0.0018291909973044062,
+        "relative_01_vs_005": 0.00004363068564572359,
+        "relative_02_vs_005": 0.00025746617473754174,
+        "relative_04_vs_005": 0.15624128823483696
+      },
+      {
+        "event_id": "ci39493944",
+        "component": "HNN",
+        "period_s": 8,
+        "psa_005_m_s2": 0.000727927081611396,
+        "psa_01_m_s2": 0.0007278886362942441,
+        "psa_02_m_s2": 0.0007276302016291907,
+        "psa_04_m_s2": 0.0012842751816271182,
+        "relative_01_vs_005": 0.000052814791650313,
+        "relative_02_vs_005": 0.0004078430239854436,
+        "relative_04_vs_005": 0.7642909764864727
+      },
+      {
+        "event_id": "ci39493944",
+        "component": "HNN",
+        "period_s": 10,
+        "psa_005_m_s2": 0.00037294294850314383,
+        "psa_01_m_s2": 0.0003729158528985324,
+        "psa_02_m_s2": 0.0003725856376517209,
+        "psa_04_m_s2": 0.0012474343462179794,
+        "relative_01_vs_005": 0.00007265348418628026,
+        "relative_02_vs_005": 0.0009580844814388589,
+        "relative_04_vs_005": 2.344839609448907
+      }
+    ]
+  }
 }
