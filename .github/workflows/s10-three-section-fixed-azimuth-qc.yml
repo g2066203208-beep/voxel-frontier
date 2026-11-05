@@ -78,3 +78,9 @@ jobs:
           print("S10_ENDPOINT_NATIVE_QC_PASS_NOT_MATERIAL_LIFE")
           PY
           sha256sum "$P/s10_rainflow_endpoint_boundary_qc.py" "$RUNNER_TEMP/s10_endpoint.json"
+      - name: Preserve native endpoint receipt as Actions artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: s10-real-endpoint-qc-native-receipt
+          path: ${{ runner.temp }}/s10_endpoint.json
+          retention-days: 90
