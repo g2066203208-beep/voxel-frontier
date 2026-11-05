@@ -1,10 +1,10 @@
 {
   "SOURCE": "Direct GitHub-branch ERA5 derived 31-bin CSV, 126-slot source matrix, original 18 NTM controller/input CSV and original 18 NTM FST/OUTB identity CSV; scoped REST Git tree/release/Actions metadata inventory",
-  "READING_LEVEL": "Derived CSV direct bytes and inherited original-OUTB SHA receipts; Git tree path names, release asset names and recent 100 Actions run titles only. No 4-8m/s original BTS/OUTB read or recovered; full historical Actions artifact scan NOT DONE.",
+  "READING_LEVEL": "Derived CSV direct bytes and inherited original-OUTB SHA receipts; Git tree path names, release asset names and recent 100 Actions run titles only. No 4-8m/s original BTS/OUTB read or recovered; full historical Actions artifact scan NOT DONE.; 2026-11-05 original 158m ServoDyn exact member bytes read in GitHub Actions 41960401342 and SHA-verified (details in controller_cutin_evidence.original_servodyn_source_card_20261105)",
   "REF": "T062 original 18NTM source contract; 12-stage critical path and prior S10 conditional-load-m4 diagnostic",
   "STANDARD": "IEC 61400-1/6 2025 licensed text NOT READ; 1m/s centers, six seeds, cut-in and operating regime are candidate research design NOT clause acceptance",
   "OFFICIAL": "GitHub REST repository tree, releases and Actions metadata; OpenFAST/TurbSim source identities inherited, NOT native controller or formal IEC validation",
-  "RUN": "Node source-only deterministic 30-slot construction with 6 tamper rejection tests; no TurbSim, OpenFAST or Abaqus production run",
+  "RUN": "Node source-only deterministic 30-slot construction with 6 tamper rejection tests; no TurbSim, OpenFAST or Abaqus production run; 2026-11-05 original-source Python selftest and extraction GitHub Actions 41960401342 completed/success (no production solver)",
   "FIG": "0",
   "TAB": "30 proposed source-missing low-wind NTM slots; no wind-field or material response figures",
   "input_sha256": {
@@ -13,7 +13,8 @@
     "controller": "be58d33306e6ac101d42b42c7f4d24ea5743662d1a9355aff9862b5a7e0aad45",
     "identity": "d57ff9e71b58b531b1aaa357ad7a57a86daf529e061f9d8996cf2453b04a7da5",
     "discon_receipt": "953d64614acca6278bba3cf79279c31c9adff8137734c190e29f2e376381e6c6",
-    "reference_servo": "266fed7bd2ab3084594fab29c6aae437f8e244154fd6b1c3e3c48e8b5f969654"
+    "reference_servo": "266fed7bd2ab3084594fab29c6aae437f8e244154fd6b1c3e3c48e8b5f969654",
+    "original_servodyn_full_card": "103e7bd71209a095b833ca4ba62627ae7724870615112fdccfbff502076c966e"
   },
   "inventory_snapshot": {
     "read_date": "2026-11-04",
@@ -124,7 +125,63 @@
     "top_3_share_of_missing": 0.7514517515356072,
     "formal_DLC12_slots_passed": 0,
     "stage_passed": 0,
-    "HOLD": "Actual historical 158m ServoDyn generator startup/stop settings and DLL runtime wind-speed transition are not in available extracted fields; original 4-8m/s BTS/OUTB missing; no licensed IEC2025 clauses read."
+    "HOLD": "Actual historical 158m ServoDyn generator startup/stop settings and DLL runtime wind-speed transition are not in available extracted fields; original 4-8m/s BTS/OUTB missing; no licensed IEC2025 clauses read.",
+    "original_servodyn_source_card_20261105": {
+      "SOURCE": "Original historical 158m ServoDyn source member in research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip, member CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_ServoDyn.dat; same original ServoDyn SHA registered for 18 NTM cases",
+      "READING_LEVEL": "GitHub Actions checked out the original repository ZIP and extracted exact 12108 member bytes; original member SHA256 verified, no reference-value substitution",
+      "REF": "T062 source manifest and original 18NTM identity; no new journal original-page reading",
+      "STANDARD": "IEC 61400-1/6:2025 licensed original clauses NOT READ; no cut-in or DLC1.2 compliance inference",
+      "OFFICIAL": "Original OpenFAST ServoDyn input-card labels; external DLL runtime behavior not certified",
+      "RUN": "GitHub Actions 41960401342 completed/success, original-source Python selftest 1 positive + 8 tamper/invalid negative PASS; no native wind/Abaqus solver",
+      "FIG": "0",
+      "TAB": "8 original historical ServoDyn fields",
+      "source_member_sha256": "103e7bd71209a095b833ca4ba62627ae7724870615112fdccfbff502076c966e",
+      "source_member_bytes": 12108,
+      "source_member_git_blob_sha": "NOT_SEPARATELY_COMMITTED_MEMBER_INSIDE_ZIP",
+      "source_archive_path": "research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip",
+      "fields": {
+        "PCMode": "5",
+        "VSContrl": "5",
+        "GenTiStr": "True",
+        "GenTiStp": "True",
+        "SpdGenOn": "9999.9",
+        "TimGenOn": "0",
+        "TimGenOf": "9999.9",
+        "DLL_FileName": "libdiscon.dll"
+      },
+      "field_semantics": {
+        "GenTiStr": "True: generator start by TimGenOn; False: by SpdGenOn generator rpm",
+        "GenTiStp": "True: stop by TimGenOf; False: when generator power zero",
+        "SpdGenOn": "HSS generator speed rpm, NOT wind m/s; inactive with GenTiStr=True",
+        "TimGenOn": "Generator startup time 0 s, NOT wind cut-in",
+        "TimGenOf": "Generator stop time 9999.9 s, NOT wind cut-out",
+        "PCMode_VSContrl": "5/5 external DLL; cannot infer controller's wind-speed startup hysteresis"
+      },
+      "cut_in_verdict": "WIND_SPEED_CUT_IN_NOT_ESTABLISHED",
+      "source_receipt_sha256": "c6eb64058dbc42d3df1a4e2f66ab3422696f930d0a911d7726525588647cd3d0",
+      "source_receipt_artifact_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41960401342/artifacts/13385715348",
+      "workflow_run_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/41960401342",
+      "workflow_run_id": 41960401342,
+      "tests": {
+        "positive": 1,
+        "negative": 8,
+        "conclusion": "success",
+        "prior_failures": [
+          {
+            "run": 41960268550,
+            "reason": "Python regex double-escaped, false numeric rejection"
+          },
+          {
+            "run": 41960341739,
+            "reason": "Negative test injected literal backslash-n instead of newline"
+          }
+        ]
+      },
+      "error_budget": "Original member byte length and SHA exact, field tokens source-exact; no numeric wind-speed cut-in/operability or controller DLL state uncertainty estimated",
+      "HOLD": "4-8 m/s operating/cut-in and original BTS/OUTB remain unverified; no formal DLC1.2 or material fatigue PASS",
+      "physical_pass": false,
+      "stage_passed": 0
+    }
   },
   "cut_in_sensitivity": {
     "status": "SCENARIO_ONLY_NOT_ACTUAL_CONTROLLER_CUT_IN",

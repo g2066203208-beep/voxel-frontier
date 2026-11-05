@@ -1170,3 +1170,7 @@ PR #42已实际存在[16行真实RotD表](../../experiments/T079/real-records/S0
 
 
 **2026-11-05 06:08｜S10四ETM完整124行方位网格敏感性（0/12）：** 已直接读取Library原始16件ZIP（全部CRC与ZIP/GZIP/CSV三层SHA对上原manifest），复用扩展[T077程序](../../experiments/T077/recovery/s10_azimuth_grid_convergence.py)SHA256 `57d8802f3ad60b968840e548922145967b19b5de275ecf87f71a5604a816b760`；生成[124行完整压缩CSV](../../experiments/T077/recovery/S10_4ETM_31SEG_AZIMUTH_GRID_CONVERGENCE_20261105.csv.gz)（gzip SHA256 `ce0ff94a60b945931ae75a707114efdbcc2955250a703b5a018ed9effaa5c2cb`，解压SHA256 `1eacf29f513aea0bad86313680fb9ed32a6a1b0a0c68334839ce4e635dffc278`）。四工况16→64方位m4最大差0.0595461/0/0/0.545289819%，m10为0.00015431/0/0/0.77225433%；最大U19p202140_ETM_S06 CSEG31，说明先前单工况0.0595%不是四工况误差上界。7解析+3合成拒绝+2真实复制篡改拒绝，本地Python11.25s；无新CI/生产求解。详细SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、原件hash、假设、误差及HOLD见[原T077收据](../../experiments/T077/recovery/S10_4CASE_31SEG_SYNC_GROSS_RECEIPT_20261030.json)。仅历史ETM弹性圆环名义应力DEL，非连续角度真值、DLC1.2、有效PT或材料疲劳寿命；**S06 PARTIAL、S07/S10 BLOCKED、0/12、E/WE=0、DLC1.2=0/126**。
+
+
+## 2026-11-05 11:07｜S06/S10原始ServoDyn启动字段源级闭合（非DLC1.2 PASS）
+- 158m原始ServoDyn 12108字节、SHA256 `103e7bd71209a095b833ca4ba62627ae7724870615112fdccfbff502076c966e`，GitHub Actions #41960401342 原件解析成功，1正8负测试通过；历史字段 `PCMode=5,VSContrl=5,GenTiStr=True,GenTiStp=True,TimGenOn=0s,TimGenOf=9999.9s,SpdGenOn=9999.9rpm` 已直接确认。**这些不是风速cut-in/out。** 完整SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB、两次失败及误差见T062原30槽JSON和研究说明；阶段0/12，S06 PARTIAL，S07/S10 BLOCKED，DLC1.2 0/126，E/WE=0。
