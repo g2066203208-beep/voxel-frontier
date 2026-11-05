@@ -543,7 +543,7 @@
     "REF": "Inherited T077 ASTM-style reversal-stack convention from s10_control_cycle_export_compact.py; no new original literature pages",
     "STANDARD": "No new licensed IEC/GB/NB clauses read; no material fatigue clause PASS",
     "OFFICIAL": "GitHub Actions artifact IDs 11465219800 and 11483249910; original historical OpenFAST provenance inherited",
-    "RUN": "Native local Python 3.13.5 source-level numerical run, 5 synthetic known-answer/3 negative, 3 real oracle and 3 time-reversal; GitHub Actions native run 42081433701 triggered, completion status to be updated",
+    "RUN": "Native GitHub Actions #42081433701 job 127435196509 completed/success: both archived ZIP SHA OK; tracked original Python module self-test; 3x12001 real numerical oracle and endpoint tests; Python stdlib no structural solver",
     "FIG": "0",
     "TAB": "3 controls: open residual vs assumed periodic boundary vs deliberately invalid half-cycle deletion",
     "script_path": "research/wind-tower/experiments/T077/recovery/s10_rainflow_endpoint_boundary_qc.py",
@@ -581,7 +581,7 @@
       "csv_sha": 2
     },
     "ERROR_BUDGET": "Real open DEL4 matches historical independent oracle within 1e-8 MPa; time grid abs 1e-7 s; cyclic residual pair abs 1e-10 MPa; wrap-around physics not measured; no local stress, bin probability or fatigue curve uncertainty estimate",
-    "FAILURES": "No local numerical test failures; first attempt with test-only local shim has source module hash differing from actual GitHub original, explicitly documented; native CI status pending",
+    "FAILURES": "No numerical failures. Local reconstructed dependency differed bytewise from tracked module, resolved for source-level validation by successful GitHub native CI using tracked module. No physical material/structural validation claimed.",
     "HOLD": "Assumed periodic closure not physically validated; 3 nominal stress sections from 2 ETM cases, not DLC1.2/local 4-material fatigue. Annual Miner life 0, S10 BLOCKED, E/WE 0, 0/12 PASS",
     "controls": [
       {
@@ -644,6 +644,16 @@
         "periodic_half_rows": 0,
         "time_reverse_open_m4_abs_diff": 0
       }
-    ]
+    ],
+    "native_ci": {
+      "run_id": 42081433701,
+      "job_id": 127435196509,
+      "status": "completed",
+      "conclusion": "success",
+      "run_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/42081433701",
+      "script_sha256": "123dc1f3094dea57cfef594a552e5b4bd1ae811f070832d01835030525abe81c",
+      "runner_receipt_sha256": "d6b686b55a0aaa323ec325707b0cbedb053face3df78e43c903cff889f6caa09",
+      "artifact_upload": "Second run triggered by workflow update, ID pending"
+    }
   }
 }
