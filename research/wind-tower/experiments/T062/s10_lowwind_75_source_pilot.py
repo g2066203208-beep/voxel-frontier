@@ -360,15 +360,170 @@ def grid_command(repo_root, write):
           "pilot_sha=" + GRID_PILOT_SHA,
           "receipt_sha=" + sha(path.read_bytes()))
 
+
+# S07 source-dependency gate: a TurbSim .inp alone does NOT rebind OpenFAST's
+# historical absolute InflowWind BTS reference. This is a conditional source
+# mismatch audit, NOT an executable new OpenFAST case or controller cut-in test.
+DEPENDENCY_KEY = "lowwind_30slot_dependency_gate_20261106"
+GRID_PLAN_SHA = "9d2e1403f9a230fc1cf97c191495ff7bdad552c6782b7403a6c8a1f7339fd475"
+
+def _dependency_row(candidate, original):
+    case = candidate["candidate_case_NOT_RUN"]
+    match = re.fullmatch(r"U0[4-8]p5_NTM_(S0[1-6])", case)
+    require(match is not None, "DEPENDENCY_CANDIDATE_ID")
+    seed = match.group(1)
+    parent = "U09p343881_NTM_" + seed
+    require(original["case"] == parent, "DEPENDENCY_SEED_PARENT")
+    require(original["inflow_WindType"] == "3", "DEPENDENCY_WINDTYPE")
+    path = original["inflow_FileName_BTS"]
+    require(re.match(r"^[A-Za-z]:\\", path) is not None,
+            "DEPENDENCY_EXPECTED_HISTORICAL_ABSOLUTE_PATH")
+    historical_bts = path.replace("\\", "/").split("/")[-1]
+    require(historical_bts == parent + ".bts", "DEPENDENCY_PARENT_BTS_NAME")
+    require(original["fst_sha256"] == FST_SHA, "DEPENDENCY_FST_IDENTITY")
+    require(original["servo_sha256"] == SERVO_SHA, "DEPENDENCY_SERVO_IDENTITY")
+    require(original["discon_sha256"] == DISCON_SHA, "DEPENDENCY_DISCON_IDENTITY")
+    require(re.fullmatch(r"[0-9a-f]{64}", original["inflow_sha256"]) is not None,
+            "DEPENDENCY_INFLOW_SHA")
+    require(original["servo_DLL_FileName"].lower() == "libdiscon.dll",
+            "DEPENDENCY_DLL_NAME")
+    require(original["bts_archived_sha256"] == "" and
+            original["formal_DLC12_reuse_verdict"] == "HOLD_NOT_VERIFIED",
+            "DEPENDENCY_FALSE_HISTORICAL_PASS")
+    require(candidate["source_OUTB_sha256"] == "" and
+            candidate["new_BTS_sha256"] == "" and
+            candidate["new_OUTB_sha256"] == "",
+            "DEPENDENCY_FALSE_NEW_OUTPUT")
+    require(candidate["readiness_status"] ==
+            "NEED_TURBSIM_BTS_CONTROLLER_CUTIN_AND_DLC12_VALIDATION",
+            "DEPENDENCY_FALSE_CANDIDATE_PASS")
+    desired = case + ".bts"
+    require(historical_bts != desired, "DEPENDENCY_EXPECTED_MISMATCH")
+    return {
+        "candidate_case_NOT_RUN": case,
+        "parent_case": parent,
+        "historical_inflow_sha256_INHERITED": original["inflow_sha256"],
+        "historical_bts_basename_INHERITED": historical_bts,
+        "required_candidate_bts_basename_NOT_GENERATED": desired,
+        "inherited_inflow_is_windows_absolute": True,
+        "would_reuse_wrong_wind_if_original_inflow_card_used_unchanged": True,
+        "candidate_inflow_card_SHA256": None,
+        "candidate_BTS_SHA256": None,
+        "candidate_OUTB_SHA256": None,
+        "dependency_status": "MUST_REBIND_AND_VERIFY_NEW_INFLOW_CARD_BTS_AND_DLL"
+    }
+
+def dependency_negative_tests(candidate, original):
+    import copy
+    variants = []
+    def change(side, key, value):
+        c, o = copy.deepcopy(candidate), copy.deepcopy(original)
+        (c if side == "c" else o)[key] = value
+        variants.append((c, o))
+    change("o", "inflow_WindType", "1")
+    change("o", "inflow_FileName_BTS", "inputs/" + original["case"] + ".bts")
+    change("o", "inflow_FileName_BTS", r"C:\fake\U09p343881_NTM_S06.bts")
+    change("o", "fst_sha256", "0" * 64)
+    change("o", "servo_DLL_FileName", "wrong.dll")
+    change("o", "bts_archived_sha256", "f" * 64)
+    change("c", "new_BTS_sha256", "f" * 64)
+    change("c", "readiness_status", "PASS")
+    for i, (c, o) in enumerate(variants):
+        try:
+            _dependency_row(c, o)
+        except (ValueError, KeyError):
+            pass
+        else:
+            raise AssertionError("DEPENDENCY_NEGATIVE_ACCEPTED_" + str(i))
+    return len(variants)
+
+def build_dependency_gate(repo_root):
+    root = repo_root / ROOT / "experiments/T062"
+    plan_raw = gate.read_pinned(root / GRID_SOURCE_CSV, GRID_PLAN_SHA)
+    historical_raw = gate.read_pinned(
+        root / "S07_18NTM_ORIGINAL_TURBSIM_CONTROLLER_INPUTS_20261031.csv",
+        CONFIG_SHA)
+    plan = list(csv.DictReader(io.StringIO(plan_raw.decode("utf-8-sig"))))
+    history = list(csv.DictReader(io.StringIO(historical_raw.decode("utf-8-sig"))))
+    source = {r["case"]: r for r in history}
+    require(len(plan) == 30 and len(source) == 18, "DEPENDENCY_SOURCE_ROWS")
+    grid = build_lowwind_grid(repo_root)
+    derived = {r["candidate_case_NOT_RUN"] for r in grid["entries"]}
+    require({r["candidate_case_NOT_RUN"] for r in plan} == derived,
+            "DEPENDENCY_CANDIDATE_GRID_DIVERGENCE")
+    records = []
+    for row in plan:
+        match = re.fullmatch(r"U0[4-8]p5_NTM_(S0[1-6])",
+                             row["candidate_case_NOT_RUN"])
+        require(match is not None, "DEPENDENCY_CASE_PARSE")
+        parent = "U09p343881_NTM_" + match.group(1)
+        require(parent in source, "DEPENDENCY_PARENT_MISSING")
+        records.append(_dependency_row(row, source[parent]))
+    require(len(records) == 30 and
+            len({r["candidate_case_NOT_RUN"] for r in records}) == 30,
+            "DEPENDENCY_30_CASES")
+    require(len({r["historical_inflow_sha256_INHERITED"]
+                 for r in records}) == 6, "DEPENDENCY_SIX_ORIGINAL_INFLOW_CARDS")
+    negatives = dependency_negative_tests(plan[0], source["U09p343881_NTM_S01"])
+    return {
+        "SOURCE": "Original 18NTM SHA-pinned source identity CSV and 30-slot source plan; 7.5 S01 exact TurbSim pilot verified by existing grid function",
+        "READING_LEVEL": "18-case verified derived CSV (not re-read original InflowWind/FST/DLL raw members this round); 30-slot CSV and pilot raw bytes read. New candidate InflowWind/BTS/OUTB bytes DO NOT EXIST.",
+        "REF": "T062 original-input gate; no new paper full-text reading",
+        "STANDARD": "IEC 61400-1/6 2025 authorized clauses NOT READ; no DLC1.2 acceptance",
+        "OFFICIAL": "Original OpenFAST source identity recorded in T062; this is not a runtime/ROSCO test",
+        "RUN": "Python stdlib source-only dependency crosswalk; no TurbSim/OpenFAST/CAE run",
+        "FIG": 0, "TAB": "30 candidate-to-original InflowWind BTS reference rows",
+        "input_sha256": {"planning_csv": GRID_PLAN_SHA,
+                         "original_18NTM_source_csv": CONFIG_SHA,
+                         "pilot_turbsim_inp": GRID_PILOT_SHA},
+        "assumptions": "IF an original 9.343881m/s InflowWind card is reused unchanged, it still points to the 9.343881m/s BTS, not to the 4.5..8.5m/s candidate. No candidate InflowWind card has been constructed or executed.",
+        "error_budget": "Exact source token/path matching; original raw InflowWind bytes not independently rehashed this round; runtime, controller, turbulence and fatigue errors NEED_ESTIMATE",
+        "negative_tests_rejected": negatives,
+        "original_inflow_cards_unique": 6,
+        "inherited_unrebound_references": len(records),
+        "candidate_inflow_cards_verified": 0,
+        "new_BTS_verified": 0,
+        "new_OUTB_verified": 0,
+        "records": records,
+        "HOLD": "Must construct and SHA-lock each candidate InflowWind card, replace absolute original BTS reference, supply actual candidate BTS and consistent FST/ServoDyn/DISCON/DLL paths and original run-state evidence; no source-closed runnable low-wind case yet",
+        "physical_pass": False, "formal_dlc12_verified_slots": 0,
+        "stages_passed": 0
+    }
+
+def dependency_command(repo_root, write):
+    path = repo_root / ROOT / "experiments/T062" / GRID_RECEIPT_JSON
+    receipt = json.loads(path.read_text(encoding="utf-8"))
+    computed = build_dependency_gate(repo_root)
+    require(receipt.get("lowwind_30slot_candidate_grid_20261106") ==
+            build_lowwind_grid(repo_root), "DEPENDENCY_GRID_RECEIPT_DRIFT")
+    if write:
+        receipt[DEPENDENCY_KEY] = computed
+        path.write_text(json.dumps(receipt, indent=2, ensure_ascii=False) + "\n",
+                        encoding="utf-8")
+    else:
+        require(receipt.get(DEPENDENCY_KEY) == computed,
+                "DEPENDENCY_COMMITTED_RECEIPT_DRIFT")
+    print("S07_LOWWIND_INFLOW_DEPENDENCY_HOLD",
+          "unrebound=30/30", "original_inflow_cards=6",
+          "negative_tests=" + str(computed["negative_tests_rejected"]),
+          "candidate_BTS=0", "DLC12_PASS=0")
+
 def main():
     parser=argparse.ArgumentParser()
     parser.add_argument("--selftest",action="store_true")
     parser.add_argument("--grid-write",action="store_true")
     parser.add_argument("--grid-check",action="store_true")
+    parser.add_argument("--dependency-write",action="store_true")
+    parser.add_argument("--dependency-check",action="store_true")
     parser.add_argument("--repo-root",type=Path,default=Path("."))
     parser.add_argument("--out-dir",type=Path)
     args=parser.parse_args()
     if args.selftest: selftest(); return
+    if args.dependency_write or args.dependency_check:
+        require(not (args.dependency_write and args.dependency_check),
+                'DEPENDENCY_MODE_CONFLICT')
+        dependency_command(args.repo_root, args.dependency_write)
+        return
     if args.grid_write or args.grid_check:
         require(not (args.grid_write and args.grid_check), 'GRID_MODE_CONFLICT')
         grid_command(args.repo_root, args.grid_write)
