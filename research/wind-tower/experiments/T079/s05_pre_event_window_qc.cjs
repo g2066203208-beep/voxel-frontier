@@ -136,7 +136,93 @@ function selfTestTimeStep(){
  return "S05_DT_QC_SELFTEST_PASS_3_POSITIVE_4_NEGATIVE";
 }
 
-if(typeof module!=="undefined"&&module.exports)module.exports={parse,corrected,spectrum,drift,compute,selfTest,timeStepQC,selfTestTimeStep,SOURCES,PERIODS};
+
+/* S05 anti-alias diagnostic on original 0.01 s samples. Fixed 201-tap
+   symmetric Blackman-windowed sinc low-pass, cutoff 9 Hz at fs=100 Hz;
+   DC-normalized, reflection at endpoints, centered zero-phase convolution.
+   Decimate 4:1 at original t=0 phase to dt=0.04 s, no extrapolation.
+   This is a sensitivity experiment, NOT a verified instrument correction. */
+const AA_CUTOFF_HZ=9,AA_TAPS=201,AA_FS_HZ=100;
+function firKernel(cutoff=AA_CUTOFF_HZ,taps=AA_TAPS){
+ if(!Number.isFinite(cutoff)||cutoff<=0||cutoff>=AA_FS_HZ/8||!Number.isInteger(taps)||taps<3||taps%2!==1)throw Error("FIR_PARAMETERS");
+ const w=[],M=taps-1;let sum=0;
+ for(let i=0;i<taps;i++){
+  const x=i-M/2,sinc=x===0?2*cutoff/AA_FS_HZ:Math.sin(2*Math.PI*cutoff*x/AA_FS_HZ)/(Math.PI*x);
+  const win=.42-.5*Math.cos(2*Math.PI*i/M)+.08*Math.cos(4*Math.PI*i/M);
+  w.push(sinc*win);sum+=sinc*win;
+ }
+ return w.map(x=>x/sum);
+}
+function firGain(h,f){
+ if(!Array.isArray(h)||h.length<3||!Number.isFinite(f)||f<0||f>AA_FS_HZ/2)throw Error("FIR_GAIN_INPUT");
+ const H=(h.length-1)/2;let re=0,im=0;
+ for(let j=0;j<h.length;j++){const a=2*Math.PI*f*(j-H)/AA_FS_HZ;re+=h[j]*Math.cos(a);im-=h[j]*Math.sin(a)}
+ return Math.hypot(re,im);
+}
+function zeroPhaseFIR(a,h){
+ if(!Array.isArray(a)||a.length<2||!a.every(Number.isFinite)||!Array.isArray(h)||h.length<3||h.length%2!==1||!h.every(Number.isFinite))throw Error("FIR_INPUT");
+ const n=a.length,H=(h.length-1)/2,out=new Array(n);
+ for(let i=0;i<n;i++){
+  let sum=0;
+  for(let j=-H;j<=H;j++){
+   let k=i+j;
+   while(k<0||k>=n){if(k<0)k=-k;if(k>=n)k=2*n-2-k}
+   sum+=h[j+H]*a[k];
+  }
+  out[i]=sum;
+ }
+ return out;
+}
+function antiAliasQC(rawMap){
+ const h=firKernel(),rows=[],src=[];
+ for(const [ev,axis,sha] of SOURCES){
+  const a=parse(rawMap[ev+"_"+axis]),base=corrected(a,20);
+  const filtered01=zeroPhaseFIR(base.a,h);
+  const filtered04=strideSamples(filtered01,4),unfiltered04=strideSamples(base.a,4);
+  src.push({event_id:ev,component:axis,source_sha256_inherited:sha,npts:a.length,dt_s:DT,
+   pre20_offset_m_s2:base.offset,filtered_npts:filtered04.length});
+  for(const T of PERIODS){
+   const p01=spectrum(base.a,T,.01),pf01=spectrum(filtered01,T,.01),
+         pf04=spectrum(filtered04,T,.04),pu04=spectrum(unfiltered04,T,.04);
+   if(!(p01>0&&pf01>0))throw Error("NONPOSITIVE_PSA");
+   rows.push({event_id:ev,component:axis,period_s:T,
+    psa_unfiltered_01_m_s2:p01,psa_filtered_01_m_s2:pf01,
+    psa_filtered_04_m_s2:pf04,psa_unfiltered_04_m_s2:pu04,
+    filter_effect_relative:Math.abs(pf01/p01-1),
+    filtered04_vs_filtered01_relative:Math.abs(pf04/pf01-1),
+    unfiltered04_vs_unfiltered01_relative:Math.abs(pu04/p01-1)});
+  }
+ }
+ const max={};
+ for(const key of ["filter_effect_relative","filtered04_vs_filtered01_relative","unfiltered04_vs_unfiltered01_relative"])
+  max[key]=rows.reduce((a,b)=>a[key]>=b[key]?a:b);
+ return {source:src,method:{fs_hz:AA_FS_HZ,cutoff_hz:AA_CUTOFF_HZ,taps:AA_TAPS,
+  window:"Blackman",kernel:"symmetric DC-normalized sinc",boundary:"reflect",phase:"centered zero-phase",
+  decimation_factor:4,dt_original_s:.01,dt_decimated_s:.04,
+  gain_2hz:firGain(h,2),gain_4hz:firGain(h,4),gain_9hz:firGain(h,9),
+  gain_12p5hz:firGain(h,12.5),gain_20hz:firGain(h,20)},rows,max};
+}
+function selfTestAntiAlias(){
+ const h=firKernel();
+ if(Math.abs(h.reduce((a,b)=>a+b,0)-1)>1e-12)throw Error("DC_GAIN_ORACLE");
+ if(Math.abs(firGain(h,2)-1)>1e-3||firGain(h,12.5)>1e-3||firGain(h,20)>1e-4)throw Error("FREQUENCY_GAIN_ORACLE");
+ const n=1001,constant=Array(n).fill(2.75),f=zeroPhaseFIR(constant,h);
+ if(f.some(x=>Math.abs(x-2.75)>1e-11))throw Error("REFLECTION_DC_ORACLE");
+ const low=Array.from({length:n},(_,i)=>Math.sin(2*Math.PI*2*i/AA_FS_HZ));
+ const high=Array.from({length:n},(_,i)=>Math.sin(2*Math.PI*20*i/AA_FS_HZ));
+ const ratio=(x,y)=>Math.sqrt(x.slice(200,800).reduce((s,v,i)=>s+v*v,0)/
+  y.slice(200,800).reduce((s,v)=>s+v*v,0));
+ if(Math.abs(ratio(zeroPhaseFIR(low,h),low)-1)>1e-3)throw Error("PASSBAND_TIME_ORACLE");
+ if(ratio(zeroPhaseFIR(high,h),high)>1e-3)throw Error("STOPBAND_TIME_ORACLE");
+ if(spectrum(Array(5001).fill(0),6,.04)!==0)throw Error("ZERO_SPECTRUM_ORACLE");
+ const bad=[[()=>firKernel(12.5,201),"FIR_PARAMETERS"],[()=>firKernel(9,200),"FIR_PARAMETERS"],
+ [()=>zeroPhaseFIR([1,NaN],h),"FIR_INPUT"],[()=>zeroPhaseFIR([1],h),"FIR_INPUT"],
+ [()=>firGain(h,-1),"FIR_GAIN_INPUT"],[()=>antiAliasQC({}),"SOURCE_TYPE"]];
+ for(const [fn,expected] of bad){try{fn();throw Error("NEGATIVE_ACCEPTED")}catch(e){if(e.message!==expected)throw e}}
+ return "S05_ANTIALIAS_SELFTEST_PASS_5_POSITIVE_6_NEGATIVE";
+}
+
+if(typeof module!=="undefined"&&module.exports)module.exports={parse,corrected,spectrum,drift,compute,selfTest,timeStepQC,selfTestTimeStep,antiAliasQC,selfTestAntiAlias,firKernel,firGain,zeroPhaseFIR,SOURCES,PERIODS};
 if(typeof require==="function"&&typeof module!=="undefined"&&require.main===module){
  const fs=require("fs"),path=require("path"),crypto=require("crypto");
  if(process.argv.includes("--self-test")){console.log(selfTest(),selfTestTimeStep());process.exit(0)}
@@ -148,5 +234,5 @@ if(typeof require==="function"&&typeof module!=="undefined"&&require.main===modu
   if(actual!==expected)throw Error("SOURCE_SHA256_MISMATCH_"+ev+"_"+axis);
   map[ev+"_"+axis]=bytes.toString("utf8");
  }
- console.log(JSON.stringify(process.argv.includes("--dt-qc")?{test:selfTestTimeStep(),result:timeStepQC(map)}:{test:selfTest(),result:compute(map)},null,2));
+ console.log(JSON.stringify(process.argv.includes("--anti-alias-qc")?{test:selfTestAntiAlias(),result:antiAliasQC(map)}:process.argv.includes("--dt-qc")?{test:selfTestTimeStep(),result:timeStepQC(map)}:{test:selfTest(),result:compute(map)},null,2));
 }
