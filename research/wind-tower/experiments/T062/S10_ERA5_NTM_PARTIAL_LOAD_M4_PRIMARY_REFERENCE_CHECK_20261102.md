@@ -67,3 +67,15 @@
 **REF/STANDARD/OFFICIAL**：REF沿用本文件既有ERA5/风疲劳文献阅读层级；STANDARD=没有新增IEC 61400-1/6授权2025正文/2026勘误核读，不作条款验收；OFFICIAL=历史OpenFAST/TurbSim来源身份登记及GitHub范围有限的库存元数据，不是新风场原件。**假设/误差预算**：整数边界下小时计数精确；切入速度仅为场景而非已确认控制器参数，箱内阈值、机组停机/重启滞回、控制器动态状态、ERA5地形与高度外推、材料局部应力及缺失风载响应误差均未估计，故比例不能转化为疲劳损伤或实际发电小时。**HOLD**：缺4–8m/s原始BTS/OUTB、实际cut-in和运行状态、31站同态载荷、IEC正式DLC1.2及材料局部应力；S06 PARTIAL、S07/S10 BLOCKED、正式DLC1.2 0/126、地震E/WE=0、12阶段0/12。
 
 **下一唯一动作**：按历史Actions原始归档索引进一步查找4–8m/s可恢复的BTS/OUTB或FST/TurbSim输入（优先检查ZIP成员与完整artifact列表，而非仅名称）；找不到则保留明确资源缺口，不启动昂贵求解。
+
+## 2026-11-05｜S10九测高六seed空间伪重复诊断（独立准备，0/12）
+
+**新增且非重复的科学检查**：在已验证的18组NTM×60通道原始OUTB派生DEL统计上，不再重新计算seed-CV，而是按**同一风速、同一m、同一力/矩分量**，对塔底与9测高相邻站点的六seed DEL向量做Pearson相关。3风速×2诊断指数(m4/m10)×6分量×9对相邻站=**324项**；36个分组均有9对。**324/324项r>0.99**，最小r=**0.9999541213330111**（U11p4_NTM/m10/Mx/TwHt5MLxt↔TwHt6MLxt），中位r=**0.9999999957878483**，最大r=**0.999999999986526**。这是六seed**标量DEL空间共变**，不是600s时程逐点相关、不是物理载荷映射或独立样本数的置信推断。九测高同一seed产生的60通道**不能当作60个独立风场重复试验**；360组通道×m统计也不能当作360个独立seed试验。
+
+- **SOURCE/阅读层级**：本轮直接从GitHub PR #42分支读取[1080行历史原生OUTB派生CSV](S06_18NTM_ORIGINAL_9GAGE_LOAD_DEL_20261031.csv)，本轮独立SHA256重算与登记一致：`95de6578cf379d1b2e1d99a68c26954a68e93cc8bfc4bdcd63dd324ae2999a0f`；读取[18 OUTB原始来源收据](S06_18NTM_ORIGINAL_LOAD_DEL_RECEIPT_20261031.json)并逐case比对原始OUTB SHA身份。本轮**未重读18个原始OUTB二进制字节**，其原生解码与原件SHA沿用先前收据，不重复冒称原生重算。
+- **RUN**：[可执行Node CJS程序](s10_ntm_seed_spatial_dependence_qc.cjs)，SHA256 `19527d31e41b3a0f62a26575f8f63f30b8ff45cce1a4b5ae80e25ae05735bfef`；本轮在工具V8中执行完整导出的JS分析函数，对真实1080行进行结构/OUTB身份/时间/单位/数值校验，2个解析正例和6个异常拒绝（零方差、时间篡改、表头篡改、非数值、OUTB哈希篡改、收据数量篡改）通过；**未运行Node CLI，未新增Actions CI或OpenFAST/Abaqus生产RUN**。命令：`node s10_ntm_seed_spatial_dependence_qc.cjs --source S06_18NTM_ORIGINAL_9GAGE_LOAD_DEL_20261031.csv --receipt S06_18NTM_ORIGINAL_LOAD_DEL_RECEIPT_20261031.json --out S10_18NTM_SEED_SPATIAL_DEPENDENCE_20261105.csv`。
+- **TAB/FIG**：[36行实算CSV](S10_18NTM_SEED_SPATIAL_DEPENDENCE_20261105.csv) SHA256 `b7f523a834d556a81face88d28ac030cab8693cd62268f40bf8bedde93bd292e`；FIG=0，未生成材料应力图。
+- **REF/STANDARD/OFFICIAL**：REF沿用本文件此前雨流/DEL来源阅读层级；STANDARD=本轮未取得IEC/GB/NB授权原条文；OFFICIAL=历史OpenFAST原生OUTB的既有来源收据，不是本轮新增官方计算或规范核验。
+- **假设/误差预算/失败**：Pearson只基于每组6个seed，相关系数对样本量敏感；CSV的DEL舍入与原OUTB量化来自上游误差账，未传播成r的物理置信界。全部相关值接近1，不表示各测高绝对DEL相同，也不证明跨批次31站同步；本轮6项异常均正确拒绝，无未解决脚本异常。禁止把324对相关当独立样本，不能以此计算有效年损伤或材料寿命。
+- **HOLD/阶段**：缺4–8m/s NTM BTS/OUTB、实际控制器切入/启停身份、31站同态风载、局部材料应力和授权规范；S06 PARTIAL、S07/S10 BLOCKED、DLC1.2 0/126、地震E/WE=0、整阶段**0/12**。不修改冻结T057/T070，不合并PR。**下一唯一动作**：从已归档ServoDyn/ROSCO/FST实际控制器配置核实cut-in与停机条件，建立缺失4–8m/s风箱最小必要源数据优先级，先不启动生产求解。
+
