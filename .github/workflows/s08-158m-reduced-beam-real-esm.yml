@@ -154,7 +154,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          for f in S08_158M_BEAM_PROXY_FULL_RATE_RECEIPT_20261106.json S08_158M_BEAM_PROXY_35SEG_MOMENT_ENVELOPE_20261102.csv S08_158M_BEAM_PROXY_36NODE_DISPLACEMENT_ENVELOPE_20261102.csv S08_158M_BEAM_PROXY_ALONG_HEIGHT_RECEIPT_20261102.json FIG_S08_07_158M_BEAM_PROXY_ALONG_HEIGHT_ENVELOPES_NOT_ABAQUS.svg; do
+          for f in S08_158M_BEAM_PROXY_FULL_RATE_RECEIPT_20261106.json; do
             if [[ "$f" == *.svg ]]; then
               target="research/wind-tower/manuscript/final-thesis/figures/$f"
             else
