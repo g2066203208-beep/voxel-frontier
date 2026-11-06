@@ -145,8 +145,10 @@ def envelope_svg(path, moment_rows, displacement_rows):
     out.append('</svg>')
     Path(path).write_text('\n'.join(out)+'\n')
 
-def integrate_modal(acc,omega,phi,gamma,K,dt,zeta=0.05,moment_phi=None,node_phi=None):
+def integrate_modal(acc,omega,phi,gamma,K,dt,zeta=0.05,moment_phi=None,node_phi=None,history_stride=20):
     # Newmark average acceleration, initial rest, -Gamma*a_g generalized forcing.
+    if type(history_stride) is not int or history_stride<1:
+        raise ValueError('history_stride must be a positive integer')
     q=np.zeros(len(omega));v=q.copy();aa=-gamma*acc[0]
     c=2*zeta*omega;k=omega**2;b=.25;g=.5
     den=1+b*dt*dt*k+g*dt*c
@@ -178,7 +180,7 @@ def integrate_modal(acc,omega,phi,gamma,K,dt,zeta=0.05,moment_phi=None,node_phi=
         for key,val in [('top_u_m',top_u),('top_abs_acc_m_s2',top_abs_acc),
                         ('base_elastic_shear_N',shear),('base_elastic_moment_Nm',moment)]:
             if abs(val)>peak[key][0]:peak[key]=(float(abs(val)),idx)
-        if idx%20==0:history.append((idx*dt,top_u,top_abs_acc,shear,moment))
+        if idx%history_stride==0:history.append((idx*dt,top_u,top_abs_acc,shear,moment))
     envelope=None
     if moment_phi is not None:
         envelope={'mom_min':mom_min,'mom_max':mom_max,'mom_abs':mom_abs,
@@ -197,6 +199,24 @@ def self_test():
     assert all(v[0]==0 for v in p.values())
     p,_,_=integrate_modal(np.sin(np.arange(1001)*0.01),om[:4],phi[:,:4],g[:4],K,0.01)
     assert p['top_u_m'][0]>0
+    # Full-rate history retains all internally tracked maxima, and exact
+    # 20x decimation reproduces the original 0.1s archive on a 0.005s grid.
+    synthetic=np.sin(np.arange(1001)*0.005*5)
+    pf,hf,_=integrate_modal(synthetic,om[:4],phi[:,:4],g[:4],K,0.005,history_stride=1)
+    pc,hc,_=integrate_modal(synthetic,om[:4],phi[:,:4],g[:4],K,0.005,history_stride=20)
+    assert len(hf)==1001 and len(hc)==51
+    assert all(np.array_equal(hf[20*i],row) for i,row in enumerate(hc))
+    for key,col in (('top_u_m',1),('top_abs_acc_m_s2',2),
+                    ('base_elastic_shear_N',3),('base_elastic_moment_Nm',4)):
+        full_peak=max(abs(row[col]) for row in hf)
+        assert np.isclose(full_peak,pf[key][0],rtol=1e-12,atol=1e-9),(key,full_peak,pf[key])
+        assert np.isclose(pf[key][0],pc[key][0],rtol=1e-12,atol=1e-9)
+        assert full_peak+1e-9>=max(abs(row[col]) for row in hc)
+    for bad in (0,-1,1.5,True):
+        try:integrate_modal(synthetic[:3],om[:4],phi[:,:4],g[:4],K,0.005,history_stride=bad)
+        except ValueError:pass
+        else:raise AssertionError('accepted invalid history stride')
+    print('PASS full-rate 0.005s 4-QoI peak identity and exact 20x legacy decimation, 4 invalid strides rejected')
     B,_,_,_=section_moment_operator(z,ei)
     u=np.linspace(-0.002,0.003,K.shape[0]);u[:2]=0.
     for i in (0,3,34):
@@ -212,7 +232,9 @@ def self_test():
 
 def main():
     ap=argparse.ArgumentParser();ap.add_argument('--tower');ap.add_argument('--esm')
-    ap.add_argument('--outdir');ap.add_argument('--self-test',action='store_true');args=ap.parse_args()
+    ap.add_argument('--outdir');ap.add_argument('--self-test',action='store_true')
+    ap.add_argument('--full-rate-history',action='store_true',help='save E-only 0.005s proxy history, not S09 W/E/WE')
+    args=ap.parse_args()
     if args.self_test:self_test();return
     if not args.tower or not args.esm or not args.outdir:ap.error('--tower --esm --outdir required')
     out=Path(args.outdir);out.mkdir(parents=True,exist_ok=True)
@@ -226,15 +248,18 @@ def main():
     B,section_z,section_element,section_end=section_moment_operator(z,ei)
     moment_phi=B@phi
     node_phi=np.vstack((np.zeros((1,len(om))),phi[::2]))
-    t,acc=read_esm(args.esm);dt=float(t[1]-t[0]);summary=[];histories={};envelopes={}
+    t,acc=read_esm(args.esm);dt=float(t[1]-t[0]);summary=[];histories={};envelopes={};full_histories={}
 
     for name,series in acc.items():
-        peaks,history,envelope=integrate_modal(series,om,phi,g,K,dt,moment_phi=moment_phi,node_phi=node_phi)
+        peaks,history,envelope=integrate_modal(series,om,phi,g,K,dt,moment_phi=moment_phi,node_phi=node_phi,history_stride=1 if args.full_rate_history else 20)
         summary.append({'direction':name,'peak_top_relative_displacement_m':peaks['top_u_m'][0],
                         'time_peak_top_displacement_s':peaks['top_u_m'][1]*dt,
                         'peak_top_absolute_acceleration_m_s2':peaks['top_abs_acc_m_s2'][0],
                         'peak_base_elastic_shear_kN':peaks['base_elastic_shear_N'][0]/1000,
                         'peak_base_elastic_moment_kNm':peaks['base_elastic_moment_Nm'][0]/1000})
+        if args.full_rate_history:
+            full_histories[name]=history
+            history=history[::20]
         histories[name]=history;envelopes[name]=envelope
     with (out/'S08_158M_BEAM_PROXY_MODAL_20261102.csv').open('w',newline='') as h:
         w=csv.writer(h);w.writerow(['mode','frequency_Hz','period_s','effective_mass_fraction',
@@ -247,6 +272,47 @@ def main():
           'base_elastic_shear_N','base_elastic_moment_Nm'])
         for key,history in histories.items():
             for row in history:w.writerow([key,*row])
+    full_rate_meta=None
+    if args.full_rate_history:
+        full_name='S08_158M_BEAM_PROXY_HISTORY_0P005S_20261106.csv'
+        with (out/full_name).open('w',newline='') as h:
+            w=csv.writer(h);w.writerow(['direction','time_s','top_relative_u_m',
+                'top_absolute_acc_m_s2','base_elastic_shear_N','base_elastic_moment_Nm'])
+            for key in ('HNE','HNN'):
+                for row in full_histories[key]:w.writerow([key,*row])
+        comparisons=[]
+        for direction in ('HNE','HNN'):
+            rows=full_histories[direction]
+            if len(rows)!=len(t) or len(histories[direction])!=len(t[::20]):
+                raise ValueError('FULL_RATE_ROW_COUNT_MISMATCH')
+            if not np.allclose([r[0] for r in rows],t,rtol=0,atol=1e-8):
+                raise ValueError('FULL_RATE_ESM_TIME_GRID_MISMATCH')
+            if not all(rows[i*20]==r for i,r in enumerate(histories[direction])):
+                raise ValueError('LEGACY_20X_DECIMATION_MISMATCH')
+            original=next(x for x in summary if x['direction']==direction)
+            for key,col,scale in (
+                ('peak_top_relative_displacement_m',1,1.),
+                ('peak_top_absolute_acceleration_m_s2',2,1.),
+                ('peak_base_elastic_shear_kN',3,1000.),
+                ('peak_base_elastic_moment_kNm',4,1000.)):
+                measured=max(abs(row[col]) for row in rows)/scale
+                expected=original[key]
+                if not np.isclose(measured,expected,rtol=1e-11,atol=1e-10):
+                    raise ValueError('FULL_RATE_PEAK_MISMATCH_'+direction+'_'+key)
+                comparisons.append({'direction':direction,'qoi':key,
+                    'full_rate_peak_abs':float(measured),
+                    'original_integrator_peak_abs':float(expected),
+                    'absolute_residual':float(abs(measured-expected))})
+        full_rate_meta={
+            'file':full_name,'file_sha256':sha(out/full_name),
+            'legacy_file':'S08_158M_BEAM_PROXY_HISTORY_20261102.csv',
+            'legacy_file_sha256':sha(out/'S08_158M_BEAM_PROXY_HISTORY_20261102.csv'),
+            'n_rows':sum(len(v) for v in full_histories.values()),
+            'rows_per_direction':len(t),'dt_s':dt,'n_directions':len(full_histories),
+            'exact_20x_decimation_reproduces_legacy':True,
+            'eight_peak_integrator_checks':comparisons,
+            'admissible_for_S09_four_scenario_comparison':False,
+            'initial_state_sha256':None,'W_WE_histories_present':False}
     moment_rows=[];displacement_rows=[]
     for direction,envelope in envelopes.items():
         for i in range(len(section_z)):
@@ -309,6 +375,28 @@ def main():
       'failure_records':[],'stage':'S08 independent structural proxy only; BLOCKED for Abaqus native E',
       'HOLD':'no native Abaqus E, no PT/contact initial state, no RNA inertia, no site-matched design spectrum',
       'peak_summary':summary}
+    if full_rate_meta is not None:
+        receipt['full_rate_history']=full_rate_meta
+        sidecar={
+            'classification':'REAL_ESM_E_ONLY_NONPRODUCTION_BEAM_PROXY_0P005S_NOT_S09_PAIRED',
+            'SOURCE':receipt['SOURCE'],'REF':receipt['REF'],
+            'STANDARD':receipt['STANDARD'],'OFFICIAL':receipt['OFFICIAL'],
+            'RUN':'Full-rate Newmark beam-proxy history; no native structural solver',
+            'FIG':0,'TAB':full_rate_meta['file'],
+            'source_reading_level':receipt['source_reading_level'],
+            'source_tower_sha256':receipt['source_tower_sha256'],
+            'source_esm_sha256':receipt['source_esm_sha256'],
+            'code_sha256':receipt['code_sha256'],
+            'software':receipt['software'],
+            'assumptions':receipt['assumptions'],
+            'error_budget':receipt['error_budget']+
+                '; full-rate 8-QoI peaks vs integrator rtol=1e-11, atol=1e-10; physical model error unquantified',
+            'failure_records':[],
+            'full_rate_history':full_rate_meta,
+            'HOLD':'E-only linear beam proxy; no matching B/W/WE, no verified initial-state SHA, no native physics PASS',
+            'S08_PASS':False,'S09_PASS':False,'native_E_WE_RUN':0}
+        (out/'S08_158M_BEAM_PROXY_FULL_RATE_RECEIPT_20261106.json').write_text(
+            json.dumps(sidecar,ensure_ascii=False,indent=2)+'\n')
     (out/'S08_158M_BEAM_PROXY_RECEIPT_20261102.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n')
     print(json.dumps({'f1_Hz':f[0],'f2_Hz':f[1],'mass_kg':mass_est,
       'mesherr6':mesherr.max(),'modal_mass12':sum(eff),'peaks':summary},indent=2))
