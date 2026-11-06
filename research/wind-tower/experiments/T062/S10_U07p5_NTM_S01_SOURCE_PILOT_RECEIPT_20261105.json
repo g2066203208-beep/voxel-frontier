@@ -360,5 +360,84 @@
     "formal_dlc12_verified_slots": 0,
     "stages_passed": 0,
     "status": "SOURCE_LAYOUT_CONDITIONAL_NOT_RUN"
+  },
+  "lowwind_45_s01_aerodyn_manifest_inventory_20261106": {
+    "SOURCE": "Original static file-manifest.json, 7 shared Rotor blade/airfoil entries; raw AeroDyn ZIP parsing pending native CI",
+    "READING_LEVEL": "Direct manifest JSON entries, NOT newly re-read original ZIP member bytes",
+    "REF": "S07 original FST source module graph and original T062 18NTM source identity",
+    "STANDARD": "IEC 61400-1/6 2025 licensed clauses NOT READ",
+    "OFFICIAL": "Original repository archival manifest, not OpenFAST execution",
+    "RUN": "JS manifest exact-path enumeration; separate Python synthetic parser 1 positive/8 negative; native ZIP source audit pending",
+    "FIG": 0,
+    "TAB": "7 manifest entries (1 blade and 6 airfoils) plus two distinct AeroDyn card identities",
+    "manifest_registered_sha256": "c9da25b3a967c9ed3b3a859666263c6964d8480798185e6e031539c38e4c3302",
+    "manifest_git_blob_sha": "c965a5b0f65d6b0cf8b5d500bacbba86c1b04432",
+    "shared_aerodyn_card_sha256": "e258d2e8fc7664b93f3e6a792c46ec38bea327859f95c3b200391e9f2bb1a568",
+    "case_local_noninterchangeable_card_sha256": "7ebaa0bdf25076041a98ee25ae0577f2d02be61569092965e47be5f875bbcc6d",
+    "rows": [
+      {
+        "path": "CASES/Rotor/Airfoils/Cylinder_Aerodyn15.dat",
+        "bytes": 10987,
+        "registered_sha256": "2994cb5f79282170019be0a8c48b60155905365cac4ac88b21dda58c16f925cb",
+        "manifest_status": "included",
+        "canonical_archive": "research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip",
+        "canonical_member": "CASES/Rotor/Airfoils/Cylinder_Aerodyn15.dat"
+      },
+      {
+        "path": "CASES/Rotor/Airfoils/FFA_W3_241_AeroDyn15.dat",
+        "bytes": 12455,
+        "registered_sha256": "6c5aff68e1e4d52021867a7cda42616aafc8fdd08d52d6f92d2b7841714c69fd",
+        "manifest_status": "included",
+        "canonical_archive": "research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip",
+        "canonical_member": "CASES/Rotor/Airfoils/FFA_W3_241_AeroDyn15.dat"
+      },
+      {
+        "path": "CASES/Rotor/Airfoils/FFA_W3_301_AeroDyn15.dat",
+        "bytes": 12455,
+        "registered_sha256": "2a38e9062d278a55e7bbc8f879022bbb2696906a628ac57a896455146c798296",
+        "manifest_status": "included",
+        "canonical_archive": "research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip",
+        "canonical_member": "CASES/Rotor/Airfoils/FFA_W3_301_AeroDyn15.dat"
+      },
+      {
+        "path": "CASES/Rotor/Airfoils/FFA_W3_360_AeroDyn15.dat",
+        "bytes": 12455,
+        "registered_sha256": "d32e7c2ef4babab699126167e2108d92471fbead0a61aafb2ddd40fb662dbcb4",
+        "manifest_status": "included",
+        "canonical_archive": "research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip",
+        "canonical_member": "CASES/Rotor/Airfoils/FFA_W3_360_AeroDyn15.dat"
+      },
+      {
+        "path": "CASES/Rotor/Airfoils/FFA_W3_480_AeroDyn15.dat",
+        "bytes": 12456,
+        "registered_sha256": "a8933ac866dc3ec019d77a9c9b2a25fc45a8924f525807a0c36de0b727a3892d",
+        "manifest_status": "included",
+        "canonical_archive": "research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip",
+        "canonical_member": "CASES/Rotor/Airfoils/FFA_W3_480_AeroDyn15.dat"
+      },
+      {
+        "path": "CASES/Rotor/Airfoils/FFA_W3_600_AeroDyn15.dat",
+        "bytes": 6736,
+        "registered_sha256": "0f8603417eb31cfd5604aedf64e2e2a5c2994d7d14b94db2ec9fd250a6d5934f",
+        "manifest_status": "included",
+        "canonical_archive": "research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip",
+        "canonical_member": "CASES/Rotor/Airfoils/FFA_W3_600_AeroDyn15.dat"
+      },
+      {
+        "path": "CASES/Rotor/DTU_10MW_AeroDyn15_blade.dat",
+        "bytes": 2745,
+        "registered_sha256": "2e1597b858dab17c5bfd98d5963d0e00c2dc279f5107a5f21d4b2a48f8edb9fa",
+        "manifest_status": "included",
+        "canonical_archive": "research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip",
+        "canonical_member": "CASES/Rotor/DTU_10MW_AeroDyn15_blade.dat"
+      }
+    ],
+    "total_registered_bytes": 70289,
+    "error_budget": "Manifest path/count/bytes exact; archive member bytes and AeroDyn actual declared NumAFfiles NOT newly verified, physical error unestimated",
+    "HOLD": "Need original ZIP member parsing to establish actual AeroDyn references; original controller DLL and new 4.5m/s BTS/OUTB absent",
+    "status": "MANIFEST_INVENTORY_ONLY_PENDING_NATIVE_ZIP",
+    "physical_pass": false,
+    "formal_dlc12_verified_slots": 0,
+    "stages_passed": 0
   }
 }
