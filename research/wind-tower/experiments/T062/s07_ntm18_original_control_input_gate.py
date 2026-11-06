@@ -607,6 +607,116 @@ def build_module_graph(repo_root):
         source.close()
 
 
+
+# S07 source-only AeroDyn15 downstream blade/airfoil graph.
+# The original FST references CASES/Rotor/ (10088 bytes), NOT the
+# case-local 9774-byte AeroDyn card. Never conflate these variants.
+def aero_references(raw):
+    import posixpath
+    text = raw.decode("utf-8-sig", errors="strict")
+    declared = parse_key(text, "NumAFfiles")
+    require(not declared or re.fullmatch(r"[0-9]+", declared),
+            "AERO_INVALID_NUM_AFFILES")
+    refs = []
+    for lineno, line in enumerate(text.splitlines(), 1):
+        left = line.split("!", 1)[0].strip()
+        if not left:
+            continue
+        # OpenFAST may use quoted file values or unquoted standalone AF rows.
+        match = re.search(r"""(?:"([^"]+\\.dat)"|'([^']+\\.dat)'|(?<!\\S)([^\\s"'!]+\\.dat))(?=\\s|$)""", left, re.I)
+        if not match:
+            continue
+        token = next(v for v in match.groups() if v is not None)
+        token = token.replace("\\\\", "/")
+        require(not token.startswith("/") and not re.match(r"^[A-Za-z]:", token),
+                "AERO_ABSOLUTE_REFERENCE")
+        path = posixpath.normpath(posixpath.join("CASES/Rotor", token))
+        require(path.startswith("CASES/Rotor/") and ".." not in path.split("/"),
+                "AERO_PATH_ESCAPE")
+        role = "airfoil" if "/Airfoils/" in path else "blade"
+        refs.append({"line": lineno, "reference": token, "resolved": path, "role": role})
+    require(len(refs) == len({r["resolved"] for r in refs}),
+            "AERO_DUPLICATE_FILE_REFERENCE")
+    require(any(r["role"] == "blade" for r in refs), "AERO_BLADE_REFERENCE_MISSING")
+    require(any(r["role"] == "airfoil" for r in refs), "AERO_AIRFOIL_REFERENCE_MISSING")
+    if declared:
+        require(sum(r["role"] == "airfoil" for r in refs) == int(declared),
+                "AERO_AIRFOIL_DECLARED_COUNT_MISMATCH")
+    return refs, int(declared) if declared else None
+
+def aero_dependency_self_test():
+    good = (b'1 NumAFfiles\\n"DTU_10MW_AeroDyn15_blade.dat" ADBlFile(1)\\n'
+            b'"Airfoils/Cylinder_Aerodyn15.dat"\\n')
+    refs, declared = aero_references(good)
+    assert declared == 1 and len(refs) == 2
+    bad = [
+        good.replace(b'1 NumAFfiles', b'2 NumAFfiles'),
+        good.replace(b'Airfoils/Cylinder_Aerodyn15.dat', b'../outside.dat'),
+        good.replace(b'Airfoils/Cylinder_Aerodyn15.dat', b'/tmp/outside.dat'),
+        good.replace(b'Airfoils/Cylinder_Aerodyn15.dat', b'C:/outside.dat'),
+        good.replace(b'1 NumAFfiles', b'bad NumAFfiles'),
+        good + b'"Airfoils/Cylinder_Aerodyn15.dat"\\n',
+        good.replace(b'DTU_10MW_AeroDyn15_blade.dat', b'not_a_blade.txt'),
+        good.replace(b'Airfoils/Cylinder_Aerodyn15.dat', b'not_an_airfoil.txt'),
+    ]
+    for raw in bad:
+        try:
+            aero_references(raw)
+        except ValueError:
+            pass
+        else:
+            raise AssertionError("AERO_BAD_REFERENCE_ACCEPTED")
+    print("S07_AERODYN_DEPENDENCY_SELFTEST_PASS_1_POSITIVE_8_NEGATIVE_NO_SOLVER")
+
+def build_aero_dependency(repo_root):
+    base = repo_root / ROOT
+    static = read_pinned(base / "archive/local-assets-20261004/file-manifest.json", STATIC_SHA)
+    supp = read_pinned(base / "archive/local-assets-20261004-supplement/file-manifest.json", SUPPLEMENT_SHA)
+    source = Source(repo_root, {"static": manifest_index(static),
+                                "supplement": manifest_index(supp)})
+    try:
+        shared = "CASES/Rotor/DTU_10MW_RWT_AeroDyn15.dat"
+        case_local = "CASES/U09p343881_NTM_S01/Rotor/DTU_10MW_RWT_AeroDyn15.dat"
+        card, card_meta = source.get("static", "openfast-36-r2", shared)
+        other, other_meta = source.get("static", "openfast-36-r2", case_local)
+        require(sha(card) == "e258d2e8fc7664b93f3e6a792c46ec38bea327859f95c3b200391e9f2bb1a568",
+                "AERO_SHARED_FST_REFERENCED_CARD_SHA")
+        require(sha(other) == "7ebaa0bdf25076041a98ee25ae0577f2d02be61569092965e47be5f875bbcc6d",
+                "AERO_CASE_LOCAL_CARD_SHA")
+        require(sha(card) != sha(other), "AERO_DISTINCT_VARIANTS_COLLAPSED")
+        refs, declared = aero_references(card)
+        checked = []
+        for item in refs:
+            raw, entry = source.get("static", "openfast-36-r2", item["resolved"])
+            checked.append(dict(item, sha256=sha(raw), bytes=len(raw),
+                                canonical_member=entry["canonical_member"],
+                                archive=entry["canonical_archive"]))
+        return {
+            "SOURCE": "Original FST-selected shared CASES/Rotor AeroDyn15 card, downstream blade/airfoil original ZIP members, SHA-pinned manifest",
+            "READING_LEVEL": "Exact archived ZIP member bytes and per-file SHA256, not inferred from filenames alone",
+            "REF": "T062 original module graph; 12-stage S07 input identity gate",
+            "STANDARD": "IEC 61400-1/6:2025 licensed clauses not read; NOT formal DLC1.2",
+            "OFFICIAL": "Original historical OpenFAST AeroDyn15 input syntax; source-only, no executable validation",
+            "RUN": "Python3 standard-library source parser, negative tests and original SHA checks; no solver",
+            "FIG": 0, "TAB": "FST-selected AeroDyn15 card, blade and airfoil dependencies",
+            "input_sha256": {"static_manifest": STATIC_SHA, "supplement_manifest": SUPPLEMENT_SHA,
+                             "shared_aerodyn_card": sha(card), "case_local_alternative": sha(other)},
+            "fst_selected_shared_aerodyn": {"path": shared, "sha256": sha(card),
+                                             "bytes": len(card), "canonical_member": card_meta["canonical_member"]},
+            "noninterchangeable_case_local_aerodyn": {"path": case_local,
+                "sha256": sha(other), "bytes": len(other),
+                "canonical_member": other_meta["canonical_member"]},
+            "declared_NumAFfiles": declared, "references": checked,
+            "source_members_verified": source.read_count,
+            "assumptions": "The original FST ..\\\\Rotor reference resolves to shared CASES/Rotor; candidate staging paths remain NOT_RUN",
+            "error_budget": "Source bytes, hashes, counts and lexical relative paths exact; runtime file resolution, aero loads, controller DLL and physical errors NOT ESTIMATED",
+            "HOLD": "New 4.5m/s BTS/OUTB and original DLL absent; staged portable bundle and native OpenFAST not tested",
+            "status": "AERODYN_DEPENDENCY_SOURCE_ONLY_NOT_RUN",
+            "physical_pass": False, "formal_dlc12_verified_slots": 0, "stages_passed": 0
+        }
+    finally:
+        source.close()
+
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--repo-root", type=Path)
@@ -618,14 +728,22 @@ def main():
     p.add_argument("--discon-lowwind-source", type=Path)
     p.add_argument("--discon-lowwind-receipt", type=Path)
     p.add_argument("--module-graph-receipt", type=Path)
+    p.add_argument("--aero-dependency-receipt", type=Path)
     args = p.parse_args()
     if args.self_test:
         self_test()
         servo_startup_self_test()
         discon_lowwind_self_test()
         module_graph_self_test()
+        aero_dependency_self_test()
         if not args.repo_root and not args.servo_startup_source and not args.discon_lowwind_source:
             return
+    if args.aero_dependency_receipt:
+        record = build_aero_dependency(args.repo_root or Path("."))
+        args.aero_dependency_receipt.parent.mkdir(parents=True, exist_ok=True)
+        args.aero_dependency_receipt.write_text(json.dumps(record, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        print("S07_AERODYN_SOURCE_ONLY", json.dumps({"references": len(record["references"]), "verified": record["source_members_verified"], "declared_NumAFfiles": record["declared_NumAFfiles"]}, sort_keys=True))
+        return
     if args.module_graph_receipt:
         record = build_module_graph(args.repo_root or Path('.'))
         args.module_graph_receipt.parent.mkdir(parents=True, exist_ok=True)
