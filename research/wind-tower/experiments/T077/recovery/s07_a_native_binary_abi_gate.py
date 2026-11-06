@@ -4,6 +4,8 @@ import argparse
 import hashlib
 import json
 import struct
+import sys
+import os
 import tempfile
 from pathlib import Path
 
@@ -104,6 +106,57 @@ def audit(receipt, exe, dll):
             'HOLD': 'No native initialization/version/banner/controller runtime ABI or 31-station OUTB'}
 
 
+
+def native_reference_dll_load(dll):
+    """Windows LoadLibrary + GetProcAddress only; NEVER call DISCON or OpenFAST.
+
+    This checks the SHA-locked *reference* DLL, not the missing historical DLL.
+    A successful OS load does not establish the controller calling convention,
+    historical equivalence, or turbine physics.
+    """
+    dll = Path(dll)
+    if (not dll.is_file() or dll.stat().st_size != 1122431 or
+            digest(dll) != EXPECTED['dll']):
+        raise ValueError('REFERENCE_DLL_REAL_BYTES_SHA_OR_SIZE_MISMATCH')
+    pe = pe_info(dll.read_bytes())
+    if not pe['discon_export'] or pe['machine'] != 'AMD64':
+        raise ValueError('REFERENCE_DLL_STATIC_PE_OR_EXPORT_INVALID')
+    if sys.platform != 'win32' or sys.maxsize <= 2**32:
+        raise ValueError('WINDOWS_AMD64_NATIVE_LOADER_REQUIRED')
+    import ctypes
+    result = {
+        'SOURCE': {'reference_dll_sha256': EXPECTED['dll'],
+                   'reference_dll_bytes': 1122431},
+        'READING_LEVEL': 'REAL_WINDOWS_OS_LOADER_REFERENCE_DLL_ONLY',
+        'REF': 'T077 S07_A_NATIVE_BINARY_ABI_RECEIPT.json and A-case RUN card',
+        'STANDARD': 'NOT_READ',
+        'OFFICIAL': 'Windows OS LoadLibrary/GetProcAddress; not original DLL certification',
+        'RUN': {'openfast': 0, 'discon_calls': 0, 'abaqus': 0,
+                'type': 'Windows reference DLL load-only, NO SOLVER'},
+        'FIG': 0,
+        'TAB': {'pe': pe, 'loader': 'ctypes.WinDLL', 'export': 'DISCON'},
+        'HOLD': 'Historical 36-case DLL absent; DISCON calling ABI and OpenFAST initialization NOT tested',
+        'physical_pass': False, 'stages_passed': 0,
+    }
+    try:
+        # Explicit DLL search scope; no calls into exported DISCON function.
+        with os.add_dll_directory(str(dll.resolve().parent)):
+            handle = ctypes.WinDLL(str(dll.resolve()))
+            symbol = getattr(handle, 'DISCON')
+            address = ctypes.cast(symbol, ctypes.c_void_p).value
+        if not address:
+            raise OSError('DISCON resolved to null address')
+        result['status'] = 'PASS_REFERENCE_DLL_WINDOWS_LOAD_AND_EXPORT_ONLY'
+        result['TAB']['symbol_address_nonzero'] = True
+    except (OSError, AttributeError) as exc:
+        result['status'] = 'HOLD_WINDOWS_REFERENCE_DLL_LOAD_OR_EXPORT'
+        result['TAB']['symbol_address_nonzero'] = False
+        result['failure'] = {'type': type(exc).__name__,
+                             'winerror': getattr(exc, 'winerror', None),
+                             'message': str(exc)}
+    return result
+
+
 def synthetic_pe(export='DISCON', machine=0x8664):
     b = bytearray(1024)
     b[:2] = b'MZ'
@@ -138,12 +191,22 @@ def selftest():
         file = Path(tmp)/'test.dll'
         file.write_bytes(synthetic_pe())
         assert len(digest(file)) == 64
+    with tempfile.TemporaryDirectory() as tmp:
+        bad = Path(tmp)/'tampered_reference.dll'
+        bad.write_bytes(synthetic_pe())
+        try:
+            native_reference_dll_load(bad)
+        except ValueError as exc:
+            assert str(exc) == 'REFERENCE_DLL_REAL_BYTES_SHA_OR_SIZE_MISMATCH'
+        else:
+            raise AssertionError('tampered native DLL source accepted')
     print('S07_NATIVE_BINARY_PE_SYNTHETIC_PASS: export, missing export, x86 reject, bad MZ, truncated sections, sha')
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--selftest', action='store_true')
+    ap.add_argument('--native-load-only', action='store_true', help='Windows LoadLibrary only; NEVER invoke DISCON or OpenFAST')
     ap.add_argument('--receipt', type=Path)
     ap.add_argument('--exe', type=Path)
     ap.add_argument('--dll', type=Path)
@@ -151,7 +214,17 @@ def main():
     a = ap.parse_args()
     if a.selftest:
         selftest()
-    if a.receipt:
+    if a.native_load_only:
+        if a.receipt or a.exe or not a.dll:
+            ap.error('--native-load-only requires only --dll (and optional --output)')
+        result = native_reference_dll_load(a.dll)
+        raw = json.dumps(result, sort_keys=True, indent=2)+'\\n'
+        if a.output:
+            if a.output.exists():
+                raise ValueError('OUTPUT_OVERWRITE_FORBIDDEN')
+            a.output.write_text(raw, encoding='utf-8')
+        print('S07_WINDOWS_REFERENCE_DLL_LOAD_ONLY='+raw)
+    elif a.receipt:
         if not a.exe or not a.dll:
             ap.error('--receipt requires --exe and --dll')
         result = audit(json.loads(a.receipt.read_text(encoding='utf-8')), a.exe, a.dll)
@@ -162,7 +235,7 @@ def main():
             a.output.write_text(raw, encoding='utf-8')
         print('S07_NATIVE_BINARY_STATIC_GATE_PASS='+raw)
     elif not a.selftest:
-        ap.error('specify --selftest or --receipt')
+        ap.error('specify --selftest, --receipt, or --native-load-only')
 
 
 if __name__ == '__main__':
