@@ -102,6 +102,30 @@ jobs:
                        for x in result['fst_modules']]},sort_keys=True))
           PY
           sha256sum /tmp/s07_module_graph.json
+      - name: Inspect original AeroDyn15 blade and airfoil dependencies (SOURCE ONLY)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/wind-tower/experiments/T062/s07_ntm18_original_control_input_gate.py \
+            --self-test --repo-root . --aero-dependency-receipt /tmp/s07_aero_dependency.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('research/wind-tower/experiments/T062/S10_U07p5_NTM_S01_SOURCE_PILOT_RECEIPT_20261105.json')
+          existing=json.loads(p.read_text(encoding='utf-8'))
+          result=json.loads(Path('/tmp/s07_aero_dependency.json').read_text(encoding='utf-8'))
+          assert result['input_sha256']['shared_aerodyn_card']=='e258d2e8fc7664b93f3e6a792c46ec38bea327859f95c3b200391e9f2bb1a568'
+          assert result['input_sha256']['case_local_alternative']=='7ebaa0bdf25076041a98ee25ae0577f2d02be61569092965e47be5f875bbcc6d'
+          assert len(result['references'])>=2
+          assert not result['physical_pass'] and result['formal_dlc12_verified_slots']==0
+          existing['lowwind_45_s01_aerodyn_downstream_graph_20261106']=result
+          p.write_text(json.dumps(existing,ensure_ascii=False,indent=2)+'\\n',encoding='utf-8')
+          print('S07_AERODYN_ORIGINAL_DEPENDENCIES',json.dumps({
+            'declared':result['declared_NumAFfiles'],
+            'members':result['source_members_verified'],
+            'references':result['references']},sort_keys=True))
+          PY
+          sha256sum /tmp/s07_aero_dependency.json
       - name: Rebind exact original InflowWind 4.5 S01 (SOURCE ONLY; NOT RUN)
         shell: bash
         run: |
@@ -139,5 +163,6 @@ jobs:
             original_servo_startup_receipt.json
             original_discon_lowwind_receipt.json
             /tmp/s07_module_graph.json
+            /tmp/s07_aero_dependency.json
             research/wind-tower/experiments/T062/S07_U04p5_NTM_S01_InflowWind_NOT_RUN.dat
           retention-days: 7
