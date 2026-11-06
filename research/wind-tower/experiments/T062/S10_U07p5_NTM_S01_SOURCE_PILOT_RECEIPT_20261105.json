@@ -811,5 +811,61 @@
       "other_concurrent_workflow": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/42167242021",
       "persisted_result": "RECONSTRUCTED_FROM_EXISTING_15_ROW_RECEIPT_PLUS_NATIVE_CI_VERIFIED_DISCON_TABLE_AND_MANIFEST; not byte-identical to CI JSON"
     }
+  },
+  "lowwind_45_s01_reference_dll_abi_crosswalk_20261106": {
+    "SOURCE": "T077 existing original A-case ABI/assembly receipts and T062 existing 4.5 S01 source receipt",
+    "READING_LEVEL": "prior real-byte PE source gate (T077) + direct receipt crosswalk; no historical DLL bytes",
+    "REF": "T077/recovery/s07_a_native_binary_abi_gate.py and S07_A_NATIVE_BINARY_ABI_RECEIPT.json",
+    "STANDARD": "IEC/GB2025 authorized clauses NOT READ",
+    "OFFICIAL": "Windows PE export/architecture source evidence, not controller runtime certification",
+    "RUN": "Python3 stdlib JSON crosswalk and negative tests; no solver",
+    "FIG": 0,
+    "TAB": "one SHA-locked reference DLL across T077 and T062; two unresolved runtime files",
+    "reference_dll_sha256": "7aebb0d2166c0cc095d11c2b7bc13da136547c557b0f331dcdce84fe181802aa",
+    "reference_pe": {
+      "discon_case_variants": [
+        "DISCON"
+      ],
+      "discon_export": true,
+      "export_count": 1,
+      "machine": "AMD64",
+      "optional_header": "PE32+",
+      "sections": 19
+    },
+    "reference_dll_bytes": 1122431,
+    "historical_dll_bytes_verified": 0,
+    "historical_runtime_equivalence_verified": false,
+    "abi_runtime_verified": false,
+    "candidate_case": "U04p5_NTM_S01",
+    "candidate_dll_status": "REFERENCE_AVAILABLE_NOT_HISTORICAL",
+    "ERROR_BUDGET": "receipt fields and SHA exact; runtime ABI/controller equivalence/physical response NEED_ESTIMATE",
+    "HOLD": "original 36-case DLL excluded from archived ZIP; new 4.5 S01 BTS absent",
+    "status": "EXISTING_T077_REFERENCE_ABI_REUSED_NOT_RUN",
+    "physical_pass": false,
+    "formal_dlc12_verified_slots": 0,
+    "stages_passed": 0,
+    "native_ci": {
+      "crosswalk_run": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/42173380127",
+      "crosswalk_result": "completed/success",
+      "job_id": 127746153687,
+      "crosswalk_original_json_sha256": "52d9cfa6e436b50e3989735b528004d4758a933a577d980e51ff4d929fc9c35f",
+      "artifact_id": 13481799263,
+      "tests": "1 positive + 5 negative",
+      "prior_direct_reference_byte_pe_run": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/42173104098",
+      "prior_direct_reference_json_sha256": "47d145dd7b3ace97b3b7dfa5701bf6f48815a77302a286b1f32bc639fa40f2ee",
+      "prior_reference_pe_check": "completed/success, independent confirmation of already-existing T077 evidence",
+      "other_source_run": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/42173380252",
+      "other_source_result": "completed/success",
+      "prior_failed_crosswalk_run": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/42173320873",
+      "prior_failure": "JSONDecodeError caused by literal backslash-n in initial receipt writer; corrected",
+      "prior_bad_escape_run": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/42173068522",
+      "bot_conflict_recovery_commit": "cf57310180357b480c31fc5859500d64b5c2a2be"
+    },
+    "source_program": {
+      "existing_T077_parser": "research/wind-tower/experiments/T077/recovery/s07_a_native_binary_abi_gate.py",
+      "crosswalk_program": "research/wind-tower/experiments/T062/s07_ntm18_original_control_input_gate.py",
+      "input_version_commit": "cf57310180357b480c31fc5859500d64b5c2a2be",
+      "T062_program_git_blob_sha1": "e975984ed5d00a66da8318a5c0e3015b4497db2e"
+    }
   }
 }
