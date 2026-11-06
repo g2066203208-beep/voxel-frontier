@@ -467,7 +467,7 @@ def module_graph_source_lookup(source, member):
     # archive alias; never silently select another wind-speed or seed.
     import posixpath
     cases = ("CASES/U09p343881_NTM_S01/", "CASES/U09p343881_ETM_S01/")
-    normalized = member.strip().strip('"').strip("'").replace("\\\\", "/")
+    normalized = member.strip().strip('"').strip("'").replace("\\", "/")
     if (not normalized or normalized.startswith("/") or
             re.match(r"^[A-Za-z]:", normalized)):
         return {"status": "UNRESOLVED_EXTERNAL_OR_TRAVERSAL_REFERENCE",
