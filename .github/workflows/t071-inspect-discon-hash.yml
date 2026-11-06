@@ -119,7 +119,7 @@ jobs:
           assert len(result['references'])>=2
           assert not result['physical_pass'] and result['formal_dlc12_verified_slots']==0
           existing['lowwind_45_s01_aerodyn_downstream_graph_20261106']=result
-          p.write_text(json.dumps(existing,ensure_ascii=False,indent=2)+'\\n',encoding='utf-8')
+          p.write_text(json.dumps(existing,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
           print('S07_AERODYN_ORIGINAL_DEPENDENCIES',json.dumps({
             'declared':result['declared_NumAFfiles'],
             'members':result['source_members_verified'],
