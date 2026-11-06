@@ -832,6 +832,148 @@ def build_aero_dependency(repo_root, candidate_out=None):
     finally:
         source.close()
 
+
+# S07 portable source package (source-only; no binary packaging or solver).
+def s07_portable_resolve(parent, token):
+    import posixpath
+    require(isinstance(token, str) and token and "\\x00" not in token,
+            "S07_PORTABLE_EMPTY_OR_NUL")
+    normalized = token.strip().strip('"').strip("'").replace("\\\\", "/").replace("\\", "/")
+    require(normalized and not normalized.startswith("/") and
+            not re.match(r"^[A-Za-z]:", normalized),
+            "S07_PORTABLE_ABSOLUTE")
+    result = posixpath.normpath(posixpath.join(parent, normalized))
+    require(result.startswith("CASES/") and
+            result != "CASES" and not result.startswith("CASES/../"),
+            "S07_PORTABLE_ESCAPE")
+    return result
+
+
+def s07_portable_package_self_test():
+    case = "CASES/U04p5_NTM_S01"
+    assert s07_portable_resolve(case, "Control\\\\DTU_10MW_RWT_ServoDyn.dat") == case + "/Control/DTU_10MW_RWT_ServoDyn.dat"
+    assert s07_portable_resolve(case, "..\\\\Rotor\\\\DTU_10MW_RWT_AeroDyn15.dat") == "CASES/Rotor/DTU_10MW_RWT_AeroDyn15.dat"
+    assert s07_portable_resolve(case, "inputs/U04p5_NTM_S01.bts") == case + "/inputs/U04p5_NTM_S01.bts"
+    rejected = ("", "/tmp/evil", "C:\\\\evil.dat", "../../../evil", "../..", "\\x00", "/etc/passwd")
+    for token in rejected:
+        try:
+            s07_portable_resolve(case, token)
+        except ValueError:
+            pass
+        else:
+            raise AssertionError("S07_PORTABLE_BAD_PATH_ACCEPTED:" + repr(token))
+    print("S07_PORTABLE_LAYOUT_SELFTEST_PASS_3_POSITIVE_7_NEGATIVE_NOT_RUN")
+
+
+def build_s07_portable_package(repo_root):
+    """Stage plan, not a runnable package. Re-read exact archive members and
+    both committed candidates; unresolved runtime/binary paths remain HOLD."""
+    base = repo_root / ROOT
+    static = read_pinned(base / "archive/local-assets-20261004/file-manifest.json", STATIC_SHA)
+    supp = read_pinned(base / "archive/local-assets-20261004-supplement/file-manifest.json", SUPPLEMENT_SHA)
+    source = Source(repo_root, {"static": manifest_index(static),
+                                "supplement": manifest_index(supp)})
+    case = "CASES/U04p5_NTM_S01"
+    old = "CASES/U09p343881_NTM_S01"
+    rows = []
+    def add(dest, raw, origin, role, status="ARCHIVED_SOURCE_SHA_VERIFIED"):
+        require(dest.startswith("CASES/") and dest not in {r["staged_path"] for r in rows},
+                "S07_PORTABLE_DUPLICATE_OR_UNSAFE_DEST:" + dest)
+        rows.append({"staged_path": dest, "role": role, "status": status,
+                     "source": origin, "sha256": sha(raw), "bytes": len(raw)})
+    def from_archive(dest, original, role, manifest="static"):
+        raw, record = source.get(manifest, "openfast-36-r2", original)
+        add(dest, raw, {"archive": record["canonical_archive"],
+                        "member": record["canonical_member"],
+                        "logical": original}, role)
+        return raw
+    try:
+        fst = from_archive(case + "/DTU_10MW_RWT.fst",
+                           old + "/DTU_10MW_RWT.fst", "FST_original_unchanged")
+        require(sha(fst) == "5307e04d27721095ce6cbb6c125b8be1b4be71790af6c6258e3187343f5db605",
+                "S07_PORTABLE_FST_SHA")
+        keys = ("CompElast", "EDFile", "CompInflow", "InflowFile",
+                "CompAero", "AeroFile", "CompServo", "ServoFile")
+        fields = parse_keys(fst, keys)
+        require([fields[k] for k in ("CompElast", "CompInflow", "CompAero", "CompServo")] == ["1", "1", "2", "1"],
+                "S07_PORTABLE_ACTIVE_MODULE_FLAGS")
+        dest = {key: s07_portable_resolve(case, fields[key])
+                for key in ("EDFile", "InflowFile", "AeroFile", "ServoFile")}
+        ed = from_archive(dest["EDFile"], old + "/" + fields["EDFile"].replace("\\", "/"),
+                          "ElastoDyn_original")
+        inflow_path = base / "experiments/T062/S07_U04p5_NTM_S01_InflowWind_NOT_RUN.dat"
+        inflow = read_pinned(inflow_path, "2ee0f78812f675448967a4bbf6d536310d995f5c219a45cf8e4cc488d675ad55")
+        add(dest["InflowFile"], inflow, {"repository_file": str(inflow_path.relative_to(repo_root))},
+            "InflowWind_candidate", "SOURCE_ONLY_CANDIDATE_NOT_RUN")
+        aero_path = base / "experiments/T062/S07_SHARED_AERODYN15_PORTABLE_NOT_RUN.dat"
+        aero = read_pinned(aero_path, "a2e50140ee04759e9034fc1a51977d7f16c09e25f7c42559dc03ac92d2b2e10f")
+        add(dest["AeroFile"], aero, {"repository_file": str(aero_path.relative_to(repo_root))},
+            "AeroDyn15_portable_candidate", "SOURCE_ONLY_CANDIDATE_NOT_RUN")
+        servo = from_archive(dest["ServoFile"],
+                             old + "/" + fields["ServoFile"].replace("\\", "/"),
+                             "ServoDyn_original")
+        control_dir = case + "/Control"
+        sf = parse_keys(servo, ("DLL_FileName", "DLL_InFile", "DLL_ProcName",
+                                "PCMode", "VSContrl"))
+        require(sf["PCMode"] == sf["VSContrl"] == "5" and sf["DLL_ProcName"] == "DISCON",
+                "S07_PORTABLE_SERVO_CONTROLLER_ID")
+        discon_dest = s07_portable_resolve(control_dir, sf["DLL_InFile"])
+        discon = from_archive(discon_dest,
+                              old + "/Control/" + sf["DLL_InFile"].replace("\\", "/"),
+                              "DISCON_original", "supplement")
+        require(sha(discon) == "8f5d7546420ee34838e66b63e4b26d64460be5d5492f99c60b6d1ef977ffc61a",
+                "S07_PORTABLE_DISCON_SHA")
+        # ElastoDyn references are an independent downstream dependency.
+        ed_refs = parse_keys(ed, ("TwrFile", "BldFile(1)", "BldFile(2)", "BldFile(3)"))
+        require(ed_refs["TwrFile"] and ed_refs["BldFile(1)"],
+                "S07_PORTABLE_ED_DOWNSTREAM_MISSING")
+        for key in ("TwrFile", "BldFile(1)", "BldFile(2)", "BldFile(3)"):
+            token = ed_refs[key] or ed_refs["BldFile(1)"]
+            resolved = s07_portable_resolve(case, token)
+            if resolved in {r["staged_path"] for r in rows}:
+                continue
+            original = resolved.replace(case + "/", old + "/", 1) if resolved.startswith(case + "/") else resolved
+            from_archive(resolved, original, "ElastoDyn_" + key)
+        aero_refs, n_airfoil = aero_references(aero)
+        require(n_airfoil == 6 and len(aero_refs) == 9,
+                "S07_PORTABLE_AERO_REFERENCE_COUNT")
+        for item in aero_refs:
+            resolved = item["resolved"]
+            if resolved not in {r["staged_path"] for r in rows}:
+                from_archive(resolved, resolved, "AeroDyn_" + item["role"])
+        bts = s07_portable_resolve(case, parse_keys(inflow, ("FileName_BTS",))["FileName_BTS"])
+        require(bts == case + "/inputs/U04p5_NTM_S01.bts",
+                "S07_PORTABLE_BTS_LAYOUT")
+        dll = s07_portable_resolve(control_dir, sf["DLL_FileName"])
+        missing = [
+            {"staged_path": bts, "role": "new_TurbSim_BTS", "status": "NOT_GENERATED", "sha256": None},
+            {"staged_path": dll, "role": "historical_controller_binary", "status": "NOT_ARCHIVED", "sha256": None},
+        ]
+        return {
+            "SOURCE": "Original historical FST/ElastoDyn/ServoDyn/DISCON and rotor archive members; committed exact-byte candidate cards",
+            "READING_LEVEL": "Direct SHA-checked original ZIP members and committed candidate bytes, no executable test",
+            "REF": "Existing T062 S07 module, AeroDyn and InflowWind source gates",
+            "STANDARD": "IEC 61400-1/6 2025 licensed clauses NOT READ; not DLC1.2 acceptance",
+            "OFFICIAL": "Original OpenFAST input syntax, not certified runtime behavior",
+            "RUN": "Python3 stdlib SHA/source and lexical path checks, 3 positive/7 negative; no OpenFAST/TurbSim/Abaqus solver",
+            "FIG": 0, "TAB": "staged source file and missing dependency rows",
+            "input_sha256": {"static_manifest": STATIC_SHA, "supplement_manifest": SUPPLEMENT_SHA,
+                             "original_fst": sha(fst), "original_elastodyn": sha(ed),
+                             "original_servo": sha(servo), "original_discon": sha(discon),
+                             "candidate_inflow": sha(inflow), "candidate_aerodyn": sha(aero)},
+            "staged_case": case, "files": rows, "missing_files": missing,
+            "elastodyn_references": ed_refs, "fst_references": fields,
+            "controller_references": sf, "aero_unique_references": sorted({x["resolved"] for x in aero_refs}),
+            "assumptions": "FST is unchanged from original 9.343881 m/s case; module/ElastoDyn paths resolved lexically with proposed CASES sibling Rotor; no runtime path semantics proven",
+            "error_budget": "Archive/candidate bytes and SHA exact; lexical path exact for declared layout; DLL ABI, BTS data, runtime, aerodynamic/structural error NEED_ESTIMATE",
+            "HOLD": "Controller binary not archived, new BTS/OUTB absent, controller operational state and IEC2025/DLC1.2 unverified",
+            "status": "SOURCE_ONLY_STATIC_PACKAGE_MANIFEST_NOT_RUN",
+            "physical_pass": False, "formal_dlc12_verified_slots": 0, "stages_passed": 0
+        }
+    finally:
+        source.close()
+
+
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--repo-root", type=Path)
@@ -845,6 +987,7 @@ def main():
     p.add_argument("--module-graph-receipt", type=Path)
     p.add_argument("--aero-dependency-receipt", type=Path)
     p.add_argument("--aero-portable-candidate", type=Path)
+    p.add_argument("--portable-package-receipt", type=Path)
     args = p.parse_args()
     if args.self_test:
         self_test()
@@ -852,8 +995,15 @@ def main():
         discon_lowwind_self_test()
         module_graph_self_test()
         aero_dependency_self_test()
+        s07_portable_package_self_test()
         if not args.repo_root and not args.servo_startup_source and not args.discon_lowwind_source:
             return
+    if args.portable_package_receipt:
+        record = build_s07_portable_package(args.repo_root or Path('.'))
+        args.portable_package_receipt.parent.mkdir(parents=True, exist_ok=True)
+        args.portable_package_receipt.write_text(json.dumps(record, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
+        print('S07_PORTABLE_PACKAGE_SOURCE_ONLY', json.dumps({'source_files': len(record['files']), 'missing': len(record['missing_files']), 'status': record['status']}, sort_keys=True))
+        return
     if args.aero_dependency_receipt:
         record = build_aero_dependency(args.repo_root or Path("."), args.aero_portable_candidate)
         args.aero_dependency_receipt.parent.mkdir(parents=True, exist_ok=True)
