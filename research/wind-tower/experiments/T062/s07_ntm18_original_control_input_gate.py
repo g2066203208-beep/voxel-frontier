@@ -450,6 +450,145 @@ def discon_lowwind_self_test():
             raise AssertionError("DISCON_LOW_WIND_BAD_SOURCE_ACCEPTED")
     print("S07_ORIGINAL_DISCON_LOWWIND_SELFTEST_PASS: 1 positive, 9 negative")
 
+
+# S07: source-only FST module graph and ServoDyn -> DISCON -> DLL identity.
+# Reuses the original SHA-pinned manifests and archive Source.get(); no solver.
+def module_graph_safe_reference(value):
+    from pathlib import PurePosixPath
+    value = value.strip().strip('"').strip("'").replace("\\", "/")
+    require(value and not value.startswith("/") and not re.match(r"^[A-Za-z]:", value),
+            "MODULE_ABSOLUTE_OR_EMPTY_REFERENCE")
+    parts = PurePosixPath(value).parts
+    require(all(x not in ("..", "") for x in parts), "MODULE_PATH_TRAVERSAL")
+    return value
+
+def module_graph_source_lookup(source, member):
+    # Preserve original case identity, then the SHA-identical canonical ETM
+    # archive alias; never silently select another wind-speed or seed.
+    import posixpath
+    name = module_graph_safe_reference(member)
+    cases = ("CASES/U09p343881_NTM_S01/", "CASES/U09p343881_ETM_S01/")
+    candidates = []
+    for case in cases:
+        for rel in (name, "Control/" + name):
+            full = posixpath.normpath(case + rel)
+            if full not in candidates:
+                candidates.append(full)
+    found = []
+    for manifest in ("static", "supplement"):
+        idx = source.indexes[manifest]
+        for full in candidates:
+            row = idx.get(("openfast-36-r2", full))
+            if row and row.get("status") in ("included", "duplicate-reference"):
+                found.append((manifest, full, row))
+    if not found:
+        return {"status": "MISSING_ARCHIVED_MEMBER", "reference": member,
+                "tried": candidates}
+    hashes = {r["sha256"].lower() for _, _, r in found}
+    require(len(hashes) == 1, "MODULE_AMBIGUOUS_DIFFERENT_HASHES:" + name)
+    manifest, full, row = found[0]
+    raw, verified = source.get(manifest, "openfast-36-r2", full)
+    return {"status": "ARCHIVED_SOURCE_SHA_VERIFIED",
+            "reference": member, "logical_member": full,
+            "canonical_member": verified["canonical_member"],
+            "archive": verified["canonical_archive"],
+            "sha256": sha(raw), "bytes": len(raw),
+            "manifest": manifest, "_raw": raw}
+
+def module_graph_self_test():
+    assert module_graph_safe_reference("Control/DISCON.IN") == "Control/DISCON.IN"
+    rejected = ("", "/etc/passwd", "../bad.dat", "Control/../bad.dat",
+                "C:\\\\Users\\bad.dat", "C:/Users/bad.dat")
+    for value in rejected:
+        try: module_graph_safe_reference(value)
+        except ValueError: pass
+        else: raise AssertionError("MODULE_GRAPH_UNSAFE_PATH_ACCEPTED:" + value)
+    raw = b'1 CompServo\n"Control/Srv.dat" ServoFile\n'
+    assert parse_keys(raw, ("CompServo", "ServoFile"))["ServoFile"] == "Control/Srv.dat"
+    try: parse_keys(raw + b'"Other.dat" ServoFile\n', ("ServoFile",))
+    except ValueError: pass
+    else: raise AssertionError("MODULE_GRAPH_DUPLICATE_KEY_ACCEPTED")
+    print("S07_MODULE_GRAPH_SELFTEST_PASS_1_POSITIVE_7_NEGATIVE_NO_SOLVER")
+
+def build_module_graph(repo_root):
+    base = repo_root / ROOT
+    static = read_pinned(base / "archive/local-assets-20261004/file-manifest.json", STATIC_SHA)
+    supp = read_pinned(base / "archive/local-assets-20261004-supplement/file-manifest.json", SUPPLEMENT_SHA)
+    source = Source(repo_root, {"static": manifest_index(static),
+                                "supplement": manifest_index(supp)})
+    try:
+        fst, fst_entry = source.get("static", "openfast-36-r2",
+                                  "CASES/U09p343881_NTM_S01/DTU_10MW_RWT.fst")
+        require(sha(fst) == "5307e04d27721095ce6cbb6c125b8be1b4be71790af6c6258e3187343f5db605",
+                "MODULE_GRAPH_ORIGINAL_FST_SHA")
+        flag_to_field = (("CompElast", "EDFile"), ("CompInflow", "InflowFile"),
+                         ("CompAero", "AeroFile"), ("CompServo", "ServoFile"),
+                         ("CompHydro", "HydroFile"), ("CompSub", "SubFile"),
+                         ("CompMooring", "MooringFile"), ("CompIce", "IceFile"))
+        fst_keys = tuple(k for pair in flag_to_field for k in pair)
+        fields = parse_keys(fst, fst_keys)
+        graph = []
+        for flag, field in flag_to_field:
+            active = fields[flag] not in ("", "0", "False", "false")
+            ref = fields[field]
+            row = {"flag": flag, "flag_value": fields[flag],
+                   "file_field": field, "reference": ref, "active": active}
+            if active:
+                row["source"] = (module_graph_source_lookup(source, ref)
+                                 if ref else {"status": "MISSING_FST_FILE_FIELD"})
+            else:
+                row["source"] = {"status": "INACTIVE_OR_NOT_PRESENT"}
+            graph.append(row)
+        servo_row = next(x for x in graph if x["file_field"] == "ServoFile")
+        servo_source = servo_row["source"]
+        require(servo_source.get("sha256") == ORIGINAL_SERVO_SHA,
+                "MODULE_GRAPH_ORIGINAL_SERVO_SHA")
+        servo_raw = servo_source.pop("_raw")
+        servo = parse_keys(servo_raw, ("DLL_FileName", "DLL_InFile",
+                                       "PCMode", "VSContrl", "DLL_ProcName"))
+        discon = module_graph_source_lookup(source, servo["DLL_InFile"])
+        require(discon.get("sha256") ==
+                "8f5d7546420ee34838e66b63e4b26d64460be5d5492f99c60a",
+                "MODULE_GRAPH_ORIGINAL_DISCON_SHA")
+        discon.pop("_raw")
+        dll = module_graph_source_lookup(source, servo["DLL_FileName"])
+        dll.pop("_raw", None)
+        # Excluded original DLL cannot be verified from a separate reference DLL.
+        for row in graph:
+            row["source"].pop("_raw", None)
+        verified = sum(x["source"]["status"] == "ARCHIVED_SOURCE_SHA_VERIFIED"
+                       for x in graph if x["active"])
+        unresolved = [x["file_field"] for x in graph if x["active"] and
+                      x["source"]["status"] != "ARCHIVED_SOURCE_SHA_VERIFIED"]
+        return {
+            "SOURCE": "Original SHA-locked FST, ServoDyn and DISCON archive members; static and supplement manifests",
+            "READING_LEVEL": "Original ZIP member bytes re-read for archived sources; original DLL may be excluded; no executable runtime",
+            "REF": "Existing T062 18NTM source identity and controller-source audits",
+            "STANDARD": "IEC/GB 2025 licensed clauses NOT READ; not DLC1.2 acceptance",
+            "OFFICIAL": "Historical OpenFAST v3.3-era input cards; source-level graph only",
+            "RUN": "Python3 stdlib original ZIP/manifest SHA and field audit, no solver",
+            "FIG": 0, "TAB": "FST active module graph and ServoDyn-DISCON-DLL crosswalk",
+            "input_sha256": {"static_manifest": STATIC_SHA,
+                             "supplement_manifest": SUPPLEMENT_SHA,
+                             "original_fst": sha(fst),
+                             "original_servo": sha(servo_raw),
+                             "original_discon": discon["sha256"]},
+            "original_fst_canonical_member": fst_entry["canonical_member"],
+            "fst_modules": graph, "servo_controller_fields": servo,
+            "discon_source": discon, "dll_source": dll,
+            "active_module_source_verified": verified,
+            "unresolved_active_modules": unresolved,
+            "assumptions": "Archived original 9.343881m/s S01 module cards are reference only; proposed 4.5m/s staged case not assembled",
+            "error_budget": "SHA/bytes exact for archived members; runtime paths, DLL ABI, wind/structural errors NEED_ESTIMATE",
+            "HOLD": "New BTS/OUTB absent, DLL binary/runtime identity and controller state not proven, all module runtime paths untested",
+            "status": "SOURCE_MODULE_GRAPH_ONLY_NOT_RUN",
+            "physical_pass": False, "formal_dlc12_verified_slots": 0,
+            "stages_passed": 0
+        }
+    finally:
+        source.close()
+
+
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--repo-root", type=Path)
@@ -460,13 +599,21 @@ def main():
     p.add_argument("--servo-startup-receipt", type=Path)
     p.add_argument("--discon-lowwind-source", type=Path)
     p.add_argument("--discon-lowwind-receipt", type=Path)
+    p.add_argument("--module-graph-receipt", type=Path)
     args = p.parse_args()
     if args.self_test:
         self_test()
         servo_startup_self_test()
         discon_lowwind_self_test()
+        module_graph_self_test()
         if not args.repo_root and not args.servo_startup_source and not args.discon_lowwind_source:
             return
+    if args.module_graph_receipt:
+        record = build_module_graph(args.repo_root or Path('.'))
+        args.module_graph_receipt.parent.mkdir(parents=True, exist_ok=True)
+        args.module_graph_receipt.write_text(json.dumps(record, indent=2, ensure_ascii=False) + '\\n', encoding='utf-8')
+        print('S07_MODULE_GRAPH_SOURCE_ONLY', json.dumps({'verified':record['active_module_source_verified'], 'unresolved':record['unresolved_active_modules'], 'dll':record['dll_source']['status']}, sort_keys=True))
+        return
     if args.servo_startup_source:
         require(args.servo_startup_receipt is not None, "SERVO_RECEIPT_PATH_REQUIRED")
         record = inspect_servo_startup(args.servo_startup_source.read_bytes())
