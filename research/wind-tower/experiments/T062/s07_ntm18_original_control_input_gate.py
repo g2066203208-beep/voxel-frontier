@@ -466,21 +466,27 @@ def module_graph_source_lookup(source, member):
     # Preserve original case identity, then the SHA-identical canonical ETM
     # archive alias; never silently select another wind-speed or seed.
     import posixpath
-    try:
-        name = module_graph_safe_reference(member)
-    except ValueError as exc:
-        # Original cards can contain absolute machine paths or parent-relative
-        # references. Record them explicitly instead of falsely resolving
-        # them into a new staged case or aborting the whole source inventory.
-        return {"status": "UNRESOLVED_EXTERNAL_OR_TRAVERSAL_REFERENCE",
-                "reference": member, "reason": str(exc)}
     cases = ("CASES/U09p343881_NTM_S01/", "CASES/U09p343881_ETM_S01/")
+    normalized = member.strip().strip('"').strip("'").replace("\\\\", "/")
+    if (not normalized or normalized.startswith("/") or
+            re.match(r"^[A-Za-z]:", normalized)):
+        return {"status": "UNRESOLVED_EXTERNAL_OR_TRAVERSAL_REFERENCE",
+                "reference": member, "reason": "ABSOLUTE_OR_EMPTY"}
     candidates = []
     for case in cases:
-        for rel in (name, "Control/" + name):
+        # Historical AeroFile is ../Rotor/..., legitimately resolving to
+        # CASES/Rotor from the case FST directory. Bound to CASES/ and
+        # never reinterpret this as a path for a future staged candidate.
+        alternatives = (normalized,) if ".." in normalized.split("/") else (
+            normalized, "Control/" + normalized)
+        for rel in alternatives:
             full = posixpath.normpath(case + rel)
+            if not full.startswith("CASES/"):
+                return {"status": "UNRESOLVED_EXTERNAL_OR_TRAVERSAL_REFERENCE",
+                        "reference": member, "reason": "ESCAPES_CASES_ROOT"}
             if full not in candidates:
                 candidates.append(full)
+    name = normalized
     found = []
     for manifest in ("static", "supplement"):
         idx = source.indexes[manifest]
