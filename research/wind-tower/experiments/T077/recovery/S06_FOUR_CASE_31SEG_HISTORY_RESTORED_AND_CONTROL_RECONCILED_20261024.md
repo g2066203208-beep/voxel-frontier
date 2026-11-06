@@ -1,3 +1,11 @@
+## 2026-11-06 15时｜S07 A批Windows参考控制器真实原生加载（无求解）
+
+- **SOURCE/READING_LEVEL**：参考控制器原件 `references/baselines-and-site-20261004/openfast-v330-adaptation/1FreeDecay/Control/libdiscon.dll`，1,122,431字节、SHA256 `7aebb0d2166c0cc095d11c2b7bc13da136547c557b0f331dcdce84fe181802aa`；原T077 20件装配和PE收据继承。此DLL属于**参考v3.3适配资产**，历史36工况DLL在归档中excluded-format、未恢复，不能宣称二进制等同。
+- **RUN（真正Windows原生证据）**：复用并扩展[`s07_a_native_binary_abi_gate.py`](s07_a_native_binary_abi_gate.py)，在Windows GitHub runner执行SHA/长度/AMD64/PE32+/唯一DISCON导出检查、`ctypes.WinDLL`/Windows LoadLibrary和GetProcAddress，仅解析非空符号地址，**没有调用DISCON、没有启动OpenFAST、没有求解**。原生结果[`S07_A_WINDOWS_REFERENCE_DLL_LOAD_RECEIPT.json`](S07_U11p4_ETM_S04_A/S07_A_WINDOWS_REFERENCE_DLL_LOAD_RECEIPT.json)记录 `PASS_REFERENCE_DLL_WINDOWS_LOAD_AND_EXPORT_ONLY`、`symbol_address_nonzero=true`、`openfast=0`、`discon_calls=0`、`physical_pass=false`；CI自动create-only持久化提交 [93518e5](https://github.com/g2066203208-beep/voxel-frontier/commit/93518e5baa2ceb6aa6266433f2c66dd2712cc3e3)。工作流[`s07-a-native-binary-abi-gate.yml`](../../../../.github/workflows/s07-a-native-binary-abi-gate.yml)后续增加幂等回读防覆盖。**完整Actions run ID/整体conclusion本轮未独立取得**，不能把CI全流程说成已验收。
+- **REF**：T077 A-case RUN卡 `S07_A_INIT_RUN_CARD.md`、已有A-case 20件装配收据；**STANDARD**：IEC/GB/NB授权条款未新增阅读；**OFFICIAL**：Windows OS原生装载器行为而非历史OpenFAST发行/控制器版本证明；**FIG**：0；**TAB**：1件参考DLL、PE19节、1个DISCON导出、1次Windows原生载入。
+- **假设/误差预算**：源字节身份为SHA256精确比对；装载成功只证明该Windows runner的DLL依赖可解析和导出符号可定位。DLL调用约定、参数布局、历史控制器等同性、风机响应及数值物理误差均**NEED_ESTIMATE**。失败记录：无本次原生LoadLibrary失败；既有历史DLL缺失继续HOLD。S07仍BLOCKED、正式DLC1.2=0/126、E/WE/Miner=0、**0/12未晋级**。
+- **下一唯一动作**：不违反本卡“研究自动化禁止0.1s OpenFAST初始化”条款；独立推进S10多seed疲劳不确定性源级方法/程序，或由获独立授权的执行方另行执行RUN卡。冻结T057/T070/main不动，PR#42 Draft不合并。
+
 ## 2026-11-04 10时｜S10真实1574循环按均值/PT假设分域的四次矩贡献（非材料寿命）
 
 - **SOURCE/READING_LEVEL**：直接完整读取本目录[S10真实1574循环CSV](S10_3CONTROL_REAL_GROSS_CYCLES_20261030.csv)280249字节，SHA256 `646065838456b6465e321c4c6fd24966f180f275df99c615000577557219ff83`、Git Blob `4b05ec4214c1ff38df71f1e5eb80cbec5a81c38d`。原始OUTB/ZIP的SHA继承2026-10-30归档收据，**本轮未重下载原件**。
