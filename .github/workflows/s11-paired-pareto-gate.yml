@@ -22,7 +22,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          echo 'dab6e9e404514ce096056864b3323d4380c27cb1efdbe7fce3d8e2288173bbf6  s11_paired_wind_seismic_pareto_gate.py' | sha256sum --check
+          echo '6dd4ef4299bb6ff07398c9f71e85a57b4c5f89c7d1e13f00bd7f721243d4b2f3  s11_paired_wind_seismic_pareto_gate.py' | sha256sum --check
           python3 -m py_compile s11_paired_wind_seismic_pareto_gate.py
           python3 s11_paired_wind_seismic_pareto_gate.py --self-test
           echo 'S11: SYNTHETIC PARETO ALGORITHM QC ONLY; NO NATIVE W/E/WE OR FATIGUE/OPTIMIZATION PASS.'

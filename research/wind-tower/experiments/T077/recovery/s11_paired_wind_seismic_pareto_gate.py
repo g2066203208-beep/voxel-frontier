@@ -52,7 +52,7 @@ def front(candidates):
         dominates(b,a) for b in candidates if b['design_id']!=a['design_id'])])
 
 
-def calculate(raw, synthetic=False):
+def calculate(raw, synthetic=False, uncertainty=None):
     reader=csv.DictReader(io.StringIO(raw.decode('utf-8-sig')))
     if reader.fieldnames is None or tuple(reader.fieldnames)!=FIELDS:
         raise ValueError('COLUMNS_MISMATCH')
@@ -96,7 +96,7 @@ def calculate(raw, synthetic=False):
     wind=[r for r in parsed if r['wind_gate']=='PASS']
     joint=[r for r in wind if r['seismic_gate']=='PASS']
     wf=front(wind); sf=front(joint)
-    return {'status':'SYNTHETIC_ALGORITHM_QC_ONLY' if synthetic else
+    result={'status':'SYNTHETIC_ALGORITHM_QC_ONLY' if synthetic else
             'PROVISIONAL_NEEDS_INDEPENDENT_NATIVE_REVIEW',
             'input_sha256':hashlib.sha256(raw).hexdigest(),
             'n_designs':len(parsed),'operating_state':next(iter(states)),
@@ -109,6 +109,81 @@ def calculate(raw, synthetic=False):
             'new_entrants_to_front':sorted(set(sf)-set(wf)),
             'objectives':'SAME mass/M0 and max(D_concrete/D0, D_PT/D0, D_steel/D0)',
             'caveat':'Not an optimization or a seismic/fatigue physical PASS; no uncertainty tolerance frozen.'}
+    result['interval_pareto']=(interval_pareto(parsed,baseline,next(iter(states)),uncertainty,synthetic)
+                               if uncertainty is not None else {'status':'NOT_EVALUATED_NO_QOI_BUDGET'})
+    return result
+
+
+
+def interval_pareto(parsed, baseline_id, state_id, budget, synthetic):
+    """Conservative interval Pareto bracketing, not an optimization result.
+
+    For independent axis-aligned intervals, upper(A)<=lower(B) in both
+    objectives is a SUFFICIENT certificate that A dominates B for all
+    realizations. lower(A)<=upper(B) with a strict inequality is only a
+    POSSIBLE dominance relation. Hence core is a conservative subset and
+    outer is a conservative superset of any realized Pareto front.
+    Correlation and common baseline uncertainty are NOT modeled.
+    """
+    required={'schema_version','baseline_id','state_id','evidence_level',
+              'budget_source_sha256','bounds'}
+    if not isinstance(budget,dict) or set(budget)!=required:
+        raise ValueError('UNCERTAINTY_SCHEMA_MISMATCH')
+    if budget['schema_version']!=1 or budget['baseline_id']!=baseline_id or budget['state_id']!=state_id:
+        raise ValueError('UNCERTAINTY_PAIRING_MISMATCH')
+    level='SYNTHETIC_TEST_ONLY' if synthetic else 'INDEPENDENT_QOI_BUDGET'
+    if budget['evidence_level']!=level:
+        raise ValueError('UNCERTAINTY_EVIDENCE_MISMATCH')
+    if not synthetic and not sha_ok(budget['budget_source_sha256']):
+        raise ValueError('UNCERTAINTY_SOURCE_SHA_MISSING')
+    by_id={r['design_id']:r for r in parsed}
+    supplied=budget['bounds']
+    if not isinstance(supplied,dict) or set(supplied)!=set(by_id):
+        raise ValueError('UNCERTAINTY_DESIGN_SET_MISMATCH')
+    intervals={}
+    for design_id,row in by_id.items():
+        obj=supplied[design_id]
+        if not isinstance(obj,dict) or set(obj)!={'mass_ratio','max_fatigue_ratio'}:
+            raise ValueError('UNCERTAINTY_OBJECTIVES_MISMATCH')
+        intervals[design_id]={}
+        for key in ('mass_ratio','max_fatigue_ratio'):
+            pair=obj[key]
+            if not isinstance(pair,list) or len(pair)!=2:
+                raise ValueError('UNCERTAINTY_INTERVAL_SHAPE')
+            lo=numeric(pair[0],'interval_lower_'+key)
+            hi=numeric(pair[1],'interval_upper_'+key)
+            point=row[key]
+            tol=1e-12*max(1.0,abs(point))
+            if lo>hi or lo>point+tol or hi<point-tol:
+                raise ValueError('UNCERTAINTY_EXCLUDES_POINT_ESTIMATE')
+            intervals[design_id][key]=(lo,hi)
+    def all_realizations_dominates(a,b):
+        ai,bi=intervals[a],intervals[b]
+        return (all(ai[k][1]<=bi[k][0] for k in ('mass_ratio','max_fatigue_ratio'))
+                and any(ai[k][1]<bi[k][0] for k in ('mass_ratio','max_fatigue_ratio')))
+    def some_realization_dominates(a,b):
+        ai,bi=intervals[a],intervals[b]
+        return (all(ai[k][0]<=bi[k][1] for k in ('mass_ratio','max_fatigue_ratio'))
+                and any(ai[k][0]<bi[k][1] for k in ('mass_ratio','max_fatigue_ratio')))
+    def bracket(group):
+        ids=[r['design_id'] for r in group]
+        core=sorted(a for a in ids if not any(
+            some_realization_dominates(b,a) for b in ids if b!=a))
+        outer=sorted(a for a in ids if not any(
+            all_realizations_dominates(b,a) for b in ids if b!=a))
+        nominal=front(group)
+        if not set(core)<=set(nominal) or not set(nominal)<=set(outer):
+            raise AssertionError('INTERVAL_PARETO_BRACKET_BROKEN')
+        return {'nominal':nominal,'guaranteed_nondominated_core':core,
+                'not_guaranteed_dominated_outer':outer}
+    wind=[r for r in parsed if r['wind_gate']=='PASS']
+    joint=[r for r in wind if r['seismic_gate']=='PASS']
+    return {'status':'SYNTHETIC_INTERVAL_QC_ONLY' if synthetic else
+            'CONDITIONAL_INTERVAL_SCREENING_NEEDS_INDEPENDENT_REVIEW',
+            'wind_only':bracket(wind),'seismic_constrained':bracket(joint),
+            'budget_source_sha256':budget['budget_source_sha256'] or None,
+            'assumptions':'axis-aligned closed intervals; conservative bounds; no correlation or baseline covariance',
+            'physical_pass':False}
 
 
 def self_test():
@@ -154,11 +229,46 @@ def self_test():
     try:calculate(raw,synthetic=False)
     except ValueError:pass
     else:raise AssertionError('synthetic input promoted to native')
-    return {'status':'PASS_SYNTHETIC_ONLY','negative_tests':len(bad)+1,
+    # Independent analytical oracle: zero-width intervals reproduce the exact front.
+    def make_budget(width):
+        return {'schema_version':1,'baseline_id':'BASE','state_id':'SYNTH_OPERATING',
+                'evidence_level':'SYNTHETIC_TEST_ONLY','budget_source_sha256':'',
+                'bounds':{d:{'mass_ratio':[max(0.0,m-width),m+width],
+                             'max_fatigue_ratio':[max(0.0,f-width),f+width]}
+                          for d,m,f,_,_ in entries}}
+    zero=calculate(raw,synthetic=True,uncertainty=make_budget(0.0))['interval_pareto']
+    assert zero['wind_only']['guaranteed_nondominated_core']==r['wind_pareto']
+    assert zero['wind_only']['not_guaranteed_dominated_outer']==r['wind_pareto']
+    assert zero['seismic_constrained']['guaranteed_nondominated_core']==r['seismic_constrained_pareto']
+    assert zero['seismic_constrained']['not_guaranteed_dominated_outer']==r['seismic_constrained_pareto']
+    wide=calculate(raw,synthetic=True,uncertainty=make_budget(.05))['interval_pareto']
+    assert wide['wind_only']['guaranteed_nondominated_core']==['B']
+    assert wide['wind_only']['not_guaranteed_dominated_outer']==['A','B','BASE','D','E','G']
+    assert wide['seismic_constrained']['guaranteed_nondominated_core']==['B']
+    assert wide['seismic_constrained']['not_guaranteed_dominated_outer']==['B','BASE','D','G']
+    # A nominally dominates G, but interval overlap prevents declaring G
+    # dominated for all uncertainty realizations.
+    assert 'G' not in r['wind_pareto'] and 'G' in wide['wind_only']['not_guaranteed_dominated_outer']
+    import copy
+    broken=[]
+    q=make_budget(.05);q['baseline_id']='OTHER';broken.append(q)
+    q=make_budget(.05);q['bounds'].pop('G');broken.append(q)
+    q=make_budget(.05);q['bounds']['G']['mass_ratio']=[.99,1.01];broken.append(q)
+    q=make_budget(.05);q['bounds']['B']['max_fatigue_ratio']=[.9,.7];broken.append(q)
+    q=make_budget(.05);q['bounds']['B']['max_fatigue_ratio']=[float('nan'),1.0];broken.append(q)
+    q=make_budget(.05);q['evidence_level']='INDEPENDENT_QOI_BUDGET';broken.append(q)
+    q=make_budget(.05);q['bounds']['B']['mass_ratio']=[0.0];broken.append(q)
+    for q in broken:
+        try:calculate(raw,synthetic=True,uncertainty=q)
+        except ValueError:pass
+        else:raise AssertionError('accepted invalid uncertainty budget')
+    return {'status':'PASS_SYNTHETIC_ONLY','negative_tests':len(bad)+1+len(broken),
             'positive_tests':4,'input_sha256':hashlib.sha256(raw).hexdigest(),
             'wind_front':r['wind_pareto'],
             'seismic_front':r['seismic_constrained_pareto'],
             'new_entrant':r['new_entrants_to_front'],
+            'interval_oracle_zero_width':'PASS',
+            'interval_oracle_0p05':wide,
             'native_runs':0,'physical_pass':False}
 
 
@@ -167,13 +277,16 @@ def main():
     p.add_argument('--self-test',action='store_true')
     p.add_argument('--input',type=Path)
     p.add_argument('--output',type=Path)
+    p.add_argument('--uncertainty',type=Path,help='independently justified objective interval JSON; optional')
     a=p.parse_args()
     if a.self_test: print(json.dumps(self_test(),sort_keys=True))
     if a.input:
-        result=calculate(a.input.read_bytes(),synthetic=False)
+        budget=json.loads(a.uncertainty.read_text(encoding='utf-8')) if a.uncertainty else None
+        result=calculate(a.input.read_bytes(),synthetic=False,uncertainty=budget)
         output=json.dumps(result,indent=2,sort_keys=True)+'\n'
         if a.output:a.output.write_text(output,encoding='utf-8')
         else:print(output)
+    if a.uncertainty and not a.input:p.error('--uncertainty requires --input')
     if not a.self_test and not a.input:p.error('provide --self-test or --input')
 
 if __name__=='__main__':main()
