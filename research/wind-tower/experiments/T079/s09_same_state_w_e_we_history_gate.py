@@ -477,7 +477,6 @@ def full_rate_proxy_self_test():
         else:raise AssertionError('ACCEPTED_'+code)
     reject(raw,receipt,'FULL_RATE_SOURCE_SHA256_MISMATCH','0'*64)
     r,j=fixture(shift=True);reject(r,j,'FULL_RATE_TIME_GRID_MISMATCH')
-    r,j=fixture(missing=True);reject(r,j,'FULL_RATE_RECEIPT_METADATA_MISMATCH') if False else None
     # Missing direction with intact receipt must fail count, not pass by using fewer rows.
     r,j=fixture(missing=True);reject(r,j,'FULL_RATE_ROW_COUNT_MISMATCH')
     r,j=fixture(bad_peak=True);reject(r,j,'FULL_RATE_PEAK_MISMATCH')
