@@ -120,5 +120,25 @@
     "error_budget": "Midplane source residual <=0.000134%, gage interpolation <1e-9 m2/m4; physical coordinate/PT/contact/material model uncertainty NEED_ESTIMATE",
     "failures": "No native Node or solver execution; no new original 31-gage OUTB RP/TP/DCM; Fz sign inferred only conditionally from historical gravity",
     "HOLD": "Prior ~0.4% apparent gross A/I difference explained by different evaluation elevations to source precision, not a physical V&V pass; S06 PARTIAL, S07/S10 BLOCKED, 0/12"
+  },
+  "midpoint_geometry_diagnosis": {
+    "RUN": "Actual committed JS executed under V8 with mocked Node fs/path/crypto and real source SHA256: --check CSV exact 31 midpoint + 124 gage; 7 mutated inputs rejected, analytic annulus oracle passed; native Node/Actions NOT_RUN",
+    "tests": {
+      "committed_script_v8_positive": 1,
+      "midpoint_rows": 31,
+      "gage_rows": 124,
+      "mutated_input_rejections": 7,
+      "analytic_annulus_oracle": 1,
+      "rejection_errors": [
+        "SOURCE_ROW_COUNT",
+        "BAD_RADII",
+        "GROSS_NONPOSITIVE",
+        "GAGE_RECONSTRUCTION",
+        "SOURCE_ROW_COUNT",
+        "REP_CASE",
+        "BAD_HEIGHT"
+      ]
+    },
+    "failures": "; Initial negative test accidentally changed OpenFAST area column 12 rather than joint area column 11 and was accepted; corrected mutation to column 11 and observed rejection. Test-design failure retained."
   }
 }
