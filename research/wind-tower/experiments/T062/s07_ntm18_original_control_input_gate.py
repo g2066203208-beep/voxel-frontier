@@ -928,7 +928,7 @@ def build_s07_portable_package(repo_root):
         discon_refs = []
         for line in discon.decode("utf-8-sig", errors="strict").splitlines():
             active = line.split("!", 1)[0]
-            for token in re.findall(r'[A-Za-z0-9_./\\\\-]+\\.(?:txt|dat|csv)\\b', active, re.I):
+            for token in re.findall(r'[A-Za-z0-9_./\\-]+\.(?:txt|dat|csv)\b', active, re.I):
                 staged = s07_portable_resolve(control_dir, token)
                 if staged not in {r["staged_path"] for r in rows}:
                     original = staged.replace(case + "/", old + "/", 1)
