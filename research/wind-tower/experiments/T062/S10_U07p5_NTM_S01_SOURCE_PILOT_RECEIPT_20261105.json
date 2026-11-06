@@ -251,6 +251,27 @@
     "stages_passed": 0
   },
   "lowwind_45_s01_aerodyn_downstream_graph_20261106": {
+    "portable_candidate": {
+      "original_sha256": "e258d2e8fc7664b93f3e6a792c46ec38bea327859f95c3b200391e9f2bb1a568",
+      "candidate_sha256": "a2e50140ee04759e9034fc1a51977d7f16c09e25f7c42559dc03ac92d2b2e10f",
+      "original_bytes": 10088,
+      "candidate_bytes": 10088,
+      "changed_reference_line": 50,
+      "from": "Airfoils/Cylinder_AeroDyn15.dat",
+      "to": "Airfoils/Cylinder_Aerodyn15.dat",
+      "changed_byte_offset_zero_based": 6062,
+      "changed_byte_old_hex": "44",
+      "changed_byte_new_hex": "64",
+      "exact_reverse": true,
+      "all_references_case_sensitive": true,
+      "changed_reference_count": 1,
+      "physical_pass": false,
+      "status": "SOURCE_ONLY_PORTABLE_CANDIDATE_NOT_RUN",
+      "candidate_repository_path": "NOT_WRITTEN",
+      "source_original_shared_card_sha256": "e258d2e8fc7664b93f3e6a792c46ec38bea327859f95c3b200391e9f2bb1a568",
+      "case_local_alternative_sha256": "7ebaa0bdf25076041a98ee25ae0577f2d02be61569092965e47be5f875bbcc6d",
+      "original_archive_member": "CASES/Rotor/DTU_10MW_RWT_AeroDyn15.dat"
+    },
     "SOURCE": "Original FST-selected shared CASES/Rotor AeroDyn15 card, downstream blade/airfoil original ZIP members, SHA-pinned manifest",
     "READING_LEVEL": "Exact archived ZIP member bytes and per-file SHA256, not inferred from filenames alone",
     "REF": "T062 original module graph; 12-stage S07 input identity gate",
@@ -397,24 +418,7 @@
     "status": "AERODYN_DEPENDENCY_SOURCE_ONLY_NOT_RUN",
     "physical_pass": false,
     "formal_dlc12_verified_slots": 0,
-    "stages_passed": 0,
-    "native_ci_verification": {
-      "run_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/42154598935",
-      "status": "completed/success",
-      "source_only": true,
-      "original_aero_graph_json_sha256": "4fd471464f14190b1ff3472b6bf2d8d7646f977b8fc9bc7322a9d227a39a1363",
-      "self_tests": "1 positive + 8 rejected malformed cases",
-      "verified_unique_files": 7,
-      "original_reference_rows": 9,
-      "blade_slots": 3,
-      "airfoil_files": 6,
-      "case_sensitive_mismatches": 1,
-      "first_failure_run": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/42148724153",
-      "first_failure": "Self-test fixture contained literal backslash-n rather than newline; corrected",
-      "second_failure_run": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/42154551732",
-      "second_failure": "Original AeroDyn card uses Cylinder_AeroDyn15.dat while ZIP manifest has Cylinder_Aerodyn15.dat; unique casefold archive lookup ONLY for source verification",
-      "runtime_case_sensitive_path": "HOLD_NOT_TESTED"
-    }
+    "stages_passed": 0
   },
   "lowwind_45_s01_exact_inflow_rebind_20261106": {
     "SOURCE": "Exact 6248-byte original 158m U09p343881_NTM_S01 InflowWind member in static openfast-36-r2 part-001 ZIP; exact original 18NTM identity CSV",
