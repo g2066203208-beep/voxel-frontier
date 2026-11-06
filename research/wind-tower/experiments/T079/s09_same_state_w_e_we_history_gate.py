@@ -289,7 +289,7 @@ def proxy_sampling_qc(raw, peak_receipt, expected_n=1602):
 
 def proxy_sampling_self_test():
     def fixture(shift=False,missing=False):
-        s=io.StringIO();wr=csv.writer(s,lineterminator='\\n');wr.writerow(PROXY_FIELDS)
+        s=io.StringIO();wr=csv.writer(s,lineterminator='\n');wr.writerow(PROXY_FIELDS)
         for direction in PROXY_DIRECTIONS if not missing else ('HNE',):
             for i in range(3):
                 wr.writerow([direction, i*.1+(.02 if shift and i==1 else 0),
@@ -345,7 +345,7 @@ def run_proxy_sampling(history_path,receipt_path,output_path):
                        'inter_sample_peak_and_spectral_aliasing':'NOT_BOUNDED_BY_THIS_PEAK_COMPARISON'},
        'failed_cases':'six synthetic negative tests in proxy_sampling_self_test',
        'physics_PASS':False,'S09_PASS':False,'native_E_WE_RUN':0})
-    output_path.write_text(json.dumps(result,indent=2,sort_keys=True,ensure_ascii=False)+'\\n',encoding='utf-8')
+    output_path.write_text(json.dumps(result,indent=2,sort_keys=True,ensure_ascii=False)+'\n',encoding='utf-8')
     return result
 
 
