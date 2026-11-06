@@ -71,6 +71,8 @@ jobs:
     name: Windows reference DISCON LoadLibrary only (NO OpenFAST, NO DISCON call)
     runs-on: windows-latest
     timeout-minutes: 8
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
         with:
@@ -102,6 +104,40 @@ jobs:
           Write-Host ('S07_WINDOWS_REFERENCE_LOAD_STATUS=' + $result.status)
           if ($result.failure) { Write-Host ('S07_WINDOWS_LOAD_FAILURE=' + ($result.failure | ConvertTo-Json -Compress)) }
           Write-Host 'REFERENCE_ONLY; historical DLL absent; OpenFAST=0; DISCON_CALLS=0; physical PASS=FALSE'
+      - name: Persist one new Windows-native receipt on Draft branch (create-only)
+        if: github.ref == 'refs/heads/research/t080-seismic-integration-gates-20261022'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if (!(Test-Path S07_A_WINDOWS_REFERENCE_DLL_LOAD_RECEIPT.json)) { throw 'NATIVE_RECEIPT_MISSING' }
+          @'
+          import base64, json, os, urllib.request, urllib.error
+          repo=os.environ['GITHUB_REPOSITORY']
+          branch=os.environ['GITHUB_REF_NAME']
+          assert branch=='research/t080-seismic-integration-gates-20261022'
+          path='research/wind-tower/experiments/T077/recovery/S07_U11p4_ETM_S04_A/S07_A_WINDOWS_REFERENCE_DLL_LOAD_RECEIPT.json'
+          data=open('S07_A_WINDOWS_REFERENCE_DLL_LOAD_RECEIPT.json','rb').read()
+          result=json.loads(data)
+          assert result['RUN']['openfast']==0 and result['RUN']['discon_calls']==0
+          assert not result['physical_pass'] and result['stages_passed']==0
+          assert result['status'] in ('PASS_REFERENCE_DLL_WINDOWS_LOAD_AND_EXPORT_ONLY','HOLD_WINDOWS_REFERENCE_DLL_LOAD_OR_EXPORT')
+          payload={'message':'research(S07): persist real Windows reference DLL LoadLibrary-only receipt (NOT historical or solver PASS)',
+                   'branch':branch,'content':base64.b64encode(data).decode('ascii')}
+          url='https://api.github.com/repos/'+repo+'/contents/'+path
+          req=urllib.request.Request(url,data=json.dumps(payload).encode('utf-8'),method='PUT',
+                headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],
+                         'Accept':'application/vnd.github+json','Content-Type':'application/json'})
+          try:
+              with urllib.request.urlopen(req,timeout=60) as resp:
+                  body=json.load(resp)
+                  assert resp.status==201
+                  print('S07_WINDOWS_NATIVE_REFERENCE_RECEIPT_CREATED',body['commit']['sha'],result['status'])
+          except urllib.error.HTTPError as exc:
+              print('S07_NATIVE_RECEIPT_PERSIST_ERROR',exc.code,exc.read().decode('utf-8','replace')[:500])
+              raise
+          '@ | python -
       - uses: actions/upload-artifact@v4
         if: always()
         with:
