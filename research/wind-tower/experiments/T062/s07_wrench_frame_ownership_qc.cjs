@@ -197,13 +197,70 @@ function historyBoundSelftest(d){
  return {positive:1,negative_rejections:caught,real_samples:ok.samples_checked};
 }
 
+
+function towerSourceSignAudit(officialExcerpt,gravityCSV){
+ ck(typeof officialExcerpt==="string"&&officialExcerpt.length>200,"OFFICIAL_SOURCE_EMPTY");
+ const signatures=[
+  ["base_Fz_a2","m%AllOuts( TwrBsFzt) =  DOT_PRODUCT( FrcT0Trb, m%CoordSys%a2 )"],
+  ["base_Mx_a1","m%AllOuts( TwrBsMxt) =  DOT_PRODUCT( MomX0Trb, m%CoordSys%a1 )"],
+  ["base_My_minus_a3","m%AllOuts( TwrBsMyt) = -DOT_PRODUCT( MomX0Trb, m%CoordSys%a3 )"],
+  ["local_Fx_t1","m%AllOuts( TwHtFLxt(I) ) =     DOT_PRODUCT( FrcFGagT, m%CoordSys%t1(p%TwrGagNd(I),:) )"],
+  ["local_Fy_minus_t3","m%AllOuts( TwHtFLyt(I) ) = -1.*DOT_PRODUCT( FrcFGagT, m%CoordSys%t3(p%TwrGagNd(I),:) )"],
+  ["local_Fz_t2","m%AllOuts( TwHtFLzt(I) ) =     DOT_PRODUCT( FrcFGagT, m%CoordSys%t2(p%TwrGagNd(I),:) )"],
+  ["local_Mx_t1","m%AllOuts( TwHtMLxt(I) ) =     DOT_PRODUCT( MomFGagT, m%CoordSys%t1(p%TwrGagNd(I),:) )"],
+  ["local_My_minus_t3","m%AllOuts( TwHtMLyt(I) ) = -1.*DOT_PRODUCT( MomFGagT, m%CoordSys%t3(p%TwrGagNd(I),:) )"],
+  ["local_Mz_t2","m%AllOuts( TwHtMLzt(I) ) =     DOT_PRODUCT( MomFGagT, m%CoordSys%t2(p%TwrGagNd(I),:) )"],
+  ["yaw_mass_gravity","FrcFGagT = FrcONcRt - p%YawBrMass*( p%Gravity*m%CoordSys%z2 + LinAccEO )"],
+  ["tower_mass_gravity","TmpVec2  = FTTower(:,J) - p%MassT(J)*( p%Gravity*m%CoordSys%z2 + LinAccET(:,J) )"],
+  ["half_element_gravity","TmpVec2  = FTTower(:,p%TwrGagNd(I)) - p%MassT(p%TwrGagNd(I))*( p%Gravity*m%CoordSys%z2 + LinAccET(:,p%TwrGagNd(I)))"]
+ ];
+ for(const [name,signature] of signatures)ck(officialExcerpt.includes(signature),"OFFICIAL_SIGNATURE_"+name);
+ const lines=gravityCSV.trim().split(/\r?\n/),header=lines.shift().split(",");
+ ck(header.join(",")==="segment,gage_z_m,Fx_kN,Fx_kN_range,Fy_kN,Fy_kN_range,Fz_kN,Fz_kN_range,Mx_kNm,Mx_kNm_range,My_kNm,My_kNm_range,Mz_kNm,Mz_kNm_range","GRAVITY_HEADER");
+ ck(lines.length===31,"GRAVITY_COUNT");
+ let previous=-Infinity,firstMy=null,values=[];
+ for(let i=0;i<31;i++){
+  const c=lines[i].split(",");ck(c.length===14,"GRAVITY_WIDTH");
+  ck(c[0]==="CSEG_"+String(i+1).padStart(2,"0"),"GRAVITY_SEGMENT_ID");
+  const v=c.slice(1).map(Number);ck(v.every(Number.isFinite),"GRAVITY_NAN");
+  const [z,fx,fxr,fy,fyr,fz,fzr,mx,mxr,my,myr,mz,mzr]=v;
+  ck(z>0&&z<112,"GRAVITY_HEIGHT");
+  ck(fz<0&&fz>previous,"GRAVITY_AXIAL_NEGATIVE_MONOTONE");
+  ck([fx,fxr,fy,fyr,fzr,mx,mxr,myr,mz,mzr].every(x=>Math.abs(x)<1e-9),"GRAVITY_STATIC_COMPONENTS");
+  if(firstMy===null)firstMy=my;
+  ck(Math.abs(my-firstMy)<1e-9,"GRAVITY_MY_CONSISTENCY");
+  previous=fz;values.push(fz);
+ }
+ return {status:"SOURCE_CODE_PROJECTION_AND_DERIVED_GRAVITY_SIGN_QC_PASS_PHYSICAL_HOLD",official_signature_checks:signatures.length,gravity_rows:31,negative_axial_rows:values.filter(x=>x<0).length,monotone_axial_pairs:30,gravity_Fz_min_kN:Math.min(...values),gravity_Fz_max_kN:Math.max(...values),gravity_My_kNm:firstMy,
+  channel_map:{FLxt:"dot(F,t1)",FLyt:"-dot(F,t3)",FLzt:"dot(F,t2)",MLxt:"dot(M,t1)",MLyt:"-dot(M,t3)",MLzt:"dot(M,t2)"},
+  interpretation:"Negative historical derived Fz is consistent with downward gravity under upward local t2, NOT an independently proven native sign convention or pure wind force.",physical_pass:false};
+}
+function towerSourceSignSelftest(source,csv){
+ const good=towerSourceSignAudit(source,csv);
+ const replacements=[
+  [source.replace("m%AllOuts( TwHtFLzt(I) ) =     DOT_PRODUCT","m%AllOuts( TwHtFLzt(I) ) = -1.*DOT_PRODUCT"),csv],
+  [source.replace("m%AllOuts( TwHtMLyt(I) ) = -1.*DOT_PRODUCT","m%AllOuts( TwHtMLyt(I) ) =     DOT_PRODUCT"),csv],
+  [source.replace("FrcFGagT = FrcONcRt - p%YawBrMass*","FrcFGagT = FrcONcRt + p%YawBrMass*"),csv],
+  [source,csv.replace("-25192.602388144347","25192.602388144347")],
+  [source,csv.replace("CSEG_02,","CSEG_01,")],
+  [source,csv.replace("-24549.807646600373","-26000")],
+  [source,csv.replace("CSEG_31,110.53063726502562,","CSEG_31,110.53063726502562,1,")],
+  [source,csv.replace("CSEG_31,110.53063726502562,","CSEG_31,NaN,")]
+ ];
+ let caught=0;
+ for(const [s,c] of replacements){try{towerSourceSignAudit(s,c)}catch(e){caught++;continue}throw Error("SOURCE_SIGN_BAD_INPUT_ACCEPTED_"+caught);}
+ ck(caught===replacements.length,"SOURCE_SIGN_NEGATIVE_COUNT");
+ return {positive:1,negative_rejections:caught,gravity_rows:good.gravity_rows,source_signatures:good.official_signature_checks};
+}
+
 function main(argv){
  const fs=require("fs");
+ if(argv.length===3&&argv[0]==="--tower-sign"){const source=fs.readFileSync(argv[1],"utf8"),gravity=fs.readFileSync(argv[2],"utf8");const out=towerSourceSignAudit(source,gravity);out.tests=towerSourceSignSelftest(source,gravity);console.log(JSON.stringify(out,null,2));return;}
  if(argv.length===1&&argv[0]==="--selftest"){console.log(JSON.stringify(selftest()));return;}
  if(argv.length===2&&argv[0]==="--history"){const d=JSON.parse(fs.readFileSync(argv[1],"utf8"));const out=historyBoundAudit(d);out.tests=historyBoundSelftest(d);console.log(JSON.stringify(out,null,2));return;}
  ck(argv.length===2&&argv[0]==="--qc","USAGE: --selftest | --qc existing_pose_receipt.json | --history existing_9gage_receipt.json");
  const input=JSON.parse(fs.readFileSync(argv[1],"utf8"));
  console.log(JSON.stringify(audit(input),null,2));
 }
-module.exports={audit,selftest,transport,back,Ry,gate,rotationBoundY,historyBoundAudit,historyBoundSelftest};
+module.exports={audit,selftest,transport,back,Ry,gate,rotationBoundY,historyBoundAudit,historyBoundSelftest,towerSourceSignAudit,towerSourceSignSelftest};
 if(typeof require!=="undefined"&&require.main===module)main(process.argv.slice(2));
