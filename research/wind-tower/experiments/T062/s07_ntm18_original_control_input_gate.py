@@ -923,6 +923,17 @@ def build_s07_portable_package(repo_root):
                               "DISCON_original", "supplement")
         require(sha(discon) == "8f5d7546420ee34838e66b63e4b26d64460be5d5492f99c60b6d1ef977ffc61a",
                 "S07_PORTABLE_DISCON_SHA")
+        # Controller may reference an external Cp/Ct/Cq performance table.
+        # Read only active value text before '!' comments; do not invent files.
+        discon_refs = []
+        for line in discon.decode("utf-8-sig", errors="strict").splitlines():
+            active = line.split("!", 1)[0]
+            for token in re.findall(r'[A-Za-z0-9_./\\\\-]+\\.(?:txt|dat|csv)\\b', active, re.I):
+                staged = s07_portable_resolve(control_dir, token)
+                if staged not in {r["staged_path"] for r in rows}:
+                    original = staged.replace(case + "/", old + "/", 1)
+                    from_archive(staged, original, "DISCON_external_table")
+                discon_refs.append({"token": token, "staged_path": staged})
         # ElastoDyn references are an independent downstream dependency.
         ed_refs = parse_keys(ed, ("TwrFile", "BldFile(1)", "BldFile(2)", "BldFile(3)"))
         require(ed_refs["TwrFile"] and ed_refs["BldFile(1)"],
@@ -962,7 +973,7 @@ def build_s07_portable_package(repo_root):
                              "original_servo": sha(servo), "original_discon": sha(discon),
                              "candidate_inflow": sha(inflow), "candidate_aerodyn": sha(aero)},
             "staged_case": case, "files": rows, "missing_files": missing,
-            "elastodyn_references": ed_refs, "fst_references": fields,
+            "elastodyn_references": ed_refs, "discon_external_references": discon_refs, "fst_references": fields,
             "controller_references": sf, "aero_unique_references": sorted({x["resolved"] for x in aero_refs}),
             "assumptions": "FST is unchanged from original 9.343881 m/s case; module/ElastoDyn paths resolved lexically with proposed CASES sibling Rotor; no runtime path semantics proven",
             "error_budget": "Archive/candidate bytes and SHA exact; lexical path exact for declared layout; DLL ABI, BTS data, runtime, aerodynamic/structural error NEED_ESTIMATE",
