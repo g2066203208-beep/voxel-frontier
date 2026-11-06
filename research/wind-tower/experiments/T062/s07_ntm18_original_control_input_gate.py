@@ -648,8 +648,8 @@ def aero_references(raw):
     return refs, int(declared) if declared else None
 
 def aero_dependency_self_test():
-    good = (b'1 NumAFfiles\\n"DTU_10MW_AeroDyn15_blade.dat" ADBlFile(1)\\n'
-            b'"Airfoils/Cylinder_Aerodyn15.dat"\\n')
+    good = (b'1 NumAFfiles\n"DTU_10MW_AeroDyn15_blade.dat" ADBlFile(1)\n'
+            b'"Airfoils/Cylinder_Aerodyn15.dat"\n')
     refs, declared = aero_references(good)
     assert declared == 1 and len(refs) == 2
     bad = [
@@ -658,7 +658,7 @@ def aero_dependency_self_test():
         good.replace(b'Airfoils/Cylinder_Aerodyn15.dat', b'/tmp/outside.dat'),
         good.replace(b'Airfoils/Cylinder_Aerodyn15.dat', b'C:/outside.dat'),
         good.replace(b'1 NumAFfiles', b'bad NumAFfiles'),
-        good + b'"Airfoils/Cylinder_Aerodyn15.dat"\\n',
+        good + b'"Airfoils/Cylinder_Aerodyn15.dat"\n',
         good.replace(b'DTU_10MW_AeroDyn15_blade.dat', b'not_a_blade.txt'),
         good.replace(b'Airfoils/Cylinder_Aerodyn15.dat', b'not_an_airfoil.txt'),
     ]
