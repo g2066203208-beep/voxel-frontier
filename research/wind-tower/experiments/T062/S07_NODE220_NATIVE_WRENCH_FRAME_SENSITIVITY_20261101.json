@@ -387,5 +387,56 @@
     "error_budget": "Floating-point invariant tolerance 1e-8; analytic bounds valid for specified Ry only; true 31-station DCM, inertia, gravity and ownership error unbounded",
     "HOLD": "No verified synchronous 31-station DCM or free-body aerodynamic external-load ownership; no Abaqus export, no physics PASS",
     "physical_pass": false
+  },
+  "tower_source_semantics_20261106": {
+    "SOURCE": "T074 derived 31-station gravity CSV bytes (not freshly read native OUTB); OpenFAST official v3.5.3 ElastoDyn.f90 source lines 1150-1220 fetched from version-tagged GitHub; historic output card/31-station DCM NOT newly recovered",
+    "reading_level": "OFFICIAL_VERSION_TAGGED_SOURCE_LINES_DIRECT + DERIVED_CSV_BYTES_DIRECT; no new original OUTB/FST card",
+    "REF": "Existing REF018 Huang2025 p6 Eq(1) prior full-page reading; no new paper page",
+    "STANDARD": "IEC/GB 2025 authorized clauses NOT_READ; no clause acceptance",
+    "OFFICIAL": "https://github.com/OpenFAST/openfast/blob/v3.5.3/modules/elastodyn/src/ElastoDyn.f90#L1150-L1220",
+    "RUN": "Actual JS V8 execution of modified source gate: one real 31-row derived CSV positive, 12 source-code signature checks, 8 deliberately corrupted-input rejections; no native Node CI, no OpenFAST/Abaqus production",
+    "FIG": "0",
+    "TAB": "31 existing T074 rows; no new table file",
+    "source_version": "OpenFAST v3.5.3",
+    "official_source_git_blob_sha1": "2bcfb11fc40712febb5a8b5c2947c87e2aabb7b1",
+    "official_source_excerpt_lines": "1150-1220",
+    "official_source_excerpt_sha256": "7d526349d2ae646f9184961830c299e5a0dc99002a9064c3f52ce48be989cef2",
+    "inherited_full_source_sha256_not_recomputed": "a8ea1a88dc22d5401ea450f376aa7f66e3242785f1e038a22933054aaaf4f7d3",
+    "gravity_path": "research/wind-tower/experiments/T074/T074_158M_31SEG_GRAVITY_BASELINE.csv",
+    "gravity_sha256": "b20db81a63f114b60d5974ebae4daaff6bbb93938ac076cb6515b8ac2e49b349",
+    "script_path": "research/wind-tower/experiments/T062/s07_wrench_frame_ownership_qc.cjs",
+    "script_sha256": "a9bd5c20c202449cec638ca90fa70ee33afe8eff3b4f82f74889b0e37db448e9",
+    "tests": {
+      "positive": 1,
+      "negative_rejections": 8,
+      "gravity_rows": 31,
+      "source_signatures": 12
+    },
+    "summary": {
+      "status": "SOURCE_CODE_PROJECTION_AND_DERIVED_GRAVITY_SIGN_QC_PASS_PHYSICAL_HOLD",
+      "official_signature_checks": 12,
+      "gravity_rows": 31,
+      "negative_axial_rows": 31,
+      "monotone_axial_pairs": 30,
+      "gravity_Fz_min_kN": -25192.602388144347,
+      "gravity_Fz_max_kN": -8758.837607229541,
+      "gravity_My_kNm": -5793.573173694369,
+      "channel_map": {
+        "FLxt": "dot(F,t1)",
+        "FLyt": "-dot(F,t3)",
+        "FLzt": "dot(F,t2)",
+        "MLxt": "dot(M,t1)",
+        "MLyt": "-dot(M,t3)",
+        "MLzt": "dot(M,t2)"
+      },
+      "interpretation": "Negative historical derived Fz is consistent with downward gravity under upward local t2, NOT an independently proven native sign convention or pure wind force.",
+      "physical_pass": false
+    },
+    "assumptions": "Local tower t2 points along tower axial positive direction, conditional gravity interpretation; T074 is a historical derived gravity-only baseline, not newly read native source; channel projection alone does not supply full time-dependent DCM or load ownership.",
+    "error_budget": "Exact official signature string and gravity input SHA; 31-row arithmetic deterministic; real 31-station native output card/pose DCM, mass/inertia and loading decomposition error NOT_ESTIMATED.",
+    "failures": "Eight deliberate corruptions rejected. Native Node CLI and official full-source SHA256 not rerun. No independent 31-station original OUTB verification.",
+    "HOLD": "Exact local-to-global DCM at all 31 stations and original FST/OutList/OUTB cross-batch state unresolved; FL/ML are total section resultants with mass/gravity/inertia, not wind-only external loads. S06 PARTIAL, S07/S10 BLOCKED, 0/12.",
+    "physical_pass": false,
+    "stage_passed": 0
   }
 }
