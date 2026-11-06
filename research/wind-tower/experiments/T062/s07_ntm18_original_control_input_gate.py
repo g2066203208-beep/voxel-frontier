@@ -985,6 +985,93 @@ def build_s07_portable_package(repo_root):
         source.close()
 
 
+
+# S07: reference DLL static PE/export inspection; NEVER historical binary equivalence.
+def inspect_pe_reference_dll(data):
+    import struct
+    def check(ok, code):
+        if not ok: raise ValueError(code)
+    def u16(p):
+        check(0 <= p <= len(data)-2, 'PE_U16_OOB')
+        return struct.unpack_from('<H', data, p)[0]
+    def u32(p):
+        check(0 <= p <= len(data)-4, 'PE_U32_OOB')
+        return struct.unpack_from('<I', data, p)[0]
+    check(len(data) >= 0x40 and data[:2] == b'MZ', 'PE_DOS_HEADER_MISSING')
+    pe = u32(0x3c)
+    check(pe >= 0x40 and pe + 24 <= len(data) and data[pe:pe+4] == b'PE\\0\\0', 'PE_SIGNATURE_INVALID')
+    machine, nsections, timestamp, _, _, optsize, flags = struct.unpack_from('<HHIIIHH', data, pe+4)
+    opt = pe + 24
+    check(0 < nsections <= 96 and optsize >= 96 and opt + optsize <= len(data), 'PE_OPTIONAL_OR_SECTIONS_INVALID')
+    magic = u16(opt)
+    check(magic in (0x10b, 0x20b), 'PE_OPTIONAL_MAGIC_INVALID')
+    dd = opt + (96 if magic == 0x10b else 112)
+    check(dd + 8 <= opt + optsize, 'PE_EXPORT_DIRECTORY_UNAVAILABLE')
+    exp_rva, exp_size = u32(dd), u32(dd+4)
+    section_base = opt + optsize
+    check(section_base + nsections*40 <= len(data), 'PE_SECTION_TABLE_TRUNCATED')
+    sections = []
+    for i in range(nsections):
+        s = section_base + i*40
+        name = data[s:s+8].split(b'\\0')[0].decode('ascii','replace')
+        vsize, va, rawsize, rawptr = struct.unpack_from('<IIII', data, s+8)
+        check(rawptr <= len(data) and rawsize <= len(data)-rawptr, 'PE_SECTION_RAW_OOB')
+        sections.append((name,vsize,va,rawsize,rawptr))
+    def rva_to_offset(rva, need):
+        check(0 <= need <= len(data), 'PE_RVA_BAD_NEED')
+        for name,vsize,va,rawsize,rawptr in sections:
+            if va <= rva and rva-va <= rawsize and need <= rawsize-(rva-va):
+                offset = rawptr+(rva-va)
+                check(offset + need <= len(data), 'PE_RVA_FILE_OOB')
+                return offset
+        raise ValueError('PE_RVA_UNMAPPED')
+    exports=[]
+    if exp_rva and exp_size:
+        p = rva_to_offset(exp_rva,40)
+        fields=struct.unpack_from('<IIHHIIIIIII', data,p)
+        nfunc, nnames, funcs_rva, names_rva, ord_rva=fields[6],fields[7],fields[8],fields[9],fields[10]
+        check(nfunc <= 200000 and nnames <= 20000 and nnames <= nfunc, 'PE_EXPORT_COUNTS_INVALID')
+        np = rva_to_offset(names_rva,4*nnames) if nnames else 0
+        if nnames: rva_to_offset(ord_rva,2*nnames)
+        for i in range(nnames):
+            name_rva = u32(np+4*i)
+            start = rva_to_offset(name_rva,1)
+            stop=data.find(b'\\0',start,min(start+256,len(data)))
+            check(stop>start, 'PE_EXPORT_NAME_UNTERMINATED')
+            exports.append(data[start:stop].decode('ascii','replace'))
+    discon=[x for x in exports if x.lower().lstrip('_').split('@')[0]=='discon']
+    return {'format':'PE','machine_hex':f'0x{machine:04x}', 'architecture':{0x14c:'x86',0x8664:'x86_64',0xaa64:'arm64'}.get(machine,'OTHER'), 'pe_bitness':32 if magic==0x10b else 64,'section_count':nsections,'export_count':len(exports),'discon_export_names':discon,'export_name_sample':exports[:24],'has_discon_named_export':bool(discon),'file_bytes':len(data),'sha256':hashlib.sha256(data).hexdigest(),'historical_runtime_equivalence_verified':False,'abi_runtime_verified':False,'verdict':'REFERENCE_PE_STATIC_EXPORT_ONLY_NOT_HISTORICAL_OR_RUNTIME_ABI'}
+
+def s07_reference_dll_self_test():
+    import struct
+    a=bytearray(0x600)
+    a[:2]=b'MZ'; struct.pack_into('<I',a,0x3c,0x80)
+    a[0x80:0x84]=b'PE\\0\\0'
+    struct.pack_into('<HHIIIHH',a,0x84,0x8664,1,0,0,0,0xf0,0x2022)
+    opt=0x98; struct.pack_into('<H',a,opt,0x20b)
+    struct.pack_into('<II',a,opt+112,0x1100,0x100)
+    sec=opt+0xf0; a[sec:sec+8]=b'.rdata\\0\\0'
+    struct.pack_into('<IIII',a,sec+8,0x300,0x1000,0x300,0x200)
+    struct.pack_into('<IIHHIIIIIII',a,0x300,0,0,0,0,0x1170,1,1,1,0x1140,0x1150,0x1160)
+    struct.pack_into('<I',a,0x350,0x1180)
+    struct.pack_into('<H',a,0x360,0)
+    a[0x380:0x387]=b'DISCON\\0'
+    got=inspect_pe_reference_dll(bytes(a))
+    assert got['architecture']=='x86_64' and got['discon_export_names']==['DISCON'] and not got['abi_runtime_verified']
+    rejects=[b'',b'\\x7fELF'+bytes(500),bytes(a[:100]),bytes(a[:0x84]+b'NOPE'+a[0x88:]), bytes(a[:opt]+b'\\x00\\x00'+a[opt+2:]),bytes(a[:sec+40])]
+    for i,blob in enumerate(rejects):
+        try: inspect_pe_reference_dll(blob)
+        except (ValueError,struct.error): pass
+        else: raise AssertionError(f'S07_DLL_BAD_INPUT_ACCEPTED_{i}')
+    print('S07_REFERENCE_DLL_PE_PARSER_SELFTEST_PASS_1_POSITIVE_6_NEGATIVE')
+
+def s07_reference_dll_receipt(data):
+    record=inspect_pe_reference_dll(data)
+    require(record['file_bytes']==1122431, 'REFERENCE_DLL_LENGTH_MISMATCH')
+    require(record['sha256']=='7aebb0d2166c0cc095d11c2b7bc13da136547c557b0f331dcdce84fe181802aa', 'REFERENCE_DLL_SHA256_MISMATCH')
+    record.update({'SOURCE':'repository reference DLL raw bytes; historical 36-case DLL excluded from ZIP','READING_LEVEL':'native CI byte read + PE headers and export names only','REF':'existing T062 dll_identity_source_gate','STANDARD':'IEC/GB2025 authorized clauses NOT READ','OFFICIAL':'PE header/export source, not OpenFAST/ROSCO runtime certification','RUN':'Python3 stdlib PE parser + synthetic negative tests; no solver','FIG':0,'TAB':'PE architecture, export names and DISCON presence','ERROR_BUDGET':'reference SHA/bytes exact; export names exact if PE parse succeeds; runtime ABI and historical equivalence NOT_ESTIMATED','HOLD':'historical 36-case DLL absent; 4.5m/s BTS absent; cannot claim operational DLC1.2 or controller identity','physical_pass':False,'formal_dlc12_verified_slots':0,'stages_passed':0})
+    return record
+
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--repo-root", type=Path)
@@ -999,6 +1086,8 @@ def main():
     p.add_argument("--aero-dependency-receipt", type=Path)
     p.add_argument("--aero-portable-candidate", type=Path)
     p.add_argument("--portable-package-receipt", type=Path)
+    p.add_argument("--reference-dll-source", type=Path)
+    p.add_argument("--reference-dll-receipt", type=Path)
     args = p.parse_args()
     if args.self_test:
         self_test()
@@ -1007,8 +1096,16 @@ def main():
         module_graph_self_test()
         aero_dependency_self_test()
         s07_portable_package_self_test()
-        if not args.repo_root and not args.servo_startup_source and not args.discon_lowwind_source:
+        s07_reference_dll_self_test()
+        if not args.repo_root and not args.servo_startup_source and not args.discon_lowwind_source and not args.reference_dll_source:
             return
+    if args.reference_dll_source:
+        require(args.reference_dll_receipt is not None, 'REFERENCE_DLL_RECEIPT_REQUIRED')
+        record=s07_reference_dll_receipt(args.reference_dll_source.read_bytes())
+        args.reference_dll_receipt.parent.mkdir(parents=True, exist_ok=True)
+        args.reference_dll_receipt.write_text(json.dumps(record, indent=2, ensure_ascii=False)+'\n', encoding='utf-8')
+        print('S07_REFERENCE_DLL_PE_STATIC_QC_NOT_HISTORICAL_ABI',json.dumps({'sha256':record['sha256'],'architecture':record['architecture'],'exports':record['export_count'],'discon_names':record['discon_export_names'],'physical_pass':False},sort_keys=True))
+        return
     if args.portable_package_receipt:
         record = build_s07_portable_package(args.repo_root or Path('.'))
         args.portable_package_receipt.parent.mkdir(parents=True, exist_ok=True)
