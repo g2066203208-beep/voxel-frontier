@@ -82,5 +82,43 @@
   "failures": "Initial stricter 2e-5m T074 gage-height identity assertion failed because source heights differ up to 0.001048m; replaced with recorded <0.002m diagnostic guard; 9 deliberate corruptions rejected; no native Node CI",
   "HOLD": "Two geometry sources are not identical; no validated local material stress, actual effective PT native balance, formal DLC1.2, cross-batch state or E/WE; S06 PARTIAL, S10 BLOCKED, 0/12",
   "physical_pass": false,
-  "stages_passed": 0
+  "stages_passed": 0,
+  "midplane_geometry_diagnosis": {
+    "SOURCE": "Direct 31-row T077 segment endpoint radii, 31-row OpenFAST gross A/I, 124-row four-ETM PT/gross source crosswalk; original OUTB/ZIP not newly read",
+    "reading_level": "DERIVED_CSV_BYTES_DIRECT; OFFICIAL_OPENFAST_MAINTAINER_ISSUE_AND_FORUM_DIRECT",
+    "REF": "Huang et al. 2025 p6 Eq1 prior full-page visual read; no new journal page read",
+    "STANDARD": "No new licensed IEC/GB2025 clauses read",
+    "OFFICIAL": {
+      "issue": "https://github.com/OpenFAST/openfast/issues/413",
+      "maintainer_forum": "https://forums.nlr.gov/t/local-tower-loads-output/2220",
+      "finding": "FLzt local tower axial, FLxt/FLyt local shear; local tower frame does not rotate with nacelle yaw"
+    },
+    "RUN": "V8 direct 31 midplane/124 gage source calculations; script syntax V8 parsed; new standalone Node --check not executed in native Node CI",
+    "FIG": "0",
+    "TAB": "31-row midpoint-vs-gage source identity CSV",
+    "source_sha256": {
+      "segments": "d34331c9b1eacb25cd4ffa46d4430fbe8420965e683f7444cb6cfee207eef99e",
+      "gross": "8ae262435e13c0f10326acef7270b9962c943bb5f212171d830fe834f3a364ed",
+      "crosswalk": "6cf715a3624e479681086c31db25f01dd9c86f42eaa81bd56402d716d4298b43"
+    },
+    "script_path": "research/wind-tower/experiments/T077/recovery/s10_midplane_gage_geometry_qc.cjs",
+    "script_sha256": "1ce55aced2dd360c6464214d5df73db987a492f7fef1ace97c5b0c6a7950ff29",
+    "csv_path": "research/wind-tower/experiments/T077/recovery/S10_31SEG_MIDPLANE_VS_GAGE_GEOMETRY_20261106.csv",
+    "csv_sha256": "65134f675c55846781a0b0b6570de4d8abb625b9b78afe75aa8f39f52ed64c60",
+    "summary": {
+      "midpoint_rows": 31,
+      "gage_rows": 124,
+      "max_mid_A_relative_pct": 0.00012195271885673264,
+      "max_mid_I_relative_pct": 0.00013379265799695617,
+      "max_abs_gage_mid_offset_m": 0.07041340000000673,
+      "max_abs_gage_A_reconstruction_m2": 4.974065603846611e-10,
+      "max_abs_gage_I_reconstruction_m4": 4.988400803540571e-10,
+      "physical_pass": false,
+      "stages_passed": 0
+    },
+    "assumptions": "Linear interpolation between source segment end radii; OpenFAST gross A/I compared to segment midpoint; representative gage from U09 ETM S06, all 4 cases reconstructed",
+    "error_budget": "Midplane source residual <=0.000134%, gage interpolation <1e-9 m2/m4; physical coordinate/PT/contact/material model uncertainty NEED_ESTIMATE",
+    "failures": "No native Node or solver execution; no new original 31-gage OUTB RP/TP/DCM; Fz sign inferred only conditionally from historical gravity",
+    "HOLD": "Prior ~0.4% apparent gross A/I difference explained by different evaluation elevations to source precision, not a physical V&V pass; S06 PARTIAL, S07/S10 BLOCKED, 0/12"
+  }
 }
