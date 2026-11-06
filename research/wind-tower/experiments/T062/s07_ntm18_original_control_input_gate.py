@@ -635,8 +635,11 @@ def aero_references(raw):
                 "AERO_PATH_ESCAPE")
         role = "airfoil" if "/Airfoils/" in path else "blade"
         refs.append({"line": lineno, "reference": token, "resolved": path, "role": role})
-    require(len(refs) == len({r["resolved"] for r in refs}),
-            "AERO_DUPLICATE_FILE_REFERENCE")
+    # Three blade slots may legitimately reference the same blade geometry;
+    # repeated airfoil table entries remain a source-identity ambiguity.
+    airfoil_paths = [r["resolved"] for r in refs if r["role"] == "airfoil"]
+    require(len(airfoil_paths) == len(set(airfoil_paths)),
+            "AERO_DUPLICATE_AIRFOIL_REFERENCE")
     require(any(r["role"] == "blade" for r in refs), "AERO_BLADE_REFERENCE_MISSING")
     require(any(r["role"] == "airfoil" for r in refs), "AERO_AIRFOIL_REFERENCE_MISSING")
     if declared:
