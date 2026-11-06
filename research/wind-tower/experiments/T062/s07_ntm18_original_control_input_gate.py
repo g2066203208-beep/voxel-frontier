@@ -560,7 +560,7 @@ def build_module_graph(repo_root):
                                        "PCMode", "VSContrl", "DLL_ProcName"))
         discon = module_graph_source_lookup(source, servo["DLL_InFile"])
         require(discon.get("sha256") ==
-                "8f5d7546420ee34838e66b63e4b26d64460be5d5492f99c60a",
+                "8f5d7546420ee34838e66b63e4b26d64460be5d5492f99c60b6d1ef977ffc61a",
                 "MODULE_GRAPH_ORIGINAL_DISCON_SHA")
         discon.pop("_raw")
         dll = module_graph_source_lookup(source, servo["DLL_FileName"])
