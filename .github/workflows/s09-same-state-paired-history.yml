@@ -20,9 +20,27 @@ jobs:
           python3 --version
           sha256sum research/wind-tower/experiments/T079/s09_same_state_w_e_we_history_gate.py
           python3 research/wind-tower/experiments/T079/s09_same_state_w_e_we_history_gate.py --self-test | tee s09_selftest.json
+      - name: Validate archived real ESM proxy sampling loss (E only, no solver)
+        run: |
+          python3 research/wind-tower/experiments/T079/s09_same_state_w_e_we_history_gate.py \
+            --proxy-history research/wind-tower/experiments/T079/real-records/S08_158M_BEAM_PROXY_HISTORY_20261102.csv \
+            --proxy-peak-receipt research/wind-tower/experiments/T079/real-records/S08_158M_BEAM_PROXY_RECEIPT_20261102.json \
+            --proxy-output-json s09_real_esm_proxy_sampling.json > s09_real_esm_proxy_stdout.json
+          python3 - <<'PY'
+          import json
+          x=json.load(open('s09_real_esm_proxy_sampling.json'))
+          assert x['source_nrows']==3204
+          assert len(x['peak_comparison'])==8
+          assert abs(x['max_peak_loss_pct']-8.24090446286182)<1e-8
+          assert x['S09_pair_admissible'] is False and x['actual_wind_W_WE'] is False
+          print('PASS_REAL_ESM_PROXY_SAMPLING_E_ONLY_NOT_PAIRED',x['max_peak_loss_pct'])
+          PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: s09-paired-history-analytic-receipt
-          path: s09_selftest.json
+          path: |
+            s09_selftest.json
+            s09_real_esm_proxy_sampling.json
+            s09_real_esm_proxy_stdout.json
           if-no-files-found: warn
