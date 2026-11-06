@@ -137,6 +137,8 @@ def calculate(raw, years=20.0, operating_fraction=None, probability_basis='condi
         if abs(p_sum - expected_probability) > 1e-8:
             raise ValueError(f'incomplete or double-counted {probability_basis} bin probabilities for {material}: {p_sum}, expected {expected_probability}')
         annual = 0.0
+        seed_sampling_annual_variance = 0.0
+        seed_sampling_estimable = True
         bin_breakdown = []
         for b in bins:
             keys = sorted(k for k in samples if k[0] == material and k[1] == b)
@@ -149,18 +151,49 @@ def calculate(raw, years=20.0, operating_fraction=None, probability_basis='condi
             duration_s = next(iter(durations))
             rates = [samples[k]/duration_s for k in keys]
             per_second = sum(rates)/len(rates)
+            # Sample variance (ddof=1) of INDEPENDENT seed damage rates.
+            # This is Monte Carlo seed-sampling error only, NOT wind climate,
+            # material S-N, stress-model, mesh or lifetime uncertainty.
+            # n=1 is NOT a zero-variance estimate; keep SE unavailable.
+            n_seed = len(rates)
+            if n_seed >= 2:
+                sample_var = math.fsum((x-per_second)**2 for x in rates)/(n_seed-1)
+                mean_rate_se = math.sqrt(sample_var/n_seed)
+                seed_cv = math.sqrt(sample_var)/per_second if per_second > 0 else (
+                    0.0 if sample_var == 0 else None)
+            else:
+                sample_var = None
+                mean_rate_se = None
+                seed_cv = None
+                seed_sampling_estimable = False
             # Conditional P(bin|operating) needs p_op; unconditional P(bin) does not.
             annual_weight = operating_fraction if probability_basis == 'conditional' else 1.0
             contribution = probabilities[material,b] * annual_weight * per_second * SECONDS_PER_YEAR
             annual += contribution
+            weight_annual = probabilities[material,b] * annual_weight * SECONDS_PER_YEAR
+            contribution_se = (weight_annual*mean_rate_se
+                               if mean_rate_se is not None else None)
+            if contribution_se is not None:
+                seed_sampling_annual_variance += contribution_se**2
             bin_breakdown.append({
                 'bin_id':b,'probability':probabilities[material,b],
                 'expected_seeds':declared_count,'observed_seeds':len(keys),
                 'duration_s':duration_s,'mean_damage_per_second':per_second,
                 'min_seed_damage_per_second':min(rates),
                 'max_seed_damage_per_second':max(rates),
+                'seed_rate_sample_variance_per_second_squared':sample_var,
+                'seed_mean_rate_standard_error_per_second':mean_rate_se,
+                'seed_rate_coefficient_of_variation':seed_cv,
+                'annual_contribution_standard_error_seed_sampling':contribution_se,
+                'seed_sampling_estimable':n_seed >= 2,
                 'annual_damage_contribution_conditional':contribution,
                 'annual_damage_contribution':contribution})
+        # Independent seed realizations across wind bins are assumed.
+        # If any populated bin has only one seed, total uncertainty is
+        # NOT ESTIMABLE; do not silently treat its variance as zero.
+        annual_se = (math.sqrt(seed_sampling_annual_variance)
+                     if seed_sampling_estimable else None)
+        relative_se = (annual_se/annual if annual > 0 else None) if annual_se is not None else None
         out.append({'material_id':material,'material_model_ref':material_models[material],
                     'bin_count':len(bins),'bin_breakdown':bin_breakdown,
                     'annual_damage_conditional':annual,  # deprecated field name; corrected value
@@ -168,6 +201,19 @@ def calculate(raw, years=20.0, operating_fraction=None, probability_basis='condi
                     'operating_fraction':operating_fraction,
                     'design_years':years,'design_damage_conditional':annual*years,
                     'design_damage':annual*years,
+                    'annual_damage_seed_sampling_standard_error':annual_se,
+                    'annual_damage_seed_sampling_relative_standard_error':relative_se,
+                    'design_damage_seed_sampling_standard_error':(
+                        years*annual_se if annual_se is not None else None),
+                    'annual_damage_seed_sampling_variance':(
+                        seed_sampling_annual_variance if seed_sampling_estimable else None),
+                    'seed_sampling_uncertainty_status':(
+                        'ESTIMABLE_CONDITIONAL_INDEPENDENT_SEEDS_NOT_PHYSICAL_CI'
+                        if seed_sampling_estimable else 'NOT_ESTIMABLE_BIN_WITH_N_LT_2'),
+                    'seed_sampling_uncertainty_scope':(
+                        'Independent equal-duration seeds within and across bins; '
+                        'fixed wind probabilities, operating fraction and material law; '
+                        'sample-variance SE only, no confidence interval or physical uncertainty'),
                     'status':'CONDITIONAL_NO_PHYSICAL_PASS'})
     return {'source_sha256':hashlib.sha256(raw).hexdigest(),'input_schema_version':3,
             'probability_basis':probability_basis,'operating_fraction':operating_fraction,
@@ -203,6 +249,27 @@ def selftest(probability_source=None):
     assert abs(result['results'][0]['annual_damage']-uncond['results'][0]['annual_damage'])<1e-10
     assert abs(result['results'][0]['annual_damage_conditional']-expected)<1e-10
     assert abs(result['results'][0]['design_damage_conditional']-20*expected)<1e-8
+    # Independent analytical oracle: B1 seed rates 1e-5,2e-5;
+    # B2 seed rates 3e-5,5e-5. Sample SE(mean) = 5e-6,1e-5.
+    # Annual SE = 8760*3600*.5*sqrt((.25*5e-6)^2+(.75*1e-5)^2).
+    oracle_se=.5*SECONDS_PER_YEAR*math.sqrt((.25*5e-6)**2+(.75*1e-5)**2)
+    x=result['results'][0]
+    assert math.isclose(x['annual_damage_seed_sampling_standard_error'],oracle_se,rel_tol=1e-12)
+    assert math.isclose(x['design_damage_seed_sampling_standard_error'],20*oracle_se,rel_tol=1e-12)
+    assert math.isclose(uncond['results'][0]['annual_damage_seed_sampling_standard_error'],oracle_se,rel_tol=1e-12)
+    assert x['seed_sampling_uncertainty_status'].startswith('ESTIMABLE_')
+    # A bin with only one seed has unknown sampling variance, not zero.
+    single=[dict(r,expected_seeds_per_bin=('1' if r['bin_id']=='B2' else '2'))
+            for r in rows if not (r['bin_id']=='B2' and r['seed_id']=='S2')]
+    one=calculate(encode(single),operating_fraction=.5)['results'][0]
+    assert one['annual_damage_seed_sampling_standard_error'] is None
+    assert one['design_damage_seed_sampling_standard_error'] is None
+    assert one['seed_sampling_uncertainty_status']=='NOT_ESTIMABLE_BIN_WITH_N_LT_2'
+    assert one['bin_breakdown'][1]['annual_contribution_standard_error_seed_sampling'] is None
+    # Identical seed rates genuinely have zero estimated sampling spread.
+    same=[dict(r,cycles=('1' if r['bin_id']=='B1' else '3')) for r in rows]
+    equal=calculate(encode(same),operating_fraction=.5)['results'][0]
+    assert equal['annual_damage_seed_sampling_standard_error']==0
     breakdown = result['results'][0]['bin_breakdown']
     assert len(breakdown) == 2
     assert [b['observed_seeds'] for b in breakdown] == [2,2]
@@ -251,6 +318,10 @@ def selftest(probability_source=None):
             'seed_contract_tests':5,'bin_contribution_checks':4,
             'probability_contract_negative_tests':5,
             'conditional_unconditional_equivalence':True,'operating_fraction':.5,
+            'seed_sampling_analytic_standard_error':oracle_se,
+            'seed_sampling_analytic_standard_error_match':True,
+            'single_seed_uncertainty_not_estimable':True,
+            'identical_seed_zero_variance':True,
             'real_era5_probability_qc':source_check}
 
 
