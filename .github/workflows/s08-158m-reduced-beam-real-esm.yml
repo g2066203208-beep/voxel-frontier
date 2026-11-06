@@ -41,7 +41,7 @@ jobs:
           python s08_158m_reduced_beam_real_esm.py \
             --tower source/tower.dat \
             --esm source/S08_ESM_IT2012_NVL_MP_3COMP_ACCEL_SI_NOT_DESIGN_WAVE.csv \
-            --outdir output | tee output/runner_stdout.log
+            --outdir output --full-rate-history | tee output/runner_stdout.log
           python - <<'PY'
           import csv,hashlib,json,pathlib
           d=pathlib.Path('output')
@@ -54,7 +54,24 @@ jobs:
           assert r['source_esm_sha256']=='a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34'
           assert len(list(csv.DictReader((d/'S08_158M_BEAM_PROXY_MODAL_20261102.csv').open())))==12
           assert len(list(csv.DictReader((d/'S08_158M_BEAM_PROXY_PEAKS_20261102.csv').open())))==2
-          assert len(list(csv.DictReader((d/'S08_158M_BEAM_PROXY_HISTORY_20261102.csv').open())))==3204
+          legacy=list(csv.DictReader((d/'S08_158M_BEAM_PROXY_HISTORY_20261102.csv').open()))
+          full=list(csv.DictReader((d/'S08_158M_BEAM_PROXY_HISTORY_0P005S_20261106.csv').open()))
+          assert len(legacy)==3204 and len(full)==64080
+          assert [x['direction'] for x in full[::32040]]==['HNE','HNN']
+          assert all(float(full[i]['time_s'])==0.005*i for i in (0,1,20,32039))
+          assert all(float(full[32040+i]['time_s'])==0.005*i for i in (0,1,20,32039))
+          for i in range(2):
+            for j in range(1602):
+              assert full[i*32040+j*20]==legacy[i*1602+j],(i,j)
+          side=json.loads((d/'S08_158M_BEAM_PROXY_FULL_RATE_RECEIPT_20261106.json').read_text())
+          m=side['full_rate_history']
+          assert m['n_rows']==64080 and m['rows_per_direction']==32040
+          assert m['dt_s']==0.005 and len(m['eight_peak_integrator_checks'])==8
+          assert m['file_sha256']==hashlib.sha256((d/m['file']).read_bytes()).hexdigest()
+          assert m['legacy_file_sha256']==hashlib.sha256((d/m['legacy_file']).read_bytes()).hexdigest()
+          assert side['S09_PASS'] is False and side['native_E_WE_RUN']==0
+          assert side['source_esm_sha256']=='a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34'
+          print('PASS_REAL_ESM_0P005S_64080ROWS_8PEAKS_20X_EXACT_DECIMATION_E_ONLY_NOT_S09')
           assert r['RUN'].endswith('native Abaqus E/WE=0')
           moments=list(csv.DictReader((d/'S08_158M_BEAM_PROXY_35SEG_MOMENT_ENVELOPE_20261102.csv').open()))
           nodes=list(csv.DictReader((d/'S08_158M_BEAM_PROXY_36NODE_DISPLACEMENT_ENVELOPE_20261102.csv').open()))
@@ -137,7 +154,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          for f in S08_158M_BEAM_PROXY_35SEG_MOMENT_ENVELOPE_20261102.csv S08_158M_BEAM_PROXY_36NODE_DISPLACEMENT_ENVELOPE_20261102.csv S08_158M_BEAM_PROXY_ALONG_HEIGHT_RECEIPT_20261102.json FIG_S08_07_158M_BEAM_PROXY_ALONG_HEIGHT_ENVELOPES_NOT_ABAQUS.svg; do
+          for f in S08_158M_BEAM_PROXY_35SEG_MOMENT_ENVELOPE_20261102.csv S08_158M_BEAM_PROXY_36NODE_DISPLACEMENT_ENVELOPE_20261102.csv S08_158M_BEAM_PROXY_ALONG_HEIGHT_RECEIPT_20261102.json S08_158M_BEAM_PROXY_FULL_RATE_RECEIPT_20261106.json FIG_S08_07_158M_BEAM_PROXY_ALONG_HEIGHT_ENVELOPES_NOT_ABAQUS.svg; do
             if [[ "$f" == *.svg ]]; then
               target="research/wind-tower/manuscript/final-thesis/figures/$f"
             else
