@@ -126,6 +126,20 @@ jobs:
           payload={'message':'research(S07): persist real Windows reference DLL LoadLibrary-only receipt (NOT historical or solver PASS)',
                    'branch':branch,'content':base64.b64encode(data).decode('ascii')}
           url='https://api.github.com/repos/'+repo+'/contents/'+path
+          # Idempotent create-only: never overwrite another runner's receipt.
+          probe=urllib.request.Request(url+'?ref='+branch,headers={
+              'Authorization':'Bearer '+os.environ['GH_TOKEN'],
+              'Accept':'application/vnd.github+json'})
+          try:
+              with urllib.request.urlopen(probe,timeout=30) as resp:
+                  existing=json.load(resp)
+              prior=base64.b64decode(existing['content'])
+              if prior != data:
+                  raise ValueError('EXISTING_WINDOWS_NATIVE_RECEIPT_DIFFERS_DO_NOT_OVERWRITE')
+              print('S07_WINDOWS_NATIVE_REFERENCE_RECEIPT_ALREADY_IDENTICAL',result['status'])
+              raise SystemExit(0)
+          except urllib.error.HTTPError as exc:
+              if exc.code != 404: raise
           req=urllib.request.Request(url,data=json.dumps(payload).encode('utf-8'),method='PUT',
                 headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],
                          'Accept':'application/vnd.github+json','Content-Type':'application/json'})
