@@ -623,11 +623,11 @@ def aero_references(raw):
         if not left:
             continue
         # OpenFAST may use quoted file values or unquoted standalone AF rows.
-        match = re.search(r"""(?:"([^"]+\\.dat)"|'([^']+\\.dat)'|(?<!\\S)([^\\s"'!]+\\.dat))(?=\\s|$)""", left, re.I)
+        match = re.search(r"""(?:"([^"]+\.dat)"|'([^']+\.dat)'|(?<!\S)([^\s"'!]+\.dat))(?=\s|$)""", left, re.I)
         if not match:
             continue
         token = next(v for v in match.groups() if v is not None)
-        token = token.replace("\\\\", "/")
+        token = token.replace("\\", "/")
         require(not token.startswith("/") and not re.match(r"^[A-Za-z]:", token),
                 "AERO_ABSOLUTE_REFERENCE")
         path = posixpath.normpath(posixpath.join("CASES/Rotor", token))
