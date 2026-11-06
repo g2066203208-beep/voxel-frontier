@@ -26,7 +26,8 @@ jobs:
             research/wind-tower/experiments/T062/S10_U07p5_NTM_S01_SOURCE_PILOT_RECEIPT_20261105.json
             research/wind-tower/experiments/T062/S07_U04p5_NTM_S01_InflowWind_NOT_RUN.dat
             research/wind-tower/experiments/T062/S07_SHARED_AERODYN15_PORTABLE_NOT_RUN.dat
-            research/wind-tower/references/baselines-and-site-20261004/openfast-v330-adaptation/1FreeDecay/Control/libdiscon.dll
+            research/wind-tower/experiments/T077/recovery/S07_U11p4_ETM_S04_A/S07_A_NATIVE_BINARY_ABI_RECEIPT.json
+            research/wind-tower/experiments/T077/recovery/S07_U11p4_ETM_S04_A/S07_A_ASSEMBLY_RECEIPT.json
             research/wind-tower/archive/local-assets-20261004/file-manifest.json
             research/wind-tower/archive/local-assets-20261004-supplement/file-manifest.json
           sparse-checkout-cone-mode: false
@@ -178,22 +179,22 @@ jobs:
           print('S07_PORTABLE_PACKAGE_SOURCE_MANIFEST_PASS_NOT_RUN',len(r['files']),len(r['missing_files']))
           PY
           sha256sum /tmp/s07_portable_package.json
-      - name: Inspect SHA-pinned REFERENCE DLL PE exports (NOT historical DLL, NO solver)
+      - name: Reuse T077 verified PE/ABI source receipt for 4.5 S01 (NO solver)
         shell: bash
         run: |
           set -euo pipefail
-          dll=research/wind-tower/references/baselines-and-site-20261004/openfast-v330-adaptation/1FreeDecay/Control/libdiscon.dll
           python3 research/wind-tower/experiments/T062/s07_ntm18_original_control_input_gate.py \
-            --self-test --reference-dll-source "$dll" --reference-dll-receipt /tmp/s07_reference_dll_pe.json
+            --repo-root . --reference-abi-crosswalk-receipt /tmp/s07_reference_dll_crosswalk.json
           python3 - <<'PY'
           import json
-          r=json.load(open('/tmp/s07_reference_dll_pe.json'))
-          assert r['sha256']=='7aebb0d2166c0cc095d11c2b7bc13da136547c557b0f331dcdce84fe181802aa'
-          assert r['file_bytes']==1122431 and not r['physical_pass'] and not r['abi_runtime_verified']
-          assert not r['historical_runtime_equivalence_verified']
-          print('S07_REFERENCE_DLL_PE_SOURCE_QC_PASS_NOT_HISTORICAL_ABI',r['architecture'],r['discon_export_names'])
+          r=json.load(open('/tmp/s07_reference_dll_crosswalk.json'))
+          assert r['reference_dll_sha256']=='7aebb0d2166c0cc095d11c2b7bc13da136547c557b0f331dcdce84fe181802aa'
+          assert r['reference_pe']['discon_export'] and r['reference_pe']['machine']=='AMD64'
+          assert not r['historical_runtime_equivalence_verified'] and r['historical_dll_bytes_verified']==0
+          assert not r['physical_pass'] and r['stages_passed']==0
+          print('S07_REFERENCE_ABI_EXISTING_T077_REUSED_NOT_HISTORICAL',r['reference_dll_sha256'])
           PY
-          sha256sum "$dll" /tmp/s07_reference_dll_pe.json
+          sha256sum /tmp/s07_reference_dll_crosswalk.json
       - name: Persist exact source-derived candidate and receipt to existing Draft PR branch
         if: false # Disabled: previous concurrent bot rebase overwrote T062 receipt; manually persist CI artifact with SHA instead.
         shell: bash
@@ -219,7 +220,7 @@ jobs:
             /tmp/s07_module_graph.json
             /tmp/s07_aero_dependency.json
             /tmp/s07_portable_package.json
-            /tmp/s07_reference_dll_pe.json
+            /tmp/s07_reference_dll_crosswalk.json
             research/wind-tower/experiments/T062/S07_SHARED_AERODYN15_PORTABLE_NOT_RUN.dat
             research/wind-tower/experiments/T062/S07_U04p5_NTM_S01_InflowWind_NOT_RUN.dat
           retention-days: 7
