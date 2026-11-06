@@ -749,6 +749,7 @@
       "BldFile(2)": "..\\Rotor\\DTU_10MW_ElastoDyn_Blades.dat",
       "BldFile(3)": "..\\Rotor\\DTU_10MW_ElastoDyn_Blades.dat"
     },
+    "discon_external_references": [],
     "fst_references": {
       "CompElast": "1",
       "EDFile": "DTU_10MW_RWT_ElastoDyn.dat",
