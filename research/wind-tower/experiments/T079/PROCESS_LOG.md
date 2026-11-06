@@ -1,3 +1,5 @@
+2026-11-06 22:16｜原生CI结果补录：本轮[Actions #42232188078](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/42232188078) `completed/success`；原S09合成同态自测与新增3204行真实ESM梁代理源级采样损失验证均通过。结果已同步[收据](real-records/S09_REAL_ESM_PROXY_SAMPLING_ADMISSION_20261106.json)。仅为Python源级验算，非风震物理PASS；0/12。
+
 ### 2026-11-06 22:12｜S08→S09真实ESM梁代理采样损失与同态输入资格（0/12，E_ONLY）
 
 - **SOURCE/阅读层级**：直接读取仓库既有[S08真实派生历史3204行](real-records/S08_158M_BEAM_PROXY_HISTORY_20261102.csv)（SHA256 `c6763281ca366b16849321b7542024af111d78ebb6ee470c912dda060b51ba22`；2方向×1602点，0–160.1s、dt=0.1s）与[原始0.005s峰值收据](real-records/S08_158M_BEAM_PROXY_RECEIPT_20261102.json)（SHA256 `02730b484864b02cf1d7c83826ac819ef768fd7979cb4723c2962fd0a85ed939`；原ESM加速度SHA `a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34`、塔属性SHA `f738d35fc9c8b8d8745f2ed9490c92578b056cfe37201bbfa0bfdb24906d2983`）。**本轮未重新取得原ESM 0.005s波形或重算梁动力响应**；这是两个已归档来源的逐字节身份及峰值对照。
