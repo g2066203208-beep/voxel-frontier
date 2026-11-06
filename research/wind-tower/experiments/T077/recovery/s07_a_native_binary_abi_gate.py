@@ -218,7 +218,7 @@ def main():
         if a.receipt or a.exe or not a.dll:
             ap.error('--native-load-only requires only --dll (and optional --output)')
         result = native_reference_dll_load(a.dll)
-        raw = json.dumps(result, sort_keys=True, indent=2)+'\\n'
+        raw = json.dumps(result, sort_keys=True, indent=2)+'\n'
         if a.output:
             if a.output.exists():
                 raise ValueError('OUTPUT_OVERWRITE_FORBIDDEN')
