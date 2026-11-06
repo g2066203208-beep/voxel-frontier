@@ -155,6 +155,28 @@ jobs:
           assert not r['physical_pass'] and r['candidate_BTS_sha256'] is None and r['stages_passed']==0
           print('S07_ORIGINAL_INFLOW_45_S01_SOURCE_ONLY_NOT_DLC12',r['candidate_card_sha256'])
           PY
+      - name: Build S07 4.5 S01 portable source package manifest (NO solver)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/wind-tower/experiments/T062/s07_ntm18_original_control_input_gate.py \
+            --self-test --repo-root . --portable-package-receipt /tmp/s07_portable_package.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('/tmp/s07_portable_package.json').read_text())
+          assert r['status']=='SOURCE_ONLY_STATIC_PACKAGE_MANIFEST_NOT_RUN'
+          assert r['input_sha256']['candidate_inflow']=='2ee0f78812f675448967a4bbf6d536310d995f5c219a45cf8e4cc488d675ad55'
+          assert r['input_sha256']['candidate_aerodyn']=='a2e50140ee04759e9034fc1a51977d7f16c09e25f7c42559dc03ac92d2b2e10f'
+          assert len(r['files'])>=14 and len(r['missing_files'])==2
+          assert not r['physical_pass'] and r['formal_dlc12_verified_slots']==0
+          p=Path('research/wind-tower/experiments/T062/S10_U07p5_NTM_S01_SOURCE_PILOT_RECEIPT_20261105.json')
+          existing=json.loads(p.read_text(encoding='utf-8'))
+          existing['lowwind_45_s01_portable_package_20261106']=r
+          p.write_text(json.dumps(existing,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print('S07_PORTABLE_PACKAGE_SOURCE_MANIFEST_PASS_NOT_RUN',len(r['files']),len(r['missing_files']))
+          PY
+          sha256sum /tmp/s07_portable_package.json
       - name: Persist exact source-derived candidate and receipt to existing Draft PR branch
         shell: bash
         run: |
@@ -178,6 +200,7 @@ jobs:
             original_discon_lowwind_receipt.json
             /tmp/s07_module_graph.json
             /tmp/s07_aero_dependency.json
+            /tmp/s07_portable_package.json
             research/wind-tower/experiments/T062/S07_SHARED_AERODYN15_PORTABLE_NOT_RUN.dat
             research/wind-tower/experiments/T062/S07_U04p5_NTM_S01_InflowWind_NOT_RUN.dat
           retention-days: 7
