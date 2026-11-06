@@ -1,0 +1,100 @@
+{
+  "date_utc": "2026-11-06",
+  "stage": "S10",
+  "status": "SYNTHETIC_SEED_SAMPLING_NUMERIC_QC_ONLY_NOT_MATERIAL_LIFE",
+  "source": {
+    "script_path": "research/wind-tower/experiments/T077/recovery/s10_miner_damage_gate.py",
+    "script_sha256": "43a88762b76ca72b053abd6766e812ea5521b22cfa35a8d4e87b8d81ff16374f",
+    "script_commit": "a7ed28a268be21662b22cda37d58c0542ada0bf5",
+    "real_era5_31bin_sha256": "e4058620a36b23bb218103875d4dc5b0711fc45d418b23a2208c2fc9c16c9102",
+    "era5_source_level": "REAL_DERIVED_31_BIN_CSV_SHA_VERIFIED_IN_CI",
+    "stress_input_level": "SYNTHETIC_KNOWN_ANSWER_ONLY_NOT_REAL_LOCAL_STRESS",
+    "historical_controller_dll": "NOT_RELEVANT_TO_THIS_SYNTHETIC_QC"
+  },
+  "ref": "T077 existing S10 Miner/rainflow methods and T062 ERA5 31-bin probability identity",
+  "standard": "No authorized IEC/GB clause newly read or accepted",
+  "official": "GitHub Actions Ubuntu Python execution; NOT an OpenFAST/Abaqus physical run",
+  "run": {
+    "url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/42186076530",
+    "job_id": 127786605693,
+    "job": "s10-miner-synthetic",
+    "job_conclusion": "success",
+    "step": "Compile and known-answer/negative tests",
+    "step_conclusion": "success",
+    "workflow_conclusion": "failure",
+    "other_job_failure": "Real archived 2 ETM ZIP / 3 control points / cycle range+mean: source artifact download HTTP 410 (expired); unrelated to synthetic Miner test",
+    "native_physics_runs": 0
+  },
+  "fig": 0,
+  "tab": "2 synthetic wind bins x 2 seeds; per-bin seed sampling variance and annual error, independent analytic oracle",
+  "assumptions": {
+    "probability_basis": "conditional",
+    "operating_fraction": 0.5,
+    "bin_weights": [
+      0.25,
+      0.75
+    ],
+    "duration_s": 100,
+    "years": 20,
+    "independent_seed_realizations_across_bins": true,
+    "fixed_wind_probabilities": true,
+    "fixed_material_SN": true,
+    "scope": "seed Monte Carlo sampling standard error only; no confidence interval; no model/meteorology/physical uncertainty"
+  },
+  "synthetic_numeric_oracle": {
+    "annual_damage": 532.17,
+    "annual_seed_sampling_standard_error": 119.89124947217792,
+    "annual_seed_sampling_relative_standard_error": 0.22528750112215631,
+    "design_20year_damage": 10643.4,
+    "design_20year_seed_sampling_standard_error": 2397.8249894435585,
+    "bin_B1": {
+      "p": 0.25,
+      "seed_rates_damage_per_second": [
+        0.00001,
+        0.00002
+      ],
+      "sample_variance_rate": 5e-11,
+      "seed_mean_rate_standard_error": 0.000005
+    },
+    "bin_B2": {
+      "p": 0.75,
+      "seed_rates_damage_per_second": [
+        0.00003,
+        0.00005
+      ],
+      "sample_variance_rate": 2e-10,
+      "seed_mean_rate_standard_error": 0.00001
+    }
+  },
+  "tests": {
+    "conditional_unconditional_probability_equivalence": "PASS",
+    "analytic_standard_error": "PASS",
+    "single_seed_variance": "NULL_NOT_ESTIMABLE",
+    "identical_seed_zero_variance": "PASS",
+    "missing_seed_rejection": "PASS",
+    "synthetic_rainflow_miner_integration": "PASS",
+    "real_era5_probability_identity": "PASS",
+    "real_era5_hours_total": 184080,
+    "real_era5_hours_operating": 106900
+  },
+  "error_budget": {
+    "floating_point": "analytic comparison relative tolerance 1e-12 for SE",
+    "seed_sampling": "estimated, n=2 per bin; very low precision; not a confidence interval",
+    "cross_bin_covariance": "assumed zero, not tested",
+    "wind_climate_uncertainty": "NOT_ESTIMATED",
+    "local_stress_uncertainty": "NOT_ESTIMATED",
+    "SN_material_uncertainty": "NOT_ESTIMATED",
+    "physical_life": "NOT_AVAILABLE"
+  },
+  "hold": "No verified local material stress time histories and material-specific S-N/mean stress parameters for a physical annual Miner damage estimate; S10 BLOCKED, 0/12 PASS",
+  "claim_status": {
+    "source": "VERIFIED_SHA_IN_CI",
+    "ref": "EXISTING_METHOD",
+    "standard": "NOT_READ_THIS_RUN",
+    "official": "PYTHON_CI_ONLY",
+    "run": "SYNTHETIC_TEST_PASS",
+    "fig": "NONE",
+    "tab": "SYNTHETIC_ORACLE",
+    "physical_pass": false
+  }
+}
