@@ -611,7 +611,7 @@ def main():
     if args.module_graph_receipt:
         record = build_module_graph(args.repo_root or Path('.'))
         args.module_graph_receipt.parent.mkdir(parents=True, exist_ok=True)
-        args.module_graph_receipt.write_text(json.dumps(record, indent=2, ensure_ascii=False) + '\\n', encoding='utf-8')
+        args.module_graph_receipt.write_text(json.dumps(record, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
         print('S07_MODULE_GRAPH_SOURCE_ONLY', json.dumps({'verified':record['active_module_source_verified'], 'unresolved':record['unresolved_active_modules'], 'dll':record['dll_source']['status']}, sort_keys=True))
         return
     if args.servo_startup_source:
