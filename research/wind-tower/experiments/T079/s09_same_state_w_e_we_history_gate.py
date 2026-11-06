@@ -349,6 +349,160 @@ def run_proxy_sampling(history_path,receipt_path,output_path):
     return result
 
 
+
+# S08 real full-rate E-only admission: source verification, never W/E/WE synthesis.
+FULL_RATE_SHA = 'bab269897640e91d11da3ad02f8a0f3cf537c5e5aaf0f173bba6b1244a3591e0'
+FULL_RATE_ESM_SHA = 'a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34'
+FULL_RATE_TOWER_SHA = 'f738d35fc9c8b8d8745f2ed9490c92578b056cfe37201bbfa0bfdb24906d2983'
+FULL_RATE_QOI = {
+    'top_relative_u_m':'peak_top_relative_displacement_m',
+    'top_absolute_acc_m_s2':'peak_top_absolute_acceleration_m_s2',
+    'base_elastic_shear_N':'peak_base_elastic_shear_kN',
+    'base_elastic_moment_Nm':'peak_base_elastic_moment_kNm',
+}
+
+
+def full_rate_proxy_qc(raw, receipt, expected_n=32040, expected_sha256=None):
+    """Read actual 0.005s E-only CSV and verify provenance, time grid, 8 peaks.
+
+    This is a SOURCE gate, not a native structural solver or an S09 pair.
+    """
+    if not isinstance(raw,bytes):raise ValueError('FULL_RATE_INPUT_MUST_BE_BYTES')
+    actual_sha=hashlib.sha256(raw).hexdigest()
+    if expected_sha256 is not None and actual_sha!=expected_sha256:
+        raise ValueError('FULL_RATE_SOURCE_SHA256_MISMATCH')
+    if (receipt.get('source_esm_sha256')!=FULL_RATE_ESM_SHA or
+        receipt.get('source_tower_sha256')!=FULL_RATE_TOWER_SHA):
+        raise ValueError('FULL_RATE_SOURCE_IDENTITY_MISMATCH')
+    hist=receipt.get('full_rate_history',{})
+    if (hist.get('file_sha256')!=actual_sha or
+        hist.get('n_rows')!=2*expected_n or
+        hist.get('rows_per_direction')!=expected_n or
+        hist.get('dt_s')!=.005 or hist.get('n_directions')!=2):
+        raise ValueError('FULL_RATE_RECEIPT_METADATA_MISMATCH')
+    if (hist.get('initial_state_sha256') is not None or
+        hist.get('W_WE_histories_present') is not False or
+        hist.get('admissible_for_S09_four_scenario_comparison') is not False or
+        receipt.get('S09_PASS') is not False):
+        raise ValueError('FULL_RATE_FALSE_PAIR_CLAIM')
+    peaks=hist.get('eight_peak_integrator_checks',[])
+    peak_map={(p.get('direction'),p.get('qoi')):p for p in peaks}
+    if len(peaks)!=8 or len(peak_map)!=8:
+        raise ValueError('FULL_RATE_PEAK_RECEIPT_INCOMPLETE')
+    try:decoded=raw.decode('utf-8-sig')
+    except UnicodeError:raise ValueError('FULL_RATE_INVALID_UTF8') from None
+    reader=csv.DictReader(io.StringIO(decoded))
+    if tuple(reader.fieldnames or ())!=PROXY_FIELDS:
+        raise ValueError('FULL_RATE_HEADER_MISMATCH')
+    observed={(d,q):0. for d in PROXY_DIRECTIONS for q in FULL_RATE_QOI}
+    counts={d:0 for d in PROXY_DIRECTIONS}
+    for row in reader:
+        if None in row or None in row.values():
+            raise ValueError('FULL_RATE_ROW_WIDTH')
+        d=row['direction']
+        if d not in counts:raise ValueError('FULL_RATE_DIRECTION_MISMATCH')
+        i=counts[d]
+        if i>=expected_n or d!=PROXY_DIRECTIONS[0 if counts['HNE']<expected_n else 1]:
+            raise ValueError('FULL_RATE_DIRECTION_ORDER')
+        t=finite(row['time_s'],'FULL_RATE_TIME')
+        if abs(t-.005*i)>1e-8:
+            raise ValueError('FULL_RATE_TIME_GRID_MISMATCH')
+        for q in FULL_RATE_QOI:
+            observed[d,q]=max(observed[d,q],abs(finite(row[q],'FULL_RATE_'+q)))
+        counts[d]+=1
+    if any(n!=expected_n for n in counts.values()):
+        raise ValueError('FULL_RATE_ROW_COUNT_MISMATCH')
+    comparisons=[]
+    for d in PROXY_DIRECTIONS:
+        for q,receipt_q in FULL_RATE_QOI.items():
+            p=peak_map.get((d,receipt_q))
+            if p is None:raise ValueError('FULL_RATE_PEAK_RECEIPT_INCOMPLETE')
+            expected=finite(p.get('full_rate_peak_abs'),'FULL_RATE_RECEIPT_PEAK')
+            original=finite(p.get('original_integrator_peak_abs'),'FULL_RATE_INTEGRATOR_PEAK')
+            if expected<=0 or abs(expected-original)>1e-12*max(1.,expected):
+                raise ValueError('FULL_RATE_INTEGRATOR_PEAK_MISMATCH')
+            factor=1000. if q in ('base_elastic_shear_N','base_elastic_moment_Nm') else 1.
+            actual=observed[d,q]
+            relative=abs(actual/factor-expected)/max(abs(expected),1e-15)
+            if relative>2e-9:raise ValueError('FULL_RATE_PEAK_MISMATCH')
+            comparisons.append({'direction':d,'qoi':q,'csv_peak_abs':actual,
+                'receipt_peak_abs':expected*factor,'relative_residual':relative})
+    return {'classification':'REAL_ESM_FULL_RATE_E_ONLY_SOURCE_QC_NOT_S09_PAIR',
+        'SOURCE':'S08 Actions artifact full-rate CSV + committed S08 source receipt',
+        'REF':'T079 pre-existing linear reduced-beam method; no new full text',
+        'STANDARD':'No authorized IEC/GB clauses newly read; NOT STANDARD PASS',
+        'OFFICIAL':'ESM processed source identity inherited; project tower not official DTU mixed tower',
+        'RUN':'Python stdlib source QC; NO NEW SOLVER RUN','FIG':0,
+        'TAB':'8 real E-only full-rate peaks',
+        'reading_level':'Actual 64080-row E-only CSV artifact bytes + committed source receipt',
+        'source_full_rate_sha256':actual_sha,'source_esm_sha256':FULL_RATE_ESM_SHA,
+        'source_tower_sha256':FULL_RATE_TOWER_SHA,
+        'rows':sum(counts.values()),'rows_per_direction':counts,'dt_s':.005,
+        'peak_comparisons':comparisons,
+        'max_peak_relative_residual':max(x['relative_residual'] for x in comparisons),
+        'initial_state_sha256':None,'B_W_WE_present':False,
+        'S09_pair_admissible':False,'physics_PASS':False,'native_E_WE_RUN':0,
+        'error_budget':'Exact SHA256; time-grid abs tolerance 1e-8 s; peak relative tolerance 2e-9; model/site/initial-state error UNQUANTIFIED',
+        'HOLD':'E-only nonproduction linear beam proxy; missing verified initial state and synchronized B/W/WE.'}
+
+
+def full_rate_proxy_self_test():
+    def fixture(shift=False,missing=False,bad_peak=False):
+        s=io.StringIO(newline='');w=csv.writer(s,lineterminator='\n');w.writerow(PROXY_FIELDS)
+        for d in PROXY_DIRECTIONS if not missing else ('HNE',):
+            for i in range(5):
+                k=i+1
+                w.writerow([d,i*.005+(.001 if shift and i==2 else 0),.1*k,.2*k,100*k,1000*k])
+        raw=s.getvalue().encode()
+        peaks=[]
+        for d in PROXY_DIRECTIONS:
+            for q,rq in FULL_RATE_QOI.items():
+                p=5*(.1 if q=='top_relative_u_m' else .2 if q=='top_absolute_acc_m_s2' else .1 if q=='base_elastic_shear_N' else 1.)
+                if bad_peak and d=='HNE' and q=='top_relative_u_m':p*=1.1
+                peaks.append({'direction':d,'qoi':rq,'full_rate_peak_abs':p,'original_integrator_peak_abs':p})
+        receipt={'source_esm_sha256':FULL_RATE_ESM_SHA,'source_tower_sha256':FULL_RATE_TOWER_SHA,
+            'S09_PASS':False,'full_rate_history':{'file_sha256':hashlib.sha256(raw).hexdigest(),
+            'n_rows':10,'rows_per_direction':5,'dt_s':.005,'n_directions':2,
+            'initial_state_sha256':None,'W_WE_histories_present':False,
+            'admissible_for_S09_four_scenario_comparison':False,
+            'eight_peak_integrator_checks':peaks}}
+        return raw,receipt
+    raw,receipt=fixture()
+    result=full_rate_proxy_qc(raw,receipt,5,hashlib.sha256(raw).hexdigest())
+    assert result['rows']==10 and len(result['peak_comparisons'])==8
+    assert result['max_peak_relative_residual']<1e-14 and result['S09_pair_admissible'] is False
+    def reject(raw,receipt,code,sha=None):
+        try:full_rate_proxy_qc(raw,receipt,5,sha)
+        except ValueError as e:assert str(e)==code,(str(e),code)
+        else:raise AssertionError('ACCEPTED_'+code)
+    reject(raw,receipt,'FULL_RATE_SOURCE_SHA256_MISMATCH','0'*64)
+    r,j=fixture(shift=True);reject(r,j,'FULL_RATE_TIME_GRID_MISMATCH')
+    r,j=fixture(missing=True);reject(r,j,'FULL_RATE_RECEIPT_METADATA_MISMATCH') if False else None
+    # Missing direction with intact receipt must fail count, not pass by using fewer rows.
+    r,j=fixture(missing=True);reject(r,j,'FULL_RATE_ROW_COUNT_MISMATCH')
+    r,j=fixture(bad_peak=True);reject(r,j,'FULL_RATE_PEAK_MISMATCH')
+    r,j=fixture();j['full_rate_history']['initial_state_sha256']='a'*64
+    reject(r,j,'FULL_RATE_FALSE_PAIR_CLAIM')
+    r,j=fixture();j['full_rate_history']['W_WE_histories_present']=True
+    reject(r,j,'FULL_RATE_FALSE_PAIR_CLAIM')
+    r,j=fixture();j['source_esm_sha256']='b'*64
+    reject(r,j,'FULL_RATE_SOURCE_IDENTITY_MISMATCH')
+    r,j=fixture();j['full_rate_history']['file_sha256']='c'*64
+    reject(r,j,'FULL_RATE_RECEIPT_METADATA_MISMATCH')
+    return {'positive_assertions':3,'negative_rejections':8,
+        'classification':result['classification']}
+
+
+def run_full_rate_proxy(history_path,receipt_path,output_path):
+    raw=history_path.read_bytes();receipt_bytes=receipt_path.read_bytes()
+    receipt=json.loads(receipt_bytes)
+    result=full_rate_proxy_qc(raw,receipt,expected_sha256=FULL_RATE_SHA)
+    result['source_receipt_sha256']=hashlib.sha256(receipt_bytes).hexdigest()
+    output_path.write_text(json.dumps(result,indent=2,sort_keys=True,ensure_ascii=False)+'\n',encoding='utf-8')
+    return result
+
+
+
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--self-test',action='store_true')
@@ -359,8 +513,11 @@ def main():
     ap.add_argument('--proxy-history',type=Path)
     ap.add_argument('--proxy-peak-receipt',type=Path)
     ap.add_argument('--proxy-output-json',type=Path)
+    ap.add_argument('--full-rate-history',type=Path)
+    ap.add_argument('--full-rate-receipt',type=Path)
+    ap.add_argument('--full-rate-output-json',type=Path)
     args=ap.parse_args()
-    if args.self_test: print(json.dumps({'paired':self_test(),'proxy_sampling':proxy_sampling_self_test()},sort_keys=True))
+    if args.self_test: print(json.dumps({'paired':self_test(),'proxy_sampling':proxy_sampling_self_test(),'full_rate_proxy':full_rate_proxy_self_test()},sort_keys=True))
     if args.input:
         if not (args.expected_sha256 and is_sha(args.expected_sha256)):
             ap.error('real input requires expected exact SHA256')
@@ -383,7 +540,11 @@ def main():
         if not args.proxy_peak_receipt or not args.proxy_output_json:
             ap.error('--proxy-history requires --proxy-peak-receipt and --proxy-output-json')
         print(json.dumps(run_proxy_sampling(args.proxy_history,args.proxy_peak_receipt,args.proxy_output_json),sort_keys=True))
-    if not args.self_test and not args.input and not args.proxy_history:ap.error('use --self-test, --input or --proxy-history')
+    if args.full_rate_history:
+        if not args.full_rate_receipt or not args.full_rate_output_json:
+            ap.error('--full-rate-history requires --full-rate-receipt and --full-rate-output-json')
+        print(json.dumps(run_full_rate_proxy(args.full_rate_history,args.full_rate_receipt,args.full_rate_output_json),sort_keys=True))
+    if not args.self_test and not args.input and not args.proxy_history and not args.full_rate_history:ap.error('use --self-test, --input, --proxy-history or --full-rate-history')
 
 
 if __name__=='__main__':main()
