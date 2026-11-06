@@ -690,8 +690,23 @@ def build_aero_dependency(repo_root):
         refs, declared = aero_references(card)
         checked = []
         for item in refs:
-            raw, entry = source.get("static", "openfast-36-r2", item["resolved"])
+            # Historical Windows-origin cards can differ from archived paths
+            # only by letter case. Verify unique alias against SHA-pinned
+            # manifest, but NEVER call that a portable runtime path PASS.
+            key = ("openfast-36-r2", item["resolved"])
+            if key in source.indexes["static"]:
+                manifest_path = item["resolved"]
+            else:
+                aliases = [member for (section, member) in source.indexes["static"]
+                           if section == "openfast-36-r2"
+                           and member.casefold() == item["resolved"].casefold()]
+                require(len(aliases) == 1,
+                        "AERO_MISSING_OR_AMBIGUOUS_CASE_ALIAS:" + item["resolved"])
+                manifest_path = aliases[0]
+            raw, entry = source.get("static", "openfast-36-r2", manifest_path)
             checked.append(dict(item, sha256=sha(raw), bytes=len(raw),
+                                manifest_path=manifest_path,
+                                case_sensitive_path_match=(manifest_path == item["resolved"]),
                                 canonical_member=entry["canonical_member"],
                                 archive=entry["canonical_archive"]))
         return {
@@ -710,10 +725,12 @@ def build_aero_dependency(repo_root):
                 "sha256": sha(other), "bytes": len(other),
                 "canonical_member": other_meta["canonical_member"]},
             "declared_NumAFfiles": declared, "references": checked,
+            "case_only_manifest_alias_count": sum(not x["case_sensitive_path_match"] for x in checked),
+            "runtime_portability": "HOLD_ON_CASE_SENSITIVE_HOST_IF_ANY_CASE_ALIAS; source SHA checks do not fix original paths",
             "source_members_verified": source.read_count,
             "assumptions": "The original FST ..\\\\Rotor reference resolves to shared CASES/Rotor; candidate staging paths remain NOT_RUN",
             "error_budget": "Source bytes, hashes, counts and lexical relative paths exact; runtime file resolution, aero loads, controller DLL and physical errors NOT ESTIMATED",
-            "HOLD": "New 4.5m/s BTS/OUTB and original DLL absent; staged portable bundle and native OpenFAST not tested",
+            "HOLD": "Original AeroDyn card case-sensitive path aliases (if any) require portable staging; new BTS/OUTB and original DLL absent; native OpenFAST not tested",
             "status": "AERODYN_DEPENDENCY_SOURCE_ONLY_NOT_RUN",
             "physical_pass": False, "formal_dlc12_verified_slots": 0, "stages_passed": 0
         }
