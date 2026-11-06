@@ -183,7 +183,7 @@ jobs:
         run: |
           set -euo pipefail
           dll=research/wind-tower/references/baselines-and-site-20261004/openfast-v330-adaptation/1FreeDecay/Control/libdiscon.dll
-          python3 research/wind-tower/experiments/T062/s07_ntm18_original_control_input_gate.py \\
+          python3 research/wind-tower/experiments/T062/s07_ntm18_original_control_input_gate.py \
             --self-test --reference-dll-source "$dll" --reference-dll-receipt /tmp/s07_reference_dll_pe.json
           python3 - <<'PY'
           import json

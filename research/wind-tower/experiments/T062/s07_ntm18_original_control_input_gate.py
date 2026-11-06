@@ -999,7 +999,7 @@ def inspect_pe_reference_dll(data):
         return struct.unpack_from('<I', data, p)[0]
     check(len(data) >= 0x40 and data[:2] == b'MZ', 'PE_DOS_HEADER_MISSING')
     pe = u32(0x3c)
-    check(pe >= 0x40 and pe + 24 <= len(data) and data[pe:pe+4] == b'PE\\0\\0', 'PE_SIGNATURE_INVALID')
+    check(pe >= 0x40 and pe + 24 <= len(data) and data[pe:pe+4] == b'PE\0\0', 'PE_SIGNATURE_INVALID')
     machine, nsections, timestamp, _, _, optsize, flags = struct.unpack_from('<HHIIIHH', data, pe+4)
     opt = pe + 24
     check(0 < nsections <= 96 and optsize >= 96 and opt + optsize <= len(data), 'PE_OPTIONAL_OR_SECTIONS_INVALID')
@@ -1013,7 +1013,7 @@ def inspect_pe_reference_dll(data):
     sections = []
     for i in range(nsections):
         s = section_base + i*40
-        name = data[s:s+8].split(b'\\0')[0].decode('ascii','replace')
+        name = data[s:s+8].split(b'\0')[0].decode('ascii','replace')
         vsize, va, rawsize, rawptr = struct.unpack_from('<IIII', data, s+8)
         check(rawptr <= len(data) and rawsize <= len(data)-rawptr, 'PE_SECTION_RAW_OOB')
         sections.append((name,vsize,va,rawsize,rawptr))
@@ -1036,7 +1036,7 @@ def inspect_pe_reference_dll(data):
         for i in range(nnames):
             name_rva = u32(np+4*i)
             start = rva_to_offset(name_rva,1)
-            stop=data.find(b'\\0',start,min(start+256,len(data)))
+            stop=data.find(b'\0',start,min(start+256,len(data)))
             check(stop>start, 'PE_EXPORT_NAME_UNTERMINATED')
             exports.append(data[start:stop].decode('ascii','replace'))
     discon=[x for x in exports if x.lower().lstrip('_').split('@')[0]=='discon']
@@ -1046,19 +1046,19 @@ def s07_reference_dll_self_test():
     import struct
     a=bytearray(0x600)
     a[:2]=b'MZ'; struct.pack_into('<I',a,0x3c,0x80)
-    a[0x80:0x84]=b'PE\\0\\0'
+    a[0x80:0x84]=b'PE\0\0'
     struct.pack_into('<HHIIIHH',a,0x84,0x8664,1,0,0,0,0xf0,0x2022)
     opt=0x98; struct.pack_into('<H',a,opt,0x20b)
     struct.pack_into('<II',a,opt+112,0x1100,0x100)
-    sec=opt+0xf0; a[sec:sec+8]=b'.rdata\\0\\0'
+    sec=opt+0xf0; a[sec:sec+8]=b'.rdata\0\0'
     struct.pack_into('<IIII',a,sec+8,0x300,0x1000,0x300,0x200)
     struct.pack_into('<IIHHIIIIIII',a,0x300,0,0,0,0,0x1170,1,1,1,0x1140,0x1150,0x1160)
     struct.pack_into('<I',a,0x350,0x1180)
     struct.pack_into('<H',a,0x360,0)
-    a[0x380:0x387]=b'DISCON\\0'
+    a[0x380:0x387]=b'DISCON\0'
     got=inspect_pe_reference_dll(bytes(a))
     assert got['architecture']=='x86_64' and got['discon_export_names']==['DISCON'] and not got['abi_runtime_verified']
-    rejects=[b'',b'\\x7fELF'+bytes(500),bytes(a[:100]),bytes(a[:0x84]+b'NOPE'+a[0x88:]), bytes(a[:opt]+b'\\x00\\x00'+a[opt+2:]),bytes(a[:sec+40])]
+    rejects=[b'',b'\x7fELF'+bytes(500),bytes(a[:100]),bytes(a[:0x84]+b'NOPE'+a[0x88:]), bytes(a[:opt]+b'\x00\x00'+a[opt+2:]),bytes(a[:sec+40])]
     for i,blob in enumerate(rejects):
         try: inspect_pe_reference_dll(blob)
         except (ValueError,struct.error): pass
