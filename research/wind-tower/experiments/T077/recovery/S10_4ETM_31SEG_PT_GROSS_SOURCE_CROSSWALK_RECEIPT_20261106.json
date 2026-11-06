@@ -1,0 +1,86 @@
+{
+  "stage": "S06_S10_DUAL_SOURCE_PRESTRESS_GROSS_CROSSWALK_NOT_PHYSICAL_PASS",
+  "SOURCE": "Direct PR#42 reads: existing 124-row joint-kern PT/zeroPT, 124-row continuous azimuth gross envelope, 31-row PT geometric radii and OpenFAST gross A/I, 31-row T074 gravity and full T078 PT metadata. Original 16 ZIP/OUTB NOT reread",
+  "reading_level": "DERIVED_CSV_BYTES_DIRECT, historical original ZIP/OUTB provenance inherited not freshly revalidated",
+  "REF": "REF018 Huang2025 Engineering Structures 334:120295 p6 Eq1 previously visually checked, not reread; T077 S06/S10 original source scripts",
+  "STANDARD": "IEC61400-1/6 2025 and GB/NB licensed clauses not read this run",
+  "OFFICIAL": "GitHub source bytes, inherited OpenFAST v3.5.3 provenance; no native solver run",
+  "RUN": "V8 actual full 124-row source crosswalk, 1 analytic oracle, 1 real-source positive and 9 corrupted-input rejections; native Node CI not run",
+  "FIG": "0 new physical figures",
+  "TAB": "124 rows 4 ETM x 31 segment joint/gross/PT/geometry/grav sign crosswalk",
+  "source_paths": {
+    "joint": "research/wind-tower/experiments/T077/recovery/S06_JOINT_KERN_COMPACT_124_20261027.csv",
+    "envelope": "research/wind-tower/experiments/T077/recovery/S10_4ETM_31SEG_CONTINUOUS_AZIMUTH_ENVELOPE_20261102.csv",
+    "segments": "research/wind-tower/experiments/T077/recovery/S01_PT_AXIAL_31SEG_SOURCE_20261026.csv",
+    "gross": "research/wind-tower/experiments/T077/recovery/S06_158M_TOWER_GROSS_SECTION_IDENTITY_31SEG_20261026.csv",
+    "gravity": "research/wind-tower/experiments/T074/T074_158M_31SEG_GRAVITY_BASELINE.csv",
+    "pt": "research/wind-tower/experiments/T078/T078_PRESTRESS_DESIGN_META.json"
+  },
+  "input_sha256": {
+    "joint": "d2f1edb8d7a21a268abda532b3564ec7d92967424f26b165f81b86b0db73569f",
+    "envelope": "6002f69286eb9941265697732ec7acd961ac6b5757d7472423d91e0374288f21",
+    "segments": "d34331c9b1eacb25cd4ffa46d4430fbe8420965e683f7444cb6cfee207eef99e",
+    "gross": "8ae262435e13c0f10326acef7270b9962c943bb5f212171d830fe834f3a364ed",
+    "gravity": "b20db81a63f114b60d5974ebae4daaff6bbb93938ac076cb6515b8ac2e49b349",
+    "pt": "50b5d23c9991955b8cfe304bdb1bc8519e07ad1b97a8f7500bb7e878eb69d2a1"
+  },
+  "script_path": "research/wind-tower/experiments/T077/recovery/s10_pt_gross_source_crosswalk.cjs",
+  "script_sha256": "d1535563402dc27998ca2a2af61c107dbc0dbfd98ad3368d7370434bc0ca5251",
+  "csv_path": "research/wind-tower/experiments/T077/recovery/S10_4ETM_31SEG_PT_GROSS_SOURCE_CROSSWALK_20261106.csv",
+  "csv_sha256": "6cf715a3624e479681086c31db25f01dd9c86f42eaa81bd56402d716d4298b43",
+  "tests": {
+    "analytic_known_answers": 1,
+    "full_real_positive": 1,
+    "negative_rejections": 9
+  },
+  "summary": {
+    "status": "DUAL_SOURCE_NUMERIC_QC_PASS_PHYSICAL_HOLD",
+    "rows": 124,
+    "matching_peak_times": 124,
+    "gravity_Fz_negative_rows": 124,
+    "Pe_and_P0_shift_checks": 248,
+    "positive_Pe_peak_rows": 124,
+    "zeroPT_peak_delta_MPa_bounds": [
+      -0.0347146909999978,
+      0.021821776000003013
+    ],
+    "max_abs_zeroPT_peak_difference": {
+      "case": "U09p343881_ETM_S06",
+      "segment": 26,
+      "delta": -0.0347146909999978,
+      "da": 0.18576423146214882,
+      "di": 0.16696014058328323,
+      "dz": -0.0004461658960792647,
+      "peRes": 9.079558438429558e-9,
+      "p0Res": -2.1944224215530994e-10,
+      "pe": 12.596454171
+    },
+    "joint_vs_openfast_area_pct_bounds": [
+      -0.1751524667338411,
+      0.1861277597742239
+    ],
+    "joint_vs_openfast_I_pct_bounds": [
+      -0.10886094267101853,
+      0.4095167310609549
+    ],
+    "gravity_gage_height_delta_m_bounds": [
+      -0.0010479100256191032,
+      4.6214054805204796e-10
+    ],
+    "max_abs_Pe_shift_residual_MPa": 1.0284487927947339e-8,
+    "max_abs_P0_shift_residual_MPa": 9.83893855277529e-10,
+    "physical_pass": false,
+    "stage_pass_count": 0
+  },
+  "assumptions": [
+    "source labels identify same case and segment, not independently proven fully synchronous four-batch physical state",
+    "positive tensile sign conditional; T074 negative Fz is historical consistency, not native coordinate/load ownership proof",
+    "P0 and Pe uniform coaxial pressure are counterfactual hypotheses, not native PT equilibrium",
+    "PT geometry interpolated from segment end radii at gage; OpenFAST gross A/I is a distinct derived source"
+  ],
+  "error_budget": "SHA256 exact; 9 decimal source serialization and PT rounding residual <3e-8 MPa; gross peak difference and geometry A/I differences quantified, gravity gage mismatch <=0.001048m; physical error from axis/contact/PT/material NEED_ESTIMATE",
+  "failures": "Initial stricter 2e-5m T074 gage-height identity assertion failed because source heights differ up to 0.001048m; replaced with recorded <0.002m diagnostic guard; 9 deliberate corruptions rejected; no native Node CI",
+  "HOLD": "Two geometry sources are not identical; no validated local material stress, actual effective PT native balance, formal DLC1.2, cross-batch state or E/WE; S06 PARTIAL, S10 BLOCKED, 0/12",
+  "physical_pass": false,
+  "stages_passed": 0
+}
