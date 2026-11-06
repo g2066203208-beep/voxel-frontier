@@ -466,7 +466,14 @@ def module_graph_source_lookup(source, member):
     # Preserve original case identity, then the SHA-identical canonical ETM
     # archive alias; never silently select another wind-speed or seed.
     import posixpath
-    name = module_graph_safe_reference(member)
+    try:
+        name = module_graph_safe_reference(member)
+    except ValueError as exc:
+        # Original cards can contain absolute machine paths or parent-relative
+        # references. Record them explicitly instead of falsely resolving
+        # them into a new staged case or aborting the whole source inventory.
+        return {"status": "UNRESOLVED_EXTERNAL_OR_TRAVERSAL_REFERENCE",
+                "reference": member, "reason": str(exc)}
     cases = ("CASES/U09p343881_NTM_S01/", "CASES/U09p343881_ETM_S01/")
     candidates = []
     for case in cases:
