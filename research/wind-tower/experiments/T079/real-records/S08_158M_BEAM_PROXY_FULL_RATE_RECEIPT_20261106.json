@@ -1,0 +1,102 @@
+{
+  "classification": "REAL_ESM_E_ONLY_NONPRODUCTION_BEAM_PROXY_0P005S_NOT_S09_PAIRED",
+  "SOURCE": "T077/recovery/S06_C02R3R2_158M_Tower_RECOVERED_20261026.dat and historical ESM artifact 12884814391",
+  "REF": "Existing T079 seismic method notes; no new paper full-text read",
+  "STANDARD": "No authorized GB/IEC clauses read; NOT STANDARD PASS",
+  "OFFICIAL": "Recovered OpenFAST tower file is a project source, not official DTU tower design",
+  "RUN": "Full-rate Newmark beam-proxy history; no native structural solver",
+  "FIG": 0,
+  "TAB": "S08_158M_BEAM_PROXY_HISTORY_0P005S_20261106.csv",
+  "source_reading_level": "GitHub OpenFAST 70-station tower file + archived processed ESM acceleration",
+  "source_tower_sha256": "f738d35fc9c8b8d8745f2ed9490c92578b056cfe37201bbfa0bfdb24906d2983",
+  "source_esm_sha256": "a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34",
+  "code_sha256": "c391b8bd21fbe22104bdf948fd6c8c3cc66f7de392334631c61fa8077b7acce3",
+  "software": "Python NumPy SciPy Euler-Bernoulli consistent mass Newmark",
+  "assumptions": [
+    "perfectly continuous linear Euler-Bernoulli beam, fixed base",
+    "no prestress/contact/cracking/soil/foundation",
+    "RNA mass at 158m; CG offset, inertia, blades ignored",
+    "horizontal HNE/HNN only; HNZ vertical not represented",
+    "5% equal modal damping assumed",
+    "base shear/moment are elastic restoring components, not total dynamic support reactions",
+    "35 segments from 70 OpenFAST paired stations, tiny interstation gaps closed"
+  ],
+  "error_budget": "Uniform cantilever frequency <2e-5; modal residual <1e-7; orthogonality <1e-8; first 6 coarse/refined frequencies <2%; physical model error UNQUANTIFIED; full-rate 8-QoI peaks vs integrator rtol=1e-11, atol=1e-10; physical model error unquantified",
+  "failure_records": [],
+  "full_rate_history": {
+    "file": "S08_158M_BEAM_PROXY_HISTORY_0P005S_20261106.csv",
+    "file_sha256": "bab269897640e91d11da3ad02f8a0f3cf537c5e5aaf0f173bba6b1244a3591e0",
+    "legacy_file": "S08_158M_BEAM_PROXY_HISTORY_20261102.csv",
+    "legacy_file_sha256": "1d7e73720698fd4e4638cf3b3bd4a4b62ffcb0ad6f96cf3bfc349b4f2e967b52",
+    "n_rows": 64080,
+    "rows_per_direction": 32040,
+    "dt_s": 0.005,
+    "n_directions": 2,
+    "exact_20x_decimation_reproduces_legacy": true,
+    "eight_peak_integrator_checks": [
+      {
+        "direction": "HNE",
+        "qoi": "peak_top_relative_displacement_m",
+        "full_rate_peak_abs": 0.035037028548991586,
+        "original_integrator_peak_abs": 0.035037028548991586,
+        "absolute_residual": 0.0
+      },
+      {
+        "direction": "HNE",
+        "qoi": "peak_top_absolute_acceleration_m_s2",
+        "full_rate_peak_abs": 0.14504504850883546,
+        "original_integrator_peak_abs": 0.14504504850883546,
+        "absolute_residual": 0.0
+      },
+      {
+        "direction": "HNE",
+        "qoi": "peak_base_elastic_shear_kN",
+        "full_rate_peak_abs": 325.9682621085197,
+        "original_integrator_peak_abs": 325.9682621085197,
+        "absolute_residual": 0.0
+      },
+      {
+        "direction": "HNE",
+        "qoi": "peak_base_elastic_moment_kNm",
+        "full_rate_peak_abs": 11233.622632041019,
+        "original_integrator_peak_abs": 11233.622632041019,
+        "absolute_residual": 0.0
+      },
+      {
+        "direction": "HNN",
+        "qoi": "peak_top_relative_displacement_m",
+        "full_rate_peak_abs": 0.029303410762072532,
+        "original_integrator_peak_abs": 0.029303410762072532,
+        "absolute_residual": 0.0
+      },
+      {
+        "direction": "HNN",
+        "qoi": "peak_top_absolute_acceleration_m_s2",
+        "full_rate_peak_abs": 0.15393397936141234,
+        "original_integrator_peak_abs": 0.15393397936141234,
+        "absolute_residual": 0.0
+      },
+      {
+        "direction": "HNN",
+        "qoi": "peak_base_elastic_shear_kN",
+        "full_rate_peak_abs": 302.6932847235929,
+        "original_integrator_peak_abs": 302.6932847235929,
+        "absolute_residual": 0.0
+      },
+      {
+        "direction": "HNN",
+        "qoi": "peak_base_elastic_moment_kNm",
+        "full_rate_peak_abs": 8613.006689305805,
+        "original_integrator_peak_abs": 8613.006689305805,
+        "absolute_residual": 0.0
+      }
+    ],
+    "admissible_for_S09_four_scenario_comparison": false,
+    "initial_state_sha256": null,
+    "W_WE_histories_present": false
+  },
+  "HOLD": "E-only linear beam proxy; no matching B/W/WE, no verified initial-state SHA, no native physics PASS",
+  "S08_PASS": false,
+  "S09_PASS": false,
+  "native_E_WE_RUN": 0
+}
