@@ -484,9 +484,14 @@ def module_graph_source_lookup(source, member):
     if not found:
         return {"status": "MISSING_ARCHIVED_MEMBER", "reference": member,
                 "tried": candidates}
-    hashes = {r["sha256"].lower() for _, _, r in found}
-    require(len(hashes) == 1, "MODULE_AMBIGUOUS_DIFFERENT_HASHES:" + name)
-    manifest, full, row = found[0]
+    # The original NTM InflowWind differs from the ETM card even when their
+    # filenames match. Resolve the NTM case FIRST; only use the ETM alias
+    # when the NTM member is absent (e.g. the deduplicated original FST).
+    preferred = [x for x in found if x[1].startswith(cases[0])]
+    selected = preferred if preferred else found
+    hashes = {r["sha256"].lower() for _, _, r in selected}
+    require(len(hashes) == 1, "MODULE_AMBIGUOUS_SAME_CASE_HASHES:" + name)
+    manifest, full, row = selected[0]
     raw, verified = source.get(manifest, "openfast-36-r2", full)
     return {"status": "ARCHIVED_SOURCE_SHA_VERIFIED",
             "reference": member, "logical_member": full,
