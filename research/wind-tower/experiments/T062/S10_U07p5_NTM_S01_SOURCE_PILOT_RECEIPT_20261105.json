@@ -267,7 +267,7 @@
       "changed_reference_count": 1,
       "physical_pass": false,
       "status": "SOURCE_ONLY_PORTABLE_CANDIDATE_NOT_RUN",
-      "candidate_repository_path": "NOT_WRITTEN",
+      "candidate_repository_path": "research/wind-tower/experiments/T062/S07_SHARED_AERODYN15_PORTABLE_NOT_RUN.dat",
       "source_original_shared_card_sha256": "e258d2e8fc7664b93f3e6a792c46ec38bea327859f95c3b200391e9f2bb1a568",
       "case_local_alternative_sha256": "7ebaa0bdf25076041a98ee25ae0577f2d02be61569092965e47be5f875bbcc6d",
       "original_archive_member": "CASES/Rotor/DTU_10MW_RWT_AeroDyn15.dat"
