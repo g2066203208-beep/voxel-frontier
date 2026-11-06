@@ -66,3 +66,46 @@ jobs:
           path: S07_A_NATIVE_BINARY_ABI_RECEIPT.json
           if-no-files-found: ignore
           retention-days: 30
+
+  windows-reference-dll-load-only:
+    name: Windows reference DISCON LoadLibrary only (NO OpenFAST, NO DISCON call)
+    runs-on: windows-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            research/wind-tower/experiments/T077/recovery/s07_a_native_binary_abi_gate.py
+            research/wind-tower/references/baselines-and-site-20261004/openfast-v330-adaptation/1FreeDecay/Control/libdiscon.dll
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Native Windows x64 loader and SHA-locked reference DLL (no solver)
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $py = 'research/wind-tower/experiments/T077/recovery/s07_a_native_binary_abi_gate.py'
+          $dll = 'research/wind-tower/references/baselines-and-site-20261004/openfast-v330-adaptation/1FreeDecay/Control/libdiscon.dll'
+          $actual = (Get-FileHash -Algorithm SHA256 $dll).Hash.ToLowerInvariant()
+          if ($actual -ne '7aebb0d2166c0cc095d11c2b7bc13da136547c557b0f331dcdce84fe181802aa') { throw 'REFERENCE_DLL_SHA_MISMATCH' }
+          if ((Get-Item $dll).Length -ne 1122431) { throw 'REFERENCE_DLL_SIZE_MISMATCH' }
+          python --version
+          python -m py_compile $py
+          python $py --selftest
+          python $py --native-load-only --dll $dll --output S07_A_WINDOWS_REFERENCE_DLL_LOAD_RECEIPT.json
+          if ($LASTEXITCODE -ne 0) { throw 'WINDOWS_LOAD_DIAGNOSTIC_FAILED' }
+          $result = Get-Content S07_A_WINDOWS_REFERENCE_DLL_LOAD_RECEIPT.json -Raw | ConvertFrom-Json
+          if ($result.RUN.openfast -ne 0 -or $result.RUN.discon_calls -ne 0 -or $result.physical_pass -ne $false) { throw 'UNSAFE_NATIVE_LOAD_RECEIPT' }
+          if ($result.status -notin @('PASS_REFERENCE_DLL_WINDOWS_LOAD_AND_EXPORT_ONLY','HOLD_WINDOWS_REFERENCE_DLL_LOAD_OR_EXPORT')) { throw 'UNEXPECTED_LOAD_STATUS' }
+          Write-Host ('S07_WINDOWS_REFERENCE_LOAD_STATUS=' + $result.status)
+          if ($result.failure) { Write-Host ('S07_WINDOWS_LOAD_FAILURE=' + ($result.failure | ConvertTo-Json -Compress)) }
+          Write-Host 'REFERENCE_ONLY; historical DLL absent; OpenFAST=0; DISCON_CALLS=0; physical PASS=FALSE'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: s07-windows-reference-dll-load-only
+          path: S07_A_WINDOWS_REFERENCE_DLL_LOAD_RECEIPT.json
+          if-no-files-found: warn
+          retention-days: 30
