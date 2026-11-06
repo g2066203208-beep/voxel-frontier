@@ -655,7 +655,12 @@ def inflow_rebind_command(repo_root, write):
 # S07: exact historical FST -> staged InflowWind -> proposed BTS path chain.
 # The three possible relative-path bases are made co-located by construction;
 # this is a source/layout contract, NOT an OpenFAST runtime or BTS existence test.
-FST_CHAIN_SOURCE_MEMBER = "CASES/U09p343881_NTM_S01/DTU_10MW_RWT.fst"
+# The NTM logical FST is a duplicate-reference in the original manifest, not a ZIP member.
+# Read its byte-identical canonical ETM S01 member from part-001.zip.
+FST_CHAIN_LOGICAL_MEMBER = "CASES/U09p343881_NTM_S01/DTU_10MW_RWT.fst"
+FST_CHAIN_SOURCE_MEMBER = "CASES/U09p343881_ETM_S01/DTU_10MW_RWT.fst"
+FST_CHAIN_MANIFEST = "research/wind-tower/archive/local-assets-20261004/file-manifest.json"
+FST_CHAIN_MANIFEST_SHA = "c9da25b3a967c9ed3b3a859666263c6964d8480798185e6e031539c38e4c3302"
 FST_CHAIN_RECEIPT_KEY = "lowwind_45_s01_fst_inflow_bts_chain_20261106"
 FST_CHAIN_CASE_ROOT = "CASES/U04p5_NTM_S01"
 FST_CHAIN_FST_NAME = "DTU_10MW_RWT.fst"
@@ -742,8 +747,36 @@ def fst_inflow_bts_chain_selftest():
             raise AssertionError("FST_CHAIN_NEGATIVE_ACCEPTED_" + str(i))
     print("S07_FST_INFLOW_BTS_SELFTEST_PASS_1_POSITIVE_9_NEGATIVE")
 
+def _fst_canonical_manifest_gate(manifest_raw):
+    require(sha(manifest_raw) == FST_CHAIN_MANIFEST_SHA, "FST_CHAIN_MANIFEST_SHA")
+    rows = json.loads(manifest_raw)
+    require(isinstance(rows, list), "FST_CHAIN_MANIFEST_NOT_LIST")
+    logical = [r for r in rows if r.get("section") == "openfast-36-r2"
+               and r.get("relative_path") == FST_CHAIN_LOGICAL_MEMBER]
+    canonical = [r for r in rows if r.get("section") == "openfast-36-r2"
+                 and r.get("relative_path") == FST_CHAIN_SOURCE_MEMBER]
+    require(len(logical) == len(canonical) == 1, "FST_CHAIN_MANIFEST_CARDINALITY")
+    l, c = logical[0], canonical[0]
+    require(l["status"] == "duplicate-reference" and c["status"] == "included",
+            "FST_CHAIN_MANIFEST_STATUS")
+    require(l["canonical_member"] == c["canonical_member"] == FST_CHAIN_SOURCE_MEMBER,
+            "FST_CHAIN_MANIFEST_CANONICAL_MEMBER")
+    require(l["canonical_archive"] == c["canonical_archive"] == INFLOW_SOURCE_ZIP
+            and c["archive"] == "openfast-36-r2/part-001.zip",
+            "FST_CHAIN_MANIFEST_CANONICAL_ARCHIVE")
+    require(l["sha256"].lower() == c["sha256"].lower() == FST_SHA
+            and l["bytes"] == c["bytes"] == 7131,
+            "FST_CHAIN_MANIFEST_BYTE_IDENTITY")
+    return {"logical_NTM_member_not_in_ZIP": FST_CHAIN_LOGICAL_MEMBER,
+            "logical_status": l["status"],
+            "canonical_member_read_from_ZIP": FST_CHAIN_SOURCE_MEMBER,
+            "canonical_status": c["status"], "canonical_bytes": c["bytes"],
+            "canonical_sha256": FST_SHA, "manifest_sha256": sha(manifest_raw)}
+
 def fst_inflow_bts_chain_command(repo_root, write):
     import zipfile
+    manifest = _fst_canonical_manifest_gate(
+        (repo_root / FST_CHAIN_MANIFEST).read_bytes())
     source_zip = repo_root / INFLOW_SOURCE_ZIP
     require(source_zip.is_file(), "FST_CHAIN_ARCHIVE_MISSING")
     with zipfile.ZipFile(source_zip) as archive:
@@ -762,8 +795,8 @@ def fst_inflow_bts_chain_command(repo_root, write):
             "ddfa02734274ad5bd36e84d975d18544bb5360554e25d71d8689f32313a95267",
             "FST_CHAIN_ZIP_RECEIPT_DRIFT")
     result = {
-        "SOURCE": "Exact original 158m U09p343881_NTM_S01 FST bytes from SHA-pinned openfast-36-r2 part-001 ZIP, plus committed source-derived 4.5m/s S01 InflowWind candidate",
-        "READING_LEVEL": "Original FST member bytes read and SHA256 verified on GitHub runner; committed candidate InflowWind bytes re-read and SHA256 verified; BTS bytes absent; OpenFAST v3.3 runtime path resolution source not executed",
+        "SOURCE": "Original manifest NTM S01 FST duplicate-reference resolved to exact SHA-identical canonical ETM S01 FST in part-001 ZIP; source-derived 4.5m/s S01 InflowWind candidate",
+        "READING_LEVEL": "Original manifest logical NTM FST is duplicate-reference; SHA-identical canonical ETM S01 FST ZIP member read and SHA256 verified on GitHub runner; committed candidate InflowWind bytes re-read and SHA256 verified; BTS absent; OpenFAST runtime path resolution NOT executed",
         "REF": "Existing T062 original 18NTM source identity and InflowWind byte-exact patch; no new peer-reviewed full text",
         "STANDARD": "2025 IEC/GB licensed original clauses NOT READ; no formal DLC1.2 acceptance",
         "OFFICIAL": "Original archived OpenFAST v3.3.0-era FST input; staged path equality is a conditional lexical check, NOT OpenFAST executable validation",
@@ -771,11 +804,14 @@ def fst_inflow_bts_chain_command(repo_root, write):
         "FIG": 0, "TAB": "FST InflowFile and three candidate BTS lexical base resolutions",
         "input_sha256": {
             "source_archive_zip": previous["input_sha256"]["archive_zip"],
+            "original_manifest": FST_CHAIN_MANIFEST_SHA,
             "original_fst": FST_SHA,
             "original_inflow": INFLOW_SOURCE_SHA,
             "committed_candidate_inflow": FST_CHAIN_CHILD_SHA
         },
         "source_FST_member": FST_CHAIN_SOURCE_MEMBER,
+        "logical_NTM_FST_duplicate_reference": FST_CHAIN_LOGICAL_MEMBER,
+        "canonical_manifest_gate": manifest,
         "layout": layout,
         "tests": {"original_fst_sha256": "PASS",
                   "candidate_inflow_sha256": "PASS",
@@ -796,6 +832,8 @@ def fst_inflow_bts_chain_command(repo_root, write):
         require(receipt.get(FST_CHAIN_RECEIPT_KEY) == result,
                 "FST_CHAIN_COMMITTED_RECEIPT_DRIFT")
     print("S07_FST_INFLOW_BTS_SOURCE_LAYOUT_CONDITIONAL_NOT_RUN",
+          "fst_canonical=" + FST_CHAIN_SOURCE_MEMBER,
+          "manifest_sha=" + FST_CHAIN_MANIFEST_SHA,
           "fst_sha=" + FST_SHA, "inflow_sha=" + FST_CHAIN_CHILD_SHA,
           "inflow_ref=" + layout["source_FST_InflowFile"],
           "bts_ref=" + layout["candidate_Inflow_FileName_BTS"],
