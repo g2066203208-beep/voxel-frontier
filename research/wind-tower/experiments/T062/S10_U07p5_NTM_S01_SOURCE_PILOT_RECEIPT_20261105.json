@@ -438,6 +438,9 @@
     "status": "MANIFEST_INVENTORY_ONLY_PENDING_NATIVE_ZIP",
     "physical_pass": false,
     "formal_dlc12_verified_slots": 0,
-    "stages_passed": 0
+    "stages_passed": 0,
+    "script_sha256": "b16b7a207ce7da91f54f3f76162a4b481e297dc5126d79da59b23829a8e48d3e",
+    "script_git_blob_sha": "875a782fa290304933985937c8cf1e9dff13963d",
+    "script_hash_method": "Independent JavaScript SHA256 over 46211 ASCII bytes; test vector abc matched NIST SHA256"
   }
 }
