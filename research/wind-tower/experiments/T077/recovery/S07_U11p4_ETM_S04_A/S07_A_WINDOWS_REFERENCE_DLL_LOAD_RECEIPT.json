@@ -1,0 +1,36 @@
+{
+  "FIG": 0,
+  "HOLD": "Historical 36-case DLL absent; DISCON calling ABI and OpenFAST initialization NOT tested",
+  "OFFICIAL": "Windows OS LoadLibrary/GetProcAddress; not original DLL certification",
+  "READING_LEVEL": "REAL_WINDOWS_OS_LOADER_REFERENCE_DLL_ONLY",
+  "REF": "T077 S07_A_NATIVE_BINARY_ABI_RECEIPT.json and A-case RUN card",
+  "RUN": {
+    "abaqus": 0,
+    "discon_calls": 0,
+    "openfast": 0,
+    "type": "Windows reference DLL load-only, NO SOLVER"
+  },
+  "SOURCE": {
+    "reference_dll_bytes": 1122431,
+    "reference_dll_sha256": "7aebb0d2166c0cc095d11c2b7bc13da136547c557b0f331dcdce84fe181802aa"
+  },
+  "STANDARD": "NOT_READ",
+  "TAB": {
+    "export": "DISCON",
+    "loader": "ctypes.WinDLL",
+    "pe": {
+      "discon_case_variants": [
+        "DISCON"
+      ],
+      "discon_export": true,
+      "export_count": 1,
+      "machine": "AMD64",
+      "optional_header": "PE32+",
+      "sections": 19
+    },
+    "symbol_address_nonzero": true
+  },
+  "physical_pass": false,
+  "stages_passed": 0,
+  "status": "PASS_REFERENCE_DLL_WINDOWS_LOAD_AND_EXPORT_ONLY"
+}
