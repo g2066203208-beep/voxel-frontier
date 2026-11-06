@@ -185,7 +185,7 @@ jobs:
           if-no-files-found: warn
           retention-days: 21
       - name: Persist source-verified small CSV and receipt on Draft PR only
-        if: success()
+        if: false # Source-only CI; manual SHA-locked persistence prevents old bot rewriting multi-section T062 receipt
         shell: bash
         run: |
           set -euo pipefail

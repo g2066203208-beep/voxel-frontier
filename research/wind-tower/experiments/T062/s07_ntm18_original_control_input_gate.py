@@ -1078,7 +1078,7 @@ def main():
     if args.reference_abi_crosswalk_receipt:
         record = build_s07_reference_abi_crosswalk(args.repo_root or Path('.'))
         args.reference_abi_crosswalk_receipt.parent.mkdir(parents=True, exist_ok=True)
-        args.reference_abi_crosswalk_receipt.write_text(json.dumps(record, indent=2, ensure_ascii=False)+'\\n', encoding='utf-8')
+        args.reference_abi_crosswalk_receipt.write_text(json.dumps(record, indent=2, ensure_ascii=False)+'\n', encoding='utf-8')
         print('S07_REFERENCE_ABI_CROSSWALK_SOURCE_ONLY_NOT_HISTORICAL',json.dumps({'reference_sha256':record['reference_dll_sha256'],'historical_dll_bytes_verified':0,'missing':2},sort_keys=True))
         return
     if args.portable_package_receipt:
