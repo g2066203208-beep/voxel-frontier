@@ -222,6 +222,133 @@ def self_test():
             'example':a,'synthetic_input_sha256':hashlib.sha256(raw).hexdigest()}
 
 
+
+# S08 real ESM-derived beam-proxy admission: this is an E-only, downsampled
+# source, never a fabricated B/W/E/WE set or an accepted S09 physical pair.
+PROXY_FIELDS = ('direction','time_s','top_relative_u_m','top_absolute_acc_m_s2',
+                'base_elastic_shear_N','base_elastic_moment_Nm')
+PROXY_DIRECTIONS = ('HNE','HNN')
+PROXY_SOURCE_SHA256 = 'c6763281ca366b16849321b7542024af111d78ebb6ee470c912dda060b51ba22'
+PROXY_RECEIPT_SHA256 = '02730b484864b02cf1d7c83826ac819ef768fd7979cb4723c2962fd0a85ed939'
+
+
+def proxy_sampling_qc(raw, peak_receipt, expected_n=1602):
+    """Compare actual 0.1-s S08 E proxy with its original 0.005-s peak receipt."""
+    try:
+        decoded=raw.decode('utf-8-sig')
+    except UnicodeError:
+        raise ValueError('PROXY_INVALID_UTF8') from None
+    rd=csv.DictReader(io.StringIO(decoded))
+    if tuple(rd.fieldnames or ())!=PROXY_FIELDS:
+        raise ValueError('PROXY_HEADER_MISMATCH')
+    by_dir={k:[] for k in PROXY_DIRECTIONS}
+    for row in rd:
+        if None in row or None in row.values():
+            raise ValueError('PROXY_ROW_WIDTH')
+        if row['direction'] not in by_dir:
+            raise ValueError('PROXY_UNKNOWN_DIRECTION')
+        vals=[finite(row[k],'PROXY_'+k) for k in PROXY_FIELDS[1:]]
+        by_dir[row['direction']].append(vals)
+    summary=[]
+    source_peaks={x['direction']:x for x in peak_receipt['peak_summary']}
+    if set(source_peaks)!=set(PROXY_DIRECTIONS):
+        raise ValueError('PROXY_PEAK_RECEIPT_DIRECTIONS')
+    mapping={
+        'top_relative_u_m':'peak_top_relative_displacement_m',
+        'top_absolute_acc_m_s2':'peak_top_absolute_acceleration_m_s2',
+        'base_elastic_shear_N':'peak_base_elastic_shear_kN',
+        'base_elastic_moment_Nm':'peak_base_elastic_moment_kNm'}
+    for direction in PROXY_DIRECTIONS:
+        rows=by_dir[direction]
+        if len(rows)!=expected_n:
+            raise ValueError('PROXY_NPTS_MISMATCH')
+        grid=[x[0] for x in rows]
+        if abs(grid[0])>1e-12 or any(abs(t-i*.1)>1e-8 for i,t in enumerate(grid)):
+            raise ValueError('PROXY_NONUNIFORM_OR_SHIFTED_GRID')
+        for j,key in enumerate(PROXY_FIELDS[2:],start=1):
+            i=max(range(len(rows)),key=lambda k:abs(rows[k][j]))
+            sampled=abs(rows[i][j]);full=abs(float(source_peaks[direction][mapping[key]]))
+            if key in ('base_elastic_shear_N','base_elastic_moment_Nm'):
+                full*=1000.
+            if not math.isfinite(full) or full<=0:
+                raise ValueError('PROXY_INVALID_FULL_PEAK')
+            if sampled>full*(1+1e-6):
+                raise ValueError('PROXY_SAMPLED_PEAK_EXCEEDS_FULL')
+            summary.append({'direction':direction,'qoi':key,'sampled_peak_abs':sampled,
+                            'full_resolution_peak_abs':full,'peak_loss_pct':100*(1-sampled/full),
+                            'sampled_peak_time_s':grid[i]})
+    return {'status':'REAL_ESM_BEAM_PROXY_DOWNSAMPLED_E_ONLY_NOT_S09_PAIRED',
+            'source_nrows':sum(map(len,by_dir.values())),
+            'samples_per_direction':expected_n,'sampled_dt_s':.1,
+            'original_ground_dt_s':.005,'sample_interval_ratio':20,
+            'max_peak_loss_pct':max(x['peak_loss_pct'] for x in summary),
+            'peak_comparison':summary,'S09_pair_admissible':False,
+            'initial_state_sha256':None,'actual_wind_W_WE':False,
+            'HOLD':'E-only 0.1s sampled linear beam proxy; no same-state B/W/WE, no validated initial state; use full-resolution source for future pairing'}
+
+
+def proxy_sampling_self_test():
+    def fixture(shift=False,missing=False):
+        s=io.StringIO();wr=csv.writer(s,lineterminator='\\n');wr.writerow(PROXY_FIELDS)
+        for direction in PROXY_DIRECTIONS if not missing else ('HNE',):
+            for i in range(3):
+                wr.writerow([direction, i*.1+(.02 if shift and i==1 else 0),
+                             .1*(i+1),.2*(i+1),100*(i+1),1000*(i+1)])
+        return s.getvalue().encode()
+    receipt={'peak_summary':[{'direction':d,
+         'peak_top_relative_displacement_m':.4,
+         'peak_top_absolute_acceleration_m_s2':.8,
+         'peak_base_elastic_shear_kN':.4,
+         'peak_base_elastic_moment_kNm':4.} for d in PROXY_DIRECTIONS]}
+    got=proxy_sampling_qc(fixture(),receipt,expected_n=3)
+    assert got['source_nrows']==6 and len(got['peak_comparison'])==8
+    assert abs(got['max_peak_loss_pct']-25)<1e-10
+    def rejected(raw,ref,code):
+        try:proxy_sampling_qc(raw,ref,expected_n=3)
+        except ValueError as e:assert str(e)==code,(e,code)
+        else:raise AssertionError('PROXY_ACCEPTED_INVALID_'+code)
+    rejected(fixture(shift=True),receipt,'PROXY_NONUNIFORM_OR_SHIFTED_GRID')
+    rejected(fixture(missing=True),receipt,'PROXY_NPTS_MISMATCH')
+    rejected(fixture().replace(b'0.30000000000000004',b'nan'),receipt,'NONFINITE_PROXY_top_relative_u_m')
+    bad={'peak_summary':[dict(x) for x in receipt['peak_summary']]}
+    bad['peak_summary'][0]['peak_top_relative_displacement_m']=.01
+    rejected(fixture(),bad,'PROXY_SAMPLED_PEAK_EXCEEDS_FULL')
+    rejected(fixture().replace(b'direction,time_s',b'dir,time_s'),receipt,'PROXY_HEADER_MISMATCH')
+    rejected(fixture().replace(b'HNN',b'UNKNOWN'),receipt,'PROXY_UNKNOWN_DIRECTION')
+    return {'positive':3,'negative':6,'synthetic_max_peak_loss_pct':25.0}
+
+
+def run_proxy_sampling(history_path,receipt_path,output_path):
+    history=history_path.read_bytes();receipt_bytes=receipt_path.read_bytes()
+    if hashlib.sha256(history).hexdigest()!=PROXY_SOURCE_SHA256:
+        raise ValueError('PROXY_SOURCE_SHA256_MISMATCH')
+    if hashlib.sha256(receipt_bytes).hexdigest()!=PROXY_RECEIPT_SHA256:
+        raise ValueError('PROXY_RECEIPT_SHA256_MISMATCH')
+    receipt=json.loads(receipt_bytes)
+    if receipt['source_esm_sha256']!='a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34':
+        raise ValueError('PROXY_ESM_IDENTITY_MISMATCH')
+    result=proxy_sampling_qc(history,receipt)
+    result.update({'SOURCE':'T079/real-records archived S08 ESM 158m beam-proxy history and original full-rate peak receipt',
+       'REF':'Existing T079 reduced linear beam proxy, not original OpenFAST/earthquake structural validation',
+       'STANDARD':'2025 IEC/GB authorized site clauses NOT READ in this run',
+       'OFFICIAL':'ESM processed earthquake provenance inherited from S08 receipt; not independently downloaded in this run',
+       'RUN':'Python stdlib source-level history comparison; no new beam/OpenFAST/native seismic solve',
+       'FIG':0,'TAB':'8 sampled-versus-full-peak comparisons in this JSON',
+       'source_history_sha256':PROXY_SOURCE_SHA256,'source_receipt_sha256':PROXY_RECEIPT_SHA256,
+       'source_esm_sha256':receipt['source_esm_sha256'],
+       'source_tower_sha256':receipt['source_tower_sha256'],
+       'reading_level':'GitHub original derived CSV 3204 rows plus S08 original 0.005s peak summary; original ESM waveform not re-read',
+       'assumptions':['S08 output every 20 samples; original peak receipt derived from 0.005s computation',
+                      '0.1s sample-grid peak <= original full-grid peak; not a resampling error bound'],
+       'error_budget':{'numeric':'float64 peak arithmetic; full-grid receipt is prior-run not independently recomputed',
+                       'downsampled_time_resolution_s':.1,'native_model_uncertainty':'UNQUANTIFIED',
+                       'inter_sample_peak_and_spectral_aliasing':'NOT_BOUNDED_BY_THIS_PEAK_COMPARISON'},
+       'failed_cases':'six synthetic negative tests in proxy_sampling_self_test',
+       'physics_PASS':False,'S09_PASS':False,'native_E_WE_RUN':0})
+    output_path.write_text(json.dumps(result,indent=2,sort_keys=True,ensure_ascii=False)+'\\n',encoding='utf-8')
+    return result
+
+
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--self-test',action='store_true')
@@ -229,8 +356,11 @@ def main():
     ap.add_argument('--expected-sha256')
     ap.add_argument('--output-csv',type=Path)
     ap.add_argument('--output-json',type=Path)
+    ap.add_argument('--proxy-history',type=Path)
+    ap.add_argument('--proxy-peak-receipt',type=Path)
+    ap.add_argument('--proxy-output-json',type=Path)
     args=ap.parse_args()
-    if args.self_test: print(json.dumps(self_test(),sort_keys=True))
+    if args.self_test: print(json.dumps({'paired':self_test(),'proxy_sampling':proxy_sampling_self_test()},sort_keys=True))
     if args.input:
         if not (args.expected_sha256 and is_sha(args.expected_sha256)):
             ap.error('real input requires expected exact SHA256')
@@ -249,7 +379,11 @@ def main():
         result['output_csv_sha256']=hashlib.sha256(csv_bytes).hexdigest()
         args.output_json.write_text(json.dumps(result,ensure_ascii=False,indent=2,sort_keys=True)+'\n',encoding='utf-8')
         print(json.dumps(result,sort_keys=True))
-    if not args.self_test and not args.input:ap.error('use --self-test or --input')
+    if args.proxy_history:
+        if not args.proxy_peak_receipt or not args.proxy_output_json:
+            ap.error('--proxy-history requires --proxy-peak-receipt and --proxy-output-json')
+        print(json.dumps(run_proxy_sampling(args.proxy_history,args.proxy_peak_receipt,args.proxy_output_json),sort_keys=True))
+    if not args.self_test and not args.input and not args.proxy_history:ap.error('use --self-test, --input or --proxy-history')
 
 
 if __name__=='__main__':main()
