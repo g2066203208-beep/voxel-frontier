@@ -1,0 +1,112 @@
+{
+  "status": "REAL_ESM_BEAM_PROXY_DOWNSAMPLED_E_ONLY_NOT_S09_PAIRED",
+  "date": "2026-11-06",
+  "SOURCE": [
+    "research/wind-tower/experiments/T079/real-records/S08_158M_BEAM_PROXY_HISTORY_20261102.csv",
+    "research/wind-tower/experiments/T079/real-records/S08_158M_BEAM_PROXY_RECEIPT_20261102.json"
+  ],
+  "REF": "T079 pre-existing linear 158m beam-proxy and S09 same-state method",
+  "STANDARD": "2025 IEC/GB authorized site clauses NOT READ in this run",
+  "OFFICIAL": "ESM processed earthquake source identity inherited from original S08 receipt, not redownloaded",
+  "RUN": "Independent JS connector full-file numeric comparison; Python synthetic proxy gate selftest locally 3 positive / 6 negative; GitHub Actions pending at creation",
+  "FIG": 0,
+  "TAB": "8 sampled-vs-full-rate response peaks below",
+  "reading_level": "Actual 3204-row GitHub-derived ESM beam history + original full-rate 0.005-s peak receipt; original ESM waveform not re-read",
+  "source_history_sha256": "c6763281ca366b16849321b7542024af111d78ebb6ee470c912dda060b51ba22",
+  "source_peak_receipt_sha256": "02730b484864b02cf1d7c83826ac819ef768fd7979cb4723c2962fd0a85ed939",
+  "script_sha256": "ac0badb7a8ad96064e8660cbebbfae56184939899cbcc245117e8ac750b733ae",
+  "source_esm_sha256": "a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34",
+  "source_tower_sha256": "f738d35fc9c8b8d8745f2ed9490c92578b056cfe37201bbfa0bfdb24906d2983",
+  "source_rows": 3204,
+  "samples_per_direction": 1602,
+  "source_dt_s": 0.005,
+  "stored_history_dt_s": 0.1,
+  "decimation_ratio": 20,
+  "peak_comparison": [
+    {
+      "direction": "HNE",
+      "qoi": "top_relative_u_m",
+      "sampled_peak_abs": 0.03500075728337532,
+      "full_resolution_peak_abs": 0.03503702829349452,
+      "peak_loss_pct": 0.10352193632225948,
+      "sampled_peak_time_s": 50.1
+    },
+    {
+      "direction": "HNE",
+      "qoi": "top_absolute_acc_m_s2",
+      "sampled_peak_abs": 0.1404083005888513,
+      "full_resolution_peak_abs": 0.14504504896507978,
+      "peak_loss_pct": 3.196764322058865,
+      "sampled_peak_time_s": 35.6
+    },
+    {
+      "direction": "HNE",
+      "qoi": "base_elastic_shear_N",
+      "sampled_peak_abs": 304889.2940505836,
+      "full_resolution_peak_abs": 325968.26265232265,
+      "peak_loss_pct": 6.466570834296781,
+      "sampled_peak_time_s": 35.4
+    },
+    {
+      "direction": "HNE",
+      "qoi": "base_elastic_moment_Nm",
+      "sampled_peak_abs": 10691936.24703227,
+      "full_resolution_peak_abs": 11233622.625615168,
+      "peak_loss_pct": 4.82200975264856,
+      "sampled_peak_time_s": 35.4
+    },
+    {
+      "direction": "HNN",
+      "qoi": "top_relative_u_m",
+      "sampled_peak_abs": 0.02928067184886665,
+      "full_resolution_peak_abs": 0.029303411223895688,
+      "peak_loss_pct": 0.07759975401940844,
+      "sampled_peak_time_s": 64
+    },
+    {
+      "direction": "HNN",
+      "qoi": "top_absolute_acc_m_s2",
+      "sampled_peak_abs": 0.14124842749721253,
+      "full_resolution_peak_abs": 0.15393397970018596,
+      "peak_loss_pct": 8.24090446286182,
+      "sampled_peak_time_s": 37
+    },
+    {
+      "direction": "HNN",
+      "qoi": "base_elastic_shear_N",
+      "sampled_peak_abs": 300558.9846293349,
+      "full_resolution_peak_abs": 302693.28343242034,
+      "peak_loss_pct": 0.7051027954381284,
+      "sampled_peak_time_s": 38.6
+    },
+    {
+      "direction": "HNN",
+      "qoi": "base_elastic_moment_Nm",
+      "sampled_peak_abs": 8449293.919051057,
+      "full_resolution_peak_abs": 8613006.873416595,
+      "peak_loss_pct": 1.9007642368291444,
+      "sampled_peak_time_s": 36.6
+    }
+  ],
+  "max_peak_loss_pct": 8.24090446286182,
+  "S09_pair_admissible": false,
+  "initial_state_sha256": null,
+  "actual_wind_W_WE": false,
+  "physics_PASS": false,
+  "S09_PASS": false,
+  "native_E_WE_RUN": 0,
+  "assumptions": [
+    "Archived S08 history is a 20x decimated output of original 0.005-s beam integration",
+    "Full-rate peaks inherited from earlier source-locked receipt, not independently rerun",
+    "Peak loss is observed grid-capture difference, not an upper bound on aliasing/spectral error"
+  ],
+  "error_budget": {
+    "source_sha256": "exact bytes",
+    "numeric": "IEEE754 peak comparison; rounding <1e-9 percentage points",
+    "sample_grid_loss_max_pct": 8.24090446286182,
+    "spectral_aliasing": "NOT_ESTIMATED",
+    "model_and_site": "NOT_ESTIMATED"
+  },
+  "failed_cases": "Synthetic invalid time grid, missing direction, nonfinite, tampered peak, invalid header and unknown direction rejected in local Python test; native CI pending",
+  "HOLD": "S08 0.1-s E-only beam proxy lacks full-resolution synchronized B/W/E/WE, verified same initial state and native structural validation; cannot be S09 paired input"
+}
