@@ -5,6 +5,9 @@ on:
       - '.github/workflows/t071-inspect-discon-hash.yml'
       - 'research/wind-tower/experiments/T062/s07_ntm18_original_control_input_gate.py'
       - 'research/wind-tower/experiments/T062/s10_lowwind_75_source_pilot.py'
+concurrency:
+  group: t071-s07-module-graph-${{ github.ref }}
+  cancel-in-progress: false
 permissions:
   contents: write
 jobs:
@@ -124,7 +127,9 @@ jobs:
           git add research/wind-tower/experiments/T062/S07_U04p5_NTM_S01_InflowWind_NOT_RUN.dat \
                   research/wind-tower/experiments/T062/S10_U07p5_NTM_S01_SOURCE_PILOT_RECEIPT_20261105.json
           if ! git diff --cached --quiet; then
-            git commit -m "research(S07): persist original-byte-verified 4.5 S01 InflowWind candidate (NOT_RUN)"
+            git commit -m "research(S07): persist original-byte-verified module graph and 4.5 S01 candidate (NOT_RUN)"
+            git fetch origin "$GITHUB_REF_NAME"
+            git rebase FETCH_HEAD
             git push origin "HEAD:$GITHUB_REF_NAME"
           fi
       - uses: actions/upload-artifact@v4
