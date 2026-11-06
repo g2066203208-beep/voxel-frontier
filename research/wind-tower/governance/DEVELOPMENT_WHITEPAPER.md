@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.1.1**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.1.2**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -31,6 +31,7 @@
 
 | 日期（Asia/Shanghai） | 白皮书版本 | 开发与证据增量 | 科学状态 | 远端事务 |
 |---|---|---|---|---|
+| 2026-11-07 | **v0.1.2** | **Ch3科研图表实交付**：以真实31行ERA5风速箱与126槽NTM来源CSV生成一张可直接入论文SVG、对应无依赖Node复算程序及正式§3.2.5图注；V8源级1正6负测试，来源SHA锁定；修订每小时任务防卡死切换策略 | ERA5真实小时7164/106900覆盖6.70%；历史筛查18/126、正式DLC1.2 0/126，12阶段0/12；无Abaqus、非材料寿命 | [程序 commit 69bb8b2](https://github.com/g2066203208-beep/voxel-frontier/commit/69bb8b2cad3f606a6d3e8e730160a5434124a2e9)、[图 commit 7df8b6b](https://github.com/g2066203208-beep/voxel-frontier/commit/7df8b6bbd2b680a22dfb958cfbf8f78e08b6c5a7)、[Ch3 commit 2d9d33e](https://github.com/g2066203208-beep/voxel-frontier/commit/2d9d33eba3bcac4e80a2d18227a81f28f1e1afde)、[T080记录 commit 26738b1](https://github.com/g2066203208-beep/voxel-frontier/commit/26738b15c9249f2091c2909929b761aa45533fbd)；SVG SHA256=b2f4747a7196d772c5d42f6a06f37febab5f606eb8c40ab5e57897807e09f55e |
 | 2026-11-07 | **v0.1.1** | **实质论文成果**：修订Ch4 §4.7.1年度Miner时间单位、两种概率口径和多seed年度SE；新合成量纲解析自检0.05256与3600倍单位风险；真实ERA5 31箱本轮重新求和验证184080h/106900h/7164h；程序未改，非材料寿命 | S10仍BLOCKED、DLC1.2 0/126、全12阶段0 PASS；无Abaqus | [Ch4 commit 00ca333](https://github.com/g2066203208-beep/voxel-frontier/commit/00ca333ef8321ebdbe3e472c93ea23117608f9ab)；[T080过程记录 commit c634908](https://github.com/g2066203208-beep/voxel-frontier/commit/c634908e48a7b79fb585d9f18d720847f08cf54a)；源ERA5 SHA256=e4058620a36b23bb218103875d4dc5b0711fc45d418b23a2208c2fc9c16c9102 |
 | 2026-11-07 | **v0.1.0** | 首次建立版本号、变更白皮书及每小时持续归档制度；索引既有指挥室/真实E侧来源收据；此行为**治理建设**，未新增计算、图表或原生求解 | 0/12 PASS不变；S09 HOLD | 本文件Git历史和PR #42；创建后以commit记录为准 |
 
