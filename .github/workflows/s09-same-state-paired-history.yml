@@ -13,6 +13,7 @@ jobs:
     timeout-minutes: 5
     permissions:
       contents: read
+      actions: read
     steps:
       - uses: actions/checkout@v4
       - name: Run analytic and fail-closed tests
@@ -35,6 +36,34 @@ jobs:
           assert x['S09_pair_admissible'] is False and x['actual_wind_W_WE'] is False
           print('PASS_REAL_ESM_PROXY_SAMPLING_E_ONLY_NOT_PAIRED',x['max_peak_loss_pct'])
           PY
+      - name: Download archived real S08 0.005s E-only artifact (no solver)
+        uses: actions/download-artifact@v4
+        with:
+          name: s08-real-esm-158m-reduced-beam-NOT-ABAQUS
+          repository: g2066203208-beep/voxel-frontier
+          run-id: 42240081368
+          github-token: ${{ github.token }}
+          path: s08-fullrate
+      - name: Verify all 64080 real E-only samples and eight peaks; reject S09 pair
+        run: |
+          set -euo pipefail
+          file="s08-fullrate/S08_158M_BEAM_PROXY_HISTORY_0P005S_20261106.csv"
+          echo 'bab269897640e91d11da3ad02f8a0f3cf537c5e5aaf0f173bba6b1244a3591e0  '"$file" | sha256sum -c
+          python3 research/wind-tower/experiments/T079/s09_same_state_w_e_we_history_gate.py \
+            --full-rate-history "$file" \
+            --full-rate-receipt research/wind-tower/experiments/T079/real-records/S08_158M_BEAM_PROXY_FULL_RATE_RECEIPT_20261106.json \
+            --full-rate-output-json s09_real_esm_fullrate_admission.json > s09_real_esm_fullrate_stdout.json
+          python3 - <<'PY'
+          import json
+          x=json.load(open('s09_real_esm_fullrate_admission.json'))
+          assert x['rows']==64080 and x['rows_per_direction']=={'HNE':32040,'HNN':32040}
+          assert x['dt_s']==.005 and len(x['peak_comparisons'])==8
+          assert x['max_peak_relative_residual']<2e-9
+          assert x['S09_pair_admissible'] is False and x['initial_state_sha256'] is None
+          assert x['B_W_WE_present'] is False and x['physics_PASS'] is False
+          print('PASS_REAL_ESM_64080_FULL_RATE_E_ONLY_FAIL_CLOSED_NOT_S09_PAIR',
+                x['max_peak_relative_residual'])
+          PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -43,4 +72,6 @@ jobs:
             s09_selftest.json
             s09_real_esm_proxy_sampling.json
             s09_real_esm_proxy_stdout.json
+            s09_real_esm_fullrate_admission.json
+            s09_real_esm_fullrate_stdout.json
           if-no-files-found: warn
