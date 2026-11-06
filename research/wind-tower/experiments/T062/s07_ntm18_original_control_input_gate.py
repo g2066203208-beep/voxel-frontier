@@ -647,6 +647,62 @@ def aero_references(raw):
                 "AERO_AIRFOIL_DECLARED_COUNT_MISMATCH")
     return refs, int(declared) if declared else None
 
+def aero_portable_case_patch(original, verified_references):
+    """Fix only a verified unique case-only filename mismatch; no solver claims."""
+    aliases = [x for x in verified_references if not x["case_sensitive_path_match"]]
+    require(len(aliases) == 1, "AERO_PORTABLE_ALIAS_NOT_UNIQUE")
+    item = aliases[0]
+    original_token = item["reference"].encode("ascii")
+    canonical = item["manifest_path"].split("CASES/Rotor/", 1)
+    require(len(canonical) == 2, "AERO_PORTABLE_MANIFEST_OUTSIDE_ROTOR")
+    canonical_token = canonical[1].encode("ascii")
+    require(original_token != canonical_token and
+            original_token.lower() == canonical_token.lower() and
+            len(original_token) == len(canonical_token),
+            "AERO_PORTABLE_NOT_CASE_ONLY")
+    require(original.count(original_token) == 1,
+            "AERO_PORTABLE_ORIGINAL_TOKEN_NOT_UNIQUE")
+    refs_before, declared_before = aero_references(original)
+    require(any(x["line"] == item["line"] and
+                x["reference"] == item["reference"] for x in refs_before),
+            "AERO_PORTABLE_REFERENCE_LINE_MISMATCH")
+    candidate = original.replace(original_token, canonical_token, 1)
+    require(len(candidate) == len(original), "AERO_PORTABLE_LENGTH_CHANGED")
+    require(candidate.replace(canonical_token, original_token, 1) == original,
+            "AERO_PORTABLE_NOT_REVERSIBLE")
+    refs_after, declared_after = aero_references(candidate)
+    require(declared_after == declared_before and len(refs_after) == len(refs_before),
+            "AERO_PORTABLE_REFERENCE_COUNT_CHANGED")
+    differences = [(a, b) for a, b in zip(refs_before, refs_after) if a != b]
+    require(len(differences) == 1 and differences[0][0]["line"] == item["line"] and
+            differences[0][1]["reference"] == canonical_token.decode("ascii"),
+            "AERO_PORTABLE_UNEXPECTED_REFERENCE_CHANGE")
+    byte_diffs = [i for i, (a, b) in enumerate(zip(original, candidate)) if a != b]
+    require(len(byte_diffs) == 1, "AERO_PORTABLE_EXPECTED_ONE_BYTE_DIFF")
+    # Every candidate reference must now be an exact, case-sensitive original
+    # archive path; this is still not an executable runtime path test.
+    verified_paths = {x["manifest_path"] for x in verified_references}
+    require(all(x["resolved"] in verified_paths for x in refs_after),
+            "AERO_PORTABLE_REMAINING_UNRESOLVED_PATH")
+    return candidate, {
+        "original_sha256": sha(original),
+        "candidate_sha256": sha(candidate),
+        "original_bytes": len(original),
+        "candidate_bytes": len(candidate),
+        "changed_reference_line": item["line"],
+        "from": original_token.decode("ascii"),
+        "to": canonical_token.decode("ascii"),
+        "changed_byte_offset_zero_based": byte_diffs[0],
+        "changed_byte_old_hex": format(original[byte_diffs[0]], "02x"),
+        "changed_byte_new_hex": format(candidate[byte_diffs[0]], "02x"),
+        "exact_reverse": True,
+        "all_references_case_sensitive": True,
+        "changed_reference_count": 1,
+        "physical_pass": False,
+        "status": "SOURCE_ONLY_PORTABLE_CANDIDATE_NOT_RUN",
+    }
+
+
 def aero_dependency_self_test():
     good = (b'1 NumAFfiles\n"DTU_10MW_AeroDyn15_blade.dat" ADBlFile(1)\n'
             b'"Airfoils/Cylinder_Aerodyn15.dat"\n')
@@ -669,9 +725,37 @@ def aero_dependency_self_test():
             pass
         else:
             raise AssertionError("AERO_BAD_REFERENCE_ACCEPTED")
-    print("S07_AERODYN_DEPENDENCY_SELFTEST_PASS_1_POSITIVE_8_NEGATIVE_NO_SOLVER")
+    source = good.replace(b"Cylinder_Aerodyn15", b"Cylinder_AeroDyn15")
+    verified = [
+        {"line": 2, "reference": "DTU_10MW_AeroDyn15_blade.dat",
+         "manifest_path": "CASES/Rotor/DTU_10MW_AeroDyn15_blade.dat",
+         "case_sensitive_path_match": True},
+        {"line": 3, "reference": "Airfoils/Cylinder_AeroDyn15.dat",
+         "manifest_path": "CASES/Rotor/Airfoils/Cylinder_Aerodyn15.dat",
+         "case_sensitive_path_match": False},
+    ]
+    patched, proof = aero_portable_case_patch(source, verified)
+    assert patched == good and proof["exact_reverse"]
+    assert proof["changed_reference_count"] == 1
+    for bad_source, bad_refs in [
+        (good, verified),
+        (source + b'\\n"Airfoils/Cylinder_AeroDyn15.dat"\\n', verified),
+        (source, verified + [verified[1]]),
+        (source, [{**verified[0], "case_sensitive_path_match": False}, verified[1]]),
+        (source, [{**verified[1], "manifest_path": "CASES/Rotor/../outside.dat"},
+                  verified[0]]),
+        (source, [{**verified[1], "manifest_path": "CASES/Rotor/Airfoils/OTHER.dat"},
+                  verified[0]]),
+    ]:
+        try:
+            aero_portable_case_patch(bad_source, bad_refs)
+        except ValueError:
+            pass
+        else:
+            raise AssertionError("AERO_PORTABLE_BAD_PATCH_ACCEPTED")
+    print("S07_AERODYN_DEPENDENCY_SELFTEST_PASS_1_POSITIVE_8_NEGATIVE; PORTABLE_PATCH_1_POSITIVE_6_NEGATIVE_NO_SOLVER")
 
-def build_aero_dependency(repo_root):
+def build_aero_dependency(repo_root, candidate_out=None):
     base = repo_root / ROOT
     static = read_pinned(base / "archive/local-assets-20261004/file-manifest.json", STATIC_SHA)
     supp = read_pinned(base / "archive/local-assets-20261004-supplement/file-manifest.json", SUPPLEMENT_SHA)
@@ -709,7 +793,18 @@ def build_aero_dependency(repo_root):
                                 case_sensitive_path_match=(manifest_path == item["resolved"]),
                                 canonical_member=entry["canonical_member"],
                                 archive=entry["canonical_archive"]))
+        candidate, portable_proof = aero_portable_case_patch(card, checked)
+        if candidate_out is not None:
+            candidate_out.parent.mkdir(parents=True, exist_ok=True)
+            candidate_out.write_bytes(candidate)
+            require(candidate_out.read_bytes() == candidate, "AERO_PORTABLE_WRITE_READBACK")
+        portable_proof["candidate_repository_path"] = (
+            str(candidate_out) if candidate_out is not None else "NOT_WRITTEN")
+        portable_proof["source_original_shared_card_sha256"] = sha(card)
+        portable_proof["case_local_alternative_sha256"] = sha(other)
+        portable_proof["original_archive_member"] = card_meta["canonical_member"]
         return {
+            "portable_candidate": portable_proof,
             "SOURCE": "Original FST-selected shared CASES/Rotor AeroDyn15 card, downstream blade/airfoil original ZIP members, SHA-pinned manifest",
             "READING_LEVEL": "Exact archived ZIP member bytes and per-file SHA256, not inferred from filenames alone",
             "REF": "T062 original module graph; 12-stage S07 input identity gate",
@@ -749,6 +844,7 @@ def main():
     p.add_argument("--discon-lowwind-receipt", type=Path)
     p.add_argument("--module-graph-receipt", type=Path)
     p.add_argument("--aero-dependency-receipt", type=Path)
+    p.add_argument("--aero-portable-candidate", type=Path)
     args = p.parse_args()
     if args.self_test:
         self_test()
@@ -759,10 +855,10 @@ def main():
         if not args.repo_root and not args.servo_startup_source and not args.discon_lowwind_source:
             return
     if args.aero_dependency_receipt:
-        record = build_aero_dependency(args.repo_root or Path("."))
+        record = build_aero_dependency(args.repo_root or Path("."), args.aero_portable_candidate)
         args.aero_dependency_receipt.parent.mkdir(parents=True, exist_ok=True)
         args.aero_dependency_receipt.write_text(json.dumps(record, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-        print("S07_AERODYN_SOURCE_ONLY", json.dumps({"references": len(record["references"]), "verified": record["source_members_verified"], "declared_NumAFfiles": record["declared_NumAFfiles"]}, sort_keys=True))
+        print("S07_AERODYN_SOURCE_ONLY", json.dumps({"references": len(record["references"]), "verified": record["source_members_verified"], "declared_NumAFfiles": record["declared_NumAFfiles"], "portable_candidate_sha256": record["portable_candidate"]["candidate_sha256"], "portable_candidate_status": record["portable_candidate"]["status"]}, sort_keys=True))
         return
     if args.module_graph_receipt:
         record = build_module_graph(args.repo_root or Path('.'))
