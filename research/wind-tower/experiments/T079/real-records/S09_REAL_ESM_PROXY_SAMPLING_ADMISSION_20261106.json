@@ -8,7 +8,7 @@
   "REF": "T079 pre-existing linear 158m beam-proxy and S09 same-state method",
   "STANDARD": "2025 IEC/GB authorized site clauses NOT READ in this run",
   "OFFICIAL": "ESM processed earthquake source identity inherited from original S08 receipt, not redownloaded",
-  "RUN": "Independent JS connector full-file numeric comparison; Python synthetic proxy gate selftest locally 3 positive / 6 negative; GitHub Actions pending at creation",
+  "RUN": "GitHub Actions #42232188078 completed/success: Python stdlib S09 paired selftest plus real 3204-row SHA-locked ESM proxy sampling gate; no solver",
   "FIG": 0,
   "TAB": "8 sampled-vs-full-rate response peaks below",
   "reading_level": "Actual 3204-row GitHub-derived ESM beam history + original full-rate 0.005-s peak receipt; original ESM waveform not re-read",
@@ -107,6 +107,16 @@
     "spectral_aliasing": "NOT_ESTIMATED",
     "model_and_site": "NOT_ESTIMATED"
   },
-  "failed_cases": "Synthetic invalid time grid, missing direction, nonfinite, tampered peak, invalid header and unknown direction rejected in local Python test; native CI pending",
-  "HOLD": "S08 0.1-s E-only beam proxy lacks full-resolution synchronized B/W/E/WE, verified same initial state and native structural validation; cannot be S09 paired input"
+  "failed_cases": "Six synthetic proxy input rejection cases passed; no native solver failures; source-level only",
+  "HOLD": "S08 0.1-s E-only beam proxy lacks full-resolution synchronized B/W/E/WE, verified same initial state and native structural validation; cannot be S09 paired input",
+  "CI": {
+    "run_id": 42232188078,
+    "url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/42232188078",
+    "status": "completed",
+    "conclusion": "success",
+    "steps": [
+      "paired-history-selftest",
+      "real ESM proxy sampling loss source check"
+    ]
+  }
 }
