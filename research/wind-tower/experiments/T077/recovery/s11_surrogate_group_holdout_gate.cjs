@@ -13,7 +13,7 @@ function prepare(a,synthetic){
   ids.add(r.design_id);
   if(!Array.isArray(r.features)||r.features.length!==2||!r.features.every(finite)||!finite(r.qoi)||r.qoi<0||!r.qoi_unit)err('QOI_FEATURE');
   units.add(r.qoi_unit);
-  if(synthetic?r.evidence_level!=='SYNTHETIC_TEST_ONLY':r.evidence_level!=='INDEPENDENT_VERIFIED'||!/^[a-f0-9]{64}$/.test(r.source_sha256||''))err('PROVENANCE');
+  if(synthetic?r.evidence_level!=='SYNTHETIC_TEST_ONLY':r.evidence_level!=='SOURCE_DECLARED'||!/^[a-f0-9]{64}$/.test(r.source_sha256||''))err('PROVENANCE');
   if(groups.has(r.family_id)&&groups.get(r.family_id)!==r.split)err('GROUP_LEAK');
   groups.set(r.family_id,r.split);
   const key=JSON.stringify(r.features);
@@ -59,7 +59,7 @@ function evaluate(input,synthetic=false){
   const y=Math.sign(test[i].y-test[j].y),pred=Math.sign(test[i].p-test[j].p);
   if(y){pairs++;if(pred&&pred!==y)inversions++}
  }
- return {status:'METHOD_ONLY',physical_pass:false,evidence:synthetic?'SYNTHETIC_TEST_ONLY':'INDEPENDENT_VERIFIED_INPUT',
+ return {status:'METHOD_ONLY',physical_pass:false,evidence:synthetic?'SYNTHETIC_TEST_ONLY' :'SOURCE_HASH_FORMAT_ONLY',
   unit,alpha,lambda,counts:Object.fromEntries(Object.entries(sets).map(([k,v])=>[k,v.length])),
   train_rmse:rmse(tr),holdout_rmse:rmse(test),holdout_mae:test.reduce((s,p)=>s+abs(p),0)/test.length,
   holdout_r2:sst===0?null:1-sse/sst,
@@ -97,15 +97,19 @@ function selfTest(){
  reject('bad_split',b=>b.records[0].split='other');
  reject('small_calibration',b=>b.records=b.records.filter(r=>r.split!=='calibration'||Number(r.design_id.slice(1))<35));
  try{evaluate(a,false);err('ACCEPTED_FAKE_REAL')}catch(e){if(e.message==='ACCEPTED_FAKE_REAL')throw e;neg.push('synthetic_production')}
+ const declared=clone();for(const r of declared.records){r.evidence_level='SOURCE_DECLARED';r.source_sha256='a'.repeat(64)}
+ const declaredResult=evaluate(declared,false);if(declaredResult.physical_pass||declaredResult.evidence!=='SOURCE_HASH_FORMAT_ONLY')err('PROVENANCE_SCOPE');
+ try{declared.records[0].source_sha256='not-a-sha';evaluate(declared,false);err('ACCEPTED_BAD_SHA')}catch(e){if(e.message==='ACCEPTED_BAD_SHA')throw e;neg.push('invalid_source_sha')}
  const z=clone();for(const r of z.records)if(r.split==='holdout')r.qoi=0;
  const zr=evaluate(z,true);if(zr.holdout_r2!==null||zr.max_relative_error!==null)err('ZERO_TARGET');
  const t=clone();t.alpha=.01;const nr=evaluate(t,true);
  if(nr.calibration_abs_quantile!==null||nr.holdout_coverage!==null)err('QUANTILE_TOO_SMALL');
- return {status:'PASS_SYNTHETIC_ONLY',positive_oracles:4,negative_rejections:neg.length,
+ return {status:'PASS_SYNTHETIC_ONLY',positive_oracles:5,negative_rejections:neg.length,
   exact_rmse:exact.holdout_rmse,exact_r2:exact.holdout_r2,
   adversarial_rmse:reverse.holdout_rmse,adversarial_inversions:reverse.ranking_inversions,
   adversarial_coverage:reverse.holdout_coverage,negative_cases:neg,physical_pass:false};
 }
+// SOURCE_DECLARED checks SHA syntax, not original-file authenticity.
 if(typeof require!=='undefined'&&typeof module!=='undefined'&&require.main===module){
  const fs=require('node:fs'),crypto=require('node:crypto'),args=process.argv.slice(2);
  if(args.length===1&&args[0]==='--self-test')console.log(JSON.stringify(selfTest(),null,2));
