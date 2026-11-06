@@ -11,7 +11,7 @@ R(t)=WE(t)-W(t)-E(t)+B(t): an algebraic nonadditivity diagnostic, NOT proof
 of aeroelastic interaction or physical coupled dynamics. If E is parked while
 WE is operating, DO NOT feed them into the same comparison.
 
-Input CSV has 13 columns below. Real data MUST be supplied with its exact
+All QoIs sharing a comparison_id must also share the same physical-state identity\nand exact time grid, even if their units and point IDs differ.\n\nInput CSV has 13 columns below. Real data MUST be supplied with its exact
 SHA256. No synthetic test or passing CSV check confers native/physics PASS.
 Python 3.11+ standard library only.
 """
@@ -52,6 +52,7 @@ def parse(raw):
         raise ValueError('INVALID_OR_DUPLICATE_HEADER')
     groups=defaultdict(lambda: defaultdict(dict))
     metadata={}
+    comparison_meta={}
     row_count=0
     for row in reader:
         row_count+=1
@@ -72,10 +73,17 @@ def parse(raw):
         if key in metadata and metadata[key]!=meta:
             raise ValueError('MISMATCHED_SAME_STATE_OR_UNITS')
         metadata[key]=meta
+        # Same comparison_id is one physical experiment across all response points.
+        # Units may differ by QoI, but model/initial state/mode/seed/quake/trigger may not.
+        common=meta[:-1]
+        if c in comparison_meta and comparison_meta[c]!=common:
+            raise ValueError('CROSS_POINT_MODEL_STATE_MISMATCH')
+        comparison_meta[c]=common
         if time in groups[key][sc]: raise ValueError('DUPLICATE_TIME')
         groups[key][sc][time]=value
     if not row_count: raise ValueError('EMPTY_INPUT')
     out=[]; summaries=[]
+    comparison_grids={}
     for (c,point),scenarios in sorted(groups.items()):
         if set(scenarios)!=set(SCENARIOS): raise ValueError('MISSING_SCENARIO')
         grids={sc:tuple(sorted(scenarios[sc])) for sc in SCENARIOS}
@@ -83,6 +91,9 @@ def parse(raw):
         if len(grid)<3: raise ValueError('TOO_FEW_SAMPLES')
         if any(grids[sc]!=grid for sc in SCENARIOS):
             raise ValueError('UNALIGNED_TIME_GRID')
+        if c in comparison_grids and comparison_grids[c]!=grid:
+            raise ValueError('CROSS_POINT_TIME_GRID_MISMATCH')
+        comparison_grids[c]=grid
         dts=[b-a for a,b in zip(grid,grid[1:])]
         if min(dts)<=0: raise ValueError('NONMONOTONE_TIME')
         dt=dts[0]
@@ -174,8 +185,40 @@ def self_test():
     rejected(mutate_line(2,'wind_seed','SEED02'),'MISMATCHED_SAME_STATE_OR_UNITS')
     rejected(mutate_line(2,'trigger_time_s','2.1'),'MISMATCHED_SAME_STATE_OR_UNITS')
     rejected(mutate_line(2,'earthquake_id','OTHER'),'MISMATCHED_SAME_STATE_OR_UNITS')
+    # Cross-point adversarial fixture: the old per-point-only gate accepted
+    # incompatible model states and shifted grids under the SAME comparison_id.
+    def second_point(mutator=None):
+        cloned=[]
+        for line in lines[1:]:
+            cells=line.rstrip('\n').split(',')
+            cells[FIELDS.index('point_id')]='TOWER_TOP'
+            cells[FIELDS.index('qoi')]='Uy'
+            cells[FIELDS.index('unit')]='m'
+            if mutator: mutator(cells)
+            cloned.append(','.join(cells)+'\n')
+        return (''.join(lines)+''.join(cloned)).encode()
+    two=second_point()
+    cross_rows,cross_summaries,cross_n=parse(two)
+    assert cross_n==40 and len(cross_rows)==10 and len(cross_summaries)==2
+    assert {s['point_id'] for s in cross_summaries}=={'TOWER_BASE','TOWER_TOP'}
+    def mutate_all(field,value):
+        def apply(cells):
+            i=FIELDS.index(field)
+            cells[i]=value(cells[i]) if callable(value) else value
+        return apply
+    for field,value in [('model_sha256','c'*64),
+                        ('initial_state_sha256','d'*64),
+                        ('operating_mode','PARKED'),
+                        ('wind_seed','SEED02'),
+                        ('earthquake_id','OTHER'),
+                        ('trigger_time_s','2.5')]:
+        rejected(second_point(mutate_all(field,value)),
+                 'CROSS_POINT_MODEL_STATE_MISMATCH')
+    rejected(second_point(mutate_all('time_s',lambda x:str(float(x)+0.1))),
+             'CROSS_POINT_TIME_GRID_MISMATCH')
     return {'status':'SYNTHETIC_ANALYTIC_SELFTEST_PASS_NOT_NATIVE',
-            'positive_analytic_assertions':8,'negative_rejections':11,
+            'positive_analytic_assertions':11,'negative_rejections':18,
+            'cross_point_positive_assertions':3,'cross_point_negative_rejections':7,
             'example':a,'synthetic_input_sha256':hashlib.sha256(raw).hexdigest()}
 
 
