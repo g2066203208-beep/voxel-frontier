@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="680" viewBox="0 0 1180 680">
+<rect width="1180" height="680" fill="white"/>
+<style>text{font-family:Arial,sans-serif;fill:#263344}.title{font-size:22px;font-weight:bold}.sub{font-size:16px;font-weight:bold}.axis{font-size:13px}.note{font-size:13px;fill:#586474}</style>
+<text x="42" y="40" class="title">Spatial holdout leakage in historical ETM nominal-stress screening</text>
+<text x="42" y="65" class="note">One 158 m tower design, 31 heights, four ETM cases; m=4 diagnostic load-derived nominal stress, not DOE or Miner.</text>
+<text x="90" y="101" class="sub">(a) Signed DEL margin: case U09 minus U11</text>
+<text x="670" y="101" class="sub">(b) Contiguous five-segment holdout RMSE</text>
+<line x1="90" x2="555" y1="491.79" y2="491.79" stroke="#E7EAF0"/>
+<text x="80" y="495.79" text-anchor="end" class="axis">-0.2</text>
+<line x1="90" x2="555" y1="435.36" y2="435.36" stroke="#E7EAF0"/>
+<text x="80" y="439.36" text-anchor="end" class="axis">-0.1</text>
+<line x1="90" x2="555" y1="378.93" y2="378.93" stroke="#E7EAF0"/>
+<text x="80" y="382.93" text-anchor="end" class="axis">0.0</text>
+<line x1="90" x2="555" y1="322.50" y2="322.50" stroke="#E7EAF0"/>
+<text x="80" y="326.50" text-anchor="end" class="axis">0.1</text>
+<line x1="90" x2="555" y1="266.07" y2="266.07" stroke="#E7EAF0"/>
+<text x="80" y="270.07" text-anchor="end" class="axis">0.2</text>
+<line x1="90" x2="555" y1="209.64" y2="209.64" stroke="#E7EAF0"/>
+<text x="80" y="213.64" text-anchor="end" class="axis">0.3</text>
+<line x1="90" x2="555" y1="153.21" y2="153.21" stroke="#E7EAF0"/>
+<text x="80" y="157.21" text-anchor="end" class="axis">0.4</text>
+<line x1="670" x2="1080" y1="520.00" y2="520.00" stroke="#E7EAF0"/>
+<text x="660" y="524.00" text-anchor="end" class="axis">0.00</text>
+<line x1="670" x2="1080" y1="463.57" y2="463.57" stroke="#E7EAF0"/>
+<text x="660" y="467.57" text-anchor="end" class="axis">0.02</text>
+<line x1="670" x2="1080" y1="407.14" y2="407.14" stroke="#E7EAF0"/>
+<text x="660" y="411.14" text-anchor="end" class="axis">0.04</text>
+<line x1="670" x2="1080" y1="350.71" y2="350.71" stroke="#E7EAF0"/>
+<text x="660" y="354.71" text-anchor="end" class="axis">0.06</text>
+<line x1="670" x2="1080" y1="294.29" y2="294.29" stroke="#E7EAF0"/>
+<text x="660" y="298.29" text-anchor="end" class="axis">0.08</text>
+<line x1="670" x2="1080" y1="237.86" y2="237.86" stroke="#E7EAF0"/>
+<text x="660" y="241.86" text-anchor="end" class="axis">0.10</text>
+<line x1="670" x2="1080" y1="181.43" y2="181.43" stroke="#E7EAF0"/>
+<text x="660" y="185.43" text-anchor="end" class="axis">0.12</text>
+<line x1="670" x2="1080" y1="125.00" y2="125.00" stroke="#E7EAF0"/>
+<text x="660" y="129.00" text-anchor="end" class="axis">0.14</text>
+<line x1="90" x2="555" y1="378.92857142857144" y2="378.92857142857144" stroke="#9D4554" stroke-dasharray="5 5"/>
+<rect x="90" y="125" width="465" height="395" fill="none" stroke="#7B8897"/>
+<rect x="670" y="125" width="410" height="395" fill="none" stroke="#7B8897"/>
+<polyline fill="none" stroke="#126F91" stroke-width="3" points="97.32,485.29 112.55,465.43 127.78,444.62 143.01,422.75 158.23,400.17 172.88,377.49 188.10,353.59 203.33,328.79 218.56,301.81 233.79,274.29 248.43,248.21 263.66,221.15 278.89,195.75 294.12,175.85 309.34,169.20 323.99,180.89 339.21,200.56 354.44,230.01 369.67,261.70 384.90,292.15 399.54,319.86 414.77,349.31 430.00,376.36 445.23,398.52 460.46,424.88 475.10,453.66 490.33,478.62 505.55,495.46 520.78,490.00 536.01,480.59 548.90,483.25"/>
+<circle cx="97.32" cy="486.25" r="3" fill="#D56B34"/>
+<circle cx="112.55" cy="464.95" r="3" fill="#D56B34"/>
+<circle cx="127.78" cy="444.09" r="3" fill="#D56B34"/>
+<circle cx="143.01" cy="422.39" r="3" fill="#D56B34"/>
+<circle cx="158.23" cy="399.68" r="3" fill="#D56B34"/>
+<circle cx="172.88" cy="377.34" r="3" fill="#D56B34"/>
+<circle cx="188.10" cy="353.14" r="3" fill="#D56B34"/>
+<circle cx="203.33" cy="327.70" r="3" fill="#D56B34"/>
+<circle cx="218.56" cy="301.54" r="3" fill="#D56B34"/>
+<circle cx="233.79" cy="274.48" r="3" fill="#D56B34"/>
+<circle cx="248.43" cy="248.24" r="3" fill="#D56B34"/>
+<circle cx="263.66" cy="221.98" r="3" fill="#D56B34"/>
+<circle cx="278.89" cy="198.50" r="3" fill="#D56B34"/>
+<circle cx="294.12" cy="182.47" r="3" fill="#D56B34"/>
+<circle cx="309.34" cy="178.42" r="3" fill="#D56B34"/>
+<circle cx="323.99" cy="184.57" r="3" fill="#D56B34"/>
+<circle cx="339.21" cy="205.45" r="3" fill="#D56B34"/>
+<circle cx="354.44" cy="231.13" r="3" fill="#D56B34"/>
+<circle cx="369.67" cy="261.08" r="3" fill="#D56B34"/>
+<circle cx="384.90" cy="291.35" r="3" fill="#D56B34"/>
+<circle cx="399.54" cy="320.17" r="3" fill="#D56B34"/>
+<circle cx="414.77" cy="348.11" r="3" fill="#D56B34"/>
+<circle cx="430.00" cy="373.92" r="3" fill="#D56B34"/>
+<circle cx="445.23" cy="400.62" r="3" fill="#D56B34"/>
+<circle cx="460.46" cy="426.63" r="3" fill="#D56B34"/>
+<circle cx="475.10" cy="451.22" r="3" fill="#D56B34"/>
+<circle cx="490.33" cy="474.56" r="3" fill="#D56B34"/>
+<circle cx="505.55" cy="484.31" r="3" fill="#D56B34"/>
+<circle cx="520.78" cy="488.03" r="3" fill="#D56B34"/>
+<circle cx="536.01" cy="486.34" r="3" fill="#D56B34"/>
+<circle cx="548.90" cy="472.62" r="3" fill="#D56B34"/>
+<line x1="670" x2="1080" y1="500.07926871757326" y2="500.07926871757326" stroke="#D56B34" stroke-width="2" stroke-dasharray="5 4"/>
+<polyline fill="none" stroke="#126F91" stroke-width="3" points="670.00,490.16 685.77,504.99 701.54,506.15 717.31,503.41 733.08,501.52 748.85,503.88 764.62,507.35 780.38,514.71 796.15,497.36 811.92,452.53 827.69,385.08 843.46,332.75 859.23,306.15 875.00,325.80 890.77,387.00 906.54,456.90 922.31,492.78 938.08,508.46 953.85,490.69 969.62,496.31 985.38,506.42 1001.15,508.82 1016.92,495.35 1032.69,423.32 1048.46,364.55 1064.23,381.01 1080.00,165.38"/>
+<text x="90.00" y="544" text-anchor="middle" class="axis">0</text>
+<text x="173.04" y="544" text-anchor="middle" class="axis">20</text>
+<text x="256.07" y="544" text-anchor="middle" class="axis">40</text>
+<text x="339.11" y="544" text-anchor="middle" class="axis">60</text>
+<text x="422.14" y="544" text-anchor="middle" class="axis">80</text>
+<text x="505.18" y="544" text-anchor="middle" class="axis">100</text>
+<text x="670.00" y="544" text-anchor="middle" class="axis">1</text>
+<text x="748.85" y="544" text-anchor="middle" class="axis">6</text>
+<text x="827.69" y="544" text-anchor="middle" class="axis">11</text>
+<text x="906.54" y="544" text-anchor="middle" class="axis">16</text>
+<text x="985.38" y="544" text-anchor="middle" class="axis">21</text>
+<text x="1064.23" y="544" text-anchor="middle" class="axis">26</text>
+<text x="315" y="570" text-anchor="middle" class="axis">Height z (m)</text>
+<text x="875" y="570" text-anchor="middle" class="axis">First held-out segment (5 adjacent)</text>
+<text x="20" y="330" transform="rotate(-90 20 330)" text-anchor="middle" class="axis">Signed margin (MPa)</text>
+<text x="614" y="330" transform="rotate(-90 614 330)" text-anchor="middle" class="axis">Fold RMSE (MPa)</text>
+<text x="80" y="602" class="note">Blue: observed margin / blocked-fold RMSE. Orange: LOO predictions / global LOO RMSE.</text>
+<text x="80" y="627" class="note">LOO RMSE 0.007061 MPa; BLOCK5 RMSE 0.040216 MPa; ratio 5.696x; wrong winners 0/31 and 0/135.</text>
+<text x="80" y="652" class="note">Blocked folds overlap and are not independent; no geometric design variation or material-life prediction.</text>
+</svg>
