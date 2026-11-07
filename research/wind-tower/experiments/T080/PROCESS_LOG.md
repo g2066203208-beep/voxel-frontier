@@ -1,3 +1,13 @@
+### 2026-11-08 03时｜S05 IT.NVL两事件实测来源谱形归一化与方向优势差异（0/12）
+
+- **START/防并发**：指挥室开工commit `f911ac8ec980f59d4418534dcdd9b5b8c4e73310`，read_base_sha=`559707a205d0c29aef651c9240948637421729e2`，科研三文件提交`a335d832e8ddf9ea799eaf07d8e74cf394849cab`；main=`58c1e545f67b645417d5957189f5dad693d975bb`，PR#42 Open/Draft。已按根/研究AGENTS→READ-BEFORE-WRITE及02时交接→白皮书v0.2.26→MASTER/STATUS→12阶段→T079/T080过程→两事件历史实测派生谱/官方头逐项阅读。
+- **SOURCE/OFFICIAL**：ESM 0008/NVL 46周期HNE/HNN/RotD表SHA256 `31fea6aa2064abbd042e4a1b1a15b9aee90a598a7d1991bc0869bcd63177dd8c`；0009/NVL 5周期HNE/HNN/GM表SHA256 `0c790ae1ae5cd4e4bc94a08561e7cdfc39354baa4aa1d7e5fc76800c887192ce`；本轮直接读仓库已保全ESM官方处理详情与0009原始头收据。0008 MP fc=0.04Hz、SNR报告lc=0.09Hz，0009 NVL两水平fc=0.08Hz，GOOD且lc/hc警示。**历史谱表已源级核验，但本轮未重取原波**。
+- **RUN/科学增量**：四共同周期T=4/6/6.230957763/8s，双水平GM谱归一化到各自T4。T1处Q0008=0.6932894604、Q0009=0.4686138746，归一化谱形比1.4794471480；T6比1.5786875944、T8比1.1460636839。T1处HNE/HNN分别1.204343704与0.584301477，方向主导相反；0008在T4→T6出现方向优势翻转，0009四点无翻转。**两事件同属2012 Emilia地震序列，不能视作独立危险性样本；不能把谱形差异归因于单一滤波或震级。**
+- **FIG/TAB/PROGRAM**：[Node程序](../T079/s05_esm_two_event_shape_gate.cjs) SHA256 `3358e58ea88fc94e410772de4cb6d27e3d873dc9f68bf7cb38efe5d4ef779c28`、[4行数表](../T079/real-records/S05_ESM_TWO_EVENT_NVL_NORMALIZED_SHAPE_20261108.csv) SHA256 `c668e62e023b9f39029f412ae8f173968416cce78d71fd5033eb0a438c303abe`、[SVG](../../manuscript/final-thesis/figures/FIG_S05_06_ESM_TWO_EVENT_NORMALIZED_SHAPE_20261108.svg) SHA256 `7f8ecf2ccfdbd8b2e140d638bf3bab654b1597e21c40ad710a76b6546b6d3693`、[T079正式研究正文](../T079/METHOD_PLAN.md)。
+- **TEST/失败/误差预算**：真实源与官方元数据由远端原程序calculate复算4/4，生成CSV、SVG与已提交文件逐字节相同；远端原程序V8自测1正向+7拒绝通过。**第一次动态编译测试错误是测试工具把shebang直接传入new Function，去除shebang后同一远端源码通过；并非科研程序源代码语法错误，未修改程序。** 原生Node CLI/CI未跑。CSV舍入精度14位；原始波积分、低频滤波、场址目标谱、结构周期误差未定量，不能将f/fc当合格阈值。
+- **REF/STANDARD/PASS-HOLD**：ESM3 DOI 10.13127/esm.3；两篇2026先行论文仅继承摘要/选页级，不宣称首创；授权IEC/GB/NB条款未新核。SOURCE-LEVEL MATH PASS / S05 DESIGN HOLD，12阶段**0/12**，正式DLC1.2**0/126**，材料Miner与同态W/E/WE仍HOLD。未执行Abaqus/CAE、昂贵OpenFAST/TurbSim、未动T057/T070/main、未合并Draft PR。
+- **下一唯一动作**：S05官方可用低频/场址目标谱尚缺，轮换S12，把现有真实风载与本轮地震记录适用域形成完整可审稿的局限性和设计可证伪标准，优先实质论文正文而非重复谱QC。
+
 2026-11-08 02时｜v0.2.26 期刊Fig.8链接纠错：v0.2.25科研提交远端回读后，发现英文稿Fig.8相对路径多出`manuscript/`，已纠正为`final-thesis/figures/...svg`；源程序、CSV、SVG与所有真实数值未改。只做编辑链接修复，不新增物理结果，12阶段仍0/12。
 
 ### 2026-11-08 02时｜S06/S07来源门禁后切换S10：真实18NTM六seed删减与加权四次矩阈值传播（0/12）
