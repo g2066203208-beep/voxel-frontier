@@ -1,3 +1,5 @@
+2026-11-08 02时｜v0.2.26 期刊Fig.8链接纠错：v0.2.25科研提交远端回读后，发现英文稿Fig.8相对路径多出`manuscript/`，已纠正为`final-thesis/figures/...svg`；源程序、CSV、SVG与所有真实数值未改。只做编辑链接修复，不新增物理结果，12阶段仍0/12。
+
 ### 2026-11-08 02时｜S06/S07来源门禁后切换S10：真实18NTM六seed删减与加权四次矩阈值传播（0/12）
 
 - **START/基线**：PR#42 Open/Draft，原HEAD `093de9d3a894ce30b99aa9e0005a07253708d730`，START commit `50545784892a9132e110aeae2dee867ffaaa7f02`，main `58c1e545f67b645417d5957189f5dad693d975bb`。依序已读根/研究AGENTS、指挥室READ-BEFORE-WRITE及01时交接、白皮书v0.2.24、MASTER/STATUS、12阶段、T079/T080、历史ETM 2s重叠/姿态收据及18NTM真实派生数据。W侧2s ETM pilot与E侧0.005s E-only梁代理无共同已验证初态/状态SHA，不拼接W/E/WE，按纪律切换可独立S10。
