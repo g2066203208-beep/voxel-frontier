@@ -1,3 +1,14 @@
+### 2026-11-07 17时｜S06/S12真实18NTM运行状态代理留出负结果（v0.2.15，0/12）
+
+- **START/并发基线**：PR#42原HEAD=`17e0c2683c52c850d3bcae3081a25bd30564fda9`、Open/Draft；main=`58c1e545f67b645417d5957189f5dad693d975bb`。按根/研究AGENTS→指挥室READ-BEFORE-WRITE/16时交接→白皮书v0.2.14→MASTER/STATUS/12阶段→T079/T080→T062历史18NTM/期刊/Ch3顺序阅读。因上轮S05已交付，按反卡死转S06/S12，避免重复地震排名；仅修改T062新程序/12行表、论文SVG、原期刊/Ch3、T080/白皮书/指挥室；不动冻结T057/T070/main，不合并Draft PR。
+- **可证伪科学问题**：控制风速档后，历史平均发电机功率或平均桨距角是否比“训练集同档DEL均值”更能预测留出的My/Mx载荷DEL？对两种预指定配对，LOCO（18折，每次17训练）与LOSO（6折，按共同S01–S06标签跨三档每次15训练）比较三模型：同档均值、同档均值+跨档训练内中心化斜率、混合样本回归。每次重新拟合训练均值/斜率，防止目标DEL泄漏。
+- **SOURCE**：直接完整读取[T062 18行NTM原case/OUTB-SHA配对源](../T062/S06_NTM18_OPERATING_DEL_BIN_CENTERED_20261107.csv)，SHA256 `4abf76252fa34b2c12635d409e5abc23c4a7d6f759b66dbec12b1932379f4bea`逐字节通过；三个风速箱各六seed、100–700s，功率MW、桨距角deg、My/Mx load DEL均MN·m。原始18个OUTB哈希继承前次收据，本轮未重读原OUTB，不新增OpenFAST。
+- **RUN/实质负结果**：My-功率LOCO同档均值/档内斜率/混合回归RMSE=6.160156/6.747286/5.678843 MN·m；LOSO=6.160156/**7.017623**/5.893450。Mx-桨距角LOCO=2.212449/2.267582/2.199420；LOSO=2.212449/**2.320137**/2.205653。相对同档均值，档内斜率LOSO误差My增加**13.9196%**、Mx增加**4.8674%**；不能以混合回归样本内较好RMSE否定档间混杂，亦不能外推未观测风速箱。6个seed标签折不等于6个独立物理实验；同窗代理不是事前预测。
+- **FIG/TAB/程序**：[可运行无外部依赖Node程序](../T062/s06_ntm_proxy_holdout_gate.cjs) SHA256 `3c29dd33f3eeb339b22a2d6d89567d23a1f8b8a5b6de7f5855beefaa42dbcc3b`；[12行留出统计表](../T062/S06_NTM18_PROXY_HOLDOUT_12ROW_20261107.csv) SHA256 `6c154ded694eac40c12bb43e0bb8aa6361386b9d476ccaf4bb8a5618b782a0f7`；[正式四面板SVG](../../manuscript/final-thesis/figures/FIG3_S06_NTM_PROXY_HOLDOUT_20261107.svg) SHA256 `19e10daaa5d7c47b329a49dd36ef6aaa44370816c85e1ec29f30b4e9593575c8`；[Ch3 §3.5.3.3](../../manuscript/final-thesis/chapters/03_场址风环境与整机随机风控制载荷.md)与[英文期刊§2.10/3.5/4.6 Table7 Fig6](../../manuscript/journal-wind-fatigue-results.md)已新增正式正文。
+- **测试/失败/误差**：V8执行仓库同一源码纯函数，输入18/18及3×6身份拒绝门禁、顺序反转不变性、两项独立历史数值oracle（My LOCO bin RMSE=6.16015551126、Mx LOSO slope=2.32013655708）、预期比较断言通过；5类污染（非数值、重复case、风箱错配、非法原OUTB SHA、非法seed标签）均拒绝；SHA256实现用abc/空串标准向量核验，四件原件/程序/CSV/SVG字节哈希已回读。**未运行原生Node CLI/CI**，不把V8或算法测试称物理验收。输出CSV 9位小数舍入≤5×10⁻¹⁰ MN·m；原源表小数约9位、模型抽样/控制状态/总体seed误差无有限估计，LOCO与LOSO非独立总体检验。
+- **REF/STANDARD/OFFICIAL**：REF=已有随机种子与载荷筛查方法、2026先行风震摘要/地震PT已核原页的历史证据等级，未新增全文；STANDARD=无新授权IEC/GB原页；OFFICIAL=历史OpenFAST v3.5.3 OUTB身份收据，不是正式DLC1.2。
+- **PASS/HOLD**：仅真实历史派生源的**留出算法与描述性负结果PASS**，不是物理/材料疲劳/未来seed总体预测PASS。S06 PARTIAL、S12 DRAFT、12阶段**0/12**，正式DLC1.2 **0/126**、真实材料Miner与同态W/E/WE仍HOLD。**下一唯一动作**：转S05/S10的已有真实原始资料中寻找可独立形成正式论文图表的非重复科学问题；优先在原波来源充分时做场址长周期目标谱对照，缺授权标准/真实原件即切换S11真实DOE输入可识别性，不重复18例代理小审计。
+
 ### 2026-11-07 16时｜S05真实两事件四水平对长周期谱的预处理排名反转（v0.2.14，0/12）
 
 - **START/并发基线**：PR#42原HEAD=`f231385a0afcb313a95e60009acb22d27fabf79c`、Open/Draft，main=`58c1e545f67b645417d5957189f5dad693d975bb`；按根AGENTS→研究AGENTS→指挥室READ-BEFORE-WRITE与15时交接→白皮书v0.2.13→MASTER/STATUS→12阶段→T079/T080顺序阅读。上一轮S10已完成，依轮换要求本轮转S05，不重复指数筛查。计划只改T079新源级程序/两表、论文SVG、原METHOD_PLAN/T080日志/白皮书/指挥室；不动冻结T057/T070或main。开工与收尾合记，不虚构单独START提交。
