@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="610" viewBox="0 0 1160 610">
+<rect width="1160" height="610" fill="white"/>
+<text x="54" y="44" font-size="23" font-family="Arial" fill="#17243c" font-weight="bold">Held-out operating-state proxy error: 18 historical NTM cases</text>
+<text x="54" y="71" font-size="14" font-family="Arial" fill="#46546a">Lower RMSE is better. Every prediction excludes its test case or all three cases with the same seed label.</text>
+<rect x="54" y="105" width="527" height="208" rx="7" fill="#f8fafc" stroke="#cbd5e1"/>
+<text x="72" y="132" font-family="Arial" font-size="17" font-weight="bold" fill="#17243c">My / leave-one-case-out (18 folds)</text>
+<line x1="92" y1="269" x2="554" y2="269" stroke="#64748b"/>
+<rect x="124" y="188.66" width="64" height="80.34" fill="#486a92" rx="3"/>
+<text x="156" y="181.66" text-anchor="middle" font-family="Arial" font-size="13" fill="#17243c">6.160</text>
+<text x="156" y="288" text-anchor="middle" font-family="Arial" font-size="12" fill="#334155">Bin mean</text>
+<rect x="266" y="181.00" width="64" height="88.00" fill="#d28a38" rx="3"/>
+<text x="298" y="174.00" text-anchor="middle" font-family="Arial" font-size="13" fill="#17243c">6.747</text>
+<text x="298" y="288" text-anchor="middle" font-family="Arial" font-size="12" fill="#334155">Bin+slope</text>
+<rect x="408" y="194.93" width="64" height="74.07" fill="#3d9b8a" rx="3"/>
+<text x="440" y="187.93" text-anchor="middle" font-family="Arial" font-size="13" fill="#17243c">5.679</text>
+<text x="440" y="288" text-anchor="middle" font-family="Arial" font-size="12" fill="#334155">Pooled</text>
+<text x="71" y="299" font-family="Arial" font-size="12" fill="#64748b">RMSE (MN m); diagnostic load DEL, not material damage</text>
+<rect x="611" y="105" width="527" height="208" rx="7" fill="#f8fafc" stroke="#cbd5e1"/>
+<text x="629" y="132" font-family="Arial" font-size="17" font-weight="bold" fill="#17243c">My / leave-one-seed-label-out (6 folds)</text>
+<line x1="649" y1="269" x2="1111" y2="269" stroke="#64748b"/>
+<rect x="681" y="191.75" width="64" height="77.25" fill="#486a92" rx="3"/>
+<text x="713" y="184.75" text-anchor="middle" font-family="Arial" font-size="13" fill="#17243c">6.160</text>
+<text x="713" y="288" text-anchor="middle" font-family="Arial" font-size="12" fill="#334155">Bin mean</text>
+<rect x="823" y="181.00" width="64" height="88.00" fill="#d28a38" rx="3"/>
+<text x="855" y="174.00" text-anchor="middle" font-family="Arial" font-size="13" fill="#17243c">7.018</text>
+<text x="855" y="288" text-anchor="middle" font-family="Arial" font-size="12" fill="#334155">Bin+slope</text>
+<rect x="965" y="195.10" width="64" height="73.90" fill="#3d9b8a" rx="3"/>
+<text x="997" y="188.10" text-anchor="middle" font-family="Arial" font-size="13" fill="#17243c">5.893</text>
+<text x="997" y="288" text-anchor="middle" font-family="Arial" font-size="12" fill="#334155">Pooled</text>
+<text x="628" y="299" font-family="Arial" font-size="12" fill="#64748b">RMSE (MN m); diagnostic load DEL, not material damage</text>
+<rect x="54" y="333" width="527" height="208" rx="7" fill="#f8fafc" stroke="#cbd5e1"/>
+<text x="72" y="360" font-family="Arial" font-size="17" font-weight="bold" fill="#17243c">Mx / leave-one-case-out (18 folds)</text>
+<line x1="92" y1="497" x2="554" y2="497" stroke="#64748b"/>
+<rect x="124" y="411.14" width="64" height="85.86" fill="#486a92" rx="3"/>
+<text x="156" y="404.14" text-anchor="middle" font-family="Arial" font-size="13" fill="#17243c">2.212</text>
+<text x="156" y="516" text-anchor="middle" font-family="Arial" font-size="12" fill="#334155">Bin mean</text>
+<rect x="266" y="409.00" width="64" height="88.00" fill="#d28a38" rx="3"/>
+<text x="298" y="402.00" text-anchor="middle" font-family="Arial" font-size="13" fill="#17243c">2.268</text>
+<text x="298" y="516" text-anchor="middle" font-family="Arial" font-size="12" fill="#334155">Bin+slope</text>
+<rect x="408" y="411.65" width="64" height="85.35" fill="#3d9b8a" rx="3"/>
+<text x="440" y="404.65" text-anchor="middle" font-family="Arial" font-size="13" fill="#17243c">2.199</text>
+<text x="440" y="516" text-anchor="middle" font-family="Arial" font-size="12" fill="#334155">Pooled</text>
+<text x="71" y="527" font-family="Arial" font-size="12" fill="#64748b">RMSE (MN m); diagnostic load DEL, not material damage</text>
+<rect x="611" y="333" width="527" height="208" rx="7" fill="#f8fafc" stroke="#cbd5e1"/>
+<text x="629" y="360" font-family="Arial" font-size="17" font-weight="bold" fill="#17243c">Mx / leave-one-seed-label-out (6 folds)</text>
+<line x1="649" y1="497" x2="1111" y2="497" stroke="#64748b"/>
+<rect x="681" y="413.08" width="64" height="83.92" fill="#486a92" rx="3"/>
+<text x="713" y="406.08" text-anchor="middle" font-family="Arial" font-size="13" fill="#17243c">2.212</text>
+<text x="713" y="516" text-anchor="middle" font-family="Arial" font-size="12" fill="#334155">Bin mean</text>
+<rect x="823" y="409.00" width="64" height="88.00" fill="#d28a38" rx="3"/>
+<text x="855" y="402.00" text-anchor="middle" font-family="Arial" font-size="13" fill="#17243c">2.320</text>
+<text x="855" y="516" text-anchor="middle" font-family="Arial" font-size="12" fill="#334155">Bin+slope</text>
+<rect x="965" y="413.34" width="64" height="83.66" fill="#3d9b8a" rx="3"/>
+<text x="997" y="406.34" text-anchor="middle" font-family="Arial" font-size="13" fill="#17243c">2.206</text>
+<text x="997" y="516" text-anchor="middle" font-family="Arial" font-size="12" fill="#334155">Pooled</text>
+<text x="628" y="527" font-family="Arial" font-size="12" fill="#64748b">RMSE (MN m); diagnostic load DEL, not material damage</text>
+<text x="54" y="584" font-family="Arial" font-size="13" fill="#475569">Source: archived 18 NTM cases (3 bins × 6 seeds); 100–700 s; no new simulation. Seed labels are reused across bins.</text>
+</svg>
