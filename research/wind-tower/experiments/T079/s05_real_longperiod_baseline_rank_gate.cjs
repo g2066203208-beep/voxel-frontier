@@ -28,7 +28,7 @@ function analyze(src,cross){
   const periods=[4,6,8,10], ids=['ci38457511|CI.CLC','ci38457511|CI.PASC','ci38457511|CI.RVR','ci39493944|CI.CLC'];
   if(src.length!==16||cross.length!==20)fail('ROW_COUNT');
   const by=new Map(), cc=new Map();
-  for(const r of cross){const k=key(r)+'|'+r.period_s;if(cc.has(k))fail('CROSS_DUP');cc.set(k,r);}
+  for(const r of cross){const k=key(r)+'|'+Number(r.period_s);if(cc.has(k))fail('CROSS_DUP');cc.set(k,r);}
   for(const r of src){
     const t=numeric(r.period_s,'T'),k=key(r),id=k+'|'+t;
     if(!periods.includes(t)||!ids.includes(k)||by.has(id))fail('IDENTITY');
