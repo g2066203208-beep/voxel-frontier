@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="840" height="450" viewBox="0 0 840 450">
+<rect width="100%" height="100%" fill="white"/>
+<text x="420" y="28" font-family="Arial" font-size="17" font-weight="bold" text-anchor="middle">Real ESM E-only proxy: spectral aliasing under output decimation</text>
+<text x="420" y="47" font-family="Arial" font-size="11" text-anchor="middle">Source: 0.005 s × 32040 samples per direction; ideal DFT low-pass reference</text>
+<text x="232" y="70" text-anchor="middle" font-family="Arial" font-size="14">HNE</text>
+<line x1="72" y1="364.00" x2="392" y2="364.00" stroke="#e5e7eb"/>
+<text x="65" y="368.00" text-anchor="end" font-family="Arial" font-size="10">0</text>
+<line x1="72" y1="293.00" x2="392" y2="293.00" stroke="#e5e7eb"/>
+<text x="65" y="297.00" text-anchor="end" font-family="Arial" font-size="10">25</text>
+<line x1="72" y1="222.00" x2="392" y2="222.00" stroke="#e5e7eb"/>
+<text x="65" y="226.00" text-anchor="end" font-family="Arial" font-size="10">49</text>
+<line x1="72" y1="151.00" x2="392" y2="151.00" stroke="#e5e7eb"/>
+<text x="65" y="155.00" text-anchor="end" font-family="Arial" font-size="10">74</text>
+<line x1="72" y1="80.00" x2="392" y2="80.00" stroke="#e5e7eb"/>
+<text x="65" y="84.00" text-anchor="end" font-family="Arial" font-size="10">98</text>
+<text x="104.00" y="382" text-anchor="middle" font-family="Arial" font-size="10">0.02</text>
+<text x="152.00" y="382" text-anchor="middle" font-family="Arial" font-size="10">0.05</text>
+<text x="232.00" y="382" text-anchor="middle" font-family="Arial" font-size="10">0.1</text>
+<text x="392.00" y="382" text-anchor="middle" font-family="Arial" font-size="10">0.2</text>
+<path d="M72 80V364H392" stroke="#111827" stroke-width="1.2" fill="none"/>
+<polyline points="104.00,363.24 152.00,358.13 232.00,315.62 392.00,190.64" stroke="#2563eb" stroke-width="2.4" fill="none"/>
+<circle cx="104.00" cy="363.24" r="3.2" fill="#2563eb"/>
+<circle cx="152.00" cy="358.13" r="3.2" fill="#2563eb"/>
+<circle cx="232.00" cy="315.62" r="3.2" fill="#2563eb"/>
+<circle cx="392.00" cy="190.64" r="3.2" fill="#2563eb"/>
+<polyline points="104.00,363.34 152.00,358.04 232.00,302.92 392.00,117.04" stroke="#dc2626" stroke-width="2.4" fill="none"/>
+<circle cx="104.00" cy="363.34" r="3.2" fill="#dc2626"/>
+<circle cx="152.00" cy="358.04" r="3.2" fill="#dc2626"/>
+<circle cx="232.00" cy="302.92" r="3.2" fill="#dc2626"/>
+<circle cx="392.00" cy="117.04" r="3.2" fill="#dc2626"/>
+<text x="232" y="402" font-family="Arial" text-anchor="middle" font-size="11">Output interval (s)</text>
+<text x="642" y="70" text-anchor="middle" font-family="Arial" font-size="14">HNN</text>
+<line x1="482" y1="364.00" x2="802" y2="364.00" stroke="#e5e7eb"/>
+<text x="475" y="368.00" text-anchor="end" font-family="Arial" font-size="10">0</text>
+<line x1="482" y1="293.00" x2="802" y2="293.00" stroke="#e5e7eb"/>
+<text x="475" y="297.00" text-anchor="end" font-family="Arial" font-size="10">20</text>
+<line x1="482" y1="222.00" x2="802" y2="222.00" stroke="#e5e7eb"/>
+<text x="475" y="226.00" text-anchor="end" font-family="Arial" font-size="10">40</text>
+<line x1="482" y1="151.00" x2="802" y2="151.00" stroke="#e5e7eb"/>
+<text x="475" y="155.00" text-anchor="end" font-family="Arial" font-size="10">60</text>
+<line x1="482" y1="80.00" x2="802" y2="80.00" stroke="#e5e7eb"/>
+<text x="475" y="84.00" text-anchor="end" font-family="Arial" font-size="10">80</text>
+<text x="514.00" y="382" text-anchor="middle" font-family="Arial" font-size="10">0.02</text>
+<text x="562.00" y="382" text-anchor="middle" font-family="Arial" font-size="10">0.05</text>
+<text x="642.00" y="382" text-anchor="middle" font-family="Arial" font-size="10">0.1</text>
+<text x="802.00" y="382" text-anchor="middle" font-family="Arial" font-size="10">0.2</text>
+<path d="M482 80V364H802" stroke="#111827" stroke-width="1.2" fill="none"/>
+<polyline points="514.00,363.01 562.00,357.98 642.00,288.49 802.00,177.17" stroke="#2563eb" stroke-width="2.4" fill="none"/>
+<circle cx="514.00" cy="363.01" r="3.2" fill="#2563eb"/>
+<circle cx="562.00" cy="357.98" r="3.2" fill="#2563eb"/>
+<circle cx="642.00" cy="288.49" r="3.2" fill="#2563eb"/>
+<circle cx="802.00" cy="177.17" r="3.2" fill="#2563eb"/>
+<polyline points="514.00,363.16 562.00,358.05 642.00,271.99 802.00,117.04" stroke="#dc2626" stroke-width="2.4" fill="none"/>
+<circle cx="514.00" cy="363.16" r="3.2" fill="#dc2626"/>
+<circle cx="562.00" cy="358.05" r="3.2" fill="#dc2626"/>
+<circle cx="642.00" cy="271.99" r="3.2" fill="#dc2626"/>
+<circle cx="802.00" cy="117.04" r="3.2" fill="#dc2626"/>
+<text x="642" y="402" font-family="Arial" text-anchor="middle" font-size="11">Output interval (s)</text>
+<text x="15" y="230" font-family="Arial" font-size="11" transform="rotate(-90 15 230)" text-anchor="middle">Alias RMS / ideal low-pass RMS (%)</text>
+<line x1="238" y1="421" x2="265" y2="421" stroke="#2563eb" stroke-width="3"/><text x="272" y="425" font-family="Arial" font-size="11">Top absolute acceleration</text>
+<line x1="467" y1="421" x2="494" y2="421" stroke="#dc2626" stroke-width="3"/><text x="501" y="425" font-family="Arial" font-size="11">Base elastic shear</text>
+</svg>
