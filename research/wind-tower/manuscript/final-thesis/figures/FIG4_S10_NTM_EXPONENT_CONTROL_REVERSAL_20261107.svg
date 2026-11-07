@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1060" height="590" viewBox="0 0 1060 590">
+<rect width="1060" height="590" fill="#fff"/>
+<text x="530" y="38" text-anchor="middle" font-size="23" font-family="Arial" fill="#1d3042">NTM near-base gross-stress control changes with diagnostic exponent</text>
+<text x="530" y="65" text-anchor="middle" font-size="14" font-family="Arial">158 m historical tower; BASE z=0 m; six seeds per bin; separate 16-azimuth search</text>
+<text x="285" y="101" text-anchor="middle" font-size="20" font-family="Arial">m = 4 (diagnostic only)</text>
+<line x1="65" x2="490" y1="397" y2="397" stroke="#dce4e9"/><text x="57" y="402" text-anchor="end" font-size="12" font-family="Arial">0.0</text>
+<line x1="65" x2="490" y1="325.75" y2="325.75" stroke="#dce4e9"/><text x="57" y="330.75" text-anchor="end" font-size="12" font-family="Arial">1.4</text>
+<line x1="65" x2="490" y1="254.5" y2="254.5" stroke="#dce4e9"/><text x="57" y="259.5" text-anchor="end" font-size="12" font-family="Arial">2.8</text>
+<line x1="65" x2="490" y1="183.25" y2="183.25" stroke="#dce4e9"/><text x="57" y="188.25" text-anchor="end" font-size="12" font-family="Arial">4.1</text>
+<line x1="65" x2="490" y1="112" y2="112" stroke="#dce4e9"/><text x="57" y="117" text-anchor="end" font-size="12" font-family="Arial">5.5</text>
+<rect x="107" y="229.05" width="68" height="167.95" fill="#4678a7"/>
+<text x="141" y="221.05" text-anchor="middle" font-size="14" font-weight="bold" font-family="Arial">3.241</text>
+<text x="141" y="420" text-anchor="middle" font-size="13" font-family="Arial">9.34</text>
+<rect x="229" y="180.31" width="68" height="216.69" fill="#5c9b81"/>
+<text x="263" y="172.31" text-anchor="middle" font-size="14" font-weight="bold" font-family="Arial">4.182</text>
+<text x="263" y="420" text-anchor="middle" font-size="13" font-family="Arial">11.4</text>
+<rect x="351" y="165.25" width="68" height="231.75" fill="#c27d53"/>
+<text x="385" y="157.25" text-anchor="middle" font-size="14" font-weight="bold" font-family="Arial">4.472</text>
+<text x="385" y="420" text-anchor="middle" font-size="13" font-family="Arial">19.20</text>
+<text x="283" y="445" text-anchor="middle" font-size="13" font-family="Arial">Wind speed (m/s); DEL (MPa)</text>
+<text x="795" y="101" text-anchor="middle" font-size="20" font-family="Arial">m = 10 (diagnostic only)</text>
+<line x1="575" x2="1000" y1="397" y2="397" stroke="#dce4e9"/><text x="567" y="402" text-anchor="end" font-size="12" font-family="Arial">0.0</text>
+<line x1="575" x2="1000" y1="325.75" y2="325.75" stroke="#dce4e9"/><text x="567" y="330.75" text-anchor="end" font-size="12" font-family="Arial">2.9</text>
+<line x1="575" x2="1000" y1="254.5" y2="254.5" stroke="#dce4e9"/><text x="567" y="259.5" text-anchor="end" font-size="12" font-family="Arial">5.8</text>
+<line x1="575" x2="1000" y1="183.25" y2="183.25" stroke="#dce4e9"/><text x="567" y="188.25" text-anchor="end" font-size="12" font-family="Arial">8.6</text>
+<line x1="575" x2="1000" y1="112" y2="112" stroke="#dce4e9"/><text x="567" y="117" text-anchor="end" font-size="12" font-family="Arial">11.5</text>
+<rect x="617" y="202.44" width="68" height="194.56" fill="#4678a7"/>
+<text x="651" y="194.44" text-anchor="middle" font-size="14" font-weight="bold" font-family="Arial">7.851</text>
+<text x="651" y="420" text-anchor="middle" font-size="13" font-family="Arial">9.34</text>
+<rect x="739" y="161.84" width="68" height="235.16" fill="#5c9b81"/>
+<text x="773" y="153.84" text-anchor="middle" font-size="14" font-weight="bold" font-family="Arial">9.489</text>
+<text x="773" y="420" text-anchor="middle" font-size="13" font-family="Arial">11.4</text>
+<rect x="861" y="192.98" width="68" height="204.02" fill="#c27d53"/>
+<text x="895" y="184.98" text-anchor="middle" font-size="14" font-weight="bold" font-family="Arial">8.232</text>
+<text x="895" y="420" text-anchor="middle" font-size="13" font-family="Arial">19.20</text>
+<text x="793" y="445" text-anchor="middle" font-size="13" font-family="Arial">Wind speed (m/s); DEL (MPa)</text>
+<rect x="52" y="475" width="956" height="83" rx="10" fill="#f2f6fa" stroke="#d7e0e8"/>
+<text x="530" y="501" text-anchor="middle" font-size="16" font-family="Arial">m=4 winner: 19.20 m/s; m=10 winner: 11.4 m/s (all 10 near-base stations)</text>
+<text x="530" y="529" text-anchor="middle" font-size="14" font-family="Arial">3-of-6 BASE subsets: independent 6024/8000 retain both; common-label 18/20 retain both</text>
+<text x="530" y="577" text-anchor="middle" font-size="12" font-family="Arial">Gross-section load diagnostic; not local material stress, Miner damage, or IEC DLC1.2</text></svg>
