@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="530">
+<rect width="1080" height="530" fill="white"/>
+<text x="50" y="36" font-family="Arial" font-size="21">Break-even fourth-moment DEL for five missing low-wind bins</text>
+<text x="50" y="59" font-family="Arial" font-size="12">Conditional mathematical thresholds, NOT predicted loads or material fatigue damage.</text>
+<text x="75" y="102" font-family="Arial" font-size="18">Mx threshold [MN m]</text>
+<path d="M75 145V430h400" fill="none" stroke="black"/>
+<circle cx="110" cy="237.15309224362252" r="5" fill="#155a9b"/>
+<text x="110" y="225.15309224362252" text-anchor="middle" font-family="Arial" font-size="12">5.41</text>
+<text x="110" y="452" text-anchor="middle" font-family="Arial" font-size="12">4-5</text>
+<circle cx="190" cy="233.08329788186114" r="5" fill="#155a9b"/>
+<text x="190" y="221.08329788186114" text-anchor="middle" font-family="Arial" font-size="12">5.53</text>
+<text x="190" y="452" text-anchor="middle" font-family="Arial" font-size="12">5-6</text>
+<circle cx="270" cy="222.25300521138487" r="5" fill="#155a9b"/>
+<text x="270" y="210.25300521138487" text-anchor="middle" font-family="Arial" font-size="12">5.83</text>
+<text x="270" y="452" text-anchor="middle" font-family="Arial" font-size="12">6-7</text>
+<circle cx="350" cy="204.74986927640174" r="5" fill="#155a9b"/>
+<text x="350" y="192.74986927640174" text-anchor="middle" font-family="Arial" font-size="12">6.32</text>
+<text x="350" y="452" text-anchor="middle" font-family="Arial" font-size="12">7-8</text>
+<circle cx="430" cy="178.06822693736328" r="5" fill="#155a9b"/>
+<text x="430" y="166.06822693736328" text-anchor="middle" font-family="Arial" font-size="12">7.07</text>
+<text x="430" y="452" text-anchor="middle" font-family="Arial" font-size="12">8-9</text>
+<path d="M110.0 237.2 L190.0 233.1 L270.0 222.3 L350.0 204.7 L430.0 178.1" fill="none" stroke="#155a9b" stroke-width="2.5"/>
+<line x1="75" x2="475" y1="289.43723154212705" y2="289.43723154212705" stroke="#b34b26" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="465" y="281.43723154212705" text-anchor="end" font-family="Arial" font-size="12" fill="#b34b26">five-bin equal DEL 3.95</text>
+<text x="605" y="102" font-family="Arial" font-size="18">My threshold [MN m]</text>
+<path d="M605 145V430h400" fill="none" stroke="black"/>
+<circle cx="640" cy="232.87138593296737" r="5" fill="#155a9b"/>
+<text x="640" y="220.87138593296737" text-anchor="middle" font-family="Arial" font-size="12">34.58</text>
+<text x="640" y="452" text-anchor="middle" font-family="Arial" font-size="12">4-5</text>
+<circle cx="720" cy="228.71123147985395" r="5" fill="#155a9b"/>
+<text x="720" y="216.71123147985395" text-anchor="middle" font-family="Arial" font-size="12">35.31</text>
+<text x="720" y="452" text-anchor="middle" font-family="Arial" font-size="12">5-6</text>
+<circle cx="800" cy="217.64047795359878" r="5" fill="#155a9b"/>
+<text x="800" y="205.64047795359878" text-anchor="middle" font-family="Arial" font-size="12">37.26</text>
+<text x="800" y="452" text-anchor="middle" font-family="Arial" font-size="12">6-7</text>
+<circle cx="880" cy="199.74872656991087" r="5" fill="#155a9b"/>
+<text x="880" y="187.74872656991087" text-anchor="middle" font-family="Arial" font-size="12">40.39</text>
+<text x="880" y="452" text-anchor="middle" font-family="Arial" font-size="12">7-8</text>
+<circle cx="960" cy="172.47468190660993" r="5" fill="#155a9b"/>
+<text x="960" y="160.47468190660993" text-anchor="middle" font-family="Arial" font-size="12">45.18</text>
+<text x="960" y="452" text-anchor="middle" font-family="Arial" font-size="12">8-9</text>
+<path d="M640.0 232.9 L720.0 228.7 L800.0 217.6 L880.0 199.7 L960.0 172.5" fill="none" stroke="#155a9b" stroke-width="2.5"/>
+<line x1="605" x2="1005" y1="286.31637002689064" y2="286.31637002689064" stroke="#b34b26" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="995" y="278.31637002689064" text-anchor="end" font-family="Arial" font-size="12" fill="#b34b26">five-bin equal DEL 25.21</text>
+<text x="50" y="502" font-family="Arial" font-size="12">ERA5 2005-2025; 184080 total h; [4,25) diagnostic 106900 h; missing 4-9 bin group 95402 h.</text>
+</svg>
