@@ -1,3 +1,15 @@
+## 2026-11-07 23时｜S05真实ESM 46周期PSA—PSD长周期谱峰错位（SOURCE-LEVEL，0/12）
+
+**科学问题**：已处理实测双水平地震记录的最大伪加速度周期，是否同为最大伪位移周期？这属于5%线性单自由度记录谱的量纲与周期筛查，不是158m混塔真实结构位移。**SOURCE**：直接读取ESM IT-2012-0008 IT.NVL处理后HNE/HNN 46周期RotD源[CSV](real-records/S05_ESM_IT2012_NVL_DENSE_LONGPERIOD_ROTD_20261102.csv)，SHA256 `31fea6aa2064abbd042e4a1b1a15b9aee90a598a7d1991bc0869bcd63177dd8c`；独立旧16周期[RotD表](real-records/S05_ESM_IT2012_NVL_MP_RotD_16PERIOD_20261030.csv)重叠12周期×RotD50/100共24个值完全相同（最大差0）。未重新下载原始波形。
+
+**方法**：对每周期T，ω=2π/T，PSV=PSA/ω（m/s）、PSD=PSA/ω²（m），原PSA单位m/s²。正比例换算保持同周期的旋转方位百分位，因此可对RotD50、RotD100分别换算；**PSD为SDOF相对伪位移，不是绝对地面位移或混塔塔顶位移**。仅使用原46个离散周期，4–10s范围21点、条件性梁代理T1=6.230957763s±10%六点；±10%不是已证实模态误差。
+
+**真实数值**：4–10s RotD50 PSA峰位于T=4.000000s，PSA=0.040060288m/s²；RotD50 PSD峰位于T=6.822095s，PSD=27.521235mm，较T=4s处的16.235823mm高69.5093%。两周期之间PSA平均对数斜率-1.011490，但T²因子使PSD上升。条件T1±10%六点中PSA峰T=5.647819s，PSD峰T=6.822095s，后者比T1中心PSD高5.9338%。PSD峰频率/ESM官方报告SNR低频0.09Hz=1.628695，**该比值不是频带合格阈值**。
+
+**FIG/TAB/RUN**：[可运行Node程序](s05_esm_psa_psd_period_gate.cjs) SHA256 `01db6066c3f54627f19ec34264af17cf7b57023ddc7c8a2ae9409b07e15c7604`、[46行真实来源派生CSV](real-records/S05_ESM_NVL_PSA_PSD_46PERIOD_20261107.csv) SHA256 `d85bd916c34cc4e0a008a26d07ef49935a4aa90c3feb5d9bb9a5f96a12f1c0cf`、[双面板正式SVG](../../manuscript/final-thesis/figures/FIG_S05_05_ESM_PSA_PSD_PERIOD_GATE_20261107.svg) SHA256 `1118db27c6eea51f2f300eb08e54709cc956ddab75af2f5179b583e085ca5943`。V8同源函数46行计算、2个真实数值oracle、独立旧表24值、7项坏源拒绝PASS；**原生Node CLI/CI未运行**。CSV保留13有效位，纯换算舍入误差通常≤5×10⁻¹³相对量级；原波处理、谱积分、角度网格、模态、场址和仪器低频误差没有可信上界。
+
+**REF/STANDARD/OFFICIAL/HOLD**：REF继承既有T079线性SDOF/RotD方法，未新增两篇2026论文全文核读；STANDARD未新增授权IEC/GB条文；OFFICIAL沿用既有ESM MP高通0.04Hz和报告SNR低频0.09Hz元数据，不能将两者混同或据此宣布长周期可靠。**反例**为PSA与PSD离散峰周期错位，不证明真实结构响应或材料疲劳排序反转；离散最大值不是连续谱峰的严格上界。S05 SOURCE-LEVEL PASS / DESIGN HOLD，正式目标谱与场址假设、低频验收、跨事件匹配、同态风震仍HOLD，12阶段0/12。
+
 ## 2026-11-07 16时｜S05两事件四水平对长周期谱的预处理诱导排名反转（真实来源派生，非设计选波）
 
 **科学问题与可证伪命题。** 已有USGS/SCEDC两个独立事件、四个台站水平对在4、6、8、10 s的5%阻尼伪加速度谱（PSA，m/s²）均存在未充分验证的长周期基线处理。进一步检验：**同一批真实记录，仅把未经基线校正的raw谱换成去除震前20 s均值的pre20谱，候选记录的相对排名是否不变？** 若每周期所有记录对的相对次序相同，则排名不变假设不被拒绝；反之给出逐对反例。研究不引入任何新地震时程或结构求解。

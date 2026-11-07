@@ -1,3 +1,11 @@
+### 2026-11-07 23时｜S05真实ESM伪位移谱峰源级科研交付（0/12）
+
+- **START**：指挥室先单独登记commit `54f8b4cb2c3d939a03d355fb06e63406925d8de0`，科研写前HEAD同该SHA，PR#42 Open/Draft。研究AGENTS、READ-BEFORE-WRITE、白皮书v0.2.21、MASTER/STATUS、12阶段、T079/T080及真实源已读；无Abaqus/CAE或昂贵生产。
+- **SOURCE**：直接46行处理ESM RotD原表SHA256 `31fea6aa2064abbd042e4a1b1a15b9aee90a598a7d1991bc0869bcd63177dd8c`，独立16周期表Git blob `da83ab108ccc848a2356410339e66f6cb7e8401b`，12个重叠周期RotD50/100=24/24差0；未重读原加速度波形。**REF**=T079既有SDOF/RotD方法，2026两篇论文未新增全文页；**STANDARD**=无授权条文新核读；**OFFICIAL**=既有ESM MP 0.04Hz处理高通与0.09Hz SNR报告低频，非设计验收；**RUN**=V8同源46点双精度换算/2数值oracle/7污染拒绝PASS，原生Node CLI/CI未跑；**FIG**=`research/wind-tower/manuscript/final-thesis/figures/FIG_S05_05_ESM_PSA_PSD_PERIOD_GATE_20261107.svg`；**TAB**=`research/wind-tower/experiments/T079/real-records/S05_ESM_NVL_PSA_PSD_46PERIOD_20261107.csv`。
+- **结果**：4–10s 21点，RotD50 PSA峰T=4s、0.040060288m/s²，PSD峰T=6.822095s、27.521235mm；T4s PSD=16.235823mm，差+69.5093%。条件T1±10%六点PSD离散峰较中心+5.9338%；PSD峰频/报告0.09Hz=1.628695。**不**推断实际塔顶位移或记录合格性。
+- **SHA256**：源 `31fea6aa2064abbd042e4a1b1a15b9aee90a598a7d1991bc0869bcd63177dd8c`；程序 `01db6066c3f54627f19ec34264af17cf7b57023ddc7c8a2ae9409b07e15c7604`；46行表 `d85bd916c34cc4e0a008a26d07ef49935a4aa90c3feb5d9bb9a5f96a12f1c0cf`；SVG `1118db27c6eea51f2f300eb08e54709cc956ddab75af2f5179b583e085ca5943`。本轮首次负例设计把首个legacy16标志误当T1标志，导致拒绝测试失败；已改为精确替换T1行后7/7拒绝通过，失败未隐瞒。源级SHA256算法标准abc向量自测PASS。真实谱处理/低频/结构模型误差未量化，13有效位输出舍入不构成物理误差界。
+- **END**：已写原T079研究正文/数表/图/程序及本原T080日志、白皮书和指挥室。S05 SOURCE-LEVEL PASS / DESIGN HOLD，12阶段0/12，正式DLC1.2 0/126，材料Miner和同态W/E/WE仍HOLD。下一唯一动作切换S10真实18NTM风载seed非参数不确定性；如已做同类研究，转S12正式正文，不重复本轮谱转换。
+
 ### 2026-11-07 22时｜S06/S10两组历史真实ETM同步轴力—弯矩对DEL控制裕度的影响（0/12，SOURCE-LEVEL）
 
 - **START/并发基线**：执行者ChatGPT非Abaqus科研；开工PR#42 Open/Draft HEAD=`d356aa6d72cd725de2ac1a7200c178554b1f5328`，main=`bbc5c9130f2d9fc41f776506d86118a9b8db0e65`（PR base）；已依序读根/研究AGENTS、指挥室READ-BEFORE-WRITE及21时交接、白皮书v0.2.20、MASTER/STATUS、12阶段、T079/T080、T077原16ZIP manifest/同步名义应力表及Ch4。严格只做历史OpenFAST时程的离线数据后处理，不运行任何Abaqus/CAE、OpenFAST/TurbSim生产或结构求解，不改T057/T070/main、不合并Draft PR。
