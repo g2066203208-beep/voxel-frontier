@@ -369,3 +369,14 @@ GitHub论文工作室为正式过程与状态入口，D盘保存工程工作副�
 **S10最小可验收数据合同（待S01–S09门禁）：** 每个实际风工况×种子×材料控制点必须保存\`branch_inp_sha, PT_stage(P0/input/Pe/native_Peq), G_contact_state_sha, wind_raw_sha, wind_processed_sha, seed, OpenFAST_version, Abaqus_version, channel, section_height, material_id, joint_id, stress_time_sha, sample_dt, discarded_transient, mean_stress_MPa, stress_range_MPa, rainflow_count(0.5/1), SN_model_source, Miner_D_per_10min, wind_bin_weight, annual_D, design_life_years\`。混凝土、HRB普通钢筋、PT钢绞线、钢塔分别选适用材料疲劳模型，**接缝开口/滑移另设QoI**，不能把REF023只算混凝土+PT当作全材料完工。强制从**真实应力时程逐周期**计算\`σmean, Δσ\`，不以T078的1280/985.951MPa常量替代。需检验雨流半周期、零幅/平均应力极限、寿命不随样本数和风种子偶然变化；DEL和Miner不可互相替代。
 
 **S01独立静态敏感性入口：** [T078源SHA锁定P0/Pe与Goodman候选复核](../T078/t078_pt_goodman_2026_source_oracle.py)的假设20MPa应力范围显示，误把P0当Pe循环均值可造成条件性候选损伤比4.20123，**不是实际疲劳结果**；PT总损失22.97%≠钢绞线松弛2.35%。所有规范条款/材料S–N与PT原生初态仍HOLD。无新增高成本RUN，12阶段0/12晋级。
+
+
+### 2026-11-07｜S05真实地震波在临时一阶周期±10%区间内的谱向敏感性（可入论文方法/结果，非设计谱验收）
+
+为检验采用单一模态周期选取地震动谱值可能产生的方向性与周期敏感性，选用欧洲强震数据库ESM v3所收录的IT-2012-0008事件IT.NVL台站处理后HNE/HNN双水平加速度记录，沿用已核实的5%阻尼、0.5°方位网格RotD00/50/100伪加速度反应谱。暂以简化线弹性梁给出的条件性一阶周期 \(T_1=6.230957762865167\,\mathrm{s}\) 为中心，构造**人为设定**的 \([0.9T_1,1.1T_1]=[5.607861987,6.854053539]\,\mathrm{s}\) 区间；这一±10%不是已验证的结构模态误差范围。直接筛选此前46周期实测波数值谱中的**6个离散周期**，不插值补造原波或把离散极值视为连续周期的严格包络。
+
+原始处理波未做强度缩放，6点RotD50谱值在 \(0.0233449076\) 至 \(0.0305819182\,\mathrm{m/s^2}\) 之间，中心 \(T_1\) 处为 \(0.0264169959\,\mathrm{m/s^2}\)。相对中心值，离散样本最大增幅**15.7661%**、最大降幅**11.6292%**，样本最大/最小值之比为**1.31000**。同期RotD100/RotD50介于**1.07307–1.18034**；HNE/HNN谱值的相对大小在5.647819s（HNE/HNN=0.878887）和6.000000s（1.067622）之间发生切换。由此可见，即便对同一条处理后地震波，条件性周期偏移也可能同时改变谱需求水平与主导水平方向；仅使用单点 \(T_1\) 谱值不能代替频带内的方向性敏感性检验。此结论**仅限本记录的六个采样周期和5%线性反应谱**，不外推为混塔真实位移/应力、场址地震危险性或抗震安全结论。
+
+**图与表：** [FIG-S05-03：六点真实RotD50/100与HNE/HNN谱图](../../manuscript/final-thesis/figures/FIG_S05_03_ESM_T1_BAND_DIRECTIONAL_SENSITIVITY_20261107.svg)；[六行数值表](real-records/S05_ESM_NVL_T1_PM10_PERCENT_SPECTRAL_BAND_20261107.csv)；[无依赖Node复算程序](s05_esm_modal_period_band_sensitivity.cjs)。原46周期源CSV SHA256 `31fea6aa2064abbd042e4a1b1a15b9aee90a598a7d1991bc0869bcd63177dd8c`，源码SHA256 `cadd96da49f54ed5221f26fc193d105e046ad9dade2c8ae68f40d087918e98ec`，数表SHA256 `ff58d172c95c5eb6461b05052a3b90882d2a29d0b733b05221ed3f90b5e640c7`，图SHA256 `d506caaf31f0b402b4cb9dbc8b8302abcd7be527fcededce494640ee6aee8380`。V8直接执行6项数值真值断言与10项异常源拒绝测试均通过；**未运行原生Node CI或任何新物理求解**。
+
+**误差预算及适用域：** 在这六个周期，既有1°与0.5°角度离散RotD比较的最大相对差为0.073324%，但该量**不是**积分离散、处理滤波、仪器响应或场址不确定性的上界；周期离散间可能存在更大谱峰。ESM处理高通报告0.04Hz与官方SNR报告低频0.09Hz不可混同，六点的 \(f/0.09\) 约为1.63–1.97，长周期信噪与记录处理可靠性仍需单独验证。场址目标谱、授权IEC/GB条文、多个独立地震事件和真实结构周期未闭合；S05维持PARTIAL/HOLD，12阶段**0/12**。本段作为地震输入方法的**有条件数据诊断**，不是独立送审的抗震研究结论。
