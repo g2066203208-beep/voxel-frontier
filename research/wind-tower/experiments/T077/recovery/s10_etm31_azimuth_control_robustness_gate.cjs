@@ -26,6 +26,6 @@ mustReject(rows.map((r,i)=>i===0?{...r,DEL_m4_N32_MPa:"-2"}:r),control);
 mustReject(rows,control.map((r,i)=>i===0?{...r,m4_winner:"UNKNOWN"}:r));
 mustReject(rows,control.map((r,i)=>i===0?{...r,m10_winner_DEL_MPa:"100"}:r));
 if(negative!==7||out.length!==31||out.some(r=>r.m4_flip||r.m10_flip))throw Error("CONTROL_OR_TEST");
-if(process.argv.includes("--write")){fs.writeFileSync(path.join(BASE,"S10_4ETM_31SEG_AZIMUTH_CONTROL_ROBUSTNESS_20261107.csv"),csv);fs.writeFileSync(path.join(BASE,"../../manuscript/final-thesis/figures/FIG4_S10_ETM31_AZIMUTH_CONTROL_ROBUSTNESS_20261107.svg"),svg)}
+if(process.argv.includes("--write")){fs.writeFileSync(path.join(BASE,"S10_4ETM_31SEG_AZIMUTH_CONTROL_ROBUSTNESS_20261107.csv"),csv);fs.writeFileSync(path.join(BASE,"../../../manuscript/final-thesis/figures/FIG4_S10_ETM31_AZIMUTH_CONTROL_ROBUSTNESS_20261107.svg"),svg)}
 console.log(JSON.stringify({source_gzip_sha256:hash(gz),source_plain_sha256:hash(plain),rows:out.length,flips:0,negative_rejections:negative,order_invariant:true,output_csv_sha256:hash(csv),output_svg_sha256:hash(svg),status:"SOURCE_LEVEL_ONLY_PHYSICAL_HOLD"},null,2))}
 if(require.main===module)main();
