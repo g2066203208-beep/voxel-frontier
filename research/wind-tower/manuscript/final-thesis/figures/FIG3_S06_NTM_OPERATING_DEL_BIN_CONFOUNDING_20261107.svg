@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="625" viewBox="0 0 1280 625"><rect width="1280" height="625" fill="#fff"/>
+<text x="64" y="43" font-family="Arial" font-size="24" font-weight="bold">Wind-bin confounding in 18 historical NTM cases</text>
+<text x="64" y="68" font-family="Arial" font-size="14">Tower-base My load DEL (m=4) versus mean generator power; three wind bins, six seeds per bin</text>
+<circle cx="825" cy="57" r="6" fill="#2675b6"/><text x="836" y="62" font-family="Arial" font-size="13">9.34 m/s</text>
+<circle cx="950" cy="57" r="6" fill="#d88730"/><text x="961" y="62" font-family="Arial" font-size="13">11.4 m/s</text>
+<circle cx="1075" cy="57" r="6" fill="#2a9c83"/><text x="1086" y="62" font-family="Arial" font-size="13">19.20 m/s</text>
+<text x="110" y="110" font-family="Arial" font-size="18" font-weight="bold">A  Pooled across wind bins</text>
+<line x1="110" y1="140" x2="110" y2="480" stroke="#e6ebf0"/>
+<line x1="110" y1="140" x2="580" y2="140" stroke="#e6ebf0"/>
+<text x="110" y="502" text-anchor="middle" font-family="Arial" font-size="12">5.5</text>
+<text x="100" y="144" text-anchor="end" font-family="Arial" font-size="12">70.9</text>
+<line x1="227.5" y1="140" x2="227.5" y2="480" stroke="#e6ebf0"/>
+<line x1="110" y1="225" x2="580" y2="225" stroke="#e6ebf0"/>
+<text x="227.5" y="502" text-anchor="middle" font-family="Arial" font-size="12">6.8</text>
+<text x="100" y="229" text-anchor="end" font-family="Arial" font-size="12">61.3</text>
+<line x1="345" y1="140" x2="345" y2="480" stroke="#e6ebf0"/>
+<line x1="110" y1="310" x2="580" y2="310" stroke="#e6ebf0"/>
+<text x="345" y="502" text-anchor="middle" font-family="Arial" font-size="12">8.0</text>
+<text x="100" y="314" text-anchor="end" font-family="Arial" font-size="12">51.6</text>
+<line x1="462.5" y1="140" x2="462.5" y2="480" stroke="#e6ebf0"/>
+<line x1="110" y1="395" x2="580" y2="395" stroke="#e6ebf0"/>
+<text x="462.5" y="502" text-anchor="middle" font-family="Arial" font-size="12">9.3</text>
+<text x="100" y="399" text-anchor="end" font-family="Arial" font-size="12">41.9</text>
+<line x1="580" y1="140" x2="580" y2="480" stroke="#e6ebf0"/>
+<line x1="110" y1="480" x2="580" y2="480" stroke="#e6ebf0"/>
+<text x="580" y="502" text-anchor="middle" font-family="Arial" font-size="12">10.5</text>
+<text x="100" y="484" text-anchor="end" font-family="Arial" font-size="12">32.2</text>
+<rect x="110" y="140" width="470" height="340" fill="none" stroke="#788595"/>
+<line x1="110" y1="408.16966841124207" x2="580" y2="206.08779544023605" stroke="#354154" stroke-width="2" stroke-dasharray="7,5"/>
+<circle cx="198.95" cy="314.47" r="6.5" fill="#2675b6" stroke="#fff" stroke-width="1.5"/>
+<circle cx="180.14" cy="424.69" r="6.5" fill="#2675b6" stroke="#fff" stroke-width="1.5"/>
+<circle cx="155.48" cy="377.89" r="6.5" fill="#2675b6" stroke="#fff" stroke-width="1.5"/>
+<circle cx="173.87" cy="332.02" r="6.5" fill="#2675b6" stroke="#fff" stroke-width="1.5"/>
+<circle cx="165.47" cy="447.10" r="6.5" fill="#2675b6" stroke="#fff" stroke-width="1.5"/>
+<circle cx="178.41" cy="379.36" r="6.5" fill="#2675b6" stroke="#fff" stroke-width="1.5"/>
+<circle cx="432.52" cy="338.63" r="6.5" fill="#d88730" stroke="#fff" stroke-width="1.5"/>
+<circle cx="486.93" cy="291.21" r="6.5" fill="#d88730" stroke="#fff" stroke-width="1.5"/>
+<circle cx="422.47" cy="299.83" r="6.5" fill="#d88730" stroke="#fff" stroke-width="1.5"/>
+<circle cx="425.77" cy="190.30" r="6.5" fill="#d88730" stroke="#fff" stroke-width="1.5"/>
+<circle cx="467.58" cy="276.90" r="6.5" fill="#d88730" stroke="#fff" stroke-width="1.5"/>
+<circle cx="460.74" cy="198.08" r="6.5" fill="#d88730" stroke="#fff" stroke-width="1.5"/>
+<circle cx="531.65" cy="234.00" r="6.5" fill="#2a9c83" stroke="#fff" stroke-width="1.5"/>
+<circle cx="529.16" cy="225.63" r="6.5" fill="#2a9c83" stroke="#fff" stroke-width="1.5"/>
+<circle cx="529.71" cy="277.78" r="6.5" fill="#2a9c83" stroke="#fff" stroke-width="1.5"/>
+<circle cx="529.67" cy="172.90" r="6.5" fill="#2a9c83" stroke="#fff" stroke-width="1.5"/>
+<circle cx="532.08" cy="230.54" r="6.5" fill="#2a9c83" stroke="#fff" stroke-width="1.5"/>
+<circle cx="534.52" cy="205.21" r="6.5" fill="#2a9c83" stroke="#fff" stroke-width="1.5"/>
+<text x="345" y="531" text-anchor="middle" font-family="Arial" font-size="15">Mean generator power (MW)</text>
+<text transform="translate(47,310) rotate(-90)" text-anchor="middle" font-family="Arial" font-size="14">My load DEL (MN m)</text>
+<text x="572" y="164" text-anchor="end" font-family="Arial" font-size="16" font-weight="bold">r = 0.827</text>
+<text x="725" y="110" font-family="Arial" font-size="18" font-weight="bold">B  Within-bin centered</text>
+<line x1="725" y1="140" x2="725" y2="480" stroke="#e6ebf0"/>
+<line x1="725" y1="140" x2="1195" y2="140" stroke="#e6ebf0"/>
+<text x="725" y="502" text-anchor="middle" font-family="Arial" font-size="12">-0.4</text>
+<text x="715" y="144" text-anchor="end" font-family="Arial" font-size="12">10.6</text>
+<line x1="842.5" y1="140" x2="842.5" y2="480" stroke="#e6ebf0"/>
+<line x1="725" y1="225" x2="1195" y2="225" stroke="#e6ebf0"/>
+<text x="842.5" y="502" text-anchor="middle" font-family="Arial" font-size="12">-0.2</text>
+<text x="715" y="229" text-anchor="end" font-family="Arial" font-size="12">5.4</text>
+<line x1="960" y1="140" x2="960" y2="480" stroke="#e6ebf0"/>
+<line x1="725" y1="310" x2="1195" y2="310" stroke="#e6ebf0"/>
+<text x="960" y="502" text-anchor="middle" font-family="Arial" font-size="12">0.1</text>
+<text x="715" y="314" text-anchor="end" font-family="Arial" font-size="12">0.2</text>
+<line x1="1077.5" y1="140" x2="1077.5" y2="480" stroke="#e6ebf0"/>
+<line x1="725" y1="395" x2="1195" y2="395" stroke="#e6ebf0"/>
+<text x="1077.5" y="502" text-anchor="middle" font-family="Arial" font-size="12">0.3</text>
+<text x="715" y="399" text-anchor="end" font-family="Arial" font-size="12">-5.1</text>
+<line x1="1195" y1="140" x2="1195" y2="480" stroke="#e6ebf0"/>
+<line x1="725" y1="480" x2="1195" y2="480" stroke="#e6ebf0"/>
+<text x="1195" y="502" text-anchor="middle" font-family="Arial" font-size="12">0.5</text>
+<text x="715" y="484" text-anchor="end" font-family="Arial" font-size="12">-10.3</text>
+<rect x="725" y="140" width="470" height="340" fill="none" stroke="#788595"/>
+<line x1="725" y1="339.4964496703149" x2="1195" y2="277.16175240854204" stroke="#354154" stroke-width="2" stroke-dasharray="7,5"/>
+<circle cx="1067.03" cy="192.76" r="6.5" fill="#2675b6" stroke="#fff" stroke-width="1.5"/>
+<circle cx="956.41" cy="396.50" r="6.5" fill="#2675b6" stroke="#fff" stroke-width="1.5"/>
+<circle cx="811.43" cy="309.98" r="6.5" fill="#2675b6" stroke="#fff" stroke-width="1.5"/>
+<circle cx="919.53" cy="225.20" r="6.5" fill="#2675b6" stroke="#fff" stroke-width="1.5"/>
+<circle cx="870.18" cy="437.92" r="6.5" fill="#2675b6" stroke="#fff" stroke-width="1.5"/>
+<circle cx="946.22" cy="312.71" r="6.5" fill="#2675b6" stroke="#fff" stroke-width="1.5"/>
+<circle cx="829.58" cy="447.10" r="6.5" fill="#d88730" stroke="#fff" stroke-width="1.5"/>
+<circle cx="1149.52" cy="359.44" r="6.5" fill="#d88730" stroke="#fff" stroke-width="1.5"/>
+<circle cx="770.48" cy="375.37" r="6.5" fill="#d88730" stroke="#fff" stroke-width="1.5"/>
+<circle cx="789.91" cy="172.90" r="6.5" fill="#d88730" stroke="#fff" stroke-width="1.5"/>
+<circle cx="1035.77" cy="332.98" r="6.5" fill="#d88730" stroke="#fff" stroke-width="1.5"/>
+<circle cx="995.52" cy="187.27" r="6.5" fill="#d88730" stroke="#fff" stroke-width="1.5"/>
+<circle cx="931.52" cy="330.36" r="6.5" fill="#2a9c83" stroke="#fff" stroke-width="1.5"/>
+<circle cx="916.88" cy="314.89" r="6.5" fill="#2a9c83" stroke="#fff" stroke-width="1.5"/>
+<circle cx="920.10" cy="411.29" r="6.5" fill="#2a9c83" stroke="#fff" stroke-width="1.5"/>
+<circle cx="919.87" cy="217.42" r="6.5" fill="#2a9c83" stroke="#fff" stroke-width="1.5"/>
+<circle cx="934.05" cy="323.96" r="6.5" fill="#2a9c83" stroke="#fff" stroke-width="1.5"/>
+<circle cx="948.37" cy="277.14" r="6.5" fill="#2a9c83" stroke="#fff" stroke-width="1.5"/>
+<text x="960" y="531" text-anchor="middle" font-family="Arial" font-size="15">Power minus bin mean (MW)</text>
+<text transform="translate(662,310) rotate(-90)" text-anchor="middle" font-family="Arial" font-size="14">My DEL minus bin mean (MN m)</text>
+<text x="1187" y="164" text-anchor="end" font-family="Arial" font-size="16" font-weight="bold">r = 0.149</text>
+<text x="64" y="606" font-family="Arial" font-size="13" fill="#586476">Descriptive historical-screening associations; no causal, formal DLC1.2, or material-fatigue inference.</text>
+</svg>
