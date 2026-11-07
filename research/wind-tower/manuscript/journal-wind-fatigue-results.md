@@ -132,6 +132,14 @@ A separate sensitivity analysis uses the previously archived 2,880-row, source-l
 
 At the BASE station, the full-six-seed controlling azimuth is 0° for both exponents in all three wind bins. Holding this azimuth fixed, we exhaustively enumerate all 20 common-label three-of-six seed subsets and all \(20^3=8000\) independent-within-bin subset combinations. These are finite-archive combinatorial counts, not independent experiments, confidence intervals or probabilities for new turbulence seeds. All comparisons use the same 600 s reference-cycle normalization within each exponent; no cross-exponent numerical DEL magnitude is interpreted as a damage ratio.
 
+### 2.10. Held-out operating-state proxy test
+
+To test whether the within-wind-bin association in §2.8 improves **held-out** load-DEL estimates, the same 18 SHA-paired historical NTM records were used without adding or generating simulations. Two pre-specified scalar predictors were examined: mean generator power (MW) for tower-base My load DEL and mean pitch angle (degrees) for tower-base Mx load DEL. The responses are fourth-power load DEL (MN m), not local material stresses. Three estimators were compared: (A) the training-only mean response of the target wind bin; (B) that bin mean plus a single within-bin slope estimated from the sum of within-bin-centered predictor–response cross-products over all training bins; and (C) an unstratified pooled linear regression. All means and slopes were **re-fitted after excluding the held-out observations**, avoiding use of the test response to calculate bin means.
+
+Two deterministic splits were evaluated. Leave-one-case-out (LOCO) removes one case (17 training cases; 18 test predictions). Leave-one-seed-label-out (LOSO) removes the same S01–S06 label simultaneously from all three wind bins (15 training cases; six three-case folds). LOSO is a conservative grouping check for labels shared across bins, **not** evidence that identical seed labels represent independent or physically matched turbulence realizations. Each of the 18 observations contributes once to the out-of-fold RMSE and MAE. We do not interpret these 18 correlated errors as independent samples or calculate confidence intervals. The predictor summaries and DEL are computed from the same 100–700 s history; this is a diagnostic proxy test, not prospective prediction before a wind simulation.
+
+The input is the previously audited 18-row case/OUTB-SHA-matched table (SHA256 `4abf76252fa34b2c12635d409e5abc23c4a7d6f759b66dbec12b1932379f4bea`). The new source-locked program, 12-row summary and Fig. 6 are archived under T062. No original OUTB was reopened in this pass. Model comparison is descriptive and does not establish causality, population generalization, a formal DLC1.2 fatigue load, or material life.
+
 ## 3. Results: rainflow implementation and controlling-case robustness
 
 ### 3.1. Paired rainflow ranking and controlling-case changes
@@ -217,6 +225,23 @@ The gross-section six-seed stress scores reveal a control-bin reversal (Table 6 
 
 The independent three-of-six subsets preserve **both** full-six-seed winners in 6,024/8,000 combinations (75.30%), while the exponent-specific winners differ in 6,258/8,000 (78.225%). Common-label subsets preserve both full-six-seed winners in 18/20 combinations (90%), yet the two exponents select different bins in all 20. The different counts reflect the subset construction, not different underlying wind simulations. No new OpenFAST run was performed.
 
+### 3.5. Held-out tests of operating-state proxies
+
+**Table 7.** Out-of-fold RMSE (MN m) for two load-DEL channels, with three estimators and two splitting rules. All 18 test errors are evaluated once in each row; smaller is better. Source: 18 archived SHA-paired NTM cases, program and 12-row output in T062.
+
+| Channel / predictor | Holdout | Bin mean | Bin + within-bin slope | Pooled linear |
+|---|---|---:|---:|---:|
+| My / mean power | One case | 6.1602 | 6.7473 | 5.6788 |
+| My / mean power | One seed label across bins | 6.1602 | **7.0176** | 5.8935 |
+| Mx / mean pitch | One case | 2.2124 | 2.2676 | 2.1994 |
+| Mx / mean pitch | One seed label across bins | 2.2124 | **2.3201** | 2.2057 |
+
+For My, adding the within-bin operating-state slope **increases** held-out RMSE relative to the wind-bin-mean benchmark by 9.53% (LOCO) and 13.92% (LOSO). For Mx, the corresponding increases are 2.49% and 4.87%. Thus, in this finite archive, neither pre-specified operating-state covariate demonstrates improved held-out accuracy **after conditioning on wind bin**. The unstratified pooled regressions achieve smaller RMSE in this particular archive (e.g., My LOSO 5.8935 versus 6.1602 MN m), but they also exploit between-bin differences; this does not overturn the confounding analysis or establish transfer to unobserved wind speeds. Because each bin contains only six seeds, the result is sensitive to individual realizations, and no new-seed uncertainty interval is available.
+
+![Fig. 6: held-out operating-state proxy RMSE](final-thesis/figures/FIG3_S06_NTM_PROXY_HOLDOUT_20261107.svg)
+
+**Fig. 6.** Historical 18-NTM held-out load-DEL errors for a wind-bin mean, a wind-bin mean with fitted within-bin slope, and a pooled linear model. RMSE is in MN m; the figure is not a structural or material-fatigue validation.
+
 ## 4. Discussion, falsifiability and scope
 
 A verified rainflow implementation is a necessary upstream condition for reliable selection of candidate load cases. It is not sufficient for predicting fatigue of concrete, prestressing tendons, ordinary reinforcement or structural steel: those require local material stress cycles, material-specific fatigue laws, validated mean stress, and wind-speed exposure. The 36 simulations are representative-wind screening records, not a verified DLC1.2 lifetime matrix. The archived ERA5-derived 184,080-hour series contains 106,900 hours in a deliberately diagnostic [4,25) m/s operating interval; only 7,164 hours (6.70159% of that interval) lie in the three wind-speed bins with historical NTM source coverage. The missing bins cannot be assigned zero fatigue damage.
@@ -269,6 +294,10 @@ The hybrid-tower wind–earthquake investigation [6] and the seismic/prestress s
 
 The exponent-induced reversal is a concrete counterexample to the assumption that a single generic load-screening exponent selects the same critical normal-operation wind bin as an alternative high-order stress diagnostic. The result is observed in **gross-section nominal stress** computed from synchronous force and bending-moment histories, not in material integration-point stress. It does not demonstrate that a particular concrete, reinforcement, prestressing-tendon or structural-steel fatigue law would reverse the ranking, because local mean stress, reference prestress, S–N definitions and the full wind climate are not available. Moreover, ten adjacent near-base stations provide spatial consistency within one source model, not ten independent validations. A falsifying independent test would apply predeclared material-specific stress-cycle and fatigue laws to new seed histories across complete operating wind bins, and check whether the same reversal persists.
 
+### 4.6. Held-out proxy failure and the limits of pooled correlations
+
+The within-bin correlation test in §3.3 identifies a potential ecological confounding mechanism but does not by itself quantify prediction error. The additional held-out experiment supplies a falsifiable countercheck: if a mean operating-state proxy truly captures useful **within-bin** information, the training-only bin-plus-slope estimator should outperform the training-only bin-mean baseline on unseen archive members. It does not do so for either pre-specified channel/predictor pairing under LOCO or LOSO. This is a negative result in the archived sample, not proof that power or pitch can never predict loads. In particular, same-window operating means may encode operating-state information only weakly, and the small six-seed bins do not identify nonlinear interactions, turbulence features or future-seed generalization. The pooled estimator's favorable error for My cannot be interpreted as causal evidence: wind-bin membership changes both power and load. A stronger test would pre-register an independent new-seed holdout across a complete wind-bin grid, then compare against the same bin-mean benchmark before claiming a transferable proxy.
+
 ## 5. Data availability, source-to-claim trace and limitations
 
 SOURCE: Existing 72-row CSV at experiments/T062/legacy-primary-recovered-20261102/T062_ALL36_RAINFLOW_CAUSAL_DEL_COMPARE_20261102.csv; SHA256 12dabbb1273ce03d3920aedda3f72f9fa1d75b671e01a1db145c0a972ffe15e2. This increment directly reads the derived CSV, not the original OUTB binaries. REF: existing T062 independent cycle-count audit and T080 PRE-01/PRE-02 abstract-level prior-art review; no newly read full-text journal pages. STANDARD: 2025/26 authorized IEC/GB clauses not newly inspected. OFFICIAL: archived OpenFAST source identity inherited; no new official site observation. RUN: source-level JavaScript V8 numerical analysis (three real-value oracles and eight negative-input refusals); native Node CI for this increment NOT_RUN. Script experiments/T062/t062_rainflow_rank_robustness.js SHA256 54a6103a6926cdaf731df70034ef7f6e8885829060658dc0c5d8c8dc20ca93c2. FIG=0; TAB=one two-channel quantitative ranking table. Prior original-OUTB/third-party cycle-count CI: Actions #41391433429. Error budget: 1e−5 kN·m source-level DEL comparison tolerance; reported values rounded; site, controller, stress mapping, material and seismic uncertainties not quantified. HOLD: verified DLC1.2 coverage, material-specific Miner damage, and same-state W/E/WE responses.
@@ -292,8 +321,9 @@ SOURCE: Existing 72-row CSV at experiments/T062/legacy-primary-recovered-2026110
 | Operating-state/DEL wind-bin confounding | T062 18-case operating-state SHA256 `0f577f3197870a1350c740c2e0c118073fb9b6f796b4c471765c6f616d5a1b04` and 18-case original load-DEL SHA256 `95de6578cf379d1b2e1d99a68c26954a68e93cc8bfc4bdcd63dd324ae2999a0f`; 18-case paired CSV `4abf76252fa34b2c12635d409e5abc23c4a7d6f759b66dbec12b1932379f4bea`, 4-row summary `f4a3cc059cc39cc343d83c30a4927362ff18796d2542c059eee4dbcca50173be` | Direct source-derived CSV and case/OUTB SHA match; original OUTB not reopened | §2.8, §3.3, Table 5, Fig. 4 | DESCRIPTIVE ONLY, no causation/material life |
 | Wind–earthquake / prestress novelty boundary | Ishihara [5], Wang [6], Wang [7] | [5] selected original author PDF pages previously reviewed; [6] publisher abstract/metadata only; [7] selected original publisher PDF pages previously reviewed | §§1.2, 4.4 | PRIOR ART; not a complete systematic review |
 | IEC applicability | IEC 61400-1/6 consolidated-edition catalog entries [8,9] | **Product metadata only**, no licensed clauses | §§2.7, 4 | HOLD: no standards compliance claim |
-
 | Diagnostic-exponent control-bin reversal | 2,880-row 18-NTM gross-stress SHA256 `d45f047f5d622fb834d63728c13cead49b614b6cf42e598918e55242ed45f94b`; 30-row independent control SHA256 `619e28d6ae2b76292224df999efc04e0650dcf4e001353647e75b9536d7cecd6`; 10-row result and 2-row seed table in T062 | Direct derived-source re-read; earlier OUTB SHA receipt, no binary re-read this pass | §§2.9, 3.4, 4.5; Table 6, Fig. 5 | DIAGNOSTIC ONLY, not material life |
+
+| Held-out operating-state proxy test | T062 18-row case/OUTB paired CSV SHA256 `4abf76252fa34b2c12635d409e5abc23c4a7d6f759b66dbec12b1932379f4bea`; source-locked LOCO/LOSO program SHA256 `3c29dd33f3eeb339b22a2d6d89567d23a1f8b8a5b6de7f5855beefaa42dbcc3b`; 12-row summary SHA256 `6c154ded694eac40c12bb43e0bb8aa6361386b9d476ccaf4bb8a5618b782a0f7` | Direct 18-row derived CSV; earlier OUTB receipts, no new binary read; 4 positive / 5 rejection checks via V8, no native Node CLI | §§2.10, 3.5, 4.6; Table 7, Fig. 6 | FINITE-ARCHIVE NEGATIVE RESULT, not independent future-seed validation |
 
 ### 5.2. Bibliographic references
 
@@ -315,4 +345,4 @@ SOURCE: Existing 72-row CSV at experiments/T062/legacy-primary-recovered-2026110
 
 [9] International Electrotechnical Commission (IEC). *IEC 61400-6:2020+AMD1:2025 CSV*, Wind energy generation systems—Part 6: Tower and foundation design requirements. Product metadata: https://webstore.iec.ch/en/publication/107942. **Authorized clauses not read**; no compliance certification.
 
-**Submission boundary:** Tables 1–5 and Figs. 1–4 are derived from archived load-level evidence, not a full formal DLC1.2 simulation set, material Miner damage, or state-matched wind–earthquake structural validation. The references establish context and provenance; they do not certify the model or fill unobserved wind bins.
+**Submission boundary:** Tables 1–7 and Figs. 1–6 are derived from archived load-level evidence, not a full formal DLC1.2 simulation set, material Miner damage, or state-matched wind–earthquake structural validation. The references establish context and provenance; they do not certify the model or fill unobserved wind bins.
