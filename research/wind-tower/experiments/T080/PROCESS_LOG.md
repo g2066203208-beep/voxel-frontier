@@ -1,3 +1,14 @@
+### 2026-11-08 00时｜S10真实18NTM六seed精确随机化假设敏感性（0/12）
+
+- **START/基线**：已先登记指挥室START commit `4bd9e8c689c6283d37a3f8769d68659af1cf2368`，原HEAD `02b4fbf670c9d63806f4e4014942f73d74707d44`、main `58c1e545f67b645417d5957189f5dad693d975bb`，PR#42 Open/Draft；依序读研究AGENTS、READ-BEFORE-WRITE/23时交接、白皮书v0.2.22、MASTER/STATUS、12阶段、T079/T080、T062原18行、Ch3及期刊；未重复既有六seed子集穷举。
+- **SOURCE**：直接完整读取T062 18行历史NTM×My/Mx 600s、m4、Nref600派生CSV SHA256 `4abf76252fa34b2c12635d409e5abc23c4a7d6f759b66dbec12b1932379f4bea`，每行带OUTB SHA；原OUTB本轮未重读。
+- **科学问题/RUN**：六项预定比较，A穷举924种不配对标签置换，B穷举64种同标签配对符号翻转，分别Holm六重校正，另统计36次跨seed优势。A需跨组可交换性，B需真实配对及符号对称，均未物理验证。
+- **数值**：My U09→U11差12.910597139833MN·m，A=6/924、校正p0.012987013，B=4/64、校正p0.1875；My U11→U19差4.7214423105MN·m，A=158/924、校正p0.170995671，B=4/64、校正p0.1875，优势25/36。Mx三组A校正p0.012987013、B0.1875。A 5/6 vs B 0/6低于0.05，B最小双侧p2/64，六重Holm下最低0.1875。
+- **FIG/TAB/程序**：[Node源](../T062/s10_ntm_exact_seed_inference.cjs) SHA256 `71a61e6b44e102ebded0989debe8c9f0ddaa1a4d4ac5fc35dc048f1bdf4eddd0`、[6行表](../T062/S10_NTM18_EXACT_SEED_INFERENCE_6PAIR_20261108.csv) SHA256 `293c45563b2bd78d77e8145d5011e501e7ed7cced3b21812f1210ad14a8ab0f9`、[SVG](../../manuscript/final-thesis/figures/FIG3_S10_NTM_EXACT_SEED_INFERENCE_20261108.svg) SHA256 `4b1ef211a8e0907730ecb6e82240dc502777bf65f70a8650efda056215d5d2f5`、Ch3§3.7.9与英文期刊§2.11/3.6/4.8。
+- **测试/误差/失败**：V8 18项极端计数/优势次数oracle、8项异常输入拒绝、乱序不变性PASS；SHA256 abc标准向量PASS；原生Node CLI/CI未运行。p值为精确整数比，CSV均值差九位小数舍入≤5×10⁻¹⁰MN·m；未来seed总体、随机化前提、模型与材料误差无可信上界。本轮首次测试通过，无失败。
+- **REF/STANDARD/OFFICIAL**：沿用T062已有统计方法；2026两篇160m风震/PT先行研究无新增原文页；授权IEC/GB条文未新增核读；历史OpenFAST派生数据不是现场实测或正式DLC认证。SOURCE-LEVEL METHOD PASS/PHYSICAL HOLD，12阶段0/12、DLC1.2 0/126、材料Miner与同态W/E/WE HOLD。
+- **END**：白皮书v0.2.22→v0.2.23 PATCH，PR保持Draft、main与T057/T070不动；下一唯一动作转S12整合真实风载负结果与ERA5覆盖，已有等价正文则转S06/S07 W侧真实来源准入。
+
 ### 2026-11-07 23时｜S05真实ESM伪位移谱峰源级科研交付（0/12）
 
 - **START**：指挥室先单独登记commit `54f8b4cb2c3d939a03d355fb06e63406925d8de0`，科研写前HEAD同该SHA，PR#42 Open/Draft。研究AGENTS、READ-BEFORE-WRITE、白皮书v0.2.21、MASTER/STATUS、12阶段、T079/T080及真实源已读；无Abaqus/CAE或昂贵生产。

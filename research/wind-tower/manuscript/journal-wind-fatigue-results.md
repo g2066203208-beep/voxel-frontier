@@ -140,6 +140,10 @@ Two deterministic splits were evaluated. Leave-one-case-out (LOCO) removes one c
 
 The input is the previously audited 18-row case/OUTB-SHA-matched table (SHA256 `4abf76252fa34b2c12635d409e5abc23c4a7d6f759b66dbec12b1932379f4bea`). The new source-locked program, 12-row summary and Fig. 5 are archived under T062. No original OUTB was reopened in this pass. Model comparison is descriptive and does not establish causality, population generalization, a formal DLC1.2 fatigue load, or material life.
 
+### 2.11. Exact six-seed randomization sensitivity (S10 EXACT SEED RANDOMIZATION 2026-11-08)
+
+Six predeclared contrasts across three NTM wind-bin pairs and tower-base My/Mx load-DEL were evaluated by two conditional exact tests: all 924 unpaired six-versus-six label allocations and all 64 sign patterns of hypothetical same-label paired differences. Each six-test family was Holm corrected. Neither cross-bin exchangeability nor physically valid same-label pairing is established, so p-values are diagnostic rather than confirmatory physical inference.
+
 ## 3. Results: rainflow implementation and controlling-case robustness
 
 ### 3.1. Paired rainflow ranking and controlling-case changes
@@ -244,6 +248,10 @@ For My, adding the within-bin operating-state slope **increases** held-out RMSE 
 
 **Fig. 5.** Historical 18-NTM held-out load-DEL errors for a wind-bin mean, a wind-bin mean with fitted within-bin slope, and a pooled linear model. RMSE is in MN m; the figure is not a structural or material-fatigue validation.
 
+### 3.6. Exact finite-seed inference changes with the assumed design
+
+Unpaired label permutations yielded five of six Holm-adjusted p-values below 0.05 (0.012987). The My 11.4 versus 19.202140 m/s comparison was not among them: mean difference 4.721442 MN·m, 158/924 extreme assignments, adjusted p=0.170996, and only 25/36 cross-seed comparisons favored the higher speed. Hypothetical paired-label sign flips yielded adjusted p=0.1875 for all six comparisons, none below 0.05. Six-pair two-sided minimum p=2/64 prevents a six-fold Holm-adjusted p below 0.1875. [Supplementary Table S1](../experiments/T062/S10_NTM18_EXACT_SEED_INFERENCE_6PAIR_20261108.csv) and [Supplementary Fig. S1](final-thesis/figures/FIG3_S10_NTM_EXACT_SEED_INFERENCE_20261108.svg) show the exact counts.
+
 ## 4. Discussion, falsifiability and scope
 
 A verified rainflow implementation is a necessary upstream condition for reliable selection of candidate load cases. It is not sufficient for predicting fatigue of concrete, prestressing tendons, ordinary reinforcement or structural steel: those require local material stress cycles, material-specific fatigue laws, validated mean stress, and wind-speed exposure. The 36 simulations are representative-wind screening records, not a verified DLC1.2 lifetime matrix. The archived ERA5-derived 184,080-hour series contains 106,900 hours in a deliberately diagnostic [4,25) m/s operating interval; only 7,164 hours (6.70159% of that interval) lie in the three wind-speed bins with historical NTM source coverage. The missing bins cannot be assigned zero fatigue damage.
@@ -319,6 +327,10 @@ Take the **same hypothetical section** in two cases, with area A=1 m², section 
 A sufficient **restricted** condition for rank preservation is that every counted local stress range equals its corresponding moment range multiplied by the *same* nonzero coefficient c, with matched cycle counting, equivalent-cycle normalization, exponent and no unequal mean-stress weighting. Then stress DEL is exactly |c| times moment DEL. That condition is **not established** for this tower: synchronous axial loads, joint transfer, effective prestress and material-specific mean-stress laws remain relevant. The example refutes a universal load-to-material ranking implication; it does **not** establish an actual material-control reversal. H3 requires matched, independently verified local stress-cycle ledgers and material-specific damage with a predeclared ranking uncertainty budget.
 
 The analytic program `experiments/T062/s12_rank_transfer.cjs` (SHA256 `fba182d17003b9f7e931dd32987286c3c91e052b8dd10f346bd124325c00d652`) and four-row `s12_rank_transfer.csv` (SHA256 `509158e29c0f3a732df81a875aca9f9cd67a9f3a83432cb60b3eb8fbab61c66d`) reproduce Table 7. Native Node v22.16.0 passed five exact analytic invariants and seven invalid-input refusals. This is a **mathematical-method test only**, not a new physical RUN.
+
+### 4.8. Statistical significance is not a physical wind-bin gate
+
+Five Holm-positive contrasts under unpaired exchangeability versus none under hypothetical paired-label sign symmetry is an assumption-sensitivity finding, not contradictory wind physics. Wind speeds and operating states differ deliberately; common S01–S06 labels do not prove common-random-number pairing. Prospective seed designs and complete formal wind bins are required before calibrated population inference. Neither test provides material-local stress or Miner life.
 
 ## 5. Conclusions
 
