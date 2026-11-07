@@ -1,0 +1,5 @@
+case_id,delta_M_MNm,delta_N_MN,load_DEL_MNm,stress_range_MPa,normalized_range_score_m4,scope
+A,2,-1.5,2,0.5,0.0625,ANALYTIC_NOT_PHYSICAL
+B,1,0,1,1,1,ANALYTIC_NOT_PHYSICAL
+A_axial_fixed,2,0,2,2,16,ANALYTIC_NOT_PHYSICAL
+B_axial_fixed,1,0,1,1,1,ANALYTIC_NOT_PHYSICAL
