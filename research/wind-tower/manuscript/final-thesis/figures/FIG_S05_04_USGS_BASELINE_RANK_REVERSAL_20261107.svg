@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="590" viewBox="0 0 1160 590">
+<rect width="1160" height="590" fill="#fff"/>
+<style>text{font-family:Arial,Helvetica,sans-serif;fill:#202a35}.title{font-size:23px;font-weight:700}.label{font-size:15px}.small{font-size:12px}.axis{stroke:#465465;stroke-width:1.4}.grid{stroke:#e3e9ee;stroke-width:1}</style>
+<text x="58" y="42" class="title">Long-period ranking changes induced by preprocessing</text>
+<text x="65" y="82" class="label">(a) CI.CLC event-to-event spectral contrast</text>
+<text x="620" y="82" class="label">(b) Rank of the second CI.CLC event</text>
+<line x1="105" x2="520" y1="420" y2="420" class="grid"/><text x="58" y="425" class="small">10^0</text>
+<line x1="105" x2="520" y1="295" y2="295" class="grid"/><text x="58" y="300" class="small">10^1</text>
+<line x1="105" x2="520" y1="170" y2="170" class="grid"/><text x="58" y="175" class="small">10^2</text>
+<line x1="105" y1="120" x2="105" y2="420" class="axis"/><line x1="105" y1="420" x2="520" y2="420" class="axis"/>
+<polyline fill="none" stroke="#b35b3b" stroke-width="3.4" points="105,384.3918868201235 243.33333333333331,399.2317048201744 381.66666666666663,410.7335417514019 520,417.87476741877"/>
+<polyline fill="none" stroke="#187c88" stroke-width="3.4" points="105,183.40184150393867 243.33333333333331,164.3620664633027 381.66666666666663,155.59489979265123 520,145.37274841275712"/>
+<text x="105" y="443" text-anchor="middle" class="small">4</text>
+<circle cx="105" cy="384.3918868201235" r="4.5" fill="#b35b3b"/>
+<circle cx="105" cy="183.40184150393867" r="4.5" fill="#187c88"/>
+<text x="243.33333333333331" y="443" text-anchor="middle" class="small">6</text>
+<circle cx="243.33333333333331" cy="399.2317048201744" r="4.5" fill="#b35b3b"/>
+<circle cx="243.33333333333331" cy="164.3620664633027" r="4.5" fill="#187c88"/>
+<text x="381.66666666666663" y="443" text-anchor="middle" class="small">8</text>
+<circle cx="381.66666666666663" cy="410.7335417514019" r="4.5" fill="#b35b3b"/>
+<circle cx="381.66666666666663" cy="155.59489979265123" r="4.5" fill="#187c88"/>
+<text x="520" y="443" text-anchor="middle" class="small">10</text>
+<circle cx="520" cy="417.87476741877" r="4.5" fill="#b35b3b"/>
+<circle cx="520" cy="145.37274841275712" r="4.5" fill="#187c88"/>
+<text x="250" y="470" class="label">Oscillator period T (s)</text>
+<text x="105" y="504" class="small" fill="#b35b3b">Raw (uncorrected)</text>
+<text x="275" y="504" class="small" fill="#187c88">20-s pre-event mean removed</text>
+<line x1="665" x2="1080" y1="150" y2="150" class="grid"/><text x="634" y="155" class="small">1</text>
+<line x1="665" x2="1080" y1="240" y2="240" class="grid"/><text x="634" y="245" class="small">2</text>
+<line x1="665" x2="1080" y1="330" y2="330" class="grid"/><text x="634" y="335" class="small">3</text>
+<line x1="665" x2="1080" y1="420" y2="420" class="grid"/><text x="634" y="425" class="small">4</text>
+<line x1="665" y1="150" x2="665" y2="420" class="axis"/><line x1="665" y1="420" x2="1080" y2="420" class="axis"/>
+<polyline fill="none" stroke="#b35b3b" stroke-width="3.4" points="665,240 803.3333333333333,240 941.6666666666666,240 1080,240"/>
+<circle cx="665" cy="240" r="4.5" fill="#b35b3b"/>
+<circle cx="803.3333333333333" cy="240" r="4.5" fill="#b35b3b"/>
+<circle cx="941.6666666666666" cy="240" r="4.5" fill="#b35b3b"/>
+<circle cx="1080" cy="240" r="4.5" fill="#b35b3b"/>
+<polyline fill="none" stroke="#187c88" stroke-width="3.4" points="665,420 803.3333333333333,420 941.6666666666666,420 1080,420"/>
+<circle cx="665" cy="420" r="4.5" fill="#187c88"/>
+<circle cx="803.3333333333333" cy="420" r="4.5" fill="#187c88"/>
+<circle cx="941.6666666666666" cy="420" r="4.5" fill="#187c88"/>
+<circle cx="1080" cy="420" r="4.5" fill="#187c88"/>
+<text x="665" y="443" text-anchor="middle" class="small">4</text>
+<text x="803.3333333333333" y="443" text-anchor="middle" class="small">6</text>
+<text x="941.6666666666666" y="443" text-anchor="middle" class="small">8</text>
+<text x="1080" y="443" text-anchor="middle" class="small">10</text>
+<text x="810" y="470" class="label">Oscillator period T (s)</text>
+<text x="665" y="504" class="small">Rank 1 = highest of four horizontal pairs</text>
+<text x="58" y="551" class="small">Derived from two USGS events / four station pairs; 5% PSA, m/s². Not design waves; 20-s baseline correction remains unverified.</text>
+</svg>
