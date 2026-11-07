@@ -1,3 +1,14 @@
+### 2026-11-08 02时｜S06/S07来源门禁后切换S10：真实18NTM六seed删减与加权四次矩阈值传播（0/12）
+
+- **START/基线**：PR#42 Open/Draft，原HEAD `093de9d3a894ce30b99aa9e0005a07253708d730`，START commit `50545784892a9132e110aeae2dee867ffaaa7f02`，main `58c1e545f67b645417d5957189f5dad693d975bb`。依序已读根/研究AGENTS、指挥室READ-BEFORE-WRITE及01时交接、白皮书v0.2.24、MASTER/STATUS、12阶段、T079/T080、历史ETM 2s重叠/姿态收据及18NTM真实派生数据。W侧2s ETM pilot与E侧0.005s E-only梁代理无共同已验证初态/状态SHA，不拼接W/E/WE，按纪律切换可独立S10。
+- **科学问题**：前轮五缺箱等贡献阈值是否对已观察六seed中的一个标签删减敏感？\(K_c=\sum p_j\overline{DEL_{c,j}^4}\)，\(p_j=n_j/184080\)；每次从9/11/19m/s三档分别删同名S01–S06，保留五seed计算。**同名标签不等于跨风速物理配对，六删一不是置信区间**。
+- **SOURCE/阅读深度**：直接读取T062 18行真实历史派生[输入](../T062/S06_NTM18_OPERATING_DEL_BIN_CENTERED_20261107.csv) SHA256 `4abf76252fa34b2c12635d409e5abc23c4a7d6f759b66dbec12b1932379f4bea`，含每个case对应原OUTB SHA；ERA5小时5736/1426/2及总184080、4–9m/s缺箱95402h来自既有31行ERA5归档与上一轮独立6行四次矩收据。本轮**未重新读取原始OUTB或ERA5原工作簿**。
+- **RUN/结果**：My基准\(K=209257.299445523\,(MN\,m)^4\)，六删一\(K\)变化**-10.684507%～+8.045182%**，条件五缺箱等贡献DEL阈值**24.505532031～25.700039282 MN·m**；Mx基准\(K=125.606637739\,(MN\,m)^4\)，变化**-10.699698%～+11.402494%**，阈值**3.835558943～4.053583821 MN·m**。三箱权重为无条件\(n_j/184080\)，不混用运行条件概率；非材料Miner。六个删一\(K\)均值等于原基准（线性恒等式），四次根阈值不满足该线性恒等式。
+- **程序/FIG/TAB**：[Node源](../T062/s10_ntm18_weighted_m4_seed_deletion.cjs) SHA256 `7f1d7794696af77549f8ecfb9b3b0c8e47abd845161bb01ed037ef2049d2ba56`、[14行CSV](../T062/S10_NTM18_WEIGHTED_M4_SEED_DELETION_20261108.csv) SHA256 `91b78929363f828bc7eae87ddb9539d0b5c5fd4d94ae8ec937c41c515cfd8036`、[SVG](../../manuscript/final-thesis/figures/FIG3_S10_NTM_WEIGHTED_M4_SEED_DELETION_20261108.svg) SHA256 `308bb1a205ef2f943acf8845c5ea3dd93de8ea6ce13866ee766f2f6e250db284`；正式Ch3§3.7.11、英文期刊Methods§2.13/Results§3.8/Discussion§4.10及Table10/Fig8。
+- **测试/误差预算**：V8实际源级四项独立历史基准数值、16项代数检查、8种坏源拒绝及乱序不变性PASS，SHA256标准abc向量PASS；原生Node CLI/CI未运行。18行输入小数截断与独立6行旧四次矩差：My约2.1e-6\((MN\,m)^4\)、Mx约4.5e-9\((MN\,m)^4\)；该数值误差不覆盖ERA5、风种子总体、控制器状态、低风速未知载荷和材料局部应力的物理误差。六删一相互重叠，不能提供统计置信区间。
+- **REF/STANDARD/OFFICIAL**：继承REF018 Huang2025 wind-bin×rainflow方法与既有ERA5/OpenFAST原始来源收据；2026 DOI 10.1080/13632469.2026.2671807（仅摘要）及10.1016/j.rcns.2026.03.002（既有选页）先行风震/PT工作，未新读全文，不宣称风震首创；2025 IEC/GB授权条文未新核读。**PASS=历史派生数值与源级算法；HOLD=正式DLC1.2 0/126、材料Miner、同态W/E/WE、真实结构优化与规范安全**；12阶段**0/12**。无Abaqus/CAE或昂贵生产、不改T057/T070/main、不合并Draft PR。
+- **下一唯一动作**：轮换S05，优先直接核读官方地震记录原始低频质量/谱处理适用域；若官方原件与目标谱仍缺，转S12已有实测风结果的独立审稿级正文收敛，不重复六seed删减。
+
 ### 2026-11-08 01时｜S12 ERA5缺失低风速箱等贡献DEL阈值（真实来源解析，0/12）
 
 - **START/防并发**：先在指挥室单独登记开工commit `37f293d9d1048c1f48db8ad9a7db249ed5f11089`，read_base_sha=`5aedca933a824e7e581f397c6e8c3dc1fbe6aa88`；PR#42 Open/Draft。依序读取根/研究AGENTS、指挥室READ-BEFORE-WRITE/00时交接、白皮书v0.2.23、MASTER/STATUS、12阶段、T079/T080、Ch3/英文期刊及T062既有真实ERA5/NTM分箱来源；不重复已完成的六seed统计、覆盖率或材料寿命假设。

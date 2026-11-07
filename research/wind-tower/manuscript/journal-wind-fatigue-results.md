@@ -150,6 +150,10 @@ A coverage fraction alone does not identify the relative fatigue importance of u
 
 The calculation reads the previously archived 31-row ERA5 bin table and six-row partial fourth-moment table, checks source SHA256, unique bin identities, total hours, source status and cross-table consistency, and refuses malformed inputs. No wind or structural solver is invoked.
 
+### 2.13. Finite-archive deletion sensitivity of the identified fourth moment
+
+We assess how the three observed wind-bin fourth moments depend on the six archived seeds. For each channel \(c\), \(K_c=\sum_{j\in\{9,11,19\}}(n_j/184080)(1/6)\sum_{s=1}^6L_{cjs}^4\), with ERA5 bin hours \(n_j=(5736,1426,2)\). We delete a common *label* \(s\) from all three bins, recompute each bin's fourth moment using the five retained records, and propagate \(K_c^{(-s)}\) to the conditional five-missing-bin equal-DEL threshold \((K_c^{(-s)}/(95402/184080))^{1/4}\). Shared labels do not establish cross-bin physical pairing; this is a deterministic sensitivity experiment on an existing finite archive, not a bootstrap confidence interval or a new DLC1.2 ensemble.
+
 ## 3. Results: rainflow implementation and controlling-case robustness
 
 ### 3.1. Paired rainflow ranking and controlling-case changes
@@ -277,6 +281,12 @@ The archived bins at 9, 11 and 19 m/s represent 7,164 of 106,900 diagnostic oper
 
 **Fig. 7.** Single-bin and five-bin equal-DEL thresholds computed from the ERA5 exposure archive and the existing three-bin six-seed load-level fourth moments. Curves are algebraic boundaries, not wind-load predictions. A missing-bin DEL below its individual threshold would contribute less than the archived three-bin total; above it, more, **provided the same fourth-moment definition and wind-bin state apply**. This conditional comparison does not establish actual operating states or material fatigue.
 
+### 3.8. Observed-seed deletion changes the identifiable fourth moment
+
+The six-seed known-bin baseline is \(K_{My}=209257.299446\,(MN\,m)^4\) and \(K_{Mx}=125.606638\,(MN\,m)^4\). Deleting one common seed label changes \(K_{My}\) by **-10.6845% to +8.0452%** and \(K_{Mx}\) by **-10.6997% to +11.4025%**. The corresponding five-missing-bin conditional thresholds span **24.505532–25.700039 MN m** (My) and **3.835559–4.053584 MN m** (Mx). These intervals are *six observed deletion outcomes*, not probability intervals. The mean of the six leave-one-label-out fourth moments equals the full-six estimate exactly by linearity, providing a reproducible numerical invariant.
+
+**Table 10.** [Fourteen source-derived baseline/deletion rows](../experiments/T062/S10_NTM18_WEIGHTED_M4_SEED_DELETION_20261108.csv), two channels × (reference + six deletions). **Fig. 8.** [Fourth-moment and conditional threshold sensitivity](manuscript/final-thesis/figures/FIG3_S10_NTM_WEIGHTED_M4_SEED_DELETION_20261108.svg). Source/algorithm SHA256: `4abf76252fa34b2c12635d409e5abc23c4a7d6f759b66dbec12b1932379f4bea` / `7f1d7794696af77549f8ecfb9b3b0c8e47abd845161bb01ed037ef2049d2ba56`; CSV/SVG SHA256: `91b78929363f828bc7eae87ddb9539d0b5c5fd4d94ae8ec937c41c515cfd8036` / `308bb1a205ef2f943acf8845c5ea3dd93de8ea6ce13866ee766f2f6e250db284`. V8 checks: four independent baseline values, 16 algebraic invariants, eight malformed-input rejections and permutation invariance; no native Node CLI or original OUTB reread.
+
 ## 4. Discussion, falsifiability and scope
 
 A verified rainflow implementation is a necessary upstream condition for reliable selection of candidate load cases. It is not sufficient for predicting fatigue of concrete, prestressing tendons, ordinary reinforcement or structural steel: those require local material stress cycles, material-specific fatigue laws, validated mean stress, and wind-speed exposure. The 36 simulations are representative-wind screening records, not a verified DLC1.2 lifetime matrix. The archived ERA5-derived 184,080-hour series contains 106,900 hours in a deliberately diagnostic [4,25) m/s operating interval; only 7,164 hours (6.70159% of that interval) lie in the three wind-speed bins with historical NTM source coverage. The missing bins cannot be assigned zero fatigue damage.
@@ -363,6 +373,10 @@ The derived thresholds sharpen the partial-identification result in §4.1. Under
 
 This test differs from the published 160 m hybrid-tower wind–earthquake and prestressing/seismic studies [6,7]: it evaluates the *identifiability of archived wind-load screening*, not multi-hazard structural response, PT effectiveness or a claimed first wind–earthquake analysis. It remains a load-level result, and the next decisive test requires genuinely sourced low-speed NTM cases and a justified operation-state/seed protocol. No local material stress, S–N law, annual Miner damage, or life estimate follows from Table 9.
 
+### 4.10. Known-bin seed variability does not resolve the missing-bin identifiability gap
+
+The observed deletions change the known contribution by roughly 8–11% in either direction depending on channel and label. Taking the fourth root attenuates the variation in the *conditional* missing-bin equal-contribution threshold to a few percent. This attenuation is mathematical, not evidence that the unobserved 4–9 m/s loads are predictable or that material fatigue uncertainty is small. The six deletions share most records, and the same seed labels across speeds have not been shown to represent physically paired turbulence; their extrema must not be reported as confidence limits. The missing-bin contribution remains nonnegative but unbounded above by the available data. A future source-complete DLC1.2 study must separately assess wind-bin coverage, independent seed convergence and local material-stress transfer.
+
 ## 5. Conclusions
 
 The archived 158 m hybrid-tower load-screening results establish limitations of *control-case selection*, not material fatigue lives. Correcting the historical rainflow closure error changes the My controlling realization and reverses 102/630 pairwise rankings; thus numerical cycle-counting choices can affect which cases proceed to more detailed study. Independently selecting three of six archived NTM seeds per wind bin changes the My controlling bin in 760/8000 exact finite-archive combinations (9.50%) relative to the internal six-seed reference. That percentage does not estimate future-seed failure probability.
@@ -401,6 +415,8 @@ SOURCE: Existing 72-row CSV at experiments/T062/legacy-primary-recovered-2026110
 
 | Missing-bin fourth-moment break-even sensitivity | ERA5 31-bin SHA256 `e4058620a36b23bb218103875d4dc5b0711fc45d418b23a2208c2fc9c16c9102`; historical six-row partial load moment SHA256 `d43f963fb30e16a33e87acdf6e9571710826974eee89d1f3527ab6504d85f695`; T062 Node program SHA256 `6ccf56928b2674884692d398b729d030909a7b67c17ca5951bf7c7e217d0dbae`; 12-row CSV SHA256 `e4160f9419c76eec459491dc704c3150339e77183dc1cf827d6ebd2fc28cd40f`; SVG SHA256 `2ced2991132a5ac9453bce64b71b2fa19540b2645782be09d4554b8d5cf1850c` | Derived-source reread, 12 identity checks, 2 channel oracles, 4 malformed-input refusals in V8; native Node CLI not run; no new OUTB/ERA5 workbook read | §§2.12, 3.7, 4.9; Table 9, Fig. 7 | CONDITIONAL LOAD-LEVEL BOUNDARY ONLY; missing-bin loads and Miner HOLD |
 
+| Common-label seed deletion of known-bin fourth moments | 18-case derived input SHA256 `4abf76252fa34b2c12635d409e5abc23c4a7d6f759b66dbec12b1932379f4bea`; Node `7f1d7794696af77549f8ecfb9b3b0c8e47abd845161bb01ed037ef2049d2ba56`; 14-row CSV `91b78929363f828bc7eae87ddb9539d0b5c5fd4d94ae8ec937c41c515cfd8036`; SVG `308bb1a205ef2f943acf8845c5ea3dd93de8ea6ce13866ee766f2f6e250db284` | Direct 18-case derived CSV; four independent baseline oracles, 16 algebraic checks, eight rejection tests and row-order invariance via V8; no native Node CLI or original OUTB reread | §§2.13, 3.8, 4.10; Table 10, Fig. 8 | FINITE-ARCHIVE SENSITIVITY, not a confidence interval, material life or missing-bin prediction |
+
 ### 6.2. Bibliographic references
 
 [1] Bak, C., Zahle, F., Bitsche, R., Kim, T., Yde, A., Henriksen, L. C., Natarajan, A., and Hansen, M. H. (2013). *Description of the DTU 10 MW Reference Wind Turbine*. DTU Wind Energy Report-I-0092. Technical University of Denmark. Official model/report context: https://www.hawc2.dk/models/dtu-10-mw.
@@ -421,4 +437,4 @@ SOURCE: Existing 72-row CSV at experiments/T062/legacy-primary-recovered-2026110
 
 [9] International Electrotechnical Commission (IEC). *IEC 61400-6:2020+AMD1:2025 CSV*, Wind energy generation systems—Part 6: Tower and foundation design requirements. Product metadata: https://webstore.iec.ch/en/publication/107942. **Authorized clauses not read**; no compliance certification.
 
-**Submission boundary:** Tables 1–9 and Figs. 1–7 are derived from archived load-level evidence, not a full formal DLC1.2 simulation set, material Miner damage, or state-matched wind–earthquake structural validation. The references establish context and provenance; they do not certify the model or fill unobserved wind bins.
+**Submission boundary:** Tables 1–10 and Figs. 1–8 are derived from archived load-level evidence, not a full formal DLC1.2 simulation set, material Miner damage, or state-matched wind–earthquake structural validation. The references establish context and provenance; they do not certify the model or fill unobserved wind bins.
