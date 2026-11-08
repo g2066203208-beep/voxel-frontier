@@ -1,3 +1,12 @@
+## 2026-11-09 01时｜S06/S07 同源塔底平均My与雨流DEL4控制seed错位（0/12）
+
+- **START/并发**：初始HEAD `00b0d44cb482b964be9fa3cf4bc9538275ded95f`，程序提交 `b6be5a5224be573151fb57fae4c8cdb298259ea2`，main `58c1e545f67b645417d5957189f5dad693d975bb`，PR#42 Open/Draft。依次读取研究AGENTS、指挥室READ-BEFORE-WRITE与00时交接、白皮书v0.2.48、MASTER/STATUS、12阶段、T079/T080、Ch3及两份真实源。开工/收尾在交付批次登记，不冒称事前单独提交。
+- **SOURCE/OFFICIAL**：[180行六分量时均](../T062/S07_18NTM_10STATION_NATIVE_MEAN_WRENCH_SI_20261031.csv) SHA256 `ee051cdc35ef3bfdc1ec2f9e053353ca6ba10f9f27079253830736fac9315f97`；[1080行原生雨流](../T062/S06_18NTM_ORIGINAL_9GAGE_LOAD_DEL_20261031.csv) SHA256 `95de6578cf379d1b2e1d99a68c26954a68e93cc8bfc4bdcd63dd324ae2999a0f`。逐case核对18个OUTB SHA、part ZIP、100—700s/12001×0.05s、TwrBsMyt通道和N·m↔kN·m均值。原生坐标基UNVERIFIED，原OUTB本轮未重新解码。
+- **科学问题/结果**：同一原始风场的平均My最大seed能否代替雨流DEL4最大seed？三箱各6seed，15对内部排序反转11/7/12；三箱最大值seed均不同，错误筛查漏选最大DEL4分别24.561180%/17.614085%/17.766489%。45对共享18个独立case，不做独立样本p值；11.4m/s箱7/15不支持普遍负相关。
+- **RUN/TAB/FIG**：[Node](../T062/s06_ntm18_mean_vs_del_rank.cjs) SHA256 `47d43caaf55ed270efc2f256ccc4c5bf2f8dfe53e5ca3099f08a81358c47640c`；[18case](../T062/S06_NTM18_MEAN_VS_DEL_18CASE_20261109.csv) `2afd6a7bbfc053c625d61d761eef35832cf4332cbee03f015885e23bf08ae3ec`；[3bin](../T062/S06_NTM18_MEAN_VS_DEL_3BIN_20261109.csv) `71407e8d3a4f2b76325bd1a7038a81d53f759efd54e9f592376b6ffb43e8e785`；[SVG](../../manuscript/final-thesis/figures/FIG3_S06_NTM_MEAN_VS_DEL_20261109.svg) `ff9159de9e96bcdb9b64222f43b1ec51b3afc38312f12af6cfca150890d1fefa`；[Ch3§3.7.13](../../manuscript/final-thesis/chapters/03_场址风环境与整机随机风控制载荷.md)。V8直接执行同一CJS源码、4项正向数值oracle及9项污染拒绝测试PASS；原生Node CLI/CI和昂贵生产RUN NOT_RUN。
+- **REF/STANDARD/误差/HOLD**：继承既有OpenFAST/ROSCO与两篇2026风震/PT先行文献的原有阅读深度，本轮未新核全文/授权IEC条款。CSV指标9位小数、百分比6位，显示舍入≤5×10⁻⁷百分点；原始解码、坐标、风场总体、材料点和控制器初态误差未估。**SOURCE-LEVEL RANK COUNTEREXAMPLE PASS / PHYSICAL & FORMAL DLC HOLD**；12阶段0/12、正式DLC1.2 0/126、Miner及同态W/E/WE HOLD。
+- **下一唯一动作**：恢复可同态配对的W侧完整原始六分量时程及控制器/坐标身份；无新原件转S10其他真实源，停止本轮排名重复。未执行、准备、审核或派发Abaqus/CAE，不动T057/T070/main，不合并Draft PR。
+
 ## 2026-11-09 00时｜T080交接 S05 GB/T50011（2024）六秒适用边界真实数值与正式正文（0/12）
 
 - START/READ：main 58c1e545f67b645417d5957189f5dad693d975bb、PR#42 Open/Draft；开工read_base_sha 43970e187b96f2d0d57921b8bbfec078e90a0c3a，科研源commit 9fb52aba63c5b9a78a2474a1592928725dadbdf7。按研究/根AGENTS→COMMAND_ROOM READ-BEFORE-WRITE/23时交接→白皮书v0.2.47→MASTER/STATUS→12阶段→T079/T080→Ch1及15行真实来源数据读取。START/END同批记录，不冒称先行独立提交。
