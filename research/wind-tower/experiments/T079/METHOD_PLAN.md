@@ -1,3 +1,10 @@
+## 2026-11-08 12时｜S05嘉鱼附录C.17八镇基本区划值与长周期适用域（0/12）
+
+- **SOURCE/STANDARD**：直接核读GB18306—2015附录C.17印刷p126，PDF文本L11594–11604；嘉鱼八镇陆溪/高铁岭/官桥/鱼岳/新街/渡普/潘家湾/簰洲湾均0.05g/0.35s。2015标准镜像 https://www.eia543.com/documents/中国地震动参数区划图（GB%2018306-2015）.pdf；原扫描件索引 https://commons.wikimedia.org/wiki/File:GB_18306-2015_中国地震动参数区划图.pdf；2026修改单政府PDF仅改林芝。原扫描件字节SHA NOT_AVAILABLE、未逐像素复核。
+- **TAB/RUN**：[八镇CSV](real-records/S05_GB18306_C17_JIAYU_8TOWNS_20261108.csv) SHA256 `346a2941569db9d4a98610a5be29e852421583134610b00583cdff563563175d`；[四周期比值CSV](real-records/S05_GB18306_C17_LONG_PERIOD_RATIOS_20261108.csv) SHA256 `4269676585a6f0cb3eac84345646fbf69582046910bda11c6e35d8dbc54f554d`；[可运行Node](s05_jiayu_c17_eight_town_gate.cjs) SHA256 `5361b366da592269cc4ae5b2e3ffe0a3c47f42c90bef0891e0040053e2c0f380`。8/8同值；T/Tg(4/6/6.230958/8s)=11.428571/17.142857/17.802737/22.857143；0.05g=0.4903325m/s²仅量纲换算。V8执行1正8负PASS，独立Python Decimal算术复核PASS；原生Node CLI/CI NOT_RUN。
+- **解释/误差/反例/HOLD**：2015表是Ⅱ类场地基本区划值，不等于工址设计谱；6.230958s仅历史ESM比较周期而非核实结构周期。只给PGA/Tg不能确定长周期谱值；不能用XG1林芝0.45s覆盖湖北0.35s。转录8/8及9位比值舍入误差≤5e−10；标准PDF原件身份、地勘、谱形、波选配与结构物理误差未定。新增[硕士Ch1§1.6.7](../../manuscript/final-thesis/chapters/01_绪论.md)。**REFERENCE ZONATION SOURCE PARTIAL PASS / SITE DESIGN SPECTRUM HOLD**；12阶段0/12、DLC1.2 0/126、Miner/同态W/E/WE HOLD。
+- **下一唯一动作**：切S10真实历史NTM源，寻找可用于材料特定循环均值/应力筛查的独立数据增量；不重复区划转录。未执行/准备/审查/派发Abaqus/CAE，不启动昂贵生产、不动冻结T057/T070/main、不合并PR。
+
 ## 2026-11-08 11时｜S05官方GB18306第1号修改单适用域与25行实表（0/12）
 
 - **START/来源基线**：PR#42 Open/Draft；read_base_sha=`49afcd9ffacaee4c58e05f5c0861f2b8b07bdb2e`、main=`58c1e545f67b645417d5957189f5dad693d975bb`。依序阅读根/研究AGENTS、COMMAND_ROOM 10时交接、白皮书v0.2.34、MASTER/STATUS、12阶段、T079/T080最新、Ch1；继承历史36风、ERA5、18NTM、4ETM×31段、ESM，不重复Nref或峰时。
