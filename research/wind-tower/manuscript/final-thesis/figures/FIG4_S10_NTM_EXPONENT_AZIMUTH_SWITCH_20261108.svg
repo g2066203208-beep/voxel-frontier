@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="630" viewBox="0 0 1120 630">
+<rect width="1120" height="630" fill="#fff"/>
+<text x="45" y="42" font-family="Arial" font-size="23" font-weight="bold" fill="#213246">Exponent-dependent azimuth selection in historical NTM</text>
+<text x="45" y="68" font-family="Arial" font-size="13" fill="#526171">158 m tower | 18 seed-cases x 10 correlated near-base stations | gross nominal stress, NOT material fatigue</text>
+<text x="50" y="108" font-family="Arial" font-size="16" font-weight="bold">A  Switched stations per independent wind case</text>
+<text x="575" y="108" font-family="Arial" font-size="16" font-weight="bold">B  Cost of using the other exponent selector</text>
+<text x="54" y="146" font-family="Arial" font-size="12">U9.34 S01</text>
+<rect x="145" y="134" width="325" height="15" fill="#e9eef2"/>
+<text x="481" y="146" font-family="Arial" font-size="12">0/10</text>
+<text x="54" y="170" font-family="Arial" font-size="12">U9.34 S02</text>
+<rect x="145" y="158" width="325" height="15" fill="#e9eef2"/>
+<text x="481" y="170" font-family="Arial" font-size="12">0/10</text>
+<text x="54" y="194" font-family="Arial" font-size="12">U9.34 S03</text>
+<rect x="145" y="182" width="325" height="15" fill="#e9eef2"/>
+<text x="481" y="194" font-family="Arial" font-size="12">0/10</text>
+<text x="54" y="218" font-family="Arial" font-size="12">U9.34 S04</text>
+<rect x="145" y="206" width="325" height="15" fill="#e9eef2"/>
+<text x="481" y="218" font-family="Arial" font-size="12">0/10</text>
+<text x="54" y="242" font-family="Arial" font-size="12">U9.34 S05</text>
+<rect x="145" y="230" width="325" height="15" fill="#e9eef2"/>
+<text x="481" y="242" font-family="Arial" font-size="12">0/10</text>
+<text x="54" y="266" font-family="Arial" font-size="12">U9.34 S06</text>
+<rect x="145" y="254" width="325" height="15" fill="#e9eef2"/>
+<text x="481" y="266" font-family="Arial" font-size="12">0/10</text>
+<text x="54" y="290" font-family="Arial" font-size="12">U11.4 S01</text>
+<rect x="145" y="278" width="325" height="15" fill="#e9eef2"/>
+<text x="481" y="290" font-family="Arial" font-size="12">0/10</text>
+<text x="54" y="314" font-family="Arial" font-size="12">U11.4 S02</text>
+<rect x="145" y="302" width="325" height="15" fill="#e9eef2"/>
+<text x="481" y="314" font-family="Arial" font-size="12">0/10</text>
+<text x="54" y="338" font-family="Arial" font-size="12">U11.4 S03</text>
+<rect x="145" y="326" width="325" height="15" fill="#e9eef2"/>
+<text x="481" y="338" font-family="Arial" font-size="12">0/10</text>
+<text x="54" y="362" font-family="Arial" font-size="12">U11.4 S04</text>
+<rect x="145" y="350" width="325" height="15" fill="#e9eef2"/>
+<text x="481" y="362" font-family="Arial" font-size="12">0/10</text>
+<text x="54" y="386" font-family="Arial" font-size="12">U11.4 S05</text>
+<rect x="145" y="374" width="325" height="15" fill="#e9eef2"/>
+<text x="481" y="386" font-family="Arial" font-size="12">0/10</text>
+<text x="54" y="410" font-family="Arial" font-size="12">U11.4 S06</text>
+<rect x="145" y="398" width="325" height="15" fill="#e9eef2"/>
+<text x="481" y="410" font-family="Arial" font-size="12">0/10</text>
+<text x="54" y="434" font-family="Arial" font-size="12">U19.2 S01</text>
+<rect x="145" y="422" width="325" height="15" fill="#e9eef2"/>
+<text x="481" y="434" font-family="Arial" font-size="12">0/10</text>
+<text x="54" y="458" font-family="Arial" font-size="12">U19.2 S02</text>
+<rect x="145" y="446" width="325" height="15" fill="#e9eef2"/>
+<text x="481" y="458" font-family="Arial" font-size="12">0/10</text>
+<text x="54" y="482" font-family="Arial" font-size="12">U19.2 S03</text>
+<rect x="145" y="470" width="325" height="15" fill="#e9eef2"/>
+<rect x="145" y="470" width="325" height="15" fill="#c06942"/>
+<text x="481" y="482" font-family="Arial" font-size="12">10/10</text>
+<text x="54" y="506" font-family="Arial" font-size="12">U19.2 S04</text>
+<rect x="145" y="494" width="325" height="15" fill="#e9eef2"/>
+<text x="481" y="506" font-family="Arial" font-size="12">0/10</text>
+<text x="54" y="530" font-family="Arial" font-size="12">U19.2 S05</text>
+<rect x="145" y="518" width="325" height="15" fill="#e9eef2"/>
+<text x="481" y="530" font-family="Arial" font-size="12">0/10</text>
+<text x="54" y="554" font-family="Arial" font-size="12">U19.2 S06</text>
+<rect x="145" y="542" width="325" height="15" fill="#e9eef2"/>
+<text x="481" y="554" font-family="Arial" font-size="12">0/10</text>
+<text x="54" y="595" font-family="Arial" font-size="12" fill="#526171">Only U19.2 S03 switches: 10 stations, one wind realization.</text>
+<line x1="584" x2="1078" y1="538" y2="538" stroke="#dbe4ea"/>
+<text x="545" y="542" font-family="Arial" font-size="11">0.00%</text>
+<line x1="584" x2="1078" y1="433" y2="433" stroke="#dbe4ea"/>
+<text x="545" y="437" font-family="Arial" font-size="11">0.01%</text>
+<line x1="584" x2="1078" y1="328" y2="328" stroke="#dbe4ea"/>
+<text x="545" y="332" font-family="Arial" font-size="11">0.02%</text>
+<line x1="584" x2="1078" y1="223" y2="223" stroke="#dbe4ea"/>
+<text x="545" y="227" font-family="Arial" font-size="11">0.03%</text>
+<circle cx="595" cy="210.70" r="4" fill="#c06942"/>
+<rect x="592" y="502.14" width="6" height="6" fill="#256f99"/>
+<text x="583" y="557" font-family="Arial" font-size="11">BASE</text>
+<circle cx="642" cy="210.04" r="4" fill="#c06942"/>
+<rect x="639" y="501.94" width="6" height="6" fill="#256f99"/>
+<text x="630" y="557" font-family="Arial" font-size="11">G01</text>
+<circle cx="689" cy="210.37" r="4" fill="#c06942"/>
+<rect x="686" y="500.46" width="6" height="6" fill="#256f99"/>
+<text x="677" y="557" font-family="Arial" font-size="11">G02</text>
+<circle cx="736" cy="211.03" r="4" fill="#c06942"/>
+<rect x="733" y="499.06" width="6" height="6" fill="#256f99"/>
+<text x="724" y="557" font-family="Arial" font-size="11">G03</text>
+<circle cx="783" cy="211.66" r="4" fill="#c06942"/>
+<rect x="780" y="497.59" width="6" height="6" fill="#256f99"/>
+<text x="771" y="557" font-family="Arial" font-size="11">G04</text>
+<circle cx="830" cy="212.01" r="4" fill="#c06942"/>
+<rect x="827" y="496.16" width="6" height="6" fill="#256f99"/>
+<text x="818" y="557" font-family="Arial" font-size="11">G05</text>
+<circle cx="877" cy="212.95" r="4" fill="#c06942"/>
+<rect x="874" y="493.13" width="6" height="6" fill="#256f99"/>
+<text x="865" y="557" font-family="Arial" font-size="11">G06</text>
+<circle cx="924" cy="213.26" r="4" fill="#c06942"/>
+<rect x="921" y="491.68" width="6" height="6" fill="#256f99"/>
+<text x="912" y="557" font-family="Arial" font-size="11">G07</text>
+<circle cx="971" cy="214.34" r="4" fill="#c06942"/>
+<rect x="968" y="490.07" width="6" height="6" fill="#256f99"/>
+<text x="959" y="557" font-family="Arial" font-size="11">G08</text>
+<circle cx="1018" cy="214.70" r="4" fill="#c06942"/>
+<rect x="1015" y="487.83" width="6" height="6" fill="#256f99"/>
+<text x="1006" y="557" font-family="Arial" font-size="11">G09</text>
+<text x="592" y="590" font-family="Arial" font-size="12" fill="#c06942">● m=4 regret</text>
+<text x="763" y="590" font-family="Arial" font-size="12" fill="#256f99">■ m=10 regret</text>
+<text x="585" y="611" font-family="Arial" font-size="11" fill="#526171">Regret is a within-exponent DEL ratio; not Miner damage or an error bound.</text>
+</svg>
