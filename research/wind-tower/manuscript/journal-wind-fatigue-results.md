@@ -351,6 +351,25 @@ The corrected tower-base My load-DEL order among the four historically recovered
 
 **Supplementary Fig. S3.** Four historical ETM labels plotted against two *different* source-derived screening endpoints; point labels are not a proof of cross-archive identical simulation state. Source-level [four-row CSV](../experiments/T062/S12_4ETM_CROSS_QOI_RANK_20261108.csv) SHA256 `0ab09a0067745c9bdb0ee155da8f1aef7d78931511a0afd9a0a1225e1d33982d`; figure SHA256 `2b88d3e427c5166f329b53e1b5542640d4acde829208986ee9f3826b513d8f4d`. The historical 31-section positive peaks also have noncoincident times (U11p4_ETM_S04: 541.45–628.30 s across stations), so an along-height envelope must not be read as a synchronous stress field. This result is a **candidate-selection warning**, not evidence of material fatigue-control reversal, a same-state cross-QoI validation or annual load reliability.
 
+### 3.11. Harmonizing reference cycles before comparing archived same-QoI load DELs
+
+A second, **same-QoI** comparison exposes a confounder hidden by the cross-QoI analysis in §3.10. The T062 corrected tower-base `TwrBsMyt` load DEL is reported for `m=4`, `Nref=100000` and MN m; the separate T077 four-ETM 31-gage archive reports `CSEG_01/My_kNm` at z=1.763393 m with `Nref=600` (600 s at 1 Hz) and kN m. The consistent conversion is `DEL_CSEG01,100000 [MN m] = 0.001 × DEL_CSEG01,600 [kN m] × (600/100000)^(1/4)`, with factor **0.2783157684**.
+
+**Supplementary Table S4.** Four historical ETM case labels; same load-level My DEL and common `Nref=100000`. Residual is `100(CSEG01/base−1)%`.
+
+| Archived ETM label | Base My DEL (MN m) | CSEG01 original, Nref600 (MN m) | CSEG01 harmonized (MN m) | Residual |
+|---|---:|---:|---:|---:|
+| U09p343881_ETM_S06 | 26.023387 | 92.306914 | 25.690470 | −1.2793% |
+| U11p4_ETM_S04 | 26.802479 | 94.836550 | 26.394507 | −1.5221% |
+| U19p202140_ETM_S04 | 24.323115 | 85.921775 | 23.913385 | −1.6845% |
+| U19p202140_ETM_S06 | 23.542402 | 83.242012 | 23.167565 | −1.5922% |
+
+The raw unharmonized CSEG01/base ratios range from **3.5325 to 3.5471**; after harmonization, residuals are only **−1.6845% to −1.2793%**. All four labels retain identical same-QoI ranks (**0/6 pairwise inversions**). This eliminates a demonstrable reference-cycle normalization artifact, but **does not establish identical wind, controller or initial-state histories**. The two channels are at different elevations, the original 36-case OUTB branch and the 31-gage Actions branch have not been matched by original BTS/controller/state hashes, and differences in rainflow implementation are not excluded. The residual therefore has no validated physical error attribution. The same-QoI rank agreement also does not negate the conditional 2/6 *different-QoI* reversals in §3.10 and says nothing about local material fatigue.
+
+![Supplementary Fig. S4: Harmonized tower-base versus near-base My DEL](final-thesis/figures/FIG4_S06_ETM_BASE_CSEG01_NREF_HARMONIZED_20261108.svg)
+
+**Supplementary Fig. S4.** Same-QoI My load DEL after reference-cycle harmonization and four residuals. [Reproducible Node source](../experiments/T062/s06_etm_base_cseg01_nref_harmonization.cjs) SHA256 `c10c4a95dc81fa6210856375c1d64129596ff7406a68fada0d23828c8a686a95`; [four-row CSV](../experiments/T062/S06_ETM_BASE_CSEG01_NREF_HARMONIZED_20261108.csv) SHA256 `b538a3f44030bcdf09e9d620f67326b40aea0475c5c10893467721cadf82466b`; figure SHA256 `e69436a2482aea2206ce35e569984f43b8d243ccf67b65403d8132b044a446ae`. The T077 31-station histories came from separate A/B/C/D runs, so shared clock labels cannot establish a synchronous full-tower field. The U11 CSEG11–12 86.10 s peak-time difference is within batch B and remains a valid *within-batch* noncoincidence counterexample; the full 31-station 86.85 s spread is an archive-level descriptor.
+
 ## 4. Discussion, falsifiability and scope
 
 A verified rainflow implementation is a necessary upstream condition for reliable selection of candidate load cases. It is not sufficient for predicting fatigue of concrete, prestressing tendons, ordinary reinforcement or structural steel: those require local material stress cycles, material-specific fatigue laws, validated mean stress, and wind-speed exposure. The 36 simulations are representative-wind screening records, not a verified DLC1.2 lifetime matrix. The archived ERA5-derived 184,080-hour series contains 106,900 hours in a deliberately diagnostic [4,25) m/s operating interval; only 7,164 hours (6.70159% of that interval) lie in the three wind-speed bins with historical NTM source coverage. The missing bins cannot be assigned zero fatigue damage.

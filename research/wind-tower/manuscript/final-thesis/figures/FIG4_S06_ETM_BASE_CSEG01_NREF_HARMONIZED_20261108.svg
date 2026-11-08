@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="670" viewBox="0 0 1100 670">
+<rect width="1100" height="670" fill="white"/>
+<text x="70" y="44" font-family="Arial" font-size="23" font-weight="bold">ETM My load-DEL: reference-cycle harmonization</text>
+<text x="70" y="72" font-family="Arial" font-size="14">Historical case labels only; same wind/controller/initial state NOT certified</text>
+<text x="155" y="108" font-family="Arial" font-size="16" font-weight="bold">A  Same-QoI comparison after Nref normalization</text>
+<path d="M155 138 V425 H735" fill="none" stroke="#334155" stroke-width="2"/>
+<line x1="155" y1="425" x2="719" y2="137" stroke="#94a3b8" stroke-dasharray="7 6" stroke-width="2"/>
+<text x="800" y="108" font-family="Arial" font-size="16" font-weight="bold">B  Residual</text>
+<line x1="990" y1="140" x2="990" y2="425" stroke="#94a3b8" stroke-dasharray="5 4"/>
+<text x="155" y="449" font-family="Arial" font-size="13" text-anchor="middle">22</text>
+<text x="140" y="430" font-family="Arial" font-size="13" text-anchor="end">22</text>
+<text x="343" y="449" font-family="Arial" font-size="13" text-anchor="middle">24</text>
+<text x="140" y="334" font-family="Arial" font-size="13" text-anchor="end">24</text>
+<text x="531" y="449" font-family="Arial" font-size="13" text-anchor="middle">26</text>
+<text x="140" y="238" font-family="Arial" font-size="13" text-anchor="end">26</text>
+<text x="719" y="449" font-family="Arial" font-size="13" text-anchor="middle">28</text>
+<text x="140" y="142" font-family="Arial" font-size="13" text-anchor="end">28</text>
+<text x="440" y="485" font-family="Arial" font-size="15" text-anchor="middle">Tower-base My DEL, Nref=100000 (MN m)</text>
+<text x="43" y="280" transform="rotate(-90 43 280)" font-family="Arial" font-size="15" text-anchor="middle">CSEG01 My DEL, Nref=100000 (MN m)</text>
+<circle cx="533.20" cy="247.86" r="7" fill="#0f766e"/>
+<text x="543.20" y="269.86" font-family="Arial" font-size="13">U09 S06</text>
+<text x="795" y="172" font-family="Arial" font-size="13">U09 S06</text>
+<rect x="913.24" y="159" width="76.76" height="18" fill="#0f766e"/>
+<text x="1000" y="172" font-family="Arial" font-size="12">-1.279%</text>
+<circle cx="606.43" cy="214.06" r="7" fill="#0f766e"/>
+<text x="616.43" y="199.06" font-family="Arial" font-size="13">U11 S04</text>
+<text x="795" y="237" font-family="Arial" font-size="13">U11 S04</text>
+<rect x="898.67" y="224" width="91.33" height="18" fill="#0f766e"/>
+<text x="1000" y="237" font-family="Arial" font-size="12">-1.522%</text>
+<circle cx="373.37" cy="333.16" r="7" fill="#0f766e"/>
+<text x="383.37" y="355.16" font-family="Arial" font-size="13">U19 S04</text>
+<text x="795" y="302" font-family="Arial" font-size="13">U19 S04</text>
+<rect x="888.93" y="289" width="101.07" height="18" fill="#0f766e"/>
+<text x="1000" y="302" font-family="Arial" font-size="12">-1.685%</text>
+<circle cx="299.99" cy="368.96" r="7" fill="#0f766e"/>
+<text x="309.99" y="353.96" font-family="Arial" font-size="13">U19 S06</text>
+<text x="795" y="367" font-family="Arial" font-size="13">U19 S06</text>
+<rect x="894.47" y="354" width="95.53" height="18" fill="#0f766e"/>
+<text x="1000" y="367" font-family="Arial" font-size="12">-1.592%</text>
+<rect x="70" y="525" width="960" height="92" fill="#f1f5f9" stroke="#cbd5e1"/>
+<text x="90" y="552" font-family="Arial" font-size="16" font-weight="bold">Nref correction factor = 0.278315768</text>
+<text x="90" y="579" font-family="Arial" font-size="14">4/4 concordant ranks; max absolute residual 1.6845%; locations differ.</text>
+<text x="90" y="603" font-family="Arial" font-size="13">Unscaled ~3.5x gap is mainly a normalization artifact, NOT physical amplification.</text>
+<text x="70" y="646" font-family="Arial" font-size="12">Archived load-level m=4 only; not local material stress, Miner damage or formal DLC1.2.</text>
+</svg>
