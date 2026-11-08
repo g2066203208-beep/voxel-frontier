@@ -1,3 +1,12 @@
+## 2026-11-09 04时｜S12英文期刊真实ERA5双弯矩尾部杠杆跨源整合（0/12）
+
+- **START/READ/并发**：read_base_sha `020b9d2958d61752f60f162eec3fbb10747ed5d0`，main `58c1e545f67b645417d5957189f5dad693d975bb`，PR#42 经GitHub is:open/is:draft 查询匹配；研究AGENTS→COMMAND_ROOM READ-BEFORE-WRITE及03时交接→白皮书v0.2.51→MASTER/STATUS→12阶段→T079/T080→英文期刊原稿与T062三份真源逐项读取。工作只限英文期刊S12及原有日志/指挥室/白皮书/状态；不复算S10已交付的六行概率表、不运行生产风/结构。
+- **科学问题及SOURCE/REF/STANDARD/OFFICIAL**：问同一ERA5罕见19–20m/s小时在塔底Mx/My两个负载指标中是否具有相同相对重要性。SOURCE：31行ERA5 SHA256 `e4058620a36b23bb218103875d4dc5b0711fc45d418b23a2208c2fc9c16c9102`、六行NTM M4 SHA256 `d43f963fb30e16a33e87acdf6e9571710826974eee89d1f3527ab6504d85f695`、六行跨源表 SHA256 `349c7633a79eb20b8cafb47dfb14ac588bb48c706d5ad9dca49a489df3544a8c`；既有源锁定Node SHA256 `8ed18c9d6cd2c585cade247270ccf8e2e59eab9848558f53621332fb2ff87381`。REF：期刊§1.2保留2026两篇先行风震/PT研究的已核阅读深度，[6]仅摘要、[7]原PDF部分页；本轮不冒充全文比较。STANDARD：IEC授权原条款未新读。OFFICIAL：ERA5派生数据而非实址观测。
+- **方法/数值/TAB**：在同一N=184080h分母下定义`K_c=Σ(H_b/N)Q_cb`，只对b=9/11/19的已知支持域；独立复核`Q_Mx,19/Q_Mx,9=138.593379485`、`Q_My,19/Q_My,9=3.636752591`、两者比`38.109103111`；固定总小时19→9一小时相对影响`−1.354761059%`/ `−0.027184918%`，绝对影响比`49.835024663`。有源H=7164h、19箱2h；19箱对Mx/My已知部分M4贡献`2.729214%`/`0.074990%`。数值先用V8直接读六行源复算，再用Python Decimal(40位)独立复核三项比值；显示舍入<0.000001单位末位，不含统计或模型不确定性。
+- **实质交付/FIG/RUN**：[英文期刊](../../manuscript/journal-wind-fatigue-results.md)新增§2.19方法、§3.15真实结果及**Table 12**、§4.15机制/拒绝准则，更新摘要、结论、§6来源追踪；源文件Git blob `2556af7756e2b0ac0624f90ef85b290a81740690`，科研正文提交 [10becc6e](https://github.com/g2066203208-beep/voxel-frontier/commit/10becc6e5161b20552bb918d90260927496cb40d)。复用已有S10正式图而不制造重复图；无新增物理RUN、原生Node CLI/原始OUTB/ERA5小时级重新处理均NOT_RUN。
+- **误差/反例/验收**：两个19箱小时不能给出稳健尾部概率；10个相关测站与6个seed不能当独立新风气候样本；有源K仅覆盖诊断运行小时7164/106900，剩余99736h载荷未知，不能以条件贡献推全气候、不能把load M4当Miner或材料疲劳寿命。反例是同一小时分布下Mx/My相对尾部重要性差异38.109倍（M4增长比之比）及49.835倍（单小时扰动比）；不推断控制器/结构因果或未来seed表现。**SOURCE-LEVEL DERIVED RESULTS + PUBLISHABLE MANUSCRIPT SECTION PASS / S12 SUBMISSION、MATERIAL MINER、DLC1.2、W/E/WE HOLD**。白皮书v0.2.51→v0.2.52 PATCH；12阶段0/12、正式DLC1.2 0/126。
+- **下一唯一动作**：转S06/S07仅在有新原始同态W侧六分量/控制器身份可核时恢复；若仍无新原件，转S05新官方长周期谱来源，不重复ERA5双通道杠杆计算。未执行、准备、审核、调试或派发Abaqus/CAE，不动T057/T070/main，不合并Draft PR。
+
 ## 2026-11-09 03时｜S10真实ERA5已知支持域权重集中与双通道尾部小时影响（0/12）
 
 - **START/READ/并发**：read_base_sha `a53bbc5f418bee95d29a9c9846f066a4194b414b`；main `58c1e545f67b645417d5957189f5dad693d975bb`；PR#42 Open/Draft。已读根/研究AGENTS、指挥室READ-BEFORE-WRITE与02时交接、白皮书v0.2.50、MASTER/STATUS、12阶段、T079/T080及Ch4§4.7.4/§4.7.7/§4.7.17；继承真实ERA5、18NTM及三箱四次矩，不重复seed集合审计。仅S10源级程序/六行CSV/正式SVG/Ch4与现有过程、指挥室、白皮书更新。
