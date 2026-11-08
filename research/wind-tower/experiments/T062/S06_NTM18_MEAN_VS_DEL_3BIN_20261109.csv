@@ -1,0 +1,4 @@
+wind_bin,n_seed_cases,concordant_pairs,discordant_pairs,kendall_tau,mean_selector_case,DEL_selector_case,mean_selector_DEL_MNm,max_DEL_MNm,missed_DEL_percent,DEL_winner_mean_rank,mean_winner_DEL_rank
+U09p343881,6,4,11,-0.466666667,U09p343881_NTM_S02,U09p343881_NTM_S01,38.530043271,51.074557159,24.561180,3,5
+U11p4,6,8,7,0.066666667,U11p4_NTM_S02,U11p4_NTM_S04,53.722073988,65.207837638,17.614085,5,4
+U19p202140,6,3,12,-0.600000000,U19p202140_NTM_S03,U19p202140_NTM_S04,55.251142907,67.188111211,17.766489,4,6
