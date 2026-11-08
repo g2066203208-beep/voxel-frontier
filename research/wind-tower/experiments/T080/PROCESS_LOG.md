@@ -1,3 +1,13 @@
+## 2026-11-08 17时｜S05→S08真实ESM长周期方向选取偏差与正式科研图（0/12）
+
+- **START/READ-BEFORE-WRITE**：read_base_sha=`305ecd643abb240f4d3b0329d2ee40570e453aaf`，main=`58c1e545f67b645417d5957189f5dad693d975bb`，PR#42 Open/Draft；已依序读根/研究AGENTS、指挥室READ-BEFORE-WRITE与16时交接、白皮书v0.2.40、MASTER/STATUS、12阶段、T079/T080、ESM真实46周期谱及原程序；S06/S07正式缺箱无新增原始源，本轮依反卡死切至S05/S08实测谱，不重复前轮LOBO或三章总结。开工回执与收尾同批提交，**未冒称预先独立登记**。
+- **SOURCE/深度**：直接解析历史已核[ESM 46周期双水平PSD/PSA](../T079/real-records/S05_ESM_NVL_PSA_PSD_46PERIOD_20261107.csv)全46行，SHA256 `d85bd916c34cc4e0a008a26d07ef49935a4aa90c3feb5d9bb9a5f96a12f1c0cf`，Git blob `99b0b662fcc776701f15df8e4cbe28c109727c7b`；源自官方ESM v3 DOI 10.13127/esm.3，IT-2012-0008 IT.NVL处理后HNE/HNN，5%阻尼；本轮未重新下载原波或重新积分原始记录。
+- **科学问题/公式**：同周期固定水平轴最大伪位移是否等于离散RotD100？定义 \(\delta=100[PSD_{RotD100}/\max(PSD_{HNE},PSD_{HNN})-1]\%\)，不把RotD100跨周期包络当作单一方向结构时程。
+- **TAB/FIG/RUN**：21/21正差，中位4.016266%、最大8.539344%（T=7.737650s），条件性梁T1=6.230957762865s处6.748129%；两次固定轴切换区间[5.648,6.000]s、[8.241,8.776]s。新增[Node](../T079/s08_esm_longperiod_axis_vs_rotd100.cjs) SHA256 `bf2f1e97a0d3da09b4a5d47b674db39746cb1c44783cd28c47c035b45b3ee9d5`、[21行表](../T079/real-records/S08_ESM_NVL_21PERIOD_AXIS_VS_ROTD100_20261108.csv) SHA256 `1302b39d2c90570ff6de9cf56563af590a955b5d7320ee62ddf3424b1eab3a45`、[正式SVG](../../manuscript/final-thesis/figures/FIG_S08_ESM_AXIS_VS_ROTD100_LONGPERIOD_20261108.svg) SHA256 `0ee07ed150af53deaf502b62786ca41b6e80c1db0c7d6e35cfb4c34f036ffd78`，硕士Ch1§1.6.8。
+- **测试/误差**：V8实际执行**提交同一CJS**源级46行解析、5项数值oracle及11项污染拒绝，全部PASS；CSV和SVG可从该程序--write复算，**原生Node CLI/CI NOT_RUN**。输入13位小数显示舍入引起比值末位级变化，**未估计**原波处理滤波/仪器/方向离散/真实结构模态误差；在T1处f/官方0.09Hz报告界限=1.783，不能称完整长周期可信。
+- **REF/STANDARD/OFFICIAL/状态**：REF=ESM v3 DOI 10.13127/esm.3，先行2026两篇风震/PT研究不主张首创；STANDARD=本轮未新读授权IEC/GB条文；OFFICIAL=历史ESM来源收据，不是本轮官方新下载；RUN=仅源级统计；FIG=1、TAB=21行。**SOURCE-LEVEL DIRECTIONAL SPECTRUM PASS / S05设计目标谱、S08原生E及S09同态W/E/WE HOLD**；12阶段0/12、DLC1.2 0/126、材料Miner HOLD。下一唯一动作转S06/S07：仅在取得新的原始OpenFAST完整风时程和状态SHA时做真实W侧同态恢复；否则转S10已归档未重复的真实多seed统计问题。禁止范围未触碰。
+
+
 ## 2026-11-08 16时｜S12第三—五章真实来源科学论证整合（0/12）
 
 - **START/基线**：开工PR#42 Open/Draft，read_base_sha=`9fe13943337a8d27ad70ae028720e0cc6e3bb0c1`，main=`58c1e545f67b645417d5957189f5dad693d975bb`；依序读根/研究AGENTS、指挥室READ-BEFORE-WRITE与15时交接、白皮书v0.2.39、MASTER/STATUS、12阶段、T079/T080及Ch3/4/5。只进行非Abaqus论文科学装配，未启动昂贵OpenFAST/TurbSim或任何结构生产RUN。
