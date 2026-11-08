@@ -1,3 +1,10 @@
+## 2026-11-09 05时｜S08真实ESM双水平梁代理同位矢量峰值与严格全采样界（0/12）
+
+- **START/HEAD/权限**：PR#42 Open/Draft，初始HEAD `bd534d4efef8165a4043e08ad3185a318c4fc03c`，main `58c1e545f67b645417d5957189f5dad693d975bb`；START回执先行提交 `b9bf5c0f9e6cd1792f568b390d1a0625da552d2b`。依序读根/研究AGENTS、COMMAND_ROOM READ-BEFORE-WRITE及04时交接、白皮书v0.2.52、MASTER/STATUS、12阶段、T079/T080、METHOD_PLAN、3204行历史代理时程和0.005s峰值收据。
+- **新科学问题/结果**：既有同一真实ESM双水平线性梁代理0.1s×1602对齐记录，四QoI同位二维峰值相对最大单轴增加8.217968%/29.263257%/20.219282%/9.890102%，而独立两轴峰值RSS相对同位峰值高估20.477621%/9.080809%/16.803768%/15.984633%。0.005s双轴同时峰值尚未复算，仅由历史原采样单轴峰值推导四组严格上下界；方法和完整数表见[T079本轮过程](../T079/PROCESS_LOG.md)及[拟增地震章正文](../T079/METHOD_PLAN.md)。
+- **SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB**：源历史CSV SHA256 `c6763281ca366b16849321b7542024af111d78ebb6ee470c912dda060b51ba22`、原峰值收据 `02730b484864b02cf1d7c83826ac819ef768fd7979cb4723c2962fd0a85ed939`；REF沿用2026风震/PT DOI的历史阅读层级，STANDARD/IEC授权条款未新读，OFFICIAL沿用ESM来源；RUN=V8真实来源后处理与3–4–5解析测试+8拒绝PASS、原生Node/0.005s全采样原件NOT_RUN；[Node](../T079/s08_esm_paired_horizontal_vector_bounds.cjs) SHA256 `edd68b5c27bd25edc52b84b5083dc5df96784c9ed534d2d71b5f147c31e479a1`、[4行CSV](../T079/real-records/S08_ESM_PAIRED_VECTOR_4QOI_20261109.csv) SHA256 `c9702e48c2c2748c395e345ac602b11e05162bccacd19377eaa6b352400fbc64`、[正式SVG](../../manuscript/final-thesis/figures/FIG_S08_ESM_PAIRED_VECTOR_BOUNDS_20261109.svg) SHA256 `c54e52fca45f63113f0c04b8144371adad40b03a9c42f91544444c05959a7d5d`。
+- **误差/失败/验收**：源级正向与污染拒绝通过；0.1s峰值对0.005s真峰可能漏采，全采样区间非统计CI；双轴同态仅限**相同线性梁代理的条件性正交映射**，非风震W/E/WE、非PT/接缝、非结构设计。阶段0/12、正式DLC1.2 0/126、材料Miner/同态W/E/WE HOLD。白皮书v0.2.52→v0.2.53 PATCH。下一动作仅恢复既有0.005s双轴原始历史作全采样同位范数，否则切S06新W原件；禁止重复0.1s小审计。不执行/准备/审核/派发Abaqus/CAE，不动冻结T057/T070/main，不合并PR。
+
 ## 2026-11-09 04时｜S12英文期刊真实ERA5双弯矩尾部杠杆跨源整合（0/12）
 
 - **START/READ/并发**：read_base_sha `020b9d2958d61752f60f162eec3fbb10747ed5d0`，main `58c1e545f67b645417d5957189f5dad693d975bb`，PR#42 经GitHub is:open/is:draft 查询匹配；研究AGENTS→COMMAND_ROOM READ-BEFORE-WRITE及03时交接→白皮书v0.2.51→MASTER/STATUS→12阶段→T079/T080→英文期刊原稿与T062三份真源逐项读取。工作只限英文期刊S12及原有日志/指挥室/白皮书/状态；不复算S10已交付的六行概率表、不运行生产风/结构。
