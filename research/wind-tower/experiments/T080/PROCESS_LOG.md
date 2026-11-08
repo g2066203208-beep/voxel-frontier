@@ -1,3 +1,12 @@
+## 2026-11-08 22时｜S11真实NTM seed-case分簇LOBO外推不确定性（0/12）
+
+- **开工/并发**：读main `58c1e545f67b645417d5957189f5dad693d975bb`、PR#42 Open/Draft、初始HEAD `eef4c9a082260be2ea535f847131e63369ba7d5f`；本轮程序先行提交 `4476860768d26187ee58fe0d371a1a1622d27a0f`，最终原子提交前再次读HEAD及精确READ-BEFORE-WRITE锚点。已读研究/根AGENTS、21时交接、白皮书v0.2.45、MASTER/STATUS、12阶段、T079/T080及Ch5§5.4.5。只修改T062新源级输出、Ch5、T080、白皮书、指挥室与STATUS；不触碰Abaqus/CAE或冻结T057/T070。
+- **SOURCE/REF/STANDARD/OFFICIAL**：SOURCE为[历史180行最大方位名义DEL4](../T062/S10_NTM18_180PAIR_DEL_MEAN_AZIMUTH_20261108.csv) SHA256 `652929e6e1d03aced08f7af9204e389d503ec3d7835df76bd384114ea410bccd`（上游2880行SHA `d45f047f5d622fb834d63728c13cead49b614b6cf42e598918e55242ed45f94b`）及[30行LOBO](../T062/S11_NTM18_WIND_BIN_LOBO_30STATION_20261108.csv) SHA256 `0da0eaea42716525c1cf1cce115b5e7cf30ff67c389b71dab07c9c6b341eb491`；REF=继承REF018与两篇2026先行风震/PT论文，未新精读全文；STANDARD=无新增授权条文；OFFICIAL=继承历史OpenFAST源身份、原OUTB本轮未重解码。
+- **科学问题/独立单位**：3箱各6个seed-case，10相关测站仅簇内平均。高端19.202140m/s线性RMSE3.240152074MPa、最近箱0.425696957MPa，比7.611405；6/6 case线性MSE较大；条件性64符号翻转单侧p=0.015625；6^6=46656次留出case重抽样比值分位5.092034–14.372340；训练两箱12次各删一个seed后高端比值4.985518–11.257295（12/12>1）。低端/中间比0.920265/0.777354，禁止概括全风速线性较差。
+- **RUN/FIG/TAB**：V8执行同一Node源码真实180行+30行收据交叉，4项正向、8项污染拒绝及行逆序不变性PASS；原生Node CLI/CI、原OUTB和生产RUN NOT_RUN。TAB=18case+3bin+12trainLOO，FIG=SVG，论文Ch5§5.4.6。Node SHA256 `39af30023cd1fc5002d6a4102cdb1ed3b72ad2a0611830c8303594e7eb2cb9b0`；18case `4771569cb0812406c57992f5a0573964fa47345ff2d6390b88cac8ab1ac75e75`；3bin `e4b30bdc14b35406f5e59d978c82aabcc0a78f21d931d2acc4ed2615d287ec0c`；12trainLOO `4131486fc04a78c16d4098fbea6ed26fda548873c2d41eada2d52db49bb344e3`；SVG `083fa4225d2baa393216ce9f46d3c8c9f3e594f82ddb3839f4764c76c01d9264`。
+- **误差/反例/HOLD**：数表MSE/RMSE保留9位，比例保留6位，显示舍入<5e-7；统计p依赖seed独立与符号交换性且三箱事后检查，bootstrap仅固定训练数据条件性分位非校准CI。训练随机性、控制器、风气候、材料点应力和真实外推误差NEED-ESTIMATE。历史毛截面DEL4不等于材料Miner，单固定设计不能识别设计灵敏度。**SOURCE-LEVEL ROBUSTNESS TEST PASS / S11 PHYSICAL HOLD**，12阶段0/12、正式DLC1.2 0/126、同态W/E/WE及材料Miner HOLD。
+- **下一唯一动作**：若无新增W侧原始SHA/运行状态，切S12英文期刊实质整合，停止三箱LOBO重复小审计。无Abaqus/CAE、无昂贵生产RUN、不动main/T057/T070、不合并Draft PR。
+
 ## 2026-11-08 21时｜T079/S12 S12真实ESM两事件单幅值缩放不可消除谱形差异：解析最优界/数表/科研图/正文（0/12）
 
 - **START与基线**：read_base_sha `f78527ad3f0ede85e05f87b77b7320fbdc4085e4`；本轮新核PR#42 Open/Draft、main由PR基线SHA `bbc5c9130f2d9fc41f776506d86118a9b8db0e65` 标识；依次读研究/根AGENTS、指挥室READ-BEFORE-WRITE及20时交接、白皮书v0.2.44、MASTER/STATUS、12阶段、T079/T080、Ch1§1.6.9与真实两事件4行谱；开工与收尾同批登记，未冒称先行独立提交。

@@ -1,0 +1,4 @@
+held_bin,held_wind_ms,heldout_independent_seed_cases,correlated_stations_per_case,linear_RMSE_MPa,nearest_RMSE_MPa,RMSE_ratio_linear_over_nearest,linear_worse_case_count,exact_one_sided_signflip_p,heldout_case_bootstrap_ratio_2p5,heldout_case_bootstrap_ratio_97p5,bootstrap_resamples,wind_speed_extrapolation
+U09p343881_NTM,9.343881,6,10,0.935452902,1.016504138,0.920265,0,1.000000,0.877042,0.933994,46656,YES
+U11p4_NTM,11.400000,6,10,0.809239444,1.041017796,0.777354,0,1.000000,0.608953,0.815592,46656,NO
+U19p202140_NTM,19.202140,6,10,3.240152074,0.425696957,7.611405,6,0.015625,5.092034,14.372340,46656,YES

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="530" viewBox="0 0 1120 530">
+<rect width="1120" height="530" fill="white"/>
+<text x="55" y="48" font-family="Arial" font-size="23" font-weight="bold" fill="#1c3245">Independent wind-seed uncertainty in held-out-bin extrapolation</text>
+<text x="55" y="75" font-family="Arial" font-size="14" fill="#516575">Fixed 158 m design, nominal DEL4; each marker is a six-seed wind-bin holdout (10 correlated stations per case)</text>
+<text x="65" y="126" font-family="Arial" font-size="17" fill="#1c3245">RMSE ratio: two-bin linear / nearest-bin baseline</text>
+<text x="65" y="181" font-family="Arial" font-size="15" fill="#334b60">9.34 m/s</text>
+<line x1="290" y1="175" x2="890" y2="175" stroke="#e1e7eb" stroke-width="12"/>
+<line x1="330" y1="152" x2="330" y2="198" stroke="#6c8799" stroke-dasharray="4,4"/>
+<line x1="325.0816836846724" y1="175" x2="327.3597792935918" y2="175" stroke="#3b86b5" stroke-width="7" stroke-linecap="round"/>
+<circle cx="326.81058905638895" cy="175" r="8" fill="#de8238"/>
+<text x="940" y="180" font-family="Arial" font-size="14" fill="#1c3245">0.92x</text>
+<text x="65" y="271" font-family="Arial" font-size="15" fill="#334b60">11.40 m/s</text>
+<line x1="290" y1="265" x2="890" y2="265" stroke="#e1e7eb" stroke-width="12"/>
+<line x1="330" y1="242" x2="330" y2="288" stroke="#6c8799" stroke-dasharray="4,4"/>
+<line x1="314.3581387836841" y1="265" x2="322.6236760797925" y2="265" stroke="#3b86b5" stroke-width="7" stroke-linecap="round"/>
+<circle cx="321.09416368424047" cy="265" r="8" fill="#de8238"/>
+<text x="940" y="270" font-family="Arial" font-size="14" fill="#1c3245">0.78x</text>
+<text x="65" y="361" font-family="Arial" font-size="15" fill="#334b60">19.20 m/s</text>
+<line x1="290" y1="355" x2="890" y2="355" stroke="#e1e7eb" stroke-width="12"/>
+<line x1="330" y1="332" x2="330" y2="378" stroke="#6c8799" stroke-dasharray="4,4"/>
+<line x1="493.6813733254504" y1="355" x2="864.8935878447812" y2="355" stroke="#3b86b5" stroke-width="7" stroke-linecap="round"/>
+<circle cx="594.4562121968181" cy="355" r="8" fill="#de8238"/>
+<text x="940" y="360" font-family="Arial" font-size="14" fill="#1c3245">7.61x</text>
+<text x="65" y="465" font-family="Arial" font-size="13" fill="#465b70">Orange: observed RMSE ratio; blue: exact 6^6 held-out-case bootstrap percentile interval (conditional on training).</text>
+<text x="65" y="488" font-family="Arial" font-size="13" fill="#465b70">High-bin training leave-one-seed-out: 4.986x to 11.257x (12 perturbations).</text>
+<text x="65" y="510" font-family="Arial" font-size="12" fill="#9b4037">Descriptive diagnostic only: 3 bins, 6 seeds/bin; not 60 independent cases, design DOE, or calibrated uncertainty coverage.</text>
+</svg>
