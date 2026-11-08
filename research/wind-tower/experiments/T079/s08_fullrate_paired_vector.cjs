@@ -67,7 +67,7 @@ function svg(rows){
 }
 function test(){
  const mk=(d,rows)=>rows.map((r,i)=>[d,i*.005].concat(r).join(',')).join('\n');
- const a=[[.001,0,0,0],[.003,3,3000,3000],[.004,4,4000,4000]],b=[[0,0,0,0],[.004,4,4000,4000],[0,0,0,0]];
+ const a=[[.001,.1,100,100],[.003,3,3000,3000],[.004,4,4000,4000]],b=[[0,0,0,0],[.004,4,4000,4000],[0,0,0,0]];
  const s=H+'\n'+mk('HNE',a)+'\n'+mk('HNN',b)+'\n';
  const r=analyze(parse(s,3));check(Math.abs(r[0].fullrate_vector_peak-5)<1e-10,'3_4_5_ORACLE');
  const bad=[s.replace('HNE,0.005','HNE,0.006'),s.replace('HNN,0.005','HNN,0.006'),s.replace('HNE,0.005,0.003','HNE,0.005,NaN'),s.replace('HNE,0.005,0.003','HNE,0.005,'),s.replace('HNN,0.01,0,0,0,0','HNE,0.01,0,0,0,0'),s.replace('HNE,0.005,0.003,3,3000,3000','HNE,0.005,0.003,3,3000'),s.slice(0,-18),s.replace(H,'bad')];
