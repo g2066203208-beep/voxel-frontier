@@ -86,7 +86,7 @@ function svgOutput(o){
   a.push(t(60,516,'Gray: share of 7,164 known-support hours; blue/orange: share of channel-specific K',12,muted));
   const left=605,baseY=390,scale=180/1.5;
   for(let j=0;j<2;j++){const c=ch[j],v=Math.abs(o.summary[c].pct),x=left+j*210; a.push('<rect x="'+x+'" y="'+(baseY-v*scale).toFixed(3)+'" width="115" height="'+(v*scale).toFixed(3)+'" fill="'+(j===0?blue:orange)+'" rx="3"/>');a.push(t(x+8,baseY-v*scale-10,'−'+v.toFixed(6)+'%',16,ink,700));a.push(t(x+33,baseY+27,names[j],16,ink,700));}
-  a.push('<line x1="585" y1="'+baseY+'" x2="1020" y2="'+baseY+'" stroke="#7f8b96"/>',t(600,451,'Mx: −1.701670 (MN·m)^4; My: −56.886425 (MN·m)^4',13,muted),t(600,478,'Deterministic 1-hour reassignment, not a confidence interval.',13,muted),t(600,505,'19–20 m/s has only 2 recorded hours (1 hour = 50% of bin).',13,muted),'<line x1="50" y1="540" x2="1050" y2="540" stroke="#d8e1e8"/>',t(50,561,'Source: archived ERA5 31-bin and 18-NTM three-bin M4 tables; 4–25 m/s coverage = 6.7016%.',12,muted),'</svg>'];
+  a.push('<line x1="585" y1="'+baseY+'" x2="1020" y2="'+baseY+'" stroke="#7f8b96"/>',t(600,451,'Mx: −1.701670 (MN·m)^4; My: −56.886425 (MN·m)^4',13,muted),t(600,478,'Deterministic 1-hour reassignment, not a confidence interval.',13,muted),t(600,505,'19–20 m/s has only 2 recorded hours (1 hour = 50% of bin).',13,muted),'<line x1="50" y1="540" x2="1050" y2="540" stroke="#d8e1e8"/>',t(50,561,'Source: archived ERA5 31-bin and 18-NTM three-bin M4 tables; 4–25 m/s coverage = 6.7016%.',12,muted),'</svg>');
   return a.join('\n')+'\n';
 }
 function selftest(e,m){
