@@ -1,3 +1,11 @@
+## 2026-11-08 19时｜S12英文期刊近并列方位选择与独立seed-case统计（0/12）
+
+- START/END：read_base_sha `fa5ba3369238c1e00c5d1b73f235bc8126afa1f3`；main `58c1e545f67b645417d5957189f5dad693d975bb`，PR#42 Open/Draft。已依序读根/研究AGENTS、指挥室READ-BEFORE-WRITE与18时交接、白皮书v0.2.42、MASTER/STATUS、12阶段、T079/T080、期刊稿及T062真实2880行源；开工与收尾同批写入，不冒称预先单独提交。
+- 科学问题/SOURCE：m4/m10严格argmax切换是否对很小的*决策容差*敏感？真实历史派生输入SHA256 `d45f047f5d622fb834d63728c13cead49b614b6cf42e598918e55242ed45f94b`，18独立seed-case×10相关测站×16离散方位；原OUTB本轮未重读。REF=Huang2025和2026先行风震/PT研究的既有核读层级；STANDARD=IEC/GB授权条款未新读；OFFICIAL=无新原件；RUN=V8真实来源算法；FIG=无新增；TAB=16行。
+- 新结果：epsilon=0/0.01/0.05/0.10%时，m4多候选组0/0/20/50，m10为0/10/10/30；m4/m10有共同候选组170/180→180/180（epsilon≥0.01%）。0.05%时20个m4近并列组只来自U19 S03/S05两个独立case，m10十组仅S03；严格10/180切换仍仅1/18独立风场。epsilon不是已校准物理/数值误差。
+- 实物：[Node](../T062/s12_ntm18_azimuth_epsilon_indifference.cjs) SHA256 `ec63ad7e5c9c900456d09b55a20824385ad3220bec956bab9a9a27f12f538d0c`；[16行CSV](../T062/S12_NTM18_AZIMUTH_EPSILON_INDIFFERENCE_16ROW_20261108.csv) SHA256 `05061cfee97068510b98cbcbc23f6dca62a2fe013336d31c847d2167844c251b`；[英文稿](../../manuscript/journal-wind-fatigue-results.md) SHA256 `1215ba27ecfb94acb184c8b7f9648df0ca24d4a7cb96387c3e3c8e86bc9d296e` 新增§2.16/3.12/4.12、Supplementary Table S5及结论/来源追踪。V8真实源5项正向、7项异常拒绝、行逆序不变性PASS；原生Node CLI/CI NOT_RUN。
+- 误差/反例/HOLD：计数及公式在当前派生源上精确；OUTB、截面映射、16方位离散、种子总体与材料应力不确定性未量化；源量化界不等于DEL排序误差。12阶段0/12、正式DLC1.2=0/126、材料Miner和同态W/E/WE HOLD。下一唯一动作：有新真实W源则S06/S07，缺源切S05授权目标谱或S11独立方法；不再重复本组容差。未执行/准备/审核/派发Abaqus/CAE，不动T057/T070/main、不合并PR。
+
 ## 2026-11-08 18时｜S10真实18NTM循环指数与控制方位：独立case分层及近并列代价（0/12）
 
 - **START/基线**：read_base_sha=`cb2aad3dd1e662282c2bf006297abbfb234f3062`，main=`58c1e545f67b645417d5957189f5dad693d975bb`，PR#42 Open/Draft；已按研究AGENTS→指挥室17时交接→白皮书v0.2.41→MASTER/STATUS→12阶段计划→T079/T080最新过程→T062真实源及Ch4§4.7.16读取。S06/S07仍无新完整同态风时程，按反卡死纪律切S10。开工/收尾同批补录，不冒称已预先单独提交。

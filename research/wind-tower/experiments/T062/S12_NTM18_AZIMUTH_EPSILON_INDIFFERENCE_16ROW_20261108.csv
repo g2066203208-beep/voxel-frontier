@@ -1,0 +1,17 @@
+epsilon_pct,wind_bin,case_station_groups,hard_argmax_switch_groups,m4_multicandidate_groups,m10_multicandidate_groups,either_exponent_union_multicandidate_groups,exponent_candidate_overlap_groups
+0,U09p343881_NTM,60,0,0,0,0,60
+0,U11p4_NTM,60,0,0,0,0,60
+0,U19p202140_NTM,60,10,0,0,10,50
+0,ALL,180,10,0,0,10,170
+0.01,U09p343881_NTM,60,0,0,0,0,60
+0.01,U11p4_NTM,60,0,0,0,0,60
+0.01,U19p202140_NTM,60,10,0,10,10,60
+0.01,ALL,180,10,0,10,10,180
+0.05,U09p343881_NTM,60,0,0,0,0,60
+0.05,U11p4_NTM,60,0,0,0,0,60
+0.05,U19p202140_NTM,60,10,20,10,20,60
+0.05,ALL,180,10,20,10,20,180
+0.1,U09p343881_NTM,60,0,0,0,0,60
+0.1,U11p4_NTM,60,0,0,0,0,60
+0.1,U19p202140_NTM,60,10,50,30,50,60
+0.1,ALL,180,10,50,30,50,180
