@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="520" viewBox="0 0 1120 520">
+<rect width="1120" height="520" fill="white"/>
+<text x="50" y="46" font-family="Arial" font-size="23" font-weight="bold">Same-OUTB NTM: mean My versus rainflow DEL4 selector</text>
+<text x="50" y="74" font-family="Arial" font-size="13">18 SHA-matched native tower-base cases, 100-700 s, three bins x six seeds</text>
+<text x="40" y="124" font-family="Arial" font-size="16" font-weight="bold">A. Discordant pairs within each wind bin</text>
+<line x1="100" y1="405" x2="510" y2="405" stroke="#e1e6e9"/>
+<text x="88" y="409" font-family="Arial" font-size="12" text-anchor="end">0</text>
+<line x1="100" y1="330" x2="510" y2="330" stroke="#e1e6e9"/>
+<text x="88" y="334" font-family="Arial" font-size="12" text-anchor="end">5</text>
+<line x1="100" y1="255" x2="510" y2="255" stroke="#e1e6e9"/>
+<text x="88" y="259" font-family="Arial" font-size="12" text-anchor="end">10</text>
+<line x1="100" y1="180" x2="510" y2="180" stroke="#e1e6e9"/>
+<text x="88" y="184" font-family="Arial" font-size="12" text-anchor="end">15</text>
+<rect x="150" y="240.00" width="75" height="165.00" fill="#385b78"/>
+<text x="187" y="231.00" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle">11/15</text>
+<text x="187" y="435" font-family="Arial" font-size="13" text-anchor="middle">9.344</text>
+<rect x="280" y="300.00" width="75" height="105.00" fill="#385b78"/>
+<text x="317" y="291.00" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle">7/15</text>
+<text x="317" y="435" font-family="Arial" font-size="13" text-anchor="middle">11.400</text>
+<rect x="410" y="225.00" width="75" height="180.00" fill="#385b78"/>
+<text x="447" y="216.00" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle">12/15</text>
+<text x="447" y="435" font-family="Arial" font-size="13" text-anchor="middle">19.202</text>
+<text x="310" y="470" font-family="Arial" font-size="13" text-anchor="middle">Wind speed (m/s)</text>
+<text x="590" y="124" font-family="Arial" font-size="16" font-weight="bold">B. Missed maximum DEL4 using mean selector</text>
+<line x1="650" y1="405" x2="1060" y2="405" stroke="#e1e6e9"/>
+<text x="638" y="409" font-family="Arial" font-size="12" text-anchor="end">0</text>
+<line x1="650" y1="330" x2="1060" y2="330" stroke="#e1e6e9"/>
+<text x="638" y="334" font-family="Arial" font-size="12" text-anchor="end">10</text>
+<line x1="650" y1="255" x2="1060" y2="255" stroke="#e1e6e9"/>
+<text x="638" y="259" font-family="Arial" font-size="12" text-anchor="end">20</text>
+<line x1="650" y1="180" x2="1060" y2="180" stroke="#e1e6e9"/>
+<text x="638" y="184" font-family="Arial" font-size="12" text-anchor="end">30</text>
+<rect x="700" y="220.79" width="75" height="184.21" fill="#b36c43"/>
+<text x="737" y="211.79" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle">24.56%</text>
+<text x="737" y="435" font-family="Arial" font-size="13" text-anchor="middle">9.344</text>
+<rect x="830" y="272.89" width="75" height="132.11" fill="#b36c43"/>
+<text x="867" y="263.89" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle">17.61%</text>
+<text x="867" y="435" font-family="Arial" font-size="13" text-anchor="middle">11.400</text>
+<rect x="960" y="271.75" width="75" height="133.25" fill="#b36c43"/>
+<text x="997" y="262.75" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle">17.77%</text>
+<text x="997" y="435" font-family="Arial" font-size="13" text-anchor="middle">19.202</text>
+<text x="860" y="470" font-family="Arial" font-size="13" text-anchor="middle">Wind speed (m/s)</text>
+<text x="50" y="500" font-family="Arial" font-size="12">45 dependent pairs are NOT 45 independent samples; native coordinate basis unverified; load DEL is not material fatigue life.</text>
+</svg>
