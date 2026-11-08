@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1220" height="520" viewBox="0 0 1220 520">
+<rect width="1220" height="520" fill="white"/>
+<text x="35" y="38" font-family="Arial" font-size="22" font-weight="bold">Historical NTM: three-objective seed-budget regret</text>
+<text x="35" y="64" font-family="Arial" font-size="13">Tower-base My mean, positive peak and rainflow DEL4; exact six-seed subset enumeration (retrospective only)</text>
+<text x="235" y="105" font-family="Arial" font-size="17" text-anchor="middle">9.344 m/s</text>
+<line x1="88" y1="416.00" x2="388" y2="416.00" stroke="#e1e7e8"/>
+<text x="80" y="420.00" text-anchor="end" font-family="Arial" font-size="12">0</text>
+<line x1="88" y1="359.46" x2="388" y2="359.46" stroke="#e1e7e8"/>
+<text x="80" y="363.46" text-anchor="end" font-family="Arial" font-size="12">5</text>
+<line x1="88" y1="302.92" x2="388" y2="302.92" stroke="#e1e7e8"/>
+<text x="80" y="306.92" text-anchor="end" font-family="Arial" font-size="12">10</text>
+<line x1="88" y1="246.38" x2="388" y2="246.38" stroke="#e1e7e8"/>
+<text x="80" y="250.38" text-anchor="end" font-family="Arial" font-size="12">15</text>
+<line x1="88" y1="189.85" x2="388" y2="189.85" stroke="#e1e7e8"/>
+<text x="80" y="193.85" text-anchor="end" font-family="Arial" font-size="12">20</text>
+<line x1="88" y1="133.31" x2="388" y2="133.31" stroke="#e1e7e8"/>
+<text x="80" y="137.31" text-anchor="end" font-family="Arial" font-size="12">25</text>
+<polyline fill="none" stroke="#16836f" stroke-width="2.8" points="118.00,403.39 230.00,416.00 342.00,416.00"/>
+<circle cx="118.00" cy="403.39" r="4" fill="#16836f"/>
+<circle cx="230.00" cy="416.00" r="4" fill="#16836f"/>
+<circle cx="342.00" cy="416.00" r="4" fill="#16836f"/>
+<polyline fill="none" stroke="#ba4b3a" stroke-width="2.8" points="118.00,138.27 230.00,138.27 342.00,416.00"/>
+<circle cx="118.00" cy="138.27" r="4" fill="#ba4b3a"/>
+<circle cx="230.00" cy="138.27" r="4" fill="#ba4b3a"/>
+<circle cx="342.00" cy="416.00" r="4" fill="#ba4b3a"/>
+<polyline fill="none" stroke="#396da8" stroke-width="2.8" points="118.00,403.39 230.00,403.39 342.00,416.00"/>
+<circle cx="118.00" cy="403.39" r="4" fill="#396da8"/>
+<circle cx="230.00" cy="403.39" r="4" fill="#396da8"/>
+<circle cx="342.00" cy="416.00" r="4" fill="#396da8"/>
+<polyline fill="none" stroke="#9464a6" stroke-width="2.8" points="118.00,403.39 230.00,403.39 342.00,403.39"/>
+<circle cx="118.00" cy="403.39" r="4" fill="#9464a6"/>
+<circle cx="230.00" cy="403.39" r="4" fill="#9464a6"/>
+<circle cx="342.00" cy="403.39" r="4" fill="#9464a6"/>
+<text x="118" y="436" text-anchor="middle" font-family="Arial" font-size="13">1</text>
+<text x="230" y="436" text-anchor="middle" font-family="Arial" font-size="13">2</text>
+<text x="342" y="436" text-anchor="middle" font-family="Arial" font-size="13">3</text>
+<text x="235" y="460" text-anchor="middle" font-family="Arial" font-size="13">Retained seeds k</text>
+<text x="637" y="105" font-family="Arial" font-size="17" text-anchor="middle">11.400 m/s</text>
+<line x1="490" y1="416.00" x2="790" y2="416.00" stroke="#e1e7e8"/>
+<text x="482" y="420.00" text-anchor="end" font-family="Arial" font-size="12">0</text>
+<line x1="490" y1="359.46" x2="790" y2="359.46" stroke="#e1e7e8"/>
+<text x="482" y="363.46" text-anchor="end" font-family="Arial" font-size="12">5</text>
+<line x1="490" y1="302.92" x2="790" y2="302.92" stroke="#e1e7e8"/>
+<text x="482" y="306.92" text-anchor="end" font-family="Arial" font-size="12">10</text>
+<line x1="490" y1="246.38" x2="790" y2="246.38" stroke="#e1e7e8"/>
+<text x="482" y="250.38" text-anchor="end" font-family="Arial" font-size="12">15</text>
+<line x1="490" y1="189.85" x2="790" y2="189.85" stroke="#e1e7e8"/>
+<text x="482" y="193.85" text-anchor="end" font-family="Arial" font-size="12">20</text>
+<line x1="490" y1="133.31" x2="790" y2="133.31" stroke="#e1e7e8"/>
+<text x="482" y="137.31" text-anchor="end" font-family="Arial" font-size="12">25</text>
+<polyline fill="none" stroke="#16836f" stroke-width="2.8" points="520.00,386.66 632.00,400.65 744.00,416.00"/>
+<circle cx="520.00" cy="386.66" r="4" fill="#16836f"/>
+<circle cx="632.00" cy="400.65" r="4" fill="#16836f"/>
+<circle cx="744.00" cy="416.00" r="4" fill="#16836f"/>
+<polyline fill="none" stroke="#ba4b3a" stroke-width="2.8" points="520.00,216.83 632.00,245.08 744.00,400.65"/>
+<circle cx="520.00" cy="216.83" r="4" fill="#ba4b3a"/>
+<circle cx="632.00" cy="245.08" r="4" fill="#ba4b3a"/>
+<circle cx="744.00" cy="400.65" r="4" fill="#ba4b3a"/>
+<polyline fill="none" stroke="#396da8" stroke-width="2.8" points="520.00,386.66 632.00,386.66 744.00,386.66"/>
+<circle cx="520.00" cy="386.66" r="4" fill="#396da8"/>
+<circle cx="632.00" cy="386.66" r="4" fill="#396da8"/>
+<circle cx="744.00" cy="386.66" r="4" fill="#396da8"/>
+<polyline fill="none" stroke="#9464a6" stroke-width="2.8" points="520.00,344.69 632.00,386.66 744.00,415.12"/>
+<circle cx="520.00" cy="344.69" r="4" fill="#9464a6"/>
+<circle cx="632.00" cy="386.66" r="4" fill="#9464a6"/>
+<circle cx="744.00" cy="415.12" r="4" fill="#9464a6"/>
+<text x="520" y="436" text-anchor="middle" font-family="Arial" font-size="13">1</text>
+<text x="632" y="436" text-anchor="middle" font-family="Arial" font-size="13">2</text>
+<text x="744" y="436" text-anchor="middle" font-family="Arial" font-size="13">3</text>
+<text x="637" y="460" text-anchor="middle" font-family="Arial" font-size="13">Retained seeds k</text>
+<text x="1039" y="105" font-family="Arial" font-size="17" text-anchor="middle">19.202 m/s</text>
+<line x1="892" y1="416.00" x2="1192" y2="416.00" stroke="#e1e7e8"/>
+<text x="884" y="420.00" text-anchor="end" font-family="Arial" font-size="12">0</text>
+<line x1="892" y1="359.46" x2="1192" y2="359.46" stroke="#e1e7e8"/>
+<text x="884" y="363.46" text-anchor="end" font-family="Arial" font-size="12">5</text>
+<line x1="892" y1="302.92" x2="1192" y2="302.92" stroke="#e1e7e8"/>
+<text x="884" y="306.92" text-anchor="end" font-family="Arial" font-size="12">10</text>
+<line x1="892" y1="246.38" x2="1192" y2="246.38" stroke="#e1e7e8"/>
+<text x="884" y="250.38" text-anchor="end" font-family="Arial" font-size="12">15</text>
+<line x1="892" y1="189.85" x2="1192" y2="189.85" stroke="#e1e7e8"/>
+<text x="884" y="193.85" text-anchor="end" font-family="Arial" font-size="12">20</text>
+<line x1="892" y1="133.31" x2="1192" y2="133.31" stroke="#e1e7e8"/>
+<text x="884" y="137.31" text-anchor="end" font-family="Arial" font-size="12">25</text>
+<polyline fill="none" stroke="#16836f" stroke-width="2.8" points="922.00,392.03 1034.00,416.00 1146.00,416.00"/>
+<circle cx="922.00" cy="392.03" r="4" fill="#16836f"/>
+<circle cx="1034.00" cy="416.00" r="4" fill="#16836f"/>
+<circle cx="1146.00" cy="416.00" r="4" fill="#16836f"/>
+<polyline fill="none" stroke="#ba4b3a" stroke-width="2.8" points="922.00,215.10 1034.00,298.97 1146.00,305.60"/>
+<circle cx="922.00" cy="215.10" r="4" fill="#ba4b3a"/>
+<circle cx="1034.00" cy="298.97" r="4" fill="#ba4b3a"/>
+<circle cx="1146.00" cy="305.60" r="4" fill="#ba4b3a"/>
+<polyline fill="none" stroke="#396da8" stroke-width="2.8" points="922.00,392.03 1034.00,416.00 1146.00,416.00"/>
+<circle cx="922.00" cy="392.03" r="4" fill="#396da8"/>
+<circle cx="1034.00" cy="416.00" r="4" fill="#396da8"/>
+<circle cx="1146.00" cy="416.00" r="4" fill="#396da8"/>
+<polyline fill="none" stroke="#9464a6" stroke-width="2.8" points="922.00,392.03 1034.00,392.03 1146.00,392.03"/>
+<circle cx="922.00" cy="392.03" r="4" fill="#9464a6"/>
+<circle cx="1034.00" cy="392.03" r="4" fill="#9464a6"/>
+<circle cx="1146.00" cy="392.03" r="4" fill="#9464a6"/>
+<text x="922" y="436" text-anchor="middle" font-family="Arial" font-size="13">1</text>
+<text x="1034" y="436" text-anchor="middle" font-family="Arial" font-size="13">2</text>
+<text x="1146" y="436" text-anchor="middle" font-family="Arial" font-size="13">3</text>
+<text x="1039" y="460" text-anchor="middle" font-family="Arial" font-size="13">Retained seeds k</text>
+<line x1="120" y1="484" x2="155" y2="484" stroke="#16836f" stroke-width="3"/>
+<text x="164" y="489" font-family="Arial" font-size="13">minimax</text>
+<line x1="380" y1="484" x2="415" y2="484" stroke="#ba4b3a" stroke-width="3"/>
+<text x="424" y="489" font-family="Arial" font-size="13">mean-only</text>
+<line x1="640" y1="484" x2="675" y2="484" stroke="#396da8" stroke-width="3"/>
+<text x="684" y="489" font-family="Arial" font-size="13">peak-only</text>
+<line x1="900" y1="484" x2="935" y2="484" stroke="#9464a6" stroke-width="3"/>
+<text x="944" y="489" font-family="Arial" font-size="13">DEL-only</text>
+<text x="35" y="514" font-family="Arial" font-size="11">Y: worst missed observed six-seed maximum (%). Post-hoc oracle is NOT a future-seed policy or fatigue safety claim.</text>
+</svg>

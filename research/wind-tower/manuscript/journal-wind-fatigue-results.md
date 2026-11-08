@@ -189,6 +189,16 @@ We define the coefficient sensitivity \(A_h=|w_0|+|w_1|\). For any bounded pertu
 
 The previous S11 analysis exactly enumerated 64 conditional sign flips of the six high-bin \(d_{hs}\), all \(6^6=46{,}656\) ordered held-out seed-case resamples **with fixed training means**, and 12 single-training-seed deletions. We inherit those numerical results rather than re-running or claiming a newly calibrated confidence interval. The present source-locked affine analysis cross-checks the archived 18-case, three-bin and 12-training-deletion CSVs (SHA256 identities in §6), verifies the interpolation identities and reports the coefficient bound and paired losses. Six malformed-input refusals and a row-order invariance test check the small calculation. No new OUTB, geometry DOE or formal DLC1.2 simulation is performed.
 
+### 2.18. Exact retrospective subset budget for three competing tower-base load objectives
+
+For the 18 archived NTM wind-field realizations, three SHA-matched native TwrBsMyt quantities are compared per case: time-mean moment, positive peak moment and rainflow DEL4 (m=4, Nref=600), all in MN m. The original 1,080-row rainflow table and the independently derived 18-case mean/DEL table are joined by exact case identity and 64-character OUTB SHA, with 12,001 samples at 0.05 s over 100–700 s. For each wind bin, let q* be the observed maximum of objective q among its six seed-cases. For a retained subset A, define
+
+\[
+R(A)=100\max_{q\in\{\mathrm{mean},\mathrm{positive\ peak},\mathrm{DEL4}\}}\left[1-\frac{\max_{s\in A}q_s}{q^\star}\right]\%.
+\]
+
+All 63 nonempty subsets are enumerated; for each cardinality k=1,…,6, the minimum R is compared with three single-objective top-k rankings. This is a **finite-archive oracle** using responses already observed, not a policy for choosing future random seeds or a replacement for formal fatigue sampling.
+
 ## 3. Results: rainflow implementation and controlling-case robustness
 
 ### 3.1. Paired rainflow ranking and controlling-case changes
@@ -416,6 +426,18 @@ For the highest bin, the linear prediction extrapolates **7.802140 m s⁻¹** be
 
 The previous high-bin RMSE values are 3.240152 MPa (linear) and 0.425697 MPa (nearest bin). The conditional one-sided six-case sign-flip enumeration gives 1/64 = 0.015625, while the fixed-training \(6^6\) resampling yields a ratio percentile range 5.092034–14.372340 and the 12 training-seed deletions yield ratios 4.985518–11.257295. Those figures are **conditional descriptive diagnostics**, not independent prospective tests, calibrated population confidence intervals or an established physical cause of the prediction error. The program and exact three-row CSV in T062 reproduce Supplementary Table S6; the earlier S11 SVG depicts the RMSE ratios without presenting correlated stations as independent realizations.
 
+### 3.14. Three-objective historical case retention requires a metric union
+
+**Supplementary Table S7.** Minimax missed fraction of the observed six-seed maxima in mean, positive peak and DEL4 of tower-base My. The percentage is retrospective regret, not a population error rate.
+
+| NTM speed (m/s) | Mean winner | Peak winner | DEL4 winner | Optimal k=1 regret | Optimal k=2 regret | Smallest zero-regret k and case set |
+|---:|---|---|---|---:|---:|---|
+| 9.343881 | S02 | S01 | S01 | 1.115066% | **0%** | **2: S01+S02** |
+| 11.400000 | S02 | S06 | S04 | 2.594271% | **1.357063%** | **3: S02+S04+S06** |
+| 19.202140 | S03 | S04 | S04 | 2.120187% | **0%** | **2: S03+S04** |
+
+At 11.4 m/s, all three observed maxima arise from distinct wind-field realizations, so two retained cases cannot recover all three maxima; the best two-case regret is 1.357063%. At 19.202140 m/s, even the top three mean-ranked cases miss the peak/DEL4 winner S04, incurring 9.763438% worst-objective regret, whereas the two-case union S03+S04 recovers all three historical maxima. At 9.343881 m/s, retaining the two highest mean-ranked cases misses 24.561180% of the observed DEL4 maximum. The 63 subsets per bin are strongly overlapping combinations of the same six cases, not independent replications.
+
 ## 4. Discussion, falsifiability and scope
 
 A verified rainflow implementation is a necessary upstream condition for reliable selection of candidate load cases. It is not sufficient for predicting fatigue of concrete, prestressing tendons, ordinary reinforcement or structural steel: those require local material stress cycles, material-specific fatigue laws, validated mean stress, and wind-speed exposure. The 36 simulations are representative-wind screening records, not a verified DLC1.2 lifetime matrix. The archived ERA5-derived 184,080-hour series contains 106,900 hours in a deliberately diagnostic [4,25) m/s operating interval; only 7,164 hours (6.70159% of that interval) lie in the three wind-speed bins with historical NTM source coverage. The missing bins cannot be assigned zero fatigue damage.
@@ -537,6 +559,10 @@ The new coefficient analysis supplies a **mathematical instability mechanism**, 
 
 The six high-bin seed-cases share one held-out wind-speed bin and ten spatially correlated stations each. The exact 1/64 sign-flip result is conditional on a sign-symmetry/exchangeability argument and a fixed comparison; the high bin was inspected alongside two other bins, so treating this one-sided p-value as an unqualified confirmatory discovery would be inappropriate. The percentile range is generated by resampling the **same six** held-out cases while holding training means fixed and cannot quantify new-seed, model-form, structural-design or climate uncertainty. The 12 training-seed deletions overlap heavily; their ratio range is not an independent confidence interval. A prospective falsifier of the specific linear extrapolator is a *predeclared* whole-bin test using newly sourced operating wind histories at speeds beyond the training range, with new independent seeds, a fixed response/metric definition and a nearest-bin comparator. The actual test must report errors by seed-case and separately assess training-set variability. Passing that test would still not establish material fatigue, geometry optimization, a complete DLC1.2 matrix or state-matched seismic response.
 
+### 4.14. Retrospective information retention is not prospective seed selection
+
+The three-objective budget test formalizes why historical control-case selection should use a union of response-specific winners. However, its optimal subset requires prior knowledge of all six responses. Zero retrospective regret cannot establish convergence of six seeds, safety for new wind fields, or a reduced formal DLC1.2 simulation matrix. The positive My peak is not the absolute resultant bending moment, and no load-level metric alone determines local concrete, reinforcement, PT-strand or steel Miner damage. A prospective falsifier must freeze a seed-selection rule using disjoint training cases, then evaluate missed three-objective maxima on newly sourced independent seeds and wind bins with independently checked controller states. The current archive cannot perform that test. The present contribution is therefore a falsifiable **finite-archive screening counterexample**, not a claim to first discover combined wind–earthquake response or prestress-related seismic effects already studied in the 2026 hybrid-tower literature.
+
 ## 5. Conclusions
 
 This retrospective study identifies three separable limitations in selecting fatigue-screening loads for the archived 158 m hybrid tower. **First**, correcting the historical rainflow closure implementation changes the controlling My realization and reverses 102 of 630 My case pairs (versus 12 of 630 Mx pairs). This is a reproducible *algorithmic* difference for the same archived cases, not a new physical tower response. **Second**, selecting three seeds independently in each of the three observed NTM wind bins disagrees with the full-six-seed My control-bin identity in 760 of 8000 finite-archive subset combinations (9.50%). The six-seed reference is not an independent truth and this fraction is not a future-seed failure probability. **Third**, 99,736 of the 106,900 ERA5-derived hours in the [4,25) m/s diagnostic interval lack matched historical NTM load histories. The observed-bin fourth moment is identifiable, but the unobserved nonnegative contribution has no finite data-supported upper bound.
@@ -586,6 +612,8 @@ The quantitative evidence consists of archived **derived** T062 source tables, n
 
 | Cross-archive four-ETM My DEL versus positive gross-stress envelope | 72-row corrected My rank SHA256 `1bf750ba3ea33153dbe4b23e87a1b973ca73ab41e446b2d9d5f3fac2881238a9`; 124-row 31-station continuous-azimuth stress SHA256 `6002f69286eb9941265697732ec7acd961ac6b5757d7472423d91e0374288f21`; [program](../experiments/T062/s12_cross_qoi_etm_source_gate.cjs) SHA256 `66c9b20712ecd83485c57c8eb9e460061daa2dc8ca03923091a635032c768f61`; [4-row table](../experiments/T062/S12_4ETM_CROSS_QOI_RANK_20261108.csv) SHA256 `0ab09a0067745c9bdb0ee155da8f1aef7d78931511a0afd9a0a1225e1d33982d`; [SVG](final-thesis/figures/FIG_JOURNAL_S12_CROSS_QOI_ETM_RANK_20261108.svg) SHA256 `2b88d3e427c5166f329b53e1b5542640d4acde829208986ee9f3826b513d8f4d` | Direct derived-CSV re-read; 4 case labels × 31 stations, 5 malformed-source refusals via V8; original OUTB and cross-archive identical state **not** reverified; native Node CLI/CI not run | §§2.15, 3.10, 4.7, §5; Supplementary Table S3 and Fig. S3 | CONDITIONAL CROSS-QOI SCREENING ONLY; 2/6 reversals; not material fatigue or same-state physics |
 
+**Supplementary Table S7 source-to-claim trace.** Original 1,080-row rainflow table SHA256 95de6578cf379d1b2e1d99a68c26954a68e93cc8bfc4bdcd63dd324ae2999a0f; matched 18-case table SHA256 2afd6a7bbfc053c625d61d761eef35832cf4332cbee03f015885e23bf08ae3ec. Exact-subset Node SHA256 3f56c3429d48e6f76479b309351dc8f893fbe653f8df8b4c2f3675441ffe3a37; output tables SHA256 cf17f4ed29310c649fbceba236a8be5aefc6953e40659f12bd85771404fc87fb / 7dfa42dfb7d458aa55eeae90c48a7fe2da1c3dd9da3ec061e8bab0ec82a63678; figure SHA256 8b02db273e0926fedb9aac384d3a3537dcb6e2cf8f395890ddb395f520e75dce. V8 same-source 4 positive, 8 malformed-source rejections and order-invariance PASS; native Node CLI and original OUTB re-decode NOT_RUN.
+
 ### 6.2. Bibliographic references
 
 [1] Bak, C., Zahle, F., Bitsche, R., Kim, T., Yde, A., Henriksen, L. C., Natarajan, A., and Hansen, M. H. (2013). *Description of the DTU 10 MW Reference Wind Turbine*. DTU Wind Energy Report-I-0092. Technical University of Denmark. Official model/report context: https://www.hawc2.dk/models/dtu-10-mw.
@@ -606,4 +634,4 @@ The quantitative evidence consists of archived **derived** T062 source tables, n
 
 [9] International Electrotechnical Commission (IEC). *IEC 61400-6:2020+AMD1:2025 CSV*, Wind energy generation systems—Part 6: Tower and foundation design requirements. Product metadata: https://webstore.iec.ch/en/publication/107942. **Authorized clauses not read**; no compliance certification.
 
-**Submission boundary:** Tables 1–11 and Figs. 1–9, plus Supplementary Tables S1–S6 and Figs. S1–S4, are derived from archived load-level evidence, not a full formal DLC1.2 simulation set, material Miner damage, or state-matched wind–earthquake structural validation. The references establish context and provenance; they do not certify the model or fill unobserved wind bins.
+**Submission boundary:** Tables 1–11 and Figs. 1–9, plus Supplementary Tables S1–S7 and Figs. S1–S4, are derived from archived load-level evidence, not a full formal DLC1.2 simulation set, material Miner damage, or state-matched wind–earthquake structural validation. The references establish context and provenance; they do not certify the model or fill unobserved wind bins.

@@ -1,3 +1,12 @@
+## 2026-11-09 02时｜S06/S12真实18NTM三指标历史seed预算精确穷举（0/12）
+
+- START/READ/并发：read_base_sha ad09f5fe43fdfe252a7b0e9b8f77d8d05ba8d6d9；main 58c1e545f67b645417d5957189f5dad693d975bb；PR#42 Open/Draft。依次读取研究AGENTS、指挥室READ-BEFORE-WRITE/01时交接、白皮书v0.2.49、MASTER/STATUS、12阶段、T079/T080、T062原始1080行雨流与18case同源表、Ch3及英文期刊原稿。START/END同批登记，不冒称预先单独提交。仅改T062/Ch3/期刊/过程/指挥室/状态/白皮书；非Abaqus研究。
+- SOURCE/OFFICIAL：18NTM×60通道=1080行原始OUTB派生表SHA256 95de6578cf379d1b2e1d99a68c26954a68e93cc8bfc4bdcd63dd324ae2999a0f；同OUTB已匹配18case SHA256 2afd6a7bbfc053c625d61d761eef35832cf4332cbee03f015885e23bf08ae3ec。逐case重新验证原始OUTB SHA、100—700s/12001×0.05s、kN·m/MN·m单位与mean/DEL交叉数值；未重解原OUTB。
+- 科学问题/真实结果：三指标为同一TwrBsMyt通道的时均、正峰与DEL4。每箱六seed共63非空子集，最坏相对漏选最小化；三箱零漏选最小k=2/3/2，集合U09 S01+S02、U11 S02+S04+S06、U19 S03+S04；U11 k2仍漏1.357063%，U19时均前三漏9.763438%，U09时均前二漏24.561180%。仅事后oracle，不是前瞻选seed策略/材料寿命。
+- RUN/TAB/FIG：[Node](../T062/s06_ntm18_three_qoi_budget.cjs) SHA256 3f56c3429d48e6f76479b309351dc8f893fbe653f8df8b4c2f3675441ffe3a37；[18case](../T062/S06_NTM18_THREE_QOI_18CASE_20261109.csv) SHA256 cf17f4ed29310c649fbceba236a8be5aefc6953e40659f12bd85771404fc87fb；[18budget](../T062/S06_NTM18_THREE_QOI_BUDGET_18ROW_20261109.csv) SHA256 7dfa42dfb7d458aa55eeae90c48a7fe2da1c3dd9da3ec061e8bab0ec82a63678；[科研图](../../manuscript/final-thesis/figures/FIG3_S06_NTM_THREE_QOI_SEED_BUDGET_20261109.svg) SHA256 8b02db273e0926fedb9aac384d3a3537dcb6e2cf8f395890ddb395f520e75dce；[Ch3§3.7.14](../../manuscript/final-thesis/chapters/03_场址风环境与整机随机风控制载荷.md)及[英文期刊§2.18/3.14/4.14/S7](../../manuscript/journal-wind-fatigue-results.md)。V8实际同源码4正8负+行序不变PASS；原生Node CLI/CI、原OUTB重解和生产RUN NOT_RUN。
+- REF/STANDARD：继承REF018及2026两篇混塔风震/PT先行研究原阅读深度，JEE仅摘要、RCS已核部分原页；本轮未新增全文或授权IEC/GB条款。SOURCE-LEVEL FINITE-ARCHIVE SCREENING PASS，非风震创新首创。
+- 误差/失败/HOLD：表9位小数、百分比6位显示舍入≤5×10⁻⁷百分点；原OUTB量化、控制器状态、坐标、未来风场、材料点与物理误差未量化。63子集高度重叠不独立，零漏选仅对已观测六seed成立。8类预期污染均拒绝，无新增物理失败。白皮书v0.2.49→v0.2.50 PATCH；12阶段0/12、正式DLC1.2 0/126、材料Miner/同态W/E/WE HOLD。下一唯一动作：若无新W原件强制切S10不同真实ERA5概率研究，不再重复seed选择小审计；不做、准备、审核或派发Abaqus/CAE，不动冻结母本/main、不合并PR。
+
 ## 2026-11-09 01时｜S06/S07 同源塔底平均My与雨流DEL4控制seed错位（0/12）
 
 - **START/并发**：初始HEAD `00b0d44cb482b964be9fa3cf4bc9538275ded95f`，程序提交 `b6be5a5224be573151fb57fae4c8cdb298259ea2`，main `58c1e545f67b645417d5957189f5dad693d975bb`，PR#42 Open/Draft。依次读取研究AGENTS、指挥室READ-BEFORE-WRITE与00时交接、白皮书v0.2.48、MASTER/STATUS、12阶段、T079/T080、Ch3及两份真实源。开工/收尾在交付批次登记，不冒称事前单独提交。
