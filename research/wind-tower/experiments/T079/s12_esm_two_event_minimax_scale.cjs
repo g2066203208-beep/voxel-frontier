@@ -40,8 +40,8 @@ function csvOut(rows,m){
     +rows.map((r,i)=>[f(r.T),f(r.a),f(r.b),f(r.r),f(m.scale),f(m.scale/r.r),f(100*m.errors[i]),Math.abs(m.errors[i])<=.2?'true':'false','REAL_ESM_DERIVED_PSA_NOT_DESIGN_TARGET'].join(',')).join('\n')+'\n';
 }
 function svgOut(rows,m){
-  const X=t=>125+(t-4)*115,Y1=r=>340-(r-10)*17,Y2=e=>350-e*420;
-  const poly=(arr,xf,yf)=>arr.map((v,i)=>(i?'L':'M')+xf(rows[i].T).toFixed(1)+' '+yf(v).toFixed(1)).join(' ');
+  const X=t=>125+(t-4)*105,Y1=r=>340-(r-10)*24,Y2=e=>220-e*5.5;
+  const poly=(arr,xf,yf)=>arr.map((v,i)=>(i?'L':'M')+xf(rows[i].T).toFixed(1)+' '+yf(v,i).toFixed(1)).join(' ');
   const labels=rows.map((r,i)=>'<text x="'+X(r.T).toFixed(1)+'" y="395" font-size="13" text-anchor="middle">'+(i===2?'6.231':r.T.toFixed(0))+'</text>').join('');
   const dots=rows.map((r,i)=>'<circle cx="'+X(r.T).toFixed(1)+'" cy="'+Y1(r.r).toFixed(1)+'" r="5" fill="#087b91"/><circle cx="'+(X(r.T)+610).toFixed(1)+'" cy="'+Y2(100*m.errors[i]).toFixed(1)+'" r="5" fill="#c35128"/>').join('');
   const L='<line x1="125" y1="340" x2="560" y2="340" stroke="#666"/><line x1="125" y1="85" x2="125" y2="340" stroke="#666"/><line x1="735" y1="85" x2="735" y2="340" stroke="#666"/><line x1="735" y1="340" x2="1170" y2="340" stroke="#666"/>';
@@ -49,9 +49,9 @@ function svgOut(rows,m){
   +'<text x="55" y="37" font-size="22" font-weight="bold">Two real ESM events: exact minimax constant-scale incompatibility</text>'
   +'<text x="55" y="62" font-size="13">IT.NVL, 4 common periods, 5% SDOF GM pseudo-acceleration; NOT a design-spectrum fit</text>'
   +'<text x="105" y="96" font-size="15">(a) Event 0008 / 0009 PSA ratio</text><text x="735" y="96" font-size="15">(b) Best-scaled 0009 error relative to 0008 (%)</text>'
-  +L+'<path d="'+poly(rows, X,Y1,r=>r.r)+'" stroke="#087b91" stroke-width="3" fill="none"/>'
+  +L+'<path d="'+poly(rows, X,r=>Y1(r.r))+'" stroke="#087b91" stroke-width="3" fill="none"/>'
   +'<line x1="125" y1="'+Y1(m.scale).toFixed(1)+'" x2="560" y2="'+Y1(m.scale).toFixed(1)+'" stroke="#7a50a3" stroke-width="2" stroke-dasharray="7 4"/>'
-  +'<path d="'+poly(rows,t=>X(t)+610,Y2,m.errors.map(e=>100*e))+'" stroke="#c35128" stroke-width="3" fill="none"/>'
+  +'<path d="'+poly(rows,t=>X(t)+610,(r,i)=>Y2(100*m.errors[i]))+'" stroke="#c35128" stroke-width="3" fill="none"/>'
   +[-20,0,20].map(v=>'<line x1="735" y1="'+Y2(v).toFixed(1)+'" x2="1170" y2="'+Y2(v).toFixed(1)+'" stroke="'+(v?'#cc8888':'#999')+'" stroke-dasharray="5 4"/><text x="698" y="'+(Y2(v)+4).toFixed(1)+'" font-size="12">'+v+'</text>').join('')
   +dots+labels+rows.map((r,i)=>'<text x="'+(X(r.T)+610).toFixed(1)+'" y="395" font-size="13" text-anchor="middle">'+(i===2?'6.231':r.T.toFixed(0))+'</text>').join('')
   +'<text x="260" y="420" font-size="14">Period (s)</text><text x="885" y="420" font-size="14">Period (s)</text>'
@@ -73,6 +73,7 @@ function selfTest(){
     ()=>minimax(mk([1,Infinity]))];
   bad.forEach(fn=>{try{fn();}catch{rejected++;}});
   demand(rejected===bad.length,'six malformed-input rejections');
+  demand(!svgOut(mk([11.2,17.7,16.6,12.8]),c).includes('NaN'),'SVG finite-coordinate rejection');
   return {positive:5,rejected,real_bound:c.lowerBound};
 }
 module.exports={parse,minimax,csvOut,svgOut,selfTest};
