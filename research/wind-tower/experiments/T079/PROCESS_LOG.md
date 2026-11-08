@@ -1,3 +1,14 @@
+## 2026-11-08 20时｜S05 GB55002第一组场地类别与长周期条件性参数：原页/数值/拒绝测试（0/12）
+
+- **START/来源基线**：read_base_sha `dad459007b13d1acb8b2562fe2d9d601590925b6`；main `58c1e545f67b645417d5957189f5dad693d975bb`；PR#42 Open/Draft。依序核读根/研究AGENTS、指挥室READ-BEFORE-WRITE/19时交接、白皮书v0.2.43、MASTER/STATUS、12阶段计划、T079/T080过程、Ch1§1.6.7–1.6.8；继承GB18306嘉鱼八镇0.05g/0.35s及既有ESM实测谱，不重复八镇或RotD小审计。
+- **科学问题**：已知第一组与0.05g时，缺少场地类别/设计谱会造成多大条件性特征周期变化？是否可以从PGA/Tg/alpha_max推断6.23s谱值？答案：第一组五类场地Tg=0.20/0.25/0.35/0.45/0.65s，跨度3.25倍；罕遇另加0.05s；**完整长周期谱不可由这些有限参数唯一反推**。
+- **STANDARD/OFFICIAL直接阅读深度**：住建部2021年第61号公告（2022-01-01施行）`https://www.mohurd.gov.cn/gongkai/zc/wjk/art/2021/art_17339_761174.html`；GB55002—2021公开PDF `https://www.cnass.cn/upload/gjgfenhui/file/20230116/1673863716317210.pdf`，逐页视觉核读印刷**p3（2.2.2）、p12（4.2.2两表与罕遇+0.05s）、p13（4.2.3与lambda0）**，对应PDF页22/23附近。仅对该规范适用的建筑/市政工程有强制条文意义，**风机塔架专项适用性未判定**；原PDF下载未成功，字节SHA NOT_AVAILABLE。
+- **RUN/TAB/FIG**：固定条件性比较周期6.230957762865167s（历史梁代理比较点，非已验证塔架T1）；5场地×3危险水准=**15行**。常规T/Tg=31.154789至9.586089，罕遇=24.923831至8.901368；Ⅱ类常规17.802736、罕遇15.577394。6度alpha_max最低0.04/0.12/0.28，不是Tprobe处谱值；若4.2.3适用且真实T1>5s，则条件性lambda_min=0.008×0.75=0.006（非本塔验算）。
+- **实物与SHA256**：[可运行Node](./s05_gb55002_group1_site_period_gate_20261108.cjs) `965ec29277450f803ec358d08bddb33fb03ecc92ad09774840fb324d2cd3568d`；[15行CSV](real-records/S05_GB55002_GROUP1_SITE_HAZARD_15ROW_20261108.csv) `25efd54bef7ae54b85a92ebf523cc487c60bc20f1cba08c2c1d73f8b2b004160`；[正式双面板SVG](../../manuscript/final-thesis/figures/FIG_S05_GB55002_SITE_LONGPERIOD_CONDITIONAL_20261108.svg) `4eae533f9f9158ac54ac38c0ce858d7755eeefdd7e177df962f28d7e6ebaa212`；[硕士Ch1§1.6.9](../../manuscript/final-thesis/chapters/01_绪论.md)。V8执行同一源码**9项正向断言、9项异常拒绝**，15行/5类/3级核验PASS；独立Python Decimal对五类两种T/Tg及0.006复核。原生Node CLI/CI NOT_RUN；无结构/风/地震生产RUN。
+- **误差与反例**：源表数字按印刷p12转录，输入舍入到0.01s；T/Tg输出保留6位，小于0.5×10^-6显示舍入误差；原PDF身份、实际地勘、阻尼、谱形、结构T1和专项规范适用误差无法量化。程序`targetSpectrumAtPeriod`拒绝伪造谱值；Tg差异不是已证明的地震响应变化。REF=2026两篇先行风震/PT论文已在Ch1§1.6.5分层比较，本轮未新增全文阅读。**S05 SOURCE-LEVEL CONDITIONAL PARAMETER PASS / SITE DESIGN SPECTRUM & PHYSICAL HOLD；12阶段0/12、DLC1.2 0/126、Miner及同态W/E/WE HOLD**。
+- **下一唯一动作**：不再重复S05参数表；转S06/S07仅当真实W侧时程/运行状态SHA有新源，否则切S12将S05规范条件和已知实测记录谱匹配的**拒绝条件**写入地震方法章节。未执行/准备/审核/派发任何Abaqus/CAE工作，不动冻结T057/T070/main，不合并Draft PR。
+
+
 ## 2026-11-08 17时｜S05→S08真实ESM长周期方向选取偏差与正式科研图（0/12）
 
 - **START/READ-BEFORE-WRITE**：read_base_sha=`305ecd643abb240f4d3b0329d2ee40570e453aaf`，main=`58c1e545f67b645417d5957189f5dad693d975bb`，PR#42 Open/Draft；已依序读根/研究AGENTS、指挥室READ-BEFORE-WRITE与16时交接、白皮书v0.2.40、MASTER/STATUS、12阶段、T079/T080、ESM真实46周期谱及原程序；S06/S07正式缺箱无新增原始源，本轮依反卡死切至S05/S08实测谱，不重复前轮LOBO或三章总结。开工回执与收尾同批提交，**未冒称预先独立登记**。
