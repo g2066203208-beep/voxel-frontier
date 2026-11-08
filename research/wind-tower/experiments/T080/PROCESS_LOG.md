@@ -1,3 +1,12 @@
+## 2026-11-09 03时｜S10真实ERA5已知支持域权重集中与双通道尾部小时影响（0/12）
+
+- **START/READ/并发**：read_base_sha `a53bbc5f418bee95d29a9c9846f066a4194b414b`；main `58c1e545f67b645417d5957189f5dad693d975bb`；PR#42 Open/Draft。已读根/研究AGENTS、指挥室READ-BEFORE-WRITE与02时交接、白皮书v0.2.50、MASTER/STATUS、12阶段、T079/T080及Ch4§4.7.4/§4.7.7/§4.7.17；继承真实ERA5、18NTM及三箱四次矩，不重复seed集合审计。仅S10源级程序/六行CSV/正式SVG/Ch4与现有过程、指挥室、白皮书更新。
+- **SOURCE/REF/STANDARD/OFFICIAL**：ERA5 31行源SHA256 `e4058620a36b23bb218103875d4dc5b0711fc45d418b23a2208c2fc9c16c9102`；六行历史NTM双通道M4源SHA256 `d43f963fb30e16a33e87acdf6e9571710826974eee89d1f3527ab6504d85f695`；旧18OUTB来源核验继承T062，不重解原件。REF018/REF011/两篇2026风震与PT先行文献只继承既有阅读深度；本轮无新授权IEC/GB条款。OFFICIAL为ERA5再分析**派生**概率，不是场址实测或DLC规范。
+- **真实数值与科学问题**：N=184080、N_op=106900、H_known=7164h（9/11/19箱5736/1426/2），有源支持域占诊断运行小时6.701590%。等6seed/箱的有源条件权重Kish代数ESS=8.814536（不是独立样本统计ESS）。已知部分K_Mx=125.606638、K_My=209257.299448 (MN·m)^4；19箱仅占有源小时0.027917%，贡献Mx 2.729214%、My 0.074990%，对应份额/概率97.760458与2.686136。反事实把19箱1h改归9箱（非实际误差）：ΔK_Mx=−1.701670/−1.354761%，ΔK_My=−56.886425/−0.027185%。
+- **RUN/TAB/FIG**：[程序](../T062/s10_era5_known_support_tail_influence.cjs) SHA256 `8ed18c9d6cd2c585cade247270ccf8e2e59eab9848558f53621332fb2ff87381`；[六行表](../T062/S10_ERA5_KNOWN_SUPPORT_TAIL_INFLUENCE_20261109.csv) SHA256 `349c7633a79eb20b8cafb47dfb14ac588bb48c706d5ad9dca49a489df3544a8c`；[正式SVG](../../manuscript/final-thesis/figures/FIG4_S10_ERA5_KNOWN_SUPPORT_TAIL_INFLUENCE_20261109.svg) SHA256 `508e378a56d2866b4116d95c3324bea62c5244768e5ff806b331c271c648038b`；[Ch4§4.7.18](../../manuscript/final-thesis/chapters/04_10MW混合塔架风致疲劳性能分析.md)。同一源码V8执行5项正向+9项异常拒绝、行序不变及SVG有限坐标PASS；首次程序SVG括号语法失败，已在前序修复提交`a53bbc5f`纠正并保留失败记录；原生Node CLI/CI及原始ERA5/OUTB本轮NOT_RUN。
+- **误差/假设/失败/HOLD**：ERA5整数小时与六行M4数值锁定，CSV数值9—12位显示舍入≤5e−10（相应显示单位）；尾部2h不构成稳健概率估计，21年逐小时自相关、场址代表性、跨bin seed依赖及M4模型误差未量化。单小时改归是极端反事实，不是观测误差/统计CI；所有结论仅已知3bin，缺源99736h不能置零。**SOURCE-LEVEL PARTIAL-M4 WEIGHTING PASS / MATERIAL MINER、DLC1.2与W/E/WE PHYSICAL HOLD**，12阶段0/12、正式DLC1.2 0/126。白皮书v0.2.50→v0.2.51 PATCH。
+- **下一唯一动作**：切S12，围绕真实18NTM和ERA5源对英文期刊Discussion作有科学边界的跨通道概率—四次矩论证，不重复本轮小时影响计算；若没有新实质正文则转S05官方新原件。未执行、准备、审核、派发任何Abaqus/CAE，不动T057/T070/main，不合并PR。
+
 ## 2026-11-09 02时｜S06/S12真实18NTM三指标历史seed预算精确穷举（0/12）
 
 - START/READ/并发：read_base_sha ad09f5fe43fdfe252a7b0e9b8f77d8d05ba8d6d9；main 58c1e545f67b645417d5957189f5dad693d975bb；PR#42 Open/Draft。依次读取研究AGENTS、指挥室READ-BEFORE-WRITE/01时交接、白皮书v0.2.49、MASTER/STATUS、12阶段、T079/T080、T062原始1080行雨流与18case同源表、Ch3及英文期刊原稿。START/END同批登记，不冒称预先单独提交。仅改T062/Ch3/期刊/过程/指挥室/状态/白皮书；非Abaqus研究。
