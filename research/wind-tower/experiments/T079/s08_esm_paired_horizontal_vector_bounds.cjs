@@ -77,7 +77,7 @@ function toSvg(rows){
  });
  s+='<text x="55" y="572" font-family="Arial" font-size="14" fill="#526373">A: gray is the extra peak implied by combining non-simultaneous maxima.</text>';
  s+='<text x="628" y="572" font-family="Arial" font-size="14" fill="#526373">B: gray is unresolved, not a statistical confidence interval.</text>';
- s+='<text x="55" y="611" font-family="Arial" font-size="13" fill="#526373">Full-rate individual peaks constrain but do not identify the unarchived paired full-rate vector peak.</text></svg>\n';
+ s+='<text x="55" y="611" font-family="Arial" font-size="13" fill="#526373">Full-rate individual peaks constrain but do not identify the not-yet-recomputed paired full-rate vector peak.</text></svg>\n';
  return s;
 }
 function selfTest(){
