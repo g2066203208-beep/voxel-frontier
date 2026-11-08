@@ -1,3 +1,12 @@
+## 2026-11-08 18时｜S10真实18NTM循环指数与控制方位：独立case分层及近并列代价（0/12）
+
+- **START/基线**：read_base_sha=`cb2aad3dd1e662282c2bf006297abbfb234f3062`，main=`58c1e545f67b645417d5957189f5dad693d975bb`，PR#42 Open/Draft；已按研究AGENTS→指挥室17时交接→白皮书v0.2.41→MASTER/STATUS→12阶段计划→T079/T080最新过程→T062真实源及Ch4§4.7.16读取。S06/S07仍无新完整同态风时程，按反卡死纪律切S10。开工/收尾同批补录，不冒称已预先单独提交。
+- **科学问题与SOURCE**：同一历史158m NTM的18个seed-case、10个近底测站、16周向方位的2880行OUTB派生毛截面名义应力，m4与m10控制方位切换是否为18个独立风场中的普遍现象？源CSV SHA256 `d45f047f5d622fb834d63728c13cead49b614b6cf42e598918e55242ed45f94b`，Git blob `499ce24865ccd42f73471aab4696990da94b79ac`；原始OUTB本轮未重解码。18个case的原OUTB身份SHA逐case一致，10测站强相关。
+- **RUN/TAB/FIG**：实际V8运行提交同一Node源码，严格解析2880/2880、180组，4项正向数值与9类异常输入拒绝、逆序不变性PASS。只有`U19p202140_NTM_S03`一个case在10个测站均发生m4选0°/m10选180°；其余17个case/170组未变。故**10/180测站切换仅相当于1/18独立风场实现**。十站m4相对选择代价0.030791%—0.031234%，m10为0.003129%—0.004492%；BASE时均名义应力−11.526115→+4.309740MPa，差15.835855MPa。新增[Node](../T062/s10_ntm18_exponent_azimuth_switch.cjs)、[18case表](../T062/S10_NTM18_EXPONENT_AZIMUTH_18CASE_20261108.csv)、[10站表](../T062/S10_NTM18_EXPONENT_AZIMUTH_10SWITCH_20261108.csv)、[SVG](../../manuscript/final-thesis/figures/FIG4_S10_NTM_EXPONENT_AZIMUTH_SWITCH_20261108.svg)及[Ch4§4.7.17/§4.10](../../manuscript/final-thesis/chapters/04_10MW混合塔架风致疲劳性能分析.md)。
+- **程序与输出SHA256**：Node `34da284aa4a5cc5f905077fe6645a1a857c1c07fc8b2b087ba349c7bad592c92`；18case CSV `59bf2d3c00851624c1072c86799b668b832f7cb876d90374969a78c964e47dfd`；10站CSV `bfffaf9b66e41b46499201a3b90dcda070490ebe1ac2b7be76a13d3d586d11b1`；SVG `4b4d5fc68e1bb65dd786b959247b13914c974d9d94f134e129f5c2eacbcf1ddd`；四文件已远端回读核SHA，原生Node CLI/CI NOT_RUN。
+- **REF/STANDARD/OFFICIAL/误差**：REF=沿用REF018/Huang2025及已登记2026先行风震/PT论文，未新读全文；STANDARD=IEC/GB授权条款未新读；OFFICIAL=历史OpenFAST原始OUTB身份收据而非新生产；FIG=1，TAB=18+10行。CSV数值10位小数舍入≤5e-11百分点，单样本量化界不能直接作为DEL排序误差上界；无局部材料应力、有效PT、range–mean–count、材料S–N或统计总体置信界。
+- **反例/PASS/HOLD**：一case切换而17case不变，是对“m变化必导致普遍方位切换”的真实反例；十站非十个独立样本。SOURCE-LEVEL SELECTOR ANALYSIS PASS；材料Miner、正式DLC1.2 0/126、同态W/E/WE及结构物理HOLD，12阶段**0/12**。下一唯一动作：S06/S07有新原始同态W风载时程才恢复，否则转S12英文期刊将独立样本与两侧候选规则写入方法，不再重复本数表。未做任何Abaqus/CAE、昂贵OpenFAST/TurbSim生产，不动T057/T070/main，不合并PR。
+
 ## 2026-11-08 17时｜S05→S08真实ESM长周期方向选取偏差与正式科研图（0/12）
 
 - **START/READ-BEFORE-WRITE**：read_base_sha=`305ecd643abb240f4d3b0329d2ee40570e453aaf`，main=`58c1e545f67b645417d5957189f5dad693d975bb`，PR#42 Open/Draft；已依序读根/研究AGENTS、指挥室READ-BEFORE-WRITE与16时交接、白皮书v0.2.40、MASTER/STATUS、12阶段、T079/T080、ESM真实46周期谱及原程序；S06/S07正式缺箱无新增原始源，本轮依反卡死切至S05/S08实测谱，不重复前轮LOBO或三章总结。开工回执与收尾同批提交，**未冒称预先独立登记**。
