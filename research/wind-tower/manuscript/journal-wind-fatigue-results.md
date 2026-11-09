@@ -550,13 +550,13 @@ For m=4, U19p202140_NTM_S04 is the **sole Pareto-nondominated case** and control
 
 ### 3.20. Pairing-free ETM/NTM separation changes after correcting rainflow closure
 
-A class comparison based only on seed labels can hide an important limitation: ETM seed S01 and NTM seed S01 are not necessarily a physically paired turbulent realization. We therefore used a **permutation-invariant finite-archive contrast**. For each wind speed (v), tower-base moment channel (c), rainflow implementation (a), and the six archived realizations per turbulence class, define
+A class comparison based only on seed labels can hide an important limitation: ETM seed S01 and NTM seed S01 are not necessarily a physically paired turbulent realization. We therefore used a **permutation-invariant finite-archive contrast**. For each wind speed \(v\), tower-base moment channel \(c\), rainflow implementation \(a\), and the six archived realizations per turbulence class, define
 
-[
+\[
 G_{c,v}^{(a)}=100\left[\frac{\min_{s=1,\ldots,6} DEL_{c,v,ETM,s}^{(a)}}{\max_{s=1,\ldots,6} DEL_{c,v,NTM,s}^{(a)}}-1\right]\%.
-]
+\]
 
-If (G>0), **every** observed ETM DEL exceeds **every** observed NTM DEL at that speed and channel, regardless of seed relabelling. If (G\le0), complete separation is not established; this does not imply that an identically labelled seed reverses sign. This is an exact finite-archive property, not a confidence interval, causal ETM effect or future-seed prediction.
+If \(G>0\), **every** observed ETM DEL exceeds **every** observed NTM DEL at that speed and channel, regardless of seed relabelling. If \(G\le0\), complete separation is not established; this does not imply that an identically labelled seed reverses sign. This is an exact finite-archive property, not a confidence interval, causal ETM effect or future-seed prediction.
 
 The calculation reads the same 72 historical-versus-corrected paired moment-DEL rows used in R1 (36 cases × two channels; SOURCE SHA256 `12dabbb1273ce03d3920aedda3f72f9fa1d75b671e01a1db145c0a972ffe15e2`). It does not re-run OpenFAST or the original rainflow extraction. The six-speed/channel groups yield the following **old → corrected** worst-case margins (percentage points): Mx at 9.343881, 11.400000 and 19.202140 m/s: **+14.857 → +13.660, +22.005 → +23.331, −25.351 → −12.375**; My: **−5.200 → +8.984, −42.400 → +7.613, +18.644 → +11.142**. Thus the number of My wind-speed groups with complete observed class separation increases from **one of three to three of three**, whereas Mx remains **two of three**. In contrast, ETM exceeds NTM for all 18 *same-label* seed comparisons in each channel under either implementation; same-label sign invariance therefore does **not** certify separation under arbitrary cross-seed matching.
 
