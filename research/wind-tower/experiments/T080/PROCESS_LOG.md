@@ -1,3 +1,10 @@
+## 2026-11-09 19时｜S11/S12真实NTM同箱seed留出与整箱留出验证目标错配（0/12）
+
+- **科学问题/SOURCE**：历史18个NTM seed-case×10相关测站的同一180行最大方位名义DEL4源（SHA256 `652929e6e1d03aced08f7af9204e389d503ec3d7835df76bd384114ea410bccd`）能否证明同箱seed交叉验证误差可以外推至未知风速箱？独立既有LOBO 3箱表SHA256 `bcd986ee4550ddfe894af6ce21337c5232de417e6c3dad98ef0229e851cbb65d`。继承§5.4.5–6已有整箱线性/最近箱基线，不重复生成物理时程。
+- **RUN/TAB/FIG/论文**：同箱每seed仅用同箱其余5seed预测，三箱RMSE=**0.465883404/0.538216674/0.314704203 MPa**；既有整箱线性RMSE=0.935452902/0.809239444/3.240152074 MPa，误差比**2.007912/1.503557/10.295865**。新增[Node](../T062/s11_ntm18_seed_vs_bin_holdout.cjs) SHA256 `f93a1369cb900a929102e0388a98089268e5ec3d16b27cf7c1be4a146b86605b`、[三行CSV](../T062/S11_NTM18_SEED_LOO_VS_BIN_LOBO_3BIN_20261109.csv) SHA256 `b817c40e0dde0a46a262349efe069d1c7d303c4f17e587e54cfa505632a9f95e`、[SVG](../../manuscript/final-thesis/figures/FIG5_S11_SEED_VS_BIN_VALIDATION_20261109.svg) SHA256 `e5f68e7f7904f34f1e927cf6af00b0d43a18f7aa9779db076280869f9c853fb0`及[Ch5§5.4.7](../../manuscript/final-thesis/chapters/05_疲劳控制参数敏感性与结构优化.md)实质正文。
+- **测试/反例/误差**：V8同源码六seed解析oracle sqrt(4.2)、输入乱序、5类缺失/重复/NaN/越界/负值拒绝、CSV/SVG自测PASS；180行原源与独立LOBO观测均值逐箱核对PASS；原生Node CLI/原始OUTB/新生产RUN=NOT_RUN。CSV 9位小数舍入≤5e−10 MPa；风场总体、物理来源及控制状态误差无可靠上界。高箱10.30倍为**不同验证目标**的对比，不是同一目标算法性能差，也不是可推广误差倍率；10相关测站非独立。
+- **REF/STANDARD/OFFICIAL/状态**：继承既有REF021代理验证与2026两篇混塔先行研究，未新核全文/授权条款，不提出物理首创。**S11来源级交叉验证目标反例PASS，结构DOE、材料Miner、同态W/E/WE、正式DLC1.2、送审HOLD；12阶段0/12**。白皮书v0.2.66→v0.2.67 PATCH。禁止Abaqus/CAE、冻结T057/T070/main、昂贵RUN及PR合并。
+
 ## 2026-11-09 18时｜S12硕士论文第六章正式结论重构（0/12）
 
 - **开工/并发**：已独立先行写入指挥室START commit `dd32e69748b7c4cfe69c6f3849dd3f6fd47ef65f`，基线HEAD `4827505973c176c9fbba3932adecc5a8baca9627`，main `58c1e545f67b645417d5957189f5dad693d975bb`，PR#42 Open/Draft。按研究AGENTS→指挥室17时交接→白皮书v0.2.65→MASTER/STATUS→12阶段→T079/T080最新→Ch6/Ch3/Ch4/Ch5及真实CSV阅读；继承历史数据，不重跑物理计算。
