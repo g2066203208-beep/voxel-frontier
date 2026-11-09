@@ -62,7 +62,7 @@ function makeCsv(x){
   return h+'\n'+x.rows.map(r=>[fmt(r.period),fmt(r.gm8),fmt(r.gm9),fmt(r.rG),fmt(r.rE),fmt(r.rN),fmt(x.g.c),fmt(r.gErr),fmt(x.both.c),fmt(r.eErr),fmt(r.nErr),fmt(r.anchorErr),fmt(r.fcut8),fmt(r.fcut9),'EMPIRICAL_ESM_TRANSFER_NOT_SITE_DESIGN'].join(',')).join('\n')+'\n';
 }
 function makeSvg(x){
-  const W=1040,H=670,left=100,right=980;let s=[];
+  const W=1040,H=770,left=100,right=980;let s=[];
   const line=(a,b,c,d,color,width=2,dash='')=>'<line x1="'+a+'" y1="'+b+'" x2="'+c+'" y2="'+d+'" stroke="'+color+'" stroke-width="'+width+'"'+(dash?' stroke-dasharray="'+dash+'"':'')+'/>';
   const txt=(a,b,t,size=16,color='#243447',extra='')=>'<text x="'+a+'" y="'+b+'" fill="'+color+'" font-family="Arial, sans-serif" font-size="'+size+'" '+extra+'>'+t+'</text>';
   const xx=t=>left+(t-4)/4*(right-left), yy=(v,mid)=>mid-v*1.72;
@@ -84,12 +84,12 @@ function makeSvg(x){
   s.push('<rect width="'+W+'" height="'+H+'" fill="#ffffff"/>');
   s.push(txt(40,43,'ESM IT.NVL: minimum unavoidable mismatch under one positive scale',23,'#162a45','font-weight="bold"'));
   s.push(txt(40,68,'Two 2012 events | 5% pseudo-acceleration | 4 common sampled periods | not a design spectrum',14));
-  plot(239,[{key:'gErr',color:'#1768a0'}],'A  Geometric-mean PSA: optimal maximum error = '+(100*x.g.err).toFixed(3)+'%');
-  plot(515,[{key:'eErr',color:'#0b806d'},{key:'nErr',color:'#b34b3c'}],'B  HNE and HNN together: optimal maximum error = '+(100*x.both.err).toFixed(3)+'%');
-  s.push(txt(101,649,'Periods (s): 4, 6, 6.231, 8; orange dashed lines = illustrative ±10%, NOT a code limit.',13));
-  s.push('<rect x="690" y="80" width="14" height="5" fill="#1768a0"/>'+txt(710,87,'GM',13));
-  s.push('<rect x="758" y="80" width="14" height="5" fill="#0b806d"/>'+txt(778,87,'HNE',13));
-  s.push('<rect x="837" y="80" width="14" height="5" fill="#b34b3c"/>'+txt(857,87,'HNN',13));
+  plot(245,[{key:'gErr',color:'#1768a0'}],'A  Geometric-mean PSA: optimal maximum error = '+(100*x.g.err).toFixed(3)+'%');
+  plot(568,[{key:'eErr',color:'#0b806d'},{key:'nErr',color:'#b34b3c'}],'B  HNE and HNN together: optimal maximum error = '+(100*x.both.err).toFixed(3)+'%');
+  s.push(txt(101,752,'Periods (s): 4, 6, 6.231, 8; orange dashed lines = illustrative ±10%, NOT a code limit.',13));
+  s.push('<rect x="690" y="113" width="14" height="5" fill="#1768a0"/>'+txt(710,120,'GM',13));
+  s.push('<rect x="758" y="113" width="14" height="5" fill="#0b806d"/>'+txt(778,120,'HNE',13));
+  s.push('<rect x="837" y="113" width="14" height="5" fill="#b34b3c"/>'+txt(857,120,'HNN',13));
   s.push('</svg>');return s.join('\n')+'\n';
 }
 function selfTest(){
