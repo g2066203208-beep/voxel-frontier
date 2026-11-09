@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="530" viewBox="0 0 1000 530">
+<rect width="1000" height="530" fill="white"/>
+<text x="45" y="52" font-family="Arial" font-size="24" fill="#152b40">Historical NTM My variance: between wind bins vs within seeds</text>
+<text x="45" y="79" font-family="Arial" font-size="14" fill="#526274">18 source-derived cases; 3 bins x 6 seeds; fixed-sample sum-of-squares decomposition</text>
+<text x="45" y="150" font-family="Arial" font-size="17" fill="#152b40">Time-mean My</text>
+<rect x="300" y="130" width="610" height="34" fill="#e7ad69"/>
+<rect x="300" y="130" width="604.26271" height="34" fill="#365d7d"/>
+<text x="310" y="153" font-family="Arial" font-size="15" fill="white">99.06% between</text>
+<text x="903" y="153" text-anchor="end" font-family="Arial" font-size="13" fill="#513b1f">0.94%</text>
+<line x1="903.18307" y1="179" x2="905.87558" y2="179" stroke="#273c50" stroke-width="3"/>
+<line x1="903.18307" y1="172" x2="903.18307" y2="186" stroke="#273c50" stroke-width="2"/>
+<line x1="905.87558" y1="172" x2="905.87558" y2="186" stroke="#273c50" stroke-width="2"/>
+<text x="45" y="255" font-family="Arial" font-size="17" fill="#152b40">Positive peak My</text>
+<rect x="300" y="235" width="610" height="34" fill="#e7ad69"/>
+<rect x="300" y="235" width="569.26763" height="34" fill="#365d7d"/>
+<text x="310" y="258" font-family="Arial" font-size="15" fill="white">93.32% between</text>
+<text x="903" y="258" text-anchor="end" font-family="Arial" font-size="13" fill="#513b1f">6.68%</text>
+<line x1="861.85718" y1="284" x2="886.94407" y2="284" stroke="#273c50" stroke-width="3"/>
+<line x1="861.85718" y1="277" x2="861.85718" y2="291" stroke="#273c50" stroke-width="2"/>
+<line x1="886.94407" y1="277" x2="886.94407" y2="291" stroke="#273c50" stroke-width="2"/>
+<text x="45" y="360" font-family="Arial" font-size="17" fill="#152b40">Load DEL4 My</text>
+<rect x="300" y="340" width="610" height="34" fill="#e7ad69"/>
+<rect x="300" y="340" width="413.70723" height="34" fill="#365d7d"/>
+<text x="310" y="363" font-family="Arial" font-size="15" fill="white">67.82% between</text>
+<text x="903" y="363" text-anchor="end" font-family="Arial" font-size="13" fill="#513b1f">32.18%</text>
+<line x1="677.88918" y1="389" x2="789.58928" y2="389" stroke="#273c50" stroke-width="3"/>
+<line x1="677.88918" y1="382" x2="677.88918" y2="396" stroke="#273c50" stroke-width="2"/>
+<line x1="789.58928" y1="382" x2="789.58928" y2="396" stroke="#273c50" stroke-width="2"/>
+<text x="300" y="467" text-anchor="middle" font-family="Arial" font-size="12" fill="#526274">0%</text>
+<text x="452.5" y="467" text-anchor="middle" font-family="Arial" font-size="12" fill="#526274">25%</text>
+<text x="605" y="467" text-anchor="middle" font-family="Arial" font-size="12" fill="#526274">50%</text>
+<text x="757.5" y="467" text-anchor="middle" font-family="Arial" font-size="12" fill="#526274">75%</text>
+<text x="910" y="467" text-anchor="middle" font-family="Arial" font-size="12" fill="#526274">100%</text>
+<text x="45" y="494" font-family="Arial" font-size="13" fill="#526274">Whiskers = exact 216 one-seed-per-bin deletion range; NOT a confidence interval.</text>
+<text x="45" y="515" font-family="Arial" font-size="12" fill="#526274">Not a causal controller effect, population variance, DLC1.2, or material Miner damage.</text>
+</svg>
