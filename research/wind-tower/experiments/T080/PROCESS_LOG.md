@@ -1,3 +1,15 @@
+## 2026-11-10 03时｜S06历史36工况ETM/NTM全交叉seed包络：雨流修正使My类间完全分离1/3→3/3（0/12）
+
+**START/并发。** 基线PR#42 Open/Draft HEAD=`35a0722bebcfeac5aa5ad77d8e95286518cb22c3`，main历史读取`58c1e545f67b645417d5957189f5dad693d975bb`；依序读研究AGENTS→指挥室READ-BEFORE-WRITE/02时交接→白皮书v0.2.74→MASTER/STATUS→12阶段计划→T079/T080过程→72行同源雨流因果CSV/现有Ch3与英文期刊稿。W同态源不足不重复追索，按反卡死转向S06独立可证伪的**湍流类别包络证据**，不同于已做的36case总体排序及18NTM Pareto。
+
+**科学问题与SOURCE。** ETM/NTM同编号S01不保证湍流实现物理配对；对于任意跨seed重新配对，历史ETM DEL是否始终高于NTM？直接读取36个历史case×Mx/My两通道=72行[原算法/修正算法成对DEL](../T062/legacy-primary-recovered-20261102/T062_ALL36_RAINFLOW_CAUSAL_DEL_COMPARE_20261102.csv)，源SHA256 `12dabbb1273ce03d3920aedda3f72f9fa1d75b671e01a1db145c0a972ffe15e2`，历史OpenFAST OUTB原件hash由原收据继承，本轮未重读二进制。定义 `G=100*(min_s DEL_ETM/max_s DEL_NTM-1)%`，G>0为**六seed有限历史全集**的排列无关完全分离，而不是总体概率或材料寿命。
+
+**实数结果。** 三个风速9.343881/11.4/19.202140m/s下，Mx旧→修正G分别为+14.857→+13.660、+22.005→+23.331、−25.351→−12.375个百分点，完全分离2/3→2/3；My分别为−5.200→+8.984、−42.400→+7.613、+18.644→+11.142，**完全分离1/3→3/3**。同编号seed对照两算法两通道均18/18 ETM>NTM，说明同标签比较的全同号**不推出**任意跨seed完全分离。所有数值单位基于塔底弯矩DEL kN·m，m=4历史载荷诊断，非局部应力或Miner。
+
+**RUN/FIG/TAB/论文。** [Node](../T062/s06_etm_ntm_pairing_free_rainflow_gap.cjs) SHA256 `b550aef044eeef91a8e486bd27cb7b11d228f3ed5600e79675b4fa4bcb2af9e6`；[六行CSV](../T062/S06_ETM_NTM_PAIRING_FREE_RAINFLOW_GAP_20261110.csv) `5ed0645a14ccc8b1f5d0b07cb5c548e47c1a1e3282f6b1d733128b36324e3afa`；[SVG](../../manuscript/final-thesis/figures/FIG3_S06_ETM_NTM_PAIRING_FREE_RAINFLOW_GAP_20261110.svg) `279ae970c6295fcab5cdbfcbb78b05e37b02ab4d38c78ad6af737c97b5f181dc`；[Ch3§3.7.17](../../manuscript/final-thesis/chapters/03_场址风环境与整机随机风控制载荷.md) `f0003fea73bec3713db44a4226da6e7cc3ca3d416d165f4681b1c812612620f2`、[期刊§3.20/4.20](../../manuscript/journal-wind-fatigue-results.md) `b7a576c4e64a1cf8e1abe43ce8d8d43f7eb7755a4f4d32ce030631127f014ed2`、[六章阅读母稿](../../manuscript/final-thesis/assemble/THESIS_SIX_CHAPTER_REVIEW_20261102.md)与源锁装配器同步。
+
+**独立测试/误差与边界。** V8执行远端提交版Node纯计算函数，真实六行锚点/分离计数、5类坏源拒绝（重复表头/非法case/NaN/行数缺失/重复case）、输入逆序不变、CSV与SVG**逐字节再生一致**；原生Node CLI/原始OUTB重解码/新物理RUN NOT_RUN。表内裕度保留三位小数（舍入≤0.0005个百分点）；本次派生双精度计算误差远小于该显示精度，原OUTB量化/有限seed/控制器状态/气候概率/材料局部应力等物理与统计不确定性未闭合。REF=既有Huang2025与两篇2026混塔先行论文沿用历史核读层级，本轮未全文新核；STANDARD=无新增IEC/GB授权条文；OFFICIAL=历史OpenFAST v3.5.3收据。**SOURCE-LEVEL NEGATIVE/ROBUSTNESS TEST PASS；S06 PARTIAL、12阶段0/12、正式DLC1.2 0/126、同态W/E/WE及材料Miner/送审HOLD**。白皮书v0.2.74→v0.2.75 PATCH。下一唯一动作：转S12，将英文期刊稿过长的多层补充统计压缩为以R1–R3为主的可投稿结构，不再重复本次ETM/NTM包络或旧缺失箱检查。禁区/main/T057/T070/PR合并均未触碰。
+
 ## 2026-11-10 02时｜S10真实18NTM六seed聚合算子与固定方位偏差（0/12）
 
 **START / 研究选择。** 开工基线PR#42 Open/Draft HEAD=`9b2356b4525daaf01b955dc18b1151e3b4f76324`，main=`58c1e545f67b645417d5957189f5dad693d975bb`。已依序核研究AGENTS、指挥室READ-BEFORE-WRITE及01时交接、白皮书v0.2.73、MASTER/STATUS、12阶段、T079/T080过程及本轮来源。S06已有原始OpenFAST六分量风载但与E-only梁代理的同模型/同初态证据未闭合，按反卡死转S10；不重复01时Pareto分析。
