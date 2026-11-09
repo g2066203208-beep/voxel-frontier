@@ -50,7 +50,7 @@ function csv(out){
   return h+'\n'+out.map(x=>[x.channel,x.speed,x.oldE.toFixed(9),x.oldN.toFixed(9),x.oldGap.toFixed(9),x.newE.toFixed(9),x.newN.toFixed(9),x.newGap.toFixed(9),x.oldRobust?1:0,x.newRobust?1:0].join(',')).join('\n')+'\n';
 }
 function svg(out){
-  const x0=430,scale=5.1,parts=[];
+  const x0=550,scale=4.6,parts=[];
   parts.push('<svg xmlns="http://www.w3.org/2000/svg" width="1020" height="540" viewBox="0 0 1020 540">');
   parts.push('<rect width="1020" height="540" fill="#ffffff"/>');
   parts.push('<text x="36" y="38" font-family="Arial" font-size="22" font-weight="bold">Seed-permutation-invariant ETM/NTM separation</text>');
