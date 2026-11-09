@@ -2,31 +2,31 @@
 <rect width="1020" height="540" fill="#ffffff"/>
 <text x="36" y="38" font-family="Arial" font-size="22" font-weight="bold">Seed-permutation-invariant ETM/NTM separation</text>
 <text x="36" y="62" font-family="Arial" font-size="13" fill="#475569">Six historical seeds per class; gap = 100 x [min(ETM)/max(NTM) - 1]; positive means full observed separation</text>
-<line x1="430" y1="100" x2="430" y2="444" stroke="#334155" stroke-width="2"/>
-<line x1="124" y1="100" x2="124" y2="444" stroke="#e2e8f0"/><text x="124" y="467" text-anchor="middle" font-size="12" font-family="Arial">-60%</text>
-<line x1="226" y1="100" x2="226" y2="444" stroke="#e2e8f0"/><text x="226" y="467" text-anchor="middle" font-size="12" font-family="Arial">-40%</text>
-<line x1="328" y1="100" x2="328" y2="444" stroke="#e2e8f0"/><text x="328" y="467" text-anchor="middle" font-size="12" font-family="Arial">-20%</text>
-<line x1="430" y1="100" x2="430" y2="444" stroke="#e2e8f0"/><text x="430" y="467" text-anchor="middle" font-size="12" font-family="Arial">0%</text>
-<line x1="532" y1="100" x2="532" y2="444" stroke="#e2e8f0"/><text x="532" y="467" text-anchor="middle" font-size="12" font-family="Arial">20%</text>
-<line x1="634" y1="100" x2="634" y2="444" stroke="#e2e8f0"/><text x="634" y="467" text-anchor="middle" font-size="12" font-family="Arial">40%</text>
-<line x1="736" y1="100" x2="736" y2="444" stroke="#e2e8f0"/><text x="736" y="467" text-anchor="middle" font-size="12" font-family="Arial">60%</text>
+<line x1="550" y1="100" x2="550" y2="444" stroke="#334155" stroke-width="2"/>
+<line x1="274" y1="100" x2="274" y2="444" stroke="#e2e8f0"/><text x="274" y="467" text-anchor="middle" font-size="12" font-family="Arial">-60%</text>
+<line x1="366" y1="100" x2="366" y2="444" stroke="#e2e8f0"/><text x="366" y="467" text-anchor="middle" font-size="12" font-family="Arial">-40%</text>
+<line x1="458" y1="100" x2="458" y2="444" stroke="#e2e8f0"/><text x="458" y="467" text-anchor="middle" font-size="12" font-family="Arial">-20%</text>
+<line x1="550" y1="100" x2="550" y2="444" stroke="#e2e8f0"/><text x="550" y="467" text-anchor="middle" font-size="12" font-family="Arial">0%</text>
+<line x1="642" y1="100" x2="642" y2="444" stroke="#e2e8f0"/><text x="642" y="467" text-anchor="middle" font-size="12" font-family="Arial">20%</text>
+<line x1="734" y1="100" x2="734" y2="444" stroke="#e2e8f0"/><text x="734" y="467" text-anchor="middle" font-size="12" font-family="Arial">40%</text>
+<line x1="826" y1="100" x2="826" y2="444" stroke="#e2e8f0"/><text x="826" y="467" text-anchor="middle" font-size="12" font-family="Arial">60%</text>
 <text x="35" y="136" font-family="Arial" font-size="14">TwrBsMxt  9.343881 m/s</text>
-<rect x="430.00" y="120" width="75.77" height="14" rx="2" fill="#94a3b8"/><text x="512.77" y="131" text-anchor="start" font-size="11" font-family="Arial">14.86%</text>
-<rect x="430.00" y="139" width="69.67" height="14" rx="2" fill="#2563eb"/><text x="506.67" y="150" text-anchor="start" font-size="11" font-family="Arial">13.66%</text>
+<rect x="550.00" y="120" width="68.34" height="14" rx="2" fill="#94a3b8"/><text x="625.34" y="131" text-anchor="start" font-size="11" font-family="Arial">14.86%</text>
+<rect x="550.00" y="139" width="62.84" height="14" rx="2" fill="#2563eb"/><text x="619.84" y="150" text-anchor="start" font-size="11" font-family="Arial">13.66%</text>
 <text x="35" y="189" font-family="Arial" font-size="14">TwrBsMxt  11.400000 m/s</text>
-<rect x="430.00" y="173" width="112.22" height="14" rx="2" fill="#94a3b8"/><text x="549.22" y="184" text-anchor="start" font-size="11" font-family="Arial">22.00%</text>
-<rect x="430.00" y="192" width="118.99" height="14" rx="2" fill="#2563eb"/><text x="555.99" y="203" text-anchor="start" font-size="11" font-family="Arial">23.33%</text>
+<rect x="550.00" y="173" width="101.22" height="14" rx="2" fill="#94a3b8"/><text x="658.22" y="184" text-anchor="start" font-size="11" font-family="Arial">22.00%</text>
+<rect x="550.00" y="192" width="107.32" height="14" rx="2" fill="#2563eb"/><text x="664.32" y="203" text-anchor="start" font-size="11" font-family="Arial">23.33%</text>
 <text x="35" y="242" font-family="Arial" font-size="14">TwrBsMxt  19.202140 m/s</text>
-<rect x="300.71" y="226" width="129.29" height="14" rx="2" fill="#94a3b8"/><text x="293.71" y="237" text-anchor="end" font-size="11" font-family="Arial">-25.35%</text>
-<rect x="366.89" y="245" width="63.11" height="14" rx="2" fill="#2563eb"/><text x="359.89" y="256" text-anchor="end" font-size="11" font-family="Arial">-12.38%</text>
+<rect x="433.39" y="226" width="116.61" height="14" rx="2" fill="#94a3b8"/><text x="426.39" y="237" text-anchor="end" font-size="11" font-family="Arial">-25.35%</text>
+<rect x="493.07" y="245" width="56.93" height="14" rx="2" fill="#2563eb"/><text x="486.07" y="256" text-anchor="end" font-size="11" font-family="Arial">-12.38%</text>
 <text x="35" y="295" font-family="Arial" font-size="14">TwrBsMyt  9.343881 m/s</text>
-<rect x="403.48" y="279" width="26.52" height="14" rx="2" fill="#94a3b8"/><text x="396.48" y="290" text-anchor="end" font-size="11" font-family="Arial">-5.20%</text>
-<rect x="430.00" y="298" width="45.82" height="14" rx="2" fill="#2563eb"/><text x="482.82" y="309" text-anchor="start" font-size="11" font-family="Arial">8.98%</text>
+<rect x="526.08" y="279" width="23.92" height="14" rx="2" fill="#94a3b8"/><text x="519.08" y="290" text-anchor="end" font-size="11" font-family="Arial">-5.20%</text>
+<rect x="550.00" y="298" width="41.33" height="14" rx="2" fill="#2563eb"/><text x="598.33" y="309" text-anchor="start" font-size="11" font-family="Arial">8.98%</text>
 <text x="35" y="348" font-family="Arial" font-size="14">TwrBsMyt  11.400000 m/s</text>
-<rect x="213.76" y="332" width="216.24" height="14" rx="2" fill="#94a3b8"/><text x="206.76" y="343" text-anchor="end" font-size="11" font-family="Arial">-42.40%</text>
-<rect x="430.00" y="351" width="38.82" height="14" rx="2" fill="#2563eb"/><text x="475.82" y="362" text-anchor="start" font-size="11" font-family="Arial">7.61%</text>
+<rect x="354.96" y="332" width="195.04" height="14" rx="2" fill="#94a3b8"/><text x="347.96" y="343" text-anchor="end" font-size="11" font-family="Arial">-42.40%</text>
+<rect x="550.00" y="351" width="35.02" height="14" rx="2" fill="#2563eb"/><text x="592.02" y="362" text-anchor="start" font-size="11" font-family="Arial">7.61%</text>
 <text x="35" y="401" font-family="Arial" font-size="14">TwrBsMyt  19.202140 m/s</text>
-<rect x="430.00" y="385" width="95.08" height="14" rx="2" fill="#94a3b8"/><text x="532.08" y="396" text-anchor="start" font-size="11" font-family="Arial">18.64%</text>
-<rect x="430.00" y="404" width="56.82" height="14" rx="2" fill="#2563eb"/><text x="493.82" y="415" text-anchor="start" font-size="11" font-family="Arial">11.14%</text>
+<rect x="550.00" y="385" width="85.76" height="14" rx="2" fill="#94a3b8"/><text x="642.76" y="396" text-anchor="start" font-size="11" font-family="Arial">18.64%</text>
+<rect x="550.00" y="404" width="51.25" height="14" rx="2" fill="#2563eb"/><text x="608.25" y="415" text-anchor="start" font-size="11" font-family="Arial">11.14%</text>
 <rect x="36" y="489" width="14" height="12" fill="#94a3b8"/><text x="57" y="500" font-size="12" font-family="Arial">Historical rainflow</text><rect x="244" y="489" width="14" height="12" fill="#2563eb"/><text x="265" y="500" font-size="12" font-family="Arial">Corrected rainflow</text>
 <text x="36" y="524" font-size="11" font-family="Arial" fill="#64748b">Historical archive, 36 cases / two channels; not a future-seed confidence bound or a material fatigue result.</text></svg>
