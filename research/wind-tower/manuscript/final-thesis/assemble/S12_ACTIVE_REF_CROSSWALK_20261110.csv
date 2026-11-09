@@ -1,0 +1,31 @@
+order,ref_id,r5_old_number,doi_or_source,verification_level
+1,REF001,2,"DTU Wind Energy Report-I-0092",R5
+2,REF008,1,"湖南大学",R5
+3,REF005,63,"10.1016/j.engstruct.2023.115622",R5
+4,REF007,,"湖南大学",USER-PDF
+5,REF010,64,"10.1016/j.istruc.2024.107235",R5
+6,REF039,,"10.1142/S0219455423500311",INSTITUTION
+7,REF006,,"重庆大学",USER-PDF
+8,REF061,100,"10.1016/j.renene.2025.122475",R5
+9,REF009,28,"10.5194/wes-9-1791-2024",R5
+10,REF080,,"10.1016/j.renene.2018.03.056",PUBLISHER
+11,REF090,,"10.1016/j.rser.2022.112741",PUBLISHER
+12,REF093,8,"10.1016/j.apenergy.2023.122441",R5-CORRECTED
+13,REF064,10,"NREL/TP-500-46198; https://www.nrel.gov/docs/libraries/wind-docs/turbsim_v2-00-pdf.pdf",VERSION-HOLD
+14,REF132,,"user-supplied licensed fulltext; public binary redistribution prohibited",STANDARD
+15,REF046,102,"10.5194/wes-7-53-2022",R5
+16,REF018,95,"10.1016/j.engstruct.2025.120295",R5
+17,REF041,,"10.1186/s40069-025-00800-5",PUBLISHER
+18,REF023,,"10.3390/buildings16193854",PUBLISHER
+19,REF002,5,"Trinity College Dublin TARA",R5
+20,REF143,,"10.1155/2023/1100725",PUBLISHER
+21,REF036,,"10.1007/s12205-019-1171-2",INSTITUTION
+22,REF047,15,"https://openfast.readthedocs.io/en/main/source/user/elastodyn/theory.html",VERSION-HOLD
+23,REF083,,"10.1002/er.6382",PUBLISHER
+24,REF011,75,"10.5194/wes-4-479-2019",R5
+25,REF048,6,"https://webstore.iec.ch/en/publication/111042",STANDARD
+26,REF004,65,"10.1016/j.istruc.2021.08.036",R5
+27,REF020,66,"10.1016/j.jcsr.2024.108729",R5
+28,REF021,67,"10.1016/j.engstruct.2025.120835",R5
+29,REF022,92,"10.1002/tal.70014",R5
+30,REF033,,"10.1002/tal.1741",PUBLISHER
