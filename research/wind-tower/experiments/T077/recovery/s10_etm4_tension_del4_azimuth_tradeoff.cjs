@@ -71,6 +71,6 @@ if(typeof require!=='undefined'&&typeof module!=='undefined'&&require.main===mod
  assert(crypto.createHash('sha256').update(src).digest('hex')===SOURCE_SHA256,'source hash mismatch');
  const result=analyze(src);console.log(selftest(result));
  fs.writeFileSync(path.join(__dirname,'S10_ETM4_31SEG_TENSION_DEL4_AZIMUTH_TRADEOFF_20261109.csv'),toCsv(result));
- fs.writeFileSync(path.resolve(__dirname,'../../manuscript/final-thesis/figures/FIG4_S10_ETM4_TENSION_DEL4_AZIMUTH_TRADEOFF_20261109.svg'),toSvg(result));
+ fs.writeFileSync(path.resolve(__dirname,'../../../manuscript/final-thesis/figures/FIG4_S10_ETM4_TENSION_DEL4_AZIMUTH_TRADEOFF_20261109.svg'),toSvg(result));
  console.log('WROTE 124 rows, SVG; no physical run');
 }
