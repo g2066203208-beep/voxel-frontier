@@ -1,0 +1,4 @@
+return_period_years,reported_level_mps,reduced_variate,prob_at_least_one_in_21y,extrapolation_factor_T_over_21,level_minus_sample_max_mps
+20,16.91,2.970195249,0.659438374,0.952380952,-0.716
+50,17.49,3.901938658,0.345744188,2.380952381,-0.136
+100,17.86,4.600149227,0.190272132,4.761904762,0.234
