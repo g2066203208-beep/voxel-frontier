@@ -547,6 +547,23 @@ The smallest attainable two-sided p for complete separation is 2/924=0.002165. T
 
 For m=4, U19p202140_NTM_S04 is the **sole Pareto-nondominated case** and controls **6/6** tower-base component DEL maxima; one case is sufficient for exact retrospective coverage. For m=10, three cases are nondominated (U11p4_NTM_S04, U11p4_NTM_S06, U19p202140_NTM_S04), and the unique exact minimum cover requires **two cases**: U11p4_NTM_S06 plus U19p202140_NTM_S04. The former controls My m10 DEL at **150492.197792 kN m**, whereas the latter controls the other five channels and has My m10 DEL **122739.602475 kN m**, only **81.558781%** of the observed My maximum. Hence retaining only the m4 champion misses **18.441219%** of the observed My m10 maximum. The unique minimum-cover result also persists at the 95% per-channel threshold. Supplementary Tables S7/S8 and Figure S7 document the six maxima, all 18 Pareto labels and the normalized component ratios. This is not a prospective capture probability or a Miner-damage estimate.
 
+
+### 3.20. Pairing-free ETM/NTM separation changes after correcting rainflow closure
+
+A class comparison based only on seed labels can hide an important limitation: ETM seed S01 and NTM seed S01 are not necessarily a physically paired turbulent realization. We therefore used a **permutation-invariant finite-archive contrast**. For each wind speed (v), tower-base moment channel (c), rainflow implementation (a), and the six archived realizations per turbulence class, define
+
+[
+G_{c,v}^{(a)}=100\left[\frac{\min_{s=1,\ldots,6} DEL_{c,v,ETM,s}^{(a)}}{\max_{s=1,\ldots,6} DEL_{c,v,NTM,s}^{(a)}}-1\right]\%.
+]
+
+If (G>0), **every** observed ETM DEL exceeds **every** observed NTM DEL at that speed and channel, regardless of seed relabelling. If (G\le0), complete separation is not established; this does not imply that an identically labelled seed reverses sign. This is an exact finite-archive property, not a confidence interval, causal ETM effect or future-seed prediction.
+
+The calculation reads the same 72 historical-versus-corrected paired moment-DEL rows used in R1 (36 cases × two channels; SOURCE SHA256 `12dabbb1273ce03d3920aedda3f72f9fa1d75b671e01a1db145c0a972ffe15e2`). It does not re-run OpenFAST or the original rainflow extraction. The six-speed/channel groups yield the following **old → corrected** worst-case margins (percentage points): Mx at 9.343881, 11.400000 and 19.202140 m/s: **+14.857 → +13.660, +22.005 → +23.331, −25.351 → −12.375**; My: **−5.200 → +8.984, −42.400 → +7.613, +18.644 → +11.142**. Thus the number of My wind-speed groups with complete observed class separation increases from **one of three to three of three**, whereas Mx remains **two of three**. In contrast, ETM exceeds NTM for all 18 *same-label* seed comparisons in each channel under either implementation; same-label sign invariance therefore does **not** certify separation under arbitrary cross-seed matching.
+
+![Finite-archive ETM/NTM separation margins](final-thesis/figures/FIG3_S06_ETM_NTM_PAIRING_FREE_RAINFLOW_GAP_20261110.svg)
+
+The method is reproducible from [the six-row source-derived table](../experiments/T062/S06_ETM_NTM_PAIRING_FREE_RAINFLOW_GAP_20261110.csv) and [the source-locked Node program](../experiments/T062/s06_etm_ntm_pairing_free_rainflow_gap.cjs), which rejects malformed headers, duplicate cases, incomplete seeds and nonfinite DELs. This result is a **negative control on an overbroad interpretation**: rainflow correction can change whether class ordering is robust to arbitrary reassignment of the *observed* seeds even when no same-label ETM/NTM sign reverses. ETM is not assigned a long-term NTM fatigue occurrence probability here; local material stresses, new independent seeds and formal DLC1.2 remain unverified.
+
 ## 4. Discussion, falsifiability and scope
 
 A verified rainflow implementation is a necessary upstream condition for reliable selection of candidate load cases. It is not sufficient for predicting fatigue of concrete, prestressing tendons, ordinary reinforcement or structural steel: those require local material stress cycles, material-specific fatigue laws, validated mean stress, and wind-speed exposure. The 36 simulations are representative-wind screening records, not a verified DLC1.2 lifetime matrix. The archived ERA5-derived 184,080-hour series contains 106,900 hours in a deliberately diagnostic [4,25) m/s operating interval; only 7,164 hours (6.70159% of that interval) lie in the three wind-speed bins with historical NTM source coverage. The missing bins cannot be assigned zero fatigue damage.
@@ -697,6 +714,11 @@ For the 11.4-to-19.202140 m/s My DEL4 contrast, all 36 deletions of one observed
 ### 4.19. Falsifiable limits of one-case selection
 
 The observed m4 dominance cannot justify a universal single-seed selection rule: the m10 My counterexample rejects it on the same original wind histories. Componentwise load-DEL dominance does not imply that component extrema occur simultaneously, that any 31-segment local stress is bounded by the same ranking, or that the material S–N exponent equals m4 or m10. Only three historical wind bins and six seeds per bin were observed. Independent wind bins, future seeds, model state and local material stress histories are necessary prospective falsifiers. The 2026 wind–seismic and PT–seismic prior studies do not establish this particular historical DEL ranking, but this result also makes no claim of first wind–seismic analysis.
+
+
+### 4.20. Distinguishing seed-label dominance from class-envelope dominance
+
+The corrected My data exhibit complete ETM-over-NTM separation within all three observed speed groups, whereas the historical rainflow implementation exhibited complete separation only in the highest-speed group. This does not demonstrate a population-level stochastic ordering of ETM and NTM: the statistic is based on only six realizations per class and is deliberately sensitive to the single smallest ETM and largest NTM observation. Its virtue is **logical robustness to seed-label permutations within the finite archive**, not sampling precision. Future independent seeds could break the separation. For subsequent case selection, the screening decision should therefore report both the turbulence class and the rainflow implementation, retain the original case identity, and avoid inferring material fatigue life or annual ETM frequency from this finite-archive load contrast.
 
 ## 5. Conclusions
 
