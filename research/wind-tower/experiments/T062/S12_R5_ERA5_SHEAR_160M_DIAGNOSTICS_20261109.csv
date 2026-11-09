@@ -1,0 +1,11 @@
+metric,value,unit
+alpha_from_mean_winds,0.215563722,1
+v160_from_rounded_means,4.757466221,m/s
+excluded_alpha_hours,3312.000000000,h
+excluded_alpha_fraction,1.799217731,%
+hourly_minus_fixed_v160,0.106000000,m/s
+hourly_minus_fixed_relative,2.228295144,%
+fixed_vs_eia_mean,-0.688935282,%
+hourly_vs_eia_mean,1.524008351,%
+era5_wpd_vs_eia_text,25.533980583,%
+era5_wpd_vs_eia_table,24.326923077,%

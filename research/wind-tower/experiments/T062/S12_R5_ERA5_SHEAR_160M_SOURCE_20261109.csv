@@ -1,0 +1,17 @@
+key,value,unit,source
+n_total,184080,h,R5_table_3_2
+n_valid,180768,h,R5_table_3_4
+v10_mean,2.617,m/s,R5_table_3_2
+v100_mean,4.299,m/s,R5_table_3_2
+alpha_mean_ratio,0.2156,1,R5_table_3_4
+alpha_p05,0.078,1,R5_table_3_4
+alpha_p25,0.118,1,R5_table_3_4
+alpha_p50,0.199,1,R5_table_3_4
+alpha_p75,0.297,1,R5_table_3_4
+alpha_p95,0.384,1,R5_table_3_4
+v160_mean_ratio,4.757,m/s,R5_table_3_4
+v160_hourly,4.863,m/s,R5_table_3_4
+eia_v160,4.790,m/s,R5_table_3_4
+era5_wpd,129.3,W/m2,R5_table_3_4
+eia_wpd_text,103.0,W/m2,R5_table_3_4
+eia_wpd_table,104.0,W/m2,R5_table_3_4
