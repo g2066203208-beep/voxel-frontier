@@ -1,3 +1,12 @@
+## 2026-11-09 08时｜S06跨风速箱真实18NTM三指标解耦与S12第六章正式结论（0/12）
+
+- **START/并发/继承**：本轮指挥室先行START commit `5fc0fd4fcbe04c81a1c5f2169b6248bf132c73a8`，初始HEAD `2fd91d3cd0a04969e82b248860828dd49344b1ba`，main基线取PR base SHA `bbc5c9130f2d9fc41f776506d86118a9b8db0e65`，PR#42 Open/Draft。依序读根/研究AGENTS、指挥室READ-BEFORE-WRITE及07时交接、白皮书v0.2.55、MASTER/STATUS、12阶段、T079/T080过程、Ch3§3.7.13–14/§3.10、Ch6、真实18case CSV。S06无新同态W六分量源，转用**已有真实历史风载的不同科学问题**，不重复控制seed集合/LOBO/ERA5尾部小审计。
+- **SOURCE/REF/STANDARD/OFFICIAL**：SOURCE=[18case同OUTB派生表](../T062/S06_NTM18_THREE_QOI_18CASE_20261109.csv) SHA256 `cf17f4ed29310c649fbceba236a8be5aefc6953e40659f12bd85771404fc87fb`，每case附原始OUTB SHA，3风速箱×6seed、100—700s、0.05s、TwrBsMyt、mean/positive-peak/DEL4 (m=4,Nref=600)。REF=先行2026风震/PT DOI沿用历史已读范围，本轮未核原文全文；STANDARD=无新增授权IEC条款；OFFICIAL=ERA5分母继承既有归档，未重取。
+- **科学问题/数值**：分别对六seed计算三种载荷指标算术平均及样本CV（分母n−1）。9.343881/11.4/19.202140 m/s的时均My均值=177.175982/193.078679/106.924047 MN·m，正峰My均值=271.200912/290.197883/217.362062 MN·m，DEL4均值=43.701157/56.611754/61.333196 MN·m。11.4→19.202140 m/s，时均−44.621515%、正峰−25.098674%、DEL4 **+8.340039%**；DEL4样本CV=13.329354/11.900626/6.428970%，时均CV=1.560157/3.207918/1.285860%。三箱DEL4相对seed离散为时均的3.709767—8.543595倍。跨箱非同一seed配对的因果实验，不能归因控制器、推广全风速或材料寿命。
+- **RUN/TAB/FIG/正文**：V8直接读取真实18行源并计算，新增[三行CSV](../T062/S06_NTM18_CROSS_BIN_MEAN_PEAK_DEL_3BIN_20261109.csv) SHA256 `749dbd8439ee558a1b5204719401bbdcdecb0680a2d5cdc27c1e1f4f75f0a32e`；[Ch3§3.7.15](../../manuscript/final-thesis/chapters/03_场址风环境与整机随机风控制载荷.md)新增方法公式/三箱表/结果/反例/局限，[Ch6§6.1.5](../../manuscript/final-thesis/chapters/06_结论与展望.md)将历史模板段实质改写为三条带证据指针的正式阶段性结论。FIG=无新增图，正文表即为本轮数表；原生Node CLI/OUTB重解码/风场生产RUN均NOT_RUN。
+- **独立测试/误差/失败**：V8源级18行、3×6、两项数值oracle、输入行逆序相对/绝对差<1e−11、负指标拒绝、重复case拒绝PASS。首次错误地要求浮点求和行逆序逐字节一致，测试失败后改为数值容差（没有改数据或物理判据）。CSV九位小数舍入误差≤5e−10个表内单位；六seed统计不确定性、风速箱代表性、控制器状态与结构局部响应误差**未量化**，CV不是CI。
+- **验收/HOLD**：**历史真实OUTB派生载荷跨箱统计与论文正文SOURCE-LEVEL PASS；整阶段0/12，正式DLC1.2 0/126、同态W/E/WE、材料局部应力/Miner/寿命及S12送审HOLD。** 不执行、准备、审核或派发任何Abaqus/CAE，不动冻结T057/T070/main，不合并PR。下一唯一动作：S12将T079已取得的0.005s E-only方法/结果按明确代理等级正式装配进拟增地震章节；若需原始地震谱/site/授权条款则停下改转有真实源的S05，不重复三箱指标。
+
 ## 2026-11-09 07时｜S11约束NSGA-II与LHS等预算独立算法基准（0/12）
 
 - START/并发：指挥室START提交 7822e15b9eb9fc64e8c510eb0ad891095bc4445b；初始HEAD f403c9ba71ae02c0d0ddd933890d13a5392feff7，PR#42 Open/Draft。已按AGENTS→READ-BEFORE-WRITE/06时交接→白皮书v0.2.54→MASTER/STATUS→12阶段→T079/T080→Ch5和既有S11代理/Pareto方法程序阅读。S06未取得新增可证明同态W完整六分量原件，依反卡死纪律转S11；不重复分组留出与区间Pareto门禁。
