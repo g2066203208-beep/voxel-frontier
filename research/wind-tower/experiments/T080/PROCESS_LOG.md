@@ -1,3 +1,15 @@
+## 2026-11-09 23时｜S12原R5 GEV返回水平图恢复及21年样本可辨识性（0/12）
+
+**科学问题与SOURCE。** 原R5 Word图3-5中20/50/100年GEV返回水平是否足以证明100年极值或IEC Vref？直接物化并读取原R5 DOCX（23,653,138B，SHA256 da86e1fadafc977fc66d14a97a46760e73ec3b5150ddbae65fd62c7105764ee9），目视核对原图image47.png（SHA256 8bd5628432b31132edf30a9480a0968766125d6b83cbf9b84f64025595eb1e75）和紧随段落，恢复100m逐小时年最大GEV三个**原稿报告值**16.91/17.49/17.86m/s（20/50/100年）；100m逐小时样本最大17.626m/s、年度块21个。**未获得21个逐年最大值的完整列表/原拟合参数与协方差，不冒称本轮重新拟合GEV或取得CI。**
+
+**RUN/TAB/FIG/论文。** 新[三行原报告点CSV](../T062/S12_R5_ERA5_GEV_3LEVEL_SOURCE_20261109.csv) SHA256 3039b6f6f0d0365302b9aafdd1ae272b27011453bde8c193cb257c74561b3ed6；[可运行Node](../T062/s12_r5_gev_return_level_identifiability.cjs) SHA256 eefe55638e0cd02cafac6ff61b2eae3b5f283fd8010b3ca46ce8aed8752726fe；[三行诊断表](../T062/S12_R5_ERA5_GEV_RETURN_DIAGNOSTICS_20261109.csv) SHA256 55b8a70e9009f020d4df03458f67ffebc78044f2c16f1e631071c29c82f75678；[正式SVG](../../manuscript/final-thesis/figures/FIG3_S12_R5_GEV_RETURN_EVIDENCE_20261109.svg) SHA256 2f3c3482ee344ea88d56289e02d2f68a0070e16ea3d0c302c86b02ef452927f4。Ch3新增§3.2.4b，六章阅读稿由源锁装配器更新，reader SHA256 6e0895d579e8f75ff22a88af1b0963b1778b01d2bb12f07711667ec7f0eabfa9。21年独立平稳年度块条件下，P(≥1次超越)=1−(1−1/T)^21，对T=20/50/100分别为**65.943837%/34.574419%/19.027213%**，100年/21年记录=**4.761905**；100年报告点较样本最大仅高**0.234m/s**，不构成验证。强制将三个两位小数点精确插值到同一GEV形状得到**代数xi=-0.196784**，三个点末位各±0.005m/s的八端点给出**[-0.250908,-0.143076]**；**这不是原拟合xi、统计CI或极值安全上界。**
+
+**REF/OFFICIAL/STANDARD/误差。** Coles (2001) *An Introduction to Statistical Modeling of Extreme Values*，出版社Springer书目及DOI 10.1007/978-1-4471-3675-0已核；原书公式所在页码未取得，不冒称全文读过。统计假设=各年独立平稳且T年阈值定义正确；三个报告值的印刷舍入为±0.005m/s；参数拟合、ERA5网格/观测偏差、极值非平稳性及10min风速换算均**未估计**。无新增IEC/GB授权条款核读，非Vref、非DLC或场址认证。
+
+**真实测试与失败。** V8对提交的同源Node核心执行4项实数锚点、2项解析概率oracle、11类污染拒绝PASS；另在本轮工作容器用独立同公式Node CLI验证三行来源及图表生成，初版测试暴露prob()未拒绝Infinity和临时工作目录相对路径错误，均在远端提交版修复；**远端提交版原生Node CLI/Actions NOT_RUN**。新物理/ERA5逐小时生产RUN=0。SOURCE-LEVEL STATISTICAL DIAGNOSTIC PASS；S12 PARTIAL、12阶段0/12、正式DLC1.2 0/126、材料Miner/同态W-E-WE/真实优化/送审HOLD。
+
+**下一唯一最优动作。** 转S12正式参考文献著录，优先从原R5参考文献106条与现行registry USED集做逐项作者/DOI/版本冲突核验，生成真实可用于六章的编号参考文献，不再重复GEV三个点的有限样本算术。不执行、准备、审核或派发任何Abaqus/CAE；不动冻结T057/T070/main、不合并Draft PR。
+
 ## 2026-11-09 22时｜S12原R5风切变/160 m风速—风功率密度交叉核查（0/12）
 
 **科学问题/SOURCE。** 原R5 Word中“ERA5两种160 m平均风速接近环评公开均值”能否证明风切变处理和风资源量级已校准？**不能。** 直接读取Library原R5 DOCX 23,653,138 B，SHA256 `da86e1fadafc977fc66d14a97a46760e73ec3b5150ddbae65fd62c7105764ee9`；逐项抄录原表3-2/3-4，原图3-4(a) image45.png SHA256 `19cbb41a754fce0eb3a98a6ea3c2b216737ec2317dae2c08288f369e71e072ae`、原图3-4(b) image46.png SHA256 `4c931c7ec41663fbbab6ef26a57ff3e0d9047ca231a1e516adfead243c56553f`均已目视核看。不是本轮184080h ERA5逐小时重读或原PNG逐像素恢复。
