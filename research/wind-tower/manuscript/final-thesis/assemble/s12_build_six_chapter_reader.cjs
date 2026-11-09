@@ -33,9 +33,21 @@ s=insert(s,"### 5.5.4 Pareto关系","![图5-D：NSGA-II/LHS解析基准（非真
 if(/[\x00-\x08\x0b\x0c\x0e-\x1f]/.test(s))throw Error("control chars Ch"+i);return s.trim()});
 const table=meta.map((m,i)=>`| ${i+1} | \`${m.name}\` | \`${m.blob}\` | \`${m.sha256}\` |`).join("\n");
 return `# 10 MW级陆上风机预应力混凝土—钢混合塔架：六章连续阅读母稿（2026-11-09）\n\n> **导师内部阅读用研究母稿，不是送审版Word/PDF，也不代表12阶段验收通过。** 从PR #42六章最新原文按SHA锁定装配，剔除章末内部门禁；第五章仅在装配层以真实留出验证综合表替代无实证的优化占位表，修复数学式和零基准疲劳比值定义，嵌入4幅既有S11图。原六章源文件保持不变。\n\n> **证据边界：** 158m组合研究模型、ERA5 184080h、历史36组风/18NTM/4ETM已有来源级成果；正式DLC1.2 **0/126**、分材料局部Miner/真实DOE与结构Pareto/同态W-E-WE未闭合，**12阶段0/12**。原Word媒体恢复、中英摘要、正式参考文献著录及排版尚未完成；不能直接提交盲审。\n\n## 六章源文件身份（Git Blob SHA1与UTF-8 SHA256）\n\n| 章 | 源文件 | Git Blob SHA1 | SHA256 |\n|---|---|---|---|\n${table}\n\n---\n\n${chapters.join("\n\n---\n\n")}\n`;}
+function appendActiveReferences(s,chapters,bib,registry){
+ const order=[...new Set([...chapters.join("\n").matchAll(/\bREF\d{3}\b/g)].map(m=>m[0]).filter(id=>id!=="REF131"))];
+ const e=[...bib.matchAll(/^(\d+)\. \[(REF\d{3})\] /gm)].map(m=>[Number(m[1]),m[2]]);
+ if(e.length!==30||e.some((r,i)=>r[0]!==i+1||r[1]!==order[i]))throw Error("BIB_FIRST_USE_DRIFT");
+ const r=new Map(registry.trim().split(/\r?\n/).slice(1).map(x=>{let p=x.split("\t");return[p[0],p[5]];}));
+ for(const [,id] of e){let doi=r.get(id);if(!doi||(/^10\./.test(doi)&&!bib.includes("DOI:"+doi)))throw Error("BIB_DOI_DRIFT "+id);}
+ if(!bib.includes("356:122441")||bib.includes("356:122381"))throw Error("BIB_R5_YANG");
+ const m=new Map(e.map(x=>[x[1],x[0]]));
+ let out=s.replace(/\[REF(\d{3})\]/g,(w,n)=>m.has("REF"+n)?"["+m.get("REF"+n)+"]":w).replace(/\bREF\d{3}\b/g,id=>m.has(id)?"["+m.get(id)+"]":id);
+ out=out.replace("正式参考文献著录及排版尚未完成","30条现行非禁区参考文献已初步著录（另1条禁区保留）、最终排版尚未完成");
+ return out.trimEnd()+"\n\n---\n\n"+bib.trim()+"\n";
+}
 const root=path.resolve(__dirname,".."),target=path.join(__dirname,"THESIS_SIX_CHAPTER_REVIEW_20261102.md");
 const inputs=meta.map(m=>{const s=fs.readFileSync(path.join(root,"chapters",m.name),"utf8");const blob=crypto.createHash("sha1").update(Buffer.from("blob "+Buffer.byteLength(s)+"\0")).update(s).digest("hex");const digest=crypto.createHash("sha256").update(s).digest("hex");if(blob!==m.blob||digest!==m.sha256)throw Error("SOURCE_SHA_MISMATCH: "+m.name);return s;});
-const out=build(inputs,meta);
+const out=appendActiveReferences(build(inputs,meta),inputs,fs.readFileSync(path.join(__dirname,"S12_ACTIVE_REFERENCES_20261110.md"),"utf8"),fs.readFileSync(path.resolve(__dirname,"../../../registry/literature_master.tsv"),"utf8"));
 if(process.argv.includes("--write")){fs.writeFileSync(target,out,"utf8");console.log("WROTE",crypto.createHash("sha256").update(out).digest("hex"));}
 else if(process.argv.includes("--check")){if(fs.readFileSync(target,"utf8")!==out)throw Error("ASSEMBLY_DRIFT");console.log("ASSEMBLY_PASS",crypto.createHash("sha256").update(out).digest("hex"));}
 else process.stdout.write(out);
