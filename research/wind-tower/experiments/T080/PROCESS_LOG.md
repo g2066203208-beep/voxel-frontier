@@ -1859,3 +1859,11 @@ b14fc9c6bb7679e665b30c050d43ae32cf5f86a107e09eac90a199897b83e957  /mnt/data/s07_
 - **真实参数与计算**：DISCON原卡L17 `SD_Mode=0`（ROSCO变桨触发的Shutdown()分支不启用）、L16 `PS_Mode=1`（最小桨距约束表启用；原表60点、风速4–25m/s）、L11 `VS_ControlMode=2`（TSR参考）、L15 `WE_Mode=2`（EKF估计）；L67 `VS_MinOMSpd=36.6 rad/s`、L75 `VS_TSRopt=7.5`、L82 `WE_BladeRadius=89.2m`、L86 `WE_GearboxRatio=50`。由ROSCO原生`VS_RefSpd=clamp(TSRopt*V_est/R*G,MinOMSpd,RefSpd)`得到**条件性参考速度下夹紧分界**`U*=36.6*89.2/(7.5*50)=8.70592m/s`；4.5/5.5/6.5/7.5/8.5m/s五个候选中心在**假设EKF估计风速等于中心值**时均低于该分界。**8.70592绝非实际切入风速**，不能据此删减任何低风速箱。
 - **RUN/测试/失败**：复用扩展[T062原源解析器](../T062/s07_ntm18_original_control_input_gate.py)和既有[T071源级CI](../../../../.github/workflows/t071-inspect-discon-hash.yml)，Python 1正9负自测+真实原件SHA/字段核验均PASS；本轮没有生产OpenFAST/TurbSim/Abaqus/地震RUN，无新增失败。**STANDARD**=IEC/GB 2025授权原条款本轮未读；**FIG**=0；**TAB**=13项关键字段与5候选中心（完整16字段及60点表在源级artifact/可复算脚本）。
 - **误差预算/HOLD**：源字节和数值字段精确；分界值双精度算术误差可忽略，但EKF风速估计、启动/停机状态、原历史DLL二进制、真实4–8m/s BTS/OUTB及规范适用性均未验收，物理误差不可估。S06 PARTIAL、S07/S10 BLOCKED、正式DLC1.2=0/126、E/WE原生0、**0/12未晋级**。不改T057/T070/main、不合并Draft PR。
+
+## 2026-11-10 05时｜S06原R5高风方向贝叶斯反演与最少方向覆盖（0/12）
+
+START: PR#42 Open/Draft read_base_sha=90712eaebda0cc07afa078407744a04756f1df0c，main=58c1e545f67b645417d5957189f5dad693d975bb；按研究AGENTS→COMMAND_ROOM最近交接→白皮书v0.2.76→MASTER/STATUS→12阶段→T079/T080过程→原R5表3-3真实16行源与Ch3§3.2.4开工。S10新缺失bin原件不可见，按反卡死纪律切换到S06已有真实源的独立方向暴露推断，非前轮TV重算。
+
+科学增量：用Bayes R_d=P(d|H)/P(d)区分高风来向占比与该来向发生高风概率。SSW/NNE/N相对暴露2.640997/2.403643/2.045831；**仅P(H)=5%情景**下P(H|d)=13.204987%/12.018216%/10.229156%。高风样本50/75/90/95%最少方向数2/3/5/7；三方向覆盖81.231877%（原印刷三项合计81.24%），这是方向小时覆盖，不是载荷/材料疲劳。独立总概率闭合<1e-12；印刷舍入单项±0.005个百分点；原始小时事件数与阈值并列、ERA5场址、方向载荷物理误差未核。
+
+SOURCE=原16行CSV SHA256 53417a3d0223beb07a24fa372eaa5662067eb5780836ea4106100cc325942b96；RUN=V8同源码均匀解析例/7拒绝/真实16行/方向覆盖数值断言PASS，原生Node CLI/ERA5小时/OUTB/物理RUN NOT_RUN。程序SHA256 c2ce3f77092f950d53a04c160cd50c99b3f0267192a23530f6fec8e18cbfac95；16行CSV 501a8f408c4fe496c5e49f4fc0cf79b095c48f6a67ef95d1a0ae4ca549ca4bd9；SVG 1e1469bf81d2e9d7447f62421ae0223d5309aee7937a814d6f61ad6213c1260d；可入Ch3段落 7e36f89a8efc35406ab737e3ad1708411cda512e6019c871e2db98c572415a47。REF=R5 Word与Ch3 REF080/090；STANDARD=无新增授权条文；OFFICIAL=历史ERA5；FIG/TAB为本轮对应图表。白皮书v0.2.76→v0.2.77 PATCH；12阶段0/12、DLC1.2 0/126、同态W-E-WE/材料Miner/送审HOLD。下一唯一动作S05：从已有真实ESM长周期原始谱和授权官方目标谱建立可证伪的双事件目标谱覆盖判据，缺条文则仅限定方法不伪造目标谱。禁区/main/冻结母本/PR合并均不触碰。
