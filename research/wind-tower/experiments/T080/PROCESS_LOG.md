@@ -1,3 +1,11 @@
+## 2026-11-10 00时｜S12现行六章首引参考文献恢复及可读母稿闭合（0/12）
+
+**科学写作问题与SOURCE。** 原R5 Word 106条参考文献来源SHA256 `da86e1fadafc977fc66d14a97a46760e73ec3b5150ddbae65fd62c7105764ee9`；现行六章首引31个REF，按用户禁止范围原样保留REF131，完成其余**30条**首次引用顺序的可读著录。旧R5[8] Yang 2024 *Applied Energy* 356文号**122381误→122441正**，与DOI `10.1016/j.apenergy.2023.122441`一致；IEC 2019基线与2025 CSV分别保留。 非禁区30条使用原R5/registry/出版社或机构元数据，保留TurbSim与OpenFAST文档版本未闭合说明；两篇2026直接竞争论文DOI 10.1080/13632469.2026.2671807及10.1016/j.rcns.2026.03.002单列，不伪称风震/PT首创。非科研数值创新，交付为实际进入六章母稿的正式引文初稿及来源纠错，而非机械编号。
+
+**RUN/实物/测试。** [参考文献](../../manuscript/final-thesis/assemble/S12_ACTIVE_REFERENCES_20261110.md) SHA256 `e8dbd899d740f94397129070c149f770826585e3790d61bf957e05c26df06efa`；[首引交叉表](../../manuscript/final-thesis/assemble/S12_ACTIVE_REF_CROSSWALK_20261110.csv) SHA256 `74d69208b8ca219a359143bc9aa1e294596f8721ce83d3a24b437ce555fc7402`；[Node拒绝测试](../../manuscript/final-thesis/assemble/s12_active_reference_gate.cjs) SHA256 `fc291b29c22a961505ee9570ba5e95cf8f6d393ff396c312ee4fc3dd559b0010`；[六章母稿](../../manuscript/final-thesis/assemble/THESIS_SIX_CHAPTER_REVIEW_20261102.md) SHA256 `83f0e2bd655a333954b0c93cd4acc58a79007f7260e396745cf97199ba190430`。 [科研提交1](https://github.com/g2066203208-beep/voxel-frontier/commit/036adb123000d1d7a029d1640f3e3bd060e7dfa1)、[科研提交2](https://github.com/g2066203208-beep/voxel-frontier/commit/0d432778932783a2771c4d5db8dfae11c51de702)。对真实六章源和现行registry进行V8首引/DOI检查，30/30通过；错误文号、重复REF和篡改DOI三项负例均被拒绝。六章源锁装配器V8实数据再生成178280字符阅读稿与Git远端逐字节一致，152处编号引用，原REF131未触碰。程序源码V8语法PASS；**原生Node CLI未运行**，没有任何物理/昂贵生产RUN。
+
+**误差/边界/状态。** 原稿R5条目和现行REF不是同一编号空间；30条的来源层级不同，不能把来源级比对说成全部出版社全文核验。文献版本、授权IEC条款、GB/T 7714格式、REF131保留标记和送审Word/PDF仍HOLD。S12来源级可读稿PASS，12阶段**0/12**，正式DLC1.2 **0/126**，真实材料Miner/优化/同态W-E-WE不因文献装配而闭合。白皮书v0.2.71→v0.2.72 PATCH。**下一唯一动作：切S06/S07，从已有原始36组风载文件寻找同一158m模型可核W侧六分量时程与坐标/时钟身份；原件缺失立即切S10，不重复引文小审计。**
+
 ## 2026-11-09 23时｜S12原R5 GEV返回水平图恢复及21年样本可辨识性（0/12）
 
 **科学问题与SOURCE。** 原R5 Word图3-5中20/50/100年GEV返回水平是否足以证明100年极值或IEC Vref？直接物化并读取原R5 DOCX（23,653,138B，SHA256 da86e1fadafc977fc66d14a97a46760e73ec3b5150ddbae65fd62c7105764ee9），目视核对原图image47.png（SHA256 8bd5628432b31132edf30a9480a0968766125d6b83cbf9b84f64025595eb1e75）和紧随段落，恢复100m逐小时年最大GEV三个**原稿报告值**16.91/17.49/17.86m/s（20/50/100年）；100m逐小时样本最大17.626m/s、年度块21个。**未获得21个逐年最大值的完整列表/原拟合参数与协方差，不冒称本轮重新拟合GEV或取得CI。**
