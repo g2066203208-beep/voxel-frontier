@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1380" height="980" viewBox="0 0 1380 980" role="img" aria-label="ERA5 GEV original reported levels and record-length diagnostic">
+<rect width="1380" height="980" fill="#fff"/>
+<text x="75" y="55" font-family="Arial,sans-serif" font-weight="bold" font-size="31" fill="#173c53">ERA5 100 m annual maxima: return-level evidence boundary</text>
+<text x="75" y="88" font-family="Arial,sans-serif" font-size="17" fill="#4c6574">Original R5 Word Figure 3-5: three reported GEV levels; 21 annual blocks (2005–2025)</text>
+<text x="75" y="138" font-family="Arial,sans-serif" font-weight="bold" font-size="23" fill="#173c53">A  Reported return levels (m/s; no uncertainty bands available)</text>
+<line x1="175" x2="1185" y1="380" y2="380" stroke="#dfe7ec"/>
+<text x="125" y="386" font-size="17" fill="#526a78">16.8</text>
+<line x1="175" x2="1185" y1="290.00000000000034" y2="290.00000000000034" stroke="#dfe7ec"/>
+<text x="125" y="296.00000000000034" font-size="17" fill="#526a78">17.2</text>
+<line x1="175" x2="1185" y1="199.99999999999983" y2="199.99999999999983" stroke="#dfe7ec"/>
+<text x="125" y="205.99999999999983" font-size="17" fill="#526a78">17.6</text>
+<line x1="175" x2="1185" y1="110.00000000000017" y2="110.00000000000017" stroke="#dfe7ec"/>
+<text x="125" y="116.00000000000017" font-size="17" fill="#526a78">18.0</text>
+<line x1="175" x2="1185" y1="380" y2="380" stroke="#617c8b"/>
+<line x1="175" x2="1185" y1="194.14999999999986" y2="194.14999999999986" stroke="#c2793a" stroke-dasharray="9 6" stroke-width="2"/>
+<text x="835" y="182.14999999999986" font-size="16" fill="#a05c2c">Observed hourly maximum: 17.626 m/s</text>
+<polyline points="175,355.2500000000001 553.75,224.75000000000048 1185,141.50000000000028" fill="none" stroke="#2a789f" stroke-width="4"/>
+<circle cx="175" cy="355.2500000000001" r="10" fill="#2a789f"/>
+<text x="175" y="333.2500000000001" text-anchor="middle" font-size="20" fill="#164a68">16.91</text>
+<text x="175" y="410" text-anchor="middle" font-size="18" fill="#36576b">20 yr</text>
+<circle cx="553.75" cy="224.75000000000048" r="10" fill="#2a789f"/>
+<text x="553.75" y="202.75000000000048" text-anchor="middle" font-size="20" fill="#164a68">17.49</text>
+<text x="553.75" y="410" text-anchor="middle" font-size="18" fill="#36576b">50 yr</text>
+<circle cx="1185" cy="141.50000000000028" r="10" fill="#2a789f"/>
+<text x="1185" y="119.50000000000028" text-anchor="middle" font-size="20" fill="#164a68">17.86</text>
+<text x="1185" y="410" text-anchor="middle" font-size="18" fill="#36576b">100 yr</text>
+<text x="75" y="477" font-family="Arial,sans-serif" font-weight="bold" font-size="23" fill="#173c53">B  Probability of at least one T-year exceedance in a 21-year record</text>
+<text x="75" y="511" font-family="Arial,sans-serif" font-size="17" fill="#526a78">Stationary independent annual maxima assumed; NOT a fitted-model confidence interval</text>
+<text x="100" y="595" font-family="Arial,sans-serif" font-size="20" fill="#24495f">P(at least one) = 1 − (1 − 1/T)^21</text>
+<text x="100" y="638" font-family="Arial,sans-serif" font-size="18" fill="#526a78">100-year return period = 4.76 × record length</text>
+<text x="100" y="680" font-family="Arial,sans-serif" font-size="18" fill="#526a78">Three levels cannot determine GEV fit quality</text>
+<text x="100" y="720" font-family="Arial,sans-serif" font-size="18" fill="#526a78">Original annual maxima and parameter covariance unavailable here</text>
+<line x1="760" x2="1270" y1="780" y2="780" stroke="#617c8b"/>
+<rect x="790" y="644.8" width="90" height="135.2" fill="#2a789f" rx="3"/>
+<text x="835" y="629.8" text-anchor="middle" font-size="20" fill="#164a68">65.94%</text>
+<text x="835" y="811" text-anchor="middle" font-size="17" fill="#385569">20 yr</text>
+<rect x="940" y="709.1" width="90" height="70.9" fill="#2a789f" rx="3"/>
+<text x="985" y="694.1" text-anchor="middle" font-size="20" fill="#164a68">34.57%</text>
+<text x="985" y="811" text-anchor="middle" font-size="17" fill="#385569">50 yr</text>
+<rect x="1090" y="741.0" width="90" height="39.0" fill="#2a789f" rx="3"/>
+<text x="1135" y="726.0" text-anchor="middle" font-size="20" fill="#164a68">19.03%</text>
+<text x="1135" y="811" text-anchor="middle" font-size="17" fill="#385569">100 yr</text>
+<line x1="75" x2="1295" y1="864" y2="864" stroke="#dfe7ec"/>
+<text x="75" y="896" font-family="Arial,sans-serif" font-size="16" fill="#526a78">Algebraic three-point xi = -0.1968; printed-value rounding range [-0.2509, -0.1431].</text>
+<text x="75" y="925" font-family="Arial,sans-serif" font-size="15" fill="#526a78">NOT the original fitted xi, a confidence interval, an IEC Vref, or a 10-min extreme-wind estimate.</text>
+<text x="75" y="952" font-family="Arial,sans-serif" font-size="14" fill="#667e8d">SOURCE: R5 Word Fig.3-5; original image47.png SHA256 8bd56284...eb1e75. No ERA5 hourly rerun.</text>
+</svg>
