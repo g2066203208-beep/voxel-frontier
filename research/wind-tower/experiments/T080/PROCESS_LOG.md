@@ -1,3 +1,13 @@
+## 2026-11-09 21时｜S12原Word风向原创图数据恢复与条件方向分布（0/12）
+
+**科学问题/SOURCE。** 全年100m风玫瑰能否替代高风条件方向分布？直接物化用户原R5 Word，原R5 DOCX 23,653,138B SHA256 `da86e1fadafc977fc66d14a97a46760e73ec3b5150ddbae65fd62c7105764ee9`；原图3-3(a) image43.png SHA256 `7e65ada0074a660cf7beff9d836b2aa950e93dd529eecb72acdd797fc3cd04ef`、原图3-3(b) image44.png SHA256 `603400e35ef2fb548c1758c564c36b66ed1cab2328c02850b0127f72d6e68475`。从原稿表3-3逐行读取16方位×全年/高风（V100≥P95=8.385m/s）两组百分数，核看原图像素。不是重新读取184080小时ERA5原始工作簿/NetCDF；不得将Word图表恢复称为气象原始重算。
+
+**RUN/TAB/FIG/论文。** [16行CSV](../T062/S12_R5_ERA5_100M_DIRECTION_16SECTOR_20261109.csv) SHA256 `53417a3d0223beb07a24fa372eaa5662067eb5780836ea4106100cc325942b96`；[Node无依赖程序](../T062/s12_era5_directional_shift.cjs) SHA256 `ed1d9b85bf90fb29c6ef3426a241211dd4254ad0786225655f52a98e0952f392`；[矢量科研图](../../manuscript/final-thesis/figures/FIG3_S12_ERA5_DIRECTION_CONDITIONAL_20261109.svg) SHA256 `a0ff2d43cb0bf40fbae0853f35a8f751fa531a4083c05d281e8baf6ac6397582`。此图为原Word图3-3(a)(b)的**数据源恢复后重新绘制**，非逐像素PNG修复。[Ch3§3.2.4](../../manuscript/final-thesis/chapters/03_场址风环境与整机随机风控制载荷.md)新增定量论证SHA256 `5fb856bf0aeb114e088cad2e4a21c2c6a0e5b17245c13ad0277d6d54d186abc6`；[六章阅读母稿](../../manuscript/final-thesis/assemble/THESIS_SIX_CHAPTER_REVIEW_20261102.md)同步图与正文SHA256 `7aba7d2b7f0851d03ac97b05f7984a3a924359ca9c2942f461f31f1b6c47c9d3`；[原装配器](../../manuscript/final-thesis/assemble/s12_build_six_chapter_reader.cjs)更新Ch3双哈希锁SHA256 `44f374b11371f2b71f9e5f5f3685a025973da83ee9c6de9063fed003136c193e`。
+
+**真实数值/误差/反例。** 全年16方向和100.00%，高风条件和100.01%（两位小数舍入）；N+NNE+SSW由34.79%变81.24%，差46.45个百分点；两组分别归一化的总变差TV=0.476012618738，未归一化表的绝对差半和47.605个百分点。三方向由既有数据事后选出，非预设显著性检验。每个印刷百分数±0.005百分点，TV保守舍入误差≤0.0008概率单位；ERA5地点、风向、100m→轮毂高度与结构物理误差不包含在内。方向条件频率不等于给定方向的高风发生概率，不能推断材料疲劳控制方位。
+
+**独立测试/状态。** Python3.13.5从R5 OOXML表格原件读取；V8直接执行GitHub已存程序的parse/analyze/render源码，toy总变差20百分点、5种错误源拒绝、16行数值oracle与SVG逐字节再生一致PASS。原生Node CLI/Actions、原ERA5逐小时重读、风/结构物理RUN NOT_RUN。REF080/090/093沿用此前阅读，IEC/GB授权条文无新增；100m P95=8.385m/s与HubHt P95=9.34386m/s不可混用。**12阶段0/12、正式DLC1.2 0/126、材料Miner/真实优化/同态W-E-WE/正式送审HOLD**。白皮书v0.2.68→v0.2.69 PATCH。下一唯一动作：S12恢复原Word其他原创ERA5图表或正式参考文献著录；不重复本轮16方向统计。不执行/准备/审核/派发任何Abaqus/CAE工作，不动T057/T070/main、不合并PR。
+
 ## 2026-11-09 20时｜S12六章连续阅读母稿实质装配（0/12）
 
 **科学问题与增量。** 11月2日旧合并稿未包含11月9日真实历史风载研究，且第五章仍含无实证的结构优化占位表。直接读取六章当前原始UTF-8正文，以六章Git Blob/SHA256锁定来源，原位更新为11月9日连续阅读母稿；六章原始文件未改。第五章装配层将未完成优化表替换为三行**已核历史留出验证**的跨预测任务科学论述，纠正损坏的数学式及基准材料损伤为0时比值目标不可定义的问题，4幅既有S11图首次在母稿内嵌。**本轮无新物理计算、无真实结构优化。**
