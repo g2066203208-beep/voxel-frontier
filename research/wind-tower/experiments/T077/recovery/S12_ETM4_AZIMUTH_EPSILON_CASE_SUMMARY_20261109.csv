@@ -1,0 +1,5 @@
+case,n_stations,epsilon_star_pct,median_DEL4_loss_pct,median_positive_peak_gain_MPa,negative_peak_at_DEL_winner_n,admitted_epsilon_0p1pct_n,admitted_epsilon_0p2pct_n,admitted_epsilon_0p3pct_n
+U09p343881_ETM_S06,31,0.177078310,0.127515883,19.525874486,0,7,31,31
+U11p4_ETM_S04,31,0.246829515,0.140743477,22.864904068,31,6,23,31
+U19p202140_ETM_S04,31,0.266934366,0.201040452,17.166239972,30,1,15,31
+U19p202140_ETM_S06,31,0.223591320,0.112367351,17.021888662,22,13,26,31

@@ -1,3 +1,12 @@
+## 2026-11-09 14时｜S12同工况同塔段ETM方位双指标决策阈值与期刊科研正文（0/12）
+
+- **SOURCE/开工**：START commit `d7196ad981a0b61bdd0e9bf419aa597234bd79c9`、read_base_sha=`73d5d7f2484c585242521cc02a35c1bb0569f778`，main=`58c1e545f67b645417d5957189f5dad693d975bb`，PR#42 Open/Draft。原1984行SHA256 16c9864ef7a344e5b97338c31ce26de6adb86c0f0f64942ef894fe9983926b2b；124行源SHA256 158d03443f0854fc9ff72a0f09d221d3574b68dee41f962013a07374d1758c5d。直接读取原派生CSV全部1984行、既有124行表和英文期刊§2.20/3.16/4.16，非新OUTB或生产RUN。
+- **科学问题/RUN**：定义每工况31段正峰方位进入DEL4近最优候选集的最小容差epsilon*=max[100(DELmax−DEL@peak)/DELmax]。1984行历史派生ETM源按4case×31段×16角独立复算，124组×6字段=744项与既有124行表零失配；四工况epsilon*=0.177078310/0.246829515/0.266934366/0.223591320%，0.1/0.2/0.3%时峰值方位入DEL候选集27/95/124，83/124 DEL方位最大名义应力<0。四case中位正峰增益=19.525874486/22.864904068/17.166239972/17.021888662 MPa；31段相关，不能当124独立风场。
+- **FIG/TAB/正文**：[CSV](../T077/recovery/S12_ETM4_AZIMUTH_EPSILON_CASE_SUMMARY_20261109.csv) SHA256 `3bdd50b64d75b006dbcc075213ecebd05621e59c6cd35debe1078359af18565a`；[SVG](../../manuscript/final-thesis/figures/FIG_JOURNAL_S12_ETM4_AZIMUTH_EPSILON_20261109.svg) SHA256 `0b9dba90be3a1c593c42e4d72b1d9007e328b1853c24a041d310d297479005bb`；[英文稿](../../manuscript/journal-wind-fatigue-results.md) SHA256 `4d275518eb881af4b8a5a8fdb7ed71f9e240735fde8e6f3f21e9e981c0aa12e1`。方法§2.21、结果§3.17/S8、讨论§4.17、结论与源表已写入，修复原结论重复词组。
+- **独立测试/误差**：1984行原源重算124组16角极值，对124行表DEL最大/正峰点DEL/正峰最大/DEL点正峰/两个方位6字段共744项复核，绝对差≤1e−7，零失配；4×31、83负峰及27/95/124入集断言PASS，SHA256(abc)已知解PASS。CSV 9位小数舍入≤5e−10对应单位；0.1/0.2/0.3%为**事后演示容差而非实测误差或置信区间**。原生Node CLI、OUTB、物理RUN NOT_RUN。
+- **REF/STANDARD/OFFICIAL/HOLD**：REF018及2026先行混塔风震/PT地震 DOI 10.1080/13632469.2026.2671807、10.1016/j.rcns.2026.03.002 仅继承此前阅读层级，本轮未读新原页；IEC/GB授权条款未新增。历史ETM毛截面名义应力不含有效PT、接缝、材料局部应力；正式DLC1.2 0/126、材料Miner/同态W/E/WE/独立送审HOLD，**12阶段0/12**。不执行/准备/审核/派发Abaqus/CAE、不动T057/T070/main、不合并PR。
+- **下一唯一动作**：有新同态W侧六分量原件则S06源级恢复，否则S12期刊独立先行研究原页核读及整体精简，不重复此方位统计。
+
 ## 2026-11-09 13时｜S10历史四ETM名义循环DEL4与正向峰值方位取点的可辨识性（0/12）
 
 - **SOURCE与开工**：read_base_sha=`75510e0105a641c4665d63532911bcf88a8b8d2a`，main=`58c1e545f67b645417d5957189f5dad693d975bb`，PR#42 Open/Draft。依序已读研究AGENTS、指挥室12时交接、白皮书v0.2.60、MASTER/STATUS、12阶段、T079/T080过程及Ch4§4.7.16–18。START未先单独持久化是流程偏差，现据实补记。逐行读取历史Actions派生[1984行四ETM毛截面表](../T077/recovery/S10_4CASE_31SEG_16AZ_SYNC_GROSS_RAINFLOW_20261030.csv)，SHA256 `16c9864ef7a344e5b97338c31ce26de6adb86c0f0f64942ef894fe9983926b2b`，Git blob `b5effa2a493cec0a9af8a10a3b93df0ff997d2d0`；4case×31段×16个22.5°方位，600s/12001点/0.05s，单位MPa；不是原始OUTB，也非材料局部应力或实际有效PT。
