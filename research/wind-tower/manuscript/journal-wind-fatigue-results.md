@@ -243,6 +243,10 @@ The three archived NTM wind bins each contain six wind realizations with a commo
 
 The permutation interpretation assumes exchangeability of pooled case labels under the null, which may be invalid if controller states or cross-bin seed dependencies differ. The test is a conditional finite-archive diagnostic, not a future-seed probability, an IEC wind-load criterion or a material-fatigue result. No prospective confidence interval is inferred.
 
+### 2.23. Componentwise Pareto dominance and exact minimum coverage
+
+We used the same 18 original-OUTB-derived NTM cases, each with six tower-base force/moment DEL channels and a 100–700 s analysis window (Nref=600). For each diagnostic exponent m=4 or m=10 separately, a case dominates another only if all six channel-wise DELs are no smaller and at least one is strictly larger. This partial order is invariant under positive unit conversion within a channel; no cross-unit addition or synchronized vector maximum is inferred. All 262143 nonempty subsets of 18 cases were enumerated to find the smallest retrospective set attaining each of the six observed maxima. The calculation is an archive screening test, not a material fatigue model.
+
 ## 3. Results: rainflow implementation and controlling-case robustness
 
 ### 3.1. Paired rainflow ranking and controlling-case changes
@@ -539,6 +543,10 @@ The 11.4 and 19.202140 m/s historical NTM bins have six-seed My DEL4 means **56.
 
 The smallest attainable two-sided p for complete separation is 2/924=0.002165. The first and third contrasts reject the stated exchangeability null after the three-comparison Holm adjustment; the middle contrast does not. This does **not** prove equality or justify pooling the bins. The [source-locked program](../experiments/T062/s10_ntm18_exact_bin_permutation.cjs) and [complete CSV](../experiments/T062/S10_NTM18_DEL4_EXACT_BIN_PERMUTATION_20261109.csv) preserve exact counts and source values.
 
+### 3.19. Exponent-dependent six-component screening counterexample
+
+For m=4, U19p202140_NTM_S04 is the **sole Pareto-nondominated case** and controls **6/6** tower-base component DEL maxima; one case is sufficient for exact retrospective coverage. For m=10, three cases are nondominated (U11p4_NTM_S04, U11p4_NTM_S06, U19p202140_NTM_S04), and the unique exact minimum cover requires **two cases**: U11p4_NTM_S06 plus U19p202140_NTM_S04. The former controls My m10 DEL at **150492.197792 kN m**, whereas the latter controls the other five channels and has My m10 DEL **122739.602475 kN m**, only **81.558781%** of the observed My maximum. Hence retaining only the m4 champion misses **18.441219%** of the observed My m10 maximum. The unique minimum-cover result also persists at the 95% per-channel threshold. Supplementary Tables S7/S8 and Figure S7 document the six maxima, all 18 Pareto labels and the normalized component ratios. This is not a prospective capture probability or a Miner-damage estimate.
+
 ## 4. Discussion, falsifiability and scope
 
 A verified rainflow implementation is a necessary upstream condition for reliable selection of candidate load cases. It is not sufficient for predicting fatigue of concrete, prestressing tendons, ordinary reinforcement or structural steel: those require local material stress cycles, material-specific fatigue laws, validated mean stress, and wind-speed exposure. The 36 simulations are representative-wind screening records, not a verified DLC1.2 lifetime matrix. The archived ERA5-derived 184,080-hour series contains 106,900 hours in a deliberately diagnostic [4,25) m/s operating interval; only 7,164 hours (6.70159% of that interval) lie in the three wind-speed bins with historical NTM source coverage. The missing bins cannot be assigned zero fatigue damage.
@@ -686,6 +694,10 @@ For the ideal circular-section mapping with an axially constant offset, opposite
 
 For the 11.4-to-19.202140 m/s My DEL4 contrast, all 36 deletions of one observed seed from each bin preserve a positive difference, yet the exact two-sided 12-label permutation fraction is 158/924 = 0.170996 (§3.18). This contrast concerns a different estimand from the 760/8000 three-bin control-identity changes (§3.2). Moreover, exchangeability of different-speed labels is **not established**: the permutation fraction is a conditional diagnostic, not a calibrated population p-value or a demonstration of equivalence. No deletion, permutation or historical subset calculation substitutes for independently generated seeds and verified operating states.
 
+### 4.19. Falsifiable limits of one-case selection
+
+The observed m4 dominance cannot justify a universal single-seed selection rule: the m10 My counterexample rejects it on the same original wind histories. Componentwise load-DEL dominance does not imply that component extrema occur simultaneously, that any 31-segment local stress is bounded by the same ranking, or that the material S–N exponent equals m4 or m10. Only three historical wind bins and six seeds per bin were observed. Independent wind bins, future seeds, model state and local material stress histories are necessary prospective falsifiers. The 2026 wind–seismic and PT–seismic prior studies do not establish this particular historical DEL ranking, but this result also makes no claim of first wind–seismic analysis.
+
 ## 5. Conclusions
 
 For the archived DTU 10 MW/158 m hybrid-tower **load-screening** data, three independent evidence questions lead to different limitations. **Algorithmic reproducibility (R1):** correcting a historical rainflow closure error reverses 102/630 tower-base My case-pair orders (12/630 for Mx) and changes the controlling My realization. **Finite-archive seed sensitivity (R2):** independent selection of three of the six observed NTM seeds per wind bin changes the My control-bin identity in 760/8000 combinations (9.50%). This is an exact property of overlapping historical subsets, not an estimated probability for future seeds. **Climate-support identifiability (R3):** 99,736/106,900 ERA5-derived hours within the declared [4,25) m/s diagnostic interval have no matched historical NTM load history. The unknown fourth-order load-moment contribution is nonnegative and has no finite data-supported upper bound; the other 77,180 ERA5 hours below 4 m/s are outside that diagnostic interval, **not assumed to have zero full-year load or damage**.
@@ -706,6 +718,8 @@ The quantitative evidence consists of archived **derived** T062 source tables, n
 
 
 **Four-level synthesis provenance:** the added §3.16/Table 10 uses existing corrected-rainflow 72-row evidence, the 8000 finite-subset enumeration, the 31-bin ERA5-derived coverage and the archived 1,574-row ETM nominal-stress rainflow source SHA256 `646065838456b6465e321c4c6fd24966f180f275df99c615000577557219ff83`; the directly reread three-row derived summary is SHA256 `2f688a4448a8441c3b0851213d833d57261124ffb24ec8b0e983c12ab4f88aac`. The 1.874722% spread is recomputed from the three displayed DEL4 values and is **not** a confidence interval. The new annual Miner expression is a *method definition only*, not a run or a material-damage output. Original OUTB and ERA5 hourly source files were not reprocessed for this synthesis.
+
+**Six-component source-to-claim extension:** original-OUTB-derived 1080-row T062 CSV SHA256 `95de6578cf379d1b2e1d99a68c26954a68e93cc8bfc4bdcd63dd324ae2999a0f`; source byte-level OUTB admission inherited from 2026-10-31 receipt, not reread. [Source-locked CJS](../experiments/T062/s06_ntm18_sixcomponent_pareto_cover.cjs) SHA256 `eb5d62feb16dfaf2f128ed56aa116124fbfd27c2f709b209fba25301acfb476a`; [six-channel CSV](../experiments/T062/S06_NTM18_SIXCOMPONENT_MAXIMA_20261110.csv) `0d674312fe6e19323cb030d43799b668d1667e6748df20859e4f053a208c0ecd`; [18-case CSV](../experiments/T062/S06_NTM18_SIXCOMPONENT_PARETO_20261110.csv) `82251fb62e471e6cc0413d11ea0142998a751762015f4da168505968db76fba3`; [Figure S7](final-thesis/figures/FIG3_S06_NTM18_SIXCOMPONENT_PARETO_20261110.svg) `5b5d2082a064055ca68b36e1f7bbfc24d420c95cfa8f2d26028b3863b9413f40`. V8: 3 real/structural assertions, 8 malformed-input rejections, order-invariance PASS. Native Node CLI and new physical simulations NOT_RUN. SOURCE-LEVEL NUMERIC PASS; IEC DLC1.2, synchronized six-component physics and material Miner HOLD.
 
 ### 6.1. Source-to-claim and figure/table trace
 
