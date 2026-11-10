@@ -1,0 +1,63 @@
+name: S06 18 original NTM fullrate synchronous W base6 (SOURCE ONLY)
+on:
+  push:
+    branches: [research/t080-seismic-integration-gates-20261022]
+    paths:
+      - '.github/workflows/s06-ntm-w-base6-fullrate.yml'
+      - 'research/wind-tower/experiments/T062/s06_ntm_w_base6_fullrate.py'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-w-base6:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            research/wind-tower/experiments/T062/s06_ntm_w_base6_fullrate.py
+            research/wind-tower/experiments/T062/s06_historical_outb_source_gate.py
+            research/wind-tower/experiments/T062/s06_ntm_18case_original_outb_gate.py
+            research/wind-tower/experiments/T062/S06_18NTM_ORIGINAL_9GAGE_LOAD_DEL_20261031.csv
+            research/wind-tower/experiments/T062/S06_18NTM_ORIGINAL_LOAD_DEL_RECEIPT_20261031.json
+            research/wind-tower/archive/local-assets-20261004-supplement/file-manifest.json
+      - name: Parser and synchronous-envelope known-answer/negative tests
+        run: |
+          set -euo pipefail
+          p=research/wind-tower/experiments/T062
+          python3 -m py_compile "$p/s06_ntm_w_base6_fullrate.py"
+          python3 "$p/s06_ntm_w_base6_fullrate.py" --self-test
+      - name: Fetch 18 SHA-identified original archived NTM sources
+        run: |
+          set -euo pipefail
+          root=research/wind-tower
+          mkdir -p "$RUNNER_TEMP/ntm-source"
+          count=0
+          while IFS= read -r p; do
+            curl --fail --location --silent --show-error --retry 3 --retry-all-errors \
+              --output "$RUNNER_TEMP/ntm-source/$(basename "$p")" \
+              "https://raw.githubusercontent.com/$GITHUB_REPOSITORY/$GITHUB_SHA/$p"
+            count=$((count+1))
+          done < <(python3 "$root/experiments/T062/s06_ntm_18case_original_outb_gate.py" \
+            --manifest "$root/archive/local-assets-20261004-supplement/file-manifest.json" --list-archives)
+          test "$count" -eq 18
+      - name: Recover 216018 synchronized W-base6 rows and independently check 432 summary values
+        run: |
+          set -euo pipefail
+          root=research/wind-tower
+          mkdir -p w-fullrate
+          python3 "$root/experiments/T062/s06_ntm_w_base6_fullrate.py" \
+            --manifest "$root/archive/local-assets-20261004-supplement/file-manifest.json" \
+            --zip-dir "$RUNNER_TEMP/ntm-source" \
+            --oracle "$root/experiments/T062/S06_18NTM_ORIGINAL_9GAGE_LOAD_DEL_20261031.csv" \
+            --receipt-source "$root/experiments/T062/S06_18NTM_ORIGINAL_LOAD_DEL_RECEIPT_20261031.json" \
+            --out w-fullrate
+          sha256sum w-fullrate/*
+          echo "SOURCE ONLY; no W/E/WE matching, no external load or physical PASS"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: s06-18ntm-w-base6-fullrate-synchronous-20261110
+          path: w-fullrate/*
+          retention-days: 30
