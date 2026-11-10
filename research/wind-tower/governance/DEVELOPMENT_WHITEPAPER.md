@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.9.3**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.9.4**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -136,3 +136,5 @@
 | 2026-11-07 | **v0.1.0** | 首次建立版本号、变更白皮书及每小时持续归档制度；索引既有指挥室/真实E侧来源收据；此行为**治理建设**，未新增计算、图表或原生求解 | 0/12 PASS不变；S09 HOLD | 本文件Git历史和PR #42；创建后以commit记录为准 |
 
 > 每次新增记录用一行，细节与可重算产物留在原任务日志；新增行应含本轮真实Git SHA、路径、source hash、RUN/失败和HOLD，避免制造另一份会漂移的“最新进度”。
+
+| 2026-11-11 05时 | v0.9.4 PATCH | S10真实72行循环均值诊断源表，36对Mx/My配对差全部为正，中位5.564148821百分点；六风速×湍流组平均差均为正。新增 `experiments/T062/s10_paired_channel_mean_collapse.cjs` 与 `manuscript/journal-wind-fatigue-results.md` 配对对照正文。SOURCE= `experiments/T062/S10_RAINFLOW_MEAN_HETEROGENEITY_72ROW_20261110.csv`；源级V8复算，原生Node CLI NOT_RUN。 | 仅历史载荷层诊断；群组独立性不成立，材料Miner/结构物理HOLD；12阶段晋级0/12。 | PR#42 本轮事务（Git History） |
