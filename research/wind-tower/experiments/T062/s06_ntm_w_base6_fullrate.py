@@ -22,7 +22,7 @@ def peaks(rows):
     if min(x,y)<=0 or p[px]>x+1e-8 or f[pf]>y+1e-8:raise ValueError("ENVELOPE")
     return [p[px],x,p[px]/x,100+px*.05,f[pf],y,f[pf]/y,100+pf*.05]
 def test():
-    assert abs(peaks([(0,0,0,3,0,0),(0,0,0,0,4,0)])[2]-.8)<1e-14
+    assert abs(peaks([(1,0,0,3,0,0),(0,1,0,0,4,0)])[2]-.8)<1e-14
     assert abs(peaks([(3,4,0,3,4,0),(0,0,0,0,0,0)])[2]-1)<1e-14
     for bad in ([],[(1,2,3,4,5,6)],[(1,2,3,4,5,6),(1,2,3,4,5)],
                 [(1,2,3,4,5,6),(1,2,3,4,float("nan"),6)],
