@@ -12,7 +12,7 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: s12-advisor-docx-pr42
+  group: s12-advisor-docx-artifact-pr42
   cancel-in-progress: false
 jobs:
   render:
@@ -41,17 +41,6 @@ jobs:
             echo "ERROR: mismatched SHA was accepted"; exit 1
           fi
           test ! -e s12_advisor/should_not_exist.docx
-      - name: Render preview PDF for pagination inspection
-        run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq libreoffice-writer poppler-utils fonts-noto-cjk >/dev/null
-          mkdir -p s12_advisor/preview
-          libreoffice -env:UserInstallation=file:///tmp/lo-s12-advisor --headless --convert-to pdf \
-            --outdir s12_advisor/preview s12_advisor/DTU10MW_158m_six_chapter_advisor_20261110.docx
-          pdfinfo s12_advisor/preview/DTU10MW_158m_six_chapter_advisor_20261110.pdf | grep Pages
-          pdftoppm -f 1 -l 1 -r 90 -png -singlefile \
-            s12_advisor/preview/DTU10MW_158m_six_chapter_advisor_20261110.pdf \
-            s12_advisor/preview/first_page
       - uses: actions/upload-artifact@v4
         with:
           name: S12_158m_six_chapter_advisor_docx_20261110
