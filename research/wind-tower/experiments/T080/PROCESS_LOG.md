@@ -1,3 +1,14 @@
+## 2026-11-11 02时｜S07真实TP/RP近底运动学闭合（PATCH；0/12）
+
+**START/READ/并发**：PR #42 Open/Draft，read_base_sha=00a32871e86a7b78c7eb4e4426d5746556bf87ed；依序读根/研究AGENTS、指挥室READ-BEFORE-WRITE与01时交接、白皮书v0.9.0、MASTER/STATUS、12阶段、T079/T080最新过程、Ch3§3.5.7—8及真实S07姿态ZIP。复用T062原始来源，未重复峰值包络，不执行任何禁止的Abaqus/CAE工作。
+
+**科学问题与SOURCE/OFFICIAL**：OpenFAST v3.5.3 [ElastoDyn.f90 L937–944](https://github.com/OpenFAST/openfast/blob/v3.5.3/modules/elastodyn/src/ElastoDyn.f90#L937-L944)原码表明TP为rT惯性位置、RP为AngPosEF惯性角位置×R2D，不能由三个RP直接宣称精确DCM。SOURCE=18份原始158m NTM OUTB恢复的[216018行全速姿态](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/42861971665/artifacts/13785456956)，gzip SHA256 2e113c83990d81b064636dca05308fc72676cb329033b9d603c8807d5cf0ecea（2026-12-10 17:09 UTC到期）；本轮直接读gzip并核SHA，100–700s、0.05s、九近底测点0.070536–2.750893m。
+
+**方法/真实RUN/FIG/TAB**：同刻TPzi相邻差与梯形法积分正RPyi、负RPxi（角度转弧度），重建首末点相对位移；18×12001×8区间。原生Python、numpy/pandas实际运行[只读程序](../T062/s07_tp_rp_closure_compact.py) SHA256 d60d342b52e66e478fc651544df3c64ae131d8a3a06712478a7330779db60a07，生成[18行CSV](../T062/S07_NTM18_TP_RP_KINEMATIC_CLOSURE_18ROW_20261111.csv) SHA256 aa9635c307358bdc83509ac36feed0578e21b7ca3d201d654a5fadee46cbe5c9、[科研SVG](../../manuscript/final-thesis/figures/FIG3_S07_REAL_TP_RP_KINEMATIC_CLOSURE_20261111.svg) SHA256 31c38f4752c18e9ebb8b1dbf3efe1a9b636ae6101bf1c9da71046d0d8cf94f1f及Ch3§3.5.9。X/Y相对RMS残差0.129514–0.137707%/0.159419–0.229269%；中位0.132787%/0.164088%；最大绝对残差0.310518/0.073928μm；去均值动态残差X 0.092501–0.136347%，Y 0.113055–0.162016%。符号反转相对RMS约200%。两解析正例、两坏源拒绝、原gzip SHA、18×12001时间网格、非降高度、独立CSV字节再生PASS。初次程序将seed列误判为浮点的本地异常已修复后重新运行；无新OpenFAST/TurbSim或结构生产RUN。
+
+**误差/反例/REF/STANDARD/状态**：梯形积分误差、小转角梁假设、RP非严格DCM、CSV/OUTB量化和未知物理身份保留；闭合差只是内部源级运动学诊断，不是材料局部应力、外部风载或风震同态验收。9测点仅2.680357m近底、连续采样自相关。REF=2026两篇混塔先行研究仍沿用历史摘要/选页、未新全文精读；STANDARD=无新增授权IEC/GB条文；OFFICIAL=本轮OpenFAST原码直接阅读；RUN=本地真实gzip后处理；FIG/TAB=本轮SVG/18行表。白皮书v0.9.0→v0.9.1 PATCH；**S07 SOURCE-LEVEL KINEMATIC QC PASS，精确DCM/外载所有权/同态W/E/WE/材料Miner/投稿HOLD；12阶段0/12、本轮晋级0/12、正式DLC1.2 0/126**。下一唯一动作切S05真实ESM双分量与长周期目标谱适用性研究；无授权标准不造目标值。冻结T057/T070、main、PR合并及昂贵RUN未动。
+
+
 ## 2026-11-11 01时｜S07真实18NTM九测点姿态全时程与塔底M–V–T同步包络（MINOR；0/12）
 
 **START/READ/并发**：开工PR#42 Open/Draft HEAD `d0db07f69ac098338b8e7a008022e59ed72f1961`、main `58c1e545f67b645417d5957189f5dad693d975bb`，依次读根/研究AGENTS、COMMAND_ROOM READ-BEFORE-WRITE及00时交接、白皮书v0.8.1、MASTER/STATUS、12阶段、T079/T080最新过程、S06原始OUTB/六分量时程收据、S07既有DCM/姿态QC与Ch3§3.5.5–3.5.6。首先确认原18份OUTB具有295通道、九测点TP/RP已原生输出，避免重启求解；沿用原T062任务和现有Ch3，禁止范围未触碰。先提交只读姿态恢复程序与Workflow，源级科研事务commit `849561fbd6e4147c96b328dedaab07c1e15db6ad`，后续治理事务另记Git History；提交前均重新核对PR HEAD并条件更新。
