@@ -1,3 +1,15 @@
+## 2026-11-10 21时｜S11真实NTM有限seed概率约束的精确样本量门禁（MINOR，0/12）
+
+**START/READ**：PR#42 Open/Draft，开工read_base_sha=`d3d61b96769d3d92b876932a550b19b490639c8a`、main=`bbc5c9130f2d9fc41f776506d86118a9b8db0e65`；依次读取研究AGENTS、指挥室READ-BEFORE-WRITE/20时交接、白皮书v0.6.6、MASTER/STATUS、12阶段、T079/T080过程、现行Ch5§5.4.3–5.4.7/§5.5.3a及历史72行雨流源。先发现既有S11风速箱LOBO/seed留出/NSGA-II解析基准均已完成，**拒绝提交重复的载荷风速代理试验**，转向尚未完成的有限seed机会约束统计准入模块。
+
+**科学问题与数学条件**：对**预先固定**的设计/风速箱/阈值/运行状态，若独立同分布seed的超限数k~Bin(n,p)，Clopper–Pearson单侧上界解P_{pU}(X≤k)=α；k=0时pU=1−α^(1/n)。六项(3箱×2通道)同时约束采用Bonferroni α/6。由此零超限时n=6的单项95%上界=39.3037769%，六项家族上界=54.9733338%；欲认证p≤5%最低n=59/项或六项家族94/项；p≤1%则299/477。**样本量只是理想零超限条件下的必要门槛，不是规范seed要求或生产RUN计划**。
+
+**SOURCE/实际数值**：继承真实36工况×双通道修正雨流72行表SHA256 `12dabbb1273ce03d3920aedda3f72f9fa1d75b671e01a1db145c0a972ffe15e2`，筛选18NTM×Mx/My=36行；DEL m4、N_eq100000、kN·m。为了覆盖0/k/n三类程序分支，**回顾性人为**设置Mx阈值3000、My阈值16000 kN·m（非工程/规范限值，非事前注册）。三箱Mx超限数0/0/6，My为0/2/5；11.4m/s My k2/6的单项/六项上界72.8661627%/83.5273649%；19.20214m/s My k5/6为99.1487555%/99.8606264%。由于阈值是回顾性选择，**这些概率数仅是二项公式算术演示，不得当作本历史样本的频率学置信认证**；seed iid与控制状态一致性亦未获证实，风速箱不得合并成同分布36次试验。载荷DEL超限不等于瞬时峰值、局部应力、Miner或抗震安全。
+
+**RUN/FIG/TAB/程序**：[无依赖Node源码](../T062/s11_seed_chance_constraint_gate.cjs) SHA256 `d917124ac4945e32fbd4cf71c80aae810aa1d50422af874d870203feb0e23c99`；[6行CSV](../T062/S11_NTM18_SEED_CHANCE_GATE_6ROW_20261110.csv) SHA256 `aab8333fbe252738c84dbd5ccbf63313cd1c753ceb115e8ee5e154942c66d94e`；[科研SVG](../../manuscript/final-thesis/figures/FIG5_S11_SEED_CHANCE_GATE_20261110.svg) SHA256 `1fc47ea400640b0346ae6b2685770e441670c3b8cbcab8d2dad16655b33c72c7`；[Ch5新增§5.4.8](../../manuscript/final-thesis/chapters/05_疲劳控制参数敏感性与结构优化.md) SHA256 `b46b571b886a24ad54f7bc736eb2396acdd1695fa39029fdf311e43b700bd6eb`。本地Node同源码解析正例7/7、污染拒绝8/8 PASS；远端V8实际编译并执行提交版源码selfTest及**真实72行原源解析→36个NTM通道→6行结果** PASS；CSV/SVG从远端同源码生成并已提交，6行与独立本地36值复算一致。**原生Node CLI读取完整72行原CSV、原始OUTB重解码和新风/结构物理RUN NOT_RUN**。程序最初上传有模板转义错误，第二提交修正，远端回读与V8执行后才标PASS；失败提交不删除。
+
+**REF/STANDARD/OFFICIAL/误差/HOLD**：REF=2026混塔风震 DOI 10.1080/13632469.2026.2671807及PT地震 DOI 10.1016/j.rcns.2026.03.002沿用历史阅读深度，无新全文核读/首创声明；STANDARD=无新增授权IEC/GB原页，两个阈值绝非规范值；OFFICIAL=历史OpenFAST OUTB来源SHA与已修正雨流账；双精度二项求根及CSV九位小数舍入远小于0.0001个百分点，物理模型/seed独立性/阈值事后选择/局部材料映射误差无可信上界。**S11统计方法来源级PASS，真实结构DOE/材料Miner/地震约束Pareto与期刊送审HOLD；12阶段0/12、正式DLC1.2 0/126。** 下一唯一动作S12把Ch5§5.4.8纳入SHA锁六章阅读母稿，并检查是否与原已有S11段落重复；不再继续机会约束小统计。禁止范围、冻结T057/T070、main、昂贵RUN、PR合并均未触碰。
+
 ## 2026-11-10 20时｜S12期刊DEL摘要非单射性证明与科学结论纠错（0/12）
 
 **START/并发基线**：PR#42 HEAD 80b7077e2b9a3883c7620428cc33182f7fca61fd、Open/Draft，main=58c1e545f67b645417d5957189f5dad693d975bb；按根/研究AGENTS→指挥室READ-BEFORE-WRITE/19时交接→白皮书v0.6.5→MASTER/STATUS→12阶段→T079/T080最新过程→期刊主文与36行crosswalk顺序读取。拟改期刊现有主文、T062新可运行源、T080原过程、指挥室、STATUS、白皮书；责任方为本ChatGPT非Abaqus执行者。未触碰禁区。
