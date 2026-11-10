@@ -1,3 +1,15 @@
+## 2026-11-10 18时｜S12期刊源级DEL参考循环数交叉闭合与正文纠错（0/12）
+
+**START/READ/并发基线**：main=58c1e545f67b645417d5957189f5dad693d975bb；PR#42开工HEAD=6858811c8ebd1e9d7af32058fb76531efabfaa7f，Open/Draft。依次读取研究AGENTS、COMMAND_ROOM READ-BEFORE-WRITE及17时交接、白皮书v0.6.3、MASTER/STATUS、12阶段、T079/T080过程、期刊原稿、T062两个历史原始派生CSV。研究范围仅S12非Abaqus的可投稿科学证据修复；未改冻结母本、main、PR状态或启动生产RUN。
+
+**实质性科学问题与发现**：原期刊Methods没有说明R1历史修正雨流DEL使用N_eq=100000，而R2/R3另一份18NTM原生统计使用N_ref=600；这会使读者把两种数值的**纯参考循环数差异**误读成风载、雨流算法或材料疲劳差异。独立按同一case+channel+原始OUTB SHA+weighted rainflow cycle count交叉匹配18NTM×Mx/My=36对，36/36身份和循环数完全一致。两来源DEL比值逐项符合 (100000/600)^(1/4)=**3.593041119630842**，最大相对残差**1.063371613e-12**，倒推R1 N_eq区间**[99999.99999963844,100000.0000004253]**。示例U09p343881_NTM_S01/TwrBsMyt：R1=14214.854620028620 kN·m，native Nref600=51074.5571593 kN·m，weighted cycles=678，OUTB SHA完全相同。**这个3.593倍是定义差，不是新物理响应或材料寿命倍率**。对ETM没有第二来源的同类匹配，不做外推。
+
+**SOURCE/输入SHA256/阅读层级**：直接读取R1 72行修正雨流源 legacy-primary-recovered-20261102/T062_ALL36_RAINFLOW_CAUSAL_DEL_COMPARE_20261102.csv SHA256 12dabbb1273ce03d3920aedda3f72f9fa1d75b671e01a1db145c0a972ffe15e2 与S06 1080行18NTM×60通道源 S06_18NTM_ORIGINAL_9GAGE_LOAD_DEL_20261031.csv SHA256 95de6578cf379d1b2e1d99a68c26954a68e93cc8bfc4bdcd63dd324ae2999a0f；本轮**未重新解码原OUTB**，而是使用此前原件核验的派生源及其SHA身份。**RUN**：新独立Node源级程序 [s12_ntm18_del_normalization_crosswalk.cjs](../T062/s12_ntm18_del_normalization_crosswalk.cjs) SHA256 7aa3de75ba04e694c6f7784e066538a1f1e854a63de40f38173411f7bd0c6203，仓库可用 node script --selftest 和 node script --write；本轮连接器V8独立实算36/36及7类污染拒绝PASS，**原生Node CLI NOT_RUN**。**TAB**：新增[36行交叉表](../T062/S12_NTM18_DEL_NORMALIZATION_CROSSWALK_36ROW_20261110.csv) SHA256 c630110d2aa1dcb15ae607469c7f8cba713c1bf1705544236b372a4f24c15142，期刊Supplementary Table S1。**FIG**：无新图，避免将定义差异画成物理响应。**论文**：[英文期刊主文](../../manuscript/journal-wind-fatigue-results.md)新增Methods §2.2.1、Results §3.1.1、摘要/讨论/结论/来源并修正§4.2数学排版及“36 binaries identical”的歧义。
+
+**REF**：两篇2026混塔风震/PT先行研究仍按先前出版社摘要/选页层级，不假称本轮全文阅读或首创。**STANDARD**：IEC/GB授权现行条文未新核，DLC1.2仍HOLD。**OFFICIAL**：继承历史OpenFAST OUTB字段、雨流与源收据，未调用新生产软件。**误差预算/反例/限制**：1.064e-12是两派生表在固定m4与相同循环下的算术相对残差，**不**是模型/风场/材料物理误差；表格浮点打印舍入远小于历史源不确定性；若SHA、循环计数或m改变则倍率恒等式不再足以证明来源同一，程序拒绝；新7污染反例含SHA、计数、DEL扰动、重复、缺行、NaN、零值。两来源同为同一历史OUTB派生，不是独立风样本；ETM、未来seed、材料Miner、同态W/E/WE、正式DLC1.2均不受本次源级闭合影响。
+
+**验收与下一唯一动作**：SOURCE级36/36身份、数值交叉闭合PASS；新程序原生Node和新物理NOT_RUN；稿件送审HOLD；12阶段**0/12**、正式DLC1.2 **0/126**、同态W侧及材料局部应力最大HOLD未变。白皮书v0.6.3→v0.6.4 PATCH（以远端提交回读为准）。下一轮**转S10已有真实循环range–mean–count进入期刊的可辨识性论证**，避免再在R1/R2/R3旧统计上反复小审计；如缺材料局部应力则只做严格受限的载荷层方法，不计算Miner/寿命。
+
 ## 2026-11-10 17时｜S12期刊主文跨风速箱seed迁移反例完整写入（0/12）
 
 **START/READ**：main=58c1e545f67b645417d5957189f5dad693d975bb；PR#42 read_base_sha=96945ce1daeb278e02da88e4870f65c15a723526、Open/Draft。按根/研究AGENTS→指挥室READ-BEFORE-WRITE/16时交接→白皮书v0.6.2→MASTER/STATUS→12阶段→T079/T080最新过程→现有英文期刊主文/15行真实S06留出CSV/原Node程序来源依次核读。责任=本ChatGPT非Abaqus执行者；范围仅S12英文期刊主文、原T080过程/STATUS/白皮书/指挥室，不新造独立审计台账，不修改冻结母本或main。
