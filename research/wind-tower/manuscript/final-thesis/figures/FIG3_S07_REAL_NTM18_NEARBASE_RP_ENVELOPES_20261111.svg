@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="540" viewBox="0 0 920 540">
+<rect width="920" height="540" fill="white"/>
+<text x="100" y="35" font-family="Arial" font-size="20" font-weight="bold" fill="#24323c">Original NTM near-base tower RP component peak envelopes</text>
+<text x="100" y="57" font-family="Arial" font-size="12" fill="#596874">Six seeds per wind bin, nine original gages, z=0.071–2.751 m only (NOT tower-top rotation)</text>
+<line x1="100" y1="455.00" x2="830" y2="455.00" stroke="#e4e9ec"/>
+<text x="88" y="459.00" text-anchor="end" font-family="Arial" font-size="12" fill="#485761">0.000</text>
+<line x1="100" y1="401.00" x2="830" y2="401.00" stroke="#e4e9ec"/>
+<text x="88" y="405.00" text-anchor="end" font-family="Arial" font-size="12" fill="#485761">0.002</text>
+<line x1="100" y1="347.00" x2="830" y2="347.00" stroke="#e4e9ec"/>
+<text x="88" y="351.00" text-anchor="end" font-family="Arial" font-size="12" fill="#485761">0.004</text>
+<line x1="100" y1="293.00" x2="830" y2="293.00" stroke="#e4e9ec"/>
+<text x="88" y="297.00" text-anchor="end" font-family="Arial" font-size="12" fill="#485761">0.006</text>
+<line x1="100" y1="239.00" x2="830" y2="239.00" stroke="#e4e9ec"/>
+<text x="88" y="243.00" text-anchor="end" font-family="Arial" font-size="12" fill="#485761">0.008</text>
+<line x1="100" y1="185.00" x2="830" y2="185.00" stroke="#e4e9ec"/>
+<text x="88" y="189.00" text-anchor="end" font-family="Arial" font-size="12" fill="#485761">0.010</text>
+<line x1="100" y1="131.00" x2="830" y2="131.00" stroke="#e4e9ec"/>
+<text x="88" y="135.00" text-anchor="end" font-family="Arial" font-size="12" fill="#485761">0.012</text>
+<text x="100.00" y="475" text-anchor="middle" font-family="Arial" font-size="12" fill="#485761">0.0</text>
+<text x="230.00" y="475" text-anchor="middle" font-family="Arial" font-size="12" fill="#485761">0.5</text>
+<text x="360.00" y="475" text-anchor="middle" font-family="Arial" font-size="12" fill="#485761">1.0</text>
+<text x="490.00" y="475" text-anchor="middle" font-family="Arial" font-size="12" fill="#485761">1.5</text>
+<text x="620.00" y="475" text-anchor="middle" font-family="Arial" font-size="12" fill="#485761">2.0</text>
+<text x="750.00" y="475" text-anchor="middle" font-family="Arial" font-size="12" fill="#485761">2.5</text>
+<text x="460" y="503" text-anchor="middle" font-family="Arial" font-size="13" fill="#37444d">Original gage nominal height above base (m)</text>
+<text x="20" y="275" transform="rotate(-90 20 275)" text-anchor="middle" font-family="Arial" font-size="13" fill="#37444d">max sqrt(RPxi²+RPyi²) (deg)</text>
+<polygon points="118.34,448.43 191.70,421.54 265.05,393.67 338.41,364.83 411.77,335.05 558.48,272.70 631.84,240.16 705.20,206.73 815.23,154.97 815.23,197.17 705.20,242.36 631.84,271.41 558.48,299.59 411.77,353.28 338.41,378.75 265.05,403.28 191.70,426.87 118.34,449.49" fill="#24749b" opacity="0.14"/>
+<polyline points="118.34,448.99 191.70,424.33 265.05,398.66 338.41,372.02 411.77,344.42 558.48,286.38 631.84,255.98 705.20,224.65 815.23,175.78" fill="none" stroke="#24749b" stroke-width="2.3"/>
+<circle cx="118.34" cy="448.99" r="3.2" fill="#24749b"/>
+<circle cx="191.70" cy="424.33" r="3.2" fill="#24749b"/>
+<circle cx="265.05" cy="398.66" r="3.2" fill="#24749b"/>
+<circle cx="338.41" cy="372.02" r="3.2" fill="#24749b"/>
+<circle cx="411.77" cy="344.42" r="3.2" fill="#24749b"/>
+<circle cx="558.48" cy="286.38" r="3.2" fill="#24749b"/>
+<circle cx="631.84" cy="255.98" r="3.2" fill="#24749b"/>
+<circle cx="705.20" cy="224.65" r="3.2" fill="#24749b"/>
+<circle cx="815.23" cy="175.78" r="3.2" fill="#24749b"/>
+<line x1="110" y1="521" x2="135" y2="521" stroke="#24749b" stroke-width="3"/>
+<text x="142" y="525" font-family="Arial" font-size="12" fill="#34424c">9.343881 m/s</text>
+<polygon points="118.34,448.18 191.70,420.18 265.05,391.04 338.41,360.78 411.77,329.41 558.48,263.42 631.84,228.83 705.20,193.22 815.23,137.89 815.23,158.97 705.20,210.46 631.84,243.64 558.48,275.87 411.77,337.46 338.41,366.77 265.05,395.08 191.70,422.36 118.34,448.60" fill="#bd6b33" opacity="0.14"/>
+<polyline points="118.34,448.43 191.70,421.51 265.05,393.58 338.41,364.63 411.77,334.69 558.48,271.89 631.84,239.06 705.20,205.31 815.23,152.97" fill="none" stroke="#bd6b33" stroke-width="2.3"/>
+<circle cx="118.34" cy="448.43" r="3.2" fill="#bd6b33"/>
+<circle cx="191.70" cy="421.51" r="3.2" fill="#bd6b33"/>
+<circle cx="265.05" cy="393.58" r="3.2" fill="#bd6b33"/>
+<circle cx="338.41" cy="364.63" r="3.2" fill="#bd6b33"/>
+<circle cx="411.77" cy="334.69" r="3.2" fill="#bd6b33"/>
+<circle cx="558.48" cy="271.89" r="3.2" fill="#bd6b33"/>
+<circle cx="631.84" cy="239.06" r="3.2" fill="#bd6b33"/>
+<circle cx="705.20" cy="205.31" r="3.2" fill="#bd6b33"/>
+<circle cx="815.23" cy="152.97" r="3.2" fill="#bd6b33"/>
+<line x1="350" y1="521" x2="375" y2="521" stroke="#bd6b33" stroke-width="3"/>
+<text x="382" y="525" font-family="Arial" font-size="12" fill="#34424c">11.4 m/s</text>
+<polygon points="118.34,449.31 191.70,426.04 265.05,401.95 338.41,377.07 411.77,351.39 558.48,297.73 631.84,269.77 705.20,241.07 815.23,196.67 815.23,236.20 705.20,273.46 631.84,298.27 558.48,322.34 411.77,368.17 338.41,389.91 265.05,410.62 191.70,430.69 118.34,450.21" fill="#4c8b61" opacity="0.14"/>
+<polyline points="118.34,449.90 191.70,429.12 265.05,407.75 338.41,385.82 411.77,363.31 558.48,316.65 631.84,292.41 705.20,267.33 815.23,228.57" fill="none" stroke="#4c8b61" stroke-width="2.3"/>
+<circle cx="118.34" cy="449.90" r="3.2" fill="#4c8b61"/>
+<circle cx="191.70" cy="429.12" r="3.2" fill="#4c8b61"/>
+<circle cx="265.05" cy="407.75" r="3.2" fill="#4c8b61"/>
+<circle cx="338.41" cy="385.82" r="3.2" fill="#4c8b61"/>
+<circle cx="411.77" cy="363.31" r="3.2" fill="#4c8b61"/>
+<circle cx="558.48" cy="316.65" r="3.2" fill="#4c8b61"/>
+<circle cx="631.84" cy="292.41" r="3.2" fill="#4c8b61"/>
+<circle cx="705.20" cy="267.33" r="3.2" fill="#4c8b61"/>
+<circle cx="815.23" cy="228.57" r="3.2" fill="#4c8b61"/>
+<line x1="590" y1="521" x2="615" y2="521" stroke="#4c8b61" stroke-width="3"/>
+<text x="622" y="525" font-family="Arial" font-size="12" fill="#34424c">19.202140 m/s</text>
+</svg>
