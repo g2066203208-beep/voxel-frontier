@@ -1,0 +1,60 @@
+name: S12 advisor DOCX from six-chapter source
+on:
+  push:
+    branches:
+      - research/t080-seismic-integration-gates-20261022
+    paths:
+      - .github/workflows/s12-advisor-docx.yml
+      - research/wind-tower/manuscript/final-thesis/assemble/s12_build_advisor_docx.py
+      - research/wind-tower/manuscript/final-thesis/assemble/THESIS_SIX_CHAPTER_REVIEW_20261102.md
+      - research/wind-tower/manuscript/final-thesis/figures/**
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: s12-advisor-docx-pr42
+  cancel-in-progress: false
+jobs:
+  render:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install DOCX renderer (no structural solver)
+        run: python -m pip install --disable-pip-version-check python-docx==1.2.0 cairosvg==2.8.2 pypandoc_binary==1.15
+      - name: Build full six-chapter advisor DOCX with embedded research figures
+        run: |
+          python research/wind-tower/manuscript/final-thesis/assemble/s12_build_advisor_docx.py \
+            --source research/wind-tower/manuscript/final-thesis/assemble/THESIS_SIX_CHAPTER_REVIEW_20261102.md \
+            --expected-sha256 f058675d333399504cd193927bba6e35016bbe4259c8e714ae30b9b24c464fe8 \
+            --output s12_advisor/DTU10MW_158m_six_chapter_advisor_20261110.docx \
+            --receipt s12_advisor/DOCX_SOURCE_AND_FIGURE_RECEIPT.json
+      - name: Refuse source SHA mismatch (negative test)
+        run: |
+          if python research/wind-tower/manuscript/final-thesis/assemble/s12_build_advisor_docx.py \
+            --source research/wind-tower/manuscript/final-thesis/assemble/THESIS_SIX_CHAPTER_REVIEW_20261102.md \
+            --expected-sha256 0000000000000000000000000000000000000000000000000000000000000000 \
+            --output s12_advisor/should_not_exist.docx; then
+            echo "ERROR: mismatched SHA was accepted"; exit 1
+          fi
+          test ! -e s12_advisor/should_not_exist.docx
+      - name: Render preview PDF for pagination inspection
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq libreoffice-writer poppler-utils fonts-noto-cjk >/dev/null
+          mkdir -p s12_advisor/preview
+          libreoffice -env:UserInstallation=file:///tmp/lo-s12-advisor --headless --convert-to pdf \
+            --outdir s12_advisor/preview s12_advisor/DTU10MW_158m_six_chapter_advisor_20261110.docx
+          pdfinfo s12_advisor/preview/DTU10MW_158m_six_chapter_advisor_20261110.pdf | grep Pages
+          pdftoppm -f 1 -l 1 -r 90 -png -singlefile \
+            s12_advisor/preview/DTU10MW_158m_six_chapter_advisor_20261110.pdf \
+            s12_advisor/preview/first_page
+      - uses: actions/upload-artifact@v4
+        with:
+          name: S12_158m_six_chapter_advisor_docx_20261110
+          path: s12_advisor/
+          retention-days: 30
+          if-no-files-found: error
