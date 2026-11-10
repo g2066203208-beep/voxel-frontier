@@ -1,3 +1,7 @@
+## 2026-11-11 03时｜S05真实ESM长周期方向谱积分（0/12）
+
+START：PR#42 Open/Draft，read_base_sha=44a88129c1978cbe9237c71b1e7bd08ded9dd169；已读根/研究AGENTS、COMMAND_ROOM、白皮书v0.9.1、MASTER/STATUS、12阶段、T079/T080及原46周期谱CSV；不碰禁止Abaqus/CAE。SOURCE：T079/real-records/S05_ESM_NVL_PSA_PSD_46PERIOD_20261107.csv，Git blob 99b0b662fcc776701f15df8e4cbe28c109727c7b（不是SHA256）。科学增量：对数周期梯形积分得到4–9.346437s 21点RotD50/100几何均值0.022140645/0.025766747 m/s²、比1.163776；f/SNR频比≥1.5的4–7.265465s 15点均值0.027872201/0.031785122 m/s²、比1.140388。两域不能混称4–10s完整覆盖。RUN：V8直接解析历史CSV并数值积分；新Node源码原生CLI/负例NOT_RUN，不能声称测试PASS。FIG=0；TAB=历史46周期表；正文=地震附章A.7；STANDARD=未取得授权目标谱；OFFICIAL=历史ESM来源链，未重读原波；REF=2026两篇先行论文沿用历史阅读深度，未精读新页。白皮书v0.9.1→v0.9.2，来源级PARTIAL、正式物理HOLD、12阶段0/12晋级0/12、DLC1.2 0/126；未动T057/T070、main、PR合并及昂贵RUN。下一唯一动作：S05恢复已归档ESM原始双水平波并独立重算5%阻尼长周期RotD谱，对照46周期历史表和低频质量门槛；若无原波则切S10真实雨流材料分层可辨识研究。
+
 ## 2026-11-11 02时｜S07真实TP/RP近底运动学闭合（PATCH；0/12）
 
 **START/READ/并发**：PR #42 Open/Draft，read_base_sha=00a32871e86a7b78c7eb4e4426d5746556bf87ed；依序读根/研究AGENTS、指挥室READ-BEFORE-WRITE与01时交接、白皮书v0.9.0、MASTER/STATUS、12阶段、T079/T080最新过程、Ch3§3.5.7—8及真实S07姿态ZIP。复用T062原始来源，未重复峰值包络，不执行任何禁止的Abaqus/CAE工作。
