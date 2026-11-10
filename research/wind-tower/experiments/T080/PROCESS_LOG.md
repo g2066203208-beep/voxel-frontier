@@ -1,3 +1,13 @@
+## 2026-11-10 19时｜S10/S12真实48,070雨流循环二次均值诊断与英文期刊主文（0/12）
+
+**START/READ/并发**：开工基线4c0c84cfcf7a451934f6c871246bde4a3013a3f5，研究实物提交0b7f8903dbe92dedaf7a1b97b8b5091b7dd9aab9；PR#42仍Open/Draft，main不变。按根/研究AGENTS→指挥室READ-BEFORE-WRITE及18时交接→白皮书v0.6.4→MASTER/STATUS→12阶段→T079/T080→期刊原稿及真实账本/参考表核读，遵守非Abaqus范围。
+
+**SOURCE/数值**：48,070行历史rainflow range–mean–count账本SHA256 067c60cea61b35398edd186ff509fe759d1c4420395f082d06c666d92d897ecb；72行历史DEL/加权均值参考SHA256 e1d20adb86975060f013e40b6670b0e8ecfb33e928e80819a17112980ff63d51；本轮直接读取并独立核对两份SHA。严格定义p_i=n_i range_i^4/W，二阶中心矩v、Q2=mu_w²+v、J2=v/Q2。实际25/72组J2>5%、8/72组>10%，最大20.990052% (U09p343881_ETM_S06/Mx)；U09p343881_ETM_S02/Mx时均差仅0.118408%却J2=9.753158%；单循环最大权重43.223661%，移除最大权重循环的均值影响最大5.776011%。所有数值均为**载荷循环数学诊断**，不是材料局部应力/Goodman/Miner。
+
+**RUN/FIG/TAB**：新增Node程序SHA256 8b75ebb110c45e8cd6c40442ee015e69a83eda618b6f0726be85f85ede2992bf；72行CSV SHA256 cbe5f3c13290641789a11fc7551169a4b16fd9b347b03de74f8bde1209e76a49；SVG SHA256 568e594b49bf3476833d97729fc2ef9cf16d505ec58f47ddba9c2074d72f57da；英文稿新增Methods§2.5.1、Results§3.3.1/Table5/Fig5、Discussion§4.6、摘要/结论/可用性。V8执行真实48,070行/72组、DEL/加权均值/最大循环权重72/72 oracle、二阶矩两算法闭合、1解析+8污染拒绝PASS；**原生Node CLI NOT_RUN、OUTB重解码NOT_RUN、新物理RUN NOT_RUN**。误差预算：历史参考打印9位小数，来源级DEL与均值残差<1e-9 kN m；二阶矩独立一致性门槛1e-8相对；风场/模型状态/统计外推/材料应力映射无可信误差上界。REF=两篇2026混塔先行研究沿用历史摘要/选页，未新读全文；STANDARD=无新IEC/GB授权原页；OFFICIAL=历史OpenFAST来源未重取。
+
+**验收/下一动作**：SOURCE-LEVEL PASS；材料寿命/同态W/E/WE/送审HOLD；12阶段0/12、DLC1.2 0/126。白皮书v0.6.4→v0.6.5 PATCH。下一唯一动作S12投稿式图表/引文及逻辑审校；无新源即轮换S11独立算法，不重复本次均值统计。不碰Abaqus/CAE、冻结T057/T070、main、昂贵RUN或PR合并。
+
 ## 2026-11-10 18时｜S12期刊源级DEL参考循环数交叉闭合与正文纠错（0/12）
 
 **START/READ/并发基线**：main=58c1e545f67b645417d5957189f5dad693d975bb；PR#42开工HEAD=6858811c8ebd1e9d7af32058fb76531efabfaa7f，Open/Draft。依次读取研究AGENTS、COMMAND_ROOM READ-BEFORE-WRITE及17时交接、白皮书v0.6.3、MASTER/STATUS、12阶段、T079/T080过程、期刊原稿、T062两个历史原始派生CSV。研究范围仅S12非Abaqus的可投稿科学证据修复；未改冻结母本、main、PR状态或启动生产RUN。
