@@ -1,3 +1,15 @@
+## 2026-11-10 20时｜S12期刊DEL摘要非单射性证明与科学结论纠错（0/12）
+
+**START/并发基线**：PR#42 HEAD 80b7077e2b9a3883c7620428cc33182f7fca61fd、Open/Draft，main=58c1e545f67b645417d5957189f5dad693d975bb；按根/研究AGENTS→指挥室READ-BEFORE-WRITE/19时交接→白皮书v0.6.5→MASTER/STATUS→12阶段→T079/T080最新过程→期刊主文与36行crosswalk顺序读取。拟改期刊现有主文、T062新可运行源、T080原过程、指挥室、STATUS、白皮书；责任方为本ChatGPT非Abaqus执行者。未触碰禁区。
+
+**科学问题/反例**：旧§2.2.1将DEL归一化恒等式写为“requires identical cycle multisets”，这是**充分条件误写为必要条件**。令总加权循环数C>16、N_eq=100000、DEL=L、r0=L(N_eq/C)^(1/4)。A为全部C权重在r0；B为1个全循环在2r0，其余C-1权重在r1=r0((C-16)/(C-1))^(1/4)。两者C相同且四次矩均为C*r0^4，最大range相差2倍，均值可任意不同。原始OUTB SHA相同+weighted cycle count相同+DEL倍率正确，只证明源文件身份、计数及一个四次矩一致，不证明两个后处理完整cycle multiset一致；亦**不表示已发现实际多重集差异**。
+
+**SOURCE/RUN/TAB/FIG**：直接读取原36行[NTM crosswalk](../T062/S12_NTM18_DEL_NORMALIZATION_CROSSWALK_36ROW_20261110.csv)，SHA256 c630110d2aa1dcb15ae607469c7f8cba713c1bf1705544236b372a4f24c15142；C范围546–724，36/36可构造正range反例。U09p343881_NTM_S01/My真实摘要C=678、DEL=14214.854620029 kNm；构造A 49537.604206 kNm，B峰值99075.208411 kNm且余677权重49260.898518 kNm。V8真实36行四次矩相对残差≤3.0125e-16、跨表DEL倍率≤1.0414e-12；本地Node --selftest 1正8污染拒绝PASS；新[Node](../T062/s12_del_summary_identifiability.cjs) SHA256 362b576ecb1c39a86f08de428dbccaece0c87aa068501614a7f8ad91ac777f7d，源SHA错误、重复key、非法计数/通道/DEL/倍率拒绝；**原生Node读取真实CSV NOT_RUN**，OUTB重解码/生产物理RUN NOT_RUN。FIG无新图，TAB复用36行真实来源与期刊新增数值例。两套构造分布是**解析反例而非真实风机响应**。
+
+**正文/误差/文献**：英文稿§2.2.2新非单射证明、§3.1.1真实摘要锚定反例、摘要/讨论/结论/数据来源纠偏；§2.5明确定义气候加权DEL^4不是瞬时M(t)四次矩或Miner。数值双精度误差远低于源文件小数打印；不同算法真实循环多重集、风机状态、材料映射误差无可估上界。REF=2026两篇先行混塔论文仅沿用摘要/选页，未升级全文精读；STANDARD=无新增授权IEC/GB原页；OFFICIAL=原历史OUTB哈希与ERA5登记，未重下载。
+
+**验收/下一动作**：解析非单射性PASS，36行真实摘要可构造性PASS，Node合成自测PASS；原始雨流cycle-by-cycle同一性仍**NOT_VERIFIED**，不是声称旧T062独立rainflow3.2.0历史核验无效。12阶段0/12、DLC1.2 0/126、同态W/E/WE、局部Miner与投稿HOLD；白皮书v0.6.5→v0.6.6 PATCH。下一唯一动作转S11现有真实DOE/优化算法的独立拒绝测试，不重复S12相同论文微审计。禁区/冻结母本/main/昂贵RUN/PR合并均不动。
+
 ## 2026-11-10 19时｜S10/S12真实48,070雨流循环二次均值诊断与英文期刊主文（0/12）
 
 **START/READ/并发**：开工基线4c0c84cfcf7a451934f6c871246bde4a3013a3f5，研究实物提交0b7f8903dbe92dedaf7a1b97b8b5091b7dd9aab9；PR#42仍Open/Draft，main不变。按根/研究AGENTS→指挥室READ-BEFORE-WRITE及18时交接→白皮书v0.6.4→MASTER/STATUS→12阶段→T079/T080→期刊原稿及真实账本/参考表核读，遵守非Abaqus范围。
