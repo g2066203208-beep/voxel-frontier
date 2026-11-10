@@ -104,6 +104,10 @@ def build(source: Path, output: Path, expected_sha: str | None):
                  f'**源文件SHA256：** {src_sha}。图表按现有研究母稿嵌入，原Word媒体尚未完整恢复。\n\n'
                  '---\n\n')
         md = temp / 'advisor.md'
+        # Pandoc's math parser rejects the legacy plain-TeX \rm control word.
+        # Convert only this typographic command in the transient DOCX input;
+        # do not alter the evidence-locked research manuscript.
+        body = re.sub(r'\\rm\s*([A-Za-z]+)', r'\\mathrm{\1}', body)
         md.write_text(front + body, encoding='utf-8')
         ref = temp / 'reference.docx'
         reference_docx(ref)
