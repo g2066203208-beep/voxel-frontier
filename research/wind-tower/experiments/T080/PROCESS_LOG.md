@@ -1,3 +1,15 @@
+## 2026-11-10 15时｜S12真实六章Word同步纳入3.7.18（0/12）
+
+**START/来源**：PR#42 read_base_sha=`ae4a239631cc1827236a712c6fe2efe149dc30b6`，Open/Draft，main `58c1e545f67b645417d5957189f5dad693d975bb`；已按根/研究AGENTS→指挥室READ-BEFORE-WRITE/14时交接→白皮书v0.6.0→MASTER/STATUS→12阶段→T079/T080最新过程→Ch3原正文、六章SHA锁母稿及历史15行留出结果读取。未涉及Abaqus/CAE。
+
+**科学内容/结果**：上一轮已通过的18NTM双通道共同seed跨风速箱留出结果正式进入六章连续阅读母稿。直接复制Ch3§3.7.18完整方法、公式、5行主表、限制及来源索引到3.7.17与3.8之间；六章原其余部分不变。原Ch3 Git Blob `757e1d43382be5758ce90eb4fa066f2e2bde0788`、UTF-8 SHA256 `72a4323d8b06d65ff76018cfae485d627e7b0b789f8b4957834010b68a8f4bb6`；旧六章SHA256 `f058675d333399504cd193927bba6e35016bbe4259c8e714ae30b9b24c464fe8`→新 `4de28f38ad873ffeed722451877c4f8a88b922ac05eff5443e32b3ffc8421e07`。三seed三箱oracle误差2.241689%，留出9.343881m/s时训练1.321257%而测试10.858592%；不是新增物理试验、不是部署选种准则或材料寿命。
+
+**SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB**：SOURCE=原72行雨流CSV SHA256 `12dabbb1273ce03d3920aedda3f72f9fa1d75b671e01a1db145c0a972ffe15e2`，15行留出CSV SHA256 `a16dfe3379f7cfd0b353b23f76ac6cb6cfb79242afe232215f1f3f64da9439a4`；REF=既有T062雨流方法、原Ch3已核参考，2026两篇先行研究本轮未新增全文核读；STANDARD=无新增IEC/GB授权条文；OFFICIAL=历史OpenFAST风载来源，原OUTB本轮未重解码；RUN=原147页DOCX SHA256 `fbb5ebae361ae8fe0d3492a817bef49f23add4aafdbf66116d17957ed32ac229`，python-docx+Pandoc插入源章节、5列结果表改3列长表、同源CSV绘图、150页PDF/PNG实际渲染；新DOCX SHA256 `73eebcd702d89ce4926153b755287d9d41c0b9510157c00658e27675d3dcca32`、3,175,190字节；FIG=新Word内28张图（27旧+1根据15行CSV重绘），TAB=37张表（36旧+1新增），数学节点614（旧600+14含标题复制，非新增14个科研公式）。DOCX只在本轮沙盒，**没有Git持久二进制Artifact**；原Git科研SVG保持不变。
+
+**独立检查/失败与误差预算**：SHA错误源拒绝门禁；输入15行CSV核验k3留出10.858591747%，DOCX重开验证6章/37表/28图、插入段只出现一次、保留3.8；Pandoc第一次因不当转义将`\\`误改为`\`导致公式`\\c`无法解析，已修复并保留本日志；正式Pandoc无警告。150页已全部渲染，实看p69–74，图表正常但跨页长表仍有连续阅读负担，**视觉PARTIAL，非送审PASS**；未做150页100%逐页人工视觉审查。源级文本与DOCX结构PASS；原始OUTB、局部材料应力、完整W/E/WE、正式DLC1.2均HOLD，12阶段0/12。
+
+**持久化**：六章SHA锁母稿、白皮书、T080日志、00_STATUS、指挥室同事务提交；白皮书v0.6.0→v0.6.1 PATCH。下一唯一动作：S12原R5 Word图/公式精确回链及Word可读性实测修复，若新增真实W完整同态时程可读则优先切S06/S07。禁止范围与冻结母本均未触碰。
+
 ## 2026-11-10 14时｜S06/S12真实18NTM共同seed预算与跨风速箱留出试验（0/12）
 
 START+END：本轮开工基线PR#42 HEAD=bfc662e282f055f4d41c2cb3dc2c0b20c78c158a（Open/Draft）；按根/研究AGENTS→指挥室READ-BEFORE-WRITE与13时交接→白皮书v0.5.2→MASTER/STATUS→12阶段计划→T079/T080最新过程→T062既有源程序/72行真实雨流对照→Ch3§3.7.17依序读取。先检查S06/S07历史W源：16份ETM ZIP的31站FL/ML、短时原生0.1s及2s、9测高DCM条件收据均已有；尚无本轮可新增的同态完整W六分量/正式缺失风箱原件，立即按反卡死纪律转向**已有真实18NTM的可证伪跨箱选种试验**，未重复旧W审计。责任方=本ChatGPT非Abaqus研究执行者；实际修改T062程序/15行表、Ch3正文/科研图及本过程、状态、白皮书、指挥室；不修改T057/T070/main，不合并PR或启动昂贵RUN。
