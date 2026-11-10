@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="620" viewBox="0 0 1180 620">
+<rect width="1180" height="620" fill="#ffffff"/>
+<text x="70" y="48" font-family="Arial" font-size="25" font-weight="bold" fill="#172f4b">Synchronous tower-base moment envelope: 18 original NTM histories</text>
+<text x="70" y="76" font-family="Arial" font-size="15" fill="#496074">158 m research OpenFAST | 100–700 s, dt = 0.05 s | 6 seeds per wind bin | native TwrBsMx/My</text>
+<line x1="110" y1="500" x2="1110" y2="500" stroke="#64748b" stroke-width="2"/>
+<text x="55" y="505" font-family="Arial" font-size="13" fill="#53677c">0.0%</text>
+<line x1="110" y1="445.14285714285717" x2="1110" y2="445.14285714285717" stroke="#e2e8f0" stroke-width="1"/>
+<text x="55" y="450.14285714285717" font-family="Arial" font-size="13" fill="#53677c">0.5%</text>
+<line x1="110" y1="390.2857142857143" x2="1110" y2="390.2857142857143" stroke="#e2e8f0" stroke-width="1"/>
+<text x="55" y="395.2857142857143" font-family="Arial" font-size="13" fill="#53677c">1.0%</text>
+<line x1="110" y1="335.42857142857144" x2="1110" y2="335.42857142857144" stroke="#e2e8f0" stroke-width="1"/>
+<text x="55" y="340.42857142857144" font-family="Arial" font-size="13" fill="#53677c">1.5%</text>
+<line x1="110" y1="280.57142857142856" x2="1110" y2="280.57142857142856" stroke="#e2e8f0" stroke-width="1"/>
+<text x="55" y="285.57142857142856" font-family="Arial" font-size="13" fill="#53677c">2.0%</text>
+<line x1="110" y1="225.71428571428572" x2="1110" y2="225.71428571428572" stroke="#e2e8f0" stroke-width="1"/>
+<text x="55" y="230.71428571428572" font-family="Arial" font-size="13" fill="#53677c">2.5%</text>
+<line x1="110" y1="170.8571428571429" x2="1110" y2="170.8571428571429" stroke="#e2e8f0" stroke-width="1"/>
+<text x="55" y="175.8571428571429" font-family="Arial" font-size="13" fill="#53677c">3.0%</text>
+<line x1="110" y1="116" x2="1110" y2="116" stroke="#e2e8f0" stroke-width="1"/>
+<text x="55" y="121" font-family="Arial" font-size="13" fill="#53677c">3.5%</text>
+<line x1="110" y1="500" x2="110" y2="488.4989920804575" stroke="#1679a8" stroke-width="14" opacity=".87"/>
+<circle cx="110" cy="488.4989920804575" r="5" fill="#1679a8"/>
+<text x="110" y="523" text-anchor="middle" font-family="Arial" font-size="13" fill="#53677c">S1</text>
+<line x1="168.8235294117647" y1="500" x2="168.8235294117647" y2="478.5770196114283" stroke="#1679a8" stroke-width="14" opacity=".87"/>
+<circle cx="168.8235294117647" cy="478.5770196114283" r="5" fill="#1679a8"/>
+<text x="168.8235294117647" y="523" text-anchor="middle" font-family="Arial" font-size="13" fill="#53677c">S2</text>
+<line x1="227.6470588235294" y1="500" x2="227.6470588235294" y2="493.63894408777185" stroke="#1679a8" stroke-width="14" opacity=".87"/>
+<circle cx="227.6470588235294" cy="493.63894408777185" r="5" fill="#1679a8"/>
+<text x="227.6470588235294" y="523" text-anchor="middle" font-family="Arial" font-size="13" fill="#53677c">S3</text>
+<line x1="286.47058823529414" y1="500" x2="286.47058823529414" y2="482.09579860845713" stroke="#1679a8" stroke-width="14" opacity=".87"/>
+<circle cx="286.47058823529414" cy="482.09579860845713" r="5" fill="#1679a8"/>
+<text x="286.47058823529414" y="523" text-anchor="middle" font-family="Arial" font-size="13" fill="#53677c">S4</text>
+<line x1="345.2941176470588" y1="500" x2="345.2941176470588" y2="485.0285487104003" stroke="#1679a8" stroke-width="14" opacity=".87"/>
+<circle cx="345.2941176470588" cy="485.0285487104003" r="5" fill="#1679a8"/>
+<text x="345.2941176470588" y="523" text-anchor="middle" font-family="Arial" font-size="13" fill="#53677c">S5</text>
+<line x1="404.11764705882354" y1="500" x2="404.11764705882354" y2="479.062053829486" stroke="#1679a8" stroke-width="14" opacity=".87"/>
+<circle cx="404.11764705882354" cy="479.062053829486" r="5" fill="#1679a8"/>
+<text x="404.11764705882354" y="523" text-anchor="middle" font-family="Arial" font-size="13" fill="#53677c">S6</text>
+<line x1="462.94117647058823" y1="500" x2="462.94117647058823" y2="461.2128931986283" stroke="#7c59b5" stroke-width="14" opacity=".87"/>
+<circle cx="462.94117647058823" cy="461.2128931986283" r="5" fill="#7c59b5"/>
+<text x="462.94117647058823" y="523" text-anchor="middle" font-family="Arial" font-size="13" fill="#53677c">S1</text>
+<line x1="521.7647058823529" y1="500" x2="521.7647058823529" y2="451.51377899154284" stroke="#7c59b5" stroke-width="14" opacity=".87"/>
+<circle cx="521.7647058823529" cy="451.51377899154284" r="5" fill="#7c59b5"/>
+<text x="521.7647058823529" y="523" text-anchor="middle" font-family="Arial" font-size="13" fill="#53677c">S2</text>
+<line x1="580.5882352941176" y1="500" x2="580.5882352941176" y2="463.6445132946286" stroke="#7c59b5" stroke-width="14" opacity=".87"/>
+<circle cx="580.5882352941176" cy="463.6445132946286" r="5" fill="#7c59b5"/>
+<text x="580.5882352941176" y="523" text-anchor="middle" font-family="Arial" font-size="13" fill="#53677c">S3</text>
+<line x1="639.4117647058823" y1="500" x2="639.4117647058823" y2="477.52307820251434" stroke="#7c59b5" stroke-width="14" opacity=".87"/>
+<circle cx="639.4117647058823" cy="477.52307820251434" r="5" fill="#7c59b5"/>
+<text x="639.4117647058823" y="523" text-anchor="middle" font-family="Arial" font-size="13" fill="#53677c">S4</text>
+<line x1="698.2352941176471" y1="500" x2="698.2352941176471" y2="455.3531375689139" stroke="#7c59b5" stroke-width="14" opacity=".87"/>
+<circle cx="698.2352941176471" cy="455.3531375689139" r="5" fill="#7c59b5"/>
+<text x="698.2352941176471" y="523" text-anchor="middle" font-family="Arial" font-size="13" fill="#53677c">S5</text>
+<line x1="757.0588235294117" y1="500" x2="757.0588235294117" y2="461.1589130678855" stroke="#7c59b5" stroke-width="14" opacity=".87"/>
+<circle cx="757.0588235294117" cy="461.1589130678855" r="5" fill="#7c59b5"/>
+<text x="757.0588235294117" y="523" text-anchor="middle" font-family="Arial" font-size="13" fill="#53677c">S6</text>
+<line x1="815.8823529411765" y1="500" x2="815.8823529411765" y2="170.30156464639958" stroke="#d07c26" stroke-width="14" opacity=".87"/>
+<circle cx="815.8823529411765" cy="170.30156464639958" r="5" fill="#d07c26"/>
+<text x="815.8823529411765" y="523" text-anchor="middle" font-family="Arial" font-size="13" fill="#53677c">S1</text>
+<line x1="874.7058823529412" y1="500" x2="874.7058823529412" y2="219.25768445805716" stroke="#d07c26" stroke-width="14" opacity=".87"/>
+<circle cx="874.7058823529412" cy="219.25768445805716" r="5" fill="#d07c26"/>
+<text x="874.7058823529412" y="523" text-anchor="middle" font-family="Arial" font-size="13" fill="#53677c">S2</text>
+<line x1="933.5294117647059" y1="500" x2="933.5294117647059" y2="245.095934050743" stroke="#d07c26" stroke-width="14" opacity=".87"/>
+<circle cx="933.5294117647059" cy="245.095934050743" r="5" fill="#d07c26"/>
+<text x="933.5294117647059" y="523" text-anchor="middle" font-family="Arial" font-size="13" fill="#53677c">S3</text>
+<line x1="992.3529411764706" y1="500" x2="992.3529411764706" y2="243.8101207040002" stroke="#d07c26" stroke-width="14" opacity=".87"/>
+<circle cx="992.3529411764706" cy="243.8101207040002" r="5" fill="#d07c26"/>
+<text x="992.3529411764706" y="523" text-anchor="middle" font-family="Arial" font-size="13" fill="#53677c">S4</text>
+<line x1="1051.1764705882351" y1="500" x2="1051.1764705882351" y2="233.56843432228516" stroke="#d07c26" stroke-width="14" opacity=".87"/>
+<circle cx="1051.1764705882351" cy="233.56843432228516" r="5" fill="#d07c26"/>
+<text x="1051.1764705882351" y="523" text-anchor="middle" font-family="Arial" font-size="13" fill="#53677c">S5</text>
+<line x1="1110" y1="500" x2="1110" y2="374.148317322971" stroke="#d07c26" stroke-width="14" opacity=".87"/>
+<circle cx="1110" cy="374.148317322971" r="5" fill="#d07c26"/>
+<text x="1110" y="523" text-anchor="middle" font-family="Arial" font-size="13" fill="#53677c">S6</text>
+<text x="257.05882352941177" y="553" text-anchor="middle" font-family="Arial" font-size="15" font-weight="bold" fill="#1679a8">9.344 m/s</text>
+<text x="610" y="553" text-anchor="middle" font-family="Arial" font-size="15" font-weight="bold" fill="#7c59b5">11.4 m/s</text>
+<text x="962.9411764705883" y="553" text-anchor="middle" font-family="Arial" font-size="15" font-weight="bold" fill="#d07c26">19.202 m/s</text>
+<text x="72" y="104" font-family="Arial" font-size="14" fill="#33465a">Gap = 100 × [1 − maxₜ √(Mx² + My²) / √((maxₜ|Mx|)² + (maxₜ|My|)²)]</text>
+<text x="70" y="585" font-family="Arial" font-size="14" fill="#33465a">Maximum observed gap: 3.005064% (U19p202140_NTM_S01). All 18 curves from original SHA-checked OUTB.</text>
+<text x="70" y="607" font-family="Arial" font-size="12" fill="#64748b">Native tower-base response, NOT external force, material fatigue, DLC1.2 certification, or matched wind–earthquake input.</text>
+</svg>
