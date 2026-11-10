@@ -1,3 +1,15 @@
+## 2026-11-10 22时｜S12已核概率约束研究纳入六章SHA锁母稿（PATCH，0/12）
+
+**START/READ/并发**：PR#42 Open/Draft，read_base_sha=862aae29c1ec2a914eb30714ba80eeaec7f9461c，main=58c1e545f67b645417d5957189f5dad693d975bb。依次读取根/研究AGENTS、指挥室READ-BEFORE-WRITE及21时交接、白皮书v0.7.0、MASTER/STATUS、12阶段、T079/T080、Ch3§3.7.18与Ch5§5.4.8、原六章阅读稿与装配器。仅处理非Abaqus的论文研究成果装配，继承既有成果而不重新生成风场。
+
+**实质论文问题**：最新Ch5已含18NTM×Mx/My=36行load-DEL的Clopper–Pearson/Bonferroni概率约束方法，但原六章母稿缺§5.4.8；旧装配器仍锁定Ch3/Ch5历史SHA，重新装配会丢失已完成科研段落。本轮修正双章SHA锁、保留Ch3§3.7.18、完整并入Ch5§5.4.8的数学公式、三个风速箱×双通道6行实数表、零超限理论上界39.3038%/54.9733%、理想p≤5%时59/94个独立seed/项样本量下限和严格适用边界；将原图5-S11-05嵌入连续阅读母稿，原图5-C移至§5.4.8之前。**属于已有真实科研结果的正式论文闭合，不是新增风样本或物理响应**。
+
+**SOURCE/REF/STANDARD/OFFICIAL**：Ch3 UTF-8 SHA256 `72a4323d8b06d65ff76018cfae485d627e7b0b789f8b4957834010b68a8f4bb6`，Git blob `757e1d43382be5758ce90eb4fa066f2e2bde0788`；Ch5 UTF-8 SHA256 `b46b571b886a24ad54f7bc736eb2396acdd1695fa39029fdf311e43b700bd6eb`，Git blob `c296580b01be14905734c6233a96585419aef64f`；历史72行修正雨流源SHA256 `12dabbb1273ce03d3920aedda3f72f9fa1d75b671e01a1db145c0a972ffe15e2`（21时已有真实来源核验，本轮未重新解码OUTB）。REF=2026混塔先行研究 DOI 10.1080/13632469.2026.2671807、10.1016/j.rcns.2026.03.002沿用摘要/选页阅读深度，未新核全文；STANDARD=无新增IEC/GB授权原页，59/94不是IEC seed规定；OFFICIAL=继承OpenFAST原源收据。
+
+**RUN/FIG/TAB/程序/拒绝**：[SHA锁装配器](../../manuscript/final-thesis/assemble/s12_build_six_chapter_reader.cjs) SHA256 `dc2caa2bc9184a87e6f36d00d4d4f01d957b3b079dada63d9363f314d6982d79`；[六章连续阅读母稿](../../manuscript/final-thesis/assemble/THESIS_SIX_CHAPTER_REVIEW_20261102.md) SHA256 `04143c49a640cd60736b5435f7ac3f199e9277b9500acb4ea80aff83adc27b98`，长度190671→193083字符。直接在连接器V8执行更新后的**同一build+appendActiveReferences源码**，逐一核对6章Git blob和SHA256、六章完整、Ch3§3.7.18与Ch5§5.4.8各一次、30条参考文献首次引用/DOI身份；删除任一节或科研图触发3/3拒绝PASS。首次预提交尝试曾因执行环境不支持structuredClone、正则转义和单次工具调用上限失败，均在写分支前修复，原始失败不冒充PASS。FIG=[既有图5-S11-05](../../manuscript/final-thesis/figures/FIG5_S11_SEED_CHANCE_GATE_20261110.svg)，原SHA256 `1fc47ea400640b0346ae6b2685770e441670c3b8cbcab8d2dad16655b33c72c7`；TAB=[既有6行真实诊断表](../T062/S11_NTM18_SEED_CHANCE_GATE_6ROW_20261110.csv) SHA256 `aab8333fbe252738c84dbd5ccbf63313cd1c753ceb115e8ee5e154942c66d94e`。**原生Node --check、DOCX/PDF渲染、OUTB重解码与新物理RUN NOT_RUN**；本轮未重算统计量，舍入误差无新增，回顾性阈值、iid/控制状态、材料局部映射与外推误差无可信物理上界。
+
+**验收/HOLD/下一动作**：六章科研正文与源身份装配PASS，非结构物理PASS；白皮书v0.7.0→v0.7.1 PATCH；12阶段0/12、正式DLC1.2 0/126、同态W/E/WE、材料Miner、真实结构DOE与期刊送审HOLD。下一唯一动作S06/S07优先找可追索完整W侧六分量同态风时程；缺源立即切S05官方长周期谱与实测记录的论文实质段落，不再重复本次母稿小修。禁区、冻结T057/T070、main、昂贵RUN及PR合并未触碰。
+
 ## 2026-11-10 21时｜S11真实NTM有限seed概率约束的精确样本量门禁（MINOR，0/12）
 
 **START/READ**：PR#42 Open/Draft，开工read_base_sha=`d3d61b96769d3d92b876932a550b19b490639c8a`、main=`bbc5c9130f2d9fc41f776506d86118a9b8db0e65`；依次读取研究AGENTS、指挥室READ-BEFORE-WRITE/20时交接、白皮书v0.6.6、MASTER/STATUS、12阶段、T079/T080过程、现行Ch5§5.4.3–5.4.7/§5.5.3a及历史72行雨流源。先发现既有S11风速箱LOBO/seed留出/NSGA-II解析基准均已完成，**拒绝提交重复的载荷风速代理试验**，转向尚未完成的有限seed机会约束统计准入模块。

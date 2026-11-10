@@ -2,7 +2,7 @@
 "use strict";
 // SHA-locked six-chapter reading assembly; no solver or physical verification.
 const fs=require("node:fs"),path=require("node:path"),crypto=require("node:crypto");
-const meta=[{"name":"01_绪论.md","blob":"713325657815f1c65c7b99c50a186ed3270d34b0","sha256":"2c0355a022bad10af61cebc3d1d9b5bd5b218400647d4d3cac5ac23de79114fe"},{"name":"02_研究对象_精细有限元模型与分层验证.md","blob":"cffacbbb75e9bcd0673d6b6dc16124ef63bea691","sha256":"3dbcc0d547c9215b11180999ff8655bdd0e2a92ef621e21bc2b90150c8ab028a"},{"name":"03_场址风环境与整机随机风控制载荷.md","blob":"bd55cb43a5fb81addee2f022c08feed47104181c","sha256":"8ae80d5c2f5a7ed7c71fdb8c23ae83abfc150165cec700c8912855d55cc14e54"},{"name":"04_10MW混合塔架风致疲劳性能分析.md","blob":"06c0df0782ac3669ad2c02beafd2f04576d373c3","sha256":"c5c51e5b7206ce51aaa59fa1f41fe156203c7a26d8e6b1887b4463be656b5245"},{"name":"05_疲劳控制参数敏感性与结构优化.md","blob":"356f14644d90b0280b4821514a85975d66b1bd80","sha256":"af2e85ce4623b3b2ea957bc56b78c0642d82d35b23f7ede6dce645d1aaba390b"},{"name":"06_结论与展望.md","blob":"627d4c6fb37a8016d83b52613311c43c1756fae4","sha256":"7a482aadad1717c528bb0dc3fcf72312915e0162eea271af92f0735ccf2cfd3e"}];
+const meta=[{"name":"01_绪论.md","blob":"713325657815f1c65c7b99c50a186ed3270d34b0","sha256":"2c0355a022bad10af61cebc3d1d9b5bd5b218400647d4d3cac5ac23de79114fe"},{"name":"02_研究对象_精细有限元模型与分层验证.md","blob":"cffacbbb75e9bcd0673d6b6dc16124ef63bea691","sha256":"3dbcc0d547c9215b11180999ff8655bdd0e2a92ef621e21bc2b90150c8ab028a"},{"name":"03_场址风环境与整机随机风控制载荷.md","blob":"757e1d43382be5758ce90eb4fa066f2e2bde0788","sha256":"72a4323d8b06d65ff76018cfae485d627e7b0b789f8b4957834010b68a8f4bb6"},{"name":"04_10MW混合塔架风致疲劳性能分析.md","blob":"06c0df0782ac3669ad2c02beafd2f04576d373c3","sha256":"c5c51e5b7206ce51aaa59fa1f41fe156203c7a26d8e6b1887b4463be656b5245"},{"name":"05_疲劳控制参数敏感性与结构优化.md","blob":"c296580b01be14905734c6233a96585419aef64f","sha256":"b46b571b886a24ad54f7bc736eb2396acdd1695fa39029fdf311e43b700bd6eb"},{"name":"06_结论与展望.md","blob":"627d4c6fb37a8016d83b52613311c43c1756fae4","sha256":"7a482aadad1717c528bb0dc3fcf72312915e0162eea271af92f0735ccf2cfd3e"}];
 function build(raws,meta){
 function between(s,a,b,r){let i=s.indexOf(a),j=s.indexOf(b,i+a.length);if(i<0||j<0)throw Error("missing "+a);return s.slice(0,i+a.length)+"\n\n"+r+"\n\n"+s.slice(j)}
 function insert(s,m,f){let i=s.indexOf(m);if(i<0)throw Error("missing "+m);return s.slice(0,i)+f+"\n\n"+s.slice(i)}
@@ -27,12 +27,13 @@ const synthesis=`## 5.6 现阶段验证结果对优化结论的约束\n\n本章�
 s=s.slice(0,a)+synthesis+s.slice(b).replace("## 5.10 本章小结","## 5.7 本章小结");
 s=insert(s,"### 5.4.5 风速箱整体留出","![图5-A：ETM沿高空间留出误差（非设计优化）](../figures/FIG5_S11_ETM_HEIGHT_HOLDOUT_LEAKAGE_20261107.svg)");
 s=insert(s,"### 5.4.6 按独立风场","![图5-B：NTM风速箱整体留出误差（非材料寿命）](../figures/FIG5_S11_NTM18_WINDBIN_LOBO_20261108.svg)");
-s=insert(s,"## 5.5 疲劳驱动多目标优化","![图5-C：同箱seed与整箱留出验证目标对照](../figures/FIG5_S11_SEED_VS_BIN_VALIDATION_20261109.svg)");
+s=insert(s,"### 5.4.8 六seed机会约束","![图5-C：同箱seed与整箱留出验证目标对照](../figures/FIG5_S11_SEED_VS_BIN_VALIDATION_20261109.svg)");
+s=insert(s,"## 5.5 疲劳驱动多目标优化","![图5-E：六seed机会约束二项上界（仅统计方法）](../figures/FIG5_S11_SEED_CHANCE_GATE_20261110.svg)");
 s=insert(s,"### 5.5.4 Pareto关系","![图5-D：NSGA-II/LHS解析基准（非真实结构优化）](../figures/FIG5_S11_NSGA2_ZDT1_20261109.svg)");
 }
 if(/[\x00-\x08\x0b\x0c\x0e-\x1f]/.test(s))throw Error("control chars Ch"+i);return s.trim()});
 const table=meta.map((m,i)=>`| ${i+1} | \`${m.name}\` | \`${m.blob}\` | \`${m.sha256}\` |`).join("\n");
-return `# 10 MW级陆上风机预应力混凝土—钢混合塔架：六章连续阅读母稿（2026-11-10）\n\n> **导师内部阅读用研究母稿，不是送审版Word/PDF，也不代表12阶段验收通过。** 从PR #42六章最新原文按SHA锁定装配，剔除章末内部门禁；第五章仅在装配层以真实留出验证综合表替代无实证的优化占位表，修复数学式和零基准疲劳比值定义，嵌入4幅既有S11图。本轮第四章源文件与阅读稿同步增补，其余五章源文件保持不变。\n\n> **证据边界：** 158m组合研究模型、ERA5 184080h、历史36组风/18NTM/4ETM已有来源级成果；正式DLC1.2 **0/126**、分材料局部Miner/真实DOE与结构Pareto/同态W-E-WE未闭合，**12阶段0/12**。原Word媒体恢复、中英摘要、正式参考文献著录及排版尚未完成；不能直接提交盲审。\n\n## 六章源文件身份（Git Blob SHA1与UTF-8 SHA256）\n\n| 章 | 源文件 | Git Blob SHA1 | SHA256 |\n|---|---|---|---|\n${table}\n\n---\n\n${chapters.join("\n\n---\n\n")}\n`;}
+return `# 10 MW级陆上风机预应力混凝土—钢混合塔架：六章连续阅读母稿（2026-11-10）\n\n> **导师内部阅读用研究母稿，不是送审版Word/PDF，也不代表12阶段验收通过。** 从PR #42六章最新原文按SHA锁定装配，剔除章末内部门禁；第五章仅在装配层以真实留出验证综合表替代无实证的优化占位表，修复数学式和零基准疲劳比值定义，嵌入4幅既有S11图。第三章§3.7.18与第五章§5.4.8均按最新源文件SHA锁定装配；其余四章继承既有内容。\n\n> **证据边界：** 158m组合研究模型、ERA5 184080h、历史36组风/18NTM/4ETM已有来源级成果；正式DLC1.2 **0/126**、分材料局部Miner/真实DOE与结构Pareto/同态W-E-WE未闭合，**12阶段0/12**。原Word媒体恢复、中英摘要、正式参考文献著录及排版尚未完成；不能直接提交盲审。\n\n## 六章源文件身份（Git Blob SHA1与UTF-8 SHA256）\n\n| 章 | 源文件 | Git Blob SHA1 | SHA256 |\n|---|---|---|---|\n${table}\n\n---\n\n${chapters.join("\n\n---\n\n")}\n`;}
 function appendActiveReferences(s,chapters,bib,registry){
  const order=[...new Set([...chapters.join("\n").matchAll(/\bREF\d{3}\b/g)].map(m=>m[0]).filter(id=>id!=="REF131"))];
  const e=[...bib.matchAll(/^(\d+)\. \[(REF\d{3})\] /gm)].map(m=>[Number(m[1]),m[2]]);
@@ -45,9 +46,19 @@ function appendActiveReferences(s,chapters,bib,registry){
  out=out.replace("正式参考文献著录及排版尚未完成","30条现行非禁区参考文献已初步著录（另1条禁区保留）、最终排版尚未完成");
  return out.trimEnd()+"\n\n---\n\n"+bib.trim()+"\n";
 }
+function assertChapterIntegration(out){
+ const n=(re)=>(out.match(re)||[]).length;
+ if(n(/^### 3[.]7[.]18 /gm)!==1)throw Error("CH3_3718_MISSING_OR_DUPLICATE");
+ if(n(/^### 5[.]4[.]8 /gm)!==1)throw Error("CH5_548_MISSING_OR_DUPLICATE");
+ if(n(/FIG5_S11_SEED_CHANCE_GATE_20261110[.]svg/g)!==2)throw Error("CH5_FIGURE_LINK_OR_EMBED_MISSING");
+ for(const t of ["39.3038%","54.9733%","94次/项","299次/项","10.858592%"])if(!out.includes(t))throw Error("EVIDENCE_LOST:"+t);
+ if(out.includes("## 5.6 Pareto方案选择与高保真独立复核"))throw Error("UNSUPPORTED_PARETO");
+ return true;
+}
 const root=path.resolve(__dirname,".."),target=path.join(__dirname,"THESIS_SIX_CHAPTER_REVIEW_20261102.md");
 const inputs=meta.map(m=>{const s=fs.readFileSync(path.join(root,"chapters",m.name),"utf8");const blob=crypto.createHash("sha1").update(Buffer.from("blob "+Buffer.byteLength(s)+"\0")).update(s).digest("hex");const digest=crypto.createHash("sha256").update(s).digest("hex");if(blob!==m.blob||digest!==m.sha256)throw Error("SOURCE_SHA_MISMATCH: "+m.name);return s;});
 const out=appendActiveReferences(build(inputs,meta),inputs,fs.readFileSync(path.join(__dirname,"S12_ACTIVE_REFERENCES_20261110.md"),"utf8"),fs.readFileSync(path.resolve(__dirname,"../../../registry/literature_master.tsv"),"utf8"));
+assertChapterIntegration(out);
 if(process.argv.includes("--write")){fs.writeFileSync(target,out,"utf8");console.log("WROTE",crypto.createHash("sha256").update(out).digest("hex"));}
 else if(process.argv.includes("--check")){if(fs.readFileSync(target,"utf8")!==out)throw Error("ASSEMBLY_DRIFT");console.log("ASSEMBLY_PASS",crypto.createHash("sha256").update(out).digest("hex"));}
 else process.stdout.write(out);
