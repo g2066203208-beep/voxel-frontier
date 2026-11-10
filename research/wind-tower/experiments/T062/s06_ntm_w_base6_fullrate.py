@@ -49,7 +49,7 @@ def run(a):
             e=sources[case];p=a.zip_dir/Path(e["archive"]).name;zb=p.read_bytes()
             if sha(zb)!=expected[case]["archive_sha256"]:raise ValueError("ARCHIVE_SHA_"+case)
             with zipfile.ZipFile(io.BytesIO(zb)) as z:raw=z.read(e["relative_path"])
-            if len(raw)!=int(e["bytes"]) or sha(raw)!=e["sha256"] or sha(raw)!=expected[case]["outb_sha256"]:
+            if len(raw)!=int(e["bytes"]) or sha(raw)!=e["sha256"].lower() or sha(raw)!=expected[case]["outb_sha256"]:
                 raise ValueError("OUTB_SHA_"+case)
             h=outb_header(raw);names=h["channel_names"];units=h["channel_units"]
             if h["file_id"]!=4 or h["num_samples"]!=12001 or h["num_output_channels"]!=295 or abs(h["first_time_s"]-100)>1e-9 or abs(h["time_increment_s"]-.05)>1e-12:
