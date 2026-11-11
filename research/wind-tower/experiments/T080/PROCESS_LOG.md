@@ -1,3 +1,15 @@
+## 2026-11-12 00时｜S12真实远端导师Word构建故障修复、Artifact回读与新增图页面验收（0/12）
+
+**START/READ**：read_base_sha=`7a0f64d29e4a29ee0c6074fed494f408ed67b125`；main=`58c1e545f67b645417d5957189f5dad693d975bb`；PR#42 Open/Draft。依序读取研究AGENTS、指挥室READ-BEFORE-WRITE及23时交接、白皮书v0.9.22、MASTER/STATUS、12阶段、T079/T080、六章SHA锁装配器、现行6章源、附章A.12/A.13及S12 Word工作流。继承历史36风、ERA5、T062真实72行/6行/720行及既有Ch3§3.7.19–20；未重做统计或任何结构/风机生产RUN。
+
+**真实失败及根因**：GitHub Actions #43047539200（2026-11-11 15:21 UTC）在`node .../s12_build_six_chapter_reader.cjs --check`报`ASSEMBLY_DRIFT`，后续DOCX步骤全部跳过；历史最近多次S12工作流同类失败。直接从PR当前HEAD读取6章、参考文献、注册表、附章、装配器和219063字符母稿，在独立V8内执行与仓库Node同构的`build/appendActiveReferences/assertChapterIntegration`，逐字节比对发现**唯一差异**：第1935行`## 3.10 本章小结`前手工多插入2个LF；修复后219061字符与确定性生成结果完全一致。原母稿SHA256=`aaac51a27422a1f6af177d33f286e8d6787cc8c72276411c8f34e40573f9e71f`，修复后SHA256=`3c0f8c08444a3daaea1c054d7783f24a5297185b119247e4c0c9b3420adb1647`（纯JS SHA256先以标准abc向量校验，再以旧母稿SHA交叉核对）；Git Blob=`5c557456a87c43192c8c582278a10ecf0cc0b3a6`。科研源修复commit `a8e79c5ceb9b387b23f6bff028d0b15aa24ef49b`，工作流更新期望SHA commit `a911ddc50c4849cb3817c265052c88cf5a0c5050`。中间Actions #43056519340已通过ASSEMBLY_PASS，但因旧工作流期望SHA仍失败，故保留真实失败而非伪称一次成功。
+
+**远端真实RUN与可下载Artifact**：最终[Actions #43056638399](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43056638399)于2026-11-11 16:17:53 UTC completed/success，全部`ASSEMBLY_PASS`、源SHA门禁、DOCX构建、错误SHA拒绝测试、Pandoc表格精修、自测与上传均PASS；[Artifact #13871622681](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43056638399/artifacts/13871622681)实际下载并解包、到期2026-12-11 16:17:49 UTC。远端精修DOCX 4,316,389字节、SHA256=`662495ef41cfe2b31de053e1ad8c8ee4cfa599035c23e3e14bac3bf46594d474`，**非上一轮本地172页DOCX同字节**。远端两JSON原始收据回读：六章/44表/207行/39嵌图/615数学节点/1543段；精修前后text SHA256均`ebae11afdbcfaafce18a88686fd2539cba9f0c79c67dda69010eb1961f2b74a8`，表明精修没有删除正文。源装配图39幅，上一轮本地重绘图3-19为双图所以报告40幅；不得混同。
+
+**FIG/TAB/实际视觉**：使用LibreOffice headless把**远端原始Artifact精修DOCX**实际渲染A4 **173页**；定位§3.7.19/20及图3-19第82页、图3-20第84页，抽检80–87页及81/82/84单页100%图像：两个研究图、6行bootstrap表、720重排统计表实际可见，未见严重裁切；图上英文说明与正文中文双图注并存，仍需最终规范排版。173页**未逐页人工视觉验收**，不能宣称送审版式PASS。
+
+**SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB及HOLD**：SOURCE=SHA锁定六章源、真实历史T062 72行雨流源SHA256 `cbe5f3c13290641789a11fc7551169a4b16fd9b347b03de74f8bde1209e76a49`；REF=继承既有文献未新读两篇2026全文；STANDARD=无新增授权IEC/GB条文；OFFICIAL=GitHub Actions Ubuntu24.04/Node、Python3.11/pandoc/docx；RUN=真实远端工作流与本地LibreOffice渲染；FIG=图3-19/20已核；TAB=44张远端嵌入表，真实6行/720行数值来自原T062。**本轮修复的是可复现论文装配，不是新增风机物理发现、材料寿命或地震安全结果。** 12阶段正式PASS 0/12、本轮晋级0/12，DLC1.2 0/126，S12 PARTIAL；W/E/WE严格同态、原BTS配对、材料局部应力/Miner、全篇视觉与期刊送审HOLD。下一唯一最优动作：切换S10/S12，利用已有真实31段名义应力与风速权重，把第四章尚未闭合的**长期概率口径与材料局部应力不可辨识性**写成可发表、具反例的定量讨论，不再重复六seed微统计或纯Word格式检查。未触碰禁止Abaqus/CAE、冻结T057/T070、main、昂贵RUN或PR合并。
+
 ## 2026-11-11 23时｜S12六章导师Word整合真实NTM精确bootstrap与720种seed重排（0/12）
 
 **START/READ**：PR#42 read_base_sha=097cd1743aae207459b4bcf8c879a2a8aeee22f4，Open/Draft；已依序核读研究AGENTS、指挥室READ-BEFORE-WRITE/22时交接、白皮书v0.9.21、MASTER/STATUS、12阶段、T079/T080、第三章§3.7.19–20、6行/720行真实历史载荷派生表与既有SHA锁六章Word母稿。指挥室本轮START提交610b32a80b7c8a93c5b10477e81f51a1b431b886。继承历史36风/18NTM、ERA5、31段与既有雨流/DEL；未重复风机求解或原始OUTB解码。
