@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.9.12**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.9.13**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -31,6 +31,7 @@
 
 | 日期（Asia/Shanghai） | 白皮书版本 | 开发与证据增量 | 科学状态 | 远端事务 |
 |---|---|---|---|---|
+| 2026-11-11 | **v0.9.13 PATCH** | **S05原有独立RotD源码的真实可执行性修复与数值交叉验证**：修复两处字面\\n导致代码被注释吞并、ESM标准导出列名不匹配；补唯一列名/来源SHA拒绝、Boore2010非几何RotD50 180角、连续方向RotD100；附章A.11新增SciPy独立ODE 3时间步长误差表。 | 本地Python/SciPy解析输入二阶收敛0.31134579%→0.07791027%→0.01948169%，方向不变性与CSV/参数拒绝PASS；**提交版CLI/真实ESM 46周期NOT_RUN**，非结构/低频/目标谱验收，12阶段0/12、DLC1.2 0/126。 | [修复源码](../experiments/T079/s05_rotd_independent_newmark.py) Git blob `16b13f73408c76a8fc726be50ecb96e5b807dae8`；[附章A.11](../manuscript/final-thesis/appendices/APPENDIX_A_ESM_EONLY_METHODS_RESULTS_20261110.md)；[T080过程](../experiments/T080/PROCESS_LOG.md)；本提交Git History。 |
 | 2026-11-11 | **v0.9.12 PATCH** | **S05连续角RotD100严格恒等式及误差界**：修订 `experiments/T079/s05_rotd_independent_newmark.py`，由同刻双水平相对位移模长直接给出连续方向RotD100；附章A.10证明恒等式及1°离散角严格低估上界0.0038076936%，本地Python独立50/500/5000点数学检验低估0.0007229932%/0.0020108596%/0.0017095831%。 | 数学恒等式及独立数值上界检验PASS；**非实测ESM谱**，提交版CLI、原波46周期对照NOT_RUN，S05/同态WE/Miner/送审HOLD，12阶段0/12、DLC1.2 0/126。 | [修订程序](../experiments/T079/s05_rotd_independent_newmark.py)；[附章A.10](../manuscript/final-thesis/appendices/APPENDIX_A_ESM_EONLY_METHODS_RESULTS_20261110.md)；[T080过程](../experiments/T080/PROCESS_LOG.md)；Git History。 |
 | 2026-11-11 | **v0.9.11 PATCH** | **S05独立Newmark-RotD源级实现**：新增 `experiments/T079/s05_rotd_independent_newmark.py` 和地震附章A.9，规定5%阻尼、双水平1°离散RotD50/100、原波SHA准入、时间/方向离散误差与低频HOLD。 | 原ESM原波已由其他获授权执行者恢复，但本轮云端未获得字节；源码CLI、自测及真实谱NOT_RUN，不能视为科学验证；12阶段0/12，DLC1.2 0/126。 | [源码](../experiments/T079/s05_rotd_independent_newmark.py)；[附章](../manuscript/final-thesis/appendices/APPENDIX_A_ESM_EONLY_METHODS_RESULTS_20261110.md)；[过程](../experiments/T080/PROCESS_LOG.md)；Git History。 |
 | 2026-11-11 | **v0.9.10** | **S12真实历史18行交互数据的可复现期刊科研图**：新增T062源级Node绘图程序、18点/3箱均值SVG和期刊§4.8图注/证据边界；原表Git blob 8a6e983a2c8e00f79f786268e5937303d916d97d，箱均值 4.085987/3.465896/3.715323 pp。 | V8直接来源校验PASS；Node CLI NOT_RUN；历史载荷层图，非材料Miner/WE/物理PASS；12阶段0/12、DLC1.2 0/126。 | [图](../manuscript/final-thesis/figures/FIG4_S10_ETM_NTM_DIRECTIONAL_INTERACTION_20261111.svg)；[源码](../experiments/T062/s10_interaction_figure.cjs)；[期刊正文](../manuscript/journal-wind-fatigue-results.md)；Git History。 |
