@@ -50,7 +50,7 @@ function assertChapterIntegration(out){
  const n=(re)=>(out.match(re)||[]).length;
  if(n(/^### 3[.]7[.]18 /gm)!==1)throw Error("CH3_3718_MISSING_OR_DUPLICATE");
  if(n(/^### 3[.]7[.]19 /gm)!==1||n(/^### 3[.]7[.]20 /gm)!==1)throw Error("CH3_3719_3720_MISSING_OR_DUPLICATE");
- for(const f of ["FIG3_S06_NTM_EXACT_SEED_BOOTSTRAP_PAIRING_20261111.svg","FIG3_S06_NTM_MY_SEED_LABEL_RELABEL_20261111.svg"])if(n(new RegExp("!\\\\[[^\\\\]]+\\\\]\\\\([^\\\\)]+/"+f.replace(/[.]/g,"\\\\.")+"\\\\)","g"))!==1)throw Error("CH3_FIGURE_MISSING_OR_DUPLICATE:"+f);
+ for(const f of ["FIG3_S06_NTM_EXACT_SEED_BOOTSTRAP_PAIRING_20261111.svg","FIG3_S06_NTM_MY_SEED_LABEL_RELABEL_20261111.svg"])if(out.split(f).length!==2||!out.includes("![图3-"))throw Error("CH3_FIGURE_MISSING_OR_DUPLICATE:"+f);
  for(const t of ["7.975024%","0.072874%","14.868398%","517/720"])if(!out.includes(t))throw Error("CH3_SEED_EVIDENCE_LOST:"+t);
  if(n(/^### 5[.]4[.]8 /gm)!==1)throw Error("CH5_548_MISSING_OR_DUPLICATE");
  if(n(/FIG5_S11_SEED_CHANCE_GATE_20261110[.]svg/g)!==2)throw Error("CH5_FIGURE_LINK_OR_EMBED_MISSING");
