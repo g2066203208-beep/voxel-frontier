@@ -1,3 +1,5 @@
+2026-11-11 13时｜网页版GPT非Abaqus S05 START+END：read_base_sha=447a208f027a61e0b1d25f2967b8260d65092a95，PR#42 Open/Draft。继承已恢复官方ESM MP原波身份，但本轮云端未获得原始CSV；修正独立Newmark源码：连续方向RotD100严格等于同步双轴相对位移向量模长最大值×ω²，1°扫描仅用于RotD50。严格角度离散上界0.0038076936%，本地独立Python三组50/500/5000点数学验证低估0.0007229932%/0.0020108596%/0.0017095831%。新增附章A.10、更新T080与白皮书v0.9.11→v0.9.12 PATCH；这些非真实地震谱值，提交版CLI及46周期原波逐点比较NOT_RUN，0/12晋级0/12，DLC1.2 0/126，设计谱/低频/同态WE/材料Miner HOLD。下一唯一动作：恢复原波CSV执行独立谱逐点复算，若云端源阻断转S12已有31段真实结果正文装配。未碰Abaqus/CAE、冻结T057/T070、main、昂贵RUN或PR合并。
+
 2026-11-11 12时｜网页版GPT非Abaqus S05 START+END：read_base_sha=38e861f3c8b9a882e7fff8b1d8c271826bbc6dbf；继承最新本机ESM官方ZIP恢复及原波导出收据，不重复宣称原波缺失。新增T079独立Newmark-RotD 5%阻尼Python源码、地震附章A.9、T080过程；白皮书v0.9.10→v0.9.11 PATCH。真实原波本轮未在云端获得，程序CLI/自测/原波谱NOT_RUN；0/12晋级0/12，DLC1.2 0/126，谱/低频/同态WE/材料Miner仍HOLD。下一唯一动作：执行独立原波RotD谱并与既有46周期逐点对照、时间/角度收敛。未碰Abaqus/CAE、冻结T057/T070、main、昂贵生产RUN或PR合并。
 
 2026-11-11｜本机Codex地震检查工程 END／当前本机状态：**PREPARED_NOT_SUBMITTED，1 Model / 1 Job；没有地震求解、没有ODB、没有物理PASS**。用户已要求前台打开供检查，Abaqus 2025窗口已实际显示完整整塔与Jobs(1)下 `DTU158_EONLY_REVIEW`。本次增量不改变云端S阶段判定、既有论文成果或网页版GPT禁区。
