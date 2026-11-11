@@ -1,3 +1,15 @@
+## 2026-11-12 06时｜S10/S11真实18NTM双方向最小最大抽样分配（0/12）
+
+**START/READ**：read_base_sha=bb48054b2f1c3e73f9a2b8c339a184973b37d8ca，main=58c1e545f67b645417d5957189f5dad693d975bb，PR#42 Open/Draft；依次读研究AGENTS、COMMAND_ROOM READ-BEFORE-WRITE/05时交接、白皮书v0.10.1、MASTER/STATUS、12阶段、T079/T080与Ch3/期刊，继承T026/T038、ERA5/36风/31段/18NTM雨流等历史证据，不重跑已完成的平均反力或原点偏移分析。
+
+**问题与SOURCE**：在仅有18组真实NTM（三风速箱各六seed）的固定预算下，若目标是最小化ERA5加权的已观测箱载荷四次矩估计方差，均匀六seed是否最优？SOURCE=T062历史修正后72行雨流DEL CSV SHA256 12dabbb1273ce03d3920aedda3f72f9a1db145c0a972ffe15e2（Git blob e03bdb1ddc98daa2e8726b0fe1b11a858af03b27），31行ERA5分箱 SHA256 e4058620a36b23bb218103875d4dc5b0711fc45d418b23a2208c2fc9c16c9102（blob 1bae743b385d4f24c8b5af3e0b445aae30d40c6f）；[9,10)/[11,12)/[19,20)m/s箱小时5736/1426/2，合计7164/184080=3.8918%全时小时。单位：DEL(kN·m)转(MN·m)，四次矩q=DEL4^4单位(MN·m)^4；估计方差单位(MN·m)^8。固定相同参考循环数，不等于材料m=4寿命。
+
+**方法与结果**：工作假设为箱间独立、每seed成本相同、箱内IID，估计Var(K_c)=Σ_b p_b²s_bc²/n_b；N=18、n_b≥2共91个整数分配，联合最小化Mx/My相对均匀(6,6,6)方差比的最大值。双方向最优(10,6,2)，Mx/My方差比0.6845946976/0.7202118343，对应条件性SE降低17.259762%/15.134705%；仅Mx最优(11,5,2)，Mx方差比0.680416221。6³=216个逐箱各删一seed的完整检验中，最优(9,7,2) 114次、(10,6,2) 96次、(11,5,2) 6次；最大方差比0.674614—0.752007。**这些是现有样本的插值方差/事后预算敏感性，不是新运行精度、正式DLC1.2抽样方案或可靠度**。19m/s只分2次源于其ERA5两小时权重，不能代替极端峰值风险的采样目标。
+
+**RUN/FIG/TAB/独立测试**：新增Node `experiments/T062/s10_ntm_stratified_seed_allocation.cjs` SHA256 e6929f20928125abeff34c95ff5f6f3491a6867c1b7bb1b21bcba2887a93e0cf；4行方案CSV SHA256 a3c67173160721d8dc5501976769b452d57201feeb3a46088a4b0563ad75d58d；216行LOO CSV SHA256 5b31e41f93d0d4afbde678596edbd8492d764e78799feeec665fbce521afe46f；科研SVG SHA256 a2d511ac4b4843640ae827e51ded9d99fad82364ddbb14b9afac0f7b27a1f26b；Ch3新增§3.7.21、期刊§4.14。原生Node22 [Actions #43109283944](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43109283944) completed/success：91枚举/216删除/4行+216行+SVG逐字节cmp、源SHA篡改拒绝PASS；独立Python/NumPy从36个原始四次矩值重算最优(10,6,2)与比值完全一致。REF沿用2025 Huang及2026两篇160m先行研究的已有阅读层级，STANDARD无新增授权IEC条文，OFFICIAL=历史ERA5与OpenFAST源身份。
+
+**失败与HOLD**：现有三箱仅覆盖全部ERA5小时3.8918%，缺失风速箱无可证上界；样本方差、跨箱seed独立性、19m/s概率及材料局部应力不确定性未定。历史DLC1.2仍0/126，W/E/WE同态、材料Miner与送审HOLD，12阶段0/12晋级0/12。新增Ch3源已更新，但六章SHA锁母稿/远端DOCX在本日志时点尚未同步，不冒称导师Word包含§3.7.21；后续S12需同步装配/重新构建。未执行Abaqus/CAE、冻结T057/T070、昂贵OpenFAST/TurbSim、main或PR合并。
+
 ## 2026-11-12 05时｜S07十站平均反力几何输运与量化可辨识性（0/12）
 
 **START/READ**：read_base_sha=ee997e162956ea978eaf34a4484ba0bf2fb7b632；main=58c1e545f67b645417d5957189f5dad693d975bb，PR#42 Open/Draft。按研究AGENTS→COMMAND_ROOM READ-BEFORE-WRITE/04:07交接→白皮书v0.10.0→MASTER/STATUS→12阶段→T079/T080→T062原始十站六分量平均值及九测点几何/OUTB收据开工。继承36风、18NTM全时程、31段/四ETM、ERA5、雨流/DEL，不重复前轮原点偏移证书或任何生产RUN。研究目标：检验近底十站平均弯矩沿高变化能否分辨外部气动力，避免把OpenFAST反力误当外载。
