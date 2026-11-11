@@ -1923,7 +1923,7 @@ n_b\ge2,\quad\sum_bn_b=18.
 
 因此，在上述已观测三箱、经验方差不变的条件下，10/6/2方案相对6/6/6的Mx和My估计**标准误**分别下降约17.26%和15.13%；这只是规划方差的平方根比，不是新运行后的真实收敛精度。为检验六seed方差估计的敏感性，逐箱删除一个历史seed，完整枚举6³=216个删除组合并重新搜索91种分配：最优方案为9/7/2的114次、10/6/2的96次、11/5/2的6次，最优最大方差比介于0.674614和0.752007。即便在这组删除检验中，精确的9/11 m/s预算分配仍不稳定；19 m/s固定为2只反映其ERA5箱权重极小，**不能解释为高风速控制载荷不需要更多极值/失效风险采样**。
 
-[四行方案结果表](../../../experiments/T062/S10_NTM18_STRATIFIED_ALLOC_4ROW_20261112.csv)、[216行逐删除结果](../../../experiments/T062/S10_NTM18_STRATIFIED_ALLOC_LOO_216ROW_20261112.csv)、[科研图](../figures/FIG3_S10_NTM18_STRATIFIED_ALLOC_20261112.svg)与[原生Node复算程序](../../../experiments/T062/s10_ntm_stratified_seed_allocation.cjs)可逐项复核。SOURCE为T062原72行修正后雨流表（SHA256 \`12dabbb1273ce03d3920aedda3f72f9a1db145c0a972ffe15e2\`）及ERA5 31行分箱（SHA256 \`e4058620a36b23bb218103875d4dc5b0711fc45d418b23a2208c2fc9c16c9102\`）。REF沿用Huang等2025年运行风疲劳与既有2026风震/PT先行研究，不据此声称已有研究未提出过最优抽样；STANDARD无新增授权IEC条款。
+[四行方案结果表](../../../experiments/T062/S10_NTM18_STRATIFIED_ALLOC_4ROW_20261112.csv)、[216行逐删除结果](../../../experiments/T062/S10_NTM18_STRATIFIED_ALLOC_LOO_216ROW_20261112.csv)、![图3-21：三已知NTM风速箱四次矩抽样预算的条件性方差比](../figures/FIG3_S10_NTM18_STRATIFIED_ALLOC_20261112.svg)与[原生Node复算程序](../../../experiments/T062/s10_ntm_stratified_seed_allocation.cjs)可逐项复核。SOURCE为T062原72行修正后雨流表（SHA256 \`12dabbb1273ce03d3920aedda3f72f9a1db145c0a972ffe15e2\`）及ERA5 31行分箱（SHA256 \`e4058620a36b23bb218103875d4dc5b0711fc45d418b23a2208c2fc9c16c9102\`）。REF沿用Huang等2025年运行风疲劳与既有2026风震/PT先行研究，不据此声称已有研究未提出过最优抽样；STANDARD无新增授权IEC条款。
 
 **适用性和拒绝边界：**样本方差的统计稳定性未被证明，跨箱同名seed不能视为物理配对；仅三个有源风速箱，且[19,20) m/s在21年ERA5中只有2 h，出现概率估计本身存在显著抽样不确定性。若把目标改为“控制工况漏选概率”、高风速极端载荷、分材料局部应力或完整DLC1.2，则目标函数与最优分配均须重建；不能将10/6/2直接作为正式生产工况数量或规范符合性证据。当前正式DLC1.2仍0/126、材料Miner和同态风震HOLD，12阶段验收0/12。
 
