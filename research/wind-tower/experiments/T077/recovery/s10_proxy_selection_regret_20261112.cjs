@@ -55,8 +55,8 @@ function selftest(){
  const fixture=[];for(let i=1;i<=31;i++){const s="CSEG_"+String(i).padStart(2,"0");fixture.push(row("A",s,10,9,9,9),row("B",s,8,11,12,13),row("C",s,7,6,7,8),row("D",s,6,5,6,7))}
  const x=compute(fixture);assert.equal(x.length,31);assert.equal(x[0].sum_selected_case,"B");assert(Math.abs(x[0].sum_regret_pct-20)<1e-12);
  assert.throws(()=>compute(fixture.slice(1)),/missing segment/);
- assert.throws(()=>compute([...fixture.slice(0,-1),fixture[0]]),/duplicate case/);
- assert.throws(()=>compute(fixture.map((r,i)=>i===0?{...r,sync_DEL4_MPa:-1}:r)),/negative selection regret|/);
+ assert.throws(()=>compute(fixture.map((r,i)=>i===3?{...r,case:"A"}:r)),/duplicate case/);
+ assert.throws(()=>compute(fixture.map((r,i)=>i===0?{...r,gage_z_m:r.gage_z_m+1}:r)),/gage identity/);
  console.log("SELFTEST_PASS:31 segment fixture; missing and duplicate rejection");
 }
 function main(){
