@@ -1,3 +1,15 @@
+## 2026-11-12 05时｜S07十站平均反力几何输运与量化可辨识性（0/12）
+
+**START/READ**：read_base_sha=ee997e162956ea978eaf34a4484ba0bf2fb7b632；main=58c1e545f67b645417d5957189f5dad693d975bb，PR#42 Open/Draft。按研究AGENTS→COMMAND_ROOM READ-BEFORE-WRITE/04:07交接→白皮书v0.10.0→MASTER/STATUS→12阶段→T079/T080→T062原始十站六分量平均值及九测点几何/OUTB收据开工。继承36风、18NTM全时程、31段/四ETM、ERA5、雨流/DEL，不重复前轮原点偏移证书或任何生产RUN。研究目标：检验近底十站平均弯矩沿高变化能否分辨外部气动力，避免把OpenFAST反力误当外载。
+
+**SOURCE/OFFICIAL**：T062/S07_18NTM_10STATION_NATIVE_MEAN_WRENCH_SI_20261031.csv，180行，SHA256 ee051cdc35ef3bfdc1ec2f9e053353ca6ba10f9f27079253830736fac9315f97，Git blob 1df4cafd69a7ce5dd944547918f84733e6dfa273；T062/S07_18NTM_W_POSE9_COINCIDENT_162ROW.csv，162行，SHA256 0526477678390fce5f5d8b6097fd97de22fa75a5141ee5545c312eeebfbcc9de，Git blob e6b9c9e42e5f95e24cc597b2348ea872e2401421。18个原OUTB SHA逐工况交叉匹配，600s窗口100–700s；九测点名义z=0.070535714–2.750892857m。源标签明确native坐标基底未验、平均值非时程、非气动外载。STANDARD无新IEC/GB授权原条款；REF沿用Huang2025和2026两篇风震/PT先行研究既有阅读层级，不声称首创风震同施。
+
+**科学问题/算法**：对每工况九个相邻测点区间，固定轴/名义z假设下定义Ry=My(B)−My(A)+Δz(FxA+FxB)/2、Rx=Mx(B)−Mx(A)−Δz(FyA+FyB)/2；由原始各通道int16半LSB绝对界逐项三角不等式传播By=qMyA+qMyB+Δz(qFxA+qFxB)/2，Bx同理。18×9×2=324个残差；My最大绝对48.421673361Nm，Mx最大12.646360715Nm；最大|Ry|/By=0.014899140248、最大|Rx|/Bx=0.027110215782；**两方向均162/162落入量化区间**。这是数值可辨识性结果，不证明物理平衡；未知移动局部轴、真实高程偏差、惯性/重力/气动分解误差未纳入半LSB界，不能以零可辨识残差反演气动力。
+
+**RUN/TAB/程序与独立测试**：新增 research/wind-tower/experiments/T062/s07_mean_wrench_transport_quantization.cjs SHA256 6ee36dcdf0918bf4ea3e0622717658ccd86805e224c4dfb6d92fdd7eae58ae02、research/wind-tower/experiments/T062/S07_NTM18_MEAN_WRENCH_TRANSPORT_18ROW_20261112.csv SHA256 920205c8939050e7f4e6306030bd9b5b2b49a891139909faa762200f195bb12f，18行完整案例表。直接执行提交同字节Node源的V8纯算法（mock Node模块），解析已知零残差/错误符号反例、5个坏输入拒绝PASS；完整180+162行源级计算与独立V8实现逐字节18行CSV比对PASS；原生Node CLI与真实crypto SHA gate NOT_RUN，故仅SOURCE NUMERIC QC PASS，非物理/solver PASS。误差预算仅量化半LSB与数值舍入；残差比最大<0.028，物理误差仍UNKNOWN。失败/反例：错误输运符号在解析例中产生−400Nm假残差；输入SHA/重复站位/坐标不一致由程序拒绝。FIG无新增；期刊主稿新增§4.13方法、数值和边界。
+
+**HOLD/NEXT**：外部气动力时程与惯性/重力/姿态归属未闭合，W反力不可直接转为W/E/WE同态输入；正式DLC1.2 0/126，材料Miner与送审HOLD，12阶段0/12晋级0/12。下一唯一动作：转S05/S12独立原始来源或完整论文方法闭合；若可找到带源SHA的AeroDyn气动力与同期姿态/加速度，才恢复S07外载所有权，不再重复十站平均残差。未碰Abaqus/CAE、冻结T057/T070、main、昂贵生产RUN或PR合并。
+
 ## 2026-11-12 04:07｜S06/S07 216018点真实W反力共享水平参考原点证书（0/12）
 
 START/READ：read_base_sha=0ed91cec855b24540f6d91d31384cf0b5fb835a8，main=58c1e545f67b645417d5957189f5dad693d975bb，PR#42 Open/Draft。依次读取研究/根AGENTS、指挥室READ-BEFORE-WRITE及04:03交接、白皮书v0.9.28、MASTER/STATUS、12阶段计划、T079/T080过程及T062原始W源收据；继承36组风、31段、ERA5、雨流/DEL和已有Word，不重复小型六seed统计。
