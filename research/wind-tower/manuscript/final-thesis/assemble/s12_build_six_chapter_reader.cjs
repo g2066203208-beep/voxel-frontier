@@ -57,6 +57,7 @@ function assertChapterIntegration(out){
  if(n(/^## A[.]12 /gm)!==1)throw Error("ESM_A12_MISSING_OR_DUPLICATE");
  if(n(/FIG_A12_REAL_ESM_ROTD46_ANGLE_GRID_20261111[.]svg/g)!==1)throw Error("ESM_FIGURE_MISSING_OR_DUPLICATE");
  if(n(/!\[图A-12：官方ESM处理波46周期RotD方向角网格对照\]/g)!==1)throw Error("ESM_FIGURE_NOT_EMBEDDED");
+ if(!out.includes("\n\n![图A-12：官方ESM处理波46周期RotD方向角网格对照](../figures/FIG_A12_REAL_ESM_ROTD46_ANGLE_GRID_20261111.svg)\n\n**限制与可证伪性。**"))throw Error("ESM_FIGURE_NOT_STANDALONE");
  for(const t of ["99.879547%","0.726193 mm","46/46","0.1388786304%"])if(!out.includes(t))throw Error("S12_REAL_EVIDENCE_LOST:"+t);
  if(out.includes("## 5.6 Pareto方案选择与高保真独立复核"))throw Error("UNSUPPORTED_PARETO");
  return true;
@@ -74,7 +75,7 @@ for(const [p,expected] of [[seismicSource,"5a2ca3794c497b7eb7ed3f8d0717348c36acf
 const seismicText=fs.readFileSync(seismicSource,"utf8");
 const seismicMarker="## A.12 官方ESM处理波46周期原时程独立RotD复算";
 if(seismicText.indexOf(seismicMarker)<0)throw Error("S12_MISSING_ESM_A12");
-const appendixA12=seismicText.slice(seismicText.indexOf(seismicMarker)).trim().replace("[图A-12](../figures/FIG_A12_REAL_ESM_ROTD46_ANGLE_GRID_20261111.svg)","![图A-12：官方ESM处理波46周期RotD方向角网格对照](../figures/FIG_A12_REAL_ESM_ROTD46_ANGLE_GRID_20261111.svg)");
+const appendixA12=seismicText.slice(seismicText.indexOf(seismicMarker)).trim().replace("[图A-12](../figures/FIG_A12_REAL_ESM_ROTD46_ANGLE_GRID_20261111.svg)","图A-12").replace("\n\n**限制与可证伪性。**","\n\n![图A-12：官方ESM处理波46周期RotD方向角网格对照](../figures/FIG_A12_REAL_ESM_ROTD46_ANGLE_GRID_20261111.svg)\n\n**限制与可证伪性。**");
 const outCore=appendActiveReferences(build(inputs,meta),inputs,fs.readFileSync(path.join(__dirname,"S12_ACTIVE_REFERENCES_20261110.md"),"utf8"),fs.readFileSync(path.resolve(__dirname,"../../../registry/literature_master.tsv"),"utf8"));
 const out=outCore.trimEnd()+"\\n\\n---\\n\\n"+"# 附录A（导师阅读补充）官方ESM真实双水平处理波的46周期谱复算\n\n> 本附录为S05真实处理波的独立来源级数值核对，不是场址设计地震、结构抗震验算或同态风震结果；不改变六章研究主线。\n\n"+appendixA12+"\\n";
 assertChapterIntegration(out);
