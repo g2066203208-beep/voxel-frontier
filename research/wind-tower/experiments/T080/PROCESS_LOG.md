@@ -1,3 +1,15 @@
+## 2026-11-12 04:07｜S06/S07 216018点真实W反力共享水平参考原点证书（0/12）
+
+START/READ：read_base_sha=0ed91cec855b24540f6d91d31384cf0b5fb835a8，main=58c1e545f67b645417d5957189f5dad693d975bb，PR#42 Open/Draft。依次读取研究/根AGENTS、指挥室READ-BEFORE-WRITE及04:03交接、白皮书v0.9.28、MASTER/STATUS、12阶段计划、T079/T080过程及T062原始W源收据；继承36组风、31段、ERA5、雨流/DEL和已有Word，不重复小型六seed统计。
+
+SOURCE/OFFICIAL：直接下载历史OpenFAST Actions #42842305092 Artifact #13775054290（到期2026-12-10T15:14:58Z），实际解包并SHA256核对216018行、18组×12001点、100–700s/0.05s六分量塔底反力gzip（SHA256 45cc308625ead8411d1565adc66c99e7ee8d0a979e5c3c6c18f23e744ba74dd1）和18行量化误差表（SHA256 ec1d5153635547c0ea24dba6ac62f65325dc50716b61e4c5c767ba489ec7444c）。反力不是可直接施加的外部风力；仅水平同一原点假设，未确认惯性/重力归属。
+
+RUN/TAB：本地原生Python读取216018行，严格求解共享水平坐标原点偏移下的控制工况不变充分证书。无偏移冠军U11p4_NTM_S06，650.45s，Mxy=297879.734339kN·m；次名U11p4_NTM_S03=297155.213731kN·m。独立逐工况偏移保守证书0.014130097m；所有工况共享同一偏移时的严格充分半径0.782085184m；在d=0.77m最小保守差10.560880kN·m > 量化两工况误差4.640624kN·m。新增T062 Python SHA256 e68cab50a98ebefdbb1d432f8b7fe48655fab0d6b3886d05755d408ca814540a、17行CSV SHA256 9cf289666d93bd27909d78cd850c4b77b81b1d2513004cb08987bc7663ab03d2、JSON收据，英文期刊§4.12。
+
+独立测试：合成4096角度数值oracle、解析正负例、源gzip单字节篡改SHA拒绝PASS；真实最难对手180角度扫描d=0.77m最小实际差11.298634kN·m，与严格下界10.560880kN·m一致。程序是本地原生执行，不是新OpenFAST/TurbSim生产RUN。REF=两篇2026混塔风震/PT先行文献沿用既有阅读层级；STANDARD=IEC/GB授权原条款未读；FIG=无新增图；TAB=17行真实来源逐对手证书。
+
+HOLD：未量测物理参考原点误差；不把反力冒称气动力、不把数学偏移当同态W/E/WE、不宣称正式DLC1.2或材料Miner。12阶段正式0/12晋级0/12、DLC1.2 0/126。白皮书v0.9.28→v0.10.0 MINOR。下一唯一动作S07核实外部气动力、重力/惯性及坐标变换归属的原始时程准入；若缺源切换S05/S12。未碰Abaqus/CAE、冻结T057/T070、main、昂贵生产RUN或PR合并。
+
 **03:50同轮远端最终验收补记**：修复提交[9910ef96](https://github.com/g2066203208-beep/voxel-frontier/commit/9910ef96e4ede05dd1ecb2a790edf2005d4cae97)触发[Actions #43092478067](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43092478067)，完整DOCX装配、SHA负例拒绝、精修器自测和Artifact上传均已completed/success。实际下载[Artifact #13890135522](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43092478067/artifacts/13890135522)（2026-12-11T20:01:55Z到期），精修DOCX SHA256 `961e3f2bc5419842a783acab926ea2fbe7b3314fd68e7fd2ad056275c14684bf`；45表、41图、616数学节点、1560段，原文SHA256 `eb8679849bd98309750a707a079864380f1c7593672b5b5a1337922f1b0ad8f7`精修前后严格一致。LibreOffice真实175页，139页孤立X已消失，140页后悔度四行表同页完整，139–141页视觉抽检PASS。**仅局部页面PASS，175页全篇视觉仍HOLD；不等于物理/送审验收。** 此补记属于同一v0.9.28事务，不再机械升级版本。
 
 ## 2026-11-12 03:50｜S12远端Word实测缺陷修复：§4.7.23孤立X与§4.7.24四行表跨页（0/12）
