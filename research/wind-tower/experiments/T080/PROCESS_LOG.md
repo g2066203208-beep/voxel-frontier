@@ -1,3 +1,15 @@
+## 2026-11-11 21时｜S06/S07真实18NTM六seed精确bootstrap与配对假设敏感性（0/12）
+
+**START/READ**：指挥室已在本轮首提交登记read_base_sha=889ac1d9ab8e593c1996b197fd826b34647fdd06；main=bbc5c9130f2d9fc41f776506d86118a9b8db0e65，PR#42 Open/Draft。依序核读研究/根AGENTS、指挥室20时交接、白皮书v0.9.19、MASTER/STATUS、12阶段、T079/T080、Ch3§3.7.8–18及T062原72行源表。**科学问题**：六seed四次矩合并DEL的控制风速排序在独立风速箱抽样与同名seed配对抽样两种附加假设下是否稳定？
+
+**SOURCE**：T062/S10_RAINFLOW_MEAN_HETEROGENEITY_72ROW_20261110.csv，72行源SHA256=cbe5f3c13290641789a11fc7551169a4b16fd9b347b03de74f8bde1209e76a49，原Git blob=2e83bbc1ddc2d5d51c6a23f5868acc7264d78b35；其中36行NTM=3风速×6seed×Mx/My。既有原始OUTB与雨流复算身份沿用历史T062收据，本轮**未重新读取36份OUTB**。**方法**：每箱六抽有放回bootstrap，6^6=46656有序重抽，压缩为462个多项计数向量、精确权重和46656；独立风速箱使用经验CDF积计算三箱最大值概率，共用seed标签方案用同一计数向量直接比较三箱四次矩。两种方案均为条件性经验抽样，不是IEC规定或未来总体频率。
+
+**RUN/真实数值**：连接器V8直接解析全部72行并抽取36个NTM值，完成462项精确加权枚举和独立CDF排名对照。Mx三箱合并DEL=1.922467/2.509922/6.596211 MN·m，19.202140m/s在两方案下均为100%经验排名最大。My三箱=12.424367/16.034661/17.157449 MN·m；11.4m/s反超19.202140m/s的独立箱bootstrap条件比例=7.975024%，共用标签=0.072874%（34/46656），相差约109.4倍；同名seed不能证明跨箱真实湍流配对。My 11.4/19.202140的2.5%–97.5%经验分位区间分别[14.525886,17.275819]/[16.346863,17.940002] MN·m。组合权重和及两方案排名质量和误差<1e-10，双精度+CSV输出舍入（6位正文显示）≤5e-7 MN·m；原OUTB打包量化、模型误差、统计总体偏差不包含在该界。**独立测试**：本地Node v22.16.0运行提交同字节程序的--selftest：462组合、46656权重、常数分布、严格CDF、分离控制风速及3种坏输入拒绝PASS；提交版对真实SHA锁CSV的原生Node CLI未执行，不能称完整原生数据管线PASS。
+
+**FIG/TAB**：新增6行T062结果CSV SHA256=754530b8fb8c5820f77fee7ba9a169cd9a45dca31be817cb157505afd9f48ff1；科研SVG FIG3_S06_NTM_EXACT_SEED_BOOTSTRAP_PAIRING_20261111.svg SHA256=6439f4f73ab354bb77fedf9adcf2877b74faebcdc60514207bdbfbf62501561d；Ch3§3.7.19正式正文SHA256=3b78f7032e8857ef23ccd49b20e05f6cec1e62cb7b3ec9b91fe0812e161b3996。Node源SHA256=ec7c40aa16b576fa3f85b2da65d5ef47a72025aa87f0378b538dfecdb8596c17，Git blob=561ca80a3e60800bd69e12a0501ee3cf6af3faf6。**REF**：沿用Ch3原雨流/风文献，2026两篇先行风震/PT论文未新读全文；**STANDARD**：无新授权IEC/GB条款；**OFFICIAL**：历史158m OpenFAST v3.5.3原源身份沿用，非新原生风机RUN。
+
+**HOLD/失败**：仅三历史NTM风速箱，未覆盖4–8m/s主概率箱；两方案依赖不同的跨箱抽样假设，无法给出未经假设的总体置信概率。正式DLC1.2=0/126、12阶段晋级0/12、材料局部应力/Miner、W/E/WE严格同态、送审均HOLD；现有导师Word尚未纳入本轮Ch3§3.7.19，需同步SHA锁装配并渲染，不冒称已更新Word。下一唯一最优动作：对既有真实18NTM源级TurbSim BTS随机流/跨风速seed生成方式开展身份核对，判断配对抽样是否具物理依据；若原件无法读取，转S12同步新科研图表与导师Word，不重复本轮bootstrap。禁止Abaqus/CAE、冻结T057/T070、main、昂贵OpenFAST/TurbSim生产RUN、PR合并均未动。
+
 ## 2026-11-11 20时｜S10/S12真实124行毛截面峰值有界误差计数与Word公式纠错（0/12）
 
 **START/READ**：read_base_sha=`f603bc9240f8db1f99acb6e8eec1b8e42d47685d`，main读取研究AGENTS，PR#42开工Open/Draft；依序核读研究AGENTS、指挥室READ-BEFORE-WRITE/19时交接、白皮书v0.9.18、MASTER/STATUS/12阶段、T079/T080、Ch4§4.7.15、六章母稿、真实T077四ETM×31段源CSV及本地168页导师DOCX。**实际发现**：旧Word第121页OMML将`N_c^+`及`\mathbf{1}`显示为错位上标/乱码，7列表头数学符号不可读；不能再将全篇公式视觉验收标PASS。
