@@ -55,7 +55,7 @@ def rotd(ground,dt,period,step_deg=1):
         peaks.extend([np.max(np.abs(c*u[:,0]+s*u[:,1])),
                       np.max(np.abs(-s*u[:,0]+c*u[:,1]))])
     peaks=np.asarray(peaks)*(2*math.pi/period)**2
-    return np.percentile(peaks,50),np.max(peaks),len(peaks)
+    # Exact continuous-angle RotD100 for a linear two-axis oscillator:\n    # max_theta max_t |u(t) dot e_theta| = max_t ||u(t)||_2.\n    # The finite-angle median remains a discrete RotD50 approximation.\n    exact_100=np.max(np.linalg.norm(u,axis=1))*(2*math.pi/period)**2\n    return np.percentile(peaks,50),exact_100,len(peaks)
 
 def self_test():
     t=np.arange(0,20,.005)
@@ -71,7 +71,7 @@ def self_test():
         try: sdof_displacement(a,.005,bad)
         except ValueError: pass
         else: raise AssertionError("MISSING_REJECTION")
-    print("PASS: RotD order, 90-degree invariance, uniaxial peak, invalid-period rejection")
+    # Independent exact continuous-angle identity and a rigorous 1-degree grid bound.\n    rng=np.random.default_rng(20261111)\n    for count in (50,500,5000):\n        history=rng.normal(size=(count,2))\n        exact=np.max(np.linalg.norm(history,axis=1))\n        theta=np.deg2rad(np.arange(0,180,1.0))\n        grid=max(max(np.max(np.abs(history[:,0]*np.cos(a)+history[:,1]*np.sin(a))),\n                     np.max(np.abs(-history[:,0]*np.sin(a)+history[:,1]*np.cos(a)))) for a in theta)\n        assert grid <= exact*(1+1e-12)\n        assert grid >= exact*math.cos(math.pi/360)-1e-12\n    print("PASS: RotD order, 90-degree invariance, exact continuous-angle RotD100, angular bound, invalid-period rejection")
 
 def main():
     ap=argparse.ArgumentParser()
@@ -93,7 +93,7 @@ def main():
             rows.append({"period_s":T,"RotD50_PSA_m_s2":r50,
                          "RotD100_PSA_m_s2":r100,"angle_samples":n})
         args.output.write_text(json.dumps({"input_sha256":source_sha,"dt_s":dt,
-            "damping_ratio":.05,"method":"Newmark average acceleration; 1 degree RotD",
+            "damping_ratio":.05,"method":"Newmark average acceleration; 1 degree median RotD50; exact continuous-angle RotD100",
             "status":"SOURCE_NUMERICAL_DIAGNOSTIC_ONLY","spectra":rows},indent=2)+"\n")
         print("WROTE",args.output,"input_sha256",source_sha)
 
