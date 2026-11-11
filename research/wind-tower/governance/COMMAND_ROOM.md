@@ -1,3 +1,5 @@
+2026-11-11 12时｜网页版GPT非Abaqus S05 START+END：read_base_sha=38e861f3c8b9a882e7fff8b1d8c271826bbc6dbf；继承最新本机ESM官方ZIP恢复及原波导出收据，不重复宣称原波缺失。新增T079独立Newmark-RotD 5%阻尼Python源码、地震附章A.9、T080过程；白皮书v0.9.10→v0.9.11 PATCH。真实原波本轮未在云端获得，程序CLI/自测/原波谱NOT_RUN；0/12晋级0/12，DLC1.2 0/126，谱/低频/同态WE/材料Miner仍HOLD。下一唯一动作：执行独立原波RotD谱并与既有46周期逐点对照、时间/角度收敛。未碰Abaqus/CAE、冻结T057/T070、main、昂贵生产RUN或PR合并。
+
 2026-11-11｜本机Codex地震检查工程 END／当前本机状态：**PREPARED_NOT_SUBMITTED，1 Model / 1 Job；没有地震求解、没有ODB、没有物理PASS**。用户已要求前台打开供检查，Abaqus 2025窗口已实际显示完整整塔与Jobs(1)下 `DTU158_EONLY_REVIEW`。本次增量不改变云端S阶段判定、既有论文成果或网页版GPT禁区。
 
 - 本机交付相对工作区：`outputs/DTU158_SEISMIC_REVIEW/DTU158_Seismic_Review.cae`（SHA256 b37fa41f061c137b272d38799c0edc0db1574d70f93a73d2455c1b7babd1286c）、`DTU158_EONLY_REVIEW.inp`（SHA256 61e949b52c26330e9a85f2cb4ae1e4afc18d4d7b27aca70e8e6c8ce57f75b74b）、`PREPARATION_LOG.json`和`先看这里_地震Job检查.md`。二进制仍在本机，未上传GitHub。原生writeInput(consistencyChecking=ON)成功；不是Data Check或求解成功。
