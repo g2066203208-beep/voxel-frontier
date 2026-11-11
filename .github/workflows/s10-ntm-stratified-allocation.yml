@@ -33,4 +33,6 @@ jobs:
           sed -i '2s/6438/6439/' /tmp/era_corrupted.csv
           if node s10_ntm_stratified_seed_allocation.cjs legacy-primary-recovered-20261102/T062_ALL36_RAINFLOW_CAUSAL_DEL_COMPARE_20261102.csv /tmp/era_corrupted.csv /tmp/s10mustreject; then echo 'ERROR: SHA tamper accepted'; exit 1; else echo 'SOURCE_SHA_REJECTION_PASS'; fi
           sha256sum research/wind-tower/manuscript/final-thesis/chapters/03_场址风环境与整机随机风控制载荷.md 2>/dev/null || sha256sum ../../manuscript/final-thesis/chapters/03_场址风环境与整机随机风控制载荷.md
+          sha256sum ../../manuscript/final-thesis/assemble/THESIS_SIX_CHAPTER_REVIEW_20261102.md
+          node ../../manuscript/final-thesis/assemble/s12_build_six_chapter_reader.cjs --check
           sha256sum s10_ntm_stratified_seed_allocation.cjs S10_NTM18_STRATIFIED_ALLOC_4ROW_20261112.csv S10_NTM18_STRATIFIED_ALLOC_LOO_216ROW_20261112.csv ../../manuscript/final-thesis/figures/FIG3_S10_NTM18_STRATIFIED_ALLOC_20261112.svg
