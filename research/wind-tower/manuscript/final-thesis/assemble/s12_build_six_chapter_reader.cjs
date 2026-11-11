@@ -92,6 +92,10 @@ appendixA13=appendixA13.replace("../s05_esm_mp_extra_highpass_rotd100.py","../..
 .replace("](S05_ESM_MP_ADDITIONAL_HIGHPASS_ROTD100_46ROW_20261111.csv)","](../../../experiments/T079/real-records/S05_ESM_MP_ADDITIONAL_HIGHPASS_ROTD100_46ROW_20261111.csv)")
 .replace("](../../../manuscript/final-thesis/figures/FIG_A13_ESM_ADDITIONAL_HP_ROTD100_20261111.svg)","](../figures/FIG_A13_ESM_ADDITIONAL_HP_ROTD100_20261111.svg)")
 .replace("**RUN/独立测试与误差预算。**","![图A-13：真实ESM MP处理波46周期RotD100对额外高通滤波的敏感性](../figures/FIG_A13_ESM_ADDITIONAL_HP_ROTD100_20261111.svg)\n\n**RUN/独立测试与误差预算。**");
+const a13TableStart=appendixA13.indexOf("| 周期T/s | MP原处理波RotD100/(m/s²) |");
+const a13TableEnd=appendixA13.indexOf("\n\n**真实数值结论。**",a13TableStart);
+if(a13TableStart<0||a13TableEnd<0)throw Error("S12_A13_TABLE_FORMAT_DRIFT");
+appendixA13=appendixA13.slice(0,a13TableStart)+"**表A-13的四个代表周期数值（完整46周期见源CSV；谱单位m/s²，变化率单位%）：**\n- T=4.000000 s：MP谱0.046772606692；额外0.06 Hz变化−0.23405540%；额外0.08 Hz变化−0.62374574%。\n- T=6.230957762865 s：MP谱0.030613101198；额外0.06 Hz变化−0.08404561%；额外0.08 Hz变化−0.21317852%。\n- T=8.000000 s：MP谱0.017146320011；额外0.06 Hz变化−0.05935347%；额外0.08 Hz变化−2.63510218%。\n- T=9.346436644298 s：MP谱0.011049392089；额外0.06 Hz变化−1.25940955%；额外0.08 Hz变化−6.87751501%。"+appendixA13.slice(a13TableEnd);
 appendixA13="## A.13 已处理ESM双水平记录的长周期反应谱对额外高通滤波的敏感性（真实数值，2026-11-11）\n\n"+appendixA13;
 const outCore=appendActiveReferences(build(inputs,meta),inputs,fs.readFileSync(path.join(__dirname,"S12_ACTIVE_REFERENCES_20261110.md"),"utf8"),fs.readFileSync(path.resolve(__dirname,"../../../registry/literature_master.tsv"),"utf8"));
 const out=outCore.trimEnd()+"\n\n---\n\n"+"# 附录A（导师阅读补充）官方ESM真实双水平处理波的46周期谱复算\n\n> 本附录为S05真实处理波的独立来源级数值核对，不是场址设计地震、结构抗震验算或同态风震结果；不改变六章研究主线。\n\n"+appendixA12+"\n\n"+appendixA13+"\n";
