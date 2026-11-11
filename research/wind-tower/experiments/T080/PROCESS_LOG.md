@@ -1,3 +1,18 @@
+## 2026-11-12 03时｜S10四ETM真实选控后悔度与S12远端Word复现（0/12）
+
+**START**：read_base_sha=25f3aef63f440ec91267f473e2ace6783b5c20bd，main=58c1e545f67b645417d5957189f5dad693d975bb，PR#42 Open/Draft；依序读研究AGENTS、COMMAND_ROOM READ-BEFORE-WRITE/02时交接、白皮书v0.9.25、MASTER/STATUS/12阶段、T079/T080、T077真实124行与Ch4/期刊源；禁止Abaqus/CAE、冻结T057/T070、昂贵RUN、PR合并。
+
+**远端DOCX实物**：S12 [Actions #43076226464](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43076226464) completed/success，真实下载[Artifact #13881422300](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43076226464/artifacts/13881422300)，到期2026-12-11 18:19:03 UTC。精修DOCX SHA256=e4d7fcd353623d39e1a10837f61ae16a0817ee9886e70922632691e891dc7f6d，4,395,727字节、44表/40嵌图/615数学节点；LibreOffice真实渲染174页，第139–140页科研图可见；第139页有孤立X和重复“是 这 是”，全174页视觉验收HOLD，不能冒称送审排版PASS。
+
+**S10新科研问题**：此前124行四ETM×31段分量DEL4代理有2/31或31/31控制工况翻转，但**翻转是否有实际同步目标代价**？对每段定义真实同步选控c*=argmax D_sync、代理选控c_p=argmax D_proxy、非负后悔度R=[D_sync(c*)−D_sync(c_p)]/D_sync(c*)。源SHA256=c9dcca1a582fd5343f181a7adb146d44f9ebeac164b4f5b2ea2d3f8f3ca19dbd，124/124真实来源配对。结果：最大单分量翻转0/31、后悔度0；RSS翻转2/31，仅CSEG06=0.035852787%、CSEG23=0.074244607%，全31段均值0.003551529%；算术和翻转31/31，后悔度5.824935546%–18.613504366%，均值12.440372975%，最大CSEG15同步目标损失1.304020390MPa。**这证明算术和的身份误判不是全部近并列，而RSS两次翻转实际目标差很小；不等于材料疲劳寿命、正式DLC1.2或未来统计可靠度。**
+
+**SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB**：SOURCE=既有T077四ETM×31段124行CSV；REF=历史Huang2025及两篇2026混塔风震/PT论文既有阅读深度，未新增原页；STANDARD=未取得授权IEC/GB条文；OFFICIAL=历史158m OpenFAST原始归档，未新跑风；RUN=V8直接计算真实124行及独立排序/非负恒等式、原生Node GitHub Actions测试；FIG=[两面板SVG](../../manuscript/final-thesis/figures/FIG4_S10_PROXY_SELECTION_REGRET_20261112.svg) SHA256=971fb66fa845e8d37982a243c02ea55e7ef0867d5cb05bb8ae52de722e51a157；TAB=[31行CSV](../T077/recovery/S10_4ETM_31SEG_PROXY_SELECTION_REGRET_31ROW_20261112.csv) SHA256=83fe5adb816271ef721d46d13d794cb17c4dd57126f18296bfad850f1e18f219；[Node](../T077/recovery/s10_proxy_selection_regret_20261112.cjs) SHA256=7759bbf34d31a009c921c616bbfebe3630ed8efc8567467ace00df863b181f37；期刊[§4.11](../../manuscript/journal-wind-fatigue-results.md)已补入定量结果、假设和限制。
+
+**真实失败/修复**：首次Node Actions [#43084931827](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43084931827) FAIL，源级程序误把四个不同风况的同段gage高度视为完全相同。原124行跨工况高度最大差0.000726193m（0.726mm），与**同工况**分量/同步源测点配对误差<5e-10m是不同定义。程序门禁修为跨工况<0.001m并在期刊明示“尚未独立证明对后悔度无影响”；后续Actions [#43085211081](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43085211081)已启动，完成前不宣称原生CLI PASS。误差：CSV输出9位小数舍入远小于最小RSS后悔度，但结构坐标、材料点应力、PT有效态、风速/seed代表性及跨工况0.726mm空间差对物理判断的影响均未建立可信上界。白皮书v0.9.25→v0.9.26 PATCH，12阶段0/12晋级0/12、正式DLC1.2 0/126、同态W/E/WE与材料Miner HOLD。
+
+**下一唯一动作**：S12把决策后悔度研究正式整合进Ch4及SHA锁六章导师Word，并修复139页杂字符后远端构建和局部视觉复验；本执行者不再对同一124行做更多小统计。
+
+
 ## 2026-11-12 02时｜S12第四章真实同步vs分量DEL4研究进入SHA锁六章母稿（0/12）
 
 **START/READ**：read_base_sha=`51716abe605232a696f38efd82d29320d19fa4ef`，main基线`bbc5c9130f2d9fc41f776506d86118a9b8db0e65`，PR#42 Open/Draft。依序核读根/研究AGENTS、COMMAND_ROOM最新交接及READ-BEFORE-WRITE、白皮书v0.9.24、MASTER/STATUS、12阶段、T079/T080、Ch4§4.7.23、原SHA锁六章母稿、Node装配器、Word工作流与124行结果证据；不重复旧统计。
