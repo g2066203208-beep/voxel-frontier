@@ -1,3 +1,12 @@
+2026-11-11｜本机Codex地震检查工程 END／当前本机状态：**PREPARED_NOT_SUBMITTED，1 Model / 1 Job；没有地震求解、没有ODB、没有物理PASS**。用户已要求前台打开供检查，Abaqus 2025窗口已实际显示完整整塔与Jobs(1)下 `DTU158_EONLY_REVIEW`。本次增量不改变云端S阶段判定、既有论文成果或网页版GPT禁区。
+
+- 本机交付相对工作区：`outputs/DTU158_SEISMIC_REVIEW/DTU158_Seismic_Review.cae`（SHA256 b37fa41f061c137b272d38799c0edc0db1574d70f93a73d2455c1b7babd1286c）、`DTU158_EONLY_REVIEW.inp`（SHA256 61e949b52c26330e9a85f2cb4ae1e4afc18d4d7b27aca70e8e6c8ce57f75b74b）、`PREPARATION_LOG.json`和`先看这里_地震Job检查.md`。二进制仍在本机，未上传GitHub。原生writeInput(consistencyChecking=ON)成功；不是Data Check或求解成功。
+- 保留所选 `DTU158_HybridTower_Global_RNA_OFFICIAL_RP`，102 Parts / 108实例定义；Gravity→Modal_From_Gravity→Earthquake_EONLY_REVIEW；旧三风步及风载抑制。双水平主基底加速度U1/U3，X=HNE、Z=-HNN、Y竖直，STEP TIME；32040点、dt .005s、160.195s，原波比例1、30阶模态、假定5%阻尼与0°方位。线性模态检查，不是非线性接缝开合或同态W/E/WE生产。
+- 历史分支物理定义原样保留：纵筋S345、31组环筋实例抑制、PT每位置140mm²、180弹簧接缝；不得写成T057接触父本或论文最终验收版。RNA、重力/PT平衡、模态有效质量收敛、设计谱/场地/阻尼/方位仍待验。
+- SOURCE：本机从官方ESM公开endpoint恢复IT-2012-0008/NVL/MP原始ZIP，再用仓库 `T079/s05_esm_public_processed_pair.py --export-s08` 严格导出。CSV SHA256 **a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34** 与历史一致。因此11时“云端现有可读文本缺原波”不能推广为原始公开数据不可下载。云端可沿已有恢复脚本/Actions继续独立谱重算，无需本机重复该计算。
+- 失败如实保留：下载脚本附带频谱报告因缺少s05_ground_motion_pair_qc模块失败，但ZIP已保存；改走独立CSV导出成功，未伪称频谱重算。首次CAE准备发现原交付目录单模型文件缺失（原因未知），以原提取副本SHA256 f673ec9251d2d2a76b2402daaa11bee8c6ccefd4921ffe435e0c40a9a9080b5a核对原收据后恢复，第二次原生准备成功。未删除失败日志。
+- 下一责任：用户检查当前已打开工程；本机执行者根据检查意见修订，当前不提交求解。网页版GPT/Actions继续已有非Abaqus职责，继承可恢复真实ESM源信息。main、冻结T057/T070、PR合并及生产RUN未动。REF：既有S08来源；STANDARD：未新增规范验收；OFFICIAL：ESM与本机Abaqus；RUN：仅CAE准备/输入写出；FIG/TAB：无新增结果图表。
+
 2026-11-11｜本机Codex地震Job检查交接登记 START：read_base_sha=2b54112df9bf37e45ca9b3f792495d6d8284da80；已刷新根/研究AGENTS、READ-BEFORE-WRITE、当前快照与11时云端交接、S08源记录收据及本机原生单模型提取/准备日志。用户本会话明确要求“打开它abaqus准备地震job好我检查”，本次本机准备与前台展示已获授权；不改变网页版GPT的原有禁区。继承既有整塔及ESM记录，不归零论文成果。本次GitHub仅追加本页本机准备事实与责任交接，不修改论文、门禁或冻结父本；本机工作已完成，以下为事后归档，非追溯伪称先登记。下一提交记录文件身份、真实失败、准备状态和用户检查入口。
 
 2026-11-11 11时｜S12历史18行交互数据期刊科研图START+END：read_base_sha=a4d70369fcc9b39cc750a6ede3658d08ba6ae29c；已按研究AGENTS→READ-BEFORE-WRITE/10时交接→白皮书v0.9.9→MASTER/STATUS→12阶段→T079/T080→期刊主文及18行源表核读。原ESM加速度无法从现有可读文本获得，切S12：18个真实历史载荷层交互散点+3风速箱均值(4.085987/3.465896/3.715323pp)，新增源级Node可复现图、SVG、期刊§4.8，原CSV blob=8a6e983a2c8e00f79f786268e5937303d916d97d；V8源解析与恒等式检验完成，Node CLI NOT_RUN，非新物理RUN。白皮书v0.9.9→v0.9.10 PATCH；0/12晋级0/12，DLC1.2 0/126，同态WE/局部Miner/送审HOLD。下一唯一动作：独立核读ESM原始双水平加速度是否可下载；若无，推进Ch4已存真实31段载荷的源级名义应力图，禁止重复交互统计。禁区、冻结母本/main、昂贵RUN/PR合并未动。
