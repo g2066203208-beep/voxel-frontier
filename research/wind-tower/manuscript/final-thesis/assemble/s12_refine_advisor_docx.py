@@ -45,6 +45,54 @@ def stats(doc):
             any(p.text.startswith(ch) for ch in CHAPTERS)],
     }
 
+def rebuild_etm_control_table(doc):
+    """Replace the malformed Pandoc three-column ETM table without changing any cell text.
+
+    This avoids a verified LibreOffice/Word pagination defect where the preceding
+    paragraph is wrapped into the last column and the data cells are unstacked.
+    """
+    headers = ('ETM工况', '双点DEL4保留率/%', '双点最大正峰保留率/%')
+    matches = [t for t in doc.tables if len(t.columns) == 3 and len(t.rows) == 5
+               and tuple(c.text for c in t.rows[0].cells) == headers]
+    if len(matches) > 1:
+        raise ValueError('DUPLICATE_ETM_CONTROL_TABLE')
+    if not matches:
+        if any('4.7.22 四组真实ETM' in p.text for p in doc.paragraphs):
+            raise ValueError('MISSING_ETM_CONTROL_TABLE')
+        return 0  # synthetic layout self-test has no ETM research table
+    old = matches[0]
+    if old._tbl.xpath('.//m:oMath') or old._tbl.xpath('.//w:drawing'):
+        raise ValueError('NON_TEXT_ETM_TABLE_UNSAFE_TO_REBUILD')
+    before = [[c.text for c in row.cells] for row in old.rows]
+    replacement = doc.add_table(rows=5, cols=3)
+    for i, row in enumerate(before):
+        for j, value in enumerate(row):
+            replacement.cell(i, j).text = value
+    replacement.style = 'Table Grid'
+    replacement.autofit = False
+    widths = (5.5, 5.0, 5.0)
+    for j, col in enumerate(replacement.columns):
+        col.width = Cm(widths[j])
+    for i, row in enumerate(replacement.rows):
+        for j, cell in enumerate(row.cells):
+            cell.width = Cm(widths[j])
+            for paragraph in cell.paragraphs:
+                paragraph.paragraph_format.space_after = Pt(0)
+                paragraph.paragraph_format.line_spacing = 1.1
+                for run in paragraph.runs:
+                    run.font.size = Pt(9)
+        if i == 0:
+            trPr = row._tr.get_or_add_trPr()
+            header = OxmlElement('w:tblHeader')
+            header.set(qn('w:val'), '1')
+            trPr.append(header)
+    old._tbl.addnext(replacement._tbl)
+    old._tbl.getparent().remove(old._tbl)
+    after = [[c.text for c in row.cells] for row in replacement.rows]
+    if before != after:
+        raise AssertionError('ETM_TABLE_CELL_TEXT_CHANGED')
+    return 1
+
 def refine(source: Path, target: Path, expected_sha: str | None = None):
     if not source.is_file():
         raise ValueError('MISSING_SOURCE')
@@ -53,9 +101,11 @@ def refine(source: Path, target: Path, expected_sha: str | None = None):
         raise ValueError(f'SOURCE_SHA_MISMATCH expected={expected_sha} actual={actual}')
     d = Document(source)
     before = stats(d)
+    rebuilt_etm_table = rebuild_etm_control_table(d)
     if len(before['chapter_titles']) != 6 or before['inline_images'] < 20:
         raise ValueError('INCOMPLETE_SIX_CHAPTER_MANUSCRIPT')
     changes = Counter()
+    changes['rebuilt_etm_control_table'] = rebuilt_etm_table
     caption_style = d.styles['Caption']
     caption_style.font.size = Pt(10)
     caption_style.paragraph_format.space_after = Pt(5)

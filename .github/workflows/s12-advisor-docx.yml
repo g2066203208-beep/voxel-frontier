@@ -6,6 +6,7 @@ on:
     paths:
       - .github/workflows/s12-advisor-docx.yml
       - research/wind-tower/manuscript/final-thesis/assemble/s12_build_advisor_docx.py
+      - research/wind-tower/manuscript/final-thesis/assemble/s12_refine_advisor_docx.py
       - research/wind-tower/manuscript/final-thesis/assemble/THESIS_SIX_CHAPTER_REVIEW_20261102.md
       - research/wind-tower/manuscript/final-thesis/figures/**
   workflow_dispatch:
@@ -41,9 +42,18 @@ jobs:
             echo "ERROR: mismatched SHA was accepted"; exit 1
           fi
           test ! -e s12_advisor/should_not_exist.docx
+      - name: Repair Pandoc ETM control table and verify text/figures/math unchanged
+        run: |
+          SOURCE_DOCX_SHA=$(python -c "import json; print(json.load(open('s12_advisor/DOCX_SOURCE_AND_FIGURE_RECEIPT.json'))['output_sha256'])")
+          python research/wind-tower/manuscript/final-thesis/assemble/s12_refine_advisor_docx.py \\
+            s12_advisor/DTU10MW_158m_six_chapter_advisor_20261111.docx \\
+            s12_advisor/DTU10MW_158m_six_chapter_advisor_REFINED_20261111.docx \\
+            --expected-sha256 "$SOURCE_DOCX_SHA" \\
+            --receipt s12_advisor/REFINED_SOURCE_AND_LAYOUT_RECEIPT.json
+          python research/wind-tower/manuscript/final-thesis/assemble/s12_refine_advisor_docx.py --self-test
       - uses: actions/upload-artifact@v4
         with:
-          name: S12_158m_six_chapter_advisor_docx_20261111
+          name: S12_158m_six_chapter_advisor_docx_REFINED_20261111
           path: s12_advisor/
           retention-days: 30
           if-no-files-found: error
