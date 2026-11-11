@@ -29,8 +29,8 @@ jobs:
         run: |
           python research/wind-tower/manuscript/final-thesis/assemble/s12_build_advisor_docx.py \
             --source research/wind-tower/manuscript/final-thesis/assemble/THESIS_SIX_CHAPTER_REVIEW_20261102.md \
-            --expected-sha256 f058675d333399504cd193927bba6e35016bbe4259c8e714ae30b9b24c464fe8 \
-            --output s12_advisor/DTU10MW_158m_six_chapter_advisor_20261110.docx \
+            --expected-sha256 6905e31d40e62e77d65effa9f462fbc46f60c9f715f0c38d7e4df66dd26fa09c \
+            --output s12_advisor/DTU10MW_158m_six_chapter_advisor_20261111.docx \
             --receipt s12_advisor/DOCX_SOURCE_AND_FIGURE_RECEIPT.json
       - name: Refuse source SHA mismatch (negative test)
         run: |
@@ -43,7 +43,7 @@ jobs:
           test ! -e s12_advisor/should_not_exist.docx
       - uses: actions/upload-artifact@v4
         with:
-          name: S12_158m_six_chapter_advisor_docx_20261110
+          name: S12_158m_six_chapter_advisor_docx_20261111
           path: s12_advisor/
           retention-days: 30
           if-no-files-found: error

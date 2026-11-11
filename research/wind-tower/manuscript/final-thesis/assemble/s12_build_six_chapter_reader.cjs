@@ -2,7 +2,7 @@
 "use strict";
 // SHA-locked six-chapter reading assembly; no solver or physical verification.
 const fs=require("node:fs"),path=require("node:path"),crypto=require("node:crypto");
-const meta=[{"name":"01_绪论.md","blob":"713325657815f1c65c7b99c50a186ed3270d34b0","sha256":"2c0355a022bad10af61cebc3d1d9b5bd5b218400647d4d3cac5ac23de79114fe"},{"name":"02_研究对象_精细有限元模型与分层验证.md","blob":"cffacbbb75e9bcd0673d6b6dc16124ef63bea691","sha256":"3dbcc0d547c9215b11180999ff8655bdd0e2a92ef621e21bc2b90150c8ab028a"},{"name":"03_场址风环境与整机随机风控制载荷.md","blob":"757e1d43382be5758ce90eb4fa066f2e2bde0788","sha256":"72a4323d8b06d65ff76018cfae485d627e7b0b789f8b4957834010b68a8f4bb6"},{"name":"04_10MW混合塔架风致疲劳性能分析.md","blob":"06c0df0782ac3669ad2c02beafd2f04576d373c3","sha256":"c5c51e5b7206ce51aaa59fa1f41fe156203c7a26d8e6b1887b4463be656b5245"},{"name":"05_疲劳控制参数敏感性与结构优化.md","blob":"c296580b01be14905734c6233a96585419aef64f","sha256":"b46b571b886a24ad54f7bc736eb2396acdd1695fa39029fdf311e43b700bd6eb"},{"name":"06_结论与展望.md","blob":"627d4c6fb37a8016d83b52613311c43c1756fae4","sha256":"7a482aadad1717c528bb0dc3fcf72312915e0162eea271af92f0735ccf2cfd3e"}];
+const meta=[{"name":"01_绪论.md","blob":"713325657815f1c65c7b99c50a186ed3270d34b0","sha256":"2c0355a022bad10af61cebc3d1d9b5bd5b218400647d4d3cac5ac23de79114fe"},{"name":"02_研究对象_精细有限元模型与分层验证.md","blob":"cffacbbb75e9bcd0673d6b6dc16124ef63bea691","sha256":"3dbcc0d547c9215b11180999ff8655bdd0e2a92ef621e21bc2b90150c8ab028a"},{"name":"03_场址风环境与整机随机风控制载荷.md","blob":"b86e8bd6fd0d39a60d6ee982f60bfc4c75e1b486","sha256":"a4c493c9a5b9e3beba9e1d7972da49ff7d94df60c2b4bb1df2c413c8e0831ad2"},{"name":"04_10MW混合塔架风致疲劳性能分析.md","blob":"dcf9c7b25922effcd77f30ba2b17dac4741ae187","sha256":"fbb474201190c571548f65b7ed9c5071613f94184b74d68ab4db26481fbbe79a"},{"name":"05_疲劳控制参数敏感性与结构优化.md","blob":"c296580b01be14905734c6233a96585419aef64f","sha256":"b46b571b886a24ad54f7bc736eb2396acdd1695fa39029fdf311e43b700bd6eb"},{"name":"06_结论与展望.md","blob":"627d4c6fb37a8016d83b52613311c43c1756fae4","sha256":"7a482aadad1717c528bb0dc3fcf72312915e0162eea271af92f0735ccf2cfd3e"}];
 function build(raws,meta){
 function between(s,a,b,r){let i=s.indexOf(a),j=s.indexOf(b,i+a.length);if(i<0||j<0)throw Error("missing "+a);return s.slice(0,i+a.length)+"\n\n"+r+"\n\n"+s.slice(j)}
 function insert(s,m,f){let i=s.indexOf(m);if(i<0)throw Error("missing "+m);return s.slice(0,i)+f+"\n\n"+s.slice(i)}
@@ -33,7 +33,7 @@ s=insert(s,"### 5.5.4 Pareto关系","![图5-D：NSGA-II/LHS解析基准（非真
 }
 if(/[\x00-\x08\x0b\x0c\x0e-\x1f]/.test(s))throw Error("control chars Ch"+i);return s.trim()});
 const table=meta.map((m,i)=>`| ${i+1} | \`${m.name}\` | \`${m.blob}\` | \`${m.sha256}\` |`).join("\n");
-return `# 10 MW级陆上风机预应力混凝土—钢混合塔架：六章连续阅读母稿（2026-11-10）\n\n> **导师内部阅读用研究母稿，不是送审版Word/PDF，也不代表12阶段验收通过。** 从PR #42六章最新原文按SHA锁定装配，剔除章末内部门禁；第五章仅在装配层以真实留出验证综合表替代无实证的优化占位表，修复数学式和零基准疲劳比值定义，嵌入4幅既有S11图。第三章§3.7.18与第五章§5.4.8均按最新源文件SHA锁定装配；其余四章继承既有内容。\n\n> **证据边界：** 158m组合研究模型、ERA5 184080h、历史36组风/18NTM/4ETM已有来源级成果；正式DLC1.2 **0/126**、分材料局部Miner/真实DOE与结构Pareto/同态W-E-WE未闭合，**12阶段0/12**。原Word媒体恢复、中英摘要、正式参考文献著录及排版尚未完成；不能直接提交盲审。\n\n## 六章源文件身份（Git Blob SHA1与UTF-8 SHA256）\n\n| 章 | 源文件 | Git Blob SHA1 | SHA256 |\n|---|---|---|---|\n${table}\n\n---\n\n${chapters.join("\n\n---\n\n")}\n`;}
+return `# 10 MW级陆上风机预应力混凝土—钢混合塔架：六章连续阅读母稿（2026-11-11）\n\n> **导师内部阅读用研究母稿，不是送审版Word/PDF，也不代表12阶段验收通过。** 从PR #42六章最新原文按SHA锁定装配，剔除章末内部门禁；第五章仅在装配层以真实留出验证综合表替代无实证的优化占位表，修复数学式和零基准疲劳比值定义，嵌入4幅既有S11图。第三章、第四章§4.7.22和第五章均按最新源文件SHA锁定；附录A.12以原始处理波复算来源锁单独附后，不改变六章主线。\n\n> **证据边界：** 158m组合研究模型、ERA5 184080h、历史36组风/18NTM/4ETM已有来源级成果；正式DLC1.2 **0/126**、分材料局部Miner/真实DOE与结构Pareto/同态W-E-WE未闭合，**12阶段0/12**。原Word媒体恢复、中英摘要、正式参考文献著录及排版尚未完成；不能直接提交盲审。\n\n## 六章源文件身份（Git Blob SHA1与UTF-8 SHA256）\n\n| 章 | 源文件 | Git Blob SHA1 | SHA256 |\n|---|---|---|---|\n${table}\n\n---\n\n${chapters.join("\n\n---\n\n")}\n`;}
 function appendActiveReferences(s,chapters,bib,registry){
  const order=[...new Set([...chapters.join("\n").matchAll(/\bREF\d{3}\b/g)].map(m=>m[0]).filter(id=>id!=="REF131"))];
  const e=[...bib.matchAll(/^(\d+)\. \[(REF\d{3})\] /gm)].map(m=>[Number(m[1]),m[2]]);
@@ -52,12 +52,30 @@ function assertChapterIntegration(out){
  if(n(/^### 5[.]4[.]8 /gm)!==1)throw Error("CH5_548_MISSING_OR_DUPLICATE");
  if(n(/FIG5_S11_SEED_CHANCE_GATE_20261110[.]svg/g)!==2)throw Error("CH5_FIGURE_LINK_OR_EMBED_MISSING");
  for(const t of ["39.3038%","54.9733%","94次/项","299次/项","10.858592%"])if(!out.includes(t))throw Error("EVIDENCE_LOST:"+t);
+ if(n(/^### 4[.]7[.]22 /gm)!==1)throw Error("CH4_4722_MISSING_OR_DUPLICATE");
+ if(n(/FIG4_S12_ETM4_DUAL_QOI_TWO_SITE_20261111[.]svg/g)!==1)throw Error("CH4_CONTROL_FIGURE_MISSING_OR_DUPLICATE");
+ if(n(/^## A[.]12 /gm)!==1)throw Error("ESM_A12_MISSING_OR_DUPLICATE");
+ if(n(/FIG_A12_REAL_ESM_ROTD46_ANGLE_GRID_20261111[.]svg/g)!==1)throw Error("ESM_FIGURE_MISSING_OR_DUPLICATE");
+ for(const t of ["99.879547%","0.726193 mm","46/46","0.1388786304%"])if(!out.includes(t))throw Error("S12_REAL_EVIDENCE_LOST:"+t);
  if(out.includes("## 5.6 Pareto方案选择与高保真独立复核"))throw Error("UNSUPPORTED_PARETO");
  return true;
 }
 const root=path.resolve(__dirname,".."),target=path.join(__dirname,"THESIS_SIX_CHAPTER_REVIEW_20261102.md");
 const inputs=meta.map(m=>{const s=fs.readFileSync(path.join(root,"chapters",m.name),"utf8");const blob=crypto.createHash("sha1").update(Buffer.from("blob "+Buffer.byteLength(s)+"\0")).update(s).digest("hex");const digest=crypto.createHash("sha256").update(s).digest("hex");if(blob!==m.blob||digest!==m.sha256)throw Error("SOURCE_SHA_MISMATCH: "+m.name);return s;});
-const out=appendActiveReferences(build(inputs,meta),inputs,fs.readFileSync(path.join(__dirname,"S12_ACTIVE_REFERENCES_20261110.md"),"utf8"),fs.readFileSync(path.resolve(__dirname,"../../../registry/literature_master.tsv"),"utf8"));
+const seismicSource=path.join(root,"appendices","APPENDIX_A_ESM_EONLY_METHODS_RESULTS_20261110.md");
+const rotdFigure=path.join(root,"figures","FIG_A12_REAL_ESM_ROTD46_ANGLE_GRID_20261111.svg");
+const ch4Figure=path.join(root,"figures","FIG4_S12_ETM4_DUAL_QOI_TWO_SITE_20261111.svg");
+const rotdTable=path.resolve(root,"../../experiments/T079/real-records/S05_ESM_ROTD46_RECONCILED_20261111.csv");
+for(const [p,expected] of [[seismicSource,"5a2ca3794c497b7eb7ed3f8d0717348c36acfeb6f971e3af95ca9bab297fb889"],[rotdFigure,"420e5b5ce359c0dd18743c25498ce8793b6ed3fd49c179828f5296a22159b5dc"],[ch4Figure,"5e869659ef6e76e68195884e3a90516c3241b2c24d8dff4c64c8ad595d9504f7"],[rotdTable,"ea642b37ca39bde6c1e5b48168e50650adadb00311ca9f24a11102fea82d407c"]]){
+ const actual=crypto.createHash("sha256").update(fs.readFileSync(p)).digest("hex");
+ if(actual!==expected)throw Error("S12_SOURCE_SHA_MISMATCH: "+p);
+}
+const seismicText=fs.readFileSync(seismicSource,"utf8");
+const seismicMarker="## A.12 官方ESM处理波46周期原时程独立RotD复算";
+if(seismicText.indexOf(seismicMarker)<0)throw Error("S12_MISSING_ESM_A12");
+const appendixA12=seismicText.slice(seismicText.indexOf(seismicMarker)).trim();
+const outCore=appendActiveReferences(build(inputs,meta),inputs,fs.readFileSync(path.join(__dirname,"S12_ACTIVE_REFERENCES_20261110.md"),"utf8"),fs.readFileSync(path.resolve(__dirname,"../../../registry/literature_master.tsv"),"utf8"));
+const out=outCore.trimEnd()+"\\n\\n---\\n\\n"+"# 附录A（导师阅读补充）官方ESM真实双水平处理波的46周期谱复算\n\n> 本附录为S05真实处理波的独立来源级数值核对，不是场址设计地震、结构抗震验算或同态风震结果；不改变六章研究主线。\n\n"+appendixA12+"\\n";
 assertChapterIntegration(out);
 if(process.argv.includes("--write")){fs.writeFileSync(target,out,"utf8");console.log("WROTE",crypto.createHash("sha256").update(out).digest("hex"));}
 else if(process.argv.includes("--check")){if(fs.readFileSync(target,"utf8")!==out)throw Error("ASSEMBLY_DRIFT");console.log("ASSEMBLY_PASS",crypto.createHash("sha256").update(out).digest("hex"));}
