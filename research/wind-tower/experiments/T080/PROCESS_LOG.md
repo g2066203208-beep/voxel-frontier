@@ -1,3 +1,11 @@
+## 2026-11-12 02时｜S12第四章真实同步vs分量DEL4研究进入SHA锁六章母稿（0/12）
+
+**START/READ**：read_base_sha=`51716abe605232a696f38efd82d29320d19fa4ef`，main基线`bbc5c9130f2d9fc41f776506d86118a9b8db0e65`，PR#42 Open/Draft。依序核读根/研究AGENTS、COMMAND_ROOM最新交接及READ-BEFORE-WRITE、白皮书v0.9.24、MASTER/STATUS、12阶段、T079/T080、Ch4§4.7.23、原SHA锁六章母稿、Node装配器、Word工作流与124行结果证据；不重复旧统计。
+
+**本轮实质交付**：将此前只在Ch4章节源中的**真实124对四ETM×31段同步vs边际DEL4反例**完整纳入现行六章导师阅读母稿§4.7.23，包含定义、源文件双SHA、量纲/采样、结果、反例限制、程序/表链接及[科研图](../../manuscript/final-thesis/figures/FIG4_S10_COMPONENT_RSS_VS_SYNC_20261112.svg)。原历史结果为RSS相对同步+0.471954%—+7.574874%，控制翻转2/31段；简单相加+10.349871%—+40.412173%，控制翻转31/31段；**本轮不把既有数值冒称新增计算**。新母稿SHA256 `df876a98fa0b494d1f6cf501efbfffe47739919f12b69b12c9437c6c3115cee4`，Git blob `04ae64fb30d32b5dc85f87f5c53b47a1b0aa8a81`；源Ch4 SHA256 `c41b2963b86d2d8357d054eb48dc9ed5a416163f3fc5822454447f98c486ff2e`、blob `5169a84f4ca6334a8792982eba67b1f3c655a74c`。更新确定性装配器Ch4双SHA门禁和§4.7.23/图/数值拒绝断言（blob `78a9d9c3674a0130d91e2dc4697f80862e9c768f`），更新DOCX工作流母稿SHA门禁（blob `d95ef9615e714a09a60ea56c93f27bb10b04cdfe`）。远端文件回读：§4.7.23恰好1次、SVG链接恰好1次、工作流期望SHA与新母稿一致。三个内容提交`9b336a77`、`94a6c398`、`667c84e8`；中途GitHub PR HEAD缓存延迟，刷新后继续，没有强推或覆盖并发。
+
+**RUN/验收边界**：来源级文稿装配与静态链接/断言核对PASS；**新远端Actions构建/新DOCX下载/页面渲染NOT_VERIFIED**，不能将Git文件存在或历史173页Word视作新Word完成。SOURCE=历史124行分量/1984行同步源，SHA256分别`7ca2dd4fa683b6f3c4534528bd0bcad7b2039c94ea37398e42941987f9580df4`、`16c9864ef7a344e5b97338c31ce26de6adb86c0f0f64942ef894fe9983926b2b`；REF=历史REF018及两篇2026先行研究既有阅读层级；STANDARD=无新授权IEC/GB；OFFICIAL=历史OpenFAST来源，未新增RUN；FIG/TAB=既有科研SVG/124行表。新母稿属于**名义毛截面筛查**，非材料局部应力、Miner、正式DLC1.2或风震安全。12阶段正式PASS 0/12，本轮晋级0/12，DLC1.2 0/126，W/E/WE严格同态、局部Miner、全篇视觉与送审HOLD。下一唯一最优动作：取得此次commit触发的实际Actions运行ID与Artifact并渲染新增§4.7.23页面；若CI失败修复具体错误，不能重复已完成的124对统计。禁止Abaqus/CAE、冻结母本、main、昂贵RUN及PR合并均未动。
+
 ## 2026-11-12 01时｜S10四ETM同步vs分量DEL4组合反例（0/12）
 
 START/READ：read_base_sha=d64ceb4fc1037b780f2f6d96cfcf04b805430293，main=58c1e545f67b645417d5957189f5dad693d975bb，PR#42 Open/Draft；按研究AGENTS→指挥室READ-BEFORE-WRITE/00时交接→白皮书v0.9.23→MASTER/STATUS→12阶段→T079/T080→T077两套真实源及Ch4/期刊阅读。继承36风、31段、ERA5及历史雨流，不重复旧统计。
