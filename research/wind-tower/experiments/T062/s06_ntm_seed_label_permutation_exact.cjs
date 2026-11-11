@@ -59,7 +59,7 @@ function brute(a,b,p){
   if(x>y)n++;
  }return n;
 }
-function analyze(data){
+function analyze(data,enforceOracle=true){
  ok(data.length===3&&data.every(v=>v.length===6&&v.every(x=>Number.isFinite(x)&&x>0)),'INVALID_DATA');
  ok(Math.max(...data[0])<Math.min(...data[2]),'THIRD_BIN_CAN_WIN');
  const a=data[1].map(x=>x**4),b=data[2].map(x=>x**4);
@@ -71,7 +71,7 @@ function analyze(data){
  }
  const sorted=all.map(x=>x.wins).sort((x,y)=>x-y),sum=sorted.reduce((s,x)=>s+x,0);
  const id=all.find(x=>x.permutation==='012345').wins;
- ok(id===34&&sorted[0]===13&&sorted[719]===6937,'HISTORICAL_ORACLE');
+ if(enforceOracle)ok(id===34&&sorted[0]===13&&sorted[719]===6937,'HISTORICAL_ORACLE');
  const summary={source_sha256:EXPECT,permutations:720,ordered_resamples_per_permutation:N,
   compositions:462,identity_wins:id,minimum_wins:sorted[0],q025_wins:sorted[17],
   median_wins:(sorted[359]+sorted[360])/2,q975_wins:sorted[701],
@@ -82,7 +82,7 @@ function analyze(data){
 }
 function selftest(){
  const toy=[Array(6).fill(1),Array(6).fill(2),Array(6).fill(3)];
- const a=analyze(toy);ok(a.all.every(x=>x.wins===0),'CONSTANT_ORDER');
+ const a=analyze(toy,false);ok(a.all.every(x=>x.wins===0),'CONSTANT_ORDER');
  let rejected=0;
  for(const bad of [[[1,2]],[[1,2,3,4,5,6],[1,2,3,4,5,6],[1,2,3,4,5,6]],[[1,1,1,1,1,1],[2,2,2,2,2,2],[3,3,3,3,3,NaN]]]){
   try{analyze(bad)}catch(_){rejected++}
