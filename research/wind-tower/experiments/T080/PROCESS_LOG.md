@@ -1,3 +1,5 @@
+**03:50同轮远端最终验收补记**：修复提交[9910ef96](https://github.com/g2066203208-beep/voxel-frontier/commit/9910ef96e4ede05dd1ecb2a790edf2005d4cae97)触发[Actions #43092478067](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43092478067)，完整DOCX装配、SHA负例拒绝、精修器自测和Artifact上传均已completed/success。实际下载[Artifact #13890135522](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43092478067/artifacts/13890135522)（2026-12-11T20:01:55Z到期），精修DOCX SHA256 `961e3f2bc5419842a783acab926ea2fbe7b3314fd68e7fd2ad056275c14684bf`；45表、41图、616数学节点、1560段，原文SHA256 `eb8679849bd98309750a707a079864380f1c7593672b5b5a1337922f1b0ad8f7`精修前后严格一致。LibreOffice真实175页，139页孤立X已消失，140页后悔度四行表同页完整，139–141页视觉抽检PASS。**仅局部页面PASS，175页全篇视觉仍HOLD；不等于物理/送审验收。** 此补记属于同一v0.9.28事务，不再机械升级版本。
+
 ## 2026-11-12 03:50｜S12远端Word实测缺陷修复：§4.7.23孤立X与§4.7.24四行表跨页（0/12）
 
 **START/READ**：read_base_sha=`78fdf326168cfe446a4cdf0a8191c8125166cc37`，main=`58c1e545f67b645417d5957189f5dad693d975bb`，PR#42 Open/Draft；已按研究AGENTS→指挥室READ-BEFORE-WRITE/03:21交接→白皮书v0.9.27→MASTER/STATUS/12阶段→T079/T080→Ch4§4.7.23–24、SHA锁六章母稿、精修器和工作流读取。继承历史四ETM×31段124行、同步16方位1984行、31行后悔度、36组风与ERA5，不重复统计或物理RUN。
