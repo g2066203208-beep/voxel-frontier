@@ -45,10 +45,10 @@ jobs:
       - name: Repair Pandoc ETM control table and verify text/figures/math unchanged
         run: |
           SOURCE_DOCX_SHA=$(python -c "import json; print(json.load(open('s12_advisor/DOCX_SOURCE_AND_FIGURE_RECEIPT.json'))['output_sha256'])")
-          python research/wind-tower/manuscript/final-thesis/assemble/s12_refine_advisor_docx.py \\
-            s12_advisor/DTU10MW_158m_six_chapter_advisor_20261111.docx \\
-            s12_advisor/DTU10MW_158m_six_chapter_advisor_REFINED_20261111.docx \\
-            --expected-sha256 "$SOURCE_DOCX_SHA" \\
+          python research/wind-tower/manuscript/final-thesis/assemble/s12_refine_advisor_docx.py \
+            s12_advisor/DTU10MW_158m_six_chapter_advisor_20261111.docx \
+            s12_advisor/DTU10MW_158m_six_chapter_advisor_REFINED_20261111.docx \
+            --expected-sha256 "$SOURCE_DOCX_SHA" \
             --receipt s12_advisor/REFINED_SOURCE_AND_LAYOUT_RECEIPT.json
           python research/wind-tower/manuscript/final-thesis/assemble/s12_refine_advisor_docx.py --self-test
       - uses: actions/upload-artifact@v4
