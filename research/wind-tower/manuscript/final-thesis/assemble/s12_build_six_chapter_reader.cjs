@@ -33,7 +33,7 @@ s=insert(s,"### 5.5.4 Pareto关系","![图5-D：NSGA-II/LHS解析基准（非真
 }
 if(/[\x00-\x08\x0b\x0c\x0e-\x1f]/.test(s))throw Error("control chars Ch"+i);return s.trim()});
 const table=meta.map((m,i)=>`| ${i+1} | \`${m.name}\` | \`${m.blob}\` | \`${m.sha256}\` |`).join("\n");
-return `# 10 MW级陆上风机预应力混凝土—钢混合塔架：六章连续阅读母稿（2026-11-11）\n\n> **导师内部阅读用研究母稿，不是送审版Word/PDF，也不代表12阶段验收通过。** 从PR #42六章最新原文按SHA锁定装配，剔除章末内部门禁；第五章仅在装配层以真实留出验证综合表替代无实证的优化占位表，修复数学式和零基准疲劳比值定义，嵌入4幅既有S11图。第三章、第四章§4.7.22和第五章均按最新源文件SHA锁定；附录A.12以原始处理波复算来源锁单独附后，不改变六章主线。\n\n> **证据边界：** 158m组合研究模型、ERA5 184080h、历史36组风/18NTM/4ETM已有来源级成果；正式DLC1.2 **0/126**、分材料局部Miner/真实DOE与结构Pareto/同态W-E-WE未闭合，**12阶段0/12**。原Word媒体恢复、中英摘要、正式参考文献著录及排版尚未完成；不能直接提交盲审。\n\n## 六章源文件身份（Git Blob SHA1与UTF-8 SHA256）\n\n| 章 | 源文件 | Git Blob SHA1 | SHA256 |\n|---|---|---|---|\n${table}\n\n---\n\n${chapters.join("\n\n---\n\n")}\n`;}
+return `# 10 MW级陆上风机预应力混凝土—钢混合塔架：六章连续阅读母稿（2026-11-11）\n\n> **导师内部阅读用研究母稿，不是送审版Word/PDF，也不代表12阶段验收通过。** 从PR #42六章最新原文按SHA锁定装配，剔除章末内部门禁；第五章仅在装配层以真实留出验证综合表替代无实证的优化占位表，修复数学式和零基准疲劳比值定义，嵌入4幅既有S11图。第三章、第四章§4.7.22和第五章均按最新源文件SHA锁定；附录A.12—A.13以真实处理波谱复算和附加滤波敏感性来源锁单独附后，不改变六章主线。\n\n> **证据边界：** 158m组合研究模型、ERA5 184080h、历史36组风/18NTM/4ETM已有来源级成果；正式DLC1.2 **0/126**、分材料局部Miner/真实DOE与结构Pareto/同态W-E-WE未闭合，**12阶段0/12**。原Word媒体恢复、中英摘要、正式参考文献著录及排版尚未完成；不能直接提交盲审。\n\n## 六章源文件身份（Git Blob SHA1与UTF-8 SHA256）\n\n| 章 | 源文件 | Git Blob SHA1 | SHA256 |\n|---|---|---|---|\n${table}\n\n---\n\n${chapters.join("\n\n---\n\n")}\n`;}
 function appendActiveReferences(s,chapters,bib,registry){
  const order=[...new Set([...chapters.join("\n").matchAll(/\bREF\d{3}\b/g)].map(m=>m[0]).filter(id=>id!=="REF131"))];
  const e=[...bib.matchAll(/^(\d+)\. \[(REF\d{3})\] /gm)].map(m=>[Number(m[1]),m[2]]);
@@ -55,6 +55,9 @@ function assertChapterIntegration(out){
  if(n(/^### 4[.]7[.]22 /gm)!==1)throw Error("CH4_4722_MISSING_OR_DUPLICATE");
  if(n(/FIG4_S12_ETM4_DUAL_QOI_TWO_SITE_20261111[.]svg/g)!==1)throw Error("CH4_CONTROL_FIGURE_MISSING_OR_DUPLICATE");
  if(n(/^## A[.]12 /gm)!==1)throw Error("ESM_A12_MISSING_OR_DUPLICATE");
+ if(n(/^## A[.]13 /gm)!==1)throw Error("ESM_A13_MISSING_OR_DUPLICATE");
+ if(n(/!\[图A-13：真实ESM MP处理波46周期RotD100对额外高通滤波的敏感性\]/g)!==1)throw Error("ESM_A13_FIGURE_NOT_EMBEDDED");
+ for(const t of ["-6.87751501","-1.25940955","0.000603%","0.000461%"])if(!out.includes(t))throw Error("S12_A13_REAL_EVIDENCE_LOST:"+t);
  if(n(/FIG_A12_REAL_ESM_ROTD46_ANGLE_GRID_20261111[.]svg/g)!==1)throw Error("ESM_FIGURE_MISSING_OR_DUPLICATE");
  if(n(/!\[图A-12：官方ESM处理波46周期RotD方向角网格对照\]/g)!==1)throw Error("ESM_FIGURE_NOT_EMBEDDED");
  if(!out.includes("\n\n![图A-12：官方ESM处理波46周期RotD方向角网格对照](../figures/FIG_A12_REAL_ESM_ROTD46_ANGLE_GRID_20261111.svg)\n\n**限制与可证伪性。**"))throw Error("ESM_FIGURE_NOT_STANDALONE");
@@ -76,8 +79,22 @@ const seismicText=fs.readFileSync(seismicSource,"utf8");
 const seismicMarker="## A.12 官方ESM处理波46周期原时程独立RotD复算";
 if(seismicText.indexOf(seismicMarker)<0)throw Error("S12_MISSING_ESM_A12");
 const appendixA12=seismicText.slice(seismicText.indexOf(seismicMarker)).trim().replace("[图A-12](../figures/FIG_A12_REAL_ESM_ROTD46_ANGLE_GRID_20261111.svg)","图A-12").replace("\n\n**限制与可证伪性。**","\n\n![图A-12：官方ESM处理波46周期RotD方向角网格对照](../figures/FIG_A12_REAL_ESM_ROTD46_ANGLE_GRID_20261111.svg)\n\n**限制与可证伪性。**");
+const sensitivitySource=path.resolve(root,"../../experiments/T079/real-records/S05_ESM_ADDITIONAL_HIGHPASS_SENSITIVITY_20261111.md");
+const sensitivityFigure=path.join(root,"figures","FIG_A13_ESM_ADDITIONAL_HP_ROTD100_20261111.svg");
+const sensitivityTable=path.resolve(root,"../../experiments/T079/real-records/S05_ESM_MP_ADDITIONAL_HIGHPASS_ROTD100_46ROW_20261111.csv");
+for(const [p,expected] of [[sensitivitySource,"332f20b36dc77e8ddb3ec44633d4b564df4de3ffe7d6542c0327cc34c1557cbe"],[sensitivityFigure,"87ae6fd065917a2028fc638263e03bc38a7acf60e5605f29f45abb4ca656fa9c"],[sensitivityTable,"2aa3f6797f075be4d7bcfed182687153e7af79f1d8ef3c2dc58692d3947893fa"]]){
+ if(crypto.createHash("sha256").update(fs.readFileSync(p)).digest("hex")!==expected)throw Error("S12_A13_SOURCE_SHA_MISMATCH: "+p);
+}
+const s13=fs.readFileSync(sensitivitySource,"utf8");
+if(!s13.includes("**研究问题。**")||!s13.includes("**REF/STANDARD/HOLD。**")||!s13.includes("> 此段为可入地震方法附章"))throw Error("S12_A13_SOURCE_FORMAT");
+let appendixA13=s13.slice(s13.indexOf("**研究问题。**"),s13.indexOf("> 此段为可入地震方法附章")).trim();
+appendixA13=appendixA13.replace("../s05_esm_mp_extra_highpass_rotd100.py","../../../experiments/T079/s05_esm_mp_extra_highpass_rotd100.py")
+.replace("](S05_ESM_MP_ADDITIONAL_HIGHPASS_ROTD100_46ROW_20261111.csv)","](../../../experiments/T079/real-records/S05_ESM_MP_ADDITIONAL_HIGHPASS_ROTD100_46ROW_20261111.csv)")
+.replace("](../../../manuscript/final-thesis/figures/FIG_A13_ESM_ADDITIONAL_HP_ROTD100_20261111.svg)","](../figures/FIG_A13_ESM_ADDITIONAL_HP_ROTD100_20261111.svg)")
+.replace("**RUN/独立测试与误差预算。**","![图A-13：真实ESM MP处理波46周期RotD100对额外高通滤波的敏感性](../figures/FIG_A13_ESM_ADDITIONAL_HP_ROTD100_20261111.svg)\n\n**RUN/独立测试与误差预算。**");
+appendixA13="## A.13 已处理ESM双水平记录的长周期反应谱对额外高通滤波的敏感性（真实数值，2026-11-11）\n\n"+appendixA13;
 const outCore=appendActiveReferences(build(inputs,meta),inputs,fs.readFileSync(path.join(__dirname,"S12_ACTIVE_REFERENCES_20261110.md"),"utf8"),fs.readFileSync(path.resolve(__dirname,"../../../registry/literature_master.tsv"),"utf8"));
-const out=outCore.trimEnd()+"\\n\\n---\\n\\n"+"# 附录A（导师阅读补充）官方ESM真实双水平处理波的46周期谱复算\n\n> 本附录为S05真实处理波的独立来源级数值核对，不是场址设计地震、结构抗震验算或同态风震结果；不改变六章研究主线。\n\n"+appendixA12+"\\n";
+const out=outCore.trimEnd()+"\n\n---\n\n"+"# 附录A（导师阅读补充）官方ESM真实双水平处理波的46周期谱复算\n\n> 本附录为S05真实处理波的独立来源级数值核对，不是场址设计地震、结构抗震验算或同态风震结果；不改变六章研究主线。\n\n"+appendixA12+"\n\n"+appendixA13+"\n";
 assertChapterIntegration(out);
 if(process.argv.includes("--write")){fs.writeFileSync(target,out,"utf8");console.log("WROTE",crypto.createHash("sha256").update(out).digest("hex"));}
 else if(process.argv.includes("--check")){if(fs.readFileSync(target,"utf8")!==out)throw Error("ASSEMBLY_DRIFT");console.log("ASSEMBLY_PASS",crypto.createHash("sha256").update(out).digest("hex"));}

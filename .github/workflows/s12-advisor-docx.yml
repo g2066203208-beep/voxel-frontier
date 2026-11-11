@@ -26,11 +26,13 @@ jobs:
           python-version: '3.11'
       - name: Install DOCX renderer (no structural solver)
         run: python -m pip install --disable-pip-version-check python-docx==1.2.0 cairosvg==2.8.2 pypandoc_binary==1.15
+      - name: Verify six-chapter SHA-locked assembly and A13 source before DOCX
+        run: node research/wind-tower/manuscript/final-thesis/assemble/s12_build_six_chapter_reader.cjs --check
       - name: Build full six-chapter advisor DOCX with embedded research figures
         run: |
           python research/wind-tower/manuscript/final-thesis/assemble/s12_build_advisor_docx.py \
             --source research/wind-tower/manuscript/final-thesis/assemble/THESIS_SIX_CHAPTER_REVIEW_20261102.md \
-            --expected-sha256 b54eedb784616052cb4f8d0d0917114ee01d912a0999f2dd7ac8ad33da9ef203 \
+            --expected-sha256 02c366788e1109a91eb1f33d7fa05dd9685a319d8e4ced38f973a61e078445fa \
             --output s12_advisor/DTU10MW_158m_six_chapter_advisor_20261111.docx \
             --receipt s12_advisor/DOCX_SOURCE_AND_FIGURE_RECEIPT.json
       - name: Refuse source SHA mismatch (negative test)
