@@ -5,6 +5,7 @@ on:
       - research/t080-seismic-integration-gates-20261022
     paths:
       - .github/workflows/s12-advisor-docx.yml
+      - research/wind-tower/manuscript/final-thesis/assemble/s12_build_six_chapter_reader.cjs
       - research/wind-tower/manuscript/final-thesis/assemble/s12_build_advisor_docx.py
       - research/wind-tower/manuscript/final-thesis/assemble/s12_refine_advisor_docx.py
       - research/wind-tower/manuscript/final-thesis/assemble/THESIS_SIX_CHAPTER_REVIEW_20261102.md

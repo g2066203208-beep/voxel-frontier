@@ -57,7 +57,7 @@ function assertChapterIntegration(out){
  if(n(/^## A[.]12 /gm)!==1)throw Error("ESM_A12_MISSING_OR_DUPLICATE");
  if(n(/^## A[.]13 /gm)!==1)throw Error("ESM_A13_MISSING_OR_DUPLICATE");
  if(n(/!\[图A-13：真实ESM MP处理波46周期RotD100对额外高通滤波的敏感性\]/g)!==1)throw Error("ESM_A13_FIGURE_NOT_EMBEDDED");
- for(const t of ["-6.87751501","-1.25940955","0.000603%","0.000461%"])if(!out.includes(t))throw Error("S12_A13_REAL_EVIDENCE_LOST:"+t);
+ for(const t of ["−6.87751501","−1.25940955","0.000603%","0.000461%"])if(!out.includes(t))throw Error("S12_A13_REAL_EVIDENCE_LOST:"+t);
  if(n(/FIG_A12_REAL_ESM_ROTD46_ANGLE_GRID_20261111[.]svg/g)!==1)throw Error("ESM_FIGURE_MISSING_OR_DUPLICATE");
  if(n(/!\[图A-12：官方ESM处理波46周期RotD方向角网格对照\]/g)!==1)throw Error("ESM_FIGURE_NOT_EMBEDDED");
  if(!out.includes("\n\n![图A-12：官方ESM处理波46周期RotD方向角网格对照](../figures/FIG_A12_REAL_ESM_ROTD46_ANGLE_GRID_20261111.svg)\n\n**限制与可证伪性。**"))throw Error("ESM_FIGURE_NOT_STANDALONE");
