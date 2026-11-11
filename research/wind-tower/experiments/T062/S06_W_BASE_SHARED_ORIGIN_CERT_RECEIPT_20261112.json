@@ -1,0 +1,19 @@
+{
+  "source_gzip_sha256": "45cc308625ead8411d1565adc66c99e7ee8d0a979e5c3c6c18f23e744ba74dd1",
+  "source_metrics_sha256": "ec1d5153635547c0ea24dba6ac62f65325dc50716b61e4c5c767ba489ec7444c",
+  "rows": 216018,
+  "cases": 18,
+  "champion": "U11p4_NTM_S06",
+  "champion_t0_s": 650.45,
+  "champion_original_peak_kNm": 297879.7343392976,
+  "runner_up": "U11p4_NTM_S03",
+  "shared_origin_sufficient_radius_m": 0.782085184,
+  "independent_casewise_radius_m": 0.014130097199085867,
+  "certified_radius_with_quantization_m": 0.77,
+  "min_shared_margin_at_0p77_kNm": 10.56087995,
+  "max_Mxy_quant_error_kNm": 2.30752434966,
+  "max_Fz_quant_error_kN": 0.0166074528967,
+  "two_case_quant_error_at_0p77_kNm": 4.640624176780918,
+  "source_type": "OpenFAST base reaction, NOT external wind force",
+  "limits": "Shared horizontal origin only; hypothetical d; no same-state WE, DLC1.2 or material fatigue"
+}
