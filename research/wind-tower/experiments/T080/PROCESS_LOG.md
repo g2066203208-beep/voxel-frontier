@@ -2082,3 +2082,8 @@ START：PR#42 Open/Draft，read_base_sha=da7d14bd0bc29409854a54afdf80efc4eb358c2
 ## 2026-11-11 11时｜S12期刊真实数据可复现图（0/12）
 
 SOURCE=18行历史ETM/NTM×Mx/My配对交互CSV，Git blob 8a6e983a2c8e00f79f786268e5937303d916d97d；read_base_sha=a4d70369fcc9b39cc750a6ede3658d08ba6ae29c。RUN=连接器V8直接解析18行，逐行校验差中差恒等式误差<1e-8个百分点、18唯一seed标签、3箱各6个；均值 4.085987/3.465896/3.715323 pp；图中18散点和3箱均值来源同表。新增T062 Node复图源码、论文SVG图、期刊§4.8正文；原生Node CLI尚未执行，图表属于历史载荷诊断，不是新物理RUN。REF=沿用已标注先行文献，不新增全文阅读；STANDARD/OFFICIAL=无新授权条款；FIG=FIG4_S10_ETM_NTM_DIRECTIONAL_INTERACTION_20261111.svg；TAB=继承18行原表。三箱非独立总体抽样，符号翻转p=0.125仅附加假设，材料Miner/同态WE/投稿HOLD；12阶段0/12，DLC1.2 0/126。禁止Abaqus/冻结母本/main/昂贵RUN/PR合并均未动。
+
+
+## 2026-11-11 12时｜S05独立RotD重算源级算法（0/12）
+
+READ base=38e861f3c8b9a882e7fff8b1d8c271826bbc6dbf；PR#42 Open/Draft；已核研究AGENTS、COMMAND_ROOM最新本机交接、白皮书v0.9.10、T079原ESM恢复源码、原论文附章。最新本机交接确认官方ESM ZIP已可恢复且原始三分量导出CSV SHA256 a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34，云端本轮未取得原ZIP字节。新增独立Newmark平均加速度5%阻尼RotD50/100计算源码 `T079/s05_rotd_independent_newmark.py`，支持HNE/HNN同步SI加速度、均匀dt、1°方向旋转与两正交方向的360个峰值；附章A.9给出数学定义、误差预算与反例限制。SOURCE=既有ESM原波恢复收据（本轮未读原波字节）；OFFICIAL=既有ESM来源；REF/STANDARD=未新增授权条款；RUN=源码已入Git，但原生Python CLI、自测及真实原波谱重算NOT_RUN；FIG=无；TAB=无新真实谱值。程序无物理PASS；12阶段0/12晋级0/12、DLC1.2 0/126，设计谱/低频可信/同态WE/Miner HOLD。下一动作：用现有ESM恢复脚本导出的原波在非Abaqus环境执行独立谱计算，与46周期谱逐点比较并做角度/时间收敛；不得凭算法提交冒称已完成。
