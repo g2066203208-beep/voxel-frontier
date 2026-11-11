@@ -1,3 +1,13 @@
+## 2026-11-11 23时｜S12六章导师Word整合真实NTM精确bootstrap与720种seed重排（0/12）
+
+**START/READ**：PR#42 read_base_sha=097cd1743aae207459b4bcf8c879a2a8aeee22f4，Open/Draft；已依序核读研究AGENTS、指挥室READ-BEFORE-WRITE/22时交接、白皮书v0.9.21、MASTER/STATUS、12阶段、T079/T080、第三章§3.7.19–20、6行/720行真实历史载荷派生表与既有SHA锁六章Word母稿。指挥室本轮START提交610b32a80b7c8a93c5b10477e81f51a1b431b886。继承历史36风/18NTM、ERA5、31段与既有雨流/DEL；未重复风机求解或原始OUTB解码。
+
+**科学问题/真实增量**：使导师阅读论文真正包含此前只存在于Ch3源文件的§3.7.19、§3.7.20及图3-19/20，形成“有限六seed精确经验重抽→同名跨箱配对敏感→720种标签不可辨识性反例”的连续可答辩论证，而非把源级研究停留在独立仓库章节。SOURCE=T062/S10_RAINFLOW_MEAN_HETEROGENEITY_72ROW_20261110.csv SHA256 `cbe5f3c13290641789a11fc7551169a4b16fd9b347b03de74f8bde1209e76a49`；六行表Git blob `254b0852e779c52667b4543d541934ea276b669e`，720行表Git blob `aecffc8ddadffa762e0d9cce318f49764300d207`。保留已核数值：My 11.4m/s反超19.202140m/s独立箱7.975024%、同名标签0.072874%；全720重排0.027864%–14.868398%，517/720>5%。上述比例是条件性经验组合而非物理可靠度。
+
+**FIG/TAB/实际Word**：SHA锁[六章连续阅读母稿](../../manuscript/final-thesis/assemble/THESIS_SIX_CHAPTER_REVIEW_20261102.md)新增§3.7.19/20及两幅原Git SVG链接；更新[确定性装配器](../../manuscript/final-thesis/assemble/s12_build_six_chapter_reader.cjs)第三章blob/SHA256门禁、两个新增小节及两图存在性拒绝检查，更新[Word Actions工作流](../../../../.github/workflows/s12-advisor-docx.yml)源SHA门禁。Ch3原源Git blob `2d5fbc5fd85ff9fccd37e3f66bb2ee393c9dee5d`、SHA256 `1fb13ea7df5773d349163452570ebc6214b63740e16da6aa2faecf631db21315`；更新后的六章母稿SHA256 `aaac51a27422a1f6af177d33f286e8d6787cc8c72276411c8f34e40573f9e71f`。以已有169页导师Word SHA256 `36df7585fe8210edcbc5b423f4fa5bf4ef0ae10dec4768a681bcc96163a3c058` 为本地底稿，使用独立Python脚本SHA256 `5d25e2cb856e2155f699f6ab2fc1fe172b967e81f26a7ec732c47e4bcf5c2cb7` 实际装入两节、2张数值表及3幅可读数值图（图3-19双通道重绘为2张），新DOCX SHA256 `4ea155f74c3b7b4444143635fef16c8a09085f4c93e7abe8a6705de67a106919`，4,204,797字节，**172页**，44表、40幅嵌图。实际LibreOffice PDF 172页，逐页全视觉验收未完成；抽检第79–84、171–172页，新增图表与§3.8衔接可读；历史公式/特殊字形仍有排版瑕疵。DOCX和本地脚本在当前对话沙盒，不冒称已入Git；GitHub Actions新提交的远端DOCX构建/渲染结果尚未独立回读，**CI状态NOT_VERIFIED**。
+
+**独立测试/误差预算**：720排列0.5个百分点直方图30箱频数之和720/720；6行历史数据逐行重绘，Word新增§3.7.19/20各1次、图注3-19/20各1次；无新增物理RUN。组合整数计数无Monte Carlo误差；重绘图的坐标取整/显示误差与T062原数据物理不确定性严格分开。REF=沿用原风场/雨流文献，2026两篇先行风震/PT论文未新读全文；STANDARD=无新增授权IEC/GB条文；OFFICIAL=既有OpenFAST v3.5.3历史来源。**HOLD**：BTS跨风速物理配对、正式DLC1.2 0/126、局部材料应力/Miner、同态W/E/WE与最终送审均未闭合；12阶段正式0/12，本轮晋级0/12。下一唯一动作：核实GitHub Actions真实六章Word新SHA锁构建及新增图3-19/20页面；若构建失败，修复实际源码差异而不重复统计。未执行任何禁止Abaqus/CAE、冻结母本、main、昂贵生产RUN或PR合并。
+
 ## 2026-11-11 22时｜S06/S12真实18NTM My六seed标签全排列可辨识性反例（0/12）
 
 **START/READ**：指挥室22时已登记read_base_sha=d2b65441044b6aef3d67cad2519426f17c0c9861；main=58c1e545f67b645417d5957189f5dad693d975bb，PR#42 Open/Draft。按研究AGENTS→COMMAND_ROOM READ-BEFORE-WRITE/21时交接→白皮书v0.9.20→MASTER/STATUS→12阶段→T079/T080→T062真实72行及§3.7.19读取。既有历史BTS在先前检索中为Git LFS指针，当前没有完整跨风速BTS随机场字节；不把标签相同当作物理配对，直接切换为实证载荷层的可证伪全排列敏感性。
