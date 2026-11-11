@@ -1900,7 +1900,6 @@ P_\pi^*=\frac{1}{6^6}\sum_{\substack{c_s\geq0\\\sum c_s=6}}\frac{6!}{\prod_{s=1}
 
 **复算、误差与限制。** [720行逐排列结果](../../../experiments/T062/S06_NTM_MY_SEED_RELABEL_720ROW_20261111.csv)与[源级Node程序](../../../experiments/T062/s06_ntm_seed_label_permutation_exact.cjs)均已保存；SOURCE同§3.7.19，程序对720个唯一排列、462个计数向量及总权重46656检查，并以独立$6^6$有序枚举复核原标签、极小和极大三个排列，另有常量排序和坏输入拒绝测试。V8对GitHub提交同字节程序执行selftest与真实72行来源复算PASS；原生Node CLI对真实CSV尚未独立执行。程序/数表/图SHA256见T080过程日志。所有比例均为整数计数除46656，无Monte Carlo误差；显示到六位小数的百分数舍入误差不超过$5\times10^{-7}$个百分点。未重新读取原始BTS字节，也未取得跨风速随机流物理配对证据；原始OUTB量化、风场/控制器模型误差、seed可交换性、ERA5代表性及缺失DLC1.2风速箱不在该离散误差界内。REF沿用本章原雨流文献，STANDARD未新取得授权IEC条款，OFFICIAL沿用已核158m OpenFAST历史来源；**不产生材料局部应力、Miner寿命、风震同态或结构物理PASS**。
 
-
 ## 3.8 多指标控制工况集合与第四章输入
 
 ### 3.8.1 不设一个“万能最危险case”
