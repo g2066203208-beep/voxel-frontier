@@ -1,3 +1,15 @@
+## 2026-11-11 22时｜S06/S12真实18NTM My六seed标签全排列可辨识性反例（0/12）
+
+**START/READ**：指挥室22时已登记read_base_sha=d2b65441044b6aef3d67cad2519426f17c0c9861；main=58c1e545f67b645417d5957189f5dad693d975bb，PR#42 Open/Draft。按研究AGENTS→COMMAND_ROOM READ-BEFORE-WRITE/21时交接→白皮书v0.9.20→MASTER/STATUS→12阶段→T079/T080→T062真实72行及§3.7.19读取。既有历史BTS在先前检索中为Git LFS指针，当前没有完整跨风速BTS随机场字节；不把标签相同当作物理配对，直接切换为实证载荷层的可证伪全排列敏感性。
+
+**科学问题**：同一批六seed My DEL、相同四次矩bootstrap计数，单纯改变跨风速标签双射会使“11.4 m/s反超19.202140 m/s”的条件性比例变化多少？**SOURCE**=T062/S10_RAINFLOW_MEAN_HETEROGENEITY_72ROW_20261110.csv，72行SHA256 `cbe5f3c13290641789a11fc7551169a4b16fd9b347b03de74f8bde1209e76a49`，Git blob `2e83bbc1ddc2d5d51c6a23f5868acc7264d78b35`；本轮从GitHub直接读取72行，使用18行NTM My（3箱×6seed），没有重新解码原OUTB。原9.343881m/s箱最大My DEL=14.214855 MN·m < 19.202140m/s箱最小=15.377264 MN·m，故任意六抽都不可能控制，三箱排序化为两箱比较。
+
+**RUN/数值**：对19.202140m/s箱相对于11.4m/s箱的6!=720种标签双射，逐一穷举462个计数向量（权重和46656）；原同名标签34/46656=0.072873800%，全排列最小13/46656=0.027863512%，最大6937/46656=14.868398491%；2.5%与97.5%经验次序统计量64/46656=0.137174211%与6662/46656=14.278978052%，中位3575/46656=7.662465706%，等权平均7.620313214%，517/720种排列>5%。独立风速箱bootstrap对照=7.975024%（上轮）；不能将720排列分布称为总体置信区间或实际运行概率。**独立检验**：实际V8执行GitHub提交同字节Node核心的selftest（720排列/462计数/常量排序/3拒绝）PASS；读取GitHub真实72行（来源SHA已独立核对）并运行核心，原标签、最小、最大三种排列又由独立6^6有序重抽枚举复核，质量和46656，全部PASS。原生Node对SHA锁CSV CLI未独立执行，明确NOT_RUN。
+
+**程序/FIG/TAB**：[T062/s06_ntm_seed_label_permutation_exact.cjs](../T062/s06_ntm_seed_label_permutation_exact.cjs) SHA256 `e321df4eb5e910633f2bfb4b181230fd1d764152f2ffa3ccad842570c019fff7`（Git blob 27414d7be4bd2b4ee5c75cefd076ccc4aefce931）；[720行逐排列表](../T062/S06_NTM_MY_SEED_RELABEL_720ROW_20261111.csv) SHA256 `5277eeee72d9e383772a946e92388c282710ee1e5f7a5accf2e437171b9bb1d3`；[科研图3-20](../../manuscript/final-thesis/figures/FIG3_S06_NTM_MY_SEED_LABEL_RELABEL_20261111.svg) SHA256 `9b2df28847d82df306c104a6808c8229d97f70b6a2a9004a0af813821acafd27`；新增Ch3§3.7.20与期刊Discussion§4.9，来源及证伪边界已入正文。**误差预算**：全排列整数精确计数，无Monte Carlo误差；六位小数百分数显示舍入≤5e-7百分点，双精度比较对观测数据无平局；源OUTB量化/物理模型误差、随机流跨箱相关性及经验样本偏差未定量。**REF**=继承已读Huang2025及2026两篇风震/PT先行研究的原有证据深度，本轮未新增全文原页；**STANDARD**=无新授权IEC/GB条款；**OFFICIAL**=历史158m OpenFAST v3.5.3，非本轮新solver RUN。
+
+**科学解释/HOLD**：同名seed配对的0.072874%靠近任意标签可达最小端，不能据此声称99.927%物理稳定性；720排列的均值与独立箱结果接近不证明两种抽样耦合等价。真实BTS与随机生成身份未闭合，正式DLC1.2 0/126、W/E/WE同态、局部材料应力/Miner、结构优化和送审HOLD，12阶段正式0/12，本轮晋级0/12。导师Word尚未纳入Ch3§3.7.19–20。**下一唯一动作**：S12将两节及图3-19/20加入既有SHA锁六章导师阅读Word，真实构建并抽检版式；不再围绕同一六seed生成微型统计。禁止Abaqus/CAE、冻结T057/T070、main、昂贵生产RUN及PR合并未动。
+
 ## 2026-11-11 21时｜S06/S07真实18NTM六seed精确bootstrap与配对假设敏感性（0/12）
 
 **START/READ**：指挥室已在本轮首提交登记read_base_sha=889ac1d9ab8e593c1996b197fd826b34647fdd06；main=bbc5c9130f2d9fc41f776506d86118a9b8db0e65，PR#42 Open/Draft。依序核读研究/根AGENTS、指挥室20时交接、白皮书v0.9.19、MASTER/STATUS、12阶段、T079/T080、Ch3§3.7.8–18及T062原72行源表。**科学问题**：六seed四次矩合并DEL的控制风速排序在独立风速箱抽样与同名seed配对抽样两种附加假设下是否稳定？
