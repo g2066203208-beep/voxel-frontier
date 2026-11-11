@@ -1,3 +1,15 @@
+## 2026-11-12 03:50｜S12远端Word实测缺陷修复：§4.7.23孤立X与§4.7.24四行表跨页（0/12）
+
+**START/READ**：read_base_sha=`78fdf326168cfe446a4cdf0a8191c8125166cc37`，main=`58c1e545f67b645417d5957189f5dad693d975bb`，PR#42 Open/Draft；已按研究AGENTS→指挥室READ-BEFORE-WRITE/03:21交接→白皮书v0.9.27→MASTER/STATUS/12阶段→T079/T080→Ch4§4.7.23–24、SHA锁六章母稿、精修器和工作流读取。继承历史四ETM×31段124行、同步16方位1984行、31行后悔度、36组风与ERA5，不重复统计或物理RUN。
+
+**真实远端RUN**：最新HEAD `78fdf326168cfe446a4cdf0a8191c8125166cc37` 的[Actions #43089811801](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43089811801) completed/success，实际下载[Artifact #13888153168](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43089811801/artifacts/13888153168)，到期2026-12-11T19:44:20Z。原始远端精修DOCX SHA256 `43c14f479d0f733d39b1ad59c8a0c9c92790f217c1971b374057dc24c4219b61`，4511898字节，45表/41嵌图/616数学节点；LibreOffice实测176页。第139页出现来源句后孤立`X`，第140/141页四行后悔度表被拆开，故远端Actions绿灯不等于视觉PASS。
+
+**本轮实际修复/独立复验**：在本地对远端精修DOCX进行仅Word层面的可复现修复：展开§4.7.23两个超链接为保留同字文本的普通run，孤立`X`消失；§4.7.24四行表设置Table Grid、固定列宽/字号、同表keep-with-next，整表第140页显示。修复后LibreOffice实测175页，139/140页PNG视觉复核，段落1560、表45/行211、图41、数学节点616及全文文本SHA256 `eb8679849bd98309750a707a079864380f1c7593672b5b5a1337922f1b0ad8f7` 前后严格一致。此修复**不改变任何科研数据、公式或源Markdown链接**；新增精修器两函数与合成正例/幂等/歧义拒绝测试，Git blob `bb2b7aba0552a1f2c4292fdaca672b3c7fd49f37`。提交版新Actions同字节DOCX/全175页视觉仍需复验，不冒称已远端产出新文件。
+
+**SOURCE/REF/STANDARD/OFFICIAL/RUN/FIG/TAB**：SOURCE=原六章SHA锁母稿及真实S10 31行/124行历史结果；RUN=上述真实远端Word+本地LibreOffice渲染与文本不变式；FIG=图4新增同步DEL4与后悔度图原件保持；TAB=4行后悔度表原值不变；REF/STANDARD/OFFICIAL无新增文献原页或授权条文。本轮为**真实论文交付质量修复，非新增结构科学发现**。12阶段0/12晋级0/12、DLC1.2 0/126、同态W/E/WE与材料Miner/送审HOLD。未触碰禁止的Abaqus/CAE、冻结T057/T070、main、昂贵RUN或PR合并。
+
+**NEXT**：远端验证本次精修器新版Actions并下载新版DOCX检查139–141页，若通过即切换S06/S07正式wind-bin+seed覆盖的真实源数据闭合，不再重复这批S10统计。
+
 ## 2026-11-12 03:21｜S12真实31段选控后悔度进入第四章与六章SHA锁导师母稿（0/12）
 
 **START/READ**：read_base_sha=`516699eef280617fd9b5b09626e92c440be9a1e5`，main=`bbc5c9130f2d9fc41f776506d86118a9b8db0e65`，PR#42 Open/Draft；按研究AGENTS→指挥室03时交接/READ-BEFORE-WRITE→白皮书v0.9.26→MASTER/STATUS/12阶段→T079/T080→Ch4§4.7.23/期刊§4.11/真实31行后悔度CSV/六章装配器和DOCX工作流开工。继承历史36组风、31段、ERA5及雨流DEL，不启动任何新的动力学生产RUN。

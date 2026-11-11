@@ -118,6 +118,72 @@ def rebuild_etm_control_table(doc):
         raise AssertionError('ETM_TABLE_CELL_TEXT_CHANGED')
     return 1
 
+
+def repair_s10_hyperlink_glyph_artifact(doc):
+    """Word-only fix for a verified LO stray 'X' after the §4.7.23 source sentence.
+
+    Keep the two visible source labels verbatim. The clickable source links
+    remain in the canonical Markdown; only this generated DOCX uses plain runs.
+    Refuse unexpected hyperlink counts instead of silently changing text.
+    """
+    candidates = [p for p in doc.paragraphs
+                  if p.text.startswith('研究问题。 对同一四组历史ETM×31')]
+    if not candidates:
+        return 0
+    if len(candidates) != 1:
+        raise ValueError('AMBIGUOUS_S10_SOURCE_PARAGRAPH')
+    p = candidates[0]
+    links = list(p._p.findall(qn('w:hyperlink')))
+    if not links:
+        return 0
+    if len(links) != 2:
+        raise ValueError('UNEXPECTED_S10_HYPERLINK_COUNT')
+    for link in links:
+        parent = link.getparent()
+        pos = parent.index(link)
+        for child in list(link):
+            parent.insert(pos, child)
+            pos += 1
+        parent.remove(link)
+    return len(links)
+
+
+def keep_s10_regret_table_together(doc):
+    """Render the existing 4-row §4.7.24 result table without a page split.
+
+    No table value is edited. This prevents the observed 140/141-page
+    header/body split in the 2026-11-12 Actions artifact.
+    """
+    tables = [t for t in doc.tables
+              if len(t.columns) == 4
+              and t.cell(0, 0).text == '代理选控方法'
+              and t.cell(0, 1).text == '改变控制工况的塔段']
+    if not tables:
+        if any('4.7.24 同步目标选控后悔度' in p.text for p in doc.paragraphs):
+            raise ValueError('MISSING_S10_REGRET_TABLE')
+        return 0
+    if len(tables) != 1 or len(tables[0].rows) != 4:
+        raise ValueError('AMBIGUOUS_S10_REGRET_TABLE')
+    table = tables[0]
+    table.style = 'Table Grid'
+    table.autofit = False
+    widths = (4.2, 3.8, 4.5, 3.2)
+    for j, column in enumerate(table.columns):
+        column.width = Cm(widths[j])
+    for i, row in enumerate(table.rows):
+        set_onoff(row._tr.get_or_add_trPr(), 'cantSplit')
+        for j, cell in enumerate(row.cells):
+            cell.width = Cm(widths[j])
+            for paragraph in cell.paragraphs:
+                paragraph.paragraph_format.space_before = Pt(0)
+                paragraph.paragraph_format.space_after = Pt(0)
+                paragraph.paragraph_format.line_spacing = 1.05
+                if i < len(table.rows) - 1:
+                    paragraph.paragraph_format.keep_with_next = True
+                for run in paragraph.runs:
+                    run.font.size = Pt(9)
+    return 1
+
 def refine(source: Path, target: Path, expected_sha: str | None = None):
     if not source.is_file():
         raise ValueError('MISSING_SOURCE')
@@ -128,10 +194,14 @@ def refine(source: Path, target: Path, expected_sha: str | None = None):
     before = stats(d)
     compact_fixes = normalize_undefined_compact_table_styles(d)
     rebuilt_etm_table = rebuild_etm_control_table(d)
+    s10_links = repair_s10_hyperlink_glyph_artifact(d)
+    s10_regret_table = keep_s10_regret_table_together(d)
     if len(before['chapter_titles']) != 6 or before['inline_images'] < 20:
         raise ValueError('INCOMPLETE_SIX_CHAPTER_MANUSCRIPT')
     changes = Counter()
     changes['rebuilt_etm_control_table'] = rebuilt_etm_table
+    changes['s10_hyperlinks_unwrapped_for_lo_glyph'] = s10_links
+    changes['s10_regret_table_kept_together'] = s10_regret_table
     changes['normalized_undefined_compact_table_paragraphs'] = compact_fixes
     caption_style = d.styles['Caption']
     caption_style.font.size = Pt(10)
@@ -219,7 +289,40 @@ def self_test():
         again=refine(out,root/'again.docx',sha256(out))
         assert again['source_stats']==receipt['source_stats']
         assert again['layout_fixes']['normalized_undefined_compact_table_paragraphs']==0
-        print('SELF_TEST_PASS 6chapters 20figures 1table 1SHA_rejection idempotent_structure')
+        # Positive and idempotent regression fixtures for the real S10 layout defect.
+        mini = Document()
+        p = mini.add_paragraph('研究问题。 对同一四组历史ETM×31个混凝土塔段')
+        for label in ('124行分量源', '1984行同步16方位源'):
+            h = OxmlElement('w:hyperlink')
+            rr = OxmlElement('w:r')
+            tt = OxmlElement('w:t')
+            tt.text = label
+            rr.append(tt)
+            h.append(rr)
+            p._p.append(h)
+        tbl = mini.add_table(rows=4, cols=4)
+        for j, value in enumerate(('代理选控方法', '改变控制工况的塔段',
+                                   '同步目标后悔度范围', '31段平均后悔度')):
+            tbl.cell(0, j).text = value
+        for i in range(1, 4):
+            for j in range(4):
+                tbl.cell(i, j).text = str(i * 4 + j)
+        mini_before = stats(mini)
+        assert repair_s10_hyperlink_glyph_artifact(mini) == 2
+        assert keep_s10_regret_table_together(mini) == 1
+        assert stats(mini) == mini_before
+        assert repair_s10_hyperlink_glyph_artifact(mini) == 0
+        assert keep_s10_regret_table_together(mini) == 1
+        assert stats(mini) == mini_before
+        # Refuse an ambiguous matching source paragraph.
+        mini.add_paragraph('研究问题。 对同一四组历史ETM×31重复')
+        try:
+            repair_s10_hyperlink_glyph_artifact(mini)
+        except ValueError as e:
+            assert 'AMBIGUOUS_S10_SOURCE_PARAGRAPH' in str(e)
+        else:
+            raise AssertionError('S10_DUPLICATE_PARAGRAPH_ACCEPTED')
+        print('SELF_TEST_PASS 6chapters 20figures 1table S10_regret_layout S10_hyperlink_regression SHA_rejection idempotent_structure')
 
 def main():
     p=argparse.ArgumentParser()
