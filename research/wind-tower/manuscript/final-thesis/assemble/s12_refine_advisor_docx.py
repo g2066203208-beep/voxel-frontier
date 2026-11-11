@@ -45,6 +45,31 @@ def stats(doc):
             any(p.text.startswith(ch) for ch in CHAPTERS)],
     }
 
+def normalize_undefined_compact_table_styles(doc):
+    """Remove orphan Pandoc Compact style references from table paragraphs.
+
+    The 2026-11-11 advisor DOCX references Compact in 928 table-cell
+    paragraphs, although Compact is absent from the style definitions.
+    LibreOffice then lays table cells out vertically over many pages.
+    Remove only the undefined style reference; preserve text, runs and OMML.
+    """
+    known = {style.style_id for style in doc.styles}
+    if 'Compact' in known:
+        return 0
+    fixed = 0
+    for table in doc.tables:
+        for row in table.rows:
+            for cell in row.cells:
+                for paragraph in cell.paragraphs:
+                    ppr = paragraph._p.pPr
+                    if ppr is None:
+                        continue
+                    style = ppr.find(qn('w:pStyle'))
+                    if style is not None and style.get(qn('w:val')) == 'Compact':
+                        ppr.remove(style)
+                        fixed += 1
+    return fixed
+
 def rebuild_etm_control_table(doc):
     """Replace the malformed Pandoc three-column ETM table without changing any cell text.
 
@@ -101,11 +126,13 @@ def refine(source: Path, target: Path, expected_sha: str | None = None):
         raise ValueError(f'SOURCE_SHA_MISMATCH expected={expected_sha} actual={actual}')
     d = Document(source)
     before = stats(d)
+    compact_fixes = normalize_undefined_compact_table_styles(d)
     rebuilt_etm_table = rebuild_etm_control_table(d)
     if len(before['chapter_titles']) != 6 or before['inline_images'] < 20:
         raise ValueError('INCOMPLETE_SIX_CHAPTER_MANUSCRIPT')
     changes = Counter()
     changes['rebuilt_etm_control_table'] = rebuilt_etm_table
+    changes['normalized_undefined_compact_table_paragraphs'] = compact_fixes
     caption_style = d.styles['Caption']
     caption_style.font.size = Pt(10)
     caption_style.paragraph_format.space_after = Pt(5)
@@ -172,11 +199,15 @@ def self_test():
             d.add_paragraph('图：测试图')
         t=d.add_table(rows=2,cols=2)
         t.cell(0,0).text='变量';t.cell(0,1).text='数值'
+        orphan = OxmlElement('w:pStyle')
+        orphan.set(qn('w:val'), 'Compact')
+        t.cell(0,0).paragraphs[0]._p.get_or_add_pPr().insert(0, orphan)
         t.cell(1,0).text='A';t.cell(1,1).text='1'
         src=root/'source.docx';out=root/'out.docx';d.save(src)
         receipt=refine(src,out,sha256(src))
         assert receipt['layout_fixes']['chapter_page_breaks']==5
         assert receipt['layout_fixes']['repeating_table_headers']==1
+        assert receipt['layout_fixes']['normalized_undefined_compact_table_paragraphs']==1
         assert receipt['layout_fixes']['normalized_figure_captions']==20
         assert receipt['scientific_content_unchanged']
         try:
@@ -187,6 +218,7 @@ def self_test():
             raise AssertionError('NEGATIVE_SHA_TEST_FAILED')
         again=refine(out,root/'again.docx',sha256(out))
         assert again['source_stats']==receipt['source_stats']
+        assert again['layout_fixes']['normalized_undefined_compact_table_paragraphs']==0
         print('SELF_TEST_PASS 6chapters 20figures 1table 1SHA_rejection idempotent_structure')
 
 def main():
