@@ -2077,3 +2077,8 @@ START/READ：PR#42 Open/Draft，开工HEAD=1f094bd1815f78b48ef2ad32bcdeff05b5fe8
 ## 2026-11-11 10时｜S12英文期刊证据结构实质修订（0/12）
 
 START：PR#42 Open/Draft，read_base_sha=da7d14bd0bc29409854a54afdf80efc4eb358c24；按研究AGENTS→指挥室READ-BEFORE-WRITE/09时交接→白皮书v0.9.8→MASTER/STATUS→12阶段→T079/T080及期刊原稿顺序核读。发现8,432字符的四段实际研究论证被错误放在“## References”之后，导致载荷方向、相位不可辨识和风速箱聚类统计没有进入论文Discussion主文。已将原四段原文完整保留并移入Discussion §4.7.1–4.7.4，新增§4.7导语明确三个不同估计对象、18组seed伪重复、3箱符号翻转p=0.125的附加假设及合成相位反例非实测；Conclusions和References重新保持正确末尾顺序。文件Git blob=455a561992139db8aef8b4d457f37bf93d14f2c0，科研commit=db07322d79b3f23d45167f0450c43d086de9b066。SOURCE=已归档真实72行雨流均值诊断及18行交互CSV，未新跑原始OUTB；REF=既有Huang2025与2026两篇先行文献引用，未新读全文；STANDARD/OFFICIAL=未新增授权条款或官方原件；RUN=文本重排与语义约束，非新物理计算；FIG/TAB=复用既有真实表和解析反例，不新增图。已完成正文结构检查：§4.7在§5之前，References在结论之后，四个原研究段未删；论文投稿/结构物理验收HOLD，12阶段0/12晋级0/12，DLC1.2 0/126。程序SHA256不适用（未新增程序），稿件字节SHA256未在连接器环境计算，保留Git blob供独立核算。下一唯一动作：S05若原始ESM双水平加速度可实际读取则独立5% RotD重算，否则S12对论文主稿全篇图表与正文真实RUN证据闭合做实质补写，不继续统计18行交互。禁止范围、冻结母本、main、昂贵RUN及PR合并均未触碰。
+
+
+## 2026-11-11 11时｜S12期刊真实数据可复现图（0/12）
+
+SOURCE=18行历史ETM/NTM×Mx/My配对交互CSV，Git blob 8a6e983a2c8e00f79f786268e5937303d916d97d；read_base_sha=a4d70369fcc9b39cc750a6ede3658d08ba6ae29c。RUN=连接器V8直接解析18行，逐行校验差中差恒等式误差<1e-8个百分点、18唯一seed标签、3箱各6个；均值 4.085987/3.465896/3.715323 pp；图中18散点和3箱均值来源同表。新增T062 Node复图源码、论文SVG图、期刊§4.8正文；原生Node CLI尚未执行，图表属于历史载荷诊断，不是新物理RUN。REF=沿用已标注先行文献，不新增全文阅读；STANDARD/OFFICIAL=无新授权条款；FIG=FIG4_S10_ETM_NTM_DIRECTIONAL_INTERACTION_20261111.svg；TAB=继承18行原表。三箱非独立总体抽样，符号翻转p=0.125仅附加假设，材料Miner/同态WE/投稿HOLD；12阶段0/12，DLC1.2 0/126。禁止Abaqus/冻结母本/main/昂贵RUN/PR合并均未动。
