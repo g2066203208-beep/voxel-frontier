@@ -437,6 +437,16 @@ The source files were obtained from the connected research repository. The earli
 
 
 
+### 4.16. Retrospective wind-bin occupancy is not invariant to the bin partition (12 November 2026)
+
+The historical source-identity ledger contains 18 NTM records, six seeds each at actual wind speeds 9.343881, 11.4 and 19.202140 m/s, with a shared archived FST/tower identity but 18 distinct OUTB hashes. The independent ERA5-derived 1 m/s integer histogram has 184,080 hourly samples, including 106,900 in the diagnostic [4,25) m/s interval. A falsifiable question is whether the apparent probability mass of wind-speed bins containing an archived load record can change without adding a single physical simulation or climate observation.
+
+For integer widths w in {1,2,3,4} m/s, let the first partial-bin width phi take integer values 0,...,w−1 m/s. The domain begins at 4 m/s; when phi>0, [4,4+phi) is the first cell, followed by width-w cells truncated at 25 m/s. We sum original hourly ERA5 counts over the **union** of cells containing at least one archived actual speed. Cells are counted only once even if two archived speeds or several seeds fall within them. Both the unconditional denominator (184,080 h) and the diagnostic conditional denominator (106,900 h) are reported. No fractional-boundary interpolation is attempted because the available source is already grouped into integer 1 m/s cells.
+
+Exhaustive enumeration of all ten partitions yields 7,164 h (3.891786% of all hours) for w=1, phi=0; 19,559 h (10.625272%) for w=2, phi=0; 11,002 h (5.976749%) for w=4, phi=1; and **54,977 h (29.865819% of all hours; 51.428438% of diagnostic hours)** for w=4, phi=2. The last occupancy fraction is 7.674065 times the 1 m/s baseline, with unchanged original climate and OUTB evidence. Some partitions merge two different archived wind speeds into one cell, but this does not make their seeds exchangeable or validate the load at unobserved speeds.
+
+The [executable Node source](../experiments/T062/s06_windbin_partition_sensitivity.cjs), [ten-row numerical table](../experiments/T062/S06_NTM18_BIN_PARTITION_SENSITIVITY_10ROW_20261112.csv), and [research figure](final-thesis/figures/FIG3_S06_BIN_PARTITION_SENSITIVITY_20261112.svg) preserve the source identity and reproduce the integer-bin arithmetic with an independent atomic-bin oracle. This is a **source-derived mathematical counterexample**, not a new wind-turbine response simulation, physical interpolation, validated DLC1.2 wind-bin probability or material fatigue damage. The formal validated DLC1.2 count remains **0/126**. In particular, an increase in retrospective occupancy produced solely by changing a bin partition cannot constitute an improvement in load representativeness, annual fatigue completeness or seismic–wind pairing. The 2026 combined wind–earthquake and prestressing studies [6,7] are relevant prior work, but no priority claim for combined hazards is made.
+
 ## References
 
 [1] Bak, C., Zahle, F., Bitsche, R., Kim, T., Yde, A., Henriksen, L. C., Natarajan, A., and Hansen, M. H. (2013). *Description of the DTU 10 MW Reference Wind Turbine*. DTU Wind Energy Report-I-0092. Technical University of Denmark. Official model/report context: https://www.hawc2.dk/models/dtu-10-mw.
