@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1020" height="550" viewBox="0 0 1020 550">
+<rect width="1020" height="550" fill="white"/>
+<text x="510" y="32" text-anchor="middle" font-family="Arial" font-size="21">Historical ETM / NTM six-seed load-DEL contrast (m = 4)</text>
+<line x1="104" x2="924" y1="439.00" y2="439.00" stroke="#e2e8f0"/>
+<text x="92" y="443.00" text-anchor="end" font-family="Arial" font-size="12">1.0</text>
+<line x1="104" x2="924" y1="357.89" y2="357.89" stroke="#e2e8f0"/>
+<text x="92" y="361.89" text-anchor="end" font-family="Arial" font-size="12">1.2</text>
+<line x1="104" x2="924" y1="276.78" y2="276.78" stroke="#e2e8f0"/>
+<text x="92" y="280.78" text-anchor="end" font-family="Arial" font-size="12">1.4</text>
+<line x1="104" x2="924" y1="195.67" y2="195.67" stroke="#e2e8f0"/>
+<text x="92" y="199.67" text-anchor="end" font-family="Arial" font-size="12">1.6</text>
+<line x1="104" x2="924" y1="114.56" y2="114.56" stroke="#e2e8f0"/>
+<text x="92" y="118.56" text-anchor="end" font-family="Arial" font-size="12">1.8</text>
+<rect x="124" y="196.70" width="86" height="242.30" fill="#216b91"/>
+<text x="167" y="186.70" text-anchor="middle" font-family="Arial" font-size="13">1.597</text>
+<text x="167" y="465" text-anchor="middle" font-family="Arial" font-size="12">9.343881 m/s</text>
+<text x="167" y="482" text-anchor="middle" font-family="Arial" font-size="12">Mx</text>
+<rect x="257" y="160.61" width="86" height="278.39" fill="#588a7a"/>
+<text x="300" y="150.61" text-anchor="middle" font-family="Arial" font-size="13">1.686</text>
+<text x="300" y="465" text-anchor="middle" font-family="Arial" font-size="12">9.343881 m/s</text>
+<text x="300" y="482" text-anchor="middle" font-family="Arial" font-size="12">My</text>
+<rect x="390" y="213.06" width="86" height="225.94" fill="#216b91"/>
+<text x="433" y="203.06" text-anchor="middle" font-family="Arial" font-size="13">1.557</text>
+<text x="433" y="465" text-anchor="middle" font-family="Arial" font-size="12">11.400000 m/s</text>
+<text x="433" y="482" text-anchor="middle" font-family="Arial" font-size="12">Mx</text>
+<rect x="523" y="246.60" width="86" height="192.40" fill="#588a7a"/>
+<text x="566" y="236.60" text-anchor="middle" font-family="Arial" font-size="13">1.474</text>
+<text x="566" y="465" text-anchor="middle" font-family="Arial" font-size="12">11.400000 m/s</text>
+<text x="566" y="482" text-anchor="middle" font-family="Arial" font-size="12">My</text>
+<rect x="656" y="311.16" width="86" height="127.84" fill="#c2410c"/>
+<text x="699" y="301.16" text-anchor="middle" font-family="Arial" font-size="13">1.315</text>
+<text x="699" y="465" text-anchor="middle" font-family="Arial" font-size="12">19.202140 m/s</text>
+<text x="699" y="482" text-anchor="middle" font-family="Arial" font-size="12">Mx *</text>
+<rect x="789" y="308.00" width="86" height="131.00" fill="#588a7a"/>
+<text x="832" y="298.00" text-anchor="middle" font-family="Arial" font-size="13">1.323</text>
+<text x="832" y="465" text-anchor="middle" font-family="Arial" font-size="12">19.202140 m/s</text>
+<text x="832" y="482" text-anchor="middle" font-family="Arial" font-size="12">My</text>
+<text x="510" y="515" text-anchor="middle" font-family="Arial" font-size="12">* High-speed Mx has 4/36 cross-class seed-pair reversals despite ETM aggregate &gt; NTM.</text>
+<text x="510" y="534" text-anchor="middle" font-family="Arial" font-size="11">72 archived case-channel DEL4 values, Neq=100000; not material Miner damage or formal DLC1.2</text>
+</svg>
