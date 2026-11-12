@@ -1,0 +1,52 @@
+{
+  "task": "S12 advisor DOCX targeted visual QA",
+  "date_local": "2026-11-13 05时 Asia/Shanghai",
+  "read_base_sha": "f545ad741f32d56d901ac13798c5fcabe20f726c",
+  "repair_commit": "7aa2e8281a9a98fd8404a90199c76f5f2a693592",
+  "workflow_run_url": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43308106691",
+  "workflow_run_id": 43308106691,
+  "workflow_conclusion": "success",
+  "artifact_id": 13983839125,
+  "artifact_expires_at": "2026-12-12T21:14:41Z",
+  "artifact_zip_sha256": "ed4f0da609f0725ae143c33f301d3b00e41021e5c4fb05aeb46ac35b6fed159b",
+  "artifact_zip_bytes": 10699671,
+  "refined_docx_sha256": "f2e8a68166cb129aee7611d914f9ce2d3695fe8b1c2ad2f58aa1c35f80505769",
+  "refined_docx_embedded_figures": 50,
+  "refined_docx_math_nodes": 704,
+  "original_source_docx_embedded_figures": 49,
+  "restored_figure_source": "research/wind-tower/manuscript/final-thesis/figures/FIG_S05_33PERIOD_SCALAR_MINIMAX_20261113.svg",
+  "restored_figure_sha256": "11d47d347463987ad9e77933b69d4d13963b0f8231f66807cf72770f997d8964",
+  "refiner_script_sha256": "d52207d2a56a10f65fc57c7b331465779df8f1871fd5c5678e41f52b7beaeea5",
+  "workflow_sha256": "101b210fdd0d20d54c6429d79c9701452bd01257bc25980a0a30c68e2935ec00",
+  "local_pdf_sha256": "06e2e93f9bc7af543899646f61a33ce35f923f0d6085c5f1e10a649f0ab28fc0",
+  "local_pdf_pages": 193,
+  "targeted_rendered_pages_checked": [
+    152,
+    192,
+    193
+  ],
+  "before_defects": [
+    "S10 7x6 table wraps m=10 and case IDs and splits across 152-153",
+    "S05 A14 3x7 table breaks decimal values",
+    "S05 Fig A-14 cited but missing from 49-image DOCX"
+  ],
+  "after_pass": [
+    "S10 7x6 table fully visible on p152 with case IDs and m=10 intact",
+    "S05 A14 numeric table visible on p192 without broken decimal values",
+    "S05 SHA-locked figure and caption visible on p192",
+    "Word paragraph and 52 table cell values unchanged",
+    "704 OMML math nodes unchanged",
+    "50 inline images in final Word",
+    "native GitHub Actions source SHA and negative source mismatch gate success"
+  ],
+  "limitations": [
+    "Targeted pages only; full 193-page page-by-page visual review not claimed",
+    "LibreOffice PDF rendering is not Microsoft Word layout parity",
+    "Existing A14 inline formulas are plain text; formal thesis typesetting remains pending",
+    "No new physical solver, DLC1.2, material Miner or same-state W/E/WE results"
+  ],
+  "stage_pass_count": "0/12",
+  "stage_promotion": "0/12",
+  "dlc12": "0/126",
+  "status": "TARGETED_VISUAL_QA_PASS_NOT_FINAL_THESIS_PASS"
+}
