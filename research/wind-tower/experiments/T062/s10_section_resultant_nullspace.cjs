@@ -43,6 +43,17 @@ function solve(rows){
 }
 const HEAD='segment,z_center_m,D_m,di_m,nominal_max_signed_MPa,alternative_max_signed_MPa,nominal_min_signed_MPa,alternative_min_signed_MPa,perturbation_amplitude_MPa,delta_N_MN,delta_Mx_MNm,delta_My_MNm';
 function serialize(rows){return HEAD+'\n'+rows.map(r=>r.map((v,i)=>i===0?v:f(v)).join(',')).join('\n')+'\n';}
+
+const SVG=path.join(__dirname,'../../manuscript/final-thesis/figures/FIG4_S10_SECTION_NULLSPACE_20261112.svg');
+function figure(rows){
+  const W=1000,H=470,L=72,R=28,T=50,B=55;
+  const x=i=>L+i*(W-L-R)/30, y=v=>T+(75-v)*(H-T-B)/140;
+  const line=(idx,color,dashed)=>'<polyline fill="none" stroke="'+color+'" stroke-width="2.5" '+(dashed?'stroke-dasharray="7 5"':'')+' points="'+rows.map((r,i)=>x(i).toFixed(2)+','+y(r[idx]).toFixed(2)).join(' ')+'"/>';
+  const grid=[-60,-40,-20,0,20,40,60].map(v=>'<line x1="'+L+'" y1="'+y(v)+'" x2="'+(W-R)+'" y2="'+y(v)+'" stroke="#e0e5ed"/><text x="'+(L-12)+'" y="'+(y(v)+4)+'" text-anchor="end" font-size="12">'+v+'</text>').join('');
+  const ticks=[1,5,10,15,20,25,31].map(i=>'<text x="'+x(i-1)+'" y="'+(H-29)+'" text-anchor="middle" font-size="12">'+i+'</text>').join('');
+  return '<svg xmlns="http://www.w3.org/2000/svg" width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'"><rect width="100%" height="100%" fill="white"/><text x="'+L+'" y="27" font-size="18" font-weight="bold">Resultant-nullspace: 31 real sections, hypothetical 10% second harmonic</text>'+grid+'<line x1="'+L+'" y1="'+T+'" x2="'+L+'" y2="'+(H-B)+'" stroke="#444"/><line x1="'+L+'" y1="'+(H-B)+'" x2="'+(W-R)+'" y2="'+(H-B)+'" stroke="#444"/>'+ticks+line(4,'#1f77b4',false)+line(5,'#d55e00',true)+line(6,'#009e73',false)+line(7,'#8e44ad',true)+'<text x="'+(W/2)+'" y="'+(H-7)+'" text-anchor="middle" font-size="13">Concrete segment index (1–31)</text><text x="17" y="'+(H/2)+'" text-anchor="middle" transform="rotate(-90 17 '+(H/2)+')" font-size="13">Signed nominal stress proxy (MPa)</text><g font-size="12"><text x="85" y="68" fill="#1f77b4">Nominal max</text><text x="225" y="68" fill="#d55e00">+harmonic max</text><text x="390" y="68" fill="#009e73">Nominal min</text><text x="530" y="68" fill="#8e44ad">-harmonic min</text></g><text x="970" y="462" text-anchor="end" font-size="10" fill="#666">T071 fixed N/M; not local material stress or Miner life</text></svg>\n';
+}
+
 function selftest(){
   const D=6,di=5.4,K=4.25;
   assert(Math.max(...moments(D,di,K,2).map(Math.abs))<1e-11);
@@ -59,9 +70,9 @@ if(require.main===module){
     const src=fs.readFileSync(SRC);
     assert.equal(hash(src),SHA,'source SHA256 mismatch');
     const rows=solve(parse(src.toString('utf8'))),output=serialize(rows);
-    if(process.argv.includes('--write'))fs.writeFileSync(CSV,output);
-    else assert.equal(fs.readFileSync(CSV,'utf8'),output,'result drift');
-    console.log(JSON.stringify({status:'SOURCE_LEVEL_ONLY',rows:rows.length,source_sha256:SHA,program_sha256:hash(fs.readFileSync(__filename)),csv_sha256:hash(output),CSEG27:rows[26],hypothetical_m4_range_power_ratio:1.1**4}));
+    if(process.argv.includes('--write')){fs.writeFileSync(CSV,output);fs.writeFileSync(SVG,figure(rows));}
+    else {assert.equal(fs.readFileSync(CSV,'utf8'),output,'result drift');assert.equal(fs.readFileSync(SVG,'utf8'),figure(rows),'figure drift');}
+    console.log(JSON.stringify({status:'SOURCE_LEVEL_ONLY',rows:rows.length,source_sha256:SHA,program_sha256:hash(fs.readFileSync(__filename)),csv_sha256:hash(output),svg_sha256:hash(figure(rows)),CSEG27:rows[26],hypothetical_m4_range_power_ratio:1.1**4}));
   }
 }
-module.exports={parse,solve,moments,serialize,selftest};
+module.exports={parse,solve,moments,serialize,figure,selftest};
