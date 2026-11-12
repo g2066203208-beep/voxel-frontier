@@ -8,6 +8,7 @@ on:
       - research/wind-tower/manuscript/final-thesis/assemble/s12_build_six_chapter_reader.cjs
       - research/wind-tower/manuscript/final-thesis/assemble/s12_build_advisor_docx.py
       - research/wind-tower/manuscript/final-thesis/assemble/s12_refine_advisor_docx.py
+      - research/wind-tower/manuscript/final-thesis/assemble/s12_appendix_a14_math_readability.py
       - research/wind-tower/manuscript/final-thesis/assemble/THESIS_SIX_CHAPTER_REVIEW_20261102.md
       - research/wind-tower/manuscript/final-thesis/figures/**
   workflow_dispatch:
@@ -77,6 +78,28 @@ jobs:
           receipt=__import__('json').load(open('s12_advisor/REFINED_SOURCE_AND_LAYOUT_RECEIPT.json'))
           assert receipt['visual_science_qa']['embedded_figures_after']==50, 'MISSING_S05_IMAGE_RECEIPT'
           print('WORD_CONTENT_AND_OMML_PASS',len(d.paragraphs),len(d.inline_shapes))
+          PY
+      - name: Add A.14 readable equations with source SHA lock (non-CAE)
+        run: |
+          python - <<'PY'
+          import hashlib, subprocess
+          from pathlib import Path
+          source=Path('s12_advisor/DTU10MW_158m_six_chapter_advisor_REFINED_20261113.docx')
+          output=Path('s12_advisor/DTU10MW_158m_six_chapter_advisor_A14_READABLE_20261113.docx')
+          digest=hashlib.sha256(source.read_bytes()).hexdigest()
+          subprocess.run(['python','research/wind-tower/manuscript/final-thesis/assemble/s12_appendix_a14_math_readability.py',str(source),str(output),'--expected-sha',digest],check=True)
+          from docx import Document
+          old,new=Document(source),Document(output)
+          assert len(old.tables)==len(new.tables)==52, 'TABLE_COUNT_CHANGED'
+          assert len(old.inline_shapes)==len(new.inline_shapes)==50, 'FIGURE_COUNT_CHANGED'
+          assert len(new.paragraphs)==len(old.paragraphs)+4, 'EQUATION_COUNT_CHANGED'
+          assert sum('qᵢ = PSA_ESM' in p.text for p in new.paragraphs)==1, 'EQUATION_MISSING'
+          assert [t._tbl.xml for t in old.tables]==[t._tbl.xml for t in new.tables], 'TABLE_VALUES_CHANGED'
+          import zipfile, re
+          def omml(p):
+              with zipfile.ZipFile(p) as z: return len(re.findall(rb'<m:oMath(?: |>)',z.read('word/document.xml')))
+          assert omml(source)==omml(output), 'OMML_CHANGED'
+          print('A14_ARTIFACT_PASS',hashlib.sha256(output.read_bytes()).hexdigest())
           PY
       - uses: actions/upload-artifact@v4
         if: always()
