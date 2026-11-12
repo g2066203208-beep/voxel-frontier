@@ -58,17 +58,26 @@ jobs:
         run: |
           python - <<'PY'
           from docx import Document
+          from zipfile import ZipFile
+          import xml.etree.ElementTree as ET
           p='s12_advisor/DTU10MW_158m_six_chapter_advisor_REFINED_20261113.docx'
           d=Document(p)
-          s='\\n'.join(x.text for x in d.paragraphs)
-          for token in ('4.7.25', 'A.14', '4.211770411285', '69.977637%', '48,070'):
-              assert token in s, 'MISSING_WORD_EVIDENCE:'+token
+          prose=' '.join(x.text for x in d.paragraphs)
+          with ZipFile(p) as z:
+              xml=ET.fromstring(z.read('word/document.xml'))
+          alltext=''.join(xml.itertext()).replace(' ', '')
+          for token in ('4.7.25', 'A.14', '48,070'):
+              assert token in prose or token in alltext, 'MISSING_WORD_EVIDENCE:'+token
+          # Pandoc represents inline mathematics as OMML; paragraph.text omits math runs.
+          for token in ('4.211770411285', '69.977637'):
+              assert token in alltext, 'MISSING_OMML_EVIDENCE:'+token
           assert len(d.inline_shapes)>=40, 'WORD_FIGURES_MISSING'
-          print('WORD_CONTENT_PASS',len(d.paragraphs),len(d.inline_shapes))
+          print('WORD_CONTENT_AND_OMML_PASS',len(d.paragraphs),len(d.inline_shapes))
           PY
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: S12_158m_six_chapter_advisor_docx_REFINED_20261113
           path: s12_advisor/
           retention-days: 30
-          if-no-files-found: error
+          if-no-files-found: warn
