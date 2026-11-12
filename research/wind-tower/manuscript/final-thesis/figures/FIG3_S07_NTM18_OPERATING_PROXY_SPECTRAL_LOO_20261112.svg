@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="500" viewBox="0 0 900 500" role="img" aria-label="Leave-one-seed-out prediction error ratios of pitch and generator power proxies for historical tower-base My 0.05 to 0.25 Hz band RMS">
+<rect width="900" height="500" fill="#fff"/>
+<text x="96" y="37" font-size="24" font-family="Arial, sans-serif" font-weight="bold" fill="#1c2734">Operating-state proxies do not reliably predict spectral response</text>
+<text x="96" y="61" font-size="15" font-family="Arial, sans-serif" fill="#576574">Historical 18 NTM cases · 6 seeds per wind bin · tower-base My 0.05–0.25 Hz RMS</text>
+<g font-family="Arial, sans-serif">
+<line x1="96" x2="864" y1="370" y2="370" stroke="#e2e6eb" stroke-width="1" /><text x="84" y="375" text-anchor="end" font-size="14" fill="#56616d">0.0</text>
+<line x1="96" x2="864" y1="300" y2="300" stroke="#e2e6eb" stroke-width="1" /><text x="84" y="305" text-anchor="end" font-size="14" fill="#56616d">0.5</text>
+<line x1="96" x2="864" y1="230" y2="230" stroke="#515d6b" stroke-width="1.8" stroke-dasharray="6 5"/><text x="84" y="235" text-anchor="end" font-size="14" fill="#56616d">1.0</text>
+<line x1="96" x2="864" y1="160" y2="160" stroke="#e2e6eb" stroke-width="1" /><text x="84" y="165" text-anchor="end" font-size="14" fill="#56616d">1.5</text>
+<line x1="96" x2="864" y1="90" y2="90" stroke="#e2e6eb" stroke-width="1" /><text x="84" y="95" text-anchor="end" font-size="14" fill="#56616d">2.0</text>
+<rect x="145" y="232.65" width="46" height="137.35" rx="3" fill="#315b92"/>
+<rect x="208" y="224.78" width="46" height="145.22" rx="3" fill="#c57839"/>
+<rect x="395" y="116.29" width="46" height="253.71" rx="3" fill="#315b92"/>
+<rect x="458" y="215.32" width="46" height="154.68" rx="3" fill="#c57839"/>
+<rect x="645" y="183.02" width="46" height="186.98" rx="3" fill="#315b92"/>
+<rect x="708" y="250.60" width="46" height="119.40" rx="3" fill="#c57839"/>
+<text x="168" y="222.65" text-anchor="middle" font-size="16" fill="#1c2734">0.981</text>
+<text x="231" y="214.78" text-anchor="middle" font-size="16" fill="#1c2734">1.037</text>
+<text x="200" y="406" text-anchor="middle" font-size="16" fill="#27313b">9.34 m/s</text>
+<text x="418" y="106.29" text-anchor="middle" font-size="16" fill="#1c2734">1.812</text>
+<text x="481" y="205.32" text-anchor="middle" font-size="16" fill="#1c2734">1.105</text>
+<text x="450" y="406" text-anchor="middle" font-size="16" fill="#27313b">11.40 m/s</text>
+<text x="668" y="173.02" text-anchor="middle" font-size="16" fill="#1c2734">1.336</text>
+<text x="731" y="240.60" text-anchor="middle" font-size="16" fill="#1c2734">0.853</text>
+<text x="700" y="406" text-anchor="middle" font-size="16" fill="#27313b">19.20 m/s</text>
+<rect x="113" y="420" width="15" height="15" rx="2" fill="#315b92"/><text x="136" y="433" font-size="15" fill="#26323f">Mean pitch (deg)</text>
+<rect x="325" y="420" width="15" height="15" rx="2" fill="#c57839"/><text x="348" y="433" font-size="15" fill="#26323f">Mean generator power (kW)</text>
+<text x="113" y="463" font-size="13" fill="#59636d">Ratio = LOOCV linear-proxy RMSE / LOOCV wind-bin-mean RMSE; above 1 means worse prediction.</text>
+<text x="113" y="482" font-size="12" fill="#59636d">Finite-archive diagnostic only; no unseen-seed probability, controller causality, DLC1.2 or material fatigue.</text>
+</g></svg>
