@@ -158,6 +158,10 @@ A separate retrospective frequency-domain experiment uses the complete 18-case, 
 
 For each demeaned series, a one-sided discrete Fourier variance spectrum is formed with the exact DC/Nyquist normalization and a rectangular 600 s window. Parseval closure is required to relative tolerance 1e-10. The descriptive estimand is the fraction of within-record variance within [0.05, 0.25) Hz; the corresponding band-limited RMS is also retained. This band is an explicitly chosen diagnostic, not a turbine-mode or rotor-harmonic identification. Prespecified sensitivities include 4096-point Hann/50%-overlap Welch estimates, linear detrending, lower cutoffs 0.04/0.06/0.08/0.10 Hz, and separate 300 s halves. All 36 case-by-channel values are retained; six historical seeds per wind speed are not treated as six independent climate observations.
 
+### 2.8. Case-matched spectral proxy test with genuinely held-out seed labels
+
+A separate, non-causal test combines the existing 18-case operating-state summaries with the independently archived tower-base My 0.05–0.25 Hz spectral RMS for the same historical NTM case names. The response is a **section-reaction spectral statistic**, not an aerodynamic force, material stress or Miner damage. For each of three wind-speed bins and each candidate predictor (600 s mean blade pitch or generator power), we fit a univariate within-bin slope using five cases and predict the sixth. The same five cases also define the no-predictor bin-mean baseline. The ratio of leave-one-seed-out (LOO) RMSEs is reported; values greater than one indicate degradation. For each bin and predictor, all 6!=720 permutations of the six observed response labels give an exact two-sided finite-archive absolute-correlation tail fraction. The six permutation tests are descriptive and do not establish independent sampling, controller causality, or generalization to unseen wind seeds. Source identity, complete 18×600 s pairing and 36 held-out predictions are checked by a source-locked executable and malformed-source refusals.
+
 ## 3. Results
 
 ### 3.1. Paired rainflow ranking and controlling-case changes
@@ -308,6 +312,18 @@ The My mean base reaction falls from 193,080.52 to 106,926.60 kN m (−44.62%) b
 
 Across the alternative full-record Welch, linear-detrended and 0.04–0.10 Hz cutoff definitions, the strict 19.2-versus-11.4 m/s six-seed separation persists; the smallest margin across all alternatives is 2.330 percentage points (Mx) and 8.337 percentage points (My). **A genuine negative sensitivity result** is obtained when the record is split: for Mx the two wind-speed ranges overlap in each 300 s half, by 9.439 and 4.924 percentage points respectively; My remains separated in both halves. Therefore the full-window ranking is not invariant to arbitrary record duration. Figure 3-S06-23 and the 36-row source-derived table provide the individual realization values.
 
+### 3.5. Out-of-seed prediction of spectral RMS from operating summaries
+
+| NTM speed (m s⁻¹) | Mean pitch (°) | My band RMS (kN m) | Pitch correlation / exact p | Pitch LOO RMSE ratio | Power correlation / exact p | Power LOO RMSE ratio |
+|---|---:|---:|---:|---:|---:|---:|
+| 9.344 | 0.3952 | 6912.612 | +0.494 / 0.3194 | 0.9811 | +0.559 / 0.2292 | 1.0373 |
+| 11.400 | 3.7424 | 16513.771 | −0.361 / 0.5000 | **1.8122** | +0.400 / 0.4014 | 1.1048 |
+| 19.202 | 16.6021 | 22139.805 | +0.442 / 0.3875 | **1.3356** | +0.686 / 0.1444 | 0.8529 |
+
+The historical 11.4 m s⁻¹ pitch proxy increases the held-out prediction RMSE by 81.2% relative to a wind-bin mean, while the 19.2 m s⁻¹ pitch proxy increases it by 33.6%. The low-speed pitch improvement is only 1.9%. Mean generator power improves the high-speed LOO RMSE by 14.7% but worsens it in the other two bins. All six exact within-bin permutation fractions exceed 0.05 *before* multiplicity adjustment. These results reject the operational shortcut that a single averaged control signal is an automatically reliable predictor of a separate, frequency-selective tower reaction. They do not reject a physically specified, independently validated dynamic predictor, nor do they estimate an unseen-seed prediction distribution.
+
+**Figure 3-S07 (source-level diagnostic):** [LOO error ratios for pitch and generator-power predictors](final-thesis/figures/FIG3_S07_NTM18_OPERATING_PROXY_SPECTRAL_LOO_20261112.svg). The 18 original case identities are inherited from the OpenFAST OUTB receipts; the spectral 36-row table SHA256 is `c3de99d45c70675f6a95a767e73dcfc50d57d07b4f33438ee705690b694ae622` and the operating-state 18-row table SHA256 is `0f577f3197870a1350c740c2e0c118073fb9b6f796b4c471765c6f616d5a1b04`. The [executable](../experiments/T062/s07_ntm18_operating_proxy_spectral_loo.cjs) SHA256 is `a88a4835e867e77c7de008e06c6ab6c88da861d715190b26d39483ed79621e20`; [three-row output](../experiments/T062/S07_NTM18_OPERATING_PROXY_SPECTRAL_LOO_3BIN_20261112.csv) SHA256 is `1e78e8a796887b86bd57865efd8f0de082bfeb15be8aa3525549409881eedad3`. The committed core module was executed in V8 against the two original derived tables with exact output-byte agreement; native Node CLI execution remains unverified.
+
 ## 4. Discussion
 
 ### 4.1. Three non-substitutable failure mechanisms
@@ -365,6 +381,10 @@ If independent physical evidence later supplies finite intervals \(X_A\in[\ell_A
 For scale, the real three-bin source gives \(K_x=125.6066377435\) and \(K_y=209257.2994476005\) in (MN m)^4, with missing exposure \(p_{\rm miss}=99736/184080=0.5418079096\). Writing \(L_{\rm miss,c}=\alpha L_{\rm miss,c}^{(50\%)}\), the missing-to-known contribution ratio is **exactly** \(X_c/K_c=\alpha^4\), independently of channel. The source-derived break-even loads are 3.902041 MN m (Mx) and 24.929227 MN m (My). At \(\alpha=0.5,1,2\), the hypothetical ratios are 0.0625, 1 and 16. These values are an algebraic sensitivity illustration anchored to real \(K\) and exposure totals, **not inferred missing-bin loads**; Mx and My are different response channels, not the two candidate designs in Proposition 1.
 
 The operational consequence is a staged test rather than a fatigue-life estimate. Preserve the corrected 36-case rankings as *screening decisions*, freeze a prospective seed rule before new runs, obtain independent missing-bin loads and operating-state support, and only then test whether load rankings transfer to synchronized, constituent-specific local stress cycles. Historical spectral, sign-regime, quantization, directional and nominal-stress counterexamples remain valuable as **secondary negative controls**, but they do not supply independent confirmation of R1–R3. Their complete methods, actual results, failed tests and source limitations are retained in [Supplementary evidence, §S-D](journal-wind-fatigue-secondary-evidence.md#s-d-preserved-12-november-secondary-discussion). The 2026 hybrid-tower wind–earthquake and prestress/seismic papers [6,7] already address those physical phenomena; this paper makes no priority claim for them.
+
+### 4.8. Why an averaged operating-state proxy is not a spectral-response model
+
+The added case-matched spectral test supplies a different falsifier from the earlier load-DEL proxy tests: even with an identical 600 s case identifier and a consistent wind-speed bin, a control-summary predictor can increase held-out error for a frequency-selective tower-base response. A bin-specific association is neither a transfer function nor evidence of causality, especially when rotor dynamics, turbulent excitation and the 0.05–0.25 Hz band are jointly evolving. The three six-seed bins cannot identify a universal control-to-structure mapping. A prospective study would need synchronous aerodynamic forcing, structural inertia, controller version and independently held-out wind histories before treating pitch or power as a physical W-side input. No claim of a new wind–earthquake or prestress mechanism is made; the published 2026 hybrid-tower wind–earthquake and PT/seismic studies [6,7] remain prior art for those phenomena.
 
 ## 5. Conclusions
 
