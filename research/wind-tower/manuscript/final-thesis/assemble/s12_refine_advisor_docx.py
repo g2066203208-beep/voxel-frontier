@@ -210,6 +210,31 @@ def keep_s11_minimax_table_together(doc):
                 paragraph.paragraph_format.space_after = Pt(0)
     return 1
 
+def keep_s06_spectral_table_together(doc):
+    """Keep all seven rows of the real 18-NTM six-column spectral table together.
+
+    Visual QA of Actions #43166604078 found the final My row split onto the
+    following page. This changes only pagination flags, not scientific data.
+    """
+    matches = [t for t in doc.tables
+               if len(t.columns) == 6 and t.cell(0, 0).text == '塔底反力'
+               and '实际风速' in t.cell(0, 1).text]
+    if not matches:
+        if any('3.7.23 真实18组NTM' in p.text for p in doc.paragraphs):
+            raise ValueError('MISSING_S06_SPECTRAL_TABLE')
+        return 0
+    if len(matches) != 1 or len(matches[0].rows) != 7:
+        raise ValueError('AMBIGUOUS_S06_SPECTRAL_TABLE')
+    table = matches[0]
+    for i, row in enumerate(table.rows):
+        set_onoff(row._tr.get_or_add_trPr(), 'cantSplit')
+        for cell in row.cells:
+            for paragraph in cell.paragraphs:
+                paragraph.paragraph_format.keep_with_next = i < len(table.rows) - 1
+                paragraph.paragraph_format.keep_together = True
+                paragraph.paragraph_format.space_after = Pt(0)
+    return 1
+
 def refine(source: Path, target: Path, expected_sha: str | None = None):
     if not source.is_file():
         raise ValueError('MISSING_SOURCE')
@@ -223,6 +248,7 @@ def refine(source: Path, target: Path, expected_sha: str | None = None):
     s10_links = repair_s10_hyperlink_glyph_artifact(d)
     s10_regret_table = keep_s10_regret_table_together(d)
     s11_minimax_table = keep_s11_minimax_table_together(d)
+    s06_spectral_table = keep_s06_spectral_table_together(d)
     if len(before['chapter_titles']) != 6 or before['inline_images'] < 20:
         raise ValueError('INCOMPLETE_SIX_CHAPTER_MANUSCRIPT')
     changes = Counter()
@@ -230,6 +256,7 @@ def refine(source: Path, target: Path, expected_sha: str | None = None):
     changes['s10_hyperlinks_unwrapped_for_lo_glyph'] = s10_links
     changes['s10_regret_table_kept_together'] = s10_regret_table
     changes['s11_minimax_table_kept_together'] = s11_minimax_table
+    changes['s06_spectral_table_kept_together'] = s06_spectral_table
     changes['normalized_undefined_compact_table_paragraphs'] = compact_fixes
     caption_style = d.styles['Caption']
     caption_style.font.size = Pt(10)
@@ -362,6 +389,26 @@ def self_test():
             assert 'AMBIGUOUS_S11_MINIMAX_TABLE' in str(e)
         else:
             raise AssertionError('S11_DUPLICATE_TABLE_ACCEPTED')
+        # Real S06 seven-row six-column spectral table: page-unified, byte-stable.
+        s06 = mini.add_table(rows=7, cols=6)
+        s06.cell(0, 0).text = '塔底反力'
+        s06.cell(0, 1).text = '实际风速/m·s⁻¹'
+        for i in range(1, 7):
+            for j in range(6):
+                s06.cell(i, j).text = str(i * 6 + j)
+        before_s06 = stats(mini)
+        assert keep_s06_spectral_table_together(mini) == 1
+        assert keep_s06_spectral_table_together(mini) == 1
+        assert stats(mini) == before_s06
+        s06_copy = mini.add_table(rows=7, cols=6)
+        s06_copy.cell(0, 0).text = '塔底反力'
+        s06_copy.cell(0, 1).text = '实际风速/m·s⁻¹'
+        try:
+            keep_s06_spectral_table_together(mini)
+        except ValueError as e:
+            assert 'AMBIGUOUS_S06_SPECTRAL_TABLE' in str(e)
+        else:
+            raise AssertionError('S06_DUPLICATE_TABLE_ACCEPTED')
         # Refuse an ambiguous matching source paragraph.
         mini.add_paragraph('研究问题。 对同一四组历史ETM×31重复')
         try:
@@ -370,7 +417,7 @@ def self_test():
             assert 'AMBIGUOUS_S10_SOURCE_PARAGRAPH' in str(e)
         else:
             raise AssertionError('S10_DUPLICATE_PARAGRAPH_ACCEPTED')
-        print('SELF_TEST_PASS 6chapters 20figures 1table S10_regret_layout S11_minimax_layout S10_hyperlink_regression SHA_rejection idempotent_structure')
+        print('SELF_TEST_PASS 6chapters 20figures 1table S10_regret_layout S11_minimax_layout S06_spectral_layout S10_hyperlink_regression SHA_rejection idempotent_structure')
 
 def main():
     p=argparse.ArgumentParser()
