@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="940" height="450" viewBox="0 0 940 450">
+<rect width="940" height="450" fill="white"/>
+<text x="80" y="35" font-family="Arial" font-size="19" font-weight="bold">Conditional archived NTM source support</text>
+<text x="80" y="58" font-family="Arial" font-size="12">ERA5 [threshold, 25) m/s; 18 historical NTM cases; not turbine operation or DLC1.2</text>
+<line x1="80" y1="355.00" x2="900" y2="355.00" stroke="#ddd"/>
+<text x="70" y="359.00" text-anchor="end" font-family="Arial" font-size="12">0%</text>
+<line x1="80" y1="286.25" x2="900" y2="286.25" stroke="#ddd"/>
+<text x="70" y="290.25" text-anchor="end" font-family="Arial" font-size="12">25%</text>
+<line x1="80" y1="217.50" x2="900" y2="217.50" stroke="#ddd"/>
+<text x="70" y="221.50" text-anchor="end" font-family="Arial" font-size="12">50%</text>
+<line x1="80" y1="148.75" x2="900" y2="148.75" stroke="#ddd"/>
+<text x="70" y="152.75" text-anchor="end" font-family="Arial" font-size="12">75%</text>
+<line x1="80" y1="80.00" x2="900" y2="80.00" stroke="#ddd"/>
+<text x="70" y="84.00" text-anchor="end" font-family="Arial" font-size="12">100%</text>
+<polyline points="80.00,336.57 138.00,330.37 196.00,319.31 254.00,299.05 312.00,260.02 370.00,183.66 428.00,286.85 486.00,204.71 544.00,354.54 950.00,80.00" fill="none" stroke="#245c88" stroke-width="2.5"/>
+<circle cx="80.00" cy="336.57" r="4" fill="#245c88"/>
+<text x="80.00" y="377" text-anchor="middle" font-family="Arial" font-size="12">4</text>
+<circle cx="138.00" cy="330.37" r="4" fill="#245c88"/>
+<text x="138.00" y="377" text-anchor="middle" font-family="Arial" font-size="12">5</text>
+<circle cx="196.00" cy="319.31" r="4" fill="#245c88"/>
+<text x="196.00" y="377" text-anchor="middle" font-family="Arial" font-size="12">6</text>
+<circle cx="254.00" cy="299.05" r="4" fill="#245c88"/>
+<text x="254.00" y="377" text-anchor="middle" font-family="Arial" font-size="12">7</text>
+<circle cx="312.00" cy="260.02" r="4" fill="#245c88"/>
+<text x="312.00" y="377" text-anchor="middle" font-family="Arial" font-size="12">8</text>
+<circle cx="370.00" cy="183.66" r="4" fill="#245c88"/>
+<text x="370.00" y="377" text-anchor="middle" font-family="Arial" font-size="12">9</text>
+<circle cx="428.00" cy="286.85" r="4" fill="#245c88"/>
+<text x="428.00" y="377" text-anchor="middle" font-family="Arial" font-size="12">10</text>
+<circle cx="486.00" cy="204.71" r="4" fill="#245c88"/>
+<text x="486.00" y="377" text-anchor="middle" font-family="Arial" font-size="12">11</text>
+<circle cx="544.00" cy="354.54" r="4" fill="#245c88"/>
+<text x="544.00" y="377" text-anchor="middle" font-family="Arial" font-size="12">12</text>
+<circle cx="950.00" cy="80.00" r="4" fill="#245c88"/>
+<text x="950.00" y="377" text-anchor="middle" font-family="Arial" font-size="12">19</text>
+<text x="480" y="407" text-anchor="middle" font-family="Arial" font-size="13">Lower diagnostic threshold (m/s); upper threshold fixed at 25 m/s</text>
+<text x="80" y="431" font-family="Arial" font-size="11">Sharp changes arise from removing a source-supported bin; no new wind simulation or controller-state inference.</text>
+</svg>
