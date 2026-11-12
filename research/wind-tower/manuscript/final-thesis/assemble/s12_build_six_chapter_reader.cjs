@@ -87,14 +87,16 @@ const seismicSource=path.join(root,"appendices","APPENDIX_A_ESM_EONLY_METHODS_RE
 const rotdFigure=path.join(root,"figures","FIG_A12_REAL_ESM_ROTD46_ANGLE_GRID_20261111.svg");
 const ch4Figure=path.join(root,"figures","FIG4_S12_ETM4_DUAL_QOI_TWO_SITE_20261111.svg");
 const rotdTable=path.resolve(root,"../../experiments/T079/real-records/S05_ESM_ROTD46_RECONCILED_20261111.csv");
-for(const [p,expected] of [[seismicSource,"5a2ca3794c497b7eb7ed3f8d0717348c36acfeb6f971e3af95ca9bab297fb889"],[rotdFigure,"420e5b5ce359c0dd18743c25498ce8793b6ed3fd49c179828f5296a22159b5dc"],[ch4Figure,"5e869659ef6e76e68195884e3a90516c3241b2c24d8dff4c64c8ad595d9504f7"],[rotdTable,"ea642b37ca39bde6c1e5b48168e50650adadb00311ca9f24a11102fea82d407c"]]){
+for(const [p,expected] of [[seismicSource,"e68d7784792a8e72552f76e2df1825997320493c4962cf23b96f379d25d87507"],[rotdFigure,"420e5b5ce359c0dd18743c25498ce8793b6ed3fd49c179828f5296a22159b5dc"],[ch4Figure,"5e869659ef6e76e68195884e3a90516c3241b2c24d8dff4c64c8ad595d9504f7"],[rotdTable,"ea642b37ca39bde6c1e5b48168e50650adadb00311ca9f24a11102fea82d407c"]]){
  const actual=crypto.createHash("sha256").update(fs.readFileSync(p)).digest("hex");
  if(actual!==expected)throw Error("S12_SOURCE_SHA_MISMATCH: "+p);
 }
 const seismicText=fs.readFileSync(seismicSource,"utf8");
 const seismicMarker="## A.12 官方ESM处理波46周期原时程独立RotD复算";
 if(seismicText.indexOf(seismicMarker)<0)throw Error("S12_MISSING_ESM_A12");
-const appendixA12=seismicText.slice(seismicText.indexOf(seismicMarker)).trim().replace("[图A-12](../figures/FIG_A12_REAL_ESM_ROTD46_ANGLE_GRID_20261111.svg)","图A-12").replace("\n\n**限制与可证伪性。**","\n\n![图A-12：官方ESM处理波46周期RotD方向角网格对照](../figures/FIG_A12_REAL_ESM_ROTD46_ANGLE_GRID_20261111.svg)\n\n**限制与可证伪性。**");
+const a12Start=seismicText.indexOf(seismicMarker),a13Start=seismicText.indexOf("\n### A.13 ",a12Start);
+if(a13Start<0||a13Start<=a12Start)throw Error("S12_A12_A13_SECTION_BOUNDARY_DRIFT");
+const appendixA12=seismicText.slice(a12Start,a13Start).trim().replace("[图A-12](../figures/FIG_A12_REAL_ESM_ROTD46_ANGLE_GRID_20261111.svg)","图A-12").replace("\n\n**限制与可证伪性。**","\n\n![图A-12：官方ESM处理波46周期RotD方向角网格对照](../figures/FIG_A12_REAL_ESM_ROTD46_ANGLE_GRID_20261111.svg)\n\n**限制与可证伪性。**");
 const sensitivitySource=path.resolve(root,"../../experiments/T079/real-records/S05_ESM_ADDITIONAL_HIGHPASS_SENSITIVITY_20261111.md");
 const sensitivityFigure=path.join(root,"figures","FIG_A13_ESM_ADDITIONAL_HP_ROTD100_20261111.svg");
 const sensitivityTable=path.resolve(root,"../../experiments/T079/real-records/S05_ESM_MP_ADDITIONAL_HIGHPASS_ROTD100_46ROW_20261111.csv");
