@@ -235,6 +235,106 @@ def keep_s06_spectral_table_together(doc):
                 paragraph.paragraph_format.space_after = Pt(0)
     return 1
 
+
+def _compact_science_table(table, widths, font_pt):
+    """Correct two observed page-level table defects; never edit cell text/OMML."""
+    if len(widths) != len(table.columns) or abs(sum(widths) - 15.5) > 0.01:
+        raise ValueError('SCIENCE_TABLE_WIDTH_INVALID')
+    table.style = 'Table Grid'
+    table.autofit = False
+    layout = table._tbl.tblPr.find(qn('w:tblLayout'))
+    if layout is None:
+        layout = OxmlElement('w:tblLayout')
+        table._tbl.tblPr.append(layout)
+    layout.set(qn('w:type'), 'fixed')
+    for col, width in zip(table.columns, widths):
+        col.width = Cm(width)
+    for row_number, row in enumerate(table.rows):
+        trpr = row._tr.get_or_add_trPr()
+        if trpr.find(qn('w:cantSplit')) is None:
+            trpr.append(OxmlElement('w:cantSplit'))
+        if row_number == 0 and trpr.find(qn('w:tblHeader')) is None:
+            trpr.append(OxmlElement('w:tblHeader'))
+        for cell, width in zip(row.cells, widths):
+            cell.width = Cm(width)
+            for paragraph in cell.paragraphs:
+                paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
+                paragraph.paragraph_format.space_before = Pt(0)
+                paragraph.paragraph_format.space_after = Pt(0)
+                paragraph.paragraph_format.line_spacing = 1.0
+                paragraph.paragraph_format.keep_together = True
+                if row_number:
+                    ppr = paragraph._p.get_or_add_pPr()
+                    if ppr.find(qn('w:noWrap')) is None:
+                        ppr.append(OxmlElement('w:noWrap'))
+                for run in paragraph.runs:
+                    run.font.size = Pt(font_pt + (0.2 if row_number == 0 else 0))
+
+
+def restore_s05_figure_and_compact_tables(target: Path, figure: Path):
+    """Restore missing source-locked Fig A-14 and fix verified 7x6/3x7 tables.
+
+    The previous 194-page DOCX passed structural QA yet lacked Fig A-14;
+    its 7x6 table split long case IDs across lines and its 3x7 numeric
+    table split decimal values. Preserve every existing scientific cell,
+    paragraph and OMML node. Only add the original SVG and its caption.
+    """
+    import io
+    import cairosvg
+    figure_sha = '11d47d347463987ad9e77933b69d4d13963b0f8231f66807cf72770f997d8964'
+    if not figure.is_file() or sha256(figure) != figure_sha:
+        raise ValueError('S05_FIGURE_SHA_MISMATCH')
+    doc = Document(target)
+    before_tables = [[[c.text for c in row.cells] for row in t.rows] for t in doc.tables]
+    before_paragraphs = [p.text for p in doc.paragraphs]
+    before_figures = len(doc.inline_shapes)
+    before_math = stats(doc)['math_nodes']
+    s10 = [t for t in doc.tables if len(t.rows) == 7 and len(t.columns) == 6
+           and t.cell(0, 0).text == '通道' and t.cell(0, 2).text == '控制工况']
+    s05 = [t for t in doc.tables if len(t.rows) == 3 and len(t.columns) == 7
+           and t.cell(0, 0).text == '33点源谱']
+    if len(s10) != 1 or len(s05) != 1:
+        raise ValueError('SCIENCE_TABLE_NOT_UNIQUE')
+    if any(p.text.startswith('图A-14：') for p in doc.paragraphs):
+        raise ValueError('DUPLICATE_S05_FIGURE')
+    _compact_science_table(s10[0], [0.8, 0.85, 3.15, 2.5, 2.15, 6.05], 7.8)
+    _compact_science_table(s05[0], [1.4, 2.15, 2.15, 2.0, 2.2, 2.1, 3.5], 7.4)
+    image = doc.add_paragraph()
+    image.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    image.paragraph_format.keep_with_next = True
+    image.paragraph_format.keep_together = True
+    png = cairosvg.svg2png(bytestring=figure.read_bytes(), output_width=1800)
+    image.add_run().add_picture(io.BytesIO(png), width=Cm(14.7))
+    caption = doc.add_paragraph('图A-14：ESM处理谱与示意目标谱的33周期单尺度极小极大比较（非设计谱验收）')
+    caption.style = doc.styles['Caption']
+    caption.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    caption.paragraph_format.keep_together = True
+    s05[0]._tbl.addnext(image._p)
+    image._p.addnext(caption._p)
+    temp = target.with_name(target.stem + '_qa_temp.docx')
+    doc.save(temp)
+    verified = Document(temp)
+    after_tables = [[[c.text for c in row.cells] for row in t.rows] for t in verified.tables]
+    after_paragraphs = [p.text for p in verified.paragraphs]
+    cap_idx = [i for i, value in enumerate(after_paragraphs) if value.startswith('图A-14：')]
+    if before_tables != after_tables:
+        raise AssertionError('SCIENCE_TABLE_DATA_CHANGED')
+    if len(cap_idx) != 1 or cap_idx[0] < 1:
+        raise AssertionError('S05_CAPTION_NOT_UNIQUE')
+    index = cap_idx[0]
+    if after_paragraphs[index - 1] != '' or before_paragraphs != (after_paragraphs[:index - 1] + after_paragraphs[index + 1:]):
+        raise AssertionError('SCIENCE_PROSE_CHANGED')
+    if len(verified.inline_shapes) != before_figures + 1 or stats(verified)['math_nodes'] != before_math:
+        raise AssertionError('FIGURE_OR_OMML_IDENTITY_CHANGED')
+    temp.replace(target)
+    return {'source_figure_sha256': figure_sha, 'embedded_figures_before': before_figures,
+            'embedded_figures_after': len(verified.inline_shapes),
+            'table_cell_text_unchanged': True, 'old_prose_unchanged': True,
+            'math_nodes_unchanged': before_math,
+            'fixed_tables': ['S10_7x6', 'S05_3x7'],
+            'figure_restored': 'FIG_S05_33PERIOD_SCALAR_MINIMAX_20261113.svg',
+            'output_sha256': sha256(target)}
+
 def refine(source: Path, target: Path, expected_sha: str | None = None):
     if not source.is_file():
         raise ValueError('MISSING_SOURCE')
@@ -426,12 +526,17 @@ def main():
     p.add_argument('--expected-sha256')
     p.add_argument('--receipt',type=Path)
     p.add_argument('--self-test',action='store_true')
+    p.add_argument('--s05-figure',type=Path)
     a=p.parse_args()
     if a.self_test:
         self_test();return
     if not a.source or not a.output:
         p.error('source and output required')
     r=refine(a.source,a.output,a.expected_sha256)
+    if a.s05_figure:
+        r['visual_science_qa']=restore_s05_figure_and_compact_tables(a.output,a.s05_figure)
+        r['output_sha256']=sha256(a.output)
+        r['status']='SCIENCE_TABLE_AND_FIGURE_SOURCE_PASS_VISUAL_QA_REQUIRED'
     if a.receipt:
         a.receipt.write_text(json.dumps(r,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     print(json.dumps(r,ensure_ascii=False))

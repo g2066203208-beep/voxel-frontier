@@ -52,7 +52,8 @@ jobs:
             s12_advisor/DTU10MW_158m_six_chapter_advisor_20261113.docx \
             s12_advisor/DTU10MW_158m_six_chapter_advisor_REFINED_20261113.docx \
             --expected-sha256 "$SOURCE_DOCX_SHA" \
-            --receipt s12_advisor/REFINED_SOURCE_AND_LAYOUT_RECEIPT.json
+            --receipt s12_advisor/REFINED_SOURCE_AND_LAYOUT_RECEIPT.json \
+            --s05-figure research/wind-tower/manuscript/final-thesis/figures/FIG_S05_33PERIOD_SCALAR_MINIMAX_20261113.svg
           python research/wind-tower/manuscript/final-thesis/assemble/s12_refine_advisor_docx.py --self-test
       - name: Verify inserted science sections and embedded figures in refined Word
         run: |
@@ -71,7 +72,10 @@ jobs:
           # Pandoc represents inline mathematics as OMML; paragraph.text omits math runs.
           for token in ('4.211770411285', '69.977637'):
               assert token in alltext, 'MISSING_OMML_EVIDENCE:'+token
-          assert len(d.inline_shapes)>=40, 'WORD_FIGURES_MISSING'
+          assert len(d.inline_shapes)==50, 'WORD_FIGURES_MISSING_OR_DUPLICATE'
+          assert '图A-14：ESM处理谱与示意目标谱' in prose, 'MISSING_S05_FIGURE_CAPTION'
+          receipt=__import__('json').load(open('s12_advisor/REFINED_SOURCE_AND_LAYOUT_RECEIPT.json'))
+          assert receipt['visual_science_qa']['embedded_figures_after']==50, 'MISSING_S05_IMAGE_RECEIPT'
           print('WORD_CONTENT_AND_OMML_PASS',len(d.paragraphs),len(d.inline_shapes))
           PY
       - uses: actions/upload-artifact@v4
