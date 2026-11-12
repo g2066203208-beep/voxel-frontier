@@ -184,6 +184,32 @@ def keep_s10_regret_table_together(doc):
                     run.font.size = Pt(9)
     return 1
 
+def keep_s11_minimax_table_together(doc):
+    """Keep the six-row real T071 minimax result table on one page.
+
+    The 2026-11-12 rendered artifact split the six-row table across pages
+    152 and 153. Only paragraph pagination properties change, not cell text.
+    """
+    tables = [t for t in doc.tables
+              if len(t.rows) == 6 and len(t.columns) == 3
+              and t.cell(0, 0).text == '指标（仅T071历史固定内力）'
+              and t.cell(0, 2).text == '等体积解析构造']
+    if not tables:
+        if any('5.3.4 31段固定内力' in p.text for p in doc.paragraphs):
+            raise ValueError('MISSING_S11_MINIMAX_TABLE')
+        return 0
+    if len(tables) != 1:
+        raise ValueError('AMBIGUOUS_S11_MINIMAX_TABLE')
+    table = tables[0]
+    for i, row in enumerate(table.rows):
+        set_onoff(row._tr.get_or_add_trPr(), 'cantSplit')
+        for cell in row.cells:
+            for paragraph in cell.paragraphs:
+                paragraph.paragraph_format.keep_with_next = i < len(table.rows) - 1
+                paragraph.paragraph_format.keep_together = True
+                paragraph.paragraph_format.space_after = Pt(0)
+    return 1
+
 def refine(source: Path, target: Path, expected_sha: str | None = None):
     if not source.is_file():
         raise ValueError('MISSING_SOURCE')
@@ -196,12 +222,14 @@ def refine(source: Path, target: Path, expected_sha: str | None = None):
     rebuilt_etm_table = rebuild_etm_control_table(d)
     s10_links = repair_s10_hyperlink_glyph_artifact(d)
     s10_regret_table = keep_s10_regret_table_together(d)
+    s11_minimax_table = keep_s11_minimax_table_together(d)
     if len(before['chapter_titles']) != 6 or before['inline_images'] < 20:
         raise ValueError('INCOMPLETE_SIX_CHAPTER_MANUSCRIPT')
     changes = Counter()
     changes['rebuilt_etm_control_table'] = rebuilt_etm_table
     changes['s10_hyperlinks_unwrapped_for_lo_glyph'] = s10_links
     changes['s10_regret_table_kept_together'] = s10_regret_table
+    changes['s11_minimax_table_kept_together'] = s11_minimax_table
     changes['normalized_undefined_compact_table_paragraphs'] = compact_fixes
     caption_style = d.styles['Caption']
     caption_style.font.size = Pt(10)
@@ -314,6 +342,26 @@ def self_test():
         assert repair_s10_hyperlink_glyph_artifact(mini) == 0
         assert keep_s10_regret_table_together(mini) == 1
         assert stats(mini) == mini_before
+        # Real S11 six-row table: preserve all values, keep every row together.
+        s11 = mini.add_table(rows=6, cols=3)
+        for j, value in enumerate(('指标（仅T071历史固定内力）', '基准截面', '等体积解析构造')):
+            s11.cell(0, j).text = value
+        for i in range(1, 6):
+            for j in range(3):
+                s11.cell(i, j).text = str(i * 3 + j)
+        before_s11 = stats(mini)
+        assert keep_s11_minimax_table_together(mini) == 1
+        assert keep_s11_minimax_table_together(mini) == 1
+        assert stats(mini) == before_s11
+        s11_copy = mini.add_table(rows=6, cols=3)
+        s11_copy.cell(0, 0).text = '指标（仅T071历史固定内力）'
+        s11_copy.cell(0, 2).text = '等体积解析构造'
+        try:
+            keep_s11_minimax_table_together(mini)
+        except ValueError as e:
+            assert 'AMBIGUOUS_S11_MINIMAX_TABLE' in str(e)
+        else:
+            raise AssertionError('S11_DUPLICATE_TABLE_ACCEPTED')
         # Refuse an ambiguous matching source paragraph.
         mini.add_paragraph('研究问题。 对同一四组历史ETM×31重复')
         try:
@@ -322,7 +370,7 @@ def self_test():
             assert 'AMBIGUOUS_S10_SOURCE_PARAGRAPH' in str(e)
         else:
             raise AssertionError('S10_DUPLICATE_PARAGRAPH_ACCEPTED')
-        print('SELF_TEST_PASS 6chapters 20figures 1table S10_regret_layout S10_hyperlink_regression SHA_rejection idempotent_structure')
+        print('SELF_TEST_PASS 6chapters 20figures 1table S10_regret_layout S11_minimax_layout S10_hyperlink_regression SHA_rejection idempotent_structure')
 
 def main():
     p=argparse.ArgumentParser()
