@@ -33,7 +33,7 @@ jobs:
         run: |
           python research/wind-tower/manuscript/final-thesis/assemble/s12_build_advisor_docx.py \
             --source research/wind-tower/manuscript/final-thesis/assemble/THESIS_SIX_CHAPTER_REVIEW_20261102.md \
-            --expected-sha256 4ff9ea1617a5619053c1de20664f1be4e69c10d0a9884f3cb095eef25f51b4ac \
+            --expected-sha256 6acc42343722ac3561b458d3cffdf25999bd708bac57f9433c51aba131e2d8aa \
             --output s12_advisor/DTU10MW_158m_six_chapter_advisor_20261111.docx \
             --receipt s12_advisor/DOCX_SOURCE_AND_FIGURE_RECEIPT.json
       - name: Refuse source SHA mismatch (negative test)
