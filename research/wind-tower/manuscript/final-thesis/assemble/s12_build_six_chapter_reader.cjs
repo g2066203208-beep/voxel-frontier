@@ -91,6 +91,48 @@ function assertChapterIntegration(out){
  return true;
 }
 const root=path.resolve(__dirname,".."),target=path.join(__dirname,"THESIS_SIX_CHAPTER_REVIEW_20261102.md");
+
+if(process.argv.includes("--check-patch")){
+ const sha=s=>crypto.createHash("sha256").update(s).digest("hex");
+ const pinned="12a89d73b79ba5edd9e53f0fc35f53d825559b70a76874d06c20bb2738b41cfb";
+ const expected="663dcc8fd53dcfa48a38104427ad4a50f3b3cc5ba473103b29bcff01d514c44a";
+ const ch4Path=path.join(root,"chapters","04_10MW混合塔架风致疲劳性能分析.md");
+ const appPath=path.join(root,"appendices","APPENDIX_A_ESM_EONLY_METHODS_RESULTS_20261110.md");
+ const ch4=fs.readFileSync(ch4Path,"utf8"),app=fs.readFileSync(appPath,"utf8");
+ if(sha(ch4)!=="64292203736bfa5039ae76cda2a67e059afda7d011bf0fdd9264232758bef364"||sha(app)!=="94d3f5b2268d09ca82c70a295c5493d725fce22454887bd4e8d60c2e553389cf")throw Error("PATCH_SOURCE_SHA_MISMATCH");
+ for(const [p,h] of [
+ [path.join(root,"figures","FIG4_S10_RAINFLOW_EXPONENT_CROSSOVER_20261113.svg"),"4c5544c8e0a0181227978c344d0a75c313bd2c1934e5de07942006d342a15900"],
+ [path.join(root,"figures","FIG_S05_33PERIOD_SCALAR_MINIMAX_20261113.svg"),"11d47d347463987ad9e77933b69d4d13963b0f8231f66807cf72770f997d8964"],
+ [path.resolve(root,"../../experiments/T062/S10_RAINFLOW_EXPONENT_CONTROL_12ROW_20261113.csv"),"89fc40ce60e6af015b40e35853e5f6a4cc56d15f293bb2665c158dee47fef429"],
+ [path.resolve(root,"../../experiments/T079/real-records/S05_ESM_33PERIOD_SCALAR_MINIMAX_20261113.csv"),"999550c042357c9a596b169451588a7e321dba8a8209fa5cc87aa51a5a916c22"]]){
+  if(sha(fs.readFileSync(p))!==h)throw Error("PATCH_FIG_TABLE_SHA_MISMATCH:"+p);
+ }
+ const p0=ch4.indexOf("### 4.7.25 "),p1=ch4.indexOf("\n## 4.8 ",p0),a0=app.indexOf("### A.14 ");
+ if(p0<0||p1<0||a0<0)throw Error("PATCH_SECTION_BOUNDARY");
+ const section=ch4.slice(p0,p1).trim(),a14=app.slice(a0).trim().replace(/^### A[.]14 /,"## A.14 ");
+ const mother=fs.readFileSync(target,"utf8");
+ if(sha(mother)!==expected)throw Error("PATCH_ASSEMBLY_SHA_MISMATCH");
+ for(const [re,k] of [[/^### 4[.]7[.]25 /gm,"CH4"],[/^## A[.]14 /gm,"A14"],[/FIG4_S10_RAINFLOW_EXPONENT_CROSSOVER_20261113[.]svg/g,"FIG4"],[/FIG_S05_33PERIOD_SCALAR_MINIMAX_20261113[.]svg/g,"FIGA14"]])if((mother.match(re)||[]).length!==1)throw Error("PATCH_DUPLICATE:"+k);
+ let original=mother,ending="\n\n"+a14+"\n";
+ if(!original.endsWith(ending))throw Error("PATCH_A14_CONTENT_DRIFT");
+ original=original.slice(0,-ending.length)+"\n";
+ const insertion="\n"+section+"\n\n## 4.8 关键影响因素与不确定性";
+ if(!original.includes(insertion))throw Error("PATCH_CH4_CONTENT_DRIFT");
+ original=original.replace(insertion,"\n## 4.8 关键影响因素与不确定性");
+ const oldHeader="第三章、第四章§4.3.5b、§4.7.22—4.7.24及§4.8.4和第五章均按最新源文件SHA锁定；附录A.12—A.13以真实处理波谱复算和附加滤波敏感性来源锁单独附后，不改变六章主线。";
+ const newHeader="六章基础文本按既有SHA锁定；第四章§4.7.25及附录A.14按2026-11-13新增来源文件与科研图表SHA单独锁定。附录A.12—A.13沿用既有处理波谱与滤波敏感性来源，不改变六章主线。";
+ if(!original.includes(newHeader))throw Error("PATCH_HEADER_DRIFT");
+ original=original.replace(newHeader,oldHeader);
+ const k=original.indexOf("| 4.7.25（增补） |"),z=original.indexOf("\n---\n\n# 第一章 绪论",k);
+ if(k<1||z<0||original[k-1]!=="\n")throw Error("PATCH_PROVENANCE_DRIFT");
+ const block=original.slice(k,z);
+ if(!block.includes("64292203736bfa5039ae76cda2a67e059afda7d011bf0fdd9264232758bef364")||!block.includes("94d3f5b2268d09ca82c70a295c5493d725fce22454887bd4e8d60c2e553389cf"))throw Error("PATCH_PROVENANCE_IDENTITY");
+ original=original.slice(0,k-1)+original.slice(z);
+ if(sha(original)!==pinned)throw Error("PINNED_SIX_CHAPTER_BASE_DRIFT");
+ console.log("PATCH_ASSEMBLY_PASS",expected,"PINNED_BASE_PASS",pinned,"CH4_A14_SOURCE_AND_FIGURES_PASS");
+ process.exit(0);
+}
+
 const inputs=meta.map(m=>{const s=fs.readFileSync(path.join(root,"chapters",m.name),"utf8");const blob=crypto.createHash("sha1").update(Buffer.from("blob "+Buffer.byteLength(s)+"\0")).update(s).digest("hex");const digest=crypto.createHash("sha256").update(s).digest("hex");if(blob!==m.blob||digest!==m.sha256)throw Error("SOURCE_SHA_MISMATCH: "+m.name);return s;});
 const seismicSource=path.join(root,"appendices","APPENDIX_A_ESM_EONLY_METHODS_RESULTS_20261110.md");
 const rotdFigure=path.join(root,"figures","FIG_A12_REAL_ESM_ROTD46_ANGLE_GRID_20261111.svg");
