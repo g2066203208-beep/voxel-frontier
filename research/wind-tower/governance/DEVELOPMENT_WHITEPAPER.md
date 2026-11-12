@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.18.1**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.19.0**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -182,3 +182,5 @@
 | 2026-11-11 09时 | **v0.9.8 PATCH** | **S10三风速箱独立性边界**：18行历史真实雨流交互按3风速箱聚类，箱均值4.08598685/3.46589604/3.71532295百分点；留一箱3.59060950–3.90065490；条件独立符号翻转8态，单侧p=0.125，拒绝将18/18正差称为18个独立显著实验。新增可运行Python与英文期刊推断限制正文。 | 独立Python数值计算完成，提交版Python CLI/拒绝测试NOT_RUN；箱级可交换性未证，p仅敏感性；材料Miner/WE/物理HOLD，12阶段0/12、DLC1.2 0/126。 | [源18行表](../experiments/T062/S10_TURBULENCE_CHANNEL_INTERACTION_18ROW_20261111.csv)；[程序](../experiments/T062/s10_windbin_cluster_signflip.py)；[期刊正文](../manuscript/journal-wind-fatigue-results.md)；科研commit 983cfb8、d895a9b；过程commit 486e318；Git History。 |
 
 | 2026-11-12 16时 | **v0.18.0 MINOR** | S06真实NTM六seed频带反力的924精确置换与46656成对重抽样：My平均反力比0.553793、频带RMS比1.340687，跨seed RMS全包络重叠。 | V8源级真实计算及4拒绝PASS；原生Node CLI/OUTB NOT_RUN，统计配对假设未证；0/12晋级0/12。 | [程序](../experiments/T062/s06_ntm18_exact_seed_inference.cjs) SHA256 `c906390e8235d4214a7b208fe02035be698dc59080c4e5b619173e9c119971b4`；[6行表](../experiments/T062/S06_NTM18_SPECTRAL_SEED_INFERENCE_6ROW_20261112.csv) SHA256 `8b0c2040e7e3165f3917212a0ce7bcd72616edc7220bb9c90581bbc19881da16`；[图](../manuscript/final-thesis/figures/FIG3_S06_SPECTRAL_SEED_INFERENCE_20261112.svg)；[Ch3§3.7.24](../manuscript/final-thesis/chapters/03_场址风环境与整机随机风控制载荷.md)；[期刊§4.19](../manuscript/journal-wind-fatigue-results.md)；PR#42 Git History。 |
+
+| 2026-11-12 18时 | **v0.19.0 MINOR** | **S05真实ESM 33周期对数周期谱形拟合**：RotD50/100最优s=1.149012/1.000494、精确log-RMSE=0.477286/0.491701；新增源锁Node、33行表、SVG及T079方法正文。 | SOURCE SHA256 `ea642b37ca39bde6c1e5b48168e50650adadb00311ca9f24a11102fea82d407c`；V8真实计算及积分恒等式PASS，原生Node CLI NOT_RUN；场址/授权标准/结构物理HOLD，0/12晋级0/12，DLC1.2 0/126。 | [程序](../experiments/T079/s05_esm_logperiod_target_fit.cjs) SHA256 `d72299f02309ed02abf9d42b4f5bc674405991e09f987cbcd93114386ecc849c`；[表](../experiments/T079/real-records/S05_ESM_LOGPERIOD_TARGET_33ROW_20261112.csv) SHA256 `801aa0ba27973b39d42f164d06aaab700e28c62ff1601ea2c6a2ae6129e38a2f`；[图](../manuscript/final-thesis/figures/FIG_S05_LOGPERIOD_TARGET_FIT_20261112.svg) SHA256 `b2c533830b220e2562df106a287262755aee2bded30375523cc46ed63a9c6209`；PR#42 Git History |
