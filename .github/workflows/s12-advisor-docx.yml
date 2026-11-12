@@ -33,8 +33,8 @@ jobs:
         run: |
           python research/wind-tower/manuscript/final-thesis/assemble/s12_build_advisor_docx.py \
             --source research/wind-tower/manuscript/final-thesis/assemble/THESIS_SIX_CHAPTER_REVIEW_20261102.md \
-            --expected-sha256 12a89d73b79ba5edd9e53f0fc35f53d825559b70a76874d06c20bb2738b41cfb \
-            --output s12_advisor/DTU10MW_158m_six_chapter_advisor_20261111.docx \
+            --expected-sha256 663dcc8fd53dcfa48a38104427ad4a50f3b3cc5ba473103b29bcff01d514c44a \
+            --output s12_advisor/DTU10MW_158m_six_chapter_advisor_20261113.docx \
             --receipt s12_advisor/DOCX_SOURCE_AND_FIGURE_RECEIPT.json
       - name: Refuse source SHA mismatch (negative test)
         run: |
@@ -49,14 +49,26 @@ jobs:
         run: |
           SOURCE_DOCX_SHA=$(python -c "import json; print(json.load(open('s12_advisor/DOCX_SOURCE_AND_FIGURE_RECEIPT.json'))['output_sha256'])")
           python research/wind-tower/manuscript/final-thesis/assemble/s12_refine_advisor_docx.py \
-            s12_advisor/DTU10MW_158m_six_chapter_advisor_20261111.docx \
-            s12_advisor/DTU10MW_158m_six_chapter_advisor_REFINED_20261111.docx \
+            s12_advisor/DTU10MW_158m_six_chapter_advisor_20261113.docx \
+            s12_advisor/DTU10MW_158m_six_chapter_advisor_REFINED_20261113.docx \
             --expected-sha256 "$SOURCE_DOCX_SHA" \
             --receipt s12_advisor/REFINED_SOURCE_AND_LAYOUT_RECEIPT.json
           python research/wind-tower/manuscript/final-thesis/assemble/s12_refine_advisor_docx.py --self-test
+      - name: Verify inserted science sections and embedded figures in refined Word
+        run: |
+          python - <<'PY'
+          from docx import Document
+          p='s12_advisor/DTU10MW_158m_six_chapter_advisor_REFINED_20261113.docx'
+          d=Document(p)
+          s='\\n'.join(x.text for x in d.paragraphs)
+          for token in ('4.7.25', 'A.14', '4.211770411285', '69.977637%', '48,070'):
+              assert token in s, 'MISSING_WORD_EVIDENCE:'+token
+          assert len(d.inline_shapes)>=40, 'WORD_FIGURES_MISSING'
+          print('WORD_CONTENT_PASS',len(d.paragraphs),len(d.inline_shapes))
+          PY
       - uses: actions/upload-artifact@v4
         with:
-          name: S12_158m_six_chapter_advisor_docx_REFINED_20261111
+          name: S12_158m_six_chapter_advisor_docx_REFINED_20261113
           path: s12_advisor/
           retention-days: 30
           if-no-files-found: error

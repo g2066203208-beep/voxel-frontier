@@ -96,7 +96,7 @@ const seismicSource=path.join(root,"appendices","APPENDIX_A_ESM_EONLY_METHODS_RE
 const rotdFigure=path.join(root,"figures","FIG_A12_REAL_ESM_ROTD46_ANGLE_GRID_20261111.svg");
 const ch4Figure=path.join(root,"figures","FIG4_S12_ETM4_DUAL_QOI_TWO_SITE_20261111.svg");
 const rotdTable=path.resolve(root,"../../experiments/T079/real-records/S05_ESM_ROTD46_RECONCILED_20261111.csv");
-for(const [p,expected] of [[seismicSource,"e68d7784792a8e72552f76e2df1825997320493c4962cf23b96f379d25d87507"],[rotdFigure,"420e5b5ce359c0dd18743c25498ce8793b6ed3fd49c179828f5296a22159b5dc"],[ch4Figure,"5e869659ef6e76e68195884e3a90516c3241b2c24d8dff4c64c8ad595d9504f7"],[rotdTable,"ea642b37ca39bde6c1e5b48168e50650adadb00311ca9f24a11102fea82d407c"]]){
+for(const [p,expected] of [[seismicSource,"94d3f5b2268d09ca82c70a295c5493d725fce22454887bd4e8d60c2e553389cf"],[rotdFigure,"420e5b5ce359c0dd18743c25498ce8793b6ed3fd49c179828f5296a22159b5dc"],[ch4Figure,"5e869659ef6e76e68195884e3a90516c3241b2c24d8dff4c64c8ad595d9504f7"],[rotdTable,"ea642b37ca39bde6c1e5b48168e50650adadb00311ca9f24a11102fea82d407c"]]){
  const actual=crypto.createHash("sha256").update(fs.readFileSync(p)).digest("hex");
  if(actual!==expected)throw Error("S12_SOURCE_SHA_MISMATCH: "+p);
 }
@@ -125,7 +125,26 @@ if(a13TableStart<0||a13TableEnd<0)throw Error("S12_A13_TABLE_FORMAT_DRIFT");
 appendixA13=appendixA13.slice(0,a13TableStart)+"**表A-13的四个代表周期数值（完整46周期见源CSV；谱单位m/s²，变化率单位%）：**\n- T=4.000000 s：MP谱0.046772606692；额外0.06 Hz变化−0.23405540%；额外0.08 Hz变化−0.62374574%。\n- T=6.230957762865 s：MP谱0.030613101198；额外0.06 Hz变化−0.08404561%；额外0.08 Hz变化−0.21317852%。\n- T=8.000000 s：MP谱0.017146320011；额外0.06 Hz变化−0.05935347%；额外0.08 Hz变化−2.63510218%。\n- T=9.346436644298 s：MP谱0.011049392089；额外0.06 Hz变化−1.25940955%；额外0.08 Hz变化−6.87751501%。"+appendixA13.slice(a13TableEnd);
 appendixA13="## A.13 已处理ESM双水平记录的长周期反应谱对额外高通滤波的敏感性（真实数值，2026-11-11）\n\n"+appendixA13;
 const outCore=appendActiveReferences(build(inputs,meta),inputs,fs.readFileSync(path.join(__dirname,"S12_ACTIVE_REFERENCES_20261110.md"),"utf8"),fs.readFileSync(path.resolve(__dirname,"../../../registry/literature_master.tsv"),"utf8"));
-const out=outCore.trimEnd()+"\n\n---\n\n"+"# 附录A（导师阅读补充）官方ESM真实双水平处理波的46周期谱复算\n\n> 本附录为S05真实处理波的独立来源级数值核对，不是场址设计地震、结构抗震验算或同态风震结果；不改变六章研究主线。\n\n"+appendixA12+"\n\n"+appendixA13+"\n";
+const assembled=outCore.trimEnd()+"\n\n---\n\n"+"# 附录A（导师阅读补充）官方ESM真实双水平处理波的46周期谱复算\n\n> 本附录为S05真实处理波的独立来源级数值核对，不是场址设计地震、结构抗震验算或同态风震结果；不改变六章研究主线。\n\n"+appendixA12+"\n\n"+appendixA13+"\n";
+
+const ch4LatestSource=path.join(root,"chapters","04_10MW混合塔架风致疲劳性能分析.md");
+const newFigure4=path.join(root,"figures","FIG4_S10_RAINFLOW_EXPONENT_CROSSOVER_20261113.svg");
+const newFigureA14=path.join(root,"figures","FIG_S05_33PERIOD_SCALAR_MINIMAX_20261113.svg");
+const newTable4=path.resolve(root,"../../experiments/T062/S10_RAINFLOW_EXPONENT_CONTROL_12ROW_20261113.csv");
+const newTableA14=path.resolve(root,"../../experiments/T079/real-records/S05_ESM_33PERIOD_SCALAR_MINIMAX_20261113.csv");
+for(const [p,expected] of [[ch4LatestSource,"64292203736bfa5039ae76cda2a67e059afda7d011bf0fdd9264232758bef364"],[newFigure4,"4c5544c8e0a0181227978c344d0a75c313bd2c1934e5de07942006d342a15900"],[newFigureA14,"11d47d347463987ad9e77933b69d4d13963b0f8231f66807cf72770f997d8964"],[newTable4,"89fc40ce60e6af015b40e35853e5f6a4cc56d15f293bb2665c158dee47fef429"],[newTableA14,"999550c042357c9a596b169451588a7e321dba8a8209fa5cc87aa51a5a916c22"]]){
+ if(crypto.createHash("sha256").update(fs.readFileSync(p)).digest("hex")!==expected)throw Error("S12_NEW_SOURCE_SHA_MISMATCH:"+p);
+}
+const newCh4=fs.readFileSync(ch4LatestSource,"utf8");
+const s0=newCh4.indexOf("### 4.7.25 "),s1=newCh4.indexOf("\n## 4.8 ",s0),a0=seismicText.indexOf("### A.14 ");
+if(s0<0||s1<0||a0<0)throw Error("S12_NEW_SECTION_MISSING");
+const section=newCh4.slice(s0,s1).trim(),a14=seismicText.slice(a0).trim().replace(/^### A[.]14 /,"## A.14 ");
+if(!section.includes("48,070")||!section.includes("4.211770411285")||!a14.includes("69.977637%"))throw Error("S12_NEW_EVIDENCE_MISSING");
+let out=assembled.replace("\n## 4.8 关键影响因素与不确定性","\n"+section+"\n\n## 4.8 关键影响因素与不确定性").trimEnd()+"\n\n"+a14+"\n";
+out=out.replace("第三章、第四章§4.3.5b、§4.7.22—4.7.24及§4.8.4和第五章均按最新源文件SHA锁定；附录A.12—A.13以真实处理波谱复算和附加滤波敏感性来源锁单独附后，不改变六章主线。","六章基础文本按既有SHA锁定；第四章§4.7.25及附录A.14按2026-11-13新增来源文件与科研图表SHA单独锁定。附录A.12—A.13沿用既有处理波谱与滤波敏感性来源，不改变六章主线。");
+out=out.replace("\n---\n\n# 第一章 绪论","\n| 4.7.25（增补） | `04_10MW混合塔架风致疲劳性能分析.md` | `0ee7dd4b1c94a1578d18bf0fd0d5908196a9b7fd` | `64292203736bfa5039ae76cda2a67e059afda7d011bf0fdd9264232758bef364` |\n| A.14（增补） | `APPENDIX_A_ESM_EONLY_METHODS_RESULTS_20261110.md` | `8c66057864d0903b8e4ce2dbb000bdfa63e9a5b7` | `94d3f5b2268d09ca82c70a295c5493d725fce22454887bd4e8d60c2e553389cf` |\n"+"\n---\n\n# 第一章 绪论");
+for(const [re,tag] of [[/^### 4[.]7[.]25 /gm,"S10_CH4"],[/^## A[.]14 /gm,"S05_A14"],[/FIG4_S10_RAINFLOW_EXPONENT_CROSSOVER_20261113[.]svg/g,"S10_FIG"],[/FIG_S05_33PERIOD_SCALAR_MINIMAX_20261113[.]svg/g,"S05_FIG"]])if((out.match(re)||[]).length!==1)throw Error("S12_DUPLICATE_OR_MISSING:"+tag);
+
 assertChapterIntegration(out);
 if(process.argv.includes("--write")){fs.writeFileSync(target,out,"utf8");console.log("WROTE",crypto.createHash("sha256").update(out).digest("hex"));}
 else if(process.argv.includes("--check")){if(fs.readFileSync(target,"utf8")!==out)throw Error("ASSEMBLY_DRIFT");console.log("ASSEMBLY_PASS",crypto.createHash("sha256").update(out).digest("hex"));}
