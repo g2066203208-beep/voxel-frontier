@@ -84,7 +84,7 @@ function test(){
  check(Math.abs(corr(a.map(x=>x.pitch),a.map(x=>x.rms))-1)<1e-12,"CORR_ORACLE");
  check(loo(a,"pitch").model_rmse<1e-12,"LOO_ORACLE");
  check(exactPerm(a.map(x=>x.pitch),a.map(x=>x.rms)).extreme===2,"PERM_ORACLE");
- for(const f of [()=>number("NaN"),()=>parseCsv("a,a\\n1,2"),()=>corr([1,1,1],[1,2,3])]){
+ for(const f of [()=>number("NaN"),()=>parseCsv("a,a\n1,2"),()=>corr([1,1,1],[1,2,3])]){
   let rejected=false;try{f();}catch(e){rejected=true;}check(rejected,"NEGATIVE_TEST_FAILED");
  }
 }
