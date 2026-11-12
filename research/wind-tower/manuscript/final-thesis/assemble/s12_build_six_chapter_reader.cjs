@@ -2,7 +2,7 @@
 "use strict";
 // SHA-locked six-chapter reading assembly; no solver or physical verification.
 const fs=require("node:fs"),path=require("node:path"),crypto=require("node:crypto");
-const meta=[{"name":"01_绪论.md","blob":"713325657815f1c65c7b99c50a186ed3270d34b0","sha256":"2c0355a022bad10af61cebc3d1d9b5bd5b218400647d4d3cac5ac23de79114fe"},{"name":"02_研究对象_精细有限元模型与分层验证.md","blob":"cffacbbb75e9bcd0673d6b6dc16124ef63bea691","sha256":"3dbcc0d547c9215b11180999ff8655bdd0e2a92ef621e21bc2b90150c8ab028a"},{"name":"03_场址风环境与整机随机风控制载荷.md","blob":"bec7206f102d17062d7c30531e1ea81adcce209b","sha256":"3ada3e478fb669d7af840b5abc3d992e9ce74ed2f41ac1700862f6f5e52098c3"},{"name":"04_10MW混合塔架风致疲劳性能分析.md","blob":"957280163be353ad797c85afbe775eff220bc928","sha256":"b979ca36adc966eb2185f451dc16323d863a59f04a347d9f7b21dc52c0214a71"},{"name":"05_疲劳控制参数敏感性与结构优化.md","blob":"c296580b01be14905734c6233a96585419aef64f","sha256":"b46b571b886a24ad54f7bc736eb2396acdd1695fa39029fdf311e43b700bd6eb"},{"name":"06_结论与展望.md","blob":"627d4c6fb37a8016d83b52613311c43c1756fae4","sha256":"7a482aadad1717c528bb0dc3fcf72312915e0162eea271af92f0735ccf2cfd3e"}];
+const meta=[{"name":"01_绪论.md","blob":"713325657815f1c65c7b99c50a186ed3270d34b0","sha256":"2c0355a022bad10af61cebc3d1d9b5bd5b218400647d4d3cac5ac23de79114fe"},{"name":"02_研究对象_精细有限元模型与分层验证.md","blob":"cffacbbb75e9bcd0673d6b6dc16124ef63bea691","sha256":"3dbcc0d547c9215b11180999ff8655bdd0e2a92ef621e21bc2b90150c8ab028a"},{"name":"03_场址风环境与整机随机风控制载荷.md","blob":"bec7206f102d17062d7c30531e1ea81adcce209b","sha256":"3ada3e478fb669d7af840b5abc3d992e9ce74ed2f41ac1700862f6f5e52098c3"},{"name":"04_10MW混合塔架风致疲劳性能分析.md","blob":"957280163be353ad797c85afbe775eff220bc928","sha256":"b979ca36adc966eb2185f451dc16323d863a59f04a347d9f7b21dc52c0214a71"},{"name":"05_疲劳控制参数敏感性与结构优化.md","blob":"125ba4f9a548a0510568bbc98f71621bdad6053e","sha256":"b20d79d9599808cb823f240ae7c3bcf52341eb6fe376d50d09dde7e34b4719d8"},{"name":"06_结论与展望.md","blob":"627d4c6fb37a8016d83b52613311c43c1756fae4","sha256":"7a482aadad1717c528bb0dc3fcf72312915e0162eea271af92f0735ccf2cfd3e"}];
 function build(raws,meta){
 function between(s,a,b,r){let i=s.indexOf(a),j=s.indexOf(b,i+a.length);if(i<0||j<0)throw Error("missing "+a);return s.slice(0,i+a.length)+"\n\n"+r+"\n\n"+s.slice(j)}
 function insert(s,m,f){let i=s.indexOf(m);if(i<0)throw Error("missing "+m);return s.slice(0,i)+f+"\n\n"+s.slice(i)}
@@ -48,6 +48,9 @@ function appendActiveReferences(s,chapters,bib,registry){
 }
 function assertChapterIntegration(out){
  const n=(re)=>(out.match(re)||[]).length;
+ if(n(/^### 5[.]3[.]4 /gm)!==1)throw Error("CH5_MINIMAX_SECTION_MISSING_OR_DUPLICATE");
+ if(n(/FIG5_S11_VOLUME_NEUTRAL_MINIMAX_20261112[.]svg/g)!==1||!out.includes("![图5-S11-04"))throw Error("CH5_MINIMAX_FIGURE_NOT_EMBEDDED");
+ for(const t of ["675.090938","50.987302","−4.052792%","6.464123","fff6dfcc6bc094353ebee042392033e8df47e7fb792ccc1812c0962c9c43f800"])if(!out.includes(t))throw Error("CH5_MINIMAX_EVIDENCE_LOST:"+t);
  if(n(/FIG3_S10_NTM18_STRATIFIED_ALLOC_20261112[.]svg/g)!==1)throw Error("CH3_ALLOCATION_FIGURE_NOT_EMBEDDED");
  if(n(/^### 3[.]7[.]18 /gm)!==1)throw Error("CH3_3718_MISSING_OR_DUPLICATE");
  if(n(/^### 3[.]7[.]19 /gm)!==1||n(/^### 3[.]7[.]20 /gm)!==1||n(/^### 3[.]7[.]21 /gm)!==1)throw Error("CH3_3719_3720_MISSING_OR_DUPLICATE");
