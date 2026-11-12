@@ -162,6 +162,9 @@ For each demeaned series, a one-sided discrete Fourier variance spectrum is form
 
 A separate, non-causal test combines the existing 18-case operating-state summaries with the independently archived tower-base My 0.05–0.25 Hz spectral RMS for the same historical NTM case names. The response is a **section-reaction spectral statistic**, not an aerodynamic force, material stress or Miner damage. For each of three wind-speed bins and each candidate predictor (600 s mean blade pitch or generator power), we fit a univariate within-bin slope using five cases and predict the sixth. The same five cases also define the no-predictor bin-mean baseline. The ratio of leave-one-seed-out (LOO) RMSEs is reported; values greater than one indicate degradation. For each bin and predictor, all 6!=720 permutations of the six observed response labels give an exact two-sided finite-archive absolute-correlation tail fraction. The six permutation tests are descriptive and do not establish independent sampling, controller causality, or generalization to unseen wind seeds. Source identity, complete 18×600 s pairing and 36 held-out predictions are checked by a source-locked executable and malformed-source refusals.
 
+
+**Predictive-loss-aligned exact permutation check.** The original exact correlation test does not calibrate the selected *LOO prediction loss*. We therefore fix the six predictor values and enumerate all 720 permutations of the six observed My band-RMS responses within each speed bin. Every permutation refits all six five-train/one-test linear regressions and the five-train wind-bin mean baselines. With \(R=\mathrm{RMSE}_{\rm linear,LOO}/\mathrm{RMSE}_{\rm binmean,LOO}\), report \(p_{\rm gain}=\#\{R_\pi\le R_{\rm obs}\}/720\) and \(p_{\rm harm}=\#\{R_\pi\ge R_{\rm obs}\}/720\), including the observed arrangement. Selecting the favorable tail after seeing the sign is **not** a preregistered one-sided hypothesis test. The permutation 5th/50th/95th order statistics are sorted indices 35/359/683 (zero-based). Source SHA256, all case identities, time grid, operating heuristic and finite inputs are checked before any calculation. The exchangeability assumption remains conditional and unverified.
+
 ## 3. Results
 
 ### 3.1. Paired rainflow ranking and controlling-case changes
@@ -324,6 +327,28 @@ The historical 11.4 m s⁻¹ pitch proxy increases the held-out prediction RMSE 
 
 **Figure 3-S07 (source-level diagnostic):** [LOO error ratios for pitch and generator-power predictors](final-thesis/figures/FIG3_S07_NTM18_OPERATING_PROXY_SPECTRAL_LOO_20261112.svg). The 18 original case identities are inherited from the OpenFAST OUTB receipts; the spectral 36-row table SHA256 is `c3de99d45c70675f6a95a767e73dcfc50d57d07b4f33438ee705690b694ae622` and the operating-state 18-row table SHA256 is `0f577f3197870a1350c740c2e0c118073fb9b6f796b4c471765c6f616d5a1b04`. The [executable](../experiments/T062/s07_ntm18_operating_proxy_spectral_loo.cjs) SHA256 is `a88a4835e867e77c7de008e06c6ab6c88da861d715190b26d39483ed79621e20`; [three-row output](../experiments/T062/S07_NTM18_OPERATING_PROXY_SPECTRAL_LOO_3BIN_20261112.csv) SHA256 is `1e78e8a796887b86bd57865efd8f0de082bfeb15be8aa3525549409881eedad3`. The committed core module was executed in V8 against the two original derived tables with exact output-byte agreement; native Node CLI execution remains unverified.
 
+
+### 3.5.1. Exact predictive-loss permutation calibration
+
+The earlier exact correlation tail does not test the actual LOO RMSE ratio. We recalculated all six held-out regressions and their wind-bin-mean baselines for each of 720 response-label permutations, across three wind-speed bins and two predictors (**4,320 six-fold refits; 25,920 individual fold predictions**). This is a new loss-aligned negative control on the *same 18 historical NTM cases*, not independent-seed validation or a new wind simulation.
+
+**Table 7. Exact finite-archive LOO predictive-loss permutation tails.** Ratios below one favor the univariate predictor. Both tails are descriptive and the direction was not selected before observing the data.
+
+| Speed (m/s) | Predictor | Observed LOO ratio | Gain tail | Harm tail | Null 5–95% range |
+|---|---|---:|---:|---:|---:|
+| 9.344 | pitch | 0.9811 | 0.1792 (129/720) | 0.8222 (592/720) | 0.769–1.413 |
+| 9.344 | power | 1.0373 | 0.2708 (195/720) | 0.7306 (526/720) | 0.684–1.611 |
+| 11.400 | pitch | 1.8122 | 0.8903 (641/720) | 0.1111 (80/720) | 0.727–1.929 |
+| 11.400 | power | 1.1048 | 0.3333 (240/720) | 0.6681 (481/720) | 0.639–1.428 |
+| 19.202 | pitch | 1.3356 | 0.9028 (650/720) | 0.0986 (71/720) | 0.858–1.454 |
+| 19.202 | power | 0.8529 | 0.1000 (72/720) | 0.9014 (649/720) | 0.740–1.522 |
+
+The largest observed gain is the 19.202 m/s power proxy (ratio 0.8529), but **72/720 = 0.1000** permutations perform at least as well; the low-speed pitch gain (0.9811) has a gain tail of 129/720 = 0.1792. The largest pitch-model deterioration at 11.4 m/s (ratio 1.8122) is matched or exceeded by 80/720 = 0.1111 permutations, and the 19.202 m/s pitch deterioration by 71/720 = 0.0986. No observed gain or deterioration lies in an extreme 5% tail even before multiple-comparison adjustment. The historical six-seed loss changes remain genuine retrospective comparisons but are not strong evidence of reproducible predictive skill or harm.
+
+![Fig. 7: Predictive-loss permutation envelopes](final-thesis/figures/FIG7_S12_NTM18_PREDICTIVE_LOO_PERMUTATION_20261112.svg)
+
+**Fig. 7.** Observed LOO RMSE ratio (colored dot) and exact response-permutation 5–95% envelope (grey), with equal-error reference at one. The chart is a finite-archive statistical sensitivity, not an aerodynamic or material fatigue result.
+
 ## 4. Discussion
 
 ### 4.1. Three non-substitutable failure mechanisms
@@ -386,6 +411,9 @@ The operational consequence is a staged test rather than a fatigue-life estimate
 
 The added case-matched spectral test supplies a different falsifier from the earlier load-DEL proxy tests: even with an identical 600 s case identifier and a consistent wind-speed bin, a control-summary predictor can increase held-out error for a frequency-selective tower-base response. A bin-specific association is neither a transfer function nor evidence of causality, especially when rotor dynamics, turbulent excitation and the 0.05–0.25 Hz band are jointly evolving. The three six-seed bins cannot identify a universal control-to-structure mapping. A prospective study would need synchronous aerodynamic forcing, structural inertia, controller version and independently held-out wind histories before treating pitch or power as a physical W-side input. No claim of a new wind–earthquake or prestress mechanism is made; the published 2026 hybrid-tower wind–earthquake and PT/seismic studies [6,7] remain prior art for those phenomena.
 
+
+The §3.5.1 loss-aligned permutation calculation resolves an inferential mismatch: an exact within-bin *correlation* tail is not automatically a tail test of the *LOO prediction error*. Under 720 response-label rearrangements per bin/predictor, the smallest observed descriptive tail is 71/720 (0.0986). The reported 81.2% and 33.6% pitch-model error deteriorations are therefore real comparisons of these six cases, but not unusually extreme under the stated 5% permutation reference. Likewise the 14.7% high-speed power-model gain is matched or exceeded by 72/720 permutations (0.1000). Overlapping LOO folds, six comparisons and unverified response-label exchangeability preclude population, causal or generalization claims; a prospectively frozen predictor tested on independently generated seeds remains necessary.
+
 ## 5. Conclusions
 
 In 36 archived 600 s OpenFAST screening cases for a 158 m concrete–steel hybrid tower, correcting a historical rainflow closure error changes 102/630 My and 12/630 Mx pairwise load-DEL rankings and the My controlling realization. A separate reconciliation of 18 NTM cases shows that the 100,000- versus 600-reference-cycle DEL convention changes amplitudes by the expected factor 3.593041; this is a definition change, not a new load response. Agreement of scalar DEL and cycle count does not establish equality of cycle multisets.
@@ -401,6 +429,9 @@ The analysis uses previously archived derived tables and programs in `research/w
 The source files were obtained from the connected research repository. The earlier original OUTB byte-level and rainflow 3.2.0 comparisons are **inherited receipts**; this consolidation independently recomputed the R1 and R2 combinatorics from the 72-row derived source but did not rerun original OUTB decoding, ERA5 hourly processing, native OpenFAST or structural solvers. The GitHub connector supplies blob SHA identifiers; these are not the SHA256 hashes above. Formal design-standard clauses in IEC 61400-1/6 [8,9] have not been independently read under license for this manuscript. A submission version will require a journal-specific bibliography/figure audit and clear access conditions for any nonpublic original binaries.
 
 
+
+
+The [new source-locked exact predictive-loss executable](../experiments/T062/s12_ntm18_predictive_loo_permutation.cjs) (SHA256 `669d383861aaeee21dbeea902972b6e3495dfff1a0f173d7d53bc52a08d1f6d3`) generates [six-row Table 7 CSV](../experiments/T062/S12_NTM18_PREDICTIVE_LOO_PERMUTATION_6ROW_20261112.csv) (SHA256 `edc17c35f134e2968e13779b4e49220783f509fb25db5b40ff52519dbfa87584`) and [Fig. 7 SVG](final-thesis/figures/FIG7_S12_NTM18_PREDICTIVE_LOO_PERMUTATION_20261112.svg) (SHA256 `90cb4e9eaa17d45aaa94c5f94df8426c684aca6881aa5b1b84b5de34b2e6c9d9`). Its inputs are the existing 36-row spectral and 18-row operating-state tables (SHA256 `c3de99d45c70675f6a95a767e73dcfc50d57d07b4f33438ee705690b694ae622` and `0f577f3197870a1350c740c2e0c118073fb9b6f796b4c471765c6f616d5a1b04`). The same core was executed against the actual derived source bytes in V8 with exact 6×720 permutations, a linear known-solution test, affine-invariance tests and malformed-input refusals. **Native Node CLI and original OUTB re-decoding were not performed in this transaction.**
 
 ## References
 
