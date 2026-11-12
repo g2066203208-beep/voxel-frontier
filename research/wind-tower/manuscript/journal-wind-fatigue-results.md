@@ -334,11 +334,11 @@ The §3.3.1 result is a **fourth, auxiliary load-cycle identifiability diagnosti
 
 Crucially, tower-base moment-cycle means are **not local material mean stresses**. A defensible material fatigue analysis still needs synchronized local stress-cycle ranges, means and counts; gravity/prestress state and mean-stress assumptions; constituent-specific S–N or other fatigue laws; verified operating-state probabilities; and independent uncertainty tests. The present diagnostic cannot provide Goodman factors, Miner damage, fatigue-life improvements or seismic optimization constraints.
 
-## 4.7. A falsifiable decision rule for progressing beyond load screening
+### 4.7. A falsifiable decision rule for progressing beyond load screening
 
 The three primary results are **not three estimates of the same uncertainty**. Their observational units, logical conclusions and next experiments differ (Table 5). A change in the rank of the same 36 records (R1) is an algorithmic reproducibility failure; the fraction of overlapping subsets of six existing seeds (R2) is a finite-archive selection sensitivity; and the unbounded missing-bin fourth moment (R3) is an identification failure. Adding their percentages or interpreting them as independent confidence limits would be statistically invalid.
 
-**Table 5. Decision-level evidence and prospective rejection conditions.** The numbers are inherited from source-locked T062 data; this table synthesizes existing results rather than reporting a new wind simulation.
+**Table 6. Decision-level evidence and prospective rejection conditions.** The numbers are inherited from source-locked T062 data; this table synthesizes existing results rather than reporting a new wind simulation.
 
 | Gate | Actual evidence unit and result | Permissible conclusion | Evidence that could reject a stronger claim |
 |---|---|---|---|
