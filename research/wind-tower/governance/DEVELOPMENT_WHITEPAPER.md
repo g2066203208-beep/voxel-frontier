@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.17.1**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.18.0**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -179,3 +179,5 @@
 | 2026-11-11 09时 | **v0.9.7 PATCH** | **S10局部应力可辨识性反例**：四组解析双轴载荷同一边际Mx/My循环范围2，但合成局部应力范围4/2/0/2，m=4范围幂256/16/0/16；证实独立DEL无法唯一决定局部材料疲劳。新增 `experiments/T062/s10_biaxial_phase_identifiability.py`、`S10_BIAXIAL_PHASE_NONIDENTIFIABILITY_4ROW.csv`、`manuscript/journal-wind-fatigue-results.md`正文。 | **合成解析方法验证，不是风机实测、材料Miner或结构物理PASS**；本地同构Python 4正例/10拒绝已执行，GitHub源码原生CLI尚未执行；12阶段0/12，DLC1.2 0/126，WE HOLD。 | [程序](../experiments/T062/s10_biaxial_phase_identifiability.py)、[表](../experiments/T062/S10_BIAXIAL_PHASE_NONIDENTIFIABILITY_4ROW.csv)、[期刊正文](../manuscript/journal-wind-fatigue-results.md)；科研commit `d026912d`、`17516c7a`、`62e5bf0d`；Git History为准。 |
 
 | 2026-11-11 09时 | **v0.9.8 PATCH** | **S10三风速箱独立性边界**：18行历史真实雨流交互按3风速箱聚类，箱均值4.08598685/3.46589604/3.71532295百分点；留一箱3.59060950–3.90065490；条件独立符号翻转8态，单侧p=0.125，拒绝将18/18正差称为18个独立显著实验。新增可运行Python与英文期刊推断限制正文。 | 独立Python数值计算完成，提交版Python CLI/拒绝测试NOT_RUN；箱级可交换性未证，p仅敏感性；材料Miner/WE/物理HOLD，12阶段0/12、DLC1.2 0/126。 | [源18行表](../experiments/T062/S10_TURBULENCE_CHANNEL_INTERACTION_18ROW_20261111.csv)；[程序](../experiments/T062/s10_windbin_cluster_signflip.py)；[期刊正文](../manuscript/journal-wind-fatigue-results.md)；科研commit 983cfb8、d895a9b；过程commit 486e318；Git History。 |
+
+| 2026-11-12 16时 | **v0.18.0 MINOR** | S06真实NTM六seed频带反力的924精确置换与46656成对重抽样：My平均反力比0.553793、频带RMS比1.340687，跨seed RMS全包络重叠。 | V8源级真实计算及4拒绝PASS；原生Node CLI/OUTB NOT_RUN，统计配对假设未证；0/12晋级0/12。 | [程序](../experiments/T062/s06_ntm18_exact_seed_inference.cjs) SHA256 `c906390e8235d4214a7b208fe02035be698dc59080c4e5b619173e9c119971b4`；[6行表](../experiments/T062/S06_NTM18_SPECTRAL_SEED_INFERENCE_6ROW_20261112.csv) SHA256 `8b0c2040e7e3165f3917212a0ce7bcd72616edc7220bb9c90581bbc19881da16`；[图](../manuscript/final-thesis/figures/FIG3_S06_SPECTRAL_SEED_INFERENCE_20261112.svg)；[Ch3§3.7.24](../manuscript/final-thesis/chapters/03_场址风环境与整机随机风控制载荷.md)；[期刊§4.19](../manuscript/journal-wind-fatigue-results.md)；PR#42 Git History。 |
