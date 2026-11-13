@@ -1,3 +1,7 @@
+## 2026-11-13 23时｜S12真实章节阅读增补页源级持久化
+
+PR#42基线88997ab840836297ad9c56d9c08f95b5d09ff6f1；已读AGENTS、COMMAND_ROOM、白皮书、MASTER、STATUS、12阶段、T080及当前Ch4/六章阅读母稿。SOURCE：Ch4 Git blob `32474bd1b185c99829b180fd232f2be5e8db2c31`、阅读母稿 `57cb73f4432a7293fe56936761b7c68c91b05cf8`。RUN：直接读取真实GitHub章节，严格定位唯一§4.7.26（1943字符）与§4.10.1（1477字符），确认旧母稿不含对应三级标题，保存非冻结导师阅读增补页 `manuscript/final-thesis/assemble/S12_CH4_ADVISOR_READING_ADDENDUM_20261113.md`，源提交 `65663a9b95c6b43ebed1b8e4f165ba02dd917399`。未运行原生Python脚本、未生成DOCX或PDF，SHA256及Word视觉验收HOLD；不以GitHub提取替代原程序测试。REF/STANDARD/OFFICIAL/FIG/TAB无新，正文沿用原有真实历史表。白皮书v0.29.13，正式12阶段0/12晋级0/12，DLC1.2 0/126。下一唯一动作：用非冻结装配入口将已核实真实增补页制成导师可读DOCX并独立视觉核读，不动冻结母本、main、PR合并或禁止的Abaqus/CAE。
+
 ## 2026-11-13 22时｜S12非冻结导师阅读增补程序（SOURCE级，非Word成品）
 
 PR#42基线50cc81024cb9471cf9466742eff75936cb96092a Open/Draft；核对AGENTS、COMMAND_ROOM、白皮书、MASTER/STATUS、六章阅读母稿与SHA锁装配器。发现旧193页导师Word装配母稿及其锁定装配器均不含新增Ch4§4.7.26和§4.10.1，不能称新增正文已进入Word。新增非破坏式 `manuscript/final-thesis/assemble/s12_ch4_latest_addendum.py`：从当前Ch4严格提取两节，拒绝缺失/重复/已含节的旧母稿及源文件覆盖，输出带源SHA256的独立导师阅读增补页；含合成自测但原生Python与真实章源执行本轮NOT_RUN。SOURCE=当前Ch4与旧SHA锁六章阅读母稿；RUN=源码入库/远端回读，真实Word未生成；FIG/TAB=0新；REF/STANDARD/OFFICIAL=无新；12阶段0/12，正式DLC1.2 0/126，Word最新章节同步HOLD。不得更改冻结母稿、旧Word或伪称Word已更新；下一动作运行源级程序并实际生成/核读增补页，随后经允许的非冻结装配入口形成新版Word。禁区未动。
