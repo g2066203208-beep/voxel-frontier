@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.29.4**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.29.5**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -208,3 +208,5 @@
 | 2026-11-13 00时 | **v0.24.0 MINOR** | S11真实四ETM×31段毛截面DEL4的同速seed留出与完整风速箱留出：7折源级计算、Node/7行CSV/SVG及Ch5§5.4.9；高风LOCO合并0.118246 MPa vs LOBO 0.813993 MPa（6.884倍），非结构DOE。 | SOURCE SHA256 `16c9864ef7a344e5b97338c31ce26de6adb86c0f0f64942ef894fe9983926b2b`；程序 `180523aeca7dd6f5412753f0444dbe29efaa8ed8770c706087299e0310ea8e07`；CSV `76a04daca5d8db8f69eff463d2f4372162061e00d1afb53ee892082178daa081`；SVG `dbdc3799c4096a58998e05707df0ec5b7bac403fe7cea86b6102478b5b45fb74`；V8提交版正例/4拒绝/历史oracle PASS、原生Node CLI NOT_RUN；12阶段0/12晋级0/12、DLC1.2 0/126、WE/Miner/投稿HOLD。 | [Node](../experiments/T077/recovery/s11_etm4_case_vs_bin_holdout.cjs)、[CSV](../experiments/T077/recovery/S11_ETM4_CASE_VS_BIN_HOLDOUT_7ROW_20261113.csv)、[SVG](../manuscript/final-thesis/figures/FIG5_S11_ETM4_CASE_VS_BIN_HOLDOUT_20261113.svg)、[Ch5](../manuscript/final-thesis/chapters/05_疲劳控制参数敏感性与结构优化.md)、[T080](../experiments/T080/PROCESS_LOG.md)；Git History。 |
 
 | 2026-11-13 13时 | **v0.29.3 PATCH** | S12期刊§4.23新增六终点同时95%反证界与K=1/2/6的预注册样本量表；明确同seed Mx/My相关性及逐次窥探失效。 | 解析设计PASS，真实风机RUN无，12阶段0/12、DLC1.2 0/126。 | [期刊§4.23](../manuscript/journal-wind-fatigue-results.md)、[T080](../experiments/T080/PROCESS_LOG.md)；Git History。 |
+
+| 2026-11-13 15时 | **v0.29.5 PATCH** | S10真实ERA5 19–20m/s稀疏非零2/184080小时频率的Clopper–Pearson敏感性：假设独立小时，95%频率区间1.3157854e-6至3.9246986e-5，既有六seed M4固定下两通道贡献区间见原T062文档；独立小时不可信，不是设计置信界。 | SOURCE 31-bin SHA256 e4058620a36b23bb218103875d4dc5b0711fc45d418b23a2208c2fc9c16c9102；SciPy解析复算PASS，风机物理RUN无，12阶段0/12。 | [T062原研究文件](../experiments/T062/S10_ERA5_ZERO_TAIL_IDENTIFIABILITY_20261113.md)；[科研提交](https://github.com/g2066203208-beep/voxel-frontier/commit/4436bfa6b33c45a7446a930690aef81c120c71b2)。 |
