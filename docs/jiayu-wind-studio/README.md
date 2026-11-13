@@ -1,6 +1,6 @@
 # 湖北嘉鱼风机科研工作室｜学术报告体系
 
-版本 v1.0.0（2026-11-13） · 公开研究模板，**不是已经完成的工程场址报告**。
+版本 v1.0.1（2026-11-13） · 公开研究模板，**不是已经完成的工程场址报告**。
 
 统一入口：https://g2066203208-beep.github.io/voxel-frontier/thesis-studio/
 
@@ -33,3 +33,7 @@ https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-in
 - 抗震通用规范：https://www.mohurd.gov.cn/gongkai/zc/wjk/art/2021/art_17339_761174.html
 - ERA5：https://cds.climate.copernicus.eu/datasets/reanalysis-era5-single-levels?tab=overview
 - 地震记录：https://ngawest2.berkeley.edu/
+
+## 已核实的前期资料简报
+- [嘉鱼区域前期资料核验简报](./00-%E5%98%89%E9%B1%BC%E5%8C%BA%E5%9F%9F%E5%89%8D%E6%9C%9F%E8%B5%84%E6%96%99%E6%A0%B8%E9%AA%8C%E7%AE%80%E6%8A%A5.md)
+- [风震规范与数据源核验简报](./00-%E9%A3%8E%E9%9C%87%E8%A7%84%E8%8C%83%E4%B8%8E%E6%95%B0%E6%8D%AE%E6%BA%90%E6%A0%B8%E9%AA%8C%E7%AE%80%E6%8A%A5.md)

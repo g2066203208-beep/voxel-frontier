@@ -3,7 +3,7 @@
     "name": "湖北嘉鱼风机工作室",
     "english": "JIAYU WIND ENERGY RESEARCH STUDIO",
     "location": "湖北省 · 咸宁市 · 嘉鱼县",
-    "version": "v1.0.0",
+    "version": "v1.0.1",
     "release": "2026-11-13",
     "description": "风资源 · 混合塔架 · 地震工程 · 风震耦合 · 疲劳可靠度 · 论文研究",
     "note": "嘉鱼为区域研究线索；尚无证据证明研究原型对应嘉鱼某一实际机位。研究成果状态以活动分支指挥室为准。",
@@ -118,6 +118,11 @@
         "基础资料与缺项清单"
       ],
       "links": [
+        {
+          "label": "嘉鱼区域前期资料核验简报",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/main/docs/jiayu-wind-studio/00-嘉鱼区域前期资料核验简报.md",
+          "kind": "evidence"
+        },
         {
           "label": "场址调查模板",
           "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/main/docs/jiayu-wind-studio/02-嘉鱼场址调查报告.md",
@@ -513,6 +518,11 @@
       ],
       "links": [
         {
+          "label": "风震规范与数据源核验简报",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/main/docs/jiayu-wind-studio/00-风震规范与数据源核验简报.md",
+          "kind": "evidence"
+        },
+        {
           "label": "现有论文文献库",
           "url": "https://github.com/g2066203208-beep/voxel-frontier/tree/research/t080-seismic-integration-gates-20261022/research/wind-tower/references",
           "kind": "evidence"
@@ -601,7 +611,8 @@
       ],
       "outputs": [
         "研究报告模板库",
-        "导师会议纪要"
+        "导师会议纪要",
+        "区域背景与规范核验简报"
       ],
       "links": [
         {
@@ -862,6 +873,14 @@
     }
   ],
   "reports": [
+    {
+      "name": "嘉鱼区域前期调查证据简报",
+      "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/main/docs/jiayu-wind-studio/00-嘉鱼区域前期资料核验简报.md"
+    },
+    {
+      "name": "风震规范与数据源核验",
+      "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/main/docs/jiayu-wind-studio/00-风震规范与数据源核验简报.md"
+    },
     {
       "name": "开题与前期研究报告",
       "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/main/docs/jiayu-wind-studio/01-开题与前期研究报告.md"
