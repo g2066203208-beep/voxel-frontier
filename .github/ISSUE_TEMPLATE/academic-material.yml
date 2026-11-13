@@ -1,0 +1,53 @@
+name: 学术资料提交 / Research Material Submission
+description: 提交风机、嘉鱼场址、风资源、地震、标准或论文相关资料供维护者审核
+title: "[资料提交] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        提交内容会显示在公开仓库 Issue。请勿上传个人隐私、受限论文原件、未获授权的标准全文或机密数据。上传附件请在下方正文框拖入文件，审核后可纳入资料索引。
+  - type: input
+    id: material-title
+    attributes:
+      label: 资料名称 / Title
+      placeholder: 如：嘉鱼场址风资源调查报告
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: 学科领域 / Discipline
+      options:
+        - 前期调查与场址
+        - 风资源与风荷载
+        - 地震与风震联合
+        - 混塔结构与预应力
+        - 基础与SSI
+        - 疲劳与优化
+        - 文献规范与论文
+        - 其他
+    validations:
+      required: true
+  - type: textarea
+    id: provenance
+    attributes:
+      label: 来源与引用 / Provenance
+      description: 请说明作者、年份、DOI或来源网址、工程条件及授权信息
+      placeholder: 资料来源、版权许可、数据时间、坐标和单位...
+    validations:
+      required: true
+  - type: textarea
+    id: attachments
+    attributes:
+      label: 文件附件 / Attachments
+      description: 在此拖拽或选择文件，GitHub将其作为公开Issue附件上传；此步骤需要GitHub登录
+      placeholder: 拖拽 PDF、CSV、DOCX、ZIP 或图片至本输入区域
+    validations:
+      required: false
+  - type: checkboxes
+    id: consent
+    attributes:
+      label: 提交确认
+      options:
+        - label: 我确认有权公开分享此资料，且其中不含个人隐私与保密内容
+          required: true
