@@ -1,0 +1,74 @@
+--------TurbSim v2.00.* Input File------------------------
+DTU 10 MW RWT on 158 m hybrid tower; R7 formal Chapter 3 36-case production
+---------Runtime Options-----------------------------------
+False         Echo          - Echo input data to <RootName>.ech (flag)
+807875423         RandSeed1     - First random seed (-2147483648 to 2147483647)
+RanLux        RandSeed2     - Second random seed or alternative pRNG
+False         WrBHHTP       - Write hub-height binary turbulence parameters?
+True          WrFHHTP       - Write hub-height formatted turbulence parameters?
+False         WrADHH        - Write AeroDyn hub-height time series?
+True          WrADFF        - Write TurbSim/AeroDyn full-field .bts file?
+False         WrBLFF        - Write Bladed-style .wnd file?
+False         WrADTWR       - Write tower time series?
+False         WrFMTFF       - Write formatted full-field velocity components?
+False         WrACT         - Write coherent turbulence time steps?
+True          Clockwise     - Clockwise rotation looking downwind?
+1             ScaleIEC      - Scale IEC output to exact target at hub
+
+--------Turbine/Model Specifications-----------------------
+51            NumGrid_Z     - Vertical grid-point matrix dimension
+51            NumGrid_Y     - Horizontal grid-point matrix dimension
+0.025         TimeStep      - Time step [s]
+700.0         AnalysisTime  - Total generated time [s]
+"ALL"         UsableTime    - Usable length of output time series [s]
+161.368806    HubHt         - Hub height [m]
+200.0         GridHeight    - Grid height [m]
+200.0         GridWidth     - Grid width [m]
+0.0           VFlowAng      - Vertical mean flow angle [deg]
+0.0           HFlowAng      - Horizontal mean flow angle [deg]
+
+--------Meteorological Boundary Conditions-------------------
+"IECKAI"      TurbModel     - IEC Kaimal turbulence model
+"unused"      UserFile      - User-defined spectra/time-series file
+"1-ED3"       IECstandard   - IEC 61400-1 third edition, DTU 10 MW Class IA
+"A"           IECturbc      - IEC turbulence category A; Iref=0.16
+"NTM" IEC_WindType - IEC turbulence type
+"default"     ETMc          - ETM c=2 m/s
+"PL"          WindProfileType - Power-law mean profile
+"unused"      ProfileFile   - User-defined profile file
+161.368806    RefHt         - Reference height [m]
+13      URef          - Mean wind speed at reference height [m/s]
+450.0         ZJetMax       - Low-level-jet height [m], unused
+0.20          PLExp         - IEC design power-law exponent
+"default"     Z0            - Surface roughness length [m]
+
+--------Non-IEC Meteorological Boundary Conditions------------
+"default"     Latitude      - Site latitude [deg]
+0.0           RICH_NO       - Neutral stability for IECKAI
+"default"     UStar         - Friction velocity [m/s]
+"default"     ZI            - Mixing-layer depth [m]
+"default"     PC_UW         - Hub mean u'w' Reynolds stress [m^2/s^2]
+"default"     PC_UV         - Hub mean u'v' Reynolds stress [m^2/s^2]
+"default"     PC_VW         - Hub mean v'w' Reynolds stress [m^2/s^2]
+
+--------Spatial Coherence Parameters----------------------------
+"IEC"         SCMod1        - u-component coherence model
+"IEC"         SCMod2        - v-component coherence model
+"IEC"         SCMod3        - w-component coherence model
+"default"     InCDec1       - u-component coherence parameters
+"default"     InCDec2       - v-component coherence parameters
+"default"     InCDec3       - w-component coherence parameters
+"default"     CohExp        - Coherence exponent
+
+--------Coherent Turbulence Scaling Parameters-------------------
+"unused"      CTEventPath   - Coherent-event path, unused
+"random"      CTEventFile   - Coherent-event type, unused
+True          Randomize      - Randomize coherent event, unused
+1.0           DistScl        - Event scale, unused
+0.5           CTLy           - Event lateral location, unused
+0.5           CTLz           - Event vertical location, unused
+30.0          CTStartTime   - Event start time, unused
+
+====================================================
+! NOTE: Do not add or remove any lines in this file!
+====================================================
