@@ -1,0 +1,30 @@
+{
+  "status": "REAL_ORIGINAL_NTM_BTS_GIT_LFS_BYTES_VERIFIED",
+  "source": "original Git LFS object not 134byte pointer",
+  "event": "GitHub Actions read-only LFS transfer",
+  "READING_LEVEL": "full raw BTS 436968166 bytes + original TurbSim.exe 21796864 bytes",
+  "RUN": "binary SHA + header only; TurbSim=0; OpenFAST=0; Abaqus=0",
+  "physical_pass": false,
+  "formal_DLC12_validated": 0,
+  "files": {
+    "BTS": {
+      "path": "research/wind-tower/archive/local-large-assets-20261004/turbSim-36/inputs/U09p343881_NTM_S01.bts",
+      "size_bytes": 436968166,
+      "sha256": "bd96c65ede467f28fe91e1d744132f4824a9a3c7e83476022209c91cabfa902b",
+      "header_first_64_hex": "0800330000003300000000000000606d00000000804000008040cdcccc3c898015416a5e2143a8797542402924455de6c4c6bee2724500caedc2c6ceb54500ec",
+      "little_endian_header": {
+        "file_id": 8,
+        "n_z": 51,
+        "n_y": 51,
+        "n_tower": 0,
+        "n_timesteps": 28000
+      }
+    },
+    "TurbSim_exe": {
+      "path": "research/wind-tower/references/baselines-and-site-20261004/runtime-binaries/TurbSim.exe",
+      "size_bytes": 21796864,
+      "sha256": "95c0b8867e2b2f322899975229e2b4358e88f2ddc26f1defd19504451c80dfe0",
+      "header_first_64_hex": "4d5a7800010000000400000000000000000000000040000000000000000000000000000000000000000000000000000000000000000000000078000000"
+    }
+  }
+}
