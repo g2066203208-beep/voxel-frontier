@@ -47,6 +47,10 @@ for(const r of rows){
  const seed=Number(r.rand_seed1);
  if(!Number.isSafeInteger(seed)||seed<=0||seed>=2147483648||oldSeeds.has(seed)||unique.has(seed))fail('SEED_IDENTITY');
  unique.add(seed);
+ const range=r.source_range_mps.split('-').map(Number);
+ if(range.length!==2||!range.every(Number.isFinite)||range[0]!==Math.floor(range[0])||range[1]<=range[0]||Number(r.URef_mps)!==(range[0]+range[1])/2)fail('BIN_CENTER_CONTRACT');
+ const expected=[4,6,12,14,16,20,22,24].includes(range[0]) && (range[1]-range[0]===2||range[0]===24&&range[1]===25);
+ if(!expected)fail('BIN_SOURCE_RANGE');
  if(r.status!=='PLANNED_NOT_RUN'||r.formal_DLC12_status!=='NOT_VALIDATED'||r.expected_usable_seconds!=='600')fail('MISLEADING_RUN_STATUS');
 }
 for(const u of speeds){
