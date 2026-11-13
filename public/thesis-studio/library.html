@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#122e35"><meta name="description" content="湖北嘉鱼风机工作室研究资料库：论文、风荷载、地震、模型、数据、文献及个人上传下载。">
+<title>研究资料中心 · 湖北嘉鱼风机工作室</title>
+<link rel="stylesheet" href="./library.css"><script defer src="./library.js"></script></head>
+<body>
+<div class="layout">
+<aside class="rail">
+<a class="identity" href="./"><span class="identity-icon">JW</span><span><strong>湖北嘉鱼风机工作室</strong><small>RESEARCH LIBRARY</small></span></a>
+<div class="rail-label">资料中心 / LIBRARY</div>
+<nav class="sidenav" aria-label="资料分区"><button data-tab="remote" class="navitem active" type="button"><span class="nav-icon">⌑</span> GitHub研究资料 <span id="side-remote" class="nav-badge">—</span></button><button data-tab="local" class="navitem" type="button"><span class="nav-icon">⇧</span> 本地上传文件 <span id="side-local" class="nav-badge">0</span></button><button data-tab="submit" class="navitem" type="button"><span class="nav-icon">↗</span> 共享资料投稿</button></nav>
+<div class="rail-bottom"><a href="./">科研工作台 ↗</a><a href="../">论文主工作台 ↗</a><a href="https://github.com/g2066203208-beep/voxel-frontier" target="_blank" rel="noopener noreferrer">GitHub研究仓库 ↗</a></div>
+</aside>
+<div class="content-wrap">
+<header class="topbar"><span>JIAYU / DATA REPOSITORY</span><div><a href="./">研究首页</a><a href="https://github.com/g2066203208-beep/voxel-frontier/tree/research/t080-seismic-integration-gates-20261022/research/wind-tower" target="_blank" rel="noopener noreferrer">原始研究仓库 ↗</a></div></header>
+<main class="main">
+<div class="heading"><div><div class="overline">ACADEMIC DATA MANAGEMENT</div><h1>研究资料中心<span class="title-en"> / REPOSITORY</span></h1><p id="heading-description">论文、风资源、地震工程、混塔结构、文献与科研数据。</p></div><div class="heading-actions"><button id="upload-shortcut" type="button" class="solid">上传文件 <span>＋</span></button><button id="export-manifest" type="button" class="outlined">导出目录 <span>↓</span></button></div></div>
+<div class="metrics"><div class="metric"><span>RESEARCH FILES</span><strong id="stat-files">—</strong><small>GitHub 研究目录</small></div><div class="metric"><span>DISCIPLINES</span><strong id="stat-groups">—</strong><small>学术资料分类</small></div><div class="metric"><span>MY FILES</span><strong id="stat-local">0</strong><small>本浏览器上传</small></div><div class="metric"><span>INDEX REVISION</span><strong id="stat-revision">—</strong><small>研究索引版本</small></div></div>
+<section class="section-tabs" aria-label="资料中心切换"><button type="button" data-tab="remote" class="tab active">GitHub 研究资料</button><button type="button" data-tab="local" class="tab">我的上传</button><button type="button" data-tab="submit" class="tab">公开共享投稿</button></section>
+<section id="remote-panel" class="panel">
+<div class="toolbar"><label class="searchbox"><span>⌕</span><input id="remote-search" type="search" placeholder="搜索文件名、路径、研究任务号（T079 / T062 …）" autocomplete="off"></label><select id="group-filter" aria-label="研究分组"><option value="">全部专题</option></select><select id="type-filter" aria-label="文件类型"><option value="">全部类型</option><option value="文档">文档</option><option value="数据">数据</option><option value="图表">图表</option><option value="脚本">脚本</option><option value="归档">归档</option><option value="模型/其他">模型/其他</option></select></div>
+<div class="listbar"><div class="listbar-left"><label class="selectall"><input id="remote-all" type="checkbox"> 选择本页</label><span id="remote-count">—</span></div><div class="listbar-actions"><button type="button" id="remote-manifest">所选目录 CSV ↓</button><button type="button" id="remote-bundle">所选文件 ZIP ↓</button></div></div>
+<div class="file-table-head"><span>资料名称 / FILE</span><span>分类</span><span>大小</span><span>访问</span></div>
+<div id="remote-list" class="file-list" aria-live="polite"></div>
+<div class="pagination"><span id="remote-pageinfo">—</span><div><button id="remote-prev" type="button">上一页</button><button id="remote-next" type="button">下一页</button></div></div>
+<div class="subnote">来源：公开仓库活动研究分支。大型模型或 Git LFS 指针请进入原始仓库获取实际文件。</div>
+</section>
+<section id="local-panel" class="panel" hidden>
+<div class="upload-panel"><div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="选择或拖拽文件上传本地资料库"><span class="upload-icon">⇧</span><strong>拖拽文件至此，或点击上传</strong><small>文件保存在当前浏览器 · 可下载、删除、批量导出</small><input id="file-input" type="file" multiple hidden></div><div class="upload-form"><label>学科分类<select id="upload-category"><option>未分类</option><option>场址与前期</option><option>风资源与风荷载</option><option>地震与风震联合</option><option>混塔结构</option><option>基础与SSI</option><option>疲劳与优化</option><option>论文与文献</option><option>图表与模型</option></select></label><label>资料备注<input id="upload-notes" type="text" maxlength="180" placeholder="可选：来源、批次、编号"></label><div class="upload-hint">仅本机保存，不会自动上传至 GitHub。</div></div></div>
+<div class="listbar localbar"><div class="listbar-left"><label class="selectall"><input id="local-all" type="checkbox"> 全选</label><span id="local-count">0 个本地文件</span></div><div class="listbar-actions"><button type="button" id="local-zip">导出 ZIP ↓</button><button type="button" id="local-delete">删除选中</button></div></div>
+<div class="file-table-head"><span>资料名称 / FILE</span><span>分类</span><span>大小</span><span>操作</span></div><div id="local-list" class="file-list"></div>
+</section>
+<section id="submit-panel" class="panel" hidden><div class="submission"><div class="overline">PUBLIC CONTRIBUTION / GITHUB ISSUES</div><h2>向工作室提交学术资料</h2><p>填写资料名称、研究领域、来源与许可，在 GitHub 提交表单中添加附件。提交后可供公开查看，维护者审核后纳入研究资料。</p><div class="contribution-steps"><div><strong>01</strong><span>填写资料与来源</span></div><div><strong>02</strong><span>附加 PDF / CSV / 文稿</span></div><div><strong>03</strong><span>提交并等待审核</span></div></div><a id="submit-issue" class="solid linksolid" href="https://github.com/g2066203208-beep/voxel-frontier/issues/new?template=academic-material.yml" target="_blank" rel="noopener noreferrer">提交公开资料 ↗</a><a class="inline-link" href="https://github.com/g2066203208-beep/voxel-frontier/issues?q=is%3Aissue+%22%E8%B5%84%E6%96%99%E6%8F%90%E4%BA%A4%22" target="_blank" rel="noopener noreferrer">查看资料投稿记录 ↗</a><div class="submission-note">GitHub 登录后可上传附件；公开 Issue 中的文件可被任何人访问。</div></div></section>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+</main><footer class="footer"><span>JIAYU WIND RESEARCH STUDIO / FILE LIBRARY</span><span>v1.2.0</span></footer>
+</div></div></body></html>
