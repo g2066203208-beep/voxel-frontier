@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.29.11**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.29.13**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -31,6 +31,7 @@
 
 | 日期（Asia/Shanghai） | 白皮书版本 | 开发与证据增量 | 科学状态 | 远端事务 |
 |---|---|---|---|---|
+| 2026-11-13 23时 | **v0.29.13 PATCH** | 从当前真实Ch4提取§4.7.26（1943字符）与§4.10.1（1477字符），形成非冻结导师阅读增补页；记录源Ch4 blob `32474bd1`与旧阅读母稿blob `57cb73f4`，拒绝冒称Word同步。 | 真实章节提取与远端保存PASS；原Python/Word生成、SHA256独立运行及排版HOLD；12阶段0/12。 | [阅读增补页](../manuscript/final-thesis/assemble/S12_CH4_ADVISOR_READING_ADDENDUM_20261113.md)；[源提交](https://github.com/g2066203208-beep/voxel-frontier/commit/65663a9b95c6b43ebed1b8e4f165ba02dd917399)。 |
 | 2026-11-13 22时 | **v0.29.12 PATCH** | 新增非冻结Ch4§4.7.26/§4.10.1阅读增补程序，缺失/重复/覆盖拒绝与SHA256来源收据；确认旧193页Word不含两节。 | 源码已入库但真实章节执行及Word新版本未验；12阶段0/12。 | [程序](../manuscript/final-thesis/assemble/s12_ch4_latest_addendum.py)；[源码提交](https://github.com/g2066203208-beep/voxel-frontier/commit/83f3472c8e248ca552da8b8c15c980aa4ae2d170)。 |
 | 2026-11-13 21时 | **v0.29.11 PATCH** | Ch4§4.10.1新增三级证据分层及三项可证伪结论，明确36历史screening、18NTM同步名义应力和ERA5三箱部分年化A4的不同识别域，并对照Huang2025及2026先行DOI避免首创误称。 | 正式论文科学综合正文已入库，非新物理RUN/图；正式12阶段晋级0/12，Miner、W/WE、DLC1.2 HOLD。 | [Ch4§4.10.1](../manuscript/final-thesis/chapters/04_10MW混合塔架风致疲劳性能分析.md)；[科学提交](https://github.com/g2066203208-beep/voxel-frontier/commit/ed68c8710a1e0c190cec5a8962ab7b7c3bf10871)。 |
 | 2026-11-13 20时 | **v0.29.10 PATCH** | 将真实ERA5三已覆盖NTM箱的部分年化A4及4行数表正式写入六章学位论文Ch4§4.7.26，附概率分母、Neq/600s、六seed四次幂顺序、源SHA及物理拒绝条件；继承期刊§4.26，不重复统计。 | 正文证据整合PASS；无新物理RUN，缺失96.1082%/DLC1.2/Miner HOLD；12阶段0/12。 | [Ch4§4.7.26](../manuscript/final-thesis/chapters/04_10MW混合塔架风致疲劳性能分析.md)；[科学提交](https://github.com/g2066203208-beep/voxel-frontier/commit/fd1b881a10f02da6fe2c15a63da82f1dc8303670)。 |
