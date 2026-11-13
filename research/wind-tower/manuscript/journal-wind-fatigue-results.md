@@ -455,6 +455,20 @@ In particular, even zero counterexamples in six genuinely independent prospectiv
 
 The prospective stopping rule must freeze the 158 m model, controller, NTM/ETM generator settings, run duration, transient discard, rainflow closure, \(N_{eq}\), moment axis and random-number policy *before* drawing new seeds. Report the actual number of independent blocks, failures and all excluded runs; check seed dependence and time-series convergence. If the Bernoulli independence or regime-stationarity assumptions fail, the exact bounds above are inapplicable, and a cluster-aware design is required. This design does not establish formal DLC1.2 coverage, local material stress, Miner damage or wind–earthquake response.
 
+### 4.23. Simultaneous falsification guarantees and a pre-registered primary endpoint
+
+The single-endpoint zero-event calculation in §4.22 cannot be interpreted as a simultaneous claim across the three archived wind bins and two bending channels. For a family of \(K\) **pre-specified** bin–channel endpoints, let \(p_j\) be the future non-exceedance probability for endpoint \(j\), and suppose \(n\) independent prospective paired blocks are collected *within each endpoint*. The exact zero-event one-sided marginal bound with Bonferroni allocation \(\alpha/K\) is \(U_j=1-(\alpha/K)^{1/n}\). By the union bound, \(\Pr(\forall j:p_j\le U_j)\ge 1-\alpha\), without assuming independence **between** the channels or bins. This guarantee still requires independence and stationarity **across blocks within each endpoint**, and it applies only if all \(K\) observed event counts are zero. The design minimum for a target simultaneous bound \(p_j<p_0\) is \(n>\log(\alpha/K)/\log(1-p_0)\) when strict inequality is desired (or the corresponding ceiling when equality is acceptable).
+
+| Pre-registered endpoints \(K\) | Independent zero-event blocks per endpoint for \(U_j<10\%\) | Blocks per endpoint for \(U_j<5\%\) |
+|---:|---:|---:|
+| 1 | 29 | 59 |
+| 2 | 36 | 72 |
+| 6 | 46 | 94 |
+
+For \(K=6\), 46 zero-event independent blocks *per endpoint* imply \(U_j=1-(0.05/6)^{1/46}\approx9.90\%\), simultaneously at 95% confidence. Ninety-four blocks per endpoint imply \(U_j\approx4.97\%\). A common paired wind realization may contribute to both channels at the same wind bin, but that reuse must not be counted as two independent blocks; thus the design requires **46 or 94 independent pairs at each of three wind bins**, rather than 276 or 564 independent wind-pair runs. The two channels remain two simultaneous endpoints.
+
+A more efficient alternative is to pre-register **one primary endpoint**, e.g. high-speed Mx where the archived counterexamples occur, and treat the other five comparisons as exploratory. Another distinct estimand is the probability that *any* of the six bin–channel endpoints fails within a jointly defined block; this requires a coherent joint sampling scheme across wind bins and cannot be inferred from the historical 72 DEL entries. If even one prospective non-exceedance event occurs, the zero-event formulas above must be replaced with the exact binomial upper confidence bound based on the observed event count. Sequential peeking, adaptive endpoint selection, generator changes, or discarding failed runs invalidates the stated fixed-sample guarantee unless the error budget is redesigned. These are **prospective analytic sample-size results**, not newly simulated tower loads or evidence of physical superiority of ETM.
+
 ## 5. Conclusions
 
 In 36 archived 600 s OpenFAST screening cases for a 158 m concrete–steel hybrid tower, correcting a historical rainflow closure error changes 102/630 My and 12/630 Mx pairwise load-DEL rankings and the My controlling realization. A separate reconciliation of 18 NTM cases shows that the 100,000- versus 600-reference-cycle DEL convention changes amplitudes by the expected factor 3.593041; this is a definition change, not a new load response. Agreement of scalar DEL and cycle count does not establish equality of cycle multisets.
