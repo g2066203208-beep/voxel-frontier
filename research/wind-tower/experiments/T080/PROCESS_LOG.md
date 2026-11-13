@@ -1,3 +1,7 @@
+## 2026-11-14 05时｜S05真实ESM方向谱对数周期积分（0/12）
+
+READ base=8a4885e36030e3bbdac7beebcbfd811a175525d5；PR#42 Open/Draft；继承AGENTS/COMMAND_ROOM/白皮书/MASTER/STATUS/12阶段/T079/T080及46周期真实源。SOURCE=历史46周期ESM双水平PSA CSV Git blob 99b0b662fcc776701f15df8e4cbe28c109727c7b，历史SHA256 d85bd916c34cc4e0a008a26d07ef49935a4aa90c3feb5d9bb9a5f96a12f1c0cf（本轮直接读远端CSV，未独立计算SHA256）；OFFICIAL=ESM v3 DOI 10.13127/esm.3；RUN=V8实际解析46行，按lnT梯形权重计算RotD100/RotD50，1.25–4s均值1.155472、4–9.3464s 1.166449、全窗1.160103；6s=1.176521、9s=1.081687。TAB=新增3行表于既有非冻结地震章草稿§5.2.3；FIG=0；REF/授权STANDARD无新。科学提交1a475487d2452f8a01d38e2462775c59cd8aa3da。误差：46周期积分离散误差、0.04Hz处理滤波、0.09Hz SNR边界、RotD角度离散、单事件代表性均未封闭；该比值非结构响应、非规范方向系数。S05 PARTIAL，正式12阶段晋级0/12，DLC1.2 0/126，W/E/WE及Miner HOLD。下一唯一动作：若原始ESM双水平字节可恢复，则以更密周期网格独立积分并量化离散误差；否则切S12正文/图表闭合，不反复用同一46行做小统计。禁止范围及冻结母本/main/PR合并未动。
+
 ## 2026-11-14 04时｜S11二维代理训练域凸包拒绝的源级科学纠错
 
 SOURCE=已有 `manuscript/final-thesis/assemble/s11_surrogate_admission_20261114.mjs` Git blob `9df1545386535754c4dbd1c0c0ad8dcb9aefd169`；科学问题：二维候选落在每维训练样本范围内是否保证处于训练域内？反例：24点细长斜带训练集，候选(0.7,-0.7)虽在各坐标min/max之内，却位于二维凸包之外。RUN=V8直接执行原JS `selfTest()` 正例48点及4项拒绝PASS；修改后增加凸包判定与该负例，正例48点+5项拒绝PASS；留一误差[2.5579538487e-13,1.7763568394e-15,3.8857805862e-16,1.5265566589e-16]，仅精确二次解析测试，非真实DOE验证。新增代码Git blob `50705cd38b6eca45f1c0db4a2a72ae93c1f33d73`，科学commit `a207fc37d668129f07e315cd91a8cedd6baf817b`；误差预算/限制：凸包不是稀疏DOE充分覆盖证明，边界容差1e-10为无量纲假设，需真实DOE交叉验证及物理复核；REF/STANDARD/OFFICIAL/FIG/TAB无新增。正式12阶段0/12、DLC1.2 0/126，S11科学物理HOLD；下一唯一动作切S05真实地震记录谱研究。
