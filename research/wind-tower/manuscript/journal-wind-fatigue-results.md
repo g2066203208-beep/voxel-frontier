@@ -440,6 +440,21 @@ A prospective falsification protocol should therefore freeze (i) the 158 m turbi
 
 **Evidence boundary:** SOURCE = archived 72 derived DEL4 rows, SHA256 `b362bcd7c37ccc56e21035de39448b5e761ec03f371b6b2f3eb30f41b013630d`; RUN = inherited six-seed and exact-label enumeration, not a new OpenFAST run; TAB = six archived ratios and high-speed Mx counterexample; REF/STANDARD/OFFICIAL = no newly verified full text or licensed clause. This section adds an explicit estimand and independent falsification design, **not** a new numerical physical result.
 
+### 4.22. A pre-registered independent-seed falsification threshold
+
+The observed 212/216 cross-regime pairwise comparisons are not 216 independent experiments: the same six ETM and six NTM realizations recur in many pairs, and Mx/My share trajectories. A prospective test should therefore count *new, independent seed-pair blocks* rather than cross-products of archived realizations. Define a pre-registered exceedance event for a fixed wind bin and channel, \(X_i=1\) when the new ETM load-DEL is **not greater** than the new NTM load-DEL for pair \(i\); pairing is a sampling design, not an assertion that identical integer seed labels generate identical turbulent fields. Under the explicit additional assumptions that the \(X_i\) are independent Bernoulli draws with a stable exceedance probability \(p\), observing zero events in \(n\) new pairs gives the exact one-sided 95% Clopper–Pearson upper limit \(p_U=1-0.05^{1/n}\). This is an *analytic design bound*, not a result measured from the 158 m tower.
+
+| Independent new seed-pair blocks \(n\) | Zero-event 95% upper limit for \(p\) |
+|---:|---:|
+| 6 | 39.304% |
+| 12 | 22.092% |
+| 30 | 9.503% |
+| 60 | 4.870% |
+
+In particular, even zero counterexamples in six genuinely independent prospective pairs would only bound the future counterexample probability above by **39.304%** at one-sided 95% confidence; at least 29 independent zero-event pairs are needed to bring this upper limit below 10% (\(1-0.05^{1/29}=9.814%\)), and 59 are needed for a limit below 5% (\(1-0.05^{1/59}=4.950%\)). These bounds apply to **one preselected wind-bin/channel hypothesis**. If multiple bins and both bending channels are claimed jointly, simultaneous confidence requires multiplicity control or a predeclared block-level familywise event; the table must not be reused as a simultaneous guarantee. The actual archived high-speed Mx counterexamples already refute the universal assertion that every ETM realization exceeds every NTM realization. A future study may instead test the narrower population exceedance probability or the fourth-moment aggregate ratio, which are distinct estimands.
+
+The prospective stopping rule must freeze the 158 m model, controller, NTM/ETM generator settings, run duration, transient discard, rainflow closure, \(N_{eq}\), moment axis and random-number policy *before* drawing new seeds. Report the actual number of independent blocks, failures and all excluded runs; check seed dependence and time-series convergence. If the Bernoulli independence or regime-stationarity assumptions fail, the exact bounds above are inapplicable, and a cluster-aware design is required. This design does not establish formal DLC1.2 coverage, local material stress, Miner damage or wind–earthquake response.
+
 ## 5. Conclusions
 
 In 36 archived 600 s OpenFAST screening cases for a 158 m concrete–steel hybrid tower, correcting a historical rainflow closure error changes 102/630 My and 12/630 Mx pairwise load-DEL rankings and the My controlling realization. A separate reconciliation of 18 NTM cases shows that the 100,000- versus 600-reference-cycle DEL convention changes amplitudes by the expected factor 3.593041; this is a definition change, not a new load response. Agreement of scalar DEL and cycle count does not establish equality of cycle multisets.
