@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.29.10**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.29.11**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -31,6 +31,7 @@
 
 | 日期（Asia/Shanghai） | 白皮书版本 | 开发与证据增量 | 科学状态 | 远端事务 |
 |---|---|---|---|---|
+| 2026-11-13 21时 | **v0.29.11 PATCH** | Ch4§4.10.1新增三级证据分层及三项可证伪结论，明确36历史screening、18NTM同步名义应力和ERA5三箱部分年化A4的不同识别域，并对照Huang2025及2026先行DOI避免首创误称。 | 正式论文科学综合正文已入库，非新物理RUN/图；正式12阶段晋级0/12，Miner、W/WE、DLC1.2 HOLD。 | [Ch4§4.10.1](../manuscript/final-thesis/chapters/04_10MW混合塔架风致疲劳性能分析.md)；[科学提交](https://github.com/g2066203208-beep/voxel-frontier/commit/ed68c8710a1e0c190cec5a8962ab7b7c3bf10871)。 |
 | 2026-11-13 20时 | **v0.29.10 PATCH** | 将真实ERA5三已覆盖NTM箱的部分年化A4及4行数表正式写入六章学位论文Ch4§4.7.26，附概率分母、Neq/600s、六seed四次幂顺序、源SHA及物理拒绝条件；继承期刊§4.26，不重复统计。 | 正文证据整合PASS；无新物理RUN，缺失96.1082%/DLC1.2/Miner HOLD；12阶段0/12。 | [Ch4§4.7.26](../manuscript/final-thesis/chapters/04_10MW混合塔架风致疲劳性能分析.md)；[科学提交](https://github.com/g2066203208-beep/voxel-frontier/commit/fd1b881a10f02da6fe2c15a63da82f1dc8303670)。 |
 
 | 2026-11-13 19时 | **v0.29.9 PATCH** | 直接读取真实ERA5 31-bin及历史72行DEL4，对9–10/11–12/19–20m/s三个NTM已覆盖箱做六seed四次幂平均与全时段概率加权，得到部分年度A4：Mx 3.9611309279e9、My 6.5991381954e12 (MN·m)^4/year；覆盖7164/184080小时=3.89178618%。 | 真实历史源派生算术PASS；箱内常值近似、尾部两小时及未覆盖96.1082% HOLD；非完整全年指标/材料寿命；12阶段0/12。 | [期刊§4.26](../manuscript/journal-wind-fatigue-results.md)；[T080](../experiments/T080/PROCESS_LOG.md)；本提交Git History。 |
