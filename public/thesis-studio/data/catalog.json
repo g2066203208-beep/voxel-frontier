@@ -1,0 +1,930 @@
+{
+  "meta": {
+    "name": "湖北嘉鱼风机科研工作室",
+    "english": "JIAYU WIND ENERGY RESEARCH STUDIO",
+    "location": "湖北省 · 咸宁市 · 嘉鱼县",
+    "version": "v1.0.0",
+    "release": "2026-11-13",
+    "description": "风资源 · 混合塔架 · 地震工程 · 风震耦合 · 疲劳可靠度 · 论文研究",
+    "note": "嘉鱼为区域研究线索；尚无证据证明研究原型对应嘉鱼某一实际机位。研究成果状态以活动分支指挥室为准。",
+    "repo": "https://github.com/g2066203208-beep/voxel-frontier",
+    "main": "https://g2066203208-beep.github.io/voxel-frontier/",
+    "twin": "https://g2066203208-beep.github.io/voxel-frontier/wind-twin.html",
+    "command": "https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/governance/COMMAND_ROOM.md",
+    "branch": "research/t080-seismic-integration-gates-20261022"
+  },
+  "modules": [
+    {
+      "id": "overview",
+      "group": "总控",
+      "short": "00",
+      "title": "科研总览",
+      "en": "RESEARCH OVERVIEW",
+      "brief": "研究现状、科研路径、成果证据与风险门禁。",
+      "stage": "索引已建",
+      "scope": "全项目",
+      "questions": [
+        "已完成成果与待补验条件是否清晰分离？",
+        "每一条关键结论能否追溯到原始证据？"
+      ],
+      "checks": [
+        "遵循活动分支指挥室，不用静态页面覆盖真实进度",
+        "每项输出标注来源、状态、责任人和版本",
+        "历史完成成果继承，待补验内容单列"
+      ],
+      "outputs": [
+        "科研证据总账",
+        "风险与依赖清单"
+      ],
+      "links": [
+        {
+          "label": "研究指挥室（最新）",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/governance/COMMAND_ROOM.md",
+          "kind": "evidence"
+        },
+        {
+          "label": "发展白皮书",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/governance/DEVELOPMENT_WHITEPAPER.md",
+          "kind": "evidence"
+        },
+        {
+          "label": "12阶段关键路径",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/governance/THESIS_COMPLETION_12_STAGE_CRITICAL_PATH_20261024.md",
+          "kind": "evidence"
+        }
+      ]
+    },
+    {
+      "id": "proposal",
+      "group": "研究准备",
+      "short": "01",
+      "title": "开题与研究方案",
+      "en": "RESEARCH PROPOSAL",
+      "brief": "研究问题、创新性、假设边界、技术路线、阶段计划与风险。",
+      "stage": "框架就绪",
+      "scope": "研究设计",
+      "questions": [
+        "核心科学问题是否可证伪、可复现？",
+        "与已有研究的差异在哪里？"
+      ],
+      "checks": [
+        "明确研究对象和原型来源",
+        "研究假设、对照组及评价指标",
+        "区分研究成果、工程设计要求和未通过门禁项"
+      ],
+      "outputs": [
+        "研究计划与开题报告",
+        "创新性证据矩阵"
+      ],
+      "links": [
+        {
+          "label": "研究主流程",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/workflow/MASTER_RESEARCH_PROTOCOL.md",
+          "kind": "evidence"
+        },
+        {
+          "label": "前期研究模板",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/main/docs/jiayu-wind-studio/01-开题与前期研究报告.md",
+          "kind": "template"
+        },
+        {
+          "label": "论文工作空间总纲",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/manuscript/final-thesis/00_WORKSPACE_MASTER.md",
+          "kind": "evidence"
+        }
+      ]
+    },
+    {
+      "id": "field",
+      "group": "研究准备",
+      "short": "02",
+      "title": "嘉鱼场址调查",
+      "en": "SITE INVESTIGATION",
+      "brief": "地形地貌、风场位置、地勘、水文、环境与约束条件。",
+      "stage": "场址待定",
+      "scope": "湖北嘉鱼",
+      "questions": [
+        "嘉鱼区域气象研究点是否等于实际工程风机机位？",
+        "是否取得工程坐标与勘察报告？"
+      ],
+      "checks": [
+        "记录机位坐标、高程、坐标基准",
+        "整理地质剖面、土层、地下水及勘探质量",
+        "收集风资源与地震设防原始依据",
+        "环保、用地、交通、电网约束分别归档"
+      ],
+      "outputs": [
+        "场址调查报告",
+        "基础资料与缺项清单"
+      ],
+      "links": [
+        {
+          "label": "场址调查模板",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/main/docs/jiayu-wind-studio/02-嘉鱼场址调查报告.md",
+          "kind": "template"
+        },
+        {
+          "label": "嘉鱼县区域概况",
+          "url": "https://nyt.hubei.gov.cn/bmdt/yw/szdt/202403/t20240308_5112724.shtml",
+          "kind": "official"
+        },
+        {
+          "label": "嘉鱼气象背景",
+          "url": "https://www.weather.com.cn/cityintro/101200703.shtml",
+          "kind": "official"
+        },
+        {
+          "label": "场址与地震方法计划",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/experiments/T079/METHOD_PLAN.md",
+          "kind": "evidence"
+        }
+      ]
+    },
+    {
+      "id": "windResource",
+      "group": "荷载环境",
+      "short": "03",
+      "title": "风资源与气象",
+      "en": "WIND CLIMATE",
+      "brief": "ERA5、测风、风速风向分布、年际变率和极端风资源。",
+      "stage": "已有研究",
+      "scope": "风资源",
+      "questions": [
+        "ERA5 风速是否可代表机位轮毂高度实测？",
+        "风箱、年际变率与高风尾部的证据是否充分？"
+      ],
+      "checks": [
+        "识别网格、时间范围、测站及数据版本",
+        "时区、缺测、风向与高度换算审查",
+        "Weibull/MCP/极端值方法适用性检查",
+        "对稀疏风箱与零计数给出不确定性说明"
+      ],
+      "outputs": [
+        "风资源评估报告",
+        "风速分箱和气候证据台账"
+      ],
+      "links": [
+        {
+          "label": "ERA5 数据源",
+          "url": "https://cds.climate.copernicus.eu/datasets/reanalysis-era5-single-levels?tab=overview",
+          "kind": "official"
+        },
+        {
+          "label": "风资源证据图谱",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/references/ERA5_WIND_ENERGY_EVIDENCE_MAP_20261004.tsv",
+          "kind": "evidence"
+        },
+        {
+          "label": "风气候研究档案 T062",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/tree/research/t080-seismic-integration-gates-20261022/research/wind-tower/experiments/T062",
+          "kind": "evidence"
+        },
+        {
+          "label": "风资源报告模板",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/main/docs/jiayu-wind-studio/03-风资源与气象评价.md",
+          "kind": "template"
+        }
+      ]
+    },
+    {
+      "id": "windLoad",
+      "group": "荷载环境",
+      "short": "04",
+      "title": "风荷载与气动响应",
+      "en": "AERODYNAMIC LOADS",
+      "brief": "OpenFAST/TurbSim、设计工况、同源六分量、极值与风载时程。",
+      "stage": "历史成果",
+      "scope": "风工况",
+      "questions": [
+        "历史筛选工况与正式设计工况是否混淆？",
+        "六分量是否在同一时刻、同一坐标系下关联？"
+      ],
+      "checks": [
+        "区分 NTM、ETM、DLC 的含义和前提",
+        "核对随机种子、运行窗、初始状态与控制器",
+        "保存载荷坐标、参考点、时程同步性",
+        "不把包络极值拼成同一时刻组合"
+      ],
+      "outputs": [
+        "风荷载与DLC矩阵报告",
+        "风载证据和响应图集"
+      ],
+      "links": [
+        {
+          "label": "36工况历史塔底荷载",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/experiments/T072/T072_FORMAL_36CASE_BASE_ENVELOPE.csv",
+          "kind": "evidence"
+        },
+        {
+          "label": "风载来源与校核",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/experiments/T072/T072_S06_LOAD_VALIDATION_REPORT.md",
+          "kind": "evidence"
+        },
+        {
+          "label": "气动工况模板",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/main/docs/jiayu-wind-studio/04-风荷载与DLC研究报告.md",
+          "kind": "template"
+        },
+        {
+          "label": "风机设计要求",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=9717EF2EA093AC50FFC9ABB7AFA21828",
+          "kind": "standard"
+        }
+      ]
+    },
+    {
+      "id": "seismic",
+      "group": "荷载环境",
+      "short": "05",
+      "title": "地震危险性与选波",
+      "en": "SEISMIC INPUTS",
+      "brief": "地震设防参数、真实地震记录、处理谱、长周期和输入接口。",
+      "stage": "方法研究",
+      "scope": "地震",
+      "questions": [
+        "嘉鱼研究区域的地震设防参数是否有适用的工程坐标和场地类别？",
+        "实测记录是否满足长周期、分量、单位及记录质量要求？"
+      ],
+      "checks": [
+        "GB 18306 与场址报告逐项核对",
+        "震源、台站、原波、方向、采样率留存",
+        "基线校正、滤波、缩放、反应谱与RotD复核",
+        "区分基底输入与结构响应，禁止重复施加"
+      ],
+      "outputs": [
+        "地震动选择与处理报告",
+        "地震时程和谱数据校核表"
+      ],
+      "links": [
+        {
+          "label": "地震研究 T079",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/experiments/T079/METHOD_PLAN.md",
+          "kind": "evidence"
+        },
+        {
+          "label": "地震动区划标准",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=EC0585F90CA21ABE02826394F266B623",
+          "kind": "standard"
+        },
+        {
+          "label": "USGS 地震目录",
+          "url": "https://earthquake.usgs.gov/earthquakes/search/",
+          "kind": "official"
+        },
+        {
+          "label": "PEER 强震动库",
+          "url": "https://ngawest2.berkeley.edu/",
+          "kind": "official"
+        },
+        {
+          "label": "选波报告模板",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/main/docs/jiayu-wind-studio/05-地震危险性与选波报告.md",
+          "kind": "template"
+        }
+      ]
+    },
+    {
+      "id": "structure",
+      "group": "结构与耦合",
+      "short": "06",
+      "title": "混塔结构体系",
+      "en": "HYBRID TOWER",
+      "brief": "混凝土段、钢塔段、接缝、预应力与配筋设计来源。",
+      "stage": "已有研究",
+      "scope": "结构",
+      "questions": [
+        "原型、设计支路与研究假设是否清晰分离？",
+        "材料/连接/预应力是否具有可追溯依据？"
+      ],
+      "checks": [
+        "参数表和结构几何版本冻结",
+        "锚栓、法兰、接缝等构造信息来源登记",
+        "31段纵筋、箍筋与预应力分支身份核验",
+        "设计数据不能冒充原始文献披露值"
+      ],
+      "outputs": [
+        "混塔结构调研报告",
+        "结构与材料参数账本"
+      ],
+      "links": [
+        {
+          "label": "31段配筋设计 T077",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/experiments/T077/T077_FORMAL_REBAR_REPORT.md",
+          "kind": "evidence"
+        },
+        {
+          "label": "预应力损失 T078",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/experiments/T078/T078_PRESTRESS_DESIGN_REPORT.md",
+          "kind": "evidence"
+        },
+        {
+          "label": "混塔三维可视化",
+          "url": "https://g2066203208-beep.github.io/voxel-frontier/wind-twin.html",
+          "kind": "evidence"
+        },
+        {
+          "label": "结构资料模板",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/main/docs/jiayu-wind-studio/06-混塔结构与材料综述.md",
+          "kind": "template"
+        }
+      ]
+    },
+    {
+      "id": "foundation",
+      "group": "结构与耦合",
+      "short": "07",
+      "title": "基础与SSI接口",
+      "en": "FOUNDATION & SSI",
+      "brief": "基础顶部运动传递、坐标、参考点与土—结构耦合数据交接。",
+      "stage": "接口待核",
+      "scope": "协作接口",
+      "questions": [
+        "SSI由哪位协作者负责、交付何种物理量？",
+        "输入时程是否与塔底自由度和边界条件匹配？"
+      ],
+      "checks": [
+        "记录输入位置、坐标系与参考点",
+        "时程单位、时标、方向及旋转自由度",
+        "对照固定底、基础顶输入的物理含义",
+        "留存接口版本与交接验收"
+      ],
+      "outputs": [
+        "SSI 数据交接单",
+        "基础输入一致性检查单"
+      ],
+      "links": [
+        {
+          "label": "地震耦合方法 T080",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/experiments/T080/INTEGRATION_GATES_AND_PAIRED_DESIGN_20261022.md",
+          "kind": "evidence"
+        },
+        {
+          "label": "SSI交接模板",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/main/docs/jiayu-wind-studio/07-基础SSI接口交接单.md",
+          "kind": "template"
+        },
+        {
+          "label": "地震研究计划 T079",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/experiments/T079/METHOD_PLAN.md",
+          "kind": "evidence"
+        }
+      ]
+    },
+    {
+      "id": "coupling",
+      "group": "结构与耦合",
+      "short": "08",
+      "title": "风—震联合工况",
+      "en": "WIND–SEISMIC COMBINATIONS",
+      "brief": "B/W/E/WE 配对工况、初始条件和评价指标一致性。",
+      "stage": "待准入",
+      "scope": "联合载荷",
+      "questions": [
+        "风/地震工况是否同一模型、状态与时间定义？",
+        "联合效应能够与独立荷载效应可比吗？"
+      ],
+      "checks": [
+        "荷载同期性与结构状态核对",
+        "多分量方向、时标、相位和初态记录",
+        "区分工程评估与试验性诊断",
+        "质量门槛未通过不得称为正式联合结论"
+      ],
+      "outputs": [
+        "联合工况矩阵",
+        "结构响应对照分析提纲"
+      ],
+      "links": [
+        {
+          "label": "T080准入门禁",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/experiments/T080/INTEGRATION_GATES_AND_PAIRED_DESIGN_20261022.md",
+          "kind": "evidence"
+        },
+        {
+          "label": "联合工况报告模板",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/main/docs/jiayu-wind-studio/08-联合工况及性能评价.md",
+          "kind": "template"
+        },
+        {
+          "label": "论文缺口与依赖",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/manuscript/final-thesis/CURRENT_GAPS_AND_DEPENDENCIES_20261113.md",
+          "kind": "evidence"
+        }
+      ]
+    },
+    {
+      "id": "fatigue",
+      "group": "结构与耦合",
+      "short": "09",
+      "title": "疲劳与寿命评价",
+      "en": "FATIGUE & DURABILITY",
+      "brief": "雨流、DEL、损伤指标、材料点应力与寿命有效性边界。",
+      "stage": "历史统计",
+      "scope": "疲劳",
+      "questions": [
+        "载荷 DEL 是否被错误等同于材料 Miner 损伤？",
+        "风况概率权重与载荷源身份是否可复核？"
+      ],
+      "checks": [
+        "雨流原始 range/mean/count 与四次矩区分",
+        "DEL 指数、Neq、工况和参考来源标注",
+        "材料点应力与寿命参数需要独立证据",
+        "严禁把筛选统计直接外推成年寿命"
+      ],
+      "outputs": [
+        "疲劳分析方法报告",
+        "寿命证据等级与不确定性表"
+      ],
+      "links": [
+        {
+          "label": "期刊稿相关研究",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/manuscript/journal-wind-fatigue-results.md",
+          "kind": "evidence"
+        },
+        {
+          "label": "疲劳文献与证据图谱",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/manuscript/final-thesis/04_FATIGUE_SOURCE_EVIDENCE_ATLAS_20261006.md",
+          "kind": "evidence"
+        },
+        {
+          "label": "寿命报告模板",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/main/docs/jiayu-wind-studio/09-疲劳寿命与优化评价.md",
+          "kind": "template"
+        }
+      ]
+    },
+    {
+      "id": "optimization",
+      "group": "结构与耦合",
+      "short": "10",
+      "title": "参数研究与优化",
+      "en": "PARAMETRIC STUDY",
+      "brief": "变量、约束、响应面、灵敏度、可靠性与研究型优化验证。",
+      "stage": "方案研究",
+      "scope": "优化",
+      "questions": [
+        "设计变量是否有物理工程含义？",
+        "目标函数和约束是否来自同一可比工况？"
+      ],
+      "checks": [
+        "建立参数清单及单位",
+        "约束含义和规范适用性独立核验",
+        "优化指标、数据版本和复算脚本",
+        "未验证的 Pareto 点不得称最优结构"
+      ],
+      "outputs": [
+        "参数矩阵",
+        "可靠性与优化研究提纲"
+      ],
+      "links": [
+        {
+          "label": "论文优化方案",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/manuscript/final-thesis/CH5_FATIGUE_DRIVEN_OPTIMIZATION_PROPOSAL_20261007.md",
+          "kind": "evidence"
+        },
+        {
+          "label": "联合工况评价模板",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/main/docs/jiayu-wind-studio/08-联合工况及性能评价.md",
+          "kind": "template"
+        }
+      ]
+    },
+    {
+      "id": "literature",
+      "group": "学术成果",
+      "short": "11",
+      "title": "文献与规范中心",
+      "en": "LITERATURE & STANDARDS",
+      "brief": "原文核读、DOI、适用边界、国家标准、引用关系与学术诚信。",
+      "stage": "持续维护",
+      "scope": "文献规范",
+      "questions": [
+        "是否有真实可访问的原文/DOI？",
+        "规范是否现行，是否已核读授权正文？"
+      ],
+      "checks": [
+        "文献逐篇标注阅读深度与可迁移性",
+        "作者、年份、页码、图号与引用一致",
+        "标准状态与适用范围以官方平台为准",
+        "禁止未经原文核验的文献和标准细节"
+      ],
+      "outputs": [
+        "核心文献矩阵",
+        "标准引用状态表"
+      ],
+      "links": [
+        {
+          "label": "现有论文文献库",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/tree/research/t080-seismic-integration-gates-20261022/research/wind-tower/references",
+          "kind": "evidence"
+        },
+        {
+          "label": "文献技术路线矩阵",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/references/TECHNICAL_ROUTE_LITERATURE_MATRIX_20261005.md",
+          "kind": "evidence"
+        },
+        {
+          "label": "文献核验规范模板",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/main/docs/jiayu-wind-studio/10-文献与标准证据登记.md",
+          "kind": "template"
+        },
+        {
+          "label": "风机设计标准",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=9717EF2EA093AC50FFC9ABB7AFA21828",
+          "kind": "standard"
+        }
+      ]
+    },
+    {
+      "id": "manuscript",
+      "group": "学术成果",
+      "short": "12",
+      "title": "学位论文与期刊",
+      "en": "THESIS & JOURNAL",
+      "brief": "六章主稿、图表、公式、英文投稿和送审证据。",
+      "stage": "已有正文",
+      "scope": "论文",
+      "questions": [
+        "导师阅读稿、源稿与活动论文分支是否混用？",
+        "结论能否回链到可信源与实算结果？"
+      ],
+      "checks": [
+        "版本、章节、结论与原始数据一一对应",
+        "图表引用、参数单位、章节交叉引用检查",
+        "论文已做成果继承，不被门户任务覆盖",
+        "送审与投稿门槛独立核验"
+      ],
+      "outputs": [
+        "学位论文阅读版",
+        "期刊稿与送审清单"
+      ],
+      "links": [
+        {
+          "label": "正式论文当前状态",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/manuscript/final-thesis/00_STATUS.md",
+          "kind": "evidence"
+        },
+        {
+          "label": "章节证据矩阵",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/manuscript/final-thesis/00_CHAPTER_EVIDENCE_MATRIX.tsv",
+          "kind": "evidence"
+        },
+        {
+          "label": "学位论文送审模板",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/main/docs/jiayu-wind-studio/11-论文成稿与送审清单.md",
+          "kind": "template"
+        },
+        {
+          "label": "期刊稿",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/manuscript/journal-wind-fatigue-results.md",
+          "kind": "evidence"
+        }
+      ]
+    },
+    {
+      "id": "reports",
+      "group": "学术成果",
+      "short": "13",
+      "title": "报告与学术汇报",
+      "en": "REPORTS & PRESENTATION",
+      "brief": "前期调研、专题研究、阶段报告、中期检查、组会和导师决策。",
+      "stage": "模板就绪",
+      "scope": "报告",
+      "questions": [
+        "报告是否严格区分原始数据、推导与观点？",
+        "是否有摘要、方法、结果、限制和下一动作？"
+      ],
+      "checks": [
+        "明确报告类型、日期和版本",
+        "图表、引文、方法及局限完整",
+        "会议决策记录责任人与验收证据",
+        "学校要求与导师反馈分开归档"
+      ],
+      "outputs": [
+        "研究报告模板库",
+        "导师会议纪要"
+      ],
+      "links": [
+        {
+          "label": "研究计划与阶段报告",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/workflow/REPORT_2026-10-09_PLAN.md",
+          "kind": "evidence"
+        },
+        {
+          "label": "导师要求",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/workflow/ADVISOR_REQUIREMENTS.md",
+          "kind": "evidence"
+        },
+        {
+          "label": "会议模板",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/main/docs/jiayu-wind-studio/12-组会纪要与科研复盘.md",
+          "kind": "template"
+        },
+        {
+          "label": "前期调研模板",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/main/docs/jiayu-wind-studio/01-开题与前期研究报告.md",
+          "kind": "template"
+        }
+      ]
+    },
+    {
+      "id": "library",
+      "group": "学术成果",
+      "short": "14",
+      "title": "数据与可复现中心",
+      "en": "DATA & REPRODUCIBILITY",
+      "brief": "SOURCE/RUN/FIG/TAB/REF/STANDARD 证据链、文件版本和复算记录。",
+      "stage": "持续维护",
+      "scope": "数据治理",
+      "questions": [
+        "每张图、每个数字有没有源文件及版本？",
+        "哪些结果只是诊断，哪些通过原生验证？"
+      ],
+      "checks": [
+        "保存输入、参数、脚本、输出与 SHA 记录",
+        "数值单位、坐标、时间窗一致性复核",
+        "区分解析验证、源级复算和物理计算",
+        "保留失败日志与替代关系"
+      ],
+      "outputs": [
+        "数据字典与证据资产登记",
+        "复现实验清单"
+      ],
+      "links": [
+        {
+          "label": "原始证据矩阵",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/manuscript/final-thesis/01_SOURCE_EVIDENCE_MATRIX_20261006.tsv",
+          "kind": "evidence"
+        },
+        {
+          "label": "研究可复现资料",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/tree/research/t080-seismic-integration-gates-20261022/research/wind-tower/manuscript/reproducibility",
+          "kind": "evidence"
+        },
+        {
+          "label": "质量登记模板",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/main/docs/jiayu-wind-studio/13-数据治理与复现登记.md",
+          "kind": "template"
+        }
+      ]
+    },
+    {
+      "id": "governance",
+      "group": "学术成果",
+      "short": "15",
+      "title": "项目治理与白皮书",
+      "en": "GOVERNANCE & CHANGELOG",
+      "brief": "版本、风险、任务责任、审稿意见、来源审计与交接记录。",
+      "stage": "有活动记录",
+      "scope": "治理",
+      "questions": [
+        "最新指挥室状态是否与看板一致？",
+        "版本变化是否有具体文件和证据？"
+      ],
+      "checks": [
+        "统一用活动研究分支指挥室做真实状态源",
+        "白皮书每次发布更新版本号",
+        "关键决定记录实施边界和回退方案",
+        "保持公开展示数据与研究记录脱敏"
+      ],
+      "outputs": [
+        "版本白皮书",
+        "科研交接与风险台账"
+      ],
+      "links": [
+        {
+          "label": "最新指挥室",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/governance/COMMAND_ROOM.md",
+          "kind": "evidence"
+        },
+        {
+          "label": "开发白皮书",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/governance/DEVELOPMENT_WHITEPAPER.md",
+          "kind": "evidence"
+        },
+        {
+          "label": "会议与决策模板",
+          "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/main/docs/jiayu-wind-studio/12-组会纪要与科研复盘.md",
+          "kind": "template"
+        }
+      ]
+    }
+  ],
+  "standards": [
+    {
+      "id": "STD-01",
+      "name": "GB/T 18451.1—2022",
+      "sub": "风力发电机组设计要求，等同采用 IEC 61400-1:2019",
+      "kind": "现行标准",
+      "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=9717EF2EA093AC50FFC9ABB7AFA21828",
+      "use": "风况、载荷工况、设计与场址条件"
+    },
+    {
+      "id": "STD-02",
+      "name": "GB 18306—2015",
+      "sub": "中国地震动参数区划图",
+      "kind": "现行标准",
+      "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=EC0585F90CA21ABE02826394F266B623",
+      "use": "地震动区划与场地参数的来源核验"
+    },
+    {
+      "id": "STD-03",
+      "name": "GB 55002—2021",
+      "sub": "建筑与市政工程抗震通用规范",
+      "kind": "现行强制性规范",
+      "url": "https://www.mohurd.gov.cn/gongkai/zc/wjk/art/2021/art_17339_761174.html",
+      "use": "工程抗震基本要求；须核适用对象"
+    },
+    {
+      "id": "STD-04",
+      "name": "风机抗震设计规范制定项目",
+      "sub": "20260132-T-604，尚属于国家标准制订项目",
+      "kind": "制定中 · 不可冒充现行",
+      "url": "https://std.samr.gov.cn/gb/search/gbDetailed?id=210C3B5D44DE1C0EE06397BE0A0A29C5",
+      "use": "跟踪未来标准及适用边界"
+    }
+  ],
+  "datasets": [
+    {
+      "id": "DS-01",
+      "name": "ERA5 逐小时再分析资料",
+      "domain": "风资源",
+      "status": "官方数据库",
+      "url": "https://cds.climate.copernicus.eu/datasets/reanalysis-era5-single-levels?tab=overview",
+      "desc": "用于气候背景与分箱；不是机位测风实测替代品。"
+    },
+    {
+      "id": "DS-02",
+      "name": "36组历史风载包络",
+      "domain": "风荷载",
+      "status": "项目原始索引",
+      "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/experiments/T072/T072_FORMAL_36CASE_BASE_ENVELOPE.csv",
+      "desc": "历史筛选案例；不等于全部正式DLC覆盖。"
+    },
+    {
+      "id": "DS-03",
+      "name": "31段结构配筋",
+      "domain": "结构",
+      "status": "项目设计分支",
+      "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/experiments/T077/T077_FORMAL_31SEG_REBAR_BF8.csv",
+      "desc": "须保留来源与设计分支差异。"
+    },
+    {
+      "id": "DS-04",
+      "name": "预应力损失与重力检查",
+      "domain": "结构",
+      "status": "项目设计分支",
+      "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/experiments/T078/T078_BF8_SEGMENT_LOSS_AND_GRAVITY_CHECK.csv",
+      "desc": "已有数据不是最终全部极限状态验收。"
+    },
+    {
+      "id": "DS-05",
+      "name": "T079真实地震资料及方法",
+      "domain": "地震",
+      "status": "研究档案",
+      "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/experiments/T079/METHOD_PLAN.md",
+      "desc": "选波、处理谱与场地准入以原始记录为准。"
+    },
+    {
+      "id": "DS-06",
+      "name": "T080联合工况准入研究",
+      "domain": "耦合",
+      "status": "研究档案",
+      "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/experiments/T080/INTEGRATION_GATES_AND_PAIRED_DESIGN_20261022.md",
+      "desc": "需满足同源、初态、时程与坐标门禁。"
+    },
+    {
+      "id": "DS-07",
+      "name": "论文正文与证据矩阵",
+      "domain": "论文",
+      "status": "活动分支",
+      "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/manuscript/final-thesis/00_STATUS.md",
+      "desc": "版本应与指挥室核对，切勿从静态页面断言送审完成。"
+    },
+    {
+      "id": "DS-08",
+      "name": "PEER 强震动记录库",
+      "domain": "地震",
+      "status": "外部数据库",
+      "url": "https://ngawest2.berkeley.edu/",
+      "desc": "选波需记录台站、分量、事件、采样及缩放。"
+    },
+    {
+      "id": "DS-09",
+      "name": "USGS 地震目录",
+      "domain": "地震",
+      "status": "外部数据库",
+      "url": "https://earthquake.usgs.gov/earthquakes/search/",
+      "desc": "事件搜索不等于本地工程设计波准入。"
+    }
+  ],
+  "roadmap": [
+    {
+      "n": "Ⅰ",
+      "title": "区域调查与研究定义",
+      "text": "嘉鱼环境背景、风电实际机位、地勘与目标体系；开题报告、项目边界。",
+      "flag": "前期资料需核验",
+      "module": "field"
+    },
+    {
+      "n": "Ⅱ",
+      "title": "风资源与载荷证据",
+      "text": "ERA5/测风来源、概率风箱、历史36组风载、正式DLC覆盖及源级同期性。",
+      "flag": "继承历史成果",
+      "module": "windLoad"
+    },
+    {
+      "n": "Ⅲ",
+      "title": "混塔结构与地震研究",
+      "text": "31段结构设计分支、真实地震波与谱、场址设防参数、基础顶输入。",
+      "flag": "研究中",
+      "module": "seismic"
+    },
+    {
+      "n": "Ⅳ",
+      "title": "联合工况与寿命",
+      "text": "W/E/WE配对、疲劳材料响应、控制变量及优化，不越过物理准入门槛。",
+      "flag": "待闭合门槛",
+      "module": "coupling"
+    },
+    {
+      "n": "Ⅴ",
+      "title": "论文与科研成果",
+      "text": "六章稿、期刊稿、参考文献、图表核读及复现材料。",
+      "flag": "已有正文，需审查",
+      "module": "manuscript"
+    },
+    {
+      "n": "Ⅵ",
+      "title": "送审与归档",
+      "text": "答辩材料、结论逐条审计、学术诚信和版本冻结。",
+      "flag": "不能虚称通过",
+      "module": "governance"
+    }
+  ],
+  "reports": [
+    {
+      "name": "开题与前期研究报告",
+      "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/main/docs/jiayu-wind-studio/01-开题与前期研究报告.md"
+    },
+    {
+      "name": "嘉鱼场址调查",
+      "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/main/docs/jiayu-wind-studio/02-嘉鱼场址调查报告.md"
+    },
+    {
+      "name": "风资源与气象评估",
+      "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/main/docs/jiayu-wind-studio/03-风资源与气象评价.md"
+    },
+    {
+      "name": "风荷载与DLC研究",
+      "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/main/docs/jiayu-wind-studio/04-风荷载与DLC研究报告.md"
+    },
+    {
+      "name": "地震危险性与选波",
+      "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/main/docs/jiayu-wind-studio/05-地震危险性与选波报告.md"
+    },
+    {
+      "name": "混塔结构与材料",
+      "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/main/docs/jiayu-wind-studio/06-混塔结构与材料综述.md"
+    },
+    {
+      "name": "基础与SSI交接",
+      "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/main/docs/jiayu-wind-studio/07-基础SSI接口交接单.md"
+    },
+    {
+      "name": "联合工况与性能",
+      "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/main/docs/jiayu-wind-studio/08-联合工况及性能评价.md"
+    },
+    {
+      "name": "疲劳与优化",
+      "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/main/docs/jiayu-wind-studio/09-疲劳寿命与优化评价.md"
+    },
+    {
+      "name": "文献与规范证据",
+      "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/main/docs/jiayu-wind-studio/10-文献与标准证据登记.md"
+    },
+    {
+      "name": "论文成稿与送审",
+      "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/main/docs/jiayu-wind-studio/11-论文成稿与送审清单.md"
+    },
+    {
+      "name": "组会纪要与科研复盘",
+      "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/main/docs/jiayu-wind-studio/12-组会纪要与科研复盘.md"
+    },
+    {
+      "name": "数据治理与复现",
+      "url": "https://github.com/g2066203208-beep/voxel-frontier/blob/main/docs/jiayu-wind-studio/13-数据治理与复现登记.md"
+    }
+  ],
+  "external": {
+    "GB/T 18451.1-2022": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=9717EF2EA093AC50FFC9ABB7AFA21828",
+    "GB 18306-2015": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=EC0585F90CA21ABE02826394F266B623",
+    "GB 55002-2021": "https://www.mohurd.gov.cn/gongkai/zc/wjk/art/2021/art_17339_761174.html",
+    "风机抗震标准项目（制定中）": "https://std.samr.gov.cn/gb/search/gbDetailed?id=210C3B5D44DE1C0EE06397BE0A0A29C5",
+    "ERA5": "https://cds.climate.copernicus.eu/datasets/reanalysis-era5-single-levels?tab=overview",
+    "中国气象局风能资源公报": "https://www.cma.gov.cn/zfxxgk/gknr/qxbg/202502/W020250211353621904936.pdf",
+    "PEER NGA-West2": "https://ngawest2.berkeley.edu/",
+    "USGS 地震目录": "https://earthquake.usgs.gov/earthquakes/search/",
+    "嘉鱼县区域介绍（中国天气网）": "https://www.weather.com.cn/cityintro/101200703.shtml",
+    "嘉鱼县区域概况（湖北省农业农村厅）": "https://nyt.hubei.gov.cn/bmdt/yw/szdt/202403/t20240308_5112724.shtml"
+  }
+}
