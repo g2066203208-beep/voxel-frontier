@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.30.3**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.30.4**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -31,6 +31,7 @@
 
 | 日期（Asia/Shanghai） | 白皮书版本 | 开发与证据增量 | 科学状态 | 远端事务 |
 |---|---|---|---|---|
+| 2026-11-14 07时 | **v0.30.4 PATCH** | S12直接由真实ESM历史派生46周期谱绘制45点RotD100/RotD50对数周期科研SVG，节点极值1.06619–1.36442，整合至地震章§5.2.5；[科研图](../manuscript/final-thesis/figures/FIG_S05_ESM_ROTD_RATIO_LONG_PERIOD_20261114.svg)，源Git blob `99b0b662`。 | 图和正文已入活动分支；非新物理谱求解/风机响应，12阶段晋级0/12，原波/密谱HOLD。 | [图源提交c0ac51d5](https://github.com/g2066203208-beep/voxel-frontier/commit/c0ac51d5ae949fbeecac56cec76cafc6173d1fe5)；[正文提交c91fa45f](https://github.com/g2066203208-beep/voxel-frontier/commit/c91fa45f19c99f3107a72f722de5330c76896686)。 |
 | 2026-11-14 06时 | **v0.30.3 PATCH** | S05 46行真实ESM派生谱45点对数积分1.160102738；23/16/12点抽稀偏差+0.003518/+1.240042/+0.442826%，以及5个截断窗敏感性；[地震章§5.2.4](../manuscript/final-thesis/drafts/05_地震输入与双水平线性梁代理响应_20261109.md)，源Git blob `99b0b662`、正文blob `a7834375`。 | 真实历史谱源V8派生计算；非单调抽稀说明不能宣称密谱收敛；原波/滤波/场址/物理HOLD，12阶段晋级0/12。 | [科学提交d41ed5f7](https://github.com/g2066203208-beep/voxel-frontier/commit/d41ed5f71b87e4b37680d85c2abc3c7b18eb80c3)；[T080过程](../experiments/T080/PROCESS_LOG.md)。 |
 | 2026-11-14 05时 | **v0.30.2 PATCH** | S05真实ESM 46周期谱RotD100/50对数周期积分：短窗1.155472、长窗1.166449、全窗1.160103；[地震章§5.2.3](../manuscript/final-thesis/drafts/05_地震输入与双水平线性梁代理响应_20261109.md)，历史源SHA256 d85bd916...。 | 真实历史派生谱V8算术，非原波重算/结构地震RUN；低频处理及积分离散误差HOLD，12阶段晋级0/12。 | [科学提交1a475487](https://github.com/g2066203208-beep/voxel-frontier/commit/1a475487d2452f8a01d38e2462775c59cd8aa3da)；[T080过程](../experiments/T080/PROCESS_LOG.md)。 |
 | 2026-11-14 04时 | **v0.30.1 PATCH** | S11代理准入发现矩形边界不能保证二维训练域内插，新增凸包判定与细长训练域反例拒绝测试；[源文件](../manuscript/final-thesis/assemble/s11_surrogate_admission_20261114.mjs)，源码Git blob `50705cd38b6eca45f1c0db4a2a72ae93c1f33d73`。 | 原仓库JS逻辑在V8中直接执行48点正例及5类拒绝PASS（含凸包外矩形内）；非真实DOE/物理验证，12阶段0/12、DLC1.2 0/126。 | [科学提交a207fc37](https://github.com/g2066203208-beep/voxel-frontier/commit/a207fc37d668129f07e315cd91a8cedd6baf817b)；T080过程日志。 |
