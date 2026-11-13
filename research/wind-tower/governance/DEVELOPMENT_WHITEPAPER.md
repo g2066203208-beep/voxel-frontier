@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.29.8**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.29.9**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -31,6 +31,7 @@
 
 | 日期（Asia/Shanghai） | 白皮书版本 | 开发与证据增量 | 科学状态 | 远端事务 |
 |---|---|---|---|---|
+| 2026-11-13 19时 | **v0.29.9 PATCH** | 直接读取真实ERA5 31-bin及历史72行DEL4，对9–10/11–12/19–20m/s三个NTM已覆盖箱做六seed四次幂平均与全时段概率加权，得到部分年度A4：Mx 3.9611309279e9、My 6.5991381954e12 (MN·m)^4/year；覆盖7164/184080小时=3.89178618%。 | 真实历史源派生算术PASS；箱内常值近似、尾部两小时及未覆盖96.1082% HOLD；非完整全年指标/材料寿命；12阶段0/12。 | [期刊§4.26](../manuscript/journal-wind-fatigue-results.md)；[T080](../experiments/T080/PROCESS_LOG.md)；本提交Git History。 |
 | 2026-11-13 18时 | **v0.29.8 PATCH** | 72行历史DEL4按6seed分组，新增12行条件性年度雨流范围四次幂数表（52560×100000×mean(DEL^4)/1e12），同时保留真实cycle-count均值；严格不将ETM作为全年发生概率。 | SOURCE历史SHA256 b362bcd7...；V8数值复算，非新物理RUN；12阶段0/12，Miner/正式DLC HOLD。 | [期刊§4.25](../manuscript/journal-wind-fatigue-results.md)；[科学提交](https://github.com/g2066203208-beep/voxel-frontier/commit/c3d16dceae0c249dcc669cfa4d3c42dce62f629d)。 |
 | 2026-11-13 16时（S10缺失风箱四次矩不可识别性） | **v0.29.6 PATCH** | 基于184080小时ERA5真实零观测20–25m/s五箱及19–20m/s两小时、历史六seed M4，构造δ>0、μ4=K/δ反例，证明缺失风箱未有载荷界时全年无条件四次矩无有限数据可识别上界；给出附加L与p_U时的条件性界，不冒充物理结果。 | 解析证明PASS；真实尾部载荷、年度事件簇、Miner、正式DLC1.2及12阶段0/12仍HOLD。 | [S10原研究追加](../experiments/T062/S10_ERA5_ZERO_TAIL_IDENTIFIABILITY_20261113.md)；[科学提交26dcadd3](https://github.com/g2066203208-beep/voxel-frontier/commit/26dcadd378322f8d76444b7a775c6e862563cf0b)。 |
 | 2026-11-13 14时（S10 ERA5零尾部可识别性） | **v0.29.4 PATCH** | 从既有184080小时ERA5原始31bin归档零观测20–25m/s尾部，推导独立小时假设上界1.6273946e-5与21独立年度块上界13.2946%；明确独立性/非平稳性、不能推断50年极值及不能以零观测删除风况。 | 解析方法与正文增量；无新风机物理RUN；12阶段0/12，正式DLC1.2未晋级。 | [S10实质研究](../experiments/T062/S10_ERA5_ZERO_TAIL_IDENTIFIABILITY_20261113.md)；[commit e0d1eec4](https://github.com/g2066203208-beep/voxel-frontier/commit/e0d1eec4101dbc19d647892ee0c0b4f36b3dccc9)。 |
