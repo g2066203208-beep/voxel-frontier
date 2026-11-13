@@ -1,0 +1,74 @@
+name: S10 10 NTM source-locked native input cards (NO SOLVER)
+on:
+  push:
+    branches: [research/t080-seismic-integration-gates-20261022]
+    paths:
+      - '.github/workflows/s10-native-ntm-stage-a-input-cards-20261113.yml'
+      - 'research/wind-tower/experiments/T062/s10_make_native_turbsim_ntm_stage_a_20261113.mjs'
+      - 'research/wind-tower/experiments/T062/S10_ADAPTIVE_WIND_16CASE_PILOT_MANIFEST_20261113.csv'
+      - 'research/wind-tower/experiments/T062/S10_U07p5_NTM_S01_TURBSIM_PILOT_20261105.inp'
+      - 'research/wind-tower/experiments/T062/pilot_ntm_stage_a_20261113/**'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  ten-card-same-bytes-reconstruction:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Generate 10 source-locked cards and independently compare all committed source cards
+        shell: bash
+        run: |
+          set -euo pipefail
+          D=research/wind-tower/experiments/T062
+          node --check "$D/s10_make_native_turbsim_ntm_stage_a_20261113.mjs"
+          node "$D/s10_make_native_turbsim_ntm_stage_a_20261113.mjs" --selftest
+          mkdir -p /tmp/s10-stage-a-native
+          node "$D/s10_make_native_turbsim_ntm_stage_a_20261113.mjs" /tmp/s10-stage-a-native
+          test "$(find /tmp/s10-stage-a-native -maxdepth 1 -name '*.inp' | wc -l)" -eq 10
+          test "$(find "$D/pilot_ntm_stage_a_20261113" -maxdepth 1 -name '*.inp' | wc -l)" -eq 10
+          for file in "$D"/pilot_ntm_stage_a_20261113/*.inp; do
+            cmp "$file" "/tmp/s10-stage-a-native/$(basename "$file")"
+          done
+          cp /tmp/s10-stage-a-native/S10_STAGE_A_CARD_SHA256_RECEIPT_20261113.json ./S10_STAGE_A_CARD_SHA256_RECEIPT_20261113.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          data=json.loads(Path('S10_STAGE_A_CARD_SHA256_RECEIPT_20261113.json').read_text())
+          assert data['stage_a_card_count']==10 and data['stage_b_generated']==0
+          assert data['formal_DLC12_validated']==0 and data['BTS_generated']==0
+          assert data['OpenFAST_OUTB_generated']==0 and not data['material_Miner_calculated']
+          print('10_REAL_SOURCE_CARDS_VERIFIED; TURBSIM_RUNS=0; OPENFAST_RUNS=0; NO_PHYSICS_PASS')
+          PY
+          sha256sum "$D/s10_make_native_turbsim_ntm_stage_a_20261113.mjs" "$D"/pilot_ntm_stage_a_20261113/*.inp | tee s10_stage_a_input_sha256.log
+      - name: Tamper source should fail closed (parent SHA and seed plan)
+        shell: bash
+        run: |
+          set -euo pipefail
+          D=research/wind-tower/experiments/T062
+          mkdir -p /tmp/s10-stage-a-tamper
+          cp "$D/s10_make_native_turbsim_ntm_stage_a_20261113.mjs" "$D/S10_U07p5_NTM_S01_TURBSIM_PILOT_20261105.inp" "$D/S10_ADAPTIVE_WIND_16CASE_PILOT_MANIFEST_20261113.csv" /tmp/s10-stage-a-tamper/
+          sed -i 's/7.5      URef/7.6      URef/' /tmp/s10-stage-a-tamper/S10_U07p5_NTM_S01_TURBSIM_PILOT_20261105.inp
+          if node /tmp/s10-stage-a-tamper/s10_make_native_turbsim_ntm_stage_a_20261113.mjs /tmp/s10-invalid; then
+            echo 'ERROR: mutated source accepted'; exit 1
+          fi
+          cp "$D/S10_U07p5_NTM_S01_TURBSIM_PILOT_20261105.inp" /tmp/s10-stage-a-tamper/
+          sed -i '2s/4-6/4-7/' /tmp/s10-stage-a-tamper/S10_ADAPTIVE_WIND_16CASE_PILOT_MANIFEST_20261113.csv
+          if node /tmp/s10-stage-a-tamper/s10_make_native_turbsim_ntm_stage_a_20261113.mjs /tmp/s10-invalid2; then
+            echo 'ERROR: mutated plan accepted'; exit 1
+          fi
+          echo 'SOURCE_AND_PLAN_TAMPER_REJECTED_PASS'
+      - name: Preserve verified SHA and reconstruction receipt
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: s10-ten-ntm-card-source-reconstruction-receipt
+          path: |
+            S10_STAGE_A_CARD_SHA256_RECEIPT_20261113.json
+            s10_stage_a_input_sha256.log
+          if-no-files-found: warn
+          retention-days: 30
