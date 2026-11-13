@@ -37,3 +37,7 @@ https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-in
 ## 已核实的前期资料简报
 - [嘉鱼区域前期资料核验简报](./00-%E5%98%89%E9%B1%BC%E5%8C%BA%E5%9F%9F%E5%89%8D%E6%9C%9F%E8%B5%84%E6%96%99%E6%A0%B8%E9%AA%8C%E7%AE%80%E6%8A%A5.md)
 - [风震规范与数据源核验简报](./00-%E9%A3%8E%E9%9C%87%E8%A7%84%E8%8C%83%E4%B8%8E%E6%95%B0%E6%8D%AE%E6%BA%90%E6%A0%B8%E9%AA%8C%E7%AE%80%E6%8A%A5.md)
+
+## 资料库与上传下载（v1.2.0）
+- [公开资料中心](https://g2066203208-beep.github.io/voxel-frontier/thesis-studio/library.html)
+- [文件管理与投稿说明](./FILES.md)

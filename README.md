@@ -78,3 +78,5 @@ PROJECT.md              产品范围与后续方向
 - 16个专题：前期研究、场址调研、风资源、风荷载、地震、混塔结构、基础与SSI、联合工况、疲劳、优化、文献规范、论文、报告、数据复现与学术治理。
 - 13套学术报告模板：[报告体系目录](docs/jiayu-wind-studio/README.md)。
 - 论文已有真实研究成果仍以[活动研究分支指挥室](https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/governance/COMMAND_ROOM.md)为准；公开网页是学术资料入口，不是正式验收进度表。
+
+- [GitHub 研究资料中心（3,235份研究文件分类索引、上传与下载）](https://g2066203208-beep.github.io/voxel-frontier/thesis-studio/library.html)
