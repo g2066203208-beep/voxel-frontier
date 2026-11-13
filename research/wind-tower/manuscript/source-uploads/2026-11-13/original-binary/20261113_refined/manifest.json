@@ -1,0 +1,50 @@
+{
+  "format": "git-binary-chunks-v1",
+  "original_filename": "DTU10MW_158m_six_chapter_advisor_REFINED_20261113.docx",
+  "original_size": 5414180,
+  "original_sha256": "f2e8a68166cb129aee7611d914f9ce2d3695fe8b1c2ad2f58aa1c35f80505769",
+  "parts": [
+    {
+      "index": 0,
+      "filename": "part-000.bin",
+      "size": 1048576,
+      "sha256": "08d28f90d184b6aafdb48fc43d831f843db207787c449c33039dd15f5927d0dd",
+      "git_blob_sha1": "37fd08b637827ae15705433f66b266ba62cb56fc"
+    },
+    {
+      "index": 1,
+      "filename": "part-001.bin",
+      "size": 1048576,
+      "sha256": "380a78339b410deb42374606f68d16b79e41d2e496467c1f90213daa47de1978",
+      "git_blob_sha1": "a29819c30718d7ddf773ed4d0474e07810333468"
+    },
+    {
+      "index": 2,
+      "filename": "part-002.bin",
+      "size": 1048576,
+      "sha256": "baf7c4f314b5cecd2065d972e497907bd5bd270653cb62d3ff00c8063d2e4497",
+      "git_blob_sha1": "0de5bdb18b7723528b020911e4c2c9c0b9dfbef8"
+    },
+    {
+      "index": 3,
+      "filename": "part-003.bin",
+      "size": 1048576,
+      "sha256": "fbc603853de7962b687ffb591b2845b17f750b0b1864b6422fe2e5ac098963cf",
+      "git_blob_sha1": "50351b4211ea7c7eb4c930bc3f6c172f3018bc55"
+    },
+    {
+      "index": 4,
+      "filename": "part-004.bin",
+      "size": 1048576,
+      "sha256": "486c63f6859bbbae61148dffad9dbc96e8a92d766162ae54641cfe4fbf3c0110",
+      "git_blob_sha1": "84e84e826f92c1677c2731558ee20447c989fae5"
+    },
+    {
+      "index": 5,
+      "filename": "part-005.bin",
+      "size": 171300,
+      "sha256": "19c9ccc7f0381597493d30b3716df17459792be20f8316006844c127df1a9281",
+      "git_blob_sha1": "2748de6cf4debb12529fc2fbdb4f4cdda23ae553"
+    }
+  ]
+}
