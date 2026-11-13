@@ -61,7 +61,55 @@ const max=100*MiB,category=$("#upload-category").value,notes=$("#upload-notes").
 await loadLocal();toast("已保存 "+saved+" 个文件"+(skipped?" · "+skipped+" 个未保存":""));}
 async function localZip(){const items=S.local.filter(x=>S.localSelected.has(x.id));if(!items.length){toast("请选择要导出的文件");return;}const entries=[];try{for(const f of items){const blob=await readBlob(f.id);if(!blob)throw Error("文件已不存在："+f.name);entries.push({name:f.id.slice(-5)+"_"+f.name,blob,time:f.createdAt});}const zip=await zipFiles(entries);downloadBlob(zip,"嘉鱼我的资料_"+items.length+"项.zip");toast("已导出 "+items.length+" 项");}catch(err){toast("压缩包导出失败："+err.message.slice(0,65));}}
 async function loadCatalog(){try{const res=await fetch("./data/repository-index.json",{cache:"no-store"});if(!res.ok)throw Error("HTTP "+res.status);const index=await res.json();if(!Array.isArray(index.files)||!index.source?.sha)throw Error("Malformed file index");S.index=index;S.all=index.files;const group=$("#group-filter");for(const x of index.groups){const option=document.createElement("option");option.value=x.name;option.textContent=x.name+" ("+x.count+")";group.append(option);}updateStats();remoteList();}catch(err){$("#remote-list").replaceChildren(Elem("div","empty","GitHub资料索引加载失败"));console.error(err);}}
-function bind(){for(const b of $$("[data-tab]"))b.addEventListener("click",()=>route(b.dataset.tab));$("#upload-shortcut").addEventListener("click",()=>{route("local");$("#file-input").click();});
+
+function classifyLive(path,size){
+const rel=path.startsWith("research/wind-tower/")?path.slice(20):path;
+const parts=rel.split("/"),first=parts[0],id=parts[1]||"";
+let group="其他研究资产";
+if(first==="manuscript")group="论文与期刊";
+else if(first==="references")group="文献与标准";
+else if(first==="governance")group="指挥室与白皮书";
+else if(first==="workflow"||first==="requirements")group="研究方案与报告";
+else if(first==="registry")group="科研台账";
+else if(first==="geometry"||first==="models")group="几何与模型";
+else if(first==="pdf-archives")group="PDF与打包归档";
+else if(first==="archive")group="历史归档";
+else if(first==="audit"||first==="inspection")group="质量审查";
+else if(first==="experiments"){
+if(["T079","T080"].includes(id))group="地震与风震联合";
+else if(["T062","T063","T064","T065","T071","T072","T073","T074","T075","T076"].includes(id))group="风资源与载荷";
+else if(["T077","T078"].includes(id))group="混塔配筋与预应力";else group="其他实验研究";
+}
+const name=path.split("/").pop(),ext=name.includes(".")?name.split(".").pop().toLowerCase():"";
+let type="模型/其他";
+if(["md","txt","html","rtf","doc","docx","pdf","ppt","pptx"].includes(ext))type="文档";
+else if(["csv","tsv","xlsx","xls","json","jsonl","yaml","yml","out","outb"].includes(ext))type="数据";
+else if(["py","js","cjs","mjs","ts","tsx","sh","ipynb","c","cpp"].includes(ext))type="脚本";
+else if(["svg","png","jpeg","jpg","webp","gif"].includes(ext))type="图表";
+else if(["zip","gz","tgz","7z","rar"].includes(ext))type="归档";
+return {p:path,n:name,s:size||0,e:ext,g:group,t:type,l:!!(size<210&&["cae","step","stl","zip","gz","outb","bin"].includes(ext))};
+}
+async function refreshGithub(){
+if(!S.index)return;
+const btn=$("#remote-refresh"),orig=btn.textContent;btn.disabled=true;btn.textContent="同步中…";
+try{
+const src=S.index.source,api="https://api.github.com/repos/"+src.repository;
+async function apiJson(url){const r=await fetch(url,{headers:{"Accept":"application/vnd.github+json"}});if(!r.ok)throw Error("GitHub HTTP "+r.status);return r.json();}
+const ref=await apiJson(api+"/git/ref/heads/"+src.branch);
+const dirs=await apiJson(api+"/contents/research?ref="+encodeURIComponent(src.branch));
+const folder=dirs.find(x=>x.name==="wind-tower"&&x.type==="dir");if(!folder)throw Error("研究目录不存在");
+const tree=await apiJson(api+"/git/trees/"+folder.sha+"?recursive=1");if(tree.truncated)throw Error("GitHub目录返回不完整");
+const found=tree.tree.filter(x=>x.type==="blob").map(x=>classifyLive("research/wind-tower/"+x.path,x.size));
+found.sort((a,b)=>a.g.localeCompare(b.g,"zh")||a.p.localeCompare(b.p,"en"));
+const groups=[...new Set(found.map(x=>x.g))].map(name=>({name,count:found.filter(x=>x.g===name).length}));
+S.index={...S.index,source:{...src,sha:ref.object.sha,tree:folder.sha},files:found,fileCount:found.length,groups};
+S.all=found;S.remoteSelected.clear();S.page=0;S.group="";S.type="";S.search="";$("#remote-search").value="";$("#type-filter").value="";
+const select=$("#group-filter");select.replaceChildren();const first=document.createElement("option");first.value="";first.textContent="全部专题";select.append(first);
+for(const x of groups){const opt=document.createElement("option");opt.value=x.name;opt.textContent=x.name+" ("+x.count+")";select.append(opt);}
+updateStats();remoteList();toast("已同步 "+found.length+" 个研究文件");
+}catch(e){toast("同步失败："+e.message.slice(0,65)+"；沿用已发布索引");console.error(e);}finally{btn.disabled=false;btn.textContent=orig;}
+}
+function bind(){for(const b of $("[data-tab]"))b.addEventListener("click",()=>route(b.dataset.tab));$("#upload-shortcut").addEventListener("click",()=>{route("local");$("#file-input").click();});
 $("#export-manifest").addEventListener("click",()=>S.index?exportCSV(S.shown):toast("索引尚未加载"));
 $("#remote-search").addEventListener("input",e=>{S.search=e.target.value;S.page=0;remoteList();});
 $("#group-filter").addEventListener("change",e=>{S.group=e.target.value;S.page=0;remoteList();});
@@ -69,7 +117,7 @@ $("#type-filter").addEventListener("change",e=>{S.type=e.target.value;S.page=0;r
 $("#remote-prev").addEventListener("click",()=>{S.page--;remoteList();});$("#remote-next").addEventListener("click",()=>{S.page++;remoteList();});
 $("#remote-all").addEventListener("change",e=>{for(const x of S.shown.slice(S.page*S.pageSize,(S.page+1)*S.pageSize)){e.target.checked?S.remoteSelected.add(x.p):S.remoteSelected.delete(x.p);}remoteList();});
 $("#remote-manifest").addEventListener("click",()=>{const data=S.all.filter(x=>S.remoteSelected.has(x.p));if(!data.length){toast("请先选择文件");return;}exportCSV(data);});
-$("#remote-bundle").addEventListener("click",remoteZip);
+$("#remote-bundle").addEventListener("click",remoteZip);$("#remote-refresh").addEventListener("click",refreshGithub);
 $("#local-all").addEventListener("change",e=>{for(const x of S.local){e.target.checked?S.localSelected.add(x.id):S.localSelected.delete(x.id);}renderLocal();});
 $("#local-zip").addEventListener("click",localZip);
 $("#local-delete").addEventListener("click",async()=>{if(!S.localSelected.size){toast("未选择文件");return;}if(!confirm("删除选中的 "+S.localSelected.size+" 个本地文件？"))return;for(const id of S.localSelected)await removeFile(id);S.localSelected.clear();await loadLocal();toast("本地文件已删除");});
