@@ -1,3 +1,7 @@
+## 2026-11-13 23时｜S12真实章节阅读增补页源级持久化
+
+PR#42基线88997ab840836297ad9c56d9c08f95b5d09ff6f1；已读AGENTS、COMMAND_ROOM、白皮书、MASTER、STATUS、12阶段、T080及当前Ch4/六章阅读母稿。SOURCE：Ch4 Git blob `32474bd1b185c99829b180fd232f2be5e8db2c31`、阅读母稿 `57cb73f4432a7293fe56936761b7c68c91b05cf8`。RUN：直接读取真实GitHub章节，严格定位唯一§4.7.26（1943字符）与§4.10.1（1477字符），确认旧母稿不含对应三级标题，保存非冻结导师阅读增补页 `manuscript/final-thesis/assemble/S12_CH4_ADVISOR_READING_ADDENDUM_20261113.md`，源提交 `65663a9b95c6b43ebed1b8e4f165ba02dd917399`。未运行原生Python脚本、未生成DOCX或PDF，SHA256及Word视觉验收HOLD；不以GitHub提取替代原程序测试。REF/STANDARD/OFFICIAL/FIG/TAB无新，正文沿用原有真实历史表。白皮书v0.29.13，正式12阶段0/12晋级0/12，DLC1.2 0/126。下一唯一动作：用非冻结装配入口将已核实真实增补页制成导师可读DOCX并独立视觉核读，不动冻结母本、main、PR合并或禁止的Abaqus/CAE。
+
 2026-11-13 22时｜S12发现旧193页导师Word SHA锁母稿不含最新Ch4§4.7.26/§4.10.1；新增非冻结阅读增补程序 s12_ch4_latest_addendum.py（源码commit 83f3472c8e248ca552da8b8c15c980aa4ae2d170），提取两节并拒绝重复/缺失/覆盖，源SHA256随输出。真实源CLI/新版Word尚未运行，不冒称同步；白皮书v0.29.12；12阶段晋级0/12。下一唯一动作：执行程序并产出真实增补页，再走非冻结Word装配。禁止范围保持。
 
 2026-11-13 21时｜S12 Ch4§4.10.1三级证据分层与可证伪结论完成；read_base_ch4_blob=c946f96fa801590d4d736f583b9c1a115989f4b9；科学commit ed68c8710a1e0c190cec5a8962ab7b7c3bf10871；白皮书v0.29.11。新增1479字符连续科学正文，整合真实36风screening、18NTM近底同步毛截面应力、ERA5三箱7164/184080h部分A4和局部材料应力不可识别边界；无新物理RUN/图，12阶段晋级0/12。下一唯一动作验证新增章节在导师Word非冻结装配入口中的同步与阅读效果；禁止Abaqus/CAE、冻结母本/main、昂贵RUN和PR合并。
