@@ -1,0 +1,29 @@
+name: Jiayu Research Library QA
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'public/thesis-studio/**'
+      - 'scripts/test-jiayu-library.cjs'
+      - '.github/workflows/jiayu-library-qa.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  library-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify repository index, library UI and ZIP exports
+        run: node scripts/test-jiayu-library.cjs
