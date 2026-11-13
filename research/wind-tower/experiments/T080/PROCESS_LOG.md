@@ -2374,3 +2374,8 @@ SOURCE=18行历史ETM/NTM×Mx/My配对交互CSV，Git blob 8a6e983a2c8e00f79f786
 ## 2026-11-11 12时｜S05独立RotD重算源级算法（0/12）
 
 READ base=38e861f3c8b9a882e7fff8b1d8c271826bbc6dbf；PR#42 Open/Draft；已核研究AGENTS、COMMAND_ROOM最新本机交接、白皮书v0.9.10、T079原ESM恢复源码、原论文附章。最新本机交接确认官方ESM ZIP已可恢复且原始三分量导出CSV SHA256 a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34，云端本轮未取得原ZIP字节。新增独立Newmark平均加速度5%阻尼RotD50/100计算源码 `T079/s05_rotd_independent_newmark.py`，支持HNE/HNN同步SI加速度、均匀dt、1°方向旋转与两正交方向的360个峰值；附章A.9给出数学定义、误差预算与反例限制。SOURCE=既有ESM原波恢复收据（本轮未读原波字节）；OFFICIAL=既有ESM来源；REF/STANDARD=未新增授权条款；RUN=源码已入Git，但原生Python CLI、自测及真实原波谱重算NOT_RUN；FIG=无；TAB=无新真实谱值。程序无物理PASS；12阶段0/12晋级0/12、DLC1.2 0/126，设计谱/低频可信/同态WE/Miner HOLD。下一动作：用现有ESM恢复脚本导出的原波在非Abaqus环境执行独立谱计算，与46周期谱逐点比较并做角度/时间收敛；不得凭算法提交冒称已完成。
+
+
+## 2026-11-13 13时｜S12多终点前瞻反证设计（0/12）
+
+继承§4.22独立seed零反例上界，在期刊主稿§4.23推导K终点Bonferroni同时95%上界 U=1-(0.05/K)^(1/n)；K=1/2/6时达到10%所需n=29/36/46，达到5%所需n=59/72/94（每终点独立块）。六终点46块上界9.8843%，94块4.9656%；同一seed对的Mx/My不得算成独立两块。SOURCE=历史72条DEL4背景（本轮未重新解码）；RUN=独立解析算术；TAB=6项样本量；FIG=无；REF/STANDARD/OFFICIAL=无新增；真实物理RUN=无。仅研究设计PASS，12阶段0/12，DLC1.2 0/126，正式风箱/同源W/材料局部应力HOLD。未触碰Abaqus、冻结母本、main、昂贵RUN或PR合并。
