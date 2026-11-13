@@ -751,3 +751,21 @@ The historical 158 m OpenFAST NTM base-reaction spectrum provides a falsifiable 
 All 924 equal-size unpaired label permutations give two-sided tail fractions 2/924 for mean My and 6/924 for band RMS. By contrast, six paired-label sign-flip tests have only 64 possible sign assignments, with two-sided 2/64 for each metric; across six exploratory endpoints, Holm-adjusted paired p is 0.1875. Crucially, the My band-RMS sample ranges overlap (19,093.680–24,411.789 kN·m at 19.202 m/s versus 12,405.180–19,466.050 kN·m at 11.4 m/s), falsifying the stronger claim of universal separation across every seed pairing. These finite-sample calculations demonstrate a *conditional* reversal of mean and dynamic response, not a validated wind-speed population effect. Matching seed suffixes do not establish a legitimate paired randomization design, and the 300 s half-window counterexample for Mx remains.
 
 Reproducibility: the 36-row historical spectral source has SHA256 `c3de99d45c70675f6a95a767e73dcfc50d57d07b4f33438ee705690b694ae622`; the source-locked Node enumerator is `experiments/T062/s06_ntm18_exact_seed_inference.cjs`, with a six-row output and an original figure `FIG3_S06_SPECTRAL_SEED_INFERENCE_20261112.svg`. Four corrupted-input rejection fixtures were exercised in the JS computation; native Node CLI and original OUTB re-decoding were not performed in this increment. This remains a base-*reaction* screening result, not an aerodynamic-force, local-stress, seismic-interaction, or material-fatigue result. No new licensed IEC clause or full-text 2026 prior-work reading is claimed.
+
+
+### Exact finite-label reference for historical ETM/NTM six-seed contrasts (2026-11-13)
+
+The archived 72 case–channel DEL4 values (36 wind cases × two tower-base moment channels; load DEL in kN·m, `m=4`, `Neq=100000`) were re-examined without generating new wind or structural simulations. For each of three mean wind-speed bins and each moment channel, the six ETM and six NTM DEL4 observations were pooled and all `C(12,6)=924` equal-size category assignments enumerated. The statistic was the ratio of fourth-power means, `R=[mean(DEL_ETM^4)/mean(DEL_NTM^4)]^(1/4)`; its monotonic fourth power was used to count one-sided tails. The observed labels are one member of this finite reference set, so there is no Monte Carlo sampling error.
+
+| Wind speed (m/s) | Channel | Observed ETM/NTM R | Exact upper-tail count/924 | Doubled smaller-tail p |
+|---|---|---:|---:|---:|
+| 9.343881 | TwrBsMxt | 1.597441 | 1/924 | 0.002165 |
+| 9.343881 | TwrBsMyt | 1.686437 | 1/924 | 0.002165 |
+| 11.400000 | TwrBsMxt | 1.557114 | 1/924 | 0.002165 |
+| 11.400000 | TwrBsMyt | 1.474416 | 1/924 | 0.002165 |
+| 19.202140 | TwrBsMxt | 1.315225 | 5/924 | 0.010823 |
+| 19.202140 | TwrBsMyt | 1.323020 | 1/924 | 0.002165 |
+
+**Interpretation boundary.** These are exact *conditional label-randomization reference probabilities*, not automatically valid inferential p-values for a physical ETM-versus-NTM population: ETM/NTM are deliberately different turbulence regimes, and exchangeability of all twelve runs under the sharp null has not been established. The six tests share wind realizations and channels, so their tail counts cannot be multiplied or treated as independent evidence. In particular, the four high-speed Mx cross-category reversals remain genuine observed counterexamples despite the small finite-label upper-tail proportion. The 924 allocations are not 924 new physical samples, and this does not establish formal DLC1.2 coverage, material Miner damage, or a confidence interval for future seeds.
+
+SOURCE: `experiments/T062/recomputed-load-fatigue/05_LOAD_DEL_M4_ALL36_RECOMPUTED.csv` (SHA256 `b362bcd7c37ccc56e21035de39448b5e761ec03f371b6b2f3eb30f41b013630d`). RUN: exhaustive deterministic 924-label enumeration in connector V8, independently source-locked runnable Node implementation `experiments/T062/s10_etm_ntm_exact_label_permutation.cjs` (native Node CLI pending). REFERENCE: historical 72-case DEL4, not a new OUTB decode. Rejection: script refuses source SHA drift, malformed rows and duplicate seed identities. Numerical error: deterministic double-precision summation, no stochastic permutation error; source processing and cross-bin dependence remain unquantified.
