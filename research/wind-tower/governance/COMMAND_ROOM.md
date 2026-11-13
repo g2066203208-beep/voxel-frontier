@@ -1,3 +1,7 @@
+## 2026-11-14 04时｜S11凸包外插拒绝实测
+
+PR#42开工HEAD 0285f8e4，Open/Draft；读取研究AGENTS、指挥室、白皮书、MASTER、STATUS、12阶段及T079/T080。原S11 JS已通过V8直接执行48点正例和4项拒绝；发现仅以逐变量min/max限定候选会允许二维凸包外的伪内插。改原JS增加单调链凸包与有向面积拒绝，新增24点细长训练域、候选(0.7,-0.7)处于矩形内但凸包外的反例。实际执行48点正例及5类拒绝PASS，LOOCV绝对误差约[2.56e-13,1.78e-15,3.89e-16,1.53e-16]，只是精确二次解析fixture；未有真实DOE、物理优化或NSGA-II。科学commit a207fc37，源blob 50705cd3；白皮书v0.30.1；12阶段晋级0/12。下一动作转S05已有实测谱独立分析，避免无真实DOE时反复解析小测试。禁止工作及冻结母本/main/PR合并均未触碰。
+
 ## 2026-11-14 03时｜S11二次代理约束准入源级模块
 
 PR#42 Open/Draft；开工HEAD dbd5ef2c，已按AGENTS/READ-BEFORE-WRITE/白皮书/MASTER/STATUS/12阶段/T079/T080核读。S06已存在18NTM完整原始OUTB及全速六分量artifact来源收据，但本轮未取回原始字节，未冒称W同态放行；按反卡死纪律转S11。新增可复用JS二次响应面+留一误差/保守约束/拒绝测试源 `manuscript/final-thesis/assemble/s11_surrogate_admission_20261114.mjs`（科学源提交e52c40b6）；独立Python同类算法48点解析测试+4负测已运行，JS原生尚未运行，真实DOE/优化/物理结果均HOLD。白皮书v0.30.0 MINOR；正式12阶段晋级0/12、DLC1.2 0/126。下一唯一动作：运行仓库JS自测并寻找真实非Abaqus DOE响应，若无则切S05实测谱独立研究。未动禁区、冻结母本/main、昂贵RUN或PR合并。
