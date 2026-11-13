@@ -1,0 +1,161 @@
+{
+  "status": "SOURCE_LEVEL_RESEARCH_PILOT_DESIGN_ONLY",
+  "data_basis": "2005-2025 ERA5 derived 184080h / NTM historical identity",
+  "diagnostic_wind_range_mps": "[4,25) NOT_OFFICIAL_CUT_IN_OUT",
+  "bin_width_mps": "2 except [24,25)",
+  "observed_operating_hours": 106900,
+  "total_era5_hours": 184080,
+  "historical_NTM_count": 18,
+  "original_1m_historical_coverage_hours": 7164,
+  "original_1m_historical_coverage_share": 0.06701590271281571,
+  "observed_2m_groups": 8,
+  "archived_anchor_2m_groups": 3,
+  "missing_observed_2m_groups": 5,
+  "zero_observed_tail_2m_groups": 3,
+  "stage_A_positive_pilot_new_cases": 10,
+  "stage_B_tail_conditional_pilot_new_cases": 6,
+  "research_6_seed_complete_without_historical_reuse": 66,
+  "research_6_seed_complete_with_all_18_historical_cases_qualified": 48,
+  "historical_reuse_is_not_authorized": true,
+  "scenario_proxy_warning": "p=0/2/4/6/8/10 multiplies ERA5 hour count by U_mid^p; NOT material fatigue damage, bounds, IEC weights or evidence of fatigue risk",
+  "annual_Miner_status": "NOT_IDENTIFIABLE_WITH_THIS_SOURCE",
+  "new_wind_turbine_runs": 0,
+  "power_proxy_top5": {
+    "0": [
+      {
+        "range": "4-6",
+        "share": 0.4835921421889616
+      },
+      {
+        "range": "6-8",
+        "share": 0.3223666978484565
+      },
+      {
+        "range": "8-10",
+        "share": 0.1401403180542563
+      },
+      {
+        "range": "10-12",
+        "share": 0.042797006548175864
+      },
+      {
+        "range": "12-14",
+        "share": 0.008952291861552853
+      }
+    ],
+    "2": [
+      {
+        "range": "6-8",
+        "share": 0.3395156444954856
+      },
+      {
+        "range": "4-6",
+        "share": 0.26500482605228926
+      },
+      {
+        "range": "8-10",
+        "share": 0.2427100509831738
+      },
+      {
+        "range": "10-12",
+        "share": 0.10967692573816082
+      },
+      {
+        "range": "12-14",
+        "share": 0.03211689179714408
+      }
+    ],
+    "4": [
+      {
+        "range": "8-10",
+        "share": 0.3044598770041904
+      },
+      {
+        "range": "6-8",
+        "share": 0.261138654766615
+      },
+      {
+        "range": "10-12",
+        "share": 0.2026444175193228
+      },
+      {
+        "range": "4-6",
+        "share": 0.10804861579878228
+      },
+      {
+        "range": "12-14",
+        "share": 0.08287880471693031
+      }
+    ],
+    "6": [
+      {
+        "range": "8-10",
+        "share": 0.27918767509925646
+      },
+      {
+        "range": "10-12",
+        "share": 0.2724882252790144
+      },
+      {
+        "range": "12-14",
+        "share": 0.15527302144507782
+      },
+      {
+        "range": "6-8",
+        "share": 0.1479704201111977
+      },
+      {
+        "range": "14-16",
+        "share": 0.0731005247118949
+      }
+    ],
+    "8": [
+      {
+        "range": "10-12",
+        "share": 0.27714857791285513
+      },
+      {
+        "range": "12-14",
+        "share": 0.21949865091672457
+      },
+      {
+        "range": "8-10",
+        "share": 0.19444311851739957
+      },
+      {
+        "range": "14-16",
+        "share": 0.13817746921043098
+      },
+      {
+        "range": "16-18",
+        "share": 0.08177571941315481
+      }
+    ],
+    "10": [
+      {
+        "range": "12-14",
+        "share": 0.2439570952264391
+      },
+      {
+        "range": "10-12",
+        "share": 0.2221668791925755
+      },
+      {
+        "range": "14-16",
+        "share": 0.20506086815192637
+      },
+      {
+        "range": "16-18",
+        "share": 0.15615646867641728
+      },
+      {
+        "range": "8-10",
+        "share": 0.10711403689074947
+      }
+    ]
+  },
+  "input_sha256": {
+    "S10_ERA5_2005_2025_HUB_1MS_BINS_20261031.csv": "e4058620a36b23bb218103875d4dc5b0711fc45d418b23a2208c2fc9c16c9102",
+    "S10_ERA5_21BIN_6SEED_NTM_SOURCE_COVERAGE_20261031.csv": "d4e25023f343ea76f2de5ce90c7d24dd985df770ec9f4747d203391010431e67"
+  }
+}
