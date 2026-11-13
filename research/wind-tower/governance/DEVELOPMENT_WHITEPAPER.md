@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.29.3**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.29.4**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -31,6 +31,7 @@
 
 | 日期（Asia/Shanghai） | 白皮书版本 | 开发与证据增量 | 科学状态 | 远端事务 |
 |---|---|---|---|---|
+| 2026-11-13 14时（S10 ERA5零尾部可识别性） | **v0.29.4 PATCH** | 从既有184080小时ERA5原始31bin归档零观测20–25m/s尾部，推导独立小时假设上界1.6273946e-5与21独立年度块上界13.2946%；明确独立性/非平稳性、不能推断50年极值及不能以零观测删除风况。 | 解析方法与正文增量；无新风机物理RUN；12阶段0/12，正式DLC1.2未晋级。 | [S10实质研究](../experiments/T062/S10_ERA5_ZERO_TAIL_IDENTIFIABILITY_20261113.md)；[commit e0d1eec4](https://github.com/g2066203208-beep/voxel-frontier/commit/e0d1eec4101dbc19d647892ee0c0b4f36b3dccc9)。 |
 | 2026-11-13 12时（S12独立seed前瞻反证门槛） | **v0.29.2 PATCH** | 期刊§4.22新增独立seed-pair的精确零事件单侧95%上界p_U=1-0.05^(1/n)，四行解析表及n>=29/59的10%/5%门槛；明确多重性和非独立失效条件。 | 仅可证伪实验设计/解析数值，无新增风机物理RUN；12阶段0/12、DLC1.2 0/126。 | [期刊§4.22](../manuscript/journal-wind-fatigue-results.md)；[T080过程](../experiments/T080/PROCESS_LOG.md)；本提交Git History。 |\n| 2026-11-13 11时（S12期刊估计对象与反证设计） | **v0.29.1 PATCH** | 在英文期刊主稿§4.21增加可直接审稿的完整科学论证：明确ETM/NTM总体四次矩比值估计对象、924标签参照不具物理交换性、历史四个反例与聚合比并存、冻结模型和整seed簇的前瞻独立反证实验。复用72条历史DEL4，不虚构新风机RUN。 | 正文方法与可证伪设计已入库；无新物理数值，正式12阶段0/12、DLC1.2 0/126，真实W/WE/Miner仍HOLD。 | [期刊§4.21](../manuscript/journal-wind-fatigue-results.md)；[T080过程](../experiments/T080/PROCESS_LOG.md)；本提交Git History。 |
 | 2026-11-13 10时（S06六分量来源准入） | **v0.29.0 MINOR** | 将上一轮仅本地的六分量时程来源准入程序与七项正反测试正式持久化至既有T080目录；检查7列时间/力矩/力、恒定采样、SI单位和身份SHA256；无真实OUTB/CSV时明确拒绝物理验收。 | 本地前身7/7测试PASS；GitHub版原生CLI尚未执行，真实W时程SOURCE缺失；12阶段0/12、DLC1.2 0/126，B/W/E/WE及Miner HOLD。 | [程序](../experiments/T080/s06_wind_timeseries_admission.py)；[测试](../experiments/T080/test_s06_wind_timeseries_admission.py)；[过程](../experiments/T080/PROCESS_LOG.md)；本提交Git History。 |
 | 2026-11-13 08时（S10精确标签置换） | **v0.28.0 MINOR** | 基于历史72条真实DEL4（SHA256 `b362bcd7c37ccc56e21035de39448b5e761ec03f371b6b2f3eb30f41b013630d`），六个风速×通道组各穷举C(12,6)=924种ETM/NTM标签分配；高风Mx上尾5/924，其余5组1/924。新增源SHA锁Node程序及英文期刊补充稿完整6行表、交换性假设与跨通道依赖限制。 | V8穷举结果已计算；原生Node CLI尚未运行，正式物理/IEC/DLC/材料寿命仍HOLD，12阶段0/12、DLC1.2 0/126。 | [程序](../experiments/T062/s10_etm_ntm_exact_label_permutation.cjs)；[论文增量](../manuscript/journal-wind-fatigue-secondary-evidence.md)；[提交9a2a853c](https://github.com/g2066203208-beep/voxel-frontier/commit/9a2a853c8aba7696303d4d487b2a63864487c63a)。 |
