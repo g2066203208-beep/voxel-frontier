@@ -498,6 +498,28 @@ The source files were obtained from the connected research repository. The earli
 
 The [new source-locked exact predictive-loss executable](../experiments/T062/s12_ntm18_predictive_loo_permutation.cjs) (SHA256 `7b59fcbd399ffe320d092336adc89dedd43b9c9ee3bad6c4ba52afec44b70ab7`) generates [six-row Table 6 CSV](../experiments/T062/S12_NTM18_PREDICTIVE_LOO_PERMUTATION_6ROW_20261112.csv) (SHA256 `edc17c35f134e2968e13779b4e49220783f509fb25db5b40ff52519dbfa87584`) and [Fig. 7 SVG](final-thesis/figures/FIG7_S12_NTM18_PREDICTIVE_LOO_PERMUTATION_20261112.svg) (SHA256 `90cb4e9eaa17d45aaa94c5f94df8426c684aca6881aa5b1b84b5de34b2e6c9d9`). Its inputs are the existing 36-row spectral and 18-row operating-state tables (SHA256 `c3de99d45c70675f6a95a767e73dcfc50d57d07b4f33438ee705690b694ae622` and `0f577f3197870a1350c740c2e0c118073fb9b6f796b4c471765c6f616d5a1b04`). The same core was executed against the actual derived source bytes in V8 with exact 6×720 permutations, a linear known-solution test, affine-invariance tests and malformed-input refusals. **Native Node CLI and original OUTB re-decoding were not performed in this transaction.**
 
+
+### 4.25 Historical six-seed conditional annualization of load-range fourth powers
+
+For each of the 12 speed–turbulence–channel groups in the archived 72-row rainflow-derived DEL table, we calculate the arithmetic mean of the six **fourth powers**, rather than the fourth power of the mean DEL. The archived reference specifies m=4 and N_eq=100,000, with six 600-s records per group. The 365-day annualization multiplier is 31,536,000/600=52,560. The conditional annual range-fourth-power sum is A4_cond = 52,560 × 100,000 × (1/6) Σ_s DEL_s^4 / 1,000^4, in (MN·m)^4/year. This is a hypothetical **100%-exposure-to-one-bin-and-one-regime** calculation, not a site-weighted yearly prediction. ETM is not a normal operating occurrence regime and must not be assigned an ERA5 occurrence weight without a justified probability model.
+
+| Historical bin / regime | Channel | Six-seed mean counted cycles per 600 s | Conditional annual range-fourth-power sum, (MN·m)^4/year |
+|---|---|---:|---:|
+| U09p343881_ETM | TwrBsMxt | 652.67 | 4.675091e+11 |
+| U09p343881_ETM | TwrBsMyt | 673.83 | 1.013054e+15 |
+| U09p343881_NTM | TwrBsMxt | 645.67 | 7.179447e+10 |
+| U09p343881_NTM | TwrBsMyt | 670.08 | 1.252427e+14 |
+| U11p4_ETM | TwrBsMxt | 646.33 | 1.226249e+12 |
+| U11p4_ETM | TwrBsMyt | 681.67 | 1.642004e+15 |
+| U11p4_NTM | TwrBsMxt | 648.92 | 2.085915e+11 |
+| U11p4_NTM | TwrBsMyt | 689.25 | 3.474517e+14 |
+| U19p202140_ETM | TwrBsMxt | 603.58 | 2.977373e+13 |
+| U19p202140_ETM | TwrBsMyt | 708.17 | 1.395507e+15 |
+| U19p202140_NTM | TwrBsMxt | 612.83 | 9.950238e+12 |
+| U19p202140_NTM | TwrBsMyt | 710.08 | 4.554768e+14 |
+
+The 72-row source includes actual weighted rainflow cycle counts; the group means above preserve half-cycle counts rather than treating the row count as the number of full cycles. Under the source's historical 600-s and N_eq definitions, the fourth-power identity is exact apart from CSV rounding. These annualized sums are *not* the fourth moment of instantaneous M(t), and are not material damage, because local stress histories, material-specific S–N parameters, mean-stress correction, wind-regime occurrence probabilities and unobserved wind bins are not resolved. The table's main contribution is a reproducible numerical dimensional bridge from the historical load-DEL archive to a clearly conditional annual cycle-range quantity, with no claim of IEC DLC1.2 or physical lifetime validation. SOURCE: `experiments/T062/recomputed-load-fatigue/05_LOAD_DEL_M4_ALL36_RECOMPUTED.csv`, previously archived SHA256 `b362bcd7c37ccc56e21035de39448b5e761ec03f371b6b2f3eb30f41b013630d`; original cycle-ledger SHA256 `067c60cea61b35398edd186ff509fe759d1c4420395f082d06c666d92d897ecb` (not independently re-read in this transaction). RUN: source-row arithmetic in V8, no new OpenFAST run. TAB: 12 rows. REF/STANDARD/OFFICIAL: no newly licensed clause or original record. HOLD: annual occurrence weighting and local Miner life.
+
 ## References
 
 [1] Bak, C., Zahle, F., Bitsche, R., Kim, T., Yde, A., Henriksen, L. C., Natarajan, A., and Hansen, M. H. (2013). *Description of the DTU 10 MW Reference Wind Turbine*. DTU Wind Energy Report-I-0092. Technical University of Denmark. Official model/report context: https://www.hawc2.dk/models/dtu-10-mw.
