@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.29.14**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.30.0**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -31,6 +31,7 @@
 
 | 日期（Asia/Shanghai） | 白皮书版本 | 开发与证据增量 | 科学状态 | 远端事务 |
 |---|---|---|---|---|
+| 2026-11-14 03时 | **v0.30.0 MINOR** | 新增S11独立二变量二次代理约束准入模块（留一交叉验证、最大残差保守边界、外插/坏输入拒绝、自测试接口），[源码](../manuscript/final-thesis/assemble/s11_surrogate_admission_20261114.mjs)，Git blob以远端文件记录为准；源提交[e52c40b6](https://github.com/g2066203208-beep/voxel-frontier/commit/e52c40b6a5f7557dba5305f81c7b58389a131426)。 | 本地同类Python解析fixture 48点及4拒绝PASS，**GitHub JS原生NOT_RUN**；无真实DOE/风机物理RUN，0/12、DLC1.2 0/126。 | [T080过程](../experiments/T080/PROCESS_LOG.md)；源commit e52c40b6。 |
 | 2026-11-14 01时 | **v0.29.14 PATCH** | Ch4§4.7.27新增真实三箱贡献集中度诊断：19–20m/s的Mx/My已覆盖部分和份额2.7292%/0.0750%，富集系数97.76/2.69，明确2小时与96.1082%未覆盖的不可外推边界。 | 既有真实历史表派生数值，非新物理RUN；正式12阶段晋级0/12、DLC1.2 0/126，材料寿命HOLD。 | [正文](../manuscript/final-thesis/chapters/04_10MW混合塔架风致疲劳性能分析.md)；[commit 4453e45a](https://github.com/g2066203208-beep/voxel-frontier/commit/4453e45a171c5a9830cce13a462a6137127e70e6)。 |
 | 2026-11-13 23时 | **v0.29.13 PATCH** | 从当前真实Ch4提取§4.7.26（1943字符）与§4.10.1（1477字符），形成非冻结导师阅读增补页；记录源Ch4 blob `32474bd1`与旧阅读母稿blob `57cb73f4`，拒绝冒称Word同步。 | 真实章节提取与远端保存PASS；原Python/Word生成、SHA256独立运行及排版HOLD；12阶段0/12。 | [阅读增补页](../manuscript/final-thesis/assemble/S12_CH4_ADVISOR_READING_ADDENDUM_20261113.md)；[源提交](https://github.com/g2066203208-beep/voxel-frontier/commit/65663a9b95c6b43ebed1b8e4f165ba02dd917399)。 |
 | 2026-11-13 22时 | **v0.29.12 PATCH** | 新增非冻结Ch4§4.7.26/§4.10.1阅读增补程序，缺失/重复/覆盖拒绝与SHA256来源收据；确认旧193页Word不含两节。 | 源码已入库但真实章节执行及Word新版本未验；12阶段0/12。 | [程序](../manuscript/final-thesis/assemble/s12_ch4_latest_addendum.py)；[源码提交](https://github.com/g2066203208-beep/voxel-frontier/commit/83f3472c8e248ca552da8b8c15c980aa4ae2d170)。 |
