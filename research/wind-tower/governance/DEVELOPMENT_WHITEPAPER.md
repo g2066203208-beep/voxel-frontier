@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.27.4**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.28.0**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -31,6 +31,7 @@
 
 | 日期（Asia/Shanghai） | 白皮书版本 | 开发与证据增量 | 科学状态 | 远端事务 |
 |---|---|---|---|---|
+| 2026-11-13 08时（S10精确标签置换） | **v0.28.0 MINOR** | 基于历史72条真实DEL4（SHA256 `b362bcd7c37ccc56e21035de39448b5e761ec03f371b6b2f3eb30f41b013630d`），六个风速×通道组各穷举C(12,6)=924种ETM/NTM标签分配；高风Mx上尾5/924，其余5组1/924。新增源SHA锁Node程序及英文期刊补充稿完整6行表、交换性假设与跨通道依赖限制。 | V8穷举结果已计算；原生Node CLI尚未运行，正式物理/IEC/DLC/材料寿命仍HOLD，12阶段0/12、DLC1.2 0/126。 | [程序](../experiments/T062/s10_etm_ntm_exact_label_permutation.cjs)；[论文增量](../manuscript/journal-wind-fatigue-secondary-evidence.md)；[提交9a2a853c](https://github.com/g2066203208-beep/voxel-frontier/commit/9a2a853c8aba7696303d4d487b2a63864487c63a)。 |
 | 2026-11-13 07时（S12 A.14原生Artifact流水线） | **v0.27.4 PATCH** | 在既有`.github/workflows/s12-advisor-docx.yml`新增SHA256锁定的A.14公式增强Word构建与52表/50图/704原数学节点保全、4新增段落及表格XML同一性拒绝测试；源码继承`assemble/s12_appendix_a14_math_readability.py`，原Word仍由原构建器生成。 | 已持久化工作流源码；GitHub原生RUN与新DOCX Artifact仍PENDING，未新增物理计算；12阶段0/12，DLC1.2 0/126。 | [工作流](../../../.github/workflows/s12-advisor-docx.yml)；[提交9e456518](https://github.com/g2066203208-beep/voxel-frontier/commit/9e45651843d5a55bd2b6419d7f30bf2666d10757)。 |
 | 2026-11-13 06时（S12 A.14公式可读性） | **v0.27.3 PATCH** | 在真实导师Word SHA256 `f2e8a68166cb129aee7611d914f9ce2d3695fe8b1c2ad2f58aa1c35f80505769` 上增加4行居中可读公式，含相对误差最优系数、对数误差最优系数及任意容差ε的充要判据；本地DOCX SHA256 `0942880cc029b5b2968c030f2efd731aaf674aa44fabd6f4c5b9ed6b43a3737e`，LibreOffice实际193页，p192视觉核读；52表、704个原OMML节点保持。可复用SHA拒绝式脚本：`manuscript/final-thesis/assemble/s12_appendix_a14_math_readability.py`；增强DOCX仅本轮本地文件，**未上传Git或Actions**。 | 页面可读性局部PASS，非原生OMML新增、非Microsoft Word全页验收；12阶段0/12、DLC1.2 0/126。 | [源码](../manuscript/final-thesis/assemble/s12_appendix_a14_math_readability.py)；本轮Git History。 |
 | 2026-11-13 05时（S12原生Word验收闭合） | **v0.27.2 PATCH** | **原生Actions成功构建且独立下载后真实渲染193页导师Word**：[#43308106691](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43308106691)、artifact #13983839125，ZIP SHA256 `ed4f0da609f0725ae143c33f301d3b00e41021e5c4fb05aeb46ac35b6fed159b`，DOCX SHA256 `f2e8a68166cb129aee7611d914f9ce2d3695fe8b1c2ad2f58aa1c35f80505769`；实查p152 Ch4§4.7.25 7×6表、p192 A.14 3×7表及原SHA锁图A-14、p193续文。49→50图、704 OMML不变，表值/旧正文逐字保全。 | GitHub Actions成功、DOCX来源/数学/表格结构PASS，LibreOffice**目标页面**视觉PASS；其余193页未逐页视觉验收，Microsoft Word排版/全论文科学送审HOLD；12阶段0/12晋级0/12、DLC1.2 0/126。 | [目标页面QA收据](../manuscript/final-thesis/assemble/S12_ADVISOR_WORD_VISUAL_QA_20261113.json)；[Word artifact](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43308106691)；本提交Git History。 |
