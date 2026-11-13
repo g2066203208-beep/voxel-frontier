@@ -1,0 +1,83 @@
+name: S10 original 158m NTM BTS real LFS byte recovery (NO SOLVER)
+on:
+  push:
+    branches: [research/t080-seismic-integration-gates-20261022]
+    paths:
+      - '.github/workflows/s10-original-ntm-bts-lfs-byte-probe-20261113.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  real-ntm-bts-and-turbsim-exe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - name: Sparse checkout original Git LFS pointers only
+        uses: actions/checkout@v4
+        with:
+          lfs: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            research/wind-tower/archive/local-large-assets-20261004/turbSim-36/inputs/U09p343881_NTM_S01.bts
+            research/wind-tower/references/baselines-and-site-20261004/runtime-binaries/TurbSim.exe
+      - name: Stream two original LFS payloads (NO program execution)
+        shell: bash
+        run: |
+          set -euo pipefail
+          wind='research/wind-tower/archive/local-large-assets-20261004/turbSim-36/inputs/U09p343881_NTM_S01.bts'
+          exe='research/wind-tower/references/baselines-and-site-20261004/runtime-binaries/TurbSim.exe'
+          printf '%s\n' 'GIT_LFS_READ_ONLY_SOURCE_FETCH_START' | tee s10_ntm_lfs_transfer.log
+          git lfs install --local
+          git lfs pull --include="$wind,$exe" --exclude="" 2>&1 | tee -a s10_ntm_lfs_transfer.log
+          test "$(stat -c%s "$wind")" -eq 436968166
+          test "$(stat -c%s "$exe")" -eq 21796864
+          printf '%s  %s\n' 'bd96c65ede467f28fe91e1d744132f4824a9a3c7e83476022209c91cabfa902b' "$wind" '95c0b8867e2b2f322899975229e2b4358e88f2ddc26f1defd19504451c80dfe0' "$exe" | sha256sum --check --status
+          echo 'EXACT_ORIGINAL_NTM_BTS_AND_TURBSIM_EXE_BYTES_AVAILABLE' | tee -a s10_ntm_lfs_transfer.log
+      - name: Audit real BTS header without running TurbSim
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib,json,pathlib,struct
+          files={
+            "BTS":"research/wind-tower/archive/local-large-assets-20261004/turbSim-36/inputs/U09p343881_NTM_S01.bts",
+            "TurbSim_exe":"research/wind-tower/references/baselines-and-site-20261004/runtime-binaries/TurbSim.exe"
+          }
+          expected={"BTS":("bd96c65ede467f28fe91e1d744132f4824a9a3c7e83476022209c91cabfa902b",436968166),
+                    "TurbSim_exe":("95c0b8867e2b2f322899975229e2b4358e88f2ddc26f1defd19504451c80dfe0",21796864)}
+          out={}
+          for k,p in files.items():
+              pp=pathlib.Path(p)
+              if not pp.is_file():raise ValueError("ORIGINAL_PAYLOAD_MISSING:"+p)
+              h=hashlib.sha256()
+              with pp.open('rb') as f:
+                  first=f.read(96)
+                  h.update(first)
+                  for chunk in iter(lambda:f.read(4*1024*1024),b''):h.update(chunk)
+              digest=h.hexdigest()
+              if (digest,pp.stat().st_size)!=expected[k]:raise ValueError("BINARY_SHA_OR_SIZE_MISMATCH_"+k)
+              out[k]={"path":p,"size_bytes":pp.stat().st_size,"sha256":digest,"header_first_64_hex":first[:64].hex()}
+              if k=="BTS":
+                  fid,nz,ny,ntwr,nt=struct.unpack_from('<hiiii',first)
+                  out[k]["little_endian_header"]={"file_id":fid,"n_z":nz,"n_y":ny,"n_tower":ntwr,"n_timesteps":nt}
+                  if (nz,ny,nt)!=(51,51,28000) or ntwr!=0:raise ValueError("BTS_HEADER_IDENTITY_DRIFT")
+          receipt={"status":"REAL_ORIGINAL_NTM_BTS_GIT_LFS_BYTES_VERIFIED",
+                   "source":"original Git LFS object not 134byte pointer",
+                   "event":"GitHub Actions read-only LFS transfer",
+                   "READING_LEVEL":"full raw BTS 436968166 bytes + original TurbSim.exe 21796864 bytes",
+                   "RUN":"binary SHA + header only; TurbSim=0; OpenFAST=0; Abaqus=0",
+                   "physical_pass":False,"formal_DLC12_validated":0,
+                   "files":out}
+          pathlib.Path('S10_ORIGINAL_NTM_BTS_LFS_BYTE_RECEIPT_20261113.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n')
+          print('REAL_BTS_BYTE_SHA_PASS_HEADER',out["BTS"]["little_endian_header"],'PROGRAM_EXECUTED=0')
+          PY
+      - name: Retain source proof and failure log; never archive huge original BTS or EXE
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: s10-original-ntm-bts-lfs-read-only-source-receipt
+          path: |
+            S10_ORIGINAL_NTM_BTS_LFS_BYTE_RECEIPT_20261113.json
+            s10_ntm_lfs_transfer.log
+          if-no-files-found: warn
+          retention-days: 30
