@@ -1,0 +1,48 @@
+name: S10 adaptive research NTM bin pilot source regression (NO PHYSICS)
+on:
+  push:
+    branches: [research/t080-seismic-integration-gates-20261022]
+    paths:
+      - '.github/workflows/s10-adaptive-wind-pilot-20261113.yml'
+      - 'research/wind-tower/experiments/T062/s10_adaptive_dlc12_wind_pilot_20261113.mjs'
+      - 'research/wind-tower/experiments/T062/S10_ADAPTIVE_WIND_*.csv'
+      - 'research/wind-tower/experiments/T062/S10_ADAPTIVE_WIND_DESIGN_RECEIPT_20261113.json'
+      - 'research/wind-tower/experiments/T062/S10_ERA5_2005_2025_HUB_1MS_BINS_20261031.csv'
+      - 'research/wind-tower/experiments/T062/S10_ERA5_21BIN_6SEED_NTM_SOURCE_COVERAGE_20261031.csv'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  pure-source-qc:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Source locked 11-group wind design and exact regenerated data
+        shell: bash
+        run: |
+          set -euo pipefail
+          D=research/wind-tower/experiments/T062
+          node --check "$D/s10_adaptive_dlc12_wind_pilot_20261113.mjs"
+          mkdir -p /tmp/s10-adaptive-generated
+          node "$D/s10_adaptive_dlc12_wind_pilot_20261113.mjs" "$D" /tmp/s10-adaptive-generated
+          for F in S10_ADAPTIVE_WIND_11GROUP_CLIMATE_SCENARIO_20261113.csv S10_ADAPTIVE_WIND_16CASE_PILOT_MANIFEST_20261113.csv S10_ADAPTIVE_WIND_DESIGN_RECEIPT_20261113.json; do
+            cmp "$D/$F" "/tmp/s10-adaptive-generated/$F"
+          done
+      - name: Negative test rejects altered ERA5 source
+        shell: bash
+        run: |
+          set -euo pipefail
+          D=research/wind-tower/experiments/T062
+          mkdir -p /tmp/s10-adaptive-tamper
+          cp "$D/S10_ERA5_2005_2025_HUB_1MS_BINS_20261031.csv" /tmp/s10-adaptive-tamper/
+          cp "$D/S10_ERA5_21BIN_6SEED_NTM_SOURCE_COVERAGE_20261031.csv" /tmp/s10-adaptive-tamper/
+          sed -i '2s/6438/6439/' /tmp/s10-adaptive-tamper/S10_ERA5_2005_2025_HUB_1MS_BINS_20261031.csv
+          if node "$D/s10_adaptive_dlc12_wind_pilot_20261113.mjs" /tmp/s10-adaptive-tamper /tmp/s10-adaptive-should-not-pass; then
+            echo 'ERROR: altered source accepted'; exit 1
+          else
+            echo 'SOURCE_SHA_MISMATCH_REJECTION_PASS'
+          fi
