@@ -1,0 +1,74 @@
+{
+  "format": "word-original-base64-v1",
+  "file_name": "10MW级陆上风机预应力混凝土钢混合塔架_R5_R2Z34新进展融合与主线收敛版_20260827.docx",
+  "byte_length": 23653138,
+  "sha256": "da86e1fadafc977fc66d14a97a46760e73ec3b5150ddbae65fd62c7105764ee9",
+  "base64_length": 31537520,
+  "base64_chunk_chars": 2000000,
+  "parts": [
+    {
+      "path": "research/wind-tower/manuscript/source-uploads/2026-11-13/original-binary/20260827/part-001.b64",
+      "git_blob_sha": "b9f1d5666258961a2e39c4ab93eb9094941b834e"
+    },
+    {
+      "path": "research/wind-tower/manuscript/source-uploads/2026-11-13/original-binary/20260827/part-002.b64",
+      "git_blob_sha": "3a2803a7cb53d4c992447b341bd87e145dbe82e2"
+    },
+    {
+      "path": "research/wind-tower/manuscript/source-uploads/2026-11-13/original-binary/20260827/part-003.b64",
+      "git_blob_sha": "e83d9c10b8037a4bc21dee6b8c7c093fb1022c25"
+    },
+    {
+      "path": "research/wind-tower/manuscript/source-uploads/2026-11-13/original-binary/20260827/part-004.b64",
+      "git_blob_sha": "809613c2c2c372cc6d3e3fa17b5de9c4a0046a70"
+    },
+    {
+      "path": "research/wind-tower/manuscript/source-uploads/2026-11-13/original-binary/20260827/part-005.b64",
+      "git_blob_sha": "8d1a8c77dd5b4e9848546dbac7ead7a46ce4d760"
+    },
+    {
+      "path": "research/wind-tower/manuscript/source-uploads/2026-11-13/original-binary/20260827/part-006.b64",
+      "git_blob_sha": "b1830bb01b5139c2752df65efb1320332979fadb"
+    },
+    {
+      "path": "research/wind-tower/manuscript/source-uploads/2026-11-13/original-binary/20260827/part-007.b64",
+      "git_blob_sha": "0ce359ecb7071725359e73d922506494aa1e3e4e"
+    },
+    {
+      "path": "research/wind-tower/manuscript/source-uploads/2026-11-13/original-binary/20260827/part-008.b64",
+      "git_blob_sha": "9b92a1b75382c55a0ae863af56a17636807b62d1"
+    },
+    {
+      "path": "research/wind-tower/manuscript/source-uploads/2026-11-13/original-binary/20260827/part-009.b64",
+      "git_blob_sha": "e7dc2ead926c8447ef55f3e836df1f58569388ef"
+    },
+    {
+      "path": "research/wind-tower/manuscript/source-uploads/2026-11-13/original-binary/20260827/part-010.b64",
+      "git_blob_sha": "fd991a38a209f77ff5214623de8d59e004f755bd"
+    },
+    {
+      "path": "research/wind-tower/manuscript/source-uploads/2026-11-13/original-binary/20260827/part-011.b64",
+      "git_blob_sha": "e91e53c8c69af0eb7aa6684e50075663717bcfd8"
+    },
+    {
+      "path": "research/wind-tower/manuscript/source-uploads/2026-11-13/original-binary/20260827/part-012.b64",
+      "git_blob_sha": "78d3bbf1e0c5f330acf1f580827b03db463f5d4a"
+    },
+    {
+      "path": "research/wind-tower/manuscript/source-uploads/2026-11-13/original-binary/20260827/part-013.b64",
+      "git_blob_sha": "e7f221d417f176b7b90407605ae946d6d5af9b63"
+    },
+    {
+      "path": "research/wind-tower/manuscript/source-uploads/2026-11-13/original-binary/20260827/part-014.b64",
+      "git_blob_sha": "dd379d9b3d7e7fb578026ff9d7150c9422312141"
+    },
+    {
+      "path": "research/wind-tower/manuscript/source-uploads/2026-11-13/original-binary/20260827/part-015.b64",
+      "git_blob_sha": "4f170a3b9a0c9ce1bf1f75d32f51b2c62e46ec61"
+    },
+    {
+      "path": "research/wind-tower/manuscript/source-uploads/2026-11-13/original-binary/20260827/part-016.b64",
+      "git_blob_sha": "60a12c1f199b915c984067dc781713506dc10a7c"
+    }
+  ]
+}
