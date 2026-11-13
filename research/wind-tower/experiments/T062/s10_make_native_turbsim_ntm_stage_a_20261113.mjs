@@ -23,7 +23,7 @@ function selftest(){
  let s='104729 RandSeed1 - seed\n 7.5     URef - wind\n51 NumGrid_Z - grid\r\n';
  let c=patch(patch(s,'RandSeed1','53261280'),'URef','5');
  if(patch(patch(c,'RandSeed1','104729'),'URef','7.5')!==s)fail('REVERSE_TEST');
- for(const t of ['7.5 URef\n7.5 URef\n','no URef here\n']){
+ for(const t of ['7.5 URef\n7.5 URef\n','none present\n']){
   let caught=false;try{patch(t,'URef','5')}catch{caught=true}if(!caught)fail('BAD_SOURCE_ACCEPTED');
  }
  if(fields(c,'RandSeed1').length!==1||fields(c,'URef')[0]!=='5')fail('PATCH_TEST');
