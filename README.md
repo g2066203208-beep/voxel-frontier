@@ -70,3 +70,10 @@ PROJECT.md              产品范围与后续方向
 ```
 
 仓库当前源码已改为论文工作室。仓库路径沿用现有地址，便于继续使用已连接的 GitHub Pages。
+
+## 论文工作室公开辅助面板
+
+- [辅助管理面板](https://g2066203208-beep.github.io/voxel-frontier/thesis-studio/)（新增子目录，保留原站首页）
+- 该面板仅作任务规划与界面展示，**不是**科研真实完成率或正式状态源；研究实际进度见活动分支 [COMMAND_ROOM](https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/governance/COMMAND_ROOM.md)。
+- 原论文工作室与三维混塔看板继续按原工作流部署。当前新的面板正式发布取决于既有 Pages workflow 成功运行。
+

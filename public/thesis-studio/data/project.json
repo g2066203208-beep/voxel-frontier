@@ -1,0 +1,86 @@
+{
+  "version": "v0.3.0-public",
+  "initializedAt": "2026-11-13",
+  "overview": "这是辅助初始化任务，不代表论文真实完成率；正式研究状态在活动研究分支 COMMAND_ROOM.md。",
+  "tasks": [
+    {
+      "id": "R-001",
+      "title": "核对已有论文版本、研究对象及导师要求",
+      "summary": "先核实当前论文已有成果，避免重复开展或错误覆盖。",
+      "category": "论文基线",
+      "status": "待核实"
+    },
+    {
+      "id": "R-002",
+      "title": "确认风机混塔底部构造和连接简化",
+      "summary": "核对基础、底法兰、锚栓、连接面及现有 Abaqus 模型表达。",
+      "category": "模型与连接",
+      "status": "待核实"
+    },
+    {
+      "id": "R-003",
+      "title": "核验地震输入位置与施加方式",
+      "summary": "区分塔底运动输入、螺栓受力、地基运动和约束条件；形成可追溯方案。",
+      "category": "地震分析",
+      "status": "待核实"
+    },
+    {
+      "id": "R-004",
+      "title": "确定真实地震波选择与引用证据",
+      "summary": "整理台站记录、波形分量、缩放、处理方法及文献依据。",
+      "category": "地震分析",
+      "status": "待安排"
+    },
+    {
+      "id": "R-005",
+      "title": "定义 SSI 合作方交付接口",
+      "summary": "明确基础顶部时程、加速度/位移定义、坐标、单位、适用边界和复核。",
+      "category": "SSI接口",
+      "status": "待安排"
+    },
+    {
+      "id": "R-006",
+      "title": "复核已完成的有限元模型和结果",
+      "summary": "只核查由本人提供的模型文件、求解输出及证据，不代替 Abaqus 实际运行。",
+      "category": "数值验证",
+      "status": "待核实"
+    },
+    {
+      "id": "R-007",
+      "title": "建立文献逐条原文核验表",
+      "summary": "记录 DOI、原文页码、适用性与边界，拒绝引用未验证结论。",
+      "category": "文献与证据",
+      "status": "待安排"
+    },
+    {
+      "id": "R-008",
+      "title": "整理学位论文送审检查矩阵",
+      "summary": "章节完整性、创新性证据、图表、量纲、引用与版本化。",
+      "category": "论文与送审",
+      "status": "待安排"
+    }
+  ],
+  "milestones": [
+    {
+      "name": "既有成果与版本核验",
+      "description": "定位论文原稿、已有 Abaqus 工作成果、导师要求和研究范围。",
+      "state": "未核实"
+    },
+    {
+      "name": "地震分析路线与接口确定",
+      "description": "明确塔底输入、地震波、SSI 接口、连接机制及依据。",
+      "state": "待安排"
+    },
+    {
+      "name": "结果证据与敏感性审查",
+      "description": "人工求解结果验证、模型适用性、对比研究和可复核记录。",
+      "state": "待安排"
+    },
+    {
+      "name": "论文成稿与送审质量控制",
+      "description": "论证闭环、文献复核、格式审查、导师反馈与最终版本。",
+      "state": "待安排"
+    }
+  ],
+  "publication": "public/thesis-studio/ in g2066203208-beep/voxel-frontier; published on next successful existing Pages build"
+}

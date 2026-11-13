@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="index,follow">
+  <meta name="description" content="风机混塔论文工作室：研究计划、任务、文献与质量控制">
+  <title>风机混塔 · 论文工作室</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script defer src="./app.js"></script>
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand"><span class="brandmark">W</span><div><strong>风机混塔</strong><small>THESIS STUDIO</small></div></div>
+      <div class="sidenote">公开展示工作台 <span class="pill amber">初版</span></div>
+      <nav aria-label="工作台导航">
+        <button class="nav active" data-page="overview"><span>▦</span> 总览</button>
+        <button class="nav" data-page="tasks"><span>☑</span> 研究任务</button>
+        <button class="nav" data-page="milestones"><span>◷</span> 阶段计划</button>
+        <button class="nav" data-page="library"><span>▤</span> 文献与证据</button>
+        <button class="nav" data-page="security"><span>♧</span> 公开发布说明</button>
+      </nav>
+      <div class="sidebar-footer">版本 <strong id="version-side">v0.3.0-public</strong><p>安全状态由部署平台控制<br>本网页不自带身份验证</p></div>
+    </aside>
+    <main class="main">
+      <header class="topbar"><div><span class="eyebrow">RESEARCH / WORKSPACE</span><span class="sep">/</span><span id="crumb">总览</span></div><div class="statusdot"><i></i> 静态公开展示</div></header>
+      <div class="content">
+        <section id="page-overview" class="page active">
+          <div class="hero"><div><div class="miniheading">WIND TURBINE HYBRID TOWER</div><h1>把每一步研究，<br>都变成可靠的证据。</h1><p>风机混塔论文研究的公开辅助管理界面。原有研究成果不在此归零，实际进展以研究指挥室和论文原稿为准。</p><button class="primary" data-goto="tasks">进入研究任务 <span>↗</span></button><div class="existing-links"><a href="../" title="已有正式论文工作台">原论文工作台 ↗</a><a href="../wind-twin.html" title="10MW 混塔研究可视化">混塔三维看板 ↗</a><a href="https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/governance/COMMAND_ROOM.md">最新研究指挥室 ↗</a></div></div><div class="hero-art" aria-hidden="true"><div class="mast"><div class="shaft"></div><div class="hub"></div><div class="blade b1"></div><div class="blade b2"></div><div class="blade b3"></div></div><div class="rings ring1"></div><div class="rings ring2"></div></div></div>
+          <div class="section-head"><div><span class="eyebrow">STUDIO SNAPSHOT</span><h2>辅助面板 · 初始任务</h2></div><span class="subtle">根据初始化任务清单统计，不是论文实际完成率</span></div>
+          <div class="statgrid"><article class="stat"><span>登记任务</span><b id="stat-total">—</b><small>只统计本展示清单</small></article><article class="stat"><span>待核实</span><b id="stat-pending">—</b><small>不代表旧研究缺失</small></article><article class="stat"><span>已验证完成</span><b id="stat-done">—</b><small>不代表全论文完成数</small></article><article class="stat"><span>研究阶段</span><b id="stat-phases">—</b><small>按任务持续推进</small></article></div>
+          <div class="columns"><div class="panel"><div class="panel-head"><h3>优先任务</h3><button class="ghost" data-goto="tasks">查看全部 ↗</button></div><div id="overview-tasks"></div></div><div class="panel dark"><div class="panel-head"><h3>研究原则</h3><span class="mini-white">QUALITY FIRST</span></div><p>地震波、底部输入、SSI 交接及连接模型的每个结论，都要有来源、单位、验证和模型版本。</p><div class="dark-divider"></div><div class="tagline">模型有据可查 · 结果可以复核 · 论文版本可追溯</div></div></div>
+        </section>
+        <section id="page-tasks" class="page"><div class="section-title"><span class="eyebrow">RESEARCH BOARD</span><h1>研究任务</h1><p>公开展示初始化任务清单；与 GitHub Issues 的实时同步尚未启用。</p></div><div class="toolbar"><label class="search"><span>⌕</span><input id="task-search" type="search" placeholder="搜索任务或领域" autocomplete="off"></label><div id="status-filters" class="filters"><button data-filter="all" class="selected">全部</button><button data-filter="待核实">待核实</button><button data-filter="待安排">待安排</button><button data-filter="已完成">已完成</button></div></div><div id="task-list" class="tasklist"></div><p class="helper">这是公开只读网页，不能在线编辑任务；仅仓库所有者能修改源数据后重新部署。</p></section>
+        <section id="page-milestones" class="page"><div class="section-title"><span class="eyebrow">RESEARCH ROADMAP</span><h1>阶段路线</h1><p>辅助阶段看板；正式研究计划、已完成成果和待验门槛请以原论文工作室及研究指挥室为准。</p></div><div id="milestones-list" class="milestones"></div></section>
+        <section id="page-library" class="page"><div class="section-title"><span class="eyebrow">EVIDENCE LIBRARY</span><h1>文献与证据</h1><p>不编造参考文献、DOI、论文结果。每个技术结论必须能够追溯。</p></div><div class="panel"><h3>文献核验最低标准</h3><div class="check-grid"><div>① 完整书目信息及原文链接</div><div>② 地震波和模型适用范围</div><div>③ 原文页码、图号与具体结论</div><div>④ 边界条件、单位及限制</div><div>⑤ 与本论文模型的异同</div><div>⑥ 引用质量复核状态</div></div></div><div class="empty">目前没有自动导入的文献。请在新仓库的 docs/REFERENCES.md 登记已核验来源。</div></section>
+        <section id="page-security" class="page"><div class="section-title"><span class="eyebrow">PUBLIC GITHUB PAGES</span><h1>公开访问说明</h1><p>这个辅助页面位于现有公开仓库 voxel-frontier 的 GitHub Pages 子路径。无需登录，所有页面数据均可被公众读取。</p></div><div class="security-grid"><article class="panel"><div class="panel-icon">01</div><h3>原有工作台保留</h3><p>网站主页面、三维混塔看板、科研文件与现有 Pages 发布流程保持不变。本页面仅是 /thesis-studio/ 的公开辅助入口。</p></article><article class="panel"><div class="panel-icon">02</div><h3>私人资料独立</h3><p>私人仓库 Private 不改变访问权限。此页面仅复制经过检查的静态 HTML、CSS、JS 和示例任务 JSON，不包含私人论文原件。</p></article><article class="panel"><div class="panel-icon">03</div><h3>开放浏览</h3><p>任何人知道网址后都能查看这套展示数据。不要在公开仓库存储未获许可披露的资料、密码或保密研究结果。</p></article><article class="panel"><div class="panel-icon">04</div><h3>研究进度来源</h3><p>此辅助清单从未用作科研验收台账。完整的已完成研究、近期交接和真实状态请核对原仓库活动研究分支指挥室。</p></article></div><div class="notice">公开静态只读页面，不支持登录或跨用户协同编辑。原论文工作台使用浏览器本地存储，跨设备数据不会自动同步。</div></section>
+      </div><footer class="footer"><span>Wind Tower Thesis Studio · Research Integrity by Design</span><span id="version-footer">v0.1.0-staging</span></footer>
+    </main>
+  </div>
+</body>
+</html>

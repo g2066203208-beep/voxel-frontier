@@ -1,0 +1,18 @@
+"use strict";
+const pages=["overview","tasks","milestones","library","security"];
+const pageNames={overview:"总览",tasks:"研究任务",milestones:"阶段计划",library:"文献与证据",security:"安全与权限"};
+let data=null,filter="all",searchText="";
+const $=(selector)=>document.querySelector(selector);
+const el=(tag,cls,text)=>{const node=document.createElement(tag);if(cls)node.className=cls;if(text!==undefined)node.textContent=text;return node;};
+function changePage(page){if(!pages.includes(page))return;document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id==="page-"+page));document.querySelectorAll(".nav").forEach(n=>n.classList.toggle("active",n.dataset.page===page));$("#crumb").textContent=pageNames[page];if(location.hash!=="#"+page)history.replaceState(null,"","#"+page);window.scrollTo({top:0,behavior:"instant"});}
+function statusFlag(status){return status==="已完成"?"flag green":status==="待安排"?"flag slate":"flag";}
+function renderOverview(){const tasks=data.tasks;$("#stat-total").textContent=String(tasks.length);$("#stat-pending").textContent=String(tasks.filter(t=>t.status==="待核实").length);$("#stat-done").textContent=String(tasks.filter(t=>t.status==="已完成").length);$("#stat-phases").textContent=String(data.milestones.length);const box=$("#overview-tasks");box.replaceChildren();tasks.slice(0,4).forEach(t=>{const row=el("div","mini-task"),dot=el("span","dot"),wrap=el("div"),title=el("strong","",t.title),meta=el("small","",t.category+" · "+t.status);wrap.append(title,meta);row.append(dot,wrap);box.append(row);});}
+function renderTasks(){const target=$("#task-list");target.replaceChildren();const q=searchText.trim().toLowerCase();const tasks=data.tasks.filter(t=>(filter==="all"||t.status===filter)&&(!q||(t.title+" "+t.summary+" "+t.category).toLowerCase().includes(q)));if(!tasks.length){target.append(el("div","empty","没有匹配的任务。"));return;}tasks.forEach(t=>{const card=el("article","task-card"),info=el("div");info.append(el("h3","",t.title),el("p","",t.summary),el("small","",t.category+" · "+t.id));card.append(info,el("span",statusFlag(t.status),t.status));target.append(card);});}
+function renderMilestones(){const target=$("#milestones-list");target.replaceChildren();data.milestones.forEach((m,i)=>{const row=el("div","milestone"),num=el("div","num",String(i+1).padStart(2,"0")),article=el("article");article.append(el("h3","",m.name),el("p","",m.description),el("small","",m.state));row.append(num,article);target.append(row);});}
+async function boot(){try{const res=await fetch("./data/project.json",{cache:"no-store"});if(!res.ok)throw Error("HTTP "+res.status);data=await res.json();$("#version-side").textContent=data.version;$("#version-footer").textContent=data.version;renderOverview();renderTasks();renderMilestones();}catch(e){const box=$("#overview-tasks");box.replaceChildren(el("div","empty","研究数据加载失败，请检查 site/data/project.json。"));$("#task-list").append(el("div","empty","无法加载任务清单。"));}}
+document.querySelectorAll("[data-page],[data-goto]").forEach(button=>button.addEventListener("click",()=>changePage(button.dataset.page||button.dataset.goto)));
+$("#task-search").addEventListener("input",e=>{searchText=e.target.value;if(data)renderTasks();});
+document.querySelectorAll("[data-filter]").forEach(button=>button.addEventListener("click",()=>{filter=button.dataset.filter;document.querySelectorAll("[data-filter]").forEach(item=>item.classList.toggle("selected",item===button));if(data)renderTasks();}));
+window.addEventListener("hashchange",()=>changePage(location.hash.slice(1)||"overview"));
+changePage(location.hash.slice(1)||"overview");
+boot();
