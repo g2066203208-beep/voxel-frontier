@@ -60,8 +60,8 @@ def restore_20260827(out_dir: Path) -> Path:
     return dest
 
 
-def restore_20260905(out_dir: Path) -> Path:
-    source = ROOT / '20260905_raw'
+def restore_native_chunks(out_dir: Path, subfolder: str) -> Path:
+    source = ROOT / subfolder
     m = json.loads((source / 'manifest.json').read_text(encoding='utf-8'))
     assert m['format'] == 'git-binary-chunks-v1'
     dest = out_dir / m['original_filename']
@@ -81,13 +81,14 @@ def main() -> None:
     dest = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else ROOT / 'recovered-docx'
     dest.mkdir(parents=True, exist_ok=True)
     # Refuse to overwrite already recovered / user-owned files.
-    for sub, namekey in [('20260827','file_name'),('20260905_raw','original_filename')]:
+    for sub, namekey in [('20260827','file_name'),('20260905_raw','original_filename'),('20261113_refined','original_filename')]:
         name = json.loads((ROOT/sub/'manifest.json').read_text(encoding='utf-8'))[namekey]
         if (dest/name).exists():
             raise FileExistsError(f'Refusing overwrite: {dest/name}')
     restore_20260827(dest)
-    restore_20260905(dest)
-    print('BOTH_ORIGINAL_DOCX_RECOVERED_WITHOUT_ANY_CHAT_ATTACHMENTS')
+    restore_native_chunks(dest, '20260905_raw')
+    restore_native_chunks(dest, '20261113_refined')
+    print('ALL_THREE_THESIS_DOCX_RECOVERED_WITHOUT_ANY_CHAT_ATTACHMENTS')
 
 if __name__ == '__main__':
     main()

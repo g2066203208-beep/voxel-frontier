@@ -22,7 +22,7 @@ jobs:
           persist-credentials: true
           fetch-depth: 1
           lfs: false
-      - name: Recover both exact original Word documents from tracked Git data
+      - name: Recover all three exact thesis Word documents from tracked Git data
         shell: bash
         run: |
           set -euo pipefail
@@ -34,13 +34,13 @@ jobs:
           target='research/wind-tower/manuscript/source-uploads/2026-11-13/original-docx'
           mkdir -p "$target"
           cp "$RUNNER_TEMP/original-docx/"*.docx "$target/"
-          git add -- "$target/"
+          git add -f -- "$target/"*.docx
           if git diff --cached --quiet; then
-            echo 'Exact original DOCX files already tracked and unchanged.'
+            echo 'Original DOCX files already tracked and byte identical.'
           else
             git config user.name 'github-actions[bot]'
             git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-            git commit -m 'archive: add SHA-verified original 2026 thesis DOCX files without modification'
+            git commit -m 'archive: add all three SHA-verified 2026 thesis DOCX originals without modification'
             git push origin "HEAD:${GITHUB_REF_NAME}"
           fi
       - name: Verify repository copies again
