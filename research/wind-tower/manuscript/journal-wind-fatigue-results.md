@@ -520,6 +520,28 @@ For each of the 12 speed–turbulence–channel groups in the archived 72-row ra
 
 The 72-row source includes actual weighted rainflow cycle counts; the group means above preserve half-cycle counts rather than treating the row count as the number of full cycles. Under the source's historical 600-s and N_eq definitions, the fourth-power identity is exact apart from CSV rounding. These annualized sums are *not* the fourth moment of instantaneous M(t), and are not material damage, because local stress histories, material-specific S–N parameters, mean-stress correction, wind-regime occurrence probabilities and unobserved wind bins are not resolved. The table's main contribution is a reproducible numerical dimensional bridge from the historical load-DEL archive to a clearly conditional annual cycle-range quantity, with no claim of IEC DLC1.2 or physical lifetime validation. SOURCE: `experiments/T062/recomputed-load-fatigue/05_LOAD_DEL_M4_ALL36_RECOMPUTED.csv`, previously archived SHA256 `b362bcd7c37ccc56e21035de39448b5e761ec03f371b6b2f3eb30f41b013630d`; original cycle-ledger SHA256 `067c60cea61b35398edd186ff509fe759d1c4420395f082d06c666d92d897ecb` (not independently re-read in this transaction). RUN: source-row arithmetic in V8, no new OpenFAST run. TAB: 12 rows. REF/STANDARD/OFFICIAL: no newly licensed clause or original record. HOLD: annual occurrence weighting and local Miner life.
 
+
+### 4.26 Observed-bin-only ERA5 weighting of historical NTM rainflow range fourth powers (partial annual index)
+
+The historical 2005–2025 ERA5 hub-height 1 m/s table records 184,080 hourly observations. We associate the three existing 158-m OpenFAST NTM wind-speed labels (9.343881, 11.4 and 19.202140 m/s) with their enclosing ERA5 intervals [9,10), [11,12) and [19,20) m/s, respectively. Their observed hours are 5,736, 1,426 and 2, giving an aggregate coverage of **7,164/184,080 = 3.89178618% of all hours**. This is *not* 3.8918% coverage of the operating wind regime or of the 4–25 m/s conditional distribution. The source wind-speed labels are not bin centres; treating each source NTM response as constant across its entire enclosing 1 m/s interval is an unverified discretization approximation.
+
+For channel c, define the **observed-bin partial annual rainflow range index** (MN·m)^4/year as
+
+\[A_{4,c}^{\mathrm{partial}}=\frac{365\times24\times3600}{600}\,\frac{N_{\mathrm{eq}}}{10^{12}}\sum_{j\in\{9,11,19\}}\frac{h_j}{184080}\left(\frac16\sum_{s=1}^{6}\mathrm{DEL}_{j,s,c}^{4}\right),\qquad N_{\mathrm{eq}}=100000.\]
+
+The factor 10^12 converts (kN·m)^4 to (MN·m)^4. This is the sum of *only the three represented 1 m/s intervals* and is not the complete annual fatigue index. The six seed fourth powers are averaged before climate weighting. No ETM occurrence probability is assigned.
+
+| ERA5 interval, NTM source | Hours | p (all hours) | Mx contribution, (MN·m)^4/year | My contribution, (MN·m)^4/year |
+|---|---:|---:|---:|---:|
+| [9,10), U09p343881 | 5736 | 0.0311603651 | 2.237142e9 | 3.902609e12 |
+| [11,12), U11p4 | 1426 | 0.0077466319 | 1.615881e9 | 2.691581e12 |
+| [19,20), U19p202140 | 2 | 0.00001086484 | 1.081078e8 | 4.948683e9 |
+| **Partial sum** | **7164** | **0.0389178618** | **3.961131e9** | **6.599138e12** |
+
+A reproducible independent calculation is obtained by grouping the 72-row archived `05_LOAD_DEL_M4_ALL36_RECOMPUTED.csv` by NTM wind-speed label and channel, requiring six distinct seeds in every group, and multiplying the fourth-power seed average by 52,560 × 100,000 / 10^12 and the ERA5 interval count / 184,080. Source blob IDs (Git, not SHA256) are `1b334e9afdbd792a2f4b1a41cdb150dc3698352d` for the DEL archive and `1bae743b385d4f24c8b5af3e0b445aae30d40c6f` for ERA5. Previously archived source SHA256 values are `b362bcd7c37ccc56e21035de39448b5e761ec03f371b6b2f3eb30f41b013630d` and `e4058620a36b23bb218103875d4dc5b0711fc45d418b23a2208c2fc9c16c9102`, respectively; these SHA256 identities were inherited rather than independently rehashed here.
+
+The 19–20 m/s contribution rests on just two ERA5 hours and has substantial dependence and tail uncertainty. The missing 96.1082% of hourly exposure is **not zero-load exposure**: missing wind bins, control-state changes, wind-bin representativeness, ERA5 bias, six-seed variability, material stress localization, mean-stress correction and S–N parameters remain unresolved. Even the sum cannot be interpreted as a rigorous lower bound on true annual damage because source-to-bin representativeness is not established. It is a transparent *partial historical screening index* and cannot be called Miner damage, service life, full DLC1.2, or a physical prediction. RUN: arithmetic from two real repository CSVs (no new physical run); TAB: three observed intervals and partial sum; FIG: none; REF/STANDARD/OFFICIAL: no new original source or licensed clause; PASS: internal arithmetic; HOLD: physical extrapolation and design conclusions.
+
 ## References
 
 [1] Bak, C., Zahle, F., Bitsche, R., Kim, T., Yde, A., Henriksen, L. C., Natarajan, A., and Hansen, M. H. (2013). *Description of the DTU 10 MW Reference Wind Turbine*. DTU Wind Energy Report-I-0092. Technical University of Denmark. Official model/report context: https://www.hawc2.dk/models/dtu-10-mw.
