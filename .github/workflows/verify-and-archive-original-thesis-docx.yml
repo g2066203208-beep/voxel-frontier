@@ -1,0 +1,50 @@
+name: Recover and verify original thesis DOCX from GitHub
+
+on:
+  push:
+    branches:
+      - research/t080-seismic-integration-gates-20261022
+    paths:
+      - '.github/workflows/verify-and-archive-original-thesis-docx.yml'
+      - 'research/wind-tower/manuscript/source-uploads/2026-11-13/original-binary/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  verify-and-archive-original-docx:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 1
+          lfs: false
+      - name: Recover both exact original Word documents from tracked Git data
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/wind-tower/manuscript/source-uploads/2026-11-13/original-binary/recover_all_originals.py "$RUNNER_TEMP/original-docx"
+      - name: Register actual binary DOCX files in Git branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          target='research/wind-tower/manuscript/source-uploads/2026-11-13/original-docx'
+          mkdir -p "$target"
+          cp "$RUNNER_TEMP/original-docx/"*.docx "$target/"
+          git add -- "$target/"
+          if git diff --cached --quiet; then
+            echo 'Exact original DOCX files already tracked and unchanged.'
+          else
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m 'archive: add SHA-verified original 2026 thesis DOCX files without modification'
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
+      - name: Verify repository copies again
+        shell: bash
+        run: |
+          set -euo pipefail
+          find research/wind-tower/manuscript/source-uploads/2026-11-13/original-docx -name '*.docx' -exec sha256sum {} +
