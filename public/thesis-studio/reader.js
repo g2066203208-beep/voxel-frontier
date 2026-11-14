@@ -249,7 +249,8 @@ async function renderThumbs(){
 function renderSearchArea(){
  const box=$("reader-nav-content");
  box.replaceChildren();
- const results=$("reader-search-results");
+ let results=$("reader-search-results");
+ if(!results){results=element("div");results.id="reader-search-results";}
  box.append(results);
 }
 async function searchDocument(){
