@@ -22,7 +22,7 @@ export function researchPage() {
  <div class="tower-metric"><span>规划正式DLC1.2</span><strong>0 / 126</strong><small>126是研究暂定矩阵，非IEC固定标准</small></div>
  </section>
  <section class="panel research-intro"><h2>当前模型与历史物理基线</h2>
- <p>Codex已原生确认 `TOWER_AND_FOUNDATION_SEPARATE.cae` 的92项当前配置：31组纵筋与环筋、BF1初始6.4512 MN、30处线性接缝、E-only已配置。当前工程Jobs=0；历史PT平衡后6.359523 MN和Gravity/30阶模态来自独立修复工程。T057 BF8与旧T070三维基准不是当前工程。</p>
+ <p>Codex已原生确认 <code>TOWER_AND_FOUNDATION_SEPARATE.cae</code> 的92项当前配置：31组纵筋与环筋、BF1初始6.4512 MN、30处线性接缝、E-only已配置。当前工程Jobs=0；历史PT平衡后6.359523 MN和Gravity/30阶模态来自独立修复工程。T057 BF8与旧T070三维基准不是当前工程。</p>
  <div class="research-links"><a href="#" data-view="current-model" class="button primary">在工作室内查看92项设置</a><a href="${model}" target="_blank" rel="noopener">模型来源档案</a></div></section>
  <section class="panel research-intro"><h2>六章现行稿</h2><div class="tower-table-wrap"><table class="tower-parameter-table">
  <thead><tr><th>章节</th><th>有来源的现有成果</th><th>关键未闭合结论</th></tr></thead><tbody>
