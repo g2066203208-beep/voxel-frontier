@@ -1,3 +1,9 @@
+## 2026-11-14 17:54｜论文、GitHub、工作室全链整体验证及整改台账 START（非CAE）
+
+- 执行者：ChatGPT；read_base_sha=`98db5886cce4e704b6db5f7387078f4a7e54b2ec`，PR #42 Open/Draft。已读根/研究AGENTS、当前指挥室17:40最近交接、白皮书v0.30.14、T080最新过程、S01–S12关键路径、论文STATUS与WORKSPACE_MASTER。
+- 继承Codex在2026-11-14 16:36直接本机MCP确认的158m双模型当前配置（本聊天有完整92项报告）；其原始本机JSON/CAE/ODB未由本助手读取，故来源须注明“Codex原生MCP已确认/用户转录”，不能写成凭空猜测，更不能把现工程与原修复工程重力/模态结果混同。
+- 本轮增量：直接盘点六章正文与Word/PDF装配、T062/T077/T079/T080实证、引用及原页、工作室入口和版本发布、自动CI/历史错误；形成一次**分级真实问题清单+来源路径+责任归属**、消除有证据的错版说明/高风险误导。拟改一份现有治理区域内总审查、可选源级只读前端修复与现有入口、T080过程/白皮书/指挥室。禁止本助手一切Abaqus/CAE相关执行审查派工、修改冻结模型、推测新物理PASS、重跑昂贵物理RUN、main和Draft PR合并。
+
 ## 2026-11-14 17:40｜158m当前双模型设置入库及唯一论文工作室展示收尾（白皮书v0.30.14）
 
 - READ-BEFORE-WRITE START见本文件同日下午条目，`read_base_sha=aa3b872ec2160042d102b86648f7dc1bbf965083`。本次只归档用户报告，不做CAE/Abaqus实际工作。当前双模型工程`TOWER_AND_FOUNDATION_SEPARATE.cae`的92项设置、当前Jobs=0及与独立历史`DTU158_ALIGNED_GM_VERIFY.odb`算例结果的区别已原位写入[MD](../models/CURRENT_TOWER_SETTINGS_20261114.md) commit 8fe6a5c6 / [JSON](../models/CURRENT_TOWER_SETTINGS_20261114.json) commit f2bc6213。用户报告的本机原始JSON/修复验收MD/CAE/ODB**本助手没有直接读取**，来源级别仅`USER_SUPPLIED_LOCAL_MCP_REPORT`，绝非本轮原生检查PASS。
