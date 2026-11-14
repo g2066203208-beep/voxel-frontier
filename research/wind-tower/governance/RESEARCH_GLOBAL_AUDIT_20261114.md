@@ -8,11 +8,11 @@
 |---|---|---|
 | 当前模型 | [9类92项设置](../models/CURRENT_TOWER_SETTINGS_20261114.md)、[JSON](../models/CURRENT_TOWER_SETTINGS_20261114.json)；Codex确认158m、31混凝土段/4钢塔段、31组纵筋与环筋、BF1初始6.4512MN、180个SPRING2、E-only步骤 | 当前双模型Jobs=0；旧修复工程Gravity/Modal结果不等于当前工程输出 |
 | 六章论文 | [Ch1–Ch6](../manuscript/final-thesis/chapters/)全部存在，Ch3/4含大量真实风源/雨流筛查 | Ch4材料年Miner与Ch5真实结构优化未闭合 |
-| 3版Word | [8月27日、9月5日、11月13日DOCX原件](../manuscript/source-uploads/2026-11-13/original-docx/)；189/147/193页，[529页对照](../manuscript/source-uploads/2026-11-13/AUDIT_20261113_529pages_major_findings.md) | 最新193页不包含11月14日全部正文；仅定向查过3页排版 |
+| Word历史与现稿 | [8月27日、9月5日、11月13日三版原件](../manuscript/source-uploads/2026-11-13/original-docx/)保持189/147/193页归档；[11月14日现行265页Word/PDF](../manuscript/final-thesis/deliverables/20261114/)已通过动态源SHA与自动页面检查并永久归档 | 265页尚未人工逐页视觉终审、Microsoft Word分页对照、图/式/引文和原稿逐图继承审查；旧193页不是最新稿 |
 | 风载 | 36历史NTM/ETM、18NTM塔底216,018行，4ETM×31段×12,001点共1,488,124行，已做源级QA | 跨批600s同态与整塔纯风外力分离未闭合 |
 | 气象/地震 | ERA5 184,080小时、ESM双水平各32,040点、谱与梁代理方法 | 不等于嘉鱼现场风/地震实测，也不等于正式E或W/E/WE通过 |
 | 文献/原图 | [何泽瑜原始90页PDF](../references/user-provided/He_Zeyu_2024_hybrid_tower_thesis.pdf)确实存在（10,193,750字节），另有何原页11张、Ch1–3证据原页38张、Ch4疲劳30张、学位论文对照6张 | 85张关键原页已在同一工作室内嵌检索/放大（非完整PDF全文）；保留原作者许可边界 |
-| 唯一工作室 | `src/main.ts`已有Codex当前模型92项原位检索、旧T070三维单独标识；[CI #43581408696](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43581408696) 21/21测试及TS/Vite构建通过 | `pages.yml`仅主分支main触发；PR #42没有合并/发布 |
+| 唯一工作室 | `src/main.ts`内已有当前模型92项原位检索、旧T070三维独立身份提示、85张来源关键原页检索/同页放大及现行Word/PDF入口；[CI #43586894698](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43586894698) 23/23测试及TS/Vite构建通过 | 85张非全部原PDF页面；`pages.yml`仅main发布，PR #42仍Draft未上线 |
 
 ## 实际问题与优先级
 
@@ -20,7 +20,7 @@
 |---|---|---|---|
 | I01 | P0 | 论文Ch2历史T057 BF8名义51.6096MN与Codex确认当前BF1名义6.4512MN，模型/初态/历史频率不能混称 | 已新增Ch2§2.1.5独立身份表；正式研究候选与当前工程同一物理基线未闭合 |
 | I02 | P0 | Ch3§3.5.10与Ch4§4.7.27–29原位于“**不进入最终Word**”标记后，装配时被截断；Ch4§4.10.1标题位置错误 | **已修复Markdown结构**，4个小节已移回相应章节，4.10.1归入4.10；原数值不变 |
-| I03 | P0 | 旧`s12_build_six_chapter_reader.cjs`锁定过期Ch3/Ch4 SHA；[CI #43578654634](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43578654634)真实报`SOURCE_SHA_MISMATCH` | **未修复装配契约、未重新产Word**；不能把193页旧版称最新 |
+| I03 | P0 | 旧`s12_build_six_chapter_reader.cjs`存在历史SHA过期失败（保留旧[CI #43578654634](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43578654634)） | **已以动态源SHA的新装配链替代并构建265页Word/PDF**：[构建成功 #43586214517](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43586214517)、[永久归档成功 #43586710092](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43586710092)；旧脚本仅历史追踪，人工视觉/送审HOLD |
 | I04 | P0 | OpenFAST塔底/截面内力不能唯一作为外加气动力；31段跨四次独立运行虽高度相关、最佳滞后0仍非完整600s同态证明 | 已保存[风载18NTM审计](../experiments/T062/S06_W_CROSSSOURCE_ADMISSION_20261114.md)、[4ETM审计](../experiments/T077/recovery/S06_4ETM_CROSSBATCH_EXTERNAL_RECEIPT_20261114.json)；物理HOLD |
 | I05 | P0 | 正式DLC1.2研究矩阵仍0/126准入；历史18NTM仅3风速箱，ERA5全年三箱合计7164/184080小时（3.8918%） | 126为仓库**暂定21×6设计**，不是IEC固定硬性最小例数；历史36风保留 |
 | I06 | P0 | 缺材料点range-mean-count、相应疲劳参数、风速权重闭合、全年Miner | Ch4数据是载荷/名义应力筛查，不是材料年寿命 |
@@ -28,8 +28,8 @@
 | I08 | P0 | Ch5只有真实历史载荷代理验证和算法基准，缺不同结构设计点的独立真实响应 | 不得称结构Pareto最优已形成 |
 | I09 | P1 | 当前模型以前标签只写“用户提供报告”，漏掉Codex原生MCP已实际确认的事实 | 本轮修复MD、JSON及工作室，保留“本助手未二次读取原件”的准确限定 |
 | I10 | P1 | 文献旧清单错误地称何泽瑜原始PDF待上传、旧29/39库数误导 | [文献队列](../references/NEED_USER_DOWNLOAD.md)已更新。实际目录30个user-provided PDF、46个open-access PDF（仅文件数，未本轮复核每篇许可） |
-| I11 | P1 | 旧工作室研究流程页仍有`/blob/main`链接及过期进度；历史T070三维不能代替当前双模型网格 | 需在唯一工作室修复研究索引，避免旧信息覆盖当前状态 |
-| I12 | P1 | 三版Word图片/对象化阻尼/历史频率继承未完成终审；11月13日仅3页定向视觉检查 | 原DOCX已存档；未完成完整盲审排版及参考文献GB/T7714复核 |
+| I11 | P1 | 旧工作室研究索引曾引用`main`旧进度，旧T070三维不能代替当前BF1双模型 | **已更新研究索引、模型92项和85张原页及Word/PDF入口**，测试23/23通过；最新内容仅在PR #42研究分支，main/Pages未发布 |
+| I12 | P1 | 三版历史Word的图片/对象化阻尼/历史频率继承及当前稿排版尚未完整终审 | 新265页Word/PDF已有自动无空白/越界检查；**全页人工视觉、Microsoft Word对照、GB/T7714和逐图继承仍HOLD** |
 | I13 | P1 | 嘉鱼项目地震场地类别、目标谱及正式标准条文适用证据未闭合 | ESM NVL为条件性真实记录，不是嘉鱼现场设计波 |
 | I14 | P2 | 管理日志/白皮书持续增长、旧计划与新事实同屏 | 本审查是当前总索引；历史记录保留，不删原研究日志 |
 
@@ -48,7 +48,7 @@
 
 ## 非CAE整改顺序
 
-1. **Word最新版本**：依据当前6章重锁源、修复装配脚本、出可编辑最新版；对公式、表格、图及引用逐页检查，再与原三版Word做版本继承对照。未更新前不能称“送审终稿”。
+1. **Word现行版本**：265页可编辑稿与PDF已由真实CI构建并永久归档；下一步是265页人工逐页检查、公式/图表/引用GB/T7714及三版历史Word继承对照；未完成前不能称“送审终稿”。
 2. **风载与材料证据边界**：有真正同态纯风外载原件才做来源与载荷责任核验；没有则保留HOLD，不生成虚构的材料寿命。
 3. **唯一工作室**：同步研究分支的现行状态和原图索引；不合并Draft PR #42或宣称Pages部署。
 4. **权限界限**：原生Abaqus/CAE工程及地震物理不属于本助手执行、审查或派发范围，保留Codex已报告的历史事实。
