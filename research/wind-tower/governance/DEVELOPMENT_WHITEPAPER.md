@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.30.19**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.30.20**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -31,6 +31,7 @@
 
 | 日期（Asia/Shanghai） | 白皮书版本 | 开发与证据增量 | 科学状态 | 远端事务 |
 |---|---|---|---|---|
+| 2026-11-14 20时 | **v0.30.20 PATCH** | S12 Ch4§4.7.30以非负性推导三箱年度载荷四次幂部分识别下界，并构造缺失箱零贡献与任意大贡献反例，证明完整指标无有限上界；科学commit [e622cbbb](https://github.com/g2066203208-beep/voxel-frontier/commit/e622cbbb2a4118aa8cd1defc09f762770c503fac)、正文blob `44ef65d74d36f308b2463ede98662d6601220cd0`。 | 解析证明而非新物理RUN/材料Miner；12阶段0/12、正式DLC1.2 0/126。 | [Ch4§4.7.30](../manuscript/final-thesis/chapters/04_10MW混合塔架风致疲劳性能分析.md)、[T080过程](../experiments/T080/PROCESS_LOG.md)。 |
 | 2026-11-14 19时后 | **v0.30.19 PATCH** | 把Ch4§4.2.4概率/运行状态年度估计量修正后的当前六章源（commit `82453ba0`）重新生成可编辑Word/PDF并永久替换研究分支的阅读版入口：源SHA256 `31f32303...`、Word SHA256 `b355bac8...`；265页/47图/63表/**801 OMML**。已确认原生[构建#43588545415](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43588545415)与[归档#43589481448](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43589481448)均completed/success，归档提交[5126f8d2](https://github.com/g2066203208-beep/voxel-frontier/commit/5126f8d299e34c3e73c6fbbd808529780a3fcd3c)；上版bd950076保持Git历史可回溯。 | 仅文档版本/源身份/页位置自动QA；非送审人工视觉终审，材料年Miner、同态W/E/WE、纯气动外载及真实Pareto继续HOLD，正式12阶段0/12，DLC1.2 0/126。 | [永久Word/PDF及源收据](../manuscript/final-thesis/deliverables/20261114/)、[T080过程](../experiments/T080/PROCESS_LOG.md)。 |
 | 2026-11-14 19时后 | **v0.30.18 PATCH** | S12第四章§4.2.4将无条件ERA5概率、箱内运行状态与短时材料损伤率统一为可量纲核验的年化估计量；明确条件概率等价、三箱错误归一化25.695倍反例、闰年与覆盖边界。源Ch4 blob `0beff9b5791af3dac20b98e52faab9f204377198`，科学commit [82453ba0](https://github.com/g2066203208-beep/voxel-frontier/commit/82453ba0de6ab27b34092aadb4ad7d4f0c127d6b)。 | 解析方法纠错，不是新增物理RUN；真实状态概率、局部应力、完整风箱、材料Miner与寿命HOLD，12阶段0/12、DLC1.2 0/126；265页Word尚未重装配。 | [Ch4§4.2.4](../manuscript/final-thesis/chapters/04_10MW混合塔架风致疲劳性能分析.md)、[T080过程](../experiments/T080/PROCESS_LOG.md)。 |
 | 2026-11-14 19时 | **v0.30.17 PATCH** | 复核PR#42与4条GitHub Actions原生状态后，纠正全局14项问题总表I03/I11/I12和论文README的过时“Word未生成/工作室未更新”语句：现行265页Word/PDF、85张关键原页已在研究分支且程序检查通过；保留旧SHA失败历史，不将文档成功冒充科学验收。 | 直接调用GitHub Actions API确认#43586214517、#43586710092、#43586894698、#43578427372均completed/success；未启动任何新计算、没有人工逐页视觉/Word本机对照，也无新Abaqus/物理结果；正式12阶段0/12、DLC1.2 0/126，PR Draft未合并main/Pages。 | [14项状态表](RESEARCH_GLOBAL_AUDIT_20261114.md)、[论文工作区README](../manuscript/final-thesis/README.md)、[T080过程](../experiments/T080/PROCESS_LOG.md)。 |
