@@ -16,7 +16,7 @@ export function researchPage() {
  <a class="button primary" href="${audit}" target="_blank" rel="noopener">完整问题台账</a></div>
  <section class="tower-metrics">
  <div class="tower-metric"><span>当前真实模型</span><strong>158 m</strong><small>Codex MCP读取确认 · BF1、31组环筋</small></div>
- <div class="tower-metric"><span>论文工作稿</span><strong>6章</strong><small>三版原始Word保留 · 新版265页研究稿已归档</small></div>
+ <div class="tower-metric"><span>论文工作稿</span><strong>6章</strong><small>三版原始Word保留 · 现行185页研究稿已归档</small></div>
  <div class="tower-metric"><span>历史风工况</span><strong>36</strong><small>18 NTM + 18 ETM</small></div>
  <div class="tower-metric"><span>31段ETM时程</span><strong>4组</strong><small>历史共1,488,124行 · 跨批同态HOLD</small></div>
  <div class="tower-metric"><span>12阶段正式验收</span><strong>0 / 12</strong><small>已有来源、方法成果不能抹零</small></div>
@@ -29,14 +29,34 @@ export function researchPage() {
  <thead><tr><th>章节</th><th>有来源的现有成果</th><th>关键未闭合结论</th></tr></thead><tbody>
  <tr><th>Ch1 绪论</th><td>文献与研究问题链</td><td>投稿创新需原文边界核定</td></tr>
  <tr><th>Ch2 模型</th><td>原型参数、当前BF1与T057历史候选分开</td><td>不同版本的正式物理适用性</td></tr>
- <tr><th>Ch3 随机风</th><td>ERA5及36历史工况、NTM/ETM时程</td><td>正式全风速与纯风外载来源</td></tr>
+ <tr><th>Ch3 随机风</th><td>ERA5及36历史工况、NTM/ETM时程</td><td>正式风速箱覆盖；跨模型传递才核外载归属</td></tr>
  <tr><th>Ch4 疲劳</th><td>48,070条载荷循环及名义应力筛查</td><td>材料点年Miner/寿命</td></tr>
  <tr><th>Ch5 优化</th><td>DOE/代理/算法验证</td><td>真实设计点Pareto优化</td></tr>
  <tr><th>Ch6 结论</th><td>历史筛查、统计限制与展望</td><td>风震/材料/优化新物理结论</td></tr>
- </tbody></table></div><div class="research-links"><a href="${chapters}" target="_blank" rel="noopener">现行六章全文</a><a class="button primary" href="${delivery}DTU10MW_158m_CURRENT_six_chapter_research_20261114.docx" target="_blank" rel="noopener">265页新版Word</a><a href="${delivery}DTU10MW_158m_CURRENT_six_chapter_research_20261114.pdf" target="_blank" rel="noopener">265页PDF</a><a href="${docx}" target="_blank" rel="noopener">历史三版Word</a></div></section>
+ </tbody></table></div><div class="research-links"><a href="${chapters}" target="_blank" rel="noopener">现行六章全文</a><a class="button primary" href="${delivery}DTU10MW_158m_CURRENT_six_chapter_research_20261114.docx" target="_blank" rel="noopener">185页新版Word</a><a href="${delivery}DTU10MW_158m_CURRENT_six_chapter_research_20261114.pdf" target="_blank" rel="noopener">185页PDF</a><a href="${docx}" target="_blank" rel="noopener">历史三版Word</a></div></section>
+
+ <section class="panel research-intro" aria-label="疲劳计算 · 真实数据与前置门禁">
+ <h2>疲劳计算 · 真实数据及前置条件（11月14日）</h2>
+ <p><strong>已复算的来源级数据：</strong>36历史风工况、48,070条载荷级雨流；18NTM的2,880行10个近底位置×16方位毛截面统计；3个ETM控制点的<strong>1,574条真实毛截面应力雨流循环</strong>。这些数据属于真实风致响应筛查，不等于局部材料疲劳寿命。</p>
+ <div class="tower-table-wrap"><table class="tower-parameter-table"><thead><tr><th>历史ETM工况</th><th>混凝土段</th><th>固定方位</th><th>循环行</th><th>等效循环数</th><th>DEL4 / MPa</th></tr></thead><tbody>
+ <tr><td>9.343881 m/s · S06</td><td>CSEG16</td><td>180°</td><td>413</td><td>407.5</td><td>7.052732</td></tr>
+ <tr><td>9.343881 m/s · S06</td><td>CSEG17</td><td>180°</td><td>526</td><td>520.5</td><td>7.037162</td></tr>
+ <tr><td>11.4 m/s · S04</td><td>CSEG04</td><td>0°</td><td>635</td><td>628</td><td>7.169089</td></tr>
+ </tbody></table></div>
+ <p><strong>预应力身份已纠正：</strong>当前BF1为36×140 mm²，总面积5040 mm²，初始6.4512 MN；历史BF8为36×8×140 mm²，总面积40320 mm²，初始51.6096 MN。历史毛截面记录内的Pe/P0只是另一设计分支的均值平移假设，<strong>不得直接作为BF1局部材料应力</strong>。</p>
+ <div class="tower-table-wrap"><table class="tower-parameter-table"><thead><tr><th>疲劳计算环节</th><th>真实状态</th><th>下一判断依据</th></tr></thead><tbody>
+ <tr><td>历史风载时程与载荷雨流</td><td>已完成</td><td>36工况 / 48,070循环</td></tr>
+ <tr><td>毛截面应力与控制位置</td><td>已完成来源级筛查</td><td>2,880条NTM统计、1,574条ETM循环</td></tr>
+ <tr><td>BF1有效平均应力和局部材料循环</td><td>未证实</td><td>需要与当前模型同版本的独立材料点记录</td></tr>
+ <tr><td>各材料疲劳关系及N_allow</td><td>文献已归档，参数未完成准入</td><td>混凝土、钢筋、PT、钢塔分材料</td></tr>
+ <tr><td>完整年度风致Miner</td><td>未完成</td><td>正式风速箱覆盖、局部循环、材料关系</td></tr>
+ <tr><td>W+E地震期间事件疲劳</td><td>未完成</td><td>同状态W/W+E材料应力循环</td></tr>
+ </tbody></table></div>
+ <p class="tower-source-footer">原始三控制点循环SHA256：646065838456…；NTM名义应力SHA256：d45f047f5d62…。GitHub研究分支新增独立核对程序和6类拒绝测试，原始数据未覆盖。状态为<strong>来源级通过／材料寿命未通过</strong>。</p>
+ </section>
  <section class="panel research-intro"><h2>当前高优先级问题</h2>
  <p><strong>已修正文稿：</strong>Ch3一个及Ch4三个被旧装配器排除的新增小节，已经移动回正文；Ch4§4.10.1章节层级已校正。Ch2已明确当前BF1与历史BF8分支不同。</p>
- <p><strong>仍未解决：</strong>旧装配器过期问题已由现行源SHA锁构建替代；新版265页Word/PDF已归档，但尚非送审版，完整人工视觉与格式终审未通过；跨批600s同态及气动力/惯性分解未闭合；E-only完整地震未运行、W/E/WE、材料Miner及真实结构优化均不能宣称通过。</p>
+ <p><strong>仍未解决：</strong>旧装配器过期问题已由现行源SHA锁构建替代；新版185页Word/PDF已归档，但尚非送审版，完整人工视觉与格式终审未通过；跨批600s同态未完全证明；外载/惯性归属仅在跨模型传递时仍需核验；E-only完整地震未运行、W/E/WE、材料Miner及真实结构优化均不能宣称通过。</p>
  <p><strong>资料核实：</strong>何泽瑜原始90页PDF与11张关键原页均已入GitHub；现存85张关键原页已经在同一个工作室直接显示与放大，未把全部PDF整本转成图片；原作者权属与引文终审继续保留。</p>
  <div class="research-links"><a class="button primary" href="${audit}" target="_blank" rel="noopener">查看14条证据问题及处理状态</a><a href="#" data-view="source-evidence" class="button primary">工作室内查看85张原始证据图</a><a href="${refs}" target="_blank" rel="noopener">原始PDF文件目录</a></div>
  </section><p class="tower-source-footer">研究分支PR #42仍Draft；正式Pages只由main部署，本页代码已提交不等于官网已同步。资料原图引用须保留原作者和许可边界。</p>`;
