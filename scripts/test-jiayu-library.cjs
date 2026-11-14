@@ -41,7 +41,7 @@ assert.equal(figureIndex.hosted,541,"all originals should be deployed in Pages")
 assert.equal(figureIndex.hePages.length,11,"11 He Zeyu source pages");
 assert.equal(figureIndex.documents.length,3,"Jiayu government, EIA, and He thesis PDFs");
 function gitBlobSha(buf){
-  return crypto.createHash("sha1").update("blob "+buf.length+"\\0").update(buf).digest("hex");
+  return crypto.createHash("sha1").update("blob "+buf.length+"\0").update(buf).digest("hex");
 }
 const featuredNames=[
  "figure2-1-word-zh.png",
