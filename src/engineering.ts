@@ -10,12 +10,13 @@ export function researchPage() {
  const refs = repo + '/tree/research/t080-seismic-integration-gates-20261022/research/wind-tower/references/';
  const chapters = repo + '/tree/research/t080-seismic-integration-gates-20261022/research/wind-tower/manuscript/final-thesis/chapters/';
  const docx = repo + '/tree/research/t080-seismic-integration-gates-20261022/research/wind-tower/manuscript/source-uploads/2026-11-13/original-docx/';
+ const delivery = branch + 'manuscript/final-thesis/deliverables/20261114/';
  return `<div class="page-heading"><div><div class="eyebrow">158M HYBRID TOWER / VERIFIED RESEARCH INDEX</div><h1>10 MW混合塔架 · 研究总览</h1>
  <p>2026-11-14核查 · 本页显示GitHub研究分支的实际成果与未验事项，不以测试绿灯代替物理验收。</p></div>
  <a class="button primary" href="${audit}" target="_blank" rel="noopener">完整问题台账</a></div>
  <section class="tower-metrics">
  <div class="tower-metric"><span>当前真实模型</span><strong>158 m</strong><small>Codex MCP读取确认 · BF1、31组环筋</small></div>
- <div class="tower-metric"><span>论文工作稿</span><strong>6章</strong><small>三版Word归档 · 最新Word尚未装配</small></div>
+ <div class="tower-metric"><span>论文工作稿</span><strong>6章</strong><small>三版原始Word保留 · 新版265页研究稿已归档</small></div>
  <div class="tower-metric"><span>历史风工况</span><strong>36</strong><small>18 NTM + 18 ETM</small></div>
  <div class="tower-metric"><span>31段ETM时程</span><strong>4组</strong><small>历史共1,488,124行 · 跨批同态HOLD</small></div>
  <div class="tower-metric"><span>12阶段正式验收</span><strong>0 / 12</strong><small>已有来源、方法成果不能抹零</small></div>
@@ -32,11 +33,11 @@ export function researchPage() {
  <tr><th>Ch4 疲劳</th><td>48,070条载荷循环及名义应力筛查</td><td>材料点年Miner/寿命</td></tr>
  <tr><th>Ch5 优化</th><td>DOE/代理/算法验证</td><td>真实设计点Pareto优化</td></tr>
  <tr><th>Ch6 结论</th><td>历史筛查、统计限制与展望</td><td>风震/材料/优化新物理结论</td></tr>
- </tbody></table></div><div class="research-links"><a href="${chapters}" target="_blank" rel="noopener">现行六章全文</a><a href="${docx}" target="_blank" rel="noopener">三份原始Word</a></div></section>
+ </tbody></table></div><div class="research-links"><a href="${chapters}" target="_blank" rel="noopener">现行六章全文</a><a class="button primary" href="${delivery}DTU10MW_158m_CURRENT_six_chapter_research_20261114.docx" target="_blank" rel="noopener">265页新版Word</a><a href="${delivery}DTU10MW_158m_CURRENT_six_chapter_research_20261114.pdf" target="_blank" rel="noopener">265页PDF</a><a href="${docx}" target="_blank" rel="noopener">历史三版Word</a></div></section>
  <section class="panel research-intro"><h2>当前高优先级问题</h2>
  <p><strong>已修正文稿：</strong>Ch3一个及Ch4三个被旧装配器排除的新增小节，已经移动回正文；Ch4§4.10.1章节层级已校正。Ch2已明确当前BF1与历史BF8分支不同。</p>
- <p><strong>仍未解决：</strong>Word装配源SHA版本过期（已有CI失败）、193页Word尚不是当前稿；跨批600s同态及气动力/惯性分解未闭合；E-only完整地震未运行、W/E/WE、材料Miner及真实结构优化均不能宣称通过。</p>
- <p><strong>资料核实：</strong>何泽瑜原始90页PDF与11张关键原页均已入GitHub；现有参考原图尚未全部内嵌显示在工作室，不把有原图目录等于网页已可通读。</p>
+ <p><strong>仍未解决：</strong>旧装配器过期问题已由现行源SHA锁构建替代；新版265页Word/PDF已归档，但尚非送审版，完整人工视觉与格式终审未通过；跨批600s同态及气动力/惯性分解未闭合；E-only完整地震未运行、W/E/WE、材料Miner及真实结构优化均不能宣称通过。</p>
+ <p><strong>资料核实：</strong>何泽瑜原始90页PDF与11张关键原页均已入GitHub；现存85张关键原页已经在同一个工作室直接显示与放大，未把全部PDF整本转成图片；原作者权属与引文终审继续保留。</p>
  <div class="research-links"><a class="button primary" href="${audit}" target="_blank" rel="noopener">查看14条证据问题及处理状态</a><a href="#" data-view="source-evidence" class="button primary">工作室内查看85张原始证据图</a><a href="${refs}" target="_blank" rel="noopener">原始PDF文件目录</a></div>
  </section><p class="tower-source-footer">研究分支PR #42仍Draft；正式Pages只由main部署，本页代码已提交不等于官网已同步。资料原图引用须保留原作者和许可边界。</p>`;
 }
