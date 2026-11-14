@@ -37,7 +37,7 @@ export function researchPage() {
  <p><strong>已修正文稿：</strong>Ch3一个及Ch4三个被旧装配器排除的新增小节，已经移动回正文；Ch4§4.10.1章节层级已校正。Ch2已明确当前BF1与历史BF8分支不同。</p>
  <p><strong>仍未解决：</strong>Word装配源SHA版本过期（已有CI失败）、193页Word尚不是当前稿；跨批600s同态及气动力/惯性分解未闭合；E-only完整地震未运行、W/E/WE、材料Miner及真实结构优化均不能宣称通过。</p>
  <p><strong>资料核实：</strong>何泽瑜原始90页PDF与11张关键原页均已入GitHub；现有参考原图尚未全部内嵌显示在工作室，不把有原图目录等于网页已可通读。</p>
- <div class="research-links"><a class="button primary" href="${audit}" target="_blank" rel="noopener">查看14条证据问题及处理状态</a><a href="${refs}" target="_blank" rel="noopener">原始PDF与原页目录</a></div>
+ <div class="research-links"><a class="button primary" href="${audit}" target="_blank" rel="noopener">查看14条证据问题及处理状态</a><a href="#" data-view="source-evidence" class="button primary">工作室内查看85张原始证据图</a><a href="${refs}" target="_blank" rel="noopener">原始PDF文件目录</a></div>
  </section><p class="tower-source-footer">研究分支PR #42仍Draft；正式Pages只由main部署，本页代码已提交不等于官网已同步。资料原图引用须保留原作者和许可边界。</p>`;
 }
 
