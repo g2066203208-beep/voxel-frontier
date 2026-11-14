@@ -3,7 +3,7 @@
 ## 2026-11-14最新版可编辑研究稿（265页，非送审稿）
 
 - [**当前六章可编辑Word**](deliverables/20261114/DTU10MW_158m_CURRENT_six_chapter_research_20261114.docx)｜[**PDF 265页阅读版**](deliverables/20261114/DTU10MW_158m_CURRENT_six_chapter_research_20261114.pdf)｜[**真实源SHA与排版QA收据**](deliverables/20261114/)。
-- 原生[GitHub Actions #43586214517](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43586214517) **SUCCESS**：逐次锁定当前六章、30条参考书目和附录A，47幅原始科研SVG图进入Word，63表、779个OMML数学对象；265页无空白页/文字越界被自动检出。[永久Git归档验证 #43586710092](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43586710092) **SUCCESS**。
+- 最新含Ch4§4.2.4年度概率修正的原生[GitHub Actions #43588545415](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43588545415) **SUCCESS**：同次源commit `82453ba0`锁定六章、30条参考书目及附录A，47幅原始科研SVG图、63表、**801个OMML数学对象**；PDF 265页，自动0空白页/0越界文字。[永久Git归档验证 #43589481448](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43589481448) **SUCCESS**（归档commit `5126f8d2`，Word SHA256 `b355bac8...d7f0d95`）；旧11月14日构建历史在Git History保留。
 - 原始2026-08/09/11三版Word仍原样保存在`../source-uploads/2026-11-13/original-docx/`，没有被覆盖。当前Word尚须全页人工排版、公式视觉、图题/引用GB/T 7714及物理结论复核；**不能作为已经通过正式送审的终稿**。
 
 
