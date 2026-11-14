@@ -11,7 +11,7 @@
 | 3版Word | [8月27日、9月5日、11月13日DOCX原件](../manuscript/source-uploads/2026-11-13/original-docx/)；189/147/193页，[529页对照](../manuscript/source-uploads/2026-11-13/AUDIT_20261113_529pages_major_findings.md) | 最新193页不包含11月14日全部正文；仅定向查过3页排版 |
 | 风载 | 36历史NTM/ETM、18NTM塔底216,018行，4ETM×31段×12,001点共1,488,124行，已做源级QA | 跨批600s同态与整塔纯风外力分离未闭合 |
 | 气象/地震 | ERA5 184,080小时、ESM双水平各32,040点、谱与梁代理方法 | 不等于嘉鱼现场风/地震实测，也不等于正式E或W/E/WE通过 |
-| 文献/原图 | [何泽瑜原始90页PDF](../references/user-provided/He_Zeyu_2024_hybrid_tower_thesis.pdf)确实存在（10,193,750字节），另有何原页11张、Ch1–3证据原页38张、Ch4疲劳30张、学位论文对照5张 | 原页在GitHub，但尚未全部以内嵌方式呈现在工作室；须遵守来源许可 |
+| 文献/原图 | [何泽瑜原始90页PDF](../references/user-provided/He_Zeyu_2024_hybrid_tower_thesis.pdf)确实存在（10,193,750字节），另有何原页11张、Ch1–3证据原页38张、Ch4疲劳30张、学位论文对照6张 | 85张关键原页已在同一工作室内嵌检索/放大（非完整PDF全文）；保留原作者许可边界 |
 | 唯一工作室 | `src/main.ts`已有Codex当前模型92项原位检索、旧T070三维单独标识；[CI #43581408696](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43581408696) 21/21测试及TS/Vite构建通过 | `pages.yml`仅主分支main触发；PR #42没有合并/发布 |
 
 ## 实际问题与优先级
