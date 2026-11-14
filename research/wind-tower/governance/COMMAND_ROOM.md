@@ -1,3 +1,11 @@
+## 2026-11-14 20时后｜S12 Word表格错版根因实修和185页永久归档 END（白皮书v0.30.21）
+
+- START见本指挥室19时后条目（原HEAD `bfbc7645`）；继承36历史风、18NTM真实OUTB、4ETM×31段、10份现成TurbSim Stage A输入卡和历史Word/265页最新版。核心实际发现：从GitHub artifact直接下载旧265页Word/PDF，旧第8/12页等63张管道表格因未定义`Compact`样式发生系统性竖排，之前自动0空白/0越界漏检；2026-11-14本地修复版仅作因果试验。新代码`517e2573`定义模板样式，`d1aeee95`增加PDF表头横向拒绝测试；旧固定SHA工作流仅保留手动复现（`7d8274e2`）。
+- [新原生构建 #43593104348](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43593104348) 成功：源commit `d1aeee95`、sha256 `ea1e9469868566abbc6289a7c19fa95f067ffce18acbdbe90f1ec25559eec75f`；Word SHA256 `f668af5c7c8597bded6e9195835f853d4b786a5043e23cc1d0a9da2a523260b6`、5,264,805B、47图/63表/812 OMML，PDF185页，横向表头x=85.15/170.20/272.20pt、y=565.23/567.28/567.28pt，自动无空白/越界。新增Ch4§4.7.30同时出现在本版源中，不能把265→185页全归因于表格修复。
+- [最新永久归档#43593614731](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43593614731)第一次GitHub remote fatal error in commit_refs_rules，未冒称成功；第二次run_attempt=2 success，GitHub研究分支远端回读新DOCX/PDF及四份收据，Word 5,264,805B，PDF 10,022,256B。README修订`62c98d29`，综合审查`6b944f92`，T080过程`9c2648f8`，白皮书**v0.30.20→v0.30.21** `b3b2c6ac`；原二进制/旧失败历史保留。当前PR#42 Open/Draft，main未合并。
+- 科学真实性：只闭合S12文档表格错版及动态回归门禁，不等于全185页人工视觉/Word同分页/GB/T7714或核心结构物理通过；正式12阶段0/12、DLC1.2 0/126，纯外部气动力分离、ETM跨批同态、材料局部Miner、E-only/W/E/WE正式物理、结构Pareto仍HOLD。保留原始历史结果及分工；本助手未触碰/审核/派发Abaqus。
+- 下一个唯一直接可做的非CAE任务：沿现行研究分支真实论文定稿做185页全页视觉、引文/公式/图表审查；风载物理材料与地震所需证据不以CI成功伪造。
+
 ## 2026-11-14 20时｜S12年度载荷部分识别定理 END（v0.30.20）
 
 - PR#42开工Open/Draft，baseline HEAD 5b24673d88796342d364111d6a9f45b137ef659e；继承v0.30.19归档265页Word/PDF及历史ERA5/18NTM雨流结果，不重复装配或物理计算。
