@@ -1,3 +1,9 @@
+## 2026-11-14｜当前158m双模型工程设置快照与唯一论文工作室内嵌 START
+
+- 执行者：ChatGPT（仅文档/前端，非CAE）；read_base_sha=`aa3b872ec2160042d102b86648f7dc1bbf965083`，PR #42=`open`/Draft=`true`。已读根及研究AGENTS、指挥室最新S11 17时交接、白皮书v0.30.13及T080最新过程；已定位论文工作室`src/main.ts`/`src/engineering.ts`现有单体应用与旧T070三维展示，确认不新增第二工作室。
+- SOURCE=用户在本次对话直接粘贴的**2026-11-14 16:36**本机Abaqus MCP读取文字报告（16:39要求归档）；本机`D:\Codex-research-native\JOINT_VIEW_20261114\CURRENT_TOWER_SETTINGS.json`及`D:\Codex-research-native\EONLY_THESIS_ALIGNED_20261111\REPAIR_AND_VALIDATION_REPORT.md`在此环境**未直接读取**，不冒称独立原生核验。对话文字按来源深度视为`USER_SUPPLIED_LOCAL_MCP_REPORT`，历史ODB与当前无Jobs双模型工程分开表述。
+- 本次授权**仅**将现有报告设置如实结构化、版本化保存GitHub，并在同一个论文工作室增加原位可读的完整专业设置页；保留来源、非等同性和未完成项。拟修改`research/wind-tower/models/`新快照文件、`src/`现有应用、T080过程和白皮书、指挥室；不得碰Abaqus/CAE/INP/ODB、任何原生模型检查、T057/T070冻结资产、昂贵RUN、main或合并PR。下一责任：本ChatGPT写入回读/构建验证后交接。
+
 ## 2026-11-14 17时后｜S11区间Pareto稳健支配准入（v0.30.13）
 
 - 继承S06 17时v0.30.12，不重复ETM/NTM源级审计。新增[S11区间支配源码](../manuscript/final-thesis/assemble/s11_interval_pareto_admission_20261114.mjs)（commit a6ae022bbff3dfef7bbbb6e0610fc2a69a8d70e9，blob c6d79f2620708542eacd352b74d04515f1dfe087），质量/损伤/漂移最小、频率最大，只有所有最坏端不劣且至少一项严格优才宣称稳健支配；区分稳健可行与可能可行，内置反例拒绝。
