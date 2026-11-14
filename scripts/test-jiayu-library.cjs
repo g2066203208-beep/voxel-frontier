@@ -87,12 +87,36 @@ assert.ok(figureScript.includes("renderHe"),"He original pages renderer");
 assert.ok(!figureScript.includes("raw.githubusercontent"),"all original images use same-site paths");
 new Function(figureScript);
 
+
+const references=JSON.parse(read("data/reference-index.json"));
+assert.equal(references.total,81,"original PDF index count");
+assert.equal(references.entries.length,81,"PDF source records complete");
+assert.equal(references.readable,79,"readable PDF sources");
+assert.equal(references.originalImageCount,395,"source pages and archive screenshots");
+assert.equal(references.masterCount,163,"all bibliography master entries");
+assert.equal(references.master.length,163,"literature master completeness");
+assert.equal(new Set(references.master.map(x=>x.id)).size,163,"unique bibliography IDs");
+assert.equal(new Set(references.entries.map(x=>x.path)).size,81,"unique PDF original paths");
+assert.equal(references.images.length,395,"original evidence scan index");
+assert.equal(references.images.reduce((x,y)=>x+(figureIndex.images.some(f=>f.p===y.p&&f.sha===y.sha)?1:0),0),395,"source screenshots SHA cross-index verified");
+assert.ok(references.entries.some(x=>x.name==="He_Zeyu_2024_hybrid_tower_thesis.pdf"&&x.mode==="local"),"He thesis original");
+assert.ok(references.entries.some(x=>x.name.includes("嘉鱼县政府")&&x.mode==="local"),"Jiayu government original");
+assert.ok(references.entries.some(x=>x.name.includes("簰洲湾")&&x.mode==="local"),"Jiayu wind EIA original");
+assert.ok(references.entries.some(x=>x.name.includes("李泽宇")&&x.url),"Li Zeyu thesis source available");
+assert.ok(references.entries.some(x=>x.category==="规范与标准"&&!x.url),"restricted standards are not copied to public Pages");
+const referenceScript=read("references.js");
+assert.ok(referenceScript.includes("reference-master"),"full bibliography view");
+assert.ok(referenceScript.includes("reference-scan-grid"),"original-page image viewer");
+assert.ok(referenceScript.includes("focusReference"),"inline PDF source route");
+new Function(referenceScript);
+
 const home=read("index.html");
 const notes=fs.readFileSync(path.resolve(__dirname,"../research-notes.html"),"utf8");
 assert.ok(notes.includes('class="embedded-mode"'),"legacy drafts embedded rather than separate studio");
 const redirect=fs.readFileSync(path.resolve(__dirname,"../index.html"),"utf8");
 assert.ok(redirect.includes("./thesis-studio/"),"old home redirects to canonical studio");
 assert.ok(home.includes('href="#library"'),"unified file library navigation");
+assert.ok(home.includes('src="./references.js"'),"bibliography sources loaded in single studio");
 assert.ok(home.includes('id="library-view"'),"file library embedded in single studio");
 assert.ok(home.includes('id="notes-view"'),"original research records embedded in single studio");
 assert.ok(home.includes('id="notes-frame"'),"original paper drafts kept accessible");
@@ -127,5 +151,5 @@ assert.ok(!home.includes('src="./documents/%E5%98%89'),"home no heavy PDF embed"
  assert.equal(data.readUInt16LE(data.length-22+10),2,"ZIP entry count");
  assert.ok(data.includes(Buffer.from("123456789")),"file payload retained");
  await assert.rejects(sandbox.zipFiles([{name:"huge.bin",blob:{size:101*1024*1024}}]),/100 MB/);
- console.log("JIAYU_STUDIO_QA_PASS",idx.fileCount,"files",figureIndex.total,"images",figureIndex.hosted,"SHA-verified originals and PDFs / ZIP UTF8 CRC / UI controls");
+ console.log("JIAYU_STUDIO_QA_PASS",idx.fileCount,"project files",figureIndex.total,"images",references.total,"source PDFs",references.originalImageCount,"reference pages",references.masterCount,"bibliography entries");
 })().catch(e=>{console.error(e);process.exitCode=1;});

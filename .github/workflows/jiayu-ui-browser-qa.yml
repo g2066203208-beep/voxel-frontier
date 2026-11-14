@@ -1,19 +1,21 @@
 name: Jiayu Academic UI Browser QA
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - '.github/workflows/jiayu-ui-browser-qa.yml'
-      - 'scripts/qa-jiayu-browser.cjs'
-      - 'public/thesis-studio/**'
+  workflow_run:
+    workflows: ["Deploy Paper Studio to Pages"]
+    types: [completed]
   workflow_dispatch:
+
+concurrency:
+  group: jiayu-browser-qa
+  cancel-in-progress: true
 
 permissions:
   contents: read
 
 jobs:
   browser-qa:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-24.04
     timeout-minutes: 12
     steps:
