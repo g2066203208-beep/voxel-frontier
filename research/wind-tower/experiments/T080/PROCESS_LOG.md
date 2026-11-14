@@ -1,3 +1,6 @@
+## 2026-11-14 08时｜S12真实E-only响应峰值时刻抽样混叠反例（0/12）
+READ-BEFORE-WRITE: PR#42 Open/Draft、基线44111b2f；已读研究AGENTS、指挥室、白皮书v0.30.4、MASTER/STATUS、12阶段、T079/T080与地震章。SOURCE=历史S08四行真实E-only梁代理同步峰值CSV Git blob e9aae56c1da761f6ce19fe97b7e97a4bf3d6c62b，历史SHA256 0566ccfa604e2a4e7538fd9a20fe8d2f36f8e661d024baaf305b3d0d1cbd0af9。RUN=V8从远端四行CSV逐项重算0.005s与严格0.1s抽样峰时差：[-0.050,+0.005,+0.005,+1.165]s；对应幅值漏失[0.139519,0.125075,0.167614,1.727466]%，最大时刻偏移为11.65个0.1s间隔，证明幅值误差小不保证峰时误差小。FIG=FIG_S08_ESM_PEAK_TIME_ALIASING_20261114.svg；TAB=4行；正文§5.4.1。REF/STANDARD/OFFICIAL无新增；原64080行未重新下载，未验证峰邻域、0.005s连续时间收敛、真实结构及场址。物理E/W/WE、Miner、正式DLC1.2=0/126、12阶段晋级0/12。禁止Abaqus/CAE、冻结T057/T070、main、昂贵RUN与PR合并未触碰。
+
 ## 2026-11-14 07时｜S12地震方向谱真实数据科研图入正文（0/12）
 READ PR#42 3fb65779 Open/Draft，研究AGENTS、指挥室、白皮书v0.30.3、MASTER/STATUS、12阶段、T079/T080及地震章已读。SOURCE=46行ESM历史派生谱CSV Git blob 99b0b662fcc776701f15df8e4cbe28c109727c7b，历史SHA256 d85bd916c34cc4e0a008a26d07ef49935a4aa90c3feb5d9bb9a5f96a12f1c0cf；RUN=直接读取远端46行，T≥1.25s的45个点计算RotD100_PSA/RotD50_PSA并绘制对数周期SVG；离散节点极值1.06618665/1.36442415，继承已核对数积分1.160102738。FIG=FIG_S05_ESM_ROTD_RATIO_LONG_PERIOD_20261114.svg（图源提交c0ac51d5）；TAB=无新；正文§5.2.5提交c91fa45f。REF/STANDARD/OFFICIAL=继承ESM v3 DOI 10.13127/esm.3，无新授权标准全文。图为实测历史派生谱的可视化，不是新地震波求解、风机结构响应或规范设计谱；原波/密谱/方向角步长/场址代表性HOLD，12阶段晋级0/12、正式DLC1.2 0/126。禁止Abaqus/CAE、冻结母本/main/昂贵RUN/PR合并均未触碰。
 
