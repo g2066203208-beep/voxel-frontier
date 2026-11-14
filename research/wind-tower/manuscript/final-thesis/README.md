@@ -1,13 +1,13 @@
 # 最终学位论文工作区 — ACTIVE
 
-## 2026-11-14最新版可编辑研究稿（265页，非送审稿）
+## 2026-11-14最新版可编辑研究稿（185页，非送审稿）
 
-- [**当前六章可编辑Word**](deliverables/20261114/DTU10MW_158m_CURRENT_six_chapter_research_20261114.docx)｜[**PDF 265页阅读版**](deliverables/20261114/DTU10MW_158m_CURRENT_six_chapter_research_20261114.pdf)｜[**真实源SHA与排版QA收据**](deliverables/20261114/)。
-- 最新含Ch4§4.2.4年度概率修正的原生[GitHub Actions #43588545415](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43588545415) **SUCCESS**：同次源commit `82453ba0`锁定六章、30条参考书目及附录A，47幅原始科研SVG图、63表、**801个OMML数学对象**；PDF 265页，自动0空白页/0越界文字。[永久Git归档验证 #43589481448](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43589481448) **SUCCESS**（归档commit `5126f8d2`，Word SHA256 `b355bac8...d7f0d95`）；旧11月14日构建历史在Git History保留。
+- [**当前六章可编辑Word**](deliverables/20261114/DTU10MW_158m_CURRENT_six_chapter_research_20261114.docx)｜[**PDF 185页表格修复阅读版**](deliverables/20261114/DTU10MW_158m_CURRENT_six_chapter_research_20261114.pdf)｜[**真实源SHA与排版QA收据**](deliverables/20261114/)。
+- 最新真实视觉缺陷修复：原265页PDF存在表格纵向散列；在Word生成模板中定义Pandoc `Compact`样式并新增PDF表头横向坐标拒绝测试。更新后的[构建Actions #43593104348](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43593104348)与[永久归档Actions #43593614731](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43593614731)均完成SUCCESS（归档尝试2，第1次远端ref写入规则错误已保留记录），源提交`d1aeee95`，Word SHA256 `f668af5c7c8597bded6e9195835f853d4b786a5043e23cc1d0a9da2a523260b6`；185页PDF/47图/63表/812 OMML，自动页检0空白/0越界及明确横向表头位置PASS。旧265页二进制仍可在Git历史恢复，绝非当前现稿；人工全页/Word/GB/T 7714终审仍未完成。
 - 原始2026-08/09/11三版Word仍原样保存在`../source-uploads/2026-11-13/original-docx/`，没有被覆盖。当前Word尚须全页人工排版、公式视觉、图题/引用GB/T 7714及物理结论复核；**不能作为已经通过正式送审的终稿**。
 
 
-> **2026-11-14整体验收与版本区别**：[全链14项问题与修复记录](../../governance/RESEARCH_GLOBAL_AUDIT_20261114.md)。本目录六章Markdown是当前研究正文；11月13日193页Word是已保存的历史导师审阅版，**不是11月14日最新章节**。Ch2已将Codex真实BF1工程与T057 BF8候选分开，Ch3/Ch4四个原落于“排除Word”区的小节已归位；旧装配器固定SHA仍保留作历史故障追踪；现行动态SHA装配器已真实构建并归档265页Word/PDF（见上方CI），仍待全页人工视觉和学术送审验收。
+> **2026-11-14整体验收与版本区别**：[全链14项问题与修复记录](../../governance/RESEARCH_GLOBAL_AUDIT_20261114.md)。本目录六章Markdown是当前研究正文；11月13日193页Word是已保存的历史导师审阅版，**不是11月14日最新章节**。Ch2已将Codex真实BF1工程与T057 BF8候选分开，Ch3/Ch4四个原落于“排除Word”区的小节已归位；旧装配器固定SHA仍保留作历史故障追踪；现行动态SHA装配器已真实构建并归档185页表格修复版Word/PDF（见上方CI），仍待全页人工视觉和学术送审验收。
 
 本目录是论文唯一正式正文工作区。
 
