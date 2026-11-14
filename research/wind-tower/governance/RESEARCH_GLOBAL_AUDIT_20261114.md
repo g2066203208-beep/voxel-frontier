@@ -1,5 +1,7 @@
 # 论文、GitHub、工作室全链审查｜2026-11-14
 
+> **2026-11-14 20时后 S12表格错版实证修复（当前版本优先；下方265页记录为历史）**：直接取回旧PDF发现第8/12页等Pandoc管道表被纵向排列，“0越界”未能捕获。定位DOCX引用未定义的`Compact`表格段落样式；模板补定义（commit `517e2573`）、新PDF几何拒绝测试（commit `d1aeee95`）。新[真实构建#43593104348](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43593104348) `completed/success`：源commit `d1aeee95`、DOCX SHA256 `f668af5c7c8597bded6e9195835f853d4b786a5043e23cc1d0a9da2a523260b6`、185页/47图/63表/812 OMML；PDF表头x=85.15/170.20/272.20pt、y=565.23/567.28/567.28pt，自动零空白/零越界。新[永久归档#43593614731](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43593614731)在首次GitHub ref规则拒推后第二次成功，永久Word/PDF及收据已从研究分支回读。原265页版本及失败记录保留Git历史；全185页人工逐页、原生Word分页、GB/T 7714、历史原图继承、物理结果仍需分别终审，不能把本次归档写成正式学位送审科学PASS。正式12阶段0/12，DLC1.2 0/126不变。
+
 > **2026-11-14 19时后 Ch4§4.2.4新归档（取代下方旧版数字，仅阅读版版本更新）**：含最新年度概率/运行状态估计量修正的六章265页Word/PDF已由[构建#43588545415](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43588545415)和[永久归档#43589481448](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43589481448)两次真实成功Actions保存；研究分支归档commit `5126f8d2`，源commit `82453ba0`，Word SHA256 `b355bac8324bee0a5d7715df51a8cfd6000696a2a3cf9899b0bba9e40d7f0d95`，47图/63表/**801 OMML**、265页自动无空白/越界。下文旧#43586214517/779 OMML属于上一构建历史，不再是当前二进制版本。人工逐页视觉/GB/T7714/旧Word图片继承HOLD，正式12阶段0/12、正式DLC1.2 0/126不变。
 
 > 研究分支PR #42（Draft）。本表依据本次实际读取的GitHub源文件、已有原生CI日志和Codex于16:36通过本机MCP确认的模型设置转录。**本助手未重新读取本机CAE/ODB或运行物理求解。** 本表只记录证据与问题，不代替12阶段物理验收。
