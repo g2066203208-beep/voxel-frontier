@@ -16,7 +16,7 @@ export function researchPage() {
  <a class="button primary" href="${audit}" target="_blank" rel="noopener">完整问题台账</a></div>
  <section class="tower-metrics">
  <div class="tower-metric"><span>当前真实模型</span><strong>158 m</strong><small>Codex MCP读取确认 · BF1、31组环筋</small></div>
- <div class="tower-metric"><span>论文工作稿</span><strong>6章</strong><small>三版原始Word保留 · 现行185页研究稿已归档</small></div>
+ <div class="tower-metric"><span>论文工作稿</span><strong>6章</strong><small>三版原始Word保留 · 现行186页研究稿已归档</small></div>
  <div class="tower-metric"><span>历史风工况</span><strong>36</strong><small>18 NTM + 18 ETM</small></div>
  <div class="tower-metric"><span>31段ETM时程</span><strong>4组</strong><small>历史共1,488,124行 · 跨批同态HOLD</small></div>
  <div class="tower-metric"><span>12阶段正式验收</span><strong>0 / 12</strong><small>已有来源、方法成果不能抹零</small></div>
@@ -33,7 +33,7 @@ export function researchPage() {
  <tr><th>Ch4 疲劳</th><td>48,070条载荷循环及名义应力筛查</td><td>材料点年Miner/寿命</td></tr>
  <tr><th>Ch5 优化</th><td>DOE/代理/算法验证</td><td>真实设计点Pareto优化</td></tr>
  <tr><th>Ch6 结论</th><td>历史筛查、统计限制与展望</td><td>风震/材料/优化新物理结论</td></tr>
- </tbody></table></div><div class="research-links"><a href="${chapters}" target="_blank" rel="noopener">现行六章全文</a><a class="button primary" href="${delivery}DTU10MW_158m_CURRENT_six_chapter_research_20261114.docx" target="_blank" rel="noopener">185页新版Word</a><a href="${delivery}DTU10MW_158m_CURRENT_six_chapter_research_20261114.pdf" target="_blank" rel="noopener">185页PDF</a><a href="${docx}" target="_blank" rel="noopener">历史三版Word</a></div></section>
+ </tbody></table></div><div class="research-links"><a href="${chapters}" target="_blank" rel="noopener">现行六章全文</a><a class="button primary" href="${delivery}DTU10MW_158m_CURRENT_six_chapter_research_20261114.docx" target="_blank" rel="noopener">186页新版Word</a><a href="${delivery}DTU10MW_158m_CURRENT_six_chapter_research_20261114.pdf" target="_blank" rel="noopener">186页PDF</a><a href="${docx}" target="_blank" rel="noopener">历史三版Word</a></div></section>
 
  <section class="panel research-intro" aria-label="疲劳计算 · 真实数据与前置门禁">
  <h2>疲劳计算 · 真实数据及前置条件（11月14日）</h2>
@@ -52,11 +52,11 @@ export function researchPage() {
  <tr><td>完整年度风致Miner</td><td>未完成</td><td>正式风速箱覆盖、局部循环、材料关系</td></tr>
  <tr><td>W+E地震期间事件疲劳</td><td>未完成</td><td>同状态W/W+E材料应力循环</td></tr>
  </tbody></table></div>
- <p class="tower-source-footer">原始三控制点循环SHA256：646065838456…；NTM名义应力SHA256：d45f047f5d62…。GitHub研究分支新增独立核对程序和6类拒绝测试，原始数据未覆盖。状态为<strong>来源级通过／材料寿命未通过</strong>。</p>
+ <p class="tower-source-footer">原始三控制点循环SHA256：646065838456…；NTM名义应力SHA256：d45f047f5d62…。GitHub Actions #43601113995：真实数据SHA与历史DEL双核验通过，6项污染输入拒绝、Miner不同BF分支和初态混用拒绝以及13项合成校验均成功。原始数据未覆盖，<strong>来源级通过／材料寿命未通过</strong>。</p>
  </section>
  <section class="panel research-intro"><h2>当前高优先级问题</h2>
  <p><strong>已修正文稿：</strong>Ch3一个及Ch4三个被旧装配器排除的新增小节，已经移动回正文；Ch4§4.10.1章节层级已校正。Ch2已明确当前BF1与历史BF8分支不同。</p>
- <p><strong>仍未解决：</strong>旧装配器过期问题已由现行源SHA锁构建替代；新版185页Word/PDF已归档，但尚非送审版，完整人工视觉与格式终审未通过；跨批600s同态未完全证明；外载/惯性归属仅在跨模型传递时仍需核验；E-only完整地震未运行、W/E/WE、材料Miner及真实结构优化均不能宣称通过。</p>
+ <p><strong>仍未解决：</strong>旧装配器过期问题已由现行源SHA锁构建替代；新版186页Word/PDF已归档，但尚非送审版，完整人工视觉与格式终审未通过；跨批600s同态未完全证明；外载/惯性归属仅在跨模型传递时仍需核验；E-only完整地震未运行、W/E/WE、材料Miner及真实结构优化均不能宣称通过。</p>
  <p><strong>资料核实：</strong>何泽瑜原始90页PDF与11张关键原页均已入GitHub；现存85张关键原页已经在同一个工作室直接显示与放大，未把全部PDF整本转成图片；原作者权属与引文终审继续保留。</p>
  <div class="research-links"><a class="button primary" href="${audit}" target="_blank" rel="noopener">查看14条证据问题及处理状态</a><a href="#" data-view="source-evidence" class="button primary">工作室内查看85张原始证据图</a><a href="${refs}" target="_blank" rel="noopener">原始PDF文件目录</a></div>
  </section><p class="tower-source-footer">研究分支PR #42仍Draft；正式Pages只由main部署，本页代码已提交不等于官网已同步。资料原图引用须保留原作者和许可边界。</p>`;
