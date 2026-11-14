@@ -22,6 +22,25 @@ async function main(){
  assert.equal((await page.locator(".metric-grid").count()),0,"remove vanity metrics");
  assert.equal((await page.locator(".original-source-preview").count()),0,"no distracting embedded PDF thumbnails on homepage");
  await page.screenshot({path:path.join(out,"jiayu-home-desktop.png"),fullPage:true});
+ await page.locator('button[data-view="literature"]').click();
+ await page.locator("#reference-doc-list .reference-row").first().waitFor({timeout:30000});
+ assert.equal(await page.locator("#reference-doc-list .reference-row").count(),18,"18 references in PDF listing page");
+ assert.ok((await page.locator("#reference-summary").innerText()).includes("395"),"395 source page originals");
+ await page.locator('[data-reference-tab="images"]').click();
+ assert.equal(await page.locator("#reference-image-list .reference-scan").count(),24,"original source pages paged");
+ const heGroup=await page.locator("#reference-image-group option").evaluateAll(options=>options.find(x=>x.textContent.includes("何泽瑜"))?.value);
+ assert.ok(heGroup,"He evidence image group");
+ await page.locator("#reference-image-group").selectOption(heGroup);
+ assert.ok((await page.locator("#reference-image-count").innerText()).includes("18"),"18 He original evidence images");
+ await page.locator("#reference-image-list .reference-scan-preview").first().click();
+ await page.locator("#ref-zoom-dialog").waitFor({state:"visible",timeout:10000});
+ await page.locator("#ref-zoom-close").click();
+ await page.locator('[data-reference-tab="master"]').click();
+ assert.equal(await page.locator("#reference-master-list .reference-row").count(),20,"163-entry academic source table paged");
+ assert.ok((await page.locator("#reference-master-count").innerText()).includes("163"),"all research citations are indexed");
+ await page.screenshot({path:path.join(out,"jiayu-reference-atlas.png"),fullPage:false});
+ await page.locator('button[data-view="overview"]').click();
+
  await page.locator('[data-open-document="jiayu-gov"]').click();
  await page.locator("#figures-view").waitFor({state:"visible",timeout:10000});
  assert.equal((await page.locator("#reader-doc-list .reader-doc").count()),3,"all PDF sources in reader");
@@ -29,7 +48,7 @@ async function main(){
   const canvas=document.getElementById("reader-canvas");
   const status=document.getElementById("reader-status");
   return canvas&&canvas.width>100&&canvas.height>100&&status&&status.textContent.includes("页");
- },{timeout:75000}).catch(async e=>{
+ },null,{timeout:60000}).catch(async e=>{
   console.log("READER_STATUS",await page.locator("#reader-status").innerText());
   console.log("FALLBACK_NOTE",await page.locator("#reader-fallback-note").innerText());
   throw e;
@@ -38,7 +57,7 @@ async function main(){
  console.log("PDF_READER_OK gov pages",pageCount);
  assert.ok(pageCount.includes("/"),"reader pagination visible");
  await page.locator("#reader-next").click();
- await page.waitForFunction(()=>document.getElementById("reader-page")?.value==="2",{timeout:15000});
+ await page.waitForFunction(()=>document.getElementById("reader-page")?.value==="2",null,{timeout:15000});
  await page.locator("#reader-zoom-in").click();
  await page.waitForTimeout(500);
  assert.notEqual(await page.locator("#reader-zoom-label").innerText(),"适合宽度");
@@ -49,8 +68,8 @@ async function main(){
  await page.waitForFunction(()=>{
   const status=document.getElementById("reader-status");
   const h=document.getElementById("reader-title");
-  return h?.textContent.includes("何泽宇")&&status?.textContent.includes("页");
- },{timeout:75000});
+  return h?.textContent.includes("何泽瑜")&&status?.textContent.includes("页");
+ },null,{timeout:60000});
  await page.screenshot({path:path.join(out,"jiayu-reader-desktop.png"),fullPage:false});
  console.log("PDF_READER_OK He thesis pages",await page.locator("#reader-total").innerText());
  await page.locator("#figure-search").fill("RotD");
