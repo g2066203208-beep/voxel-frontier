@@ -1,0 +1,24 @@
+{
+  "status": "CURRENT_DOCX_STRUCTURAL_QA_PASS_NOT_SUBMISSION_READY",
+  "section_markers": [
+    "第一章",
+    "第二章",
+    "第三章",
+    "第四章",
+    "第五章",
+    "第六章",
+    "2.1.5",
+    "3.5.10",
+    "4.7.27",
+    "4.7.28",
+    "4.7.29",
+    "4.10.1",
+    "A.14",
+    "参考文献"
+  ],
+  "paragraphs": 1816,
+  "tables": 63,
+  "embedded_figures": 47,
+  "math_objects": 779,
+  "source_git_commit": "bd9500765603c3407bf04f5f44d8a67e14d32440"
+}

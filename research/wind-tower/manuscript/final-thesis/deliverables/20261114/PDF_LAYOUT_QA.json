@@ -1,0 +1,16 @@
+{
+  "status": "AUTOMATED_ALL_PAGE_TEXT_POSITION_QA_PASS",
+  "pdf_pages": 265,
+  "blank_page_indices": [],
+  "offpage_text_spans": [],
+  "sampled_pages": [
+    1,
+    2,
+    67,
+    133,
+    199,
+    264,
+    265
+  ],
+  "limitation": "Automated full-page scan and seven preview pages only; human Word visual QA not claimed"
+}

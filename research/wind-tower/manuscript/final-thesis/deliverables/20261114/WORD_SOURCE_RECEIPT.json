@@ -1,0 +1,301 @@
+{
+  "status": "DOCX_SOURCE_ASSEMBLY_PASS_NOT_PHYSICS",
+  "source": "/home/runner/work/voxel-frontier/voxel-frontier/research/wind-tower/manuscript/final-thesis/assemble/THESIS_CURRENT_SIX_CHAPTERS_20261114.md",
+  "source_sha256": "7fa3ff7d46b0b24e5f23af08b0aa4d784ba6ac3818d3bd8d6bb7ebca6f74360f",
+  "output_sha256": "9b770c40bff3c052dcd509733137fee4a5c25a29a1ae454038c0fcf380e4a0bf",
+  "output_bytes": 5261634,
+  "figure_occurrences": 47,
+  "unique_embedded_figures": 47,
+  "math_objects": 779,
+  "tables": 63,
+  "figures": [
+    {
+      "caption": "RNA组件质量来源与积分口径对照",
+      "source": "../assemble/S12_RNA_MASS_SOURCE_FIG.svg",
+      "sha256": "4f4ed66923d02d2213ec464981e48f63d2487ade002ef834b7f6452c4893908c",
+      "png": "4f4ed66923d02d2213ec.png"
+    },
+    {
+      "caption": "图3-5：ERA5 100 m全年与高风条件16方位分布",
+      "source": "../figures/FIG3_S12_ERA5_DIRECTION_CONDITIONAL_20261109.svg",
+      "sha256": "a0ff2d43cb0bf40fbae0853f35a8f751fa531a4083c05d281e8baf6ac6397582",
+      "png": "a0ff2d43cb0bf40fbae0.png"
+    },
+    {
+      "caption": "图3-6：ERA5风切变分位数、160 m平均风速与风功率密度交叉核查",
+      "source": "../figures/FIG3_S12_ERA5_SHEAR_160M_CROSSCHECK_20261109.svg",
+      "sha256": "6756dbfc2b0f1cc23fc54cf2fe6bece24d29202524a422f77aff914e2e674c80",
+      "png": "6756dbfc2b0f1cc23fc5.png"
+    },
+    {
+      "caption": "图3-附2：原R5 GEV三个返回水平及21年观测窗口事件概率诊断",
+      "source": "../figures/FIG3_S12_R5_GEV_RETURN_EVIDENCE_20261109.svg",
+      "sha256": "2f3c3482ee344ea88d56289e02d2f68a0070e16ea3d0c302c86b02ef452927f4",
+      "png": "2f3c3482ee344ea88d56.png"
+    },
+    {
+      "caption": "图3-x：既有16方位相对高风暴露与条件情景概率",
+      "source": "../figures/FIG3_S06_ERA5_DIRECTION_BAYES_20261110.svg",
+      "sha256": "1e1469bf81d2e9d7447f62421ae0223d5309aee7937a814d6f61ad6213c1260d",
+      "png": "1e1469bf81d2e9d7447f.png"
+    },
+    {
+      "caption": "图3-附1：ERA5运行风速小时权重与历史NTM来源覆盖",
+      "source": "../figures/FIG3_S10_ERA5_NTM_SOURCE_COVERAGE_20261107.svg",
+      "sha256": "b2f4747a7196d772c5d42f6a06f37febab5f606eb8c40ab5e57897807e09f55e",
+      "png": "b2f4747a7196d772c5d4.png"
+    },
+    {
+      "caption": "图3-新增：风速档混杂效应",
+      "source": "../figures/FIG3_S06_NTM_OPERATING_DEL_BIN_CONFOUNDING_20261107.svg",
+      "sha256": "a0c4bce68e90143198bcbeedbe8c0625a27c31e8377fe6167a52ddcf4bd50adf",
+      "png": "a0c4bce68e90143198bc.png"
+    },
+    {
+      "caption": "图3-新增：运行状态代理的留出误差",
+      "source": "../figures/FIG3_S06_NTM_PROXY_HOLDOUT_20261107.svg",
+      "sha256": "19e10daaa5d7c47b329a49dd36ef6aaa44370816c85e1ec29f30b4e9593575c8",
+      "png": "19e10daaa5d7c47b329a.png"
+    },
+    {
+      "caption": "图3-W-SYNC：18组真实NTM塔底双轴弯矩同步峰值与分通道独立峰值拼接上界的差异",
+      "source": "../figures/FIG3_S06_W_BASE6_COINCIDENT_RATIO_20261110.svg",
+      "sha256": "4e8395b3763251907ca5688b15a494a03a1899c0430fa7a91c7e34a4dd54aa45",
+      "png": "4e8395b3763251907ca5.png"
+    },
+    {
+      "caption": "图3-S07：18组真实NTM的1%参考点偏移充分保证阈值",
+      "source": "../figures/FIG3_S07_W_BASE_ORIGIN_TOLERANCE_20261111.svg",
+      "sha256": "8dcbb9bd7bb122e1e204e2f6908cc8cdc563889944e63d6899ef3826bc212840",
+      "png": "8dcbb9bd7bb122e1e204.png"
+    },
+    {
+      "caption": "图3-S07a：18组真实NTM九个近底测点角位置分量模值的六seed包络",
+      "source": "../figures/FIG3_S07_REAL_NTM18_NEARBASE_RP_ENVELOPES_20261111.svg",
+      "sha256": "e29e2b37478b7246e1eb7097343afb3ab78652d65d18abded063c24c3e4aa460",
+      "png": "e29e2b37478b7246e1eb.png"
+    },
+    {
+      "caption": "图3-S07b：18组真实NTM的弯矩—扭矩及弯矩—剪力—扭矩共同峰值比例",
+      "source": "../figures/FIG3_S07_REAL_NTM18_MULTILOAD_COINCIDENCE_20261111.svg",
+      "sha256": "b247152be055aee3a750e51eb2ae539c304405aa78968993698f5cd5b89f0643",
+      "png": "b247152be055aee3a750.png"
+    },
+    {
+      "caption": "图3-S07c：18组真实NTM近底TP/RP运动学闭合残差",
+      "source": "../figures/FIG3_S07_REAL_TP_RP_KINEMATIC_CLOSURE_20261111.svg",
+      "sha256": "31c38f4752c18e9ebb8b1dbf3efe1a9b636ae6101bf1c9da71046d0d8cf94f1f",
+      "png": "31c38f4752c18e9ebb8b.png"
+    },
+    {
+      "caption": "图3-DEL：同一36份OUTB的正确My雨流DEL与旧错误算法造成的历史S03空心标记",
+      "source": "../../../experiments/T062/FIG3_T062_36CASE_MY_DEL_SOURCE_CONFLICT_20261102.svg",
+      "sha256": "f694806159bc2da2cd437e952364ad98deb74b753bebf8b0343d1bf00dff57d4",
+      "png": "f694806159bc2da2cd43.png"
+    },
+    {
+      "caption": "图3-X 历史NTM六seed子集选择对控制风速识别的影响",
+      "source": "../figures/FIG3_T062_NTM_SEED_SELECTION_ROBUSTNESS_20261107.svg",
+      "sha256": "5e3df353b8631bf3eb9bc03ede3551a3e91aaf93f41d4b61dd70f88524eb2cb4",
+      "png": "5e3df353b8631bf3eb9b.png"
+    },
+    {
+      "caption": "图3-X 历史18NTM精确随机化假设的Holm校正",
+      "source": "../figures/FIG3_S10_NTM_EXACT_SEED_INFERENCE_20261108.svg",
+      "sha256": "4b1ef211a8e0907730ecb6e82240dc502777bf65f70a8650efda056215d5d2f5",
+      "png": "4b1ef211a8e0907730ec.png"
+    },
+    {
+      "caption": "图3-X：低风速无源箱四次矩等贡献阈值",
+      "source": "../figures/FIG3_S12_ERA5_MISSING_BIN_BREAK_EVEN_20261108.svg",
+      "sha256": "2ced2991132a5ac9453bce64b71b2fa19540b2645782be09d4554b8d5cf1850c",
+      "png": "2ced2991132a5ac9453b.png"
+    },
+    {
+      "caption": "图3-X 六seed删除对三有源箱四次矩及等贡献阈值的影响",
+      "source": "../figures/FIG3_S10_NTM_WEIGHTED_M4_SEED_DELETION_20261108.svg",
+      "sha256": "308bb1a205ef2f943acf8845c5ea3dd93de8ea6ce13866ee766f2f6e250db284",
+      "png": "308bb1a205ef2f943acf.png"
+    },
+    {
+      "caption": "图3-X 缺失风速箱对载荷四次根诊断精度的条件阈值",
+      "source": "../figures/FIG3_S12_MISSING_BIN_TOLERANCE_ENVELOPE_20261108.svg",
+      "sha256": "5dc5fd706d9dc7a3748e810843b5a60d707a3e11a07378c886f1ce99ac4d7f84",
+      "png": "5dc5fd706d9dc7a3748e.png"
+    },
+    {
+      "caption": "ETM/NTM六seed跨类别全包络裕度",
+      "source": "../figures/FIG3_S06_ETM_NTM_PAIRING_FREE_RAINFLOW_GAP_20261110.svg",
+      "sha256": "279ae970c6295fcab5cdbfcbb78b05e37b02ab4d38c78ad6af737c97b5f181dc",
+      "png": "279ae970c6295fcab5cd.png"
+    },
+    {
+      "caption": "图3-X：共同seed预算的事后最优与留出风速箱误差",
+      "source": "../figures/FIG3_S06_SHARED_SEED_BIN_HOLDOUT_20261110.svg",
+      "sha256": "504428c6d6e48efcb0a0e22541b64bc1d9c651174bc4fe0e0f485ab8b9e21f22",
+      "png": "504428c6d6e48efcb0a0.png"
+    },
+    {
+      "caption": "图3-19：18组历史NTM载荷DEL四次矩合并量的精确bootstrap区间与配对假设",
+      "source": "../figures/FIG3_S06_NTM_EXACT_SEED_BOOTSTRAP_PAIRING_20261111.svg",
+      "sha256": "6439f4f73ab354bb77fedf9adcf2877b74faebcdc60514207bdbfbf62501561d",
+      "png": "6439f4f73ab354bb77fe.png"
+    },
+    {
+      "caption": "图3-20：720种跨风速seed标签重排下的条件性控制风速翻转分布",
+      "source": "../figures/FIG3_S06_NTM_MY_SEED_LABEL_RELABEL_20261111.svg",
+      "sha256": "54e81b7a49b1b204b2d065d933aeac5fb183e5a324b3a0452ef37c267917ab47",
+      "png": "54e81b7a49b1b204b2d0.png"
+    },
+    {
+      "caption": "图3-21：三已知NTM风速箱四次矩抽样预算的条件性方差比",
+      "source": "../figures/FIG3_S10_NTM18_STRATIFIED_ALLOC_20261112.svg",
+      "sha256": "a2d511ac4b4843640ae827e51ded9d99fad82364ddbb14b9afac0f7b27a1f26b",
+      "png": "a2d511ac4b4843640ae8.png"
+    },
+    {
+      "caption": "图3-S06 历史NTM来源占据概率对风速分箱规则的敏感性",
+      "source": "../figures/FIG3_S06_BIN_PARTITION_SENSITIVITY_20261112.svg",
+      "sha256": "83b979b4fd17d08be3a4e41a50f6c4527d0783f746cc96a3ad7566e3a615351e",
+      "png": "83b979b4fd17d08be3a4.png"
+    },
+    {
+      "caption": "图3-S06-23 18组历史NTM塔底反力0.05–0.25 Hz频域方差份额",
+      "source": "../figures/FIG3_S06_NTM18_BASE_REACTION_SPECTRAL_20261112.svg",
+      "sha256": "fbb314491d4a5bc00674b0b4206806ca3a0491d4756a41a3edf87cda169f7e19",
+      "png": "fbb314491d4a5bc00674.png"
+    },
+    {
+      "caption": "图3-S06：真实NTM My平均反力与频带波动的seed条件性区间",
+      "source": "../figures/FIG3_S06_SPECTRAL_SEED_INFERENCE_20261112.svg",
+      "sha256": "710e8dab99f1acc87a3a7f880e93c1bcea5e51e1df03d9dfa4d30411035550a4",
+      "png": "710e8dab99f1acc87a3a.png"
+    },
+    {
+      "caption": "图3-S07 原始九测点坐标修正后的轴向合力梯度",
+      "source": "../figures/FIG3_S07_AXIAL_FORCE_GRADIENT_20261112.svg",
+      "sha256": "d5d62c3dbba9622daf7d89aa7882a0bb7ebf6d1d758bc1c8cf7f796a61c1355d",
+      "png": "d5d62c3dbba9622daf7d.png"
+    },
+    {
+      "caption": "图3-S07：真实18组NTM运行状态均值代理的留一seed预测误差比",
+      "source": "../figures/FIG3_S07_NTM18_OPERATING_PROXY_SPECTRAL_LOO_20261112.svg",
+      "sha256": "90c88de8b4d8cf076c7cb1ce6d8af00d06ab95e7e3a730786b10c17ddd98790d",
+      "png": "90c88de8b4d8cf076c7c.png"
+    },
+    {
+      "caption": "图3-S10：历史NTM/ETM六seed塔底载荷DEL4四次矩聚合比",
+      "source": "../figures/FIG3_S10_ETM_NTM_M4_CONTRAST_20261113.svg",
+      "sha256": "fe9d3378d85590354fef571034a3d2b1410af845caf26a5171cc57365890b8a6",
+      "png": "fe9d3378d85590354fef.png"
+    },
+    {
+      "caption": "图4-前置1 三个真实ETM控制位置的名义应力范围雨流超越概率",
+      "source": "../../../experiments/T077/recovery/FIG4_S10_REAL_CONTROL_RANGE_EXCEEDANCE_20261030.svg",
+      "sha256": "feb9227a96ada5060647602cdab4c020be25740e590c9d1f29a31845241ded94",
+      "png": "feb9227a96ada5060647.png"
+    },
+    {
+      "caption": "图4-新增：历史ETM逐循环四次矩集中度与均值相关上限比例",
+      "source": "../figures/FIG4_S10_ETM_CYCLE_MEAN_M4_CONCENTRATION_20261109.svg",
+      "sha256": "d4f4cc8576aeac985169363b908a5bd7b18487c7e274a696751f37664fe97c60",
+      "png": "d4f4cc8576aeac985169.png"
+    },
+    {
+      "caption": "图4-S10 逐循环计数与四次矩在三类符号域的分配",
+      "source": "../figures/FIG4_S10_CYCLE_SIGN_M4_PT_SHIFT_20261112.svg",
+      "sha256": "ceb85455e78c9108be9ee45ce3502fd3d7d4ec83eb76d19ce84cae04dbd23d81",
+      "png": "ceb85455e78c9108be9e.png"
+    },
+    {
+      "caption": "图4-前置2 真实18NTM近塔底名义应力的诊断指数控制风速反转",
+      "source": "../figures/FIG4_S10_NTM_EXPONENT_CONTROL_REVERSAL_20261107.svg",
+      "sha256": "504fa2ac882874adbb3d9b501e1323d492edb65290b632840b1eed7358ce05ae",
+      "png": "504fa2ac882874adbb3d.png"
+    },
+    {
+      "caption": "图4-新增：真实NTM六seed聚合算子偏差",
+      "source": "../figures/FIG4_S10_NTM18_SEED_AGGREGATION_BIAS_20261110.svg",
+      "sha256": "a77a83957b04b6f3ea3a37b53bfdf456acd921642d63dbb328664b7a08aedbee",
+      "png": "a77a83957b04b6f3ea3a.png"
+    },
+    {
+      "caption": "图4-新增：四ETM截面极值时刻非同时性与跨度",
+      "source": "../figures/FIG4_S06_ETM31_PEAK_TIME_NONCOINCIDENCE_20261108.svg",
+      "sha256": "4305ae4dff5ddb80de77f1be697e3775d35d25510042a9973c09653f200a67e5",
+      "png": "4305ae4dff5ddb80de77.png"
+    },
+    {
+      "caption": "图4-新增：四ETM塔底与CSEG01 My载荷DEL参考循环数统一",
+      "source": "../figures/FIG4_S06_ETM_BASE_CSEG01_NREF_HARMONIZED_20261108.svg",
+      "sha256": "e69436a2482aea2206ce35e569984f43b8d243ccf67b65403d8132b044a446ae",
+      "png": "e69436a2482aea2206ce.png"
+    },
+    {
+      "caption": "图4-新增：四ETM×31段毛截面正峰对条件性压应力偏置的阶梯响应",
+      "source": "../figures/FIG4_S10_ETM31_GROSS_OFFSET_SCREEN_20261108.svg",
+      "sha256": "4d6a8c8fc6741339e06fef3a06b322c3acbd87d2a892b611c780c6e437e22f85",
+      "png": "4d6a8c8fc6741339e06f.png"
+    },
+    {
+      "caption": "图4-新增：有源风速小时权重、双弯矩四次矩贡献与单小时反事实影响",
+      "source": "../figures/FIG4_S10_ERA5_KNOWN_SUPPORT_TAIL_INFLUENCE_20261109.svg",
+      "sha256": "508e378a56d2866b4116d95c3324bea62c5244768e5ff806b331c271c648038b",
+      "png": "508e378a56d2866b4116.png"
+    },
+    {
+      "caption": "图4-S12：双控制点保留四ETM历史毛截面DEL4与正峰极值",
+      "source": "../figures/FIG4_S12_ETM4_DUAL_QOI_TWO_SITE_20261111.svg",
+      "sha256": "5e869659ef6e76e68195884e3a90516c3241b2c24d8dff4c64c8ad595d9504f7",
+      "png": "5e869659ef6e76e68195.png"
+    },
+    {
+      "caption": "图4-新增：分量RSS相对同步毛截面DEL4沿高偏差",
+      "source": "../figures/FIG4_S10_COMPONENT_RSS_VS_SYNC_20261112.svg",
+      "sha256": "fb1958295de4dc560c045be84d10549e15bfa24038033fb9fee04833f97d2879",
+      "png": "fb1958295de4dc560c04.png"
+    },
+    {
+      "caption": "图4-新增：31段代理选控相对于同步DEL4的后悔度",
+      "source": "../figures/FIG4_S10_PROXY_SELECTION_REGRET_20261112.svg",
+      "sha256": "971fb66fa845e8d37982a243c02ea55e7ef0867d5cb05bb8ae52de722e51a157",
+      "png": "971fb66fa845e8d37982.png"
+    },
+    {
+      "caption": "图4-S10 真实载荷范围矩指数引起的控制工况交叉",
+      "source": "../figures/FIG4_S10_RAINFLOW_EXPONENT_CROSSOVER_20261113.svg",
+      "sha256": "4c5544c8e0a0181227978c344d0a75c313bd2c1934e5de07942006d342a15900",
+      "png": "4c5544c8e0a018122797.png"
+    },
+    {
+      "caption": "图4-S10：31段合力矩零空间的有符号应力极值反例",
+      "source": "../figures/FIG4_S10_SECTION_NULLSPACE_20261112.svg",
+      "sha256": "d6ac9af06d79f10738ea5ded0ac4a49e8c6fa825a5af218679b18612073b797c",
+      "png": "d6ac9af06d79f10738ea.png"
+    },
+    {
+      "caption": "图5-S11-04：31段等体积极小极大解析证书",
+      "source": "../figures/FIG5_S11_VOLUME_NEUTRAL_MINIMAX_20261112.svg",
+      "sha256": "3d339df4cda3ba2fab37000e0dcb01cb7008d1784ac610451c4f2250ec314890",
+      "png": "3d339df4cda3ba2fab37.png"
+    },
+    {
+      "caption": "图A-x 两事件单尺度最优匹配残差",
+      "source": "../figures/FIG_S05_ESM_MINIMAX_SCALE_20261110.svg",
+      "sha256": "c1643ce9b566f2999a90647f9d8d0bcdaf23786cfcafcaf5e7e56c0c43da7e40",
+      "png": "c1643ce9b566f2999a90.png"
+    },
+    {
+      "caption": "图A-x 四类历史代理响应峰值方向与最优共同投影轴",
+      "source": "../figures/FIG_S08_ESM_PEAK_AXIS_MINIMAX_20261110.svg",
+      "sha256": "c1be638826fc579601557fced95460ed9bdd601a73ce9c24b0fc16bf0dd90981",
+      "png": "c1be638826fc57960155.png"
+    }
+  ],
+  "pandoc_stderr": "",
+  "limitations": [
+    "No original Word media reconstruction",
+    "No native physical verification",
+    "No claim of thesis submission readiness"
+  ]
+}
