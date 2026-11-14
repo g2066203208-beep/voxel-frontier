@@ -1,3 +1,11 @@
+## 2026-11-14 21:30后｜S10疲劳输入可复算核验＋唯一工作室＋186页永久归档 END（v0.31.0）
+
+- 继承本页21:30 START及36历史风、48,070条载荷雨流、1574条ETM毛截面循环、2880行NTM名义应力统计；本助手不触碰、准备、审核或派发Abaqus/CAE工作，也不改main/冻结T057/T070或合并PR #42。
+- **真实已解决**：T064把当前BF1=140mm²/位置与T078历史设计BF8=1120mm²/位置分开，当前名义初始6.4512MN≠历史BF8 51.6096MN；S10 Miner V4强制`model_branch`/`initial_state_sha256`，不同BF/初态混合拒绝；新原始源级`s10_fatigue_readiness_source_gate_20261114.mjs`完成SHA/1574+2880行/3个DEL4/DEL10与已存源收据一致。原生[Actions #43601113995](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43601113995)SUCCESS（6真实源污染拒绝、13合成Miner自测与四材料合成端到端方法）；未计算任何未经材料应力与N_allow支持的寿命。
+- **论文/工作室实物**：Ch4新增来源级实证与BF1/PT均值纠错，[S12构建#43600833734](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43600833734)成功，Word SHA256 `ec6af12b40f26163dbd45a83a430590c88aa6ae7fddd2dee9f2e37c73a5136a5`、47图63表812 OMML，新PDF186页且自动0空白0越界及横向表头PASS；[永久归档#43601210801](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43601210801)SUCCESS并已远端回读Word 5,265,685B/PDF 10,033,981B及四收据；185页版保留历史。唯一工作室原位展示真实3控制点/当前BF1与BF8/疲劳前置和HOLD，最新[UI Actions #43601300928](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43601300928)SUCCESS（仍只在研究分支，非已发布main Pages）。
+- 白皮书**v0.30.21→v0.31.0**，T080过程日志、Ch4、论文README及全局总审均已更新。科学未完成事项准确为当前BF1材料局部真实应力及各材料正式疲劳允许次数、补齐运行风速/种子、完整年Miner和同态W/E/WE，不再以纯气动力分离阻塞OpenFAST自身材料前筛；正式12阶段0/12、DLC1.2规划0/126不因方法CI自动晋级。下一非CAE动作只针对明确可得的材料参数原文与原始风速箱运行数据，不重复同一来源级审计。
+- 本次收尾前PR#42仍Open/Draft，HEAD `e8b7561cb5d6`；每项原生Actions成功/历史失误以真实URL记录，没有虚构PHYSICAL PASS。
+
 ## 2026-11-14 21:30｜S10疲劳材料输入闭合及唯一工作室实修 START（非CAE）
 
 - 执行者ChatGPT；read_base_sha=`a8f512c6ab171b5c58b5d2489808a394afb02b76`，PR#42 Open/Draft；已读根/研究AGENTS、指挥室S12最新交接、白皮书v0.30.21、现行模型Codex来源、T064疲劳合同、18NTM/3控制ETM真实循环收据、S10 Miner程序、Ch4/Ch5与唯一工作室`src/engineering.ts`。
