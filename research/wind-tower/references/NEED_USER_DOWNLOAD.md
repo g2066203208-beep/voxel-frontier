@@ -1,5 +1,7 @@
 # 待用户协助下载的核心文献 — CURRENT QUEUE
 
+> **2026-11-14核实更新：何泽瑜原始PDF已经在GitHub，不再列为待上传。** [原始90页PDF](user-provided/He_Zeyu_2024_hybrid_tower_thesis.pdf)（GitHub Content size 10,193,750 bytes；[清单](user-provided/MANIFEST.tsv) REF008/`ok`，原登记SHA256 `85fb7d2e35a039e38e4b442deadab6ce7ddbf8bf0e57885de0238d92113f511c`）。[11张原始关键页截图](evidence-screenshots/he-zeyu-tower-original/)与[何原文逐项账](HE_ZEYU_TOWER_SOURCE_LEDGER.md)也已在仓库。下方“F. GitHub二进制仍pending”属更早的失效说明，不再是当前状态。清单`29+39`的旧数量也不能表示当前目录总量：本轮目录查得`user-provided`下30份PDF、`open-access`下46份PDF，**它们只是当前目录文件数量，未本轮逐份复核PDF内容及许可**；正式有效份数以逐文件manifest/实际源核对为准。
+
 更新日期：2026-10-05（29篇用户PDF更新后）
 
 ## 0. 当前结论
