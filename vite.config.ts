@@ -8,6 +8,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(process.cwd(), 'index.html'),
+        researchNotes: resolve(process.cwd(), 'research-notes.html'),
         iea15: resolve(process.cwd(), 'iea15.html'),
         windTwin: resolve(process.cwd(), 'wind-twin.html'),
       },

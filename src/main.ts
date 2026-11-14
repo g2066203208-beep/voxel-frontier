@@ -30,7 +30,8 @@ try {
   recoveryError = error instanceof Error ? error.message : String(error);
   saveState = '原数据待恢复';
 }
-let view: View = globalThis.location.hash === '#engineering' ? 'engineering' : 'workflow';
+const requestedView = globalThis.location.hash.slice(1) as View;
+let view: View = (['overview','manuscript','reviews','replications','experiments','protocols','models','datasets','references','search','workflow','engineering'] as View[]).includes(requestedView) ? requestedView : 'workflow';
 let disposeEngineering: (()=>void) | undefined;
 let renderGeneration = 0;
 let query = '';
