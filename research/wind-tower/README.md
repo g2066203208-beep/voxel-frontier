@@ -13,7 +13,7 @@
 - `src/current-model.ts`：Codex原生MCP确认的当前BF1双模型92项设置，同一个Paper Studio导航展示；无第二工作室。
 - 两处仅在研究分支PR #42 Draft，正式Pages的main未合并也未部署本次内容。
 
-## 当前158 m双模型工程设置（2026-11-14 16:36，用户提供本机MCP报告）
+## 当前158 m双模型工程设置（2026-11-14 16:36，Codex原生MCP读取确认；用户转录）
 
 - [当前工程配置92项完整记录](models/CURRENT_TOWER_SETTINGS_20261114.md)；[可机读JSON](models/CURRENT_TOWER_SETTINGS_20261114.json)。
 - 已内嵌至仓库唯一论文工作室：`src/current-model.ts`、`src/main.ts`导航“当前工程设置 · 11.14”；[原生前端CI](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43581408696)。历史T070三维仅供基准展示，与当前双模型工程不等同。
