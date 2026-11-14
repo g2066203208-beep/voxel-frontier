@@ -1,16 +1,29 @@
 {
-  "status": "AUTOMATED_ALL_PAGE_TEXT_POSITION_QA_PASS",
-  "pdf_pages": 265,
+  "status": "AUTOMATED_ALL_PAGE_TEXT_POSITION_AND_TABLE_GEOMETRY_QA_PASS",
+  "horizontal_table_header_geometry": {
+    "page": 10,
+    "x_points": [
+      85.15,
+      170.2,
+      272.2
+    ],
+    "y_points": [
+      565.23,
+      567.28,
+      567.28
+    ]
+  },
+  "pdf_pages": 185,
   "blank_page_indices": [],
   "offpage_text_spans": [],
   "sampled_pages": [
     1,
     2,
-    67,
-    133,
-    199,
-    264,
-    265
+    47,
+    93,
+    139,
+    184,
+    185
   ],
   "limitation": "Automated full-page scan and seven preview pages only; human Word visual QA not claimed"
 }

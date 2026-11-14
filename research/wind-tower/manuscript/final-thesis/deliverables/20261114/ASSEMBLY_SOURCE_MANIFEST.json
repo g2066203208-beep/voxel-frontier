@@ -1,8 +1,8 @@
 {
   "stage": "SOURCE_ASSEMBLED_NOT_THESIS_OR_PHYSICS_PASS",
-  "source_git_commit": "82453ba0de6ab27b34092aadb4ad7d4f0c127d6b",
-  "source_sha256": "31f323039484d50b2426d80f5c10d20bb03992e8ce5a63f5e5dbe084d05bfdb4",
-  "source_bytes": 510538,
+  "source_git_commit": "d1aeee95338cc0b548285e24b165bf67cf757e40",
+  "source_sha256": "ea1e9469868566abbc6289a7c19fa95f067ffce18acbdbe90f1ec25559eec75f",
+  "source_bytes": 512969,
   "chapters": [
     {
       "name": "01_绪论.md",
@@ -27,9 +27,9 @@
     },
     {
       "name": "04_10MW混合塔架风致疲劳性能分析.md",
-      "sha256": "81590656a99cd3b699d370b50941ba9a99de980ed4238757a27720c7eae29c93",
-      "full_bytes": 167990,
-      "included_chars": 93218,
+      "sha256": "8fc6850b16d3dae05ef73540d42833129c07292bffb165d0e3f8689f68ade77f",
+      "full_bytes": 170421,
+      "included_chars": 94456,
       "excluded_workspace_chars": 789
     },
     {

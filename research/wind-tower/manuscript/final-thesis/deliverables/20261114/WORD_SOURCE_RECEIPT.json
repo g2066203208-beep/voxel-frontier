@@ -1,12 +1,12 @@
 {
   "status": "DOCX_SOURCE_ASSEMBLY_PASS_NOT_PHYSICS",
   "source": "/home/runner/work/voxel-frontier/voxel-frontier/research/wind-tower/manuscript/final-thesis/assemble/THESIS_CURRENT_SIX_CHAPTERS_20261114.md",
-  "source_sha256": "31f323039484d50b2426d80f5c10d20bb03992e8ce5a63f5e5dbe084d05bfdb4",
-  "output_sha256": "b355bac8324bee0a5d7715df51a8cfd6000696a2a3cf9899b0bba9e40d7f0d95",
-  "output_bytes": 5263255,
+  "source_sha256": "ea1e9469868566abbc6289a7c19fa95f067ffce18acbdbe90f1ec25559eec75f",
+  "output_sha256": "f668af5c7c8597bded6e9195835f853d4b786a5043e23cc1d0a9da2a523260b6",
+  "output_bytes": 5264805,
   "figure_occurrences": 47,
   "unique_embedded_figures": 47,
-  "math_objects": 801,
+  "math_objects": 812,
   "tables": 63,
   "figures": [
     {
