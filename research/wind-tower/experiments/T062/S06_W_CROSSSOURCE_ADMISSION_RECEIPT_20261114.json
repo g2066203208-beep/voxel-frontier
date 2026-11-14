@@ -1,0 +1,59 @@
+{
+  "date": "2026-11-14",
+  "classification": "SOURCE_RECEIPT_JOIN_PASS_PHYSICAL_TRANSFER_HOLD",
+  "case_count": 18,
+  "original_outb_sha_crossjoins": 18,
+  "synchronous_timegrid_crossjoins": 18,
+  "fullrate_samples": 216018,
+  "t0_s": 100,
+  "t1_s": 700,
+  "dt_s": 0.05,
+  "original_gages_per_case": 9,
+  "nearbase_gage_range_m": [
+    0.0705357142857,
+    2.75089285714
+  ],
+  "model_tower_height_m": 158,
+  "planned_segment_midpoint_mapping_rows": 31,
+  "planned_gage_batches": [
+    9,
+    9,
+    9,
+    4
+  ],
+  "max_midpoint_error_m": 0.07053568928571963,
+  "short_4batch_steady_diagnostic_duration_s": 0.1,
+  "short_4batch_overlap_checks": 63,
+  "same_time_Mxy_peak_ratio_range": [
+    0.969949361361,
+    0.999420216258
+  ],
+  "base_mean_Fz_kN_range": [
+    -25628.571,
+    -25546.052
+  ],
+  "operating_activity_heuristic_range": [
+    1,
+    1
+  ],
+  "controller_DLL_binary_identity_verified": 0,
+  "native_600s_31gage_timehistories_admitted": 0,
+  "isolated_external_aerodynamic_load_admitted": 0,
+  "formal_DLC12_admitted": 0,
+  "same_state_WE_admitted": 0,
+  "physical_pass": false,
+  "reading_level": "11 existing text CSV/JSON original receipts cross-checked from GitHub; no original binary OUTB re-decode, no new solver",
+  "source_git_blob_sha": {
+    "S06_18NTM_INPUT_SOURCE_IDENTITY_20261031.csv": "f2522a980b1f5388a2aa70f350247aa91b0d9c43",
+    "S06_18NTM_W_BASE6_COINCIDENT_ENVELOPES_18ROW_20261110.csv": "2078b1662402c31b857d8cd3d1744e288b7c221c",
+    "S07_18NTM_ORIGINAL_OPERATING_STATE_QC_20261101.csv": "99e1b4b5295102d11fb3fea89e283fe6942753f7",
+    "S07_18NTM_NATIVE_CONTROLLER_LOG_QC_20261101.csv": "cd6714b2095c447b19f83a15eeed8b02522c7d9e",
+    "S07_18NTM_ORIGINAL_TURBSIM_CONTROLLER_INPUTS_20261031.csv": "fabc03b86ffce1193e6934f6db998172a2bb7b44",
+    "S07_18NTM_10STATION_NATIVE_MEAN_WRENCH_SI_20261031.csv": "1df4cafd69a7ce5dd944547918f84733e6dfa273",
+    "S06_31CSEG_ORIGINAL_ED_GAGE_MAPPING_20261031.csv": "ea3653e9c6d4abcaad9a1723e98666744c34d2f9",
+    "S06_18NTM_W_BASE6_FULLRATE_SOURCE_RECEIPT_20261110.json": "078db8738c18a23ff4f05198d2928e1ac82b5d23",
+    "S06_NTM_ORIGINAL_FST_ED_31GAGE_CONTRACT_20261031.json": "19972eeff0df48aae609a8c3372f29978d904efd",
+    "S07_18NTM_W_POSE9_SOURCE_RECEIPT.json": "1a254455da2439ab261a29d830c9c427d49e4695",
+    "S06_NTM_NATIVE_4BATCH_OVERLAP_0P1S_QC_20261101.json": "6826ddc6e0067af9e6747fcba6b92ba772047e7d"
+  }
+}
