@@ -74,7 +74,15 @@ for(const doc of figureIndex.documents){
 }
 const figureScript=read("figures.js");
 assert.ok(figureScript.includes("renderGrid"),"all-image grid renderer");
-assert.ok(figureScript.includes("renderDocs"),"inline PDF reader renderer");
+assert.ok(figureScript.includes("window.JYReader"),"figure catalog integrates PDF reader");
+const readerScript=read("reader.js");
+assert.ok(readerScript.includes("getDocument"),"PDF.js document loading");
+assert.ok(readerScript.includes("renderPage"),"PDF canvas");
+assert.ok(readerScript.includes("getOutline"),"PDF table of contents");
+assert.ok(readerScript.includes("searchDocument"),"PDF text search");
+assert.ok(readerScript.includes("reader-text-mode"),"PDF text mode");
+assert.ok(readerScript.includes("showFallback"),"PDF fallback");
+new Function(readerScript);
 assert.ok(figureScript.includes("renderHe"),"He original pages renderer");
 assert.ok(!figureScript.includes("raw.githubusercontent"),"all original images use same-site paths");
 new Function(figureScript);
@@ -91,12 +99,22 @@ assert.ok(home.includes('id="notes-frame"'),"original paper drafts kept accessib
 assert.ok(home.includes('id="figures-view"'),"unified scientific figure gallery");
 assert.ok(home.includes('id="figure-lightbox"'),"large original preview");
 assert.ok(home.includes('id="featured-figures"'),"real research images on home");
-assert.ok(home.includes('figure2-1-word-zh.png'),"original tower diagram replaces decorative art");
-assert.ok(home.includes('id="original-pdf-frame"'),"inline original PDF reader");
+assert.ok(home.includes('id="reader-doc-list"'),"PDF source switcher");
+assert.ok(home.includes('id="reader-stage"'),"PDF study workspace");
+assert.ok(home.includes('id="reader-canvas"'),"PDF canvas");
+assert.ok(home.includes('id="reader-reflow"'),"PDF selectable text");
+assert.ok(home.includes('id="reader-query"'),"PDF search");
+assert.ok(home.includes('id="figure-pageinfo"'),"paginated gallery");
+assert.ok(!home.includes('class="metric-grid"'),"no decorative stats");
+assert.ok(!home.includes('class="roadmap-grid"'),"no duplicate roadmap cards");
+assert.ok(!home.includes('class="original-source-preview"'),"no nested homepage PDF previews");
+assert.ok(!home.includes('id="original-pdf-frame"'),"legacy PDF iframe replaced");
+assert.ok(home.includes('id="reader-fallback-frame"'),"native PDF fallback");
 assert.ok(home.includes('id="he-original-grid"'),"He thesis page image gallery");
-assert.ok(home.includes('id="original-document-tabs"'),"all source document tabs");
+assert.ok(home.includes('id="reader-doc-list"'),"source document selector");
 assert.ok(home.includes('嘉鱼县政府'),"Jiayu county government PDF is visible in UI");
-assert.ok(!home.includes('id="figure-source"'),"image viewer cannot navigate to GitHub");
+assert.ok(!home.includes('id="figure-source"'),"gallery stays inside studio");
+assert.ok(!home.includes('src="./documents/%E5%98%89'),"home no heavy PDF embed");
 
 (async()=>{
  const blob=await sandbox.zipFiles([{name:"测试.csv",blob:new Blob(["abc"],{type:"text/plain"})},{name:"data.txt",blob:new Blob(["123456789"])}]);

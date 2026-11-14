@@ -5,10 +5,12 @@ const $=id=>document.getElementById(id);
 const element=(tag,cls,text)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=String(text);return n;};
 const R={documents:[],id:null,lib:null,libPromise:null,pdf:null,loading:null,page:1,count:0,zoom:"fit",ratio:1,rotation:0,token:0,searchToken:0,renderTask:null,outline:[],thumbLimit:12,sidebar:"outline",textMode:false,bound:false,timer:0};
 const CDN=[
+ "./vendor/pdf.mjs",
  "https://cdn.jsdelivr.net/npm/pdfjs-dist@5.4.530/build/pdf.mjs",
  "https://unpkg.com/pdfjs-dist@5.4.530/build/pdf.mjs"
 ];
 const WORKER=[
+ "./vendor/pdf.worker.mjs",
  "https://cdn.jsdelivr.net/npm/pdfjs-dist@5.4.530/build/pdf.worker.mjs",
  "https://unpkg.com/pdfjs-dist@5.4.530/build/pdf.worker.mjs"
 ];

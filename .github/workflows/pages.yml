@@ -83,6 +83,22 @@ jobs:
       - name: Build production site
         run: npm run build
 
+      - name: Bundle local PDF.js study reader
+        shell: bash
+        run: |
+          set -euo pipefail
+          target="dist/thesis-studio/vendor"
+          mkdir -p "$target"
+          for name in pdf.mjs pdf.worker.mjs; do
+            curl -fsSL --retry 3 --connect-timeout 20 "https://cdn.jsdelivr.net/npm/pdfjs-dist@5.4.530/build/$name" -o "$target/$name" ||
+            curl -fsSL --retry 3 --connect-timeout 20 "https://unpkg.com/pdfjs-dist@5.4.530/build/$name" -o "$target/$name"
+            test -s "$target/$name"
+          done
+          curl -fsSL --retry 3 "https://cdn.jsdelivr.net/npm/pdfjs-dist@5.4.530/LICENSE" -o "$target/LICENSE-pdfjs.txt" ||
+          curl -fsSL --retry 3 "https://unpkg.com/pdfjs-dist@5.4.530/LICENSE" -o "$target/LICENSE-pdfjs.txt"
+          test -s "$target/LICENSE-pdfjs.txt"
+          du -ch "$target"/* | tail -1
+
       - name: Configure Pages
         uses: actions/configure-pages@v6.0.0
 
