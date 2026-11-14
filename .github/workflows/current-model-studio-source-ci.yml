@@ -7,6 +7,8 @@ on:
       - 'research/wind-tower/models/CURRENT_TOWER_SETTINGS_20261114.json'
       - 'src/current-model.ts'
       - 'src/current-model.test.ts'
+      - 'src/source-evidence.ts'
+      - 'src/source-evidence.test.ts'
       - 'src/main.ts'
       - 'src/style.css'
       - 'src/engineering.ts'
