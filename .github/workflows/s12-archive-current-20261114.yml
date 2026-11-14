@@ -83,7 +83,9 @@ jobs:
           EOF
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add "$output"
+          # The parent research manuscript folder is gitignored; explicitly stage
+          # only the verified new binary deliverables in this confined directory.
+          git add -f "$output"
           git diff --cached --quiet && { echo "VERIFIED_DELIVERABLE_ALREADY_PRESENT"; exit 0; }
           git commit -m "docs(S12): archive current 265-page source-verified research Word PDF and receipts"
           git fetch origin research/t080-seismic-integration-gates-20261022
