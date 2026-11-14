@@ -95,7 +95,10 @@ def assemble(out: Path, manifest: Path, *, include_appendix: bool = True) -> dic
     # REF131 is a pre-existing protected entry. Do not audit, renumber or expand it.
     missing = sorted(used - set(entries) - {"REF131"})
     check(not missing, "BIB_UNRESOLVED:" + ",".join(missing))
-    check(len(used - {"REF131"}) == 30, "REFERENCE_SET_UNEXPECTED")
+    # The 30-entry reference inventory may include sources cited only in
+    # excluded workspace notes. Record these separately; do not silently
+    # invent in-text citations to force every entry to be used.
+    check(len(used - {"REF131"}) >= 24, "TOO_FEW_IN_TEXT_REFERENCES")
     bibliography = "\n\n".join(
         f"{number}. [{rid}] {entry}"
         for number, (rid, entry) in enumerate(
@@ -162,6 +165,8 @@ def assemble(out: Path, manifest: Path, *, include_appendix: bool = True) -> dic
         "chapters": sources[:6],
         "other_sources": sources[6:],
         "reference_count": len(entries),
+        "in_text_reference_count": len(used - {"REF131"}),
+        "bibliography_not_cited_in_included_text": sorted(set(entries) - used),
         "protected_ref131_untouched": True,
         "figure_occurrences": len(images),
         "unique_figure_sources": len({x["sha256"] for x in images}),
