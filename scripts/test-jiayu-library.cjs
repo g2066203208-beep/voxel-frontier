@@ -4,6 +4,7 @@ const assert=require("node:assert/strict");
 const fs=require("node:fs");
 const path=require("node:path");
 const vm=require("node:vm");
+const crypto=require("node:crypto");
 const base=path.resolve(__dirname,"../public/thesis-studio");
 const read=(p)=>fs.readFileSync(path.join(base,p),"utf8");
 const script=read("library.js");
@@ -35,8 +36,13 @@ for(const id of ["remote-list","local-list","dropzone","submit-issue","remote-bu
 
 const figureIndex=JSON.parse(read("data/figure-index.json"));
 assert.equal(figureIndex.total,figureIndex.images.length,"figure catalog completeness");
-assert.ok(figureIndex.total>=500,"expected GitHub original figure inventory");
-assert.ok(figureIndex.hosted>=140,"expected published original research images");
+assert.equal(figureIndex.total,541,"all images in the original research branch");
+assert.equal(figureIndex.hosted,541,"all originals should be deployed in Pages");
+assert.equal(figureIndex.hePages.length,11,"11 He Zeyu source pages");
+assert.equal(figureIndex.documents.length,3,"Jiayu government, EIA, and He thesis PDFs");
+function gitBlobSha(buf){
+  return crypto.createHash("sha1").update("blob "+buf.length+"\\0").update(buf).digest("hex");
+}
 const featuredNames=[
  "figure2-1-word-zh.png",
  "mesh-convergence-zh.png",
@@ -49,15 +55,29 @@ for(const n of featuredNames){
 }
 let hostedFiles=0;
 for(const f of figureIndex.images.filter(x=>x.h)){
-  assert.ok(!f.p.startsWith("references/"),"third-party reference scan was republished");
-  assert.ok(!f.p.includes("../"),"unexpected image path");
+  assert.ok(!f.p.includes("../"),"unexpected figure path");
   const asset=path.join(base,"figures",f.p);
-  const stat=fs.statSync(asset);
-  assert.equal(stat.size,f.s,"copied Git blob must match source size "+f.p);
+  const buffer=fs.readFileSync(asset);
+  assert.equal(buffer.length,f.s,"original source image size "+f.p);
+  assert.equal(gitBlobSha(buffer),f.sha,"original Git blob SHA "+f.p);
   hostedFiles++;
 }
-assert.equal(hostedFiles,figureIndex.hosted,"hosted image tally");
-new Function(read("figures.js"));
+assert.equal(hostedFiles,figureIndex.hosted,"hosted original image tally");
+const allFigurePaths=new Set(figureIndex.images.map(x=>x.p));
+for(const p of figureIndex.hePages)assert.ok(allFigurePaths.has(p),"missing He original-page file "+p);
+for(const doc of figureIndex.documents){
+  const file=path.join(base,"documents",doc.name);
+  const bytes=fs.readFileSync(file);
+  assert.equal(bytes.toString("latin1",0,5),"%PDF-","original PDF header "+doc.name);
+  assert.equal(bytes.length,doc.size,"original PDF size "+doc.name);
+  assert.equal(gitBlobSha(bytes),doc.sha,"original PDF Git SHA "+doc.name);
+}
+const figureScript=read("figures.js");
+assert.ok(figureScript.includes("renderGrid"),"all-image grid renderer");
+assert.ok(figureScript.includes("renderDocs"),"inline PDF reader renderer");
+assert.ok(figureScript.includes("renderHe"),"He original pages renderer");
+assert.ok(!figureScript.includes("raw.githubusercontent"),"all original images use same-site paths");
+new Function(figureScript);
 
 const home=read("index.html");
 const notes=fs.readFileSync(path.resolve(__dirname,"../research-notes.html"),"utf8");
@@ -72,6 +92,11 @@ assert.ok(home.includes('id="figures-view"'),"unified scientific figure gallery"
 assert.ok(home.includes('id="figure-lightbox"'),"large original preview");
 assert.ok(home.includes('id="featured-figures"'),"real research images on home");
 assert.ok(home.includes('figure2-1-word-zh.png'),"original tower diagram replaces decorative art");
+assert.ok(home.includes('id="original-pdf-frame"'),"inline original PDF reader");
+assert.ok(home.includes('id="he-original-grid"'),"He thesis page image gallery");
+assert.ok(home.includes('id="original-document-tabs"'),"all source document tabs");
+assert.ok(home.includes('嘉鱼县政府'),"Jiayu county government PDF is visible in UI");
+assert.ok(!home.includes('id="figure-source"'),"image viewer cannot navigate to GitHub");
 
 (async()=>{
  const blob=await sandbox.zipFiles([{name:"测试.csv",blob:new Blob(["abc"],{type:"text/plain"})},{name:"data.txt",blob:new Blob(["123456789"])}]);
@@ -84,5 +109,5 @@ assert.ok(home.includes('figure2-1-word-zh.png'),"original tower diagram replace
  assert.equal(data.readUInt16LE(data.length-22+10),2,"ZIP entry count");
  assert.ok(data.includes(Buffer.from("123456789")),"file payload retained");
  await assert.rejects(sandbox.zipFiles([{name:"huge.bin",blob:{size:101*1024*1024}}]),/100 MB/);
- console.log("JIAYU_STUDIO_QA_PASS",idx.fileCount,"files",figureIndex.total,"images",figureIndex.hosted,"original hosted images / ZIP UTF8 CRC / UI controls");
+ console.log("JIAYU_STUDIO_QA_PASS",idx.fileCount,"files",figureIndex.total,"images",figureIndex.hosted,"SHA-verified originals and PDFs / ZIP UTF8 CRC / UI controls");
 })().catch(e=>{console.error(e);process.exitCode=1;});
