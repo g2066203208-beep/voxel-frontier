@@ -26,7 +26,8 @@ test('current and historical models are explicitly separated in inline studio co
   assert.ok(page.includes('Earthquake_EONLY_REVIEW'));
   assert.ok(page.includes('31个 EMB_HOOP'));
   assert.ok(page.includes('历史T070参考数据'));
-  assert.ok(page.includes('本轮原件复核'));
+  assert.ok(page.includes('Codex本机Abaqus MCP读取确认'));
+  assert.ok(page.includes('本助手二次原件复核'));
   assert.equal((page.match(/data-tower-row/g) ?? []).length, 92);
   assert.equal((page.match(/data-tower-section/g) ?? []).length, 9);
   assert.ok(page.includes('完整地震时程求解'));
