@@ -1,3 +1,10 @@
+## 2026-11-14 17时｜S06四ETM×31段源级及外风力归属收尾（白皮书v0.30.12）
+
+- 继承前文READ-BEFORE-WRITE START（read_base_sha=`924dd913660b6eab73b38e4bc5d8e43e2b887d2f`）；本次直查已归档16 ZIP的Source SHA清单、4份实际600s时程源QC、12边界72项滞后相位指纹、原生2s四批重叠及原历史295通道inventory，原生GitHub Node22 Actions [#43578427372](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43578427372) **success**，6/6坏数据拒绝，留存Artifact #14107557674。原ZIP这次没有重新下载字节、没有新增物理运行。
+- **历史真实成果进一步明确**：4组ETM×31段×12001样本=1,488,124行（100—700s、dt=.05s），27个同批相邻截面×4例共1,296,108个配对时刻；3个跨批边界×4例=12行，72个六分量一阶差分最优延迟为0，相关范围0.905574995234—0.999999958357；但不同运行批次的同初态/控制器/BTS精确重演无法由相关性和2s诊断替代；风塔原295输出通道没有直接的整塔分布式纯气动力六分量，塔底和截面反力不能直接当风荷载。正式S06 PARTIAL、S07/S09/S10 HOLD、12阶段晋级0/12、正式DLC1.2 0/126。
+- 远端真实文件：[12行CSV](../experiments/T077/recovery/S06_4ETM_12BOUNDARY_AERO_HOLD_20261114.csv) commit 335fce35；[证据JSON](../experiments/T077/recovery/S06_4ETM_CROSSBATCH_EXTERNAL_RECEIPT_20261114.json) commit dd4e23d8；[原生门禁脚本](../experiments/T077/recovery/s06_4etm_external_source_admission_20261114.mjs) commit fd0fd4e2；[轻量CI](https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/.github/workflows/s06-4etm-source-admission-20261114.yml) commit 2d4d70cf；[Ch3§3.8.3](../manuscript/final-thesis/chapters/03_场址风环境与整机随机风控制载荷.md) commit c35bd79a；T080过程commit 75aaa03c；白皮书**v0.30.11→v0.30.12** commit c2e6a037。
+- 下一唯一非Abaqus动作：若现存原AeroDyn逐节点纯气动力/同控制态原始长时程可恢复，做外力/惯性/重力责任账；否则直接推进S12现有可靠风载成果与科研边界的导师可读终稿，不再重复18NTM统计或四ETM关联。禁区Abaqus/CAE、冻结母本、main、昂贵RUN与PR合并未动。
+
 ## 2026-11-14 16:51后｜S06四ETM×31段跨批证据与纯外载来源追查 START
 
 - 执行者：ChatGPT；read_base_sha=`924dd913660b6eab73b38e4bc5d8e43e2b887d2f`；PR#42 Open/Draft。已读研究AGENTS、指挥室最近交接、白皮书v0.30.11、T080过程及T077真实16批历史归档、四ETM每批600秒来源收据与跨批相位指纹。继承前一轮18NTM塔底6分量核验，不重复NTM统计。
