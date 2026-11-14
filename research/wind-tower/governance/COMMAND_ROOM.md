@@ -1,3 +1,8 @@
+## 2026-11-14 23时｜S12期刊正文证据链顺序修复 END（v0.31.3）
+
+- PR#42开工Open/Draft、HEAD `408b9a270dc38543296b669752dd8780ea320683`；依序核对根/研究AGENTS、指挥室、白皮书、MASTER/STATUS、12阶段计划、T080与期刊现稿。发现§4.25–4.30六个实质结果段落被放在Conclusions和Data availability之后，损害期刊论文论证顺序；已在同一现行稿中整体移动到Discussion末尾、Conclusions之前，并修复§4.30公式邻接歧义。科研稿commit [52bad60c](https://github.com/g2066203208-beep/voxel-frontier/commit/52bad60c726be50f1e25f66c05ac5e774e1331cc)，blob `01c4592c7c4a617490408c875e10fb8cb62952cc`；T080已记录，白皮书v0.31.2→v0.31.3。
+- 这是已有科学结果的可投稿结构修复，不是新数据/新模型/物理PASS，尚未独立全文PDF/引用验收。正式12阶段0/12、本轮晋级0/12、DLC1.2 0/126；最大非CAE HOLD=运行状态占比、未覆盖风速箱、材料局部应力及同态W/E/WE。下一唯一动作：在原始状态证据可得时做箱内状态统计，否则转全文源表—图表—引用交叉闭合。禁区Abaqus/CAE、冻结母本、main、昂贵RUN、PR合并均未触碰。
+
 ## 2026-11-14 22:07｜S12运行状态混合与风速箱覆盖的独立不可识别性 END（白皮书v0.31.2）
 
 - PR#42开工Open/Draft，HEAD=5d12ebccfb70a6318069084bb1400146044d32c9；遵守根/研究AGENTS、READ-BEFORE-WRITE、现行T080、白皮书v0.31.1和六章MASTER/STATUS。继承S10真实18NTM、ERA5 184080h、[4,25)m/s 106900h及7164h三箱来源，不重复历史统计。
