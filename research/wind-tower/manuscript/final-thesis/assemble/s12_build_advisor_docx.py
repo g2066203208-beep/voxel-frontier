@@ -16,6 +16,7 @@ from xml.etree import ElementTree as ET
 
 from docx import Document
 from docx.enum.text import WD_ALIGN_PARAGRAPH
+from docx.enum.style import WD_STYLE_TYPE
 from docx.shared import Cm, Pt
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
@@ -50,6 +51,19 @@ def reference_docx(target: Path):
         s.paragraph_format.space_after = Pt(5 if name == 'Normal' else 9)
         if name == 'Normal':
             s.paragraph_format.line_spacing = 1.4
+    # Pandoc's DOCX writer emits w:pStyle="Compact" inside pipe-table cells.
+    # If the reference DOCX lacks this style, LibreOffice may render the 63
+    # tables vertically (one cell per line), despite no blank/off-page text.
+    # Define it explicitly in the reference template, preserving inline OMML.
+    compact = d.styles.add_style('Compact', WD_STYLE_TYPE.PARAGRAPH)
+    compact.base_style = d.styles['Normal']
+    compact.font.name = 'Times New Roman'
+    compact.font.size = Pt(9.5)
+    compact._element.get_or_add_rPr().get_or_add_rFonts().set(
+        qn('w:eastAsia'), '宋体')
+    compact.paragraph_format.space_before = Pt(0)
+    compact.paragraph_format.space_after = Pt(0)
+    compact.paragraph_format.line_spacing = 1.15
     footer = sec.footer.paragraphs[0]
     footer.alignment = WD_ALIGN_PARAGRAPH.CENTER
     footer.add_run('研究母稿 · 导师内部阅读  |  ')
