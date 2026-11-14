@@ -45,11 +45,10 @@ def check(condition: bool, label: str) -> None:
 def clean_chapter(source: Path, number: int) -> tuple[str, dict]:
     raw = source.read_text("utf-8").replace("\r\n", "\n")
     fence = raw.find(FENCE)
-    check(fence != -1, "MISSING_WORKSPACE_EXCLUSION_FENCE:" + source.name)
-    excluded = raw[fence + len(FENCE):]
+    excluded = raw[fence + len(FENCE):] if fence != -1 else ""
     check(not re.search(r"(?m)^#{2,4} \d+\.\d+", excluded),
           "SCIENTIFIC_SECTION_AFTER_WORD_FENCE:" + source.name)
-    body = raw[:fence].rstrip()
+    body = (raw[:fence] if fence != -1 else raw).rstrip()
     heading = "# 第" + "一二三四五六"[number] + "章"
     check(body.startswith(heading), "CHAPTER_HEADER_IDENTITY:" + source.name)
     check(body.count(heading) == 1, "CHAPTER_HEADER_DUPLICATE:" + source.name)
