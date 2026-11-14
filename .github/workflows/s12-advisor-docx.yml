@@ -1,16 +1,8 @@
 name: S12 advisor DOCX from six-chapter source
+# Historical 2026-11-02 pinned-source build: keep as manually reproducible
+# evidence only. Automatic pushes use s12-current-six-chapter-docx.yml instead;
+# the old SHA lock intentionally no longer matches current six-chapter sources.
 on:
-  push:
-    branches:
-      - research/t080-seismic-integration-gates-20261022
-    paths:
-      - .github/workflows/s12-advisor-docx.yml
-      - research/wind-tower/manuscript/final-thesis/assemble/s12_build_six_chapter_reader.cjs
-      - research/wind-tower/manuscript/final-thesis/assemble/s12_build_advisor_docx.py
-      - research/wind-tower/manuscript/final-thesis/assemble/s12_refine_advisor_docx.py
-      - research/wind-tower/manuscript/final-thesis/assemble/s12_appendix_a14_math_readability.py
-      - research/wind-tower/manuscript/final-thesis/assemble/THESIS_SIX_CHAPTER_REVIEW_20261102.md
-      - research/wind-tower/manuscript/final-thesis/figures/**
   workflow_dispatch:
 permissions:
   contents: read
