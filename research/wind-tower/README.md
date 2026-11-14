@@ -4,6 +4,12 @@
 > **论文每次写入前必读：[最新进度与交接日志](https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/governance/COMMAND_ROOM.md#read-before-write)**
 > 先读当前快照、已完成成果和最近交接，再改正文、模型、脚本或任务书；写后登记实物、状态变化和下一责任人。活动研究在 PR #42 分支，main 上的旧状态不能代替研究进度。此入口不表示研究结果已合并或 Pages 已更新。
 
+## 当前158 m双模型工程设置（2026-11-14 16:36，用户提供本机MCP报告）
+
+- [当前工程配置92项完整记录](models/CURRENT_TOWER_SETTINGS_20261114.md)；[可机读JSON](models/CURRENT_TOWER_SETTINGS_20261114.json)。
+- 已内嵌至仓库唯一论文工作室：`src/current-model.ts`、`src/main.ts`导航“当前工程设置 · 11.14”；[原生前端CI](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43581408696)。历史T070三维仅供基准展示，与当前双模型工程不等同。
+- **证据层级**：用户粘贴的本机报告，原始`D:\Codex-research-native`文件在本次会话未读取；当前Jobs=0，历史Gravity/Modal验证属于另一修复工程，完整地震时程未运行，风震联合未完成。**PR #42 Draft，main/Pages尚未更新。**
+
 ## 2026-10-21 范围变更历史（当前进度见指挥室）
 
 用户已要求在嘉鱼研究基础上增加抗震验算与风震研究，并要求全程GitHub记录。当前入口：[T079](experiments/T079/README.md)。
