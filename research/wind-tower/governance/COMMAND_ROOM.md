@@ -1,3 +1,9 @@
+## 2026-11-14 22:07｜S12运行状态混合与风速箱覆盖的独立不可识别性 END（白皮书v0.31.2）
+
+- PR#42开工Open/Draft，HEAD=5d12ebccfb70a6318069084bb1400146044d32c9；遵守根/研究AGENTS、READ-BEFORE-WRITE、现行T080、白皮书v0.31.1和六章MASTER/STATUS。继承S10真实18NTM、ERA5 184080h、[4,25)m/s 106900h及7164h三箱来源，不重复历史统计。
+- **科研正文实物**：[期刊§4.30](../manuscript/journal-wind-fatigue-results.md)（commit [ade7cfd5](https://github.com/g2066203208-beep/voxel-frontier/commit/ade7cfd5cf0315ce1cca1e308bbaca08f0c785e8)，blob e68f3a78efdf1f362a9ef4aeff48021313710442）给出全小时与运行小时条件目标估计量、二状态构造性反例：风箱全部覆盖也无法在缺机组状态占比时识别年载荷四次幂；三箱占全ERA5 3.8918%，占诊断风区6.7016%，均不是机组实际运行概率。仅数学方法/科学正文增量，不是新OpenFAST或Miner结果；源字节SHA256未独立取得。T080日志已更新，白皮书v0.31.1→v0.31.2。
+- 正式12阶段0/12、本轮晋级0/12，正式DLC1.2 0/126；最大非CAE HOLD：机组实际状态占比、未覆盖风速箱、材料局部应力及同态W/E/WE。下一唯一动作：取得现有控制器运行状态原件后开展箱内状态频率实证；原件不可得则转S12期刊引用/图表逐项闭合。不触碰Abaqus/CAE、冻结母本、main、PR合并或昂贵RUN。
+
 ## 2026-11-14 22时｜S10 NTM年载荷块频率来源核验及fe-safe研究路线首步 END（白皮书v0.31.1）
 
 - START在本文件同日21:30后；开工HEAD=`f2da031d2b8f0e7fb4455151bc55220f5621c2a1`，核对AGENTS及v0.31.0疲劳身份、已完成1574条ETM毛截面循环、2880行NTM统计、36历史风/ERA5，沿用新S10 Miner和研究分支PR#42。
