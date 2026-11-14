@@ -6,6 +6,7 @@ on:
       - research/t080-seismic-integration-gates-20261022
     paths:
       - 'research/wind-tower/experiments/T077/recovery/s10_fatigue_readiness_source_gate_20261114.mjs'
+      - 'research/wind-tower/experiments/T077/recovery/s10_miner_damage_gate.py'
       - 'research/wind-tower/experiments/T077/recovery/S10_3CONTROL_REAL_GROSS_CYCLES_20261030.csv'
       - 'research/wind-tower/experiments/T077/recovery/S10_3CONTROL_REAL_CYCLE_MEAN_RECEIPT_20261030.json'
       - 'research/wind-tower/experiments/T062/S10_18NTM_10NEARBASE_16AZ_GROSS_RAINFLOW_20261031.csv'
@@ -25,6 +26,19 @@ jobs:
         run: |
           node research/wind-tower/experiments/T077/recovery/s10_fatigue_readiness_source_gate_20261114.mjs --self-test > /tmp/s10-fatigue-source-admission.json
           node --input-type=module -e "import fs from 'node:fs';const a=JSON.parse(fs.readFileSync('/tmp/s10-fatigue-source-admission.json'));if(a.source.gross_cycle_rows!==1574||a.source.ntm_gross_stress_rows!==2880||a.current_model.nominal_initial_force_MN!==6.4512||a.separate_design_candidate.nominal_initial_force_MN!==51.6096||a.material_damage_annual!==null||a.physical_pass!==false)process.exit(1);console.log('Physical-result fabrication gate PASS')"
+      - name: Verify Miner input model-identity and synthetic end-to-end rejection gates
+        run: |
+          python3 research/wind-tower/experiments/T077/recovery/s10_miner_damage_gate.py --self-test --wind-bin-source research/wind-tower/experiments/T062/S10_ERA5_2005_2025_HUB_1MS_BINS_20261031.csv > /tmp/s10-miner-synthetic-selftest.json
+          python3 research/wind-tower/experiments/T077/recovery/s10_miner_damage_gate.py --integration-self-test > /tmp/s10-miner-integration-selftest.json
+          python3 - <<'PY'
+          import json
+          a=json.load(open('/tmp/s10-miner-synthetic-selftest.json'))
+          b=json.load(open('/tmp/s10-miner-integration-selftest.json'))
+          assert a['status']=='PASS_SYNTHETIC_ONLY' and a['negative_tests']==13
+          assert b['status']=='PASS_SYNTHETIC_END_TO_END_ONLY' and b['negative_tests']==13
+          assert b['physical_pass'] is False and b['material_life'] is None
+          print('Miner branch and initial-state rejection gates PASS; no material life claimed')
+          PY
       - name: Retain factual source-only receipt
         uses: actions/upload-artifact@v4
         with:
