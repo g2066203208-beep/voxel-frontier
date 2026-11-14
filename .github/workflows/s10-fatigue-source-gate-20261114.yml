@@ -6,6 +6,10 @@ on:
       - research/t080-seismic-integration-gates-20261022
     paths:
       - 'research/wind-tower/experiments/T077/recovery/s10_fatigue_readiness_source_gate_20261114.mjs'
+      - 'research/wind-tower/experiments/T062/s10_ntm18_600s_annual_block_clock_20261114.mjs'
+      - 'research/wind-tower/experiments/T062/S10_NTM18_600S_ANNUAL_BLOCK_CLOCK_20261114.csv'
+      - 'research/wind-tower/experiments/T062/S10_ERA5_2005_2025_HUB_1MS_BINS_20261031.csv'
+      - 'research/wind-tower/experiments/T062/S10_ERA5_21BIN_6SEED_NTM_SOURCE_COVERAGE_20261031.csv'
       - 'research/wind-tower/experiments/T077/recovery/s10_miner_damage_gate.py'
       - 'research/wind-tower/experiments/T077/recovery/S10_3CONTROL_REAL_GROSS_CYCLES_20261030.csv'
       - 'research/wind-tower/experiments/T077/recovery/S10_3CONTROL_REAL_CYCLE_MEAN_RECEIPT_20261030.json'
@@ -39,6 +43,11 @@ jobs:
           assert b['physical_pass'] is False and b['material_life'] is None
           print('Miner branch and initial-state rejection gates PASS; no material life claimed')
           PY
+      - name: Reproduce 18 actual NTM annual 600s occurrence weights, reject source tampering
+        run: |
+          node research/wind-tower/experiments/T062/s10_ntm18_600s_annual_block_clock_20261114.mjs --self-test > /tmp/s10-ntm18-block-clock.csv
+          cmp /tmp/s10-ntm18-block-clock.csv research/wind-tower/experiments/T062/S10_NTM18_600S_ANNUAL_BLOCK_CLOCK_20261114.csv
+          echo "18 historical NTM per-seed annual 600s clock PASS; not a BF1 local-stress or material fatigue certification"
       - name: Retain factual source-only receipt
         uses: actions/upload-artifact@v4
         with:
