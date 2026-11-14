@@ -1,3 +1,9 @@
+## 2026-11-14 19时｜全局审查表/论文README过时状态纠偏（v0.30.17，仅文档、非CAE）
+
+- SOURCE：直接回读PR #42、白皮书v0.30.16、全局14项问题表、论文README、S12现行265页产物归档和T080上一轮日志；原生GitHub Actions API再次确认构建#43586214517、归档#43586710092、工作室#43586894698、S06跨批来源#43578427372均为`completed/success`。不重读本机CAE/ODB，不重算风震、疲劳或优化。
+- DOC：将[全局14项审查](../../governance/RESEARCH_GLOBAL_AUDIT_20261114.md)的历史3版Word与当期265页现稿分开；修正I03“未重新产Word”、I11“需修复工作室索引”、I12漏记当期自动排版QA等过时状态；[论文README](../../manuscript/final-thesis/README.md)纠正“不能宣称当前Word成功生成”与前文成功CI相矛盾的遗留语句。历史旧CI失败仍保留，脚本未改，S12 Word完整人工视觉、GB/T7714/引文/图片继承HOLD。
+- 结果：**文档真实性纠偏**，不是新增科学/工程计算；正式12阶段0/12、正式DLC1.2 0/126，纯风外载、跨批600秒严格同态、Miner、E/W/WE真实响应、Pareto验证继续HOLD。PR#42保持Draft，未改main/Pages，禁止本助手Abaqus工作。白皮书v0.30.16→v0.30.17。
+
 ## 2026-11-14 18时后｜S12现行六章265页Word/PDF永久交付、原文85页同站图库（v0.30.16；非CAE）
 
 - START已登记指挥室（read_base_sha `e214c9c785b17fff6644bc335f6d3945317db267`）。继承原六章Markdown、2026-08/09/11历史Word、原47张科研SVG和85张参考文献原页PNG、Codex直接通过本机MCP确认的现模型92项；禁止本助手做、准备、审核、派发任何Abaqus/CAE/INP/ODB，不动T057/T070、main或合并Draft PR#42。
