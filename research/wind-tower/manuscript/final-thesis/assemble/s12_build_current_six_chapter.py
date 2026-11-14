@@ -132,7 +132,10 @@ def assemble(out: Path, manifest: Path, *, include_appendix: bool = True) -> dic
     images = []
     for m in FIGURE.finditer(combined):
         src = (HERE / m.group(2)).resolve()
-        check(src.is_relative_to(THESIS.resolve()), "FIGURE_OUTSIDE_THESIS:" + m.group(2))
+        # Manuscript figures may validly cite recorded wind/earthquake
+        # source plots under experiments/, within the same wind-tower research root.
+        check(src.is_relative_to(THESIS.parents[1].resolve()),
+              "FIGURE_OUTSIDE_RESEARCH:" + m.group(2))
         check(src.is_file(), "MISSING_FIGURE:" + m.group(2))
         check(b"<svg" in src.read_bytes()[:3000], "NOT_SVG:" + m.group(2))
         images.append({"path": m.group(2), "sha256": sha(src), "caption": m.group(1)})
