@@ -1,0 +1,144 @@
+name: S12 CURRENT six-chapter Word and PDF verification (NO CAE)
+on:
+  push:
+    branches: [research/t080-seismic-integration-gates-20261022]
+    paths:
+      - '.github/workflows/s12-current-six-chapter-docx.yml'
+      - 'research/wind-tower/manuscript/final-thesis/assemble/s12_build_current_six_chapter.py'
+      - 'research/wind-tower/manuscript/final-thesis/assemble/s12_build_advisor_docx.py'
+      - 'research/wind-tower/manuscript/final-thesis/assemble/S12_ACTIVE_REFERENCES_20261110.md'
+      - 'research/wind-tower/manuscript/final-thesis/chapters/**'
+      - 'research/wind-tower/manuscript/final-thesis/figures/**'
+      - 'research/wind-tower/manuscript/final-thesis/appendices/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: s12-current-six-chapter-pr42
+  cancel-in-progress: true
+
+jobs:
+  current-source-to-word:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install Word, PDF, figure and font tools (no structural solver)
+        run: |
+          python -m pip install --disable-pip-version-check python-docx==1.2.0 cairosvg==2.8.2 pypandoc_binary==1.15 PyMuPDF==1.25.3 Pillow==11.1.0
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq libreoffice-writer fonts-noto-cjk >/dev/null
+      - name: Lock current six chapters and audit 30 references and all research figure sources
+        run: |
+          python research/wind-tower/manuscript/final-thesis/assemble/s12_build_current_six_chapter.py \
+            --out research/wind-tower/manuscript/final-thesis/assemble/THESIS_CURRENT_SIX_CHAPTERS_20261114.md \
+            --receipt s12_current/ASSEMBLY_SOURCE_MANIFEST.json
+      - name: Render current editable Word from precisely locked same-commit Markdown
+        run: |
+          SOURCE_SHA=$(python -c "import json; print(json.load(open('s12_current/ASSEMBLY_SOURCE_MANIFEST.json'))['source_sha256'])")
+          python research/wind-tower/manuscript/final-thesis/assemble/s12_build_advisor_docx.py \
+            --source research/wind-tower/manuscript/final-thesis/assemble/THESIS_CURRENT_SIX_CHAPTERS_20261114.md \
+            --expected-sha256 "$SOURCE_SHA" \
+            --output s12_current/DTU10MW_158m_CURRENT_six_chapter_research_20261114.docx \
+            --receipt s12_current/WORD_SOURCE_RECEIPT.json
+      - name: Negative test rejects unexpected source SHA
+        run: |
+          if python research/wind-tower/manuscript/final-thesis/assemble/s12_build_advisor_docx.py \
+            --source research/wind-tower/manuscript/final-thesis/assemble/THESIS_CURRENT_SIX_CHAPTERS_20261114.md \
+            --expected-sha256 0000000000000000000000000000000000000000000000000000000000000000 \
+            --output s12_current/UNSAFE_mismatched_source.docx; then
+             echo 'ERROR: wrong source SHA accepted'; exit 1
+          fi
+          test ! -e s12_current/UNSAFE_mismatched_source.docx
+      - name: Word integrity, key section, figure and maths checks
+        run: |
+          python - <<'PY'
+          from docx import Document
+          from pathlib import Path
+          import json, zipfile, re
+          p=Path('s12_current/DTU10MW_158m_CURRENT_six_chapter_research_20261114.docx')
+          m=json.loads(Path('s12_current/ASSEMBLY_SOURCE_MANIFEST.json').read_text())
+          d=Document(p)
+          body='\n'.join(q.text for q in d.paragraphs)
+          marks=['第一章','第二章','第三章','第四章','第五章','第六章',
+                 '2.1.5','3.5.10','4.7.27','4.7.28','4.7.29','4.10.1','A.14','参考文献']
+          for t in marks: assert t in body, 'MISSING_WORD_SECTION:'+t
+          assert '工作区证据与门禁（不进入最终Word）' not in body
+          assert m['reference_count']==30
+          assert m['figure_occurrences']>=40
+          with zipfile.ZipFile(p) as z:
+              assert z.testzip() is None, 'WORD_CORRUPT_ZIP'
+              img=[x for x in z.namelist() if x.startswith('word/media/')]
+              assert len(img)==m['unique_figure_sources'], 'WORD_FIGURE_COUNT_MISMATCH'
+              raw=z.read('word/document.xml')
+              maths=len(re.findall(rb'<m:oMath(?: |>)',raw))
+              assert maths>=10, 'MATH_OMML_MISSING'
+          result={'status':'CURRENT_DOCX_STRUCTURAL_QA_PASS_NOT_SUBMISSION_READY',
+                  'section_markers':marks,'paragraphs':len(d.paragraphs),
+                  'tables':len(d.tables),'embedded_figures':len(img),
+                  'math_objects':maths,'source_git_commit':m['source_git_commit']}
+          Path('s12_current/WORD_STRUCTURE_QA.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
+          print(result)
+          PY
+      - name: Convert Word to PDF and automatically inspect all pages
+        run: |
+          mkdir -p s12_current/pdfqa
+          libreoffice -env:UserInstallation=file:///tmp/s12_current_lo \
+            --headless --convert-to pdf --outdir s12_current/pdfqa \
+            s12_current/DTU10MW_158m_CURRENT_six_chapter_research_20261114.docx
+          python - <<'PY'
+          import fitz,json
+          from pathlib import Path
+          p=next(Path('s12_current/pdfqa').glob('*.pdf'))
+          doc=fitz.open(p)
+          assert 70<=len(doc)<=500, 'PDF_PAGE_COUNT_SUSPICIOUS'
+          counts=[len(pg.get_text().strip()) for pg in doc]
+          blank=[i+1 for i,n in enumerate(counts) if n<20]
+          assert len(blank)<5, 'PDF_BLANK_PAGES:'+str(blank)
+          clipped=[]
+          for i,page in enumerate(doc):
+              bounds=page.rect
+              for bl in page.get_text('dict')['blocks']:
+                  if 'lines' not in bl:continue
+                  for ln in bl['lines']:
+                      for span in ln['spans']:
+                          box=fitz.Rect(span['bbox'])
+                          if box.x0 < bounds.x0-5 or box.y0 < bounds.y0-5 or box.x1 > bounds.x1+5 or box.y1 > bounds.y1+5:
+                              clipped.append({'page':i+1,'text':span['text'][:60]})
+          assert len(clipped)<15, 'PDF_TEXT_OFF_PAGE:'+str(clipped[:8])
+          sample=sorted(set([0,1,len(doc)//4,len(doc)//2,3*len(doc)//4,len(doc)-2,len(doc)-1]))
+          from PIL import Image,ImageOps,ImageDraw
+          thumbs=[]
+          for i in sample:
+              pix=doc[i].get_pixmap(matrix=fitz.Matrix(0.72,0.72),alpha=False)
+              img=Image.frombytes('RGB',[pix.width,pix.height],pix.samples)
+              thumb=ImageOps.contain(img,(445,630))
+              tile=Image.new('RGB',(468,670),'white')
+              tile.paste(thumb,((468-thumb.width)//2,8))
+              ImageDraw.Draw(tile).text((14,643),f'Page {i+1}',fill='black')
+              thumbs.append(tile)
+          out=Image.new('RGB',(468*2,670*4),'#eeeeee')
+          for j,tile in enumerate(thumbs):
+              out.paste(tile,((j%2)*468,(j//2)*670))
+          out.save('s12_current/pdfqa/QA_PAGE_CONTACT_SHEET.png')
+          qa={'status':'AUTOMATED_ALL_PAGE_TEXT_POSITION_QA_PASS',
+              'pdf_pages':len(doc),'blank_page_indices':blank,
+              'offpage_text_spans':clipped,'sampled_pages':[x+1 for x in sample],
+              'limitation':'Automated full-page scan and seven preview pages only; human Word visual QA not claimed'}
+          Path('s12_current/PDF_LAYOUT_QA.json').write_text(json.dumps(qa,ensure_ascii=False,indent=2)+'\n')
+          print(qa)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: S12_CURRENT_20261114_SIXCHAPTER_WORD_PDF_SOURCE_QA
+          path: |
+            s12_current/
+            research/wind-tower/manuscript/final-thesis/assemble/THESIS_CURRENT_SIX_CHAPTERS_20261114.md
+          retention-days: 30
+          if-no-files-found: warn
