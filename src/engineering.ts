@@ -37,6 +37,14 @@ export function researchPage() {
 
  <section class="panel research-intro" aria-label="疲劳计算 · 真实数据与前置门禁">
  <h2>疲劳计算 · 真实数据及前置条件（11月14日）</h2>
+ <p><strong>第一试点已选定：</strong><code>U11p4_NTM_S01</code>（历史OpenFAST正常湍流风，11.4 m/s，600秒）；作为BF1钢塔金属疲劳的候选风况，<strong>不是已经取得BF1局部材料应力或fe-safe结果</strong>。</p>
+ <div class="tower-table-wrap"><table class="tower-parameter-table"><thead><tr><th>原始NTM风速箱</th><th>源工况（每箱6 seed）</th><th>600秒载荷块/seed/年</th><th>物理等级</th></tr></thead><tbody>
+ <tr><td>9–10 m/s</td><td>9.343881 m/s</td><td>272.964798</td><td>条件性来源时间权重</td></tr>
+ <tr><td>11–12 m/s</td><td>11.4 m/s</td><td>67.860495</td><td>条件性来源时间权重</td></tr>
+ <tr><td>19–20 m/s</td><td>19.202140 m/s</td><td>0.095176</td><td>条件性来源时间权重</td></tr>
+ </tbody></table></div>
+ <p>以上仅从ERA5原31行小时统计、原126工况身份表计算：8760小时/年、每箱6个独立seed、每次600秒，按原始全部小时概率折算。<strong>没有覆盖其他运行风速箱，未经本机BF1真实应力与机组运行状态核验，不得写成全年材料疲劳寿命。</strong></p>
+ <div class="research-links"><a href="${branch}experiments/T062/S10_NTM18_600S_ANNUAL_BLOCK_CLOCK_20261114.csv" target="_blank" rel="noopener">18工况来源权重表</a><a href="${branch}experiments/T062/s10_ntm18_600s_annual_block_clock_20261114.mjs" target="_blank" rel="noopener">可复算程序</a></div>
  <p><strong>已复算的来源级数据：</strong>36历史风工况、48,070条载荷级雨流；18NTM的2,880行10个近底位置×16方位毛截面统计；3个ETM控制点的<strong>1,574条真实毛截面应力雨流循环</strong>。这些数据属于真实风致响应筛查，不等于局部材料疲劳寿命。</p>
  <div class="tower-table-wrap"><table class="tower-parameter-table"><thead><tr><th>历史ETM工况</th><th>混凝土段</th><th>固定方位</th><th>循环行</th><th>等效循环数</th><th>DEL4 / MPa</th></tr></thead><tbody>
  <tr><td>9.343881 m/s · S06</td><td>CSEG16</td><td>180°</td><td>413</td><td>407.5</td><td>7.052732</td></tr>
