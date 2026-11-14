@@ -1,0 +1,33 @@
+name: S10 Fatigue real-source and BF identity gate
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - research/t080-seismic-integration-gates-20261022
+    paths:
+      - 'research/wind-tower/experiments/T077/recovery/s10_fatigue_readiness_source_gate_20261114.mjs'
+      - 'research/wind-tower/experiments/T077/recovery/S10_3CONTROL_REAL_GROSS_CYCLES_20261030.csv'
+      - 'research/wind-tower/experiments/T077/recovery/S10_3CONTROL_REAL_CYCLE_MEAN_RECEIPT_20261030.json'
+      - 'research/wind-tower/experiments/T062/S10_18NTM_10NEARBASE_16AZ_GROSS_RAINFLOW_20261031.csv'
+      - '.github/workflows/s10-fatigue-source-gate-20261114.yml'
+permissions:
+  contents: read
+jobs:
+  verify-real-data:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify original 1574 ETM cycles, 2880 NTM screens, and 6 rejection tests
+        run: |
+          node research/wind-tower/experiments/T077/recovery/s10_fatigue_readiness_source_gate_20261114.mjs --self-test > /tmp/s10-fatigue-source-admission.json
+          node --input-type=module -e "import fs from 'node:fs';const a=JSON.parse(fs.readFileSync('/tmp/s10-fatigue-source-admission.json'));if(a.source.gross_cycle_rows!==1574||a.source.ntm_gross_stress_rows!==2880||a.current_model.nominal_initial_force_MN!==6.4512||a.separate_design_candidate.nominal_initial_force_MN!==51.6096||a.material_damage_annual!==null||a.physical_pass!==false)process.exit(1);console.log('Physical-result fabrication gate PASS')"
+      - name: Retain factual source-only receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: S10-real-gross-stress-readiness-NOT-material-life
+          path: /tmp/s10-fatigue-source-admission.json
+          retention-days: 30
