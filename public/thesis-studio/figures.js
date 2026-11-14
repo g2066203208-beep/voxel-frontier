@@ -1,172 +1,159 @@
 "use strict";
-/* Research figures: original Git objects published locally; evidence scans linked to public repository. */
-(function () {
-  const S = { data:null, load:null, all:false, category:"", query:"", page:0, perPage:18, active:null };
-  const $ = q => document.querySelector(q);
-  const node = (tag, cls, text) => {
-    const el = document.createElement(tag);
-    if(cls) el.className=cls;
-    if(text!==undefined) el.textContent=String(text);
-    return el;
-  };
-  const encode = path => path.split("/").map(encodeURIComponent).join("/");
-  const source = fig => {
-    const d=S.data.source;
-    return "https://github.com/"+d.repository+"/blob/"+d.sha+"/"+encode(d.path+"/"+fig.p);
-  };
-  const image = fig => {
-    const d=S.data.source;
-    return fig.h ? d.assetPrefix+encode(fig.p):
-      "https://raw.githubusercontent.com/"+d.repository+"/"+d.sha+"/"+encode(d.path+"/"+fig.p);
-  };
-  async function ready() {
-    if(S.data) return S.data;
-    if(!S.load) S.load=fetch("./data/figure-index.json",{cache:"no-store"}).then(r=>{
-      if(!r.ok) throw Error("Figure catalog HTTP "+r.status);
-      return r.json();
-    }).then(d=>{
-      if(!Array.isArray(d.images) || d.images.length!==d.total) throw Error("Figure index incomplete");
-      S.data=d; return d;
-    }).catch(e=>{S.load=null;throw e;});
-    return S.load;
+/* Jiayu original archive: full in-site PDFs and 541 original images. */
+(function(){
+const S={data:null,promise:null,category:"",query:"",active:null,doc:"jiayu-gov",bound:false,painted:false};
+const $=s=>document.querySelector(s);
+function E(tag,cls,text){const el=document.createElement(tag);if(cls)el.className=cls;if(text!==undefined)el.textContent=String(text);return el;}
+const encoded=p=>p.split("/").map(encodeURIComponent).join("/");
+function sourceImg(fig){return "./figures/"+encoded(fig.p);}
+function sourcePDF(doc){return doc.url;}
+async function ready(){
+ if(S.data)return S.data;
+ if(!S.promise)S.promise=fetch("./data/figure-index.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw Error("图片资料未加载");return r.json();}).then(d=>{
+ if(!Array.isArray(d.images)||d.images.length!==541||d.hosted!==d.images.length)throw Error("原图目录不完整");
+ if(!Array.isArray(d.documents)||d.documents.length!==3||d.hePages.length!==11)throw Error("文献原件不完整");
+ S.data=d;return d;
+ }).catch(e=>{S.promise=null;throw e;});
+ return S.promise;
+}
+function filename(fig){return fig.n;}
+async function download(url,name){
+ try {
+   const r=await fetch(url);if(!r.ok)throw Error("HTTP "+r.status);
+   const b=await r.blob(),src=URL.createObjectURL(b),a=E("a");
+   a.href=src;a.download=name;a.hidden=true;document.body.append(a);a.click();a.remove();
+   setTimeout(()=>URL.revokeObjectURL(src),7000);
+ }catch(e){console.error(e);alert("原件下载失败，请稍后重试");}
+}
+function card(fig,small=false){
+ const el=E("article","figure-card"+(small?" compact":""));
+ const button=E("button","figure-preview");button.type="button";
+ button.setAttribute("aria-label","放大原图 "+fig.n);
+ const photo=E("div","figure-photo"),img=E("img");
+ img.src=sourceImg(fig);img.alt=fig.n;img.loading="lazy";img.decoding="async";
+ img.onerror=()=>{photo.classList.add("broken");img.remove();photo.append(E("span","figure-error","原图载入失败"));};
+ photo.append(img);button.append(photo);button.addEventListener("click",()=>zoom(fig));
+ const body=E("div","figure-card-body");
+ body.append(E("span","figure-card-category",fig.c));
+ const name=E("strong","figure-file",filename(fig));name.title=fig.n;body.append(name);
+ const actions=E("div","figure-actions");
+ const view=E("button","","放大");view.type="button";view.addEventListener("click",()=>zoom(fig));
+ const dl=E("button","","下载原图");dl.type="button";dl.addEventListener("click",()=>download(sourceImg(fig),fig.n));
+ actions.append(view,dl);body.append(actions);el.append(button,body);return el;
+}
+function zoom(fig){
+ const dialog=$("#figure-lightbox");if(!dialog)return;S.active=fig;
+ $("#figure-zoom-name").textContent=fig.n;$("#figure-zoom-topic").textContent=fig.c+" · 原始文件";
+ $("#figure-zoom-path").textContent="research/wind-tower/"+fig.p;
+ const img=$("#figure-zoom-image");img.src=sourceImg(fig);img.alt=fig.n;dialog.showModal();
+}
+function renderGrid(){
+ if(!S.data)return;
+ const q=S.query.toLowerCase(),items=S.data.images.filter(f=>
+ (!S.category||f.c===S.category)&&(!q||(f.n+" "+f.p+" "+f.c).toLowerCase().includes(q)));
+ $("#figure-count").textContent=items.length+" / "+S.data.images.length+" 张原图";
+ const grid=$("#figure-grid");grid.replaceChildren();
+ const fragment=document.createDocumentFragment();
+ for(const f of items)fragment.append(card(f));
+ grid.append(fragment);
+ if(!items.length)grid.append(E("div","figure-empty","没有匹配的原图"));
+}
+function renderHe(){
+ const box=$("#he-original-grid");if(!box||!S.data)return;
+ const index=new Map(S.data.images.map(f=>[f.p,f]));
+ box.replaceChildren(...S.data.hePages.map(p=>index.get(p)).filter(Boolean).map(f=>card(f,true)));
+ $("#he-page-count").textContent=S.data.hePages.length+" 张论文原始页图";
+}
+function renderDocs(){
+ const tabs=$("#original-document-tabs");
+ if(!tabs||!S.data)return;
+ tabs.replaceChildren();
+ for(const item of S.data.documents){
+  const button=E("button","original-doc-tab"+(item.id===S.doc?" active":""),item.title);
+  button.type="button";button.dataset.document=item.id;
+  button.addEventListener("click",()=>selectDoc(item.id));
+  tabs.append(button);
+ }
+ selectDoc(S.doc);
+}
+function selectDoc(id){
+ if(!S.data)return;
+ const doc=S.data.documents.find(x=>x.id===id);if(!doc)return;
+ S.doc=id;
+ const frame=$("#original-pdf-frame");
+ const source=sourcePDF(doc);
+ if(frame && frame.dataset.document!==doc.id){
+    frame.src=source+"#toolbar=1&navpanes=0&view=FitH";
+    frame.dataset.document=doc.id;
+    frame.title=doc.title+" PDF原文";
+ }
+ $("#original-doc-name").textContent=doc.title;
+ $("#original-doc-meta").textContent=doc.type+" · "+(doc.size/1048576).toFixed(1)+" MB · 原始PDF";
+ document.querySelectorAll(".original-doc-tab").forEach(b=>b.classList.toggle("active",b.dataset.document===id));
+ const btn=$("#original-doc-download");
+ btn.onclick=()=>download(source,doc.name);
+}
+function bind(){
+ if(S.bound)return;S.bound=true;
+ const select=$("#figure-category");
+ for(const c of Object.keys(S.data.categories)){
+  const o=E("option","",c);o.value=c;select.append(o);
+ }
+ select.addEventListener("change",e=>{S.category=e.target.value;renderGrid();});
+ $("#figure-search").addEventListener("input",e=>{S.query=e.target.value;renderGrid();});
+ $("#figure-close").addEventListener("click",()=>$("#figure-lightbox").close());
+ $("#figure-download").addEventListener("click",()=>{if(S.active)download(sourceImg(S.active),S.active.n);});
+ $("#figure-lightbox").addEventListener("click",e=>{if(e.target===$("#figure-lightbox"))$("#figure-lightbox").close();});
+}
+async function show(){
+ try {
+   await ready();
+   bind();
+   renderDocs();
+   if(!S.painted){renderHe();S.painted=true;}
+   renderGrid();
+ }catch(e){console.error(e);$("#figure-grid").replaceChildren(E("p","figure-empty","原始资料载入失败"));}
+}
+async function overview(){
+ const preview=$("#featured-figures");if(!preview)return;
+ try{
+  const d=await ready();
+  const wanted=[
+  "figure2-1-word-zh.png","mesh-convergence-zh.png",
+  "FIG3_S06_ERA5_DIRECTION_BAYES_20261110.svg",
+  "FIG_S05_03_ROTD_PUBLICATION.svg",
+  "FIG4_S10_ETM4_TENSION_DEL4_AZIMUTH_TRADEOFF_20261109.svg",
+  "FIG_S08_06_158M_REAL_ESM_ELASTIC_BEAM_PROXY_NOT_ABAQUS.svg"
+  ];
+  const found=wanted.map(n=>d.images.find(f=>f.n===n)).filter(Boolean);
+  preview.replaceChildren(...found.map(f=>card(f,true)));
+ }catch(e){console.error(e);}
+}
+const themes={windResource:"风环境与风荷载",windLoad:"风环境与风荷载",seismic:"地震与动力响应",coupling:"地震与动力响应",structure:"混塔结构与有限元",foundation:"混塔结构与有限元",fatigue:"疲劳与优化",optimization:"疲劳与优化",manuscript:"论文与科研图表",reports:"论文与科研图表"};
+const pdfModules={field:"jiayu-gov",structure:"he-thesis",literature:"he-thesis"};
+async function moduleFigures(mod,target){
+ try{
+  const d=await ready();
+  const theme=themes[mod];
+  if(theme){
+   const found=d.images.filter(f=>f.c===theme).slice(0,3);
+   if(found.length){
+    const section=E("section","detail-panel detail-figures");
+    section.append(E("span","panel-kicker","SOURCE FIGURES"),E("h2","","科研原图"));
+    const grid=E("div","figure-detail-grid");
+    found.forEach(f=>grid.append(card(f,true)));
+    section.append(grid);target.append(section);
+   }
   }
-  function badgeFor(f){return f.h?"科研原图":"来源影像";}
-  function thumbnail(fig,compact=false) {
-    const card=node("article","figure-card"+(compact?" compact":""));
-    const btn=node("button","figure-preview");
-    btn.type="button";
-    btn.setAttribute("aria-label","预览原图："+fig.n);
-    const photo=node("div","figure-photo");
-    const im=node("img");
-    im.src=image(fig);im.loading="lazy";im.decoding="async";im.alt=fig.n;
-    im.onerror=()=>{photo.classList.add("broken");im.hidden=true;photo.append(node("span","figure-error","无法加载 · 查看源文件"));};
-    photo.append(im);
-    btn.append(photo);
-    btn.addEventListener("click",()=>open(fig));
-    const body=node("div","figure-card-body");
-    body.append(node("span","figure-card-category",fig.c+" · "+badgeFor(fig)));
-    const name=node("strong","figure-file",fig.n);
-    name.title=fig.n;body.append(name);
-    const actions=node("div","figure-actions");
-    const view=node("button","","查看大图");view.type="button";view.addEventListener("click",()=>open(fig));
-    const dl=node("button","","下载原图");dl.type="button";dl.addEventListener("click",()=>download(fig));
-    actions.append(view,dl);body.append(actions);
-    card.append(btn,body);return card;
+  if(pdfModules[mod]){
+   const doc=d.documents.find(x=>x.id===pdfModules[mod]);
+   const section=E("section","detail-panel module-original-pdf");
+   section.append(E("span","panel-kicker","ORIGINAL DOCUMENT"),E("h2","",doc.title));
+   const iframe=E("iframe","module-pdf-frame");iframe.loading="lazy";iframe.src=doc.url+"#page=1&view=FitH";
+   iframe.title=doc.title;section.append(iframe);target.append(section);
   }
-  function items() {
-    const q=S.query.trim().toLowerCase();
-    return S.data.images.filter(f=>
-      (S.all || f.h) &&
-      (!S.category || f.c===S.category) &&
-      (!q || (f.n+" "+f.p+" "+f.c).toLowerCase().includes(q))
-    );
-  }
-  function render() {
-    const grid=$("#figure-grid");
-    if(!grid || !S.data) return;
-    const selected=items();
-    const pages=Math.max(1,Math.ceil(selected.length/S.perPage));
-    S.page=Math.min(Math.max(0,S.page),pages-1);
-    const shown=selected.slice(S.page*S.perPage,(S.page+1)*S.perPage);
-    grid.replaceChildren(...shown.map(f=>thumbnail(f)));
-    if(!shown.length)grid.append(node("p","figure-empty","没有匹配的科研图像"));
-    $("#figure-count").textContent=selected.length+" 张 / 第 "+(S.page+1)+" 页";
-    $("#figure-prev").disabled=S.page===0;
-    $("#figure-next").disabled=S.page===pages-1;
-    $("#figure-hosted").classList.toggle("selected",!S.all);
-    $("#figure-all").classList.toggle("selected",S.all);
-  }
-  function bindControls() {
-    const filters=$("#figure-category");
-    if(!filters || filters.dataset.ready) return;
-    filters.dataset.ready="1";
-    for(const c of Object.keys(S.data.categories)){
-      const opt=node("option","",c);
-      opt.value=c;filters.append(opt);
-    }
-    filters.addEventListener("change",e=>{S.category=e.target.value;S.page=0;render();});
-    $("#figure-search").addEventListener("input",e=>{S.query=e.target.value;S.page=0;render();});
-    $("#figure-hosted").addEventListener("click",()=>{S.all=false;S.page=0;render();});
-    $("#figure-all").addEventListener("click",()=>{S.all=true;S.page=0;render();});
-    $("#figure-prev").addEventListener("click",()=>{S.page--;render();});
-    $("#figure-next").addEventListener("click",()=>{S.page++;render();});
-    $("#figure-close").addEventListener("click",()=>$("#figure-lightbox").close());
-    $("#figure-download").addEventListener("click",()=>{if(S.active)download(S.active);});
-    $("#figure-lightbox").addEventListener("click",e=>{if(e.target===$("#figure-lightbox"))$("#figure-lightbox").close();});
-  }
-  async function show() {
-    try {await ready();bindControls();render();}
-    catch(e){const grid=$("#figure-grid");if(grid)grid.replaceChildren(node("p","figure-empty","原图目录加载失败"));console.error(e);}
-  }
-  function open(fig) {
-    const modal=$("#figure-lightbox");
-    if(!modal)return;
-    S.active=fig;
-    $("#figure-zoom-name").textContent=fig.n;
-    $("#figure-zoom-topic").textContent=fig.c+" · "+(fig.h?"工作室原图":"GitHub来源影像");
-    $("#figure-zoom-path").textContent="research/wind-tower/"+fig.p;
-    const img=$("#figure-zoom-image");img.src=image(fig);img.alt=fig.n;
-    $("#figure-source").href=source(fig);
-    modal.showModal();
-  }
-  async function download(fig) {
-    try {
-      const url=image(fig);
-      const response=await fetch(url);
-      if(!response.ok)throw Error("HTTP "+response.status);
-      const blob=await response.blob();
-      const blobUrl=URL.createObjectURL(blob);
-      const a=node("a");a.href=blobUrl;a.download=fig.n;
-      document.body.append(a);a.click();a.remove();
-      setTimeout(()=>URL.revokeObjectURL(blobUrl),7000);
-    }catch(e) {
-      window.open(source(fig),"_blank","noopener,noreferrer");
-      console.warn("Fallback to original GitHub source",e);
-    }
-  }
-  function insertFeatured(root,figures) {
-    root.replaceChildren(...figures.map(f=>thumbnail(f,true)));
-  }
-  async function overview() {
-    const target=$("#featured-figures");if(!target)return;
-    try {
-      const d=await ready();
-      const focus=[
-        "figure2-1-word-zh.png",
-        "mesh-convergence-zh.png",
-        "FIG3_S06_ERA5_DIRECTION_BAYES_20261110.svg",
-        "FIG_S05_03_ROTD_PUBLICATION.svg",
-        "FIG4_S10_ETM4_TENSION_DEL4_AZIMUTH_TRADEOFF_20261109.svg",
-        "FIG_S08_06_158M_REAL_ESM_ELASTIC_BEAM_PROXY_NOT_ABAQUS.svg"
-      ];
-      const figs=focus.map(n=>d.images.find(x=>x.n===n&&x.h)).filter(Boolean);
-      insertFeatured(target,figs);
-    }catch(e){console.error(e);}
-  }
-  const moduleThemes={
-    windResource:"风环境与风荷载",windLoad:"风环境与风荷载",
-    seismic:"地震与动力响应",coupling:"地震与动力响应",
-    structure:"混塔结构与有限元",foundation:"混塔结构与有限元",
-    fatigue:"疲劳与优化",optimization:"疲劳与优化",
-    manuscript:"论文与科研图表",
-    reports:"论文与科研图表"
-  };
-  async function moduleFigures(mod, target) {
-    const theme=moduleThemes[mod];
-    if(!theme)return;
-    try {
-      const data=await ready();
-      const chosen=data.images.filter(x=>x.h&&x.c===theme).slice(0,3);
-      if(!chosen.length)return;
-      const panel=node("section","detail-panel detail-figures");
-      panel.append(node("span","panel-kicker","ORIGINAL FIGURES"),node("h2","","研究原图"));
-      const grid=node("div","figure-detail-grid");
-      chosen.forEach(f=>grid.append(thumbnail(f,true)));
-      panel.append(grid);
-      const a=node("button","figure-more","浏览全部原图 ↗");
-      a.type="button";a.addEventListener("click",()=>{location.hash="#figures";});
-      panel.append(a);target.append(panel);
-    }catch(e){console.error(e);}
-  }
-  window.JYFigures={show,overview,moduleFigures};
+ }catch(e){console.error(e);}
+}
+function focusDoc(id){S.doc=id;location.hash="#figures";show().then(()=>$("#original-documents").scrollIntoView({block:"start"}));}
+window.JYFigures={show,overview,moduleFigures,focusDoc};
 })();
