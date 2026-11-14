@@ -1,3 +1,9 @@
+## 2026-11-14 19时后｜S12最新Ch4§4.2.4导师Word/PDF归档修复 START（仅非CAE）
+
+- 执行者：ChatGPT；read_base_sha=`3a0d446d331ffdaf65c5556058a6e935fcdb1ed1`；PR #42 Open/Draft，已读根/研究AGENTS、指挥室v0.30.18交接、白皮书v0.30.18、T080过程、Ch4当前源、S12动态装配脚本及旧归档工作流。
+- 继承最新Ch4提交82453ba0及其成功构建 [S12 Actions #43588545415](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43588545415)：源提交82453ba0、Word SHA256 b355bac8324bee0a5d7715df51a8cfd6000696a2a3cf9899b0bba9e40d7f0d95、265页/47图/63表/801 OMML、自动版面检查0空白/0越界，Artifact 14111606048；此前永久归档指向bd950076旧版，不包含本次§4.2.4修正。
+- 本次计划仅将既有归档工作流的源提交、RUN/文档SHA强校验、阅读版说明更新至新构建，触发原生CI后核查远端永久文件与收据；如失败保留失败记录和旧成果，不虚报完成。不触碰Abaqus、CAE、T057/T070、main、PR合并及物理验收。科研12阶段0/12、正式DLC1.2 0/126不变。
+
 ## 2026-11-14 19时后｜S12长期疲劳概率估计量科学纠错 END（白皮书v0.30.18）
 
 - READ-BEFORE-WRITE：本轮核实PR#42 Open/Draft，开工HEAD `99f803b204e3261d662b1d91693019ffad786800`；已读根/研究AGENTS、指挥室19时v0.30.17交接、白皮书、MASTER/STATUS、12阶段计划、T080过程及Ch4原文。继承现有265页Word/PDF、36历史风、ERA5/雨流/DEL，不重复计算。
