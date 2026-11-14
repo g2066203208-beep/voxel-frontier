@@ -1,3 +1,12 @@
+## 2026-11-14 18时后｜S12真实265页Word/PDF永久归档＋同站85原页图库 END（白皮书v0.30.16）
+
+- READ-BEFORE-WRITE START见本文件同日S12开工项（read_base_sha `e214c9c785b17fff6644bc335f6d3945317db267`）；本次收尾前PR#42 HEAD=`067db6dcf05c5b6cddf51f605f5a1aa1c913dc53`、Open/Draft。继承现行Ch1–Ch6、历史三版Word、Codex原生MCP确认BF1当前工程92项、历史36风/ERA5/ESM源；仅处理非Abaqus论文产物、自动构建、原图展示。
+- **可交付实物**：[当前六章265页Word/PDF与4个源/内容/排版核验收据永久Git目录](../manuscript/final-thesis/deliverables/20261114/)，远端实查DOCX=5,261,634字节、PDF=10,038,968字节，永久归档Actions #43586710092 **success**，由Action写入commit `1833d49434bd2ad6b78a26cca9ef8c03be80031e`；旧2026-08-27、09-05、11-13三份DOCX未覆盖。
+- **同一源端到端成功**：[S12 Actions #43586214517](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43586214517) **success**，`s12_build_current_six_chapter.py`以源提交`bd950076...`装配**6章＋附录A.14、30条文献、47图**，原始SHA256 `7fa3ff7d46b0b24e5f23af08b0aa4d784ba6ac3818d3bd8d6bb7ebca6f74360f`，生成Word SHA256 `9b770c40bff3c052dcd509733137fee4a5c25a29a1ae454038c0fcf380e4a0bf`（47图/63表/779数学公式/1816段）与265页PDF，全文自动**0空白页/0越界文本**，最新Ch3§3.5.10/Ch4§4.7.27–29均在Word中PASS、假SHA拒绝测试PASS。Word/LibreOffice逐页**人工**视觉终审未做，不能误称正式送审合格。
+- **唯一工作室**：`src/source-evidence.ts`和`src/main.ts`将实有85张原文关键页（11+38+30+6）直接同站可检索、同页放大；`src/engineering.ts`内置当前Word/PDF入口和14问题状态，不增加第二工作室；最新[UI Actions #43586894698](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43586894698) **23/23测试PASS + TS/Vite BUILD PASS**。该图集是关键截图而非全部原PDF全文、未复制更改原件或擅称图源自创。
+- **本次故障保留**：S12首轮源正文REF覆盖门禁过严、第二轮图路径误判，均按原始CI失败定位修复；Git archive首次因`.gitignore`阻挡，被限制范围`git add -f`纠正后最终PASS。旧`s12_build_six_chapter_reader.cjs`硬编码历史版保留追踪，不再作为最新Word源生产线。指挥室/研究`README`/论文`README`/全局14问题表/T080过程日志同步新实物；开发白皮书**v0.30.15→v0.30.16** commit 067db6dc。
+- **科学状态不虚增**：12阶段正式**0/12**、正式DLC1.2规划**0/126**；已有36历史风、31段、原Word、ESM与真实模型配置都保留来源身份。纯外部风载、完整跨批同态、材料点年Miner、正式E/W/E+W地震实际响应、结构Pareto/高保真验证未由本次修复完成；Word还需图/式/引文GB/T 7714和全部页面人工排版终审。下一非CAE责任：导师可读研究稿版本一致性/全文学术质量复核，不做、不准备、不审查、不派发Abaqus工作，不触碰冻结T057/T070、main及PR合并，不宣称线上正式Pages已更新。
+
 ## 2026-11-14 18时后｜S12当前六章Word装配链与引用/图件门禁修复 START（仅非CAE）
 
 - 执行者ChatGPT；read_base_sha=`e214c9c785b17fff6644bc335f6d3945317db267`，PR#42 Open/Draft。已读根与研究AGENTS、指挥室最近v0.30.15交接、T080最新过程、v0.30.15白皮书；核对`s12_build_six_chapter_reader.cjs`旧硬编码SHA与旧CI #43578654634源不一致、`s12_build_advisor_docx.py`真实DOCX生成/校验逻辑、`MASTER_MANUSCRIPT.md`以及参考文献`S12_ACTIVE_REFERENCES_20261110.md`。
