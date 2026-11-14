@@ -6,6 +6,13 @@
 > **论文每次写入前必读：[最新进度与交接日志](https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/governance/COMMAND_ROOM.md#read-before-write)**
 > 先读当前快照、已完成成果和最近交接，再改正文、模型、脚本或任务书；写后登记实物、状态变化和下一责任人。活动研究在 PR #42 分支，main 上的旧状态不能代替研究进度。此入口不表示研究结果已合并或 Pages 已更新。
 
+
+### 2026-11-14 原文证据原图已在唯一工作室内嵌
+
+- `src/source-evidence.ts`：从本研究分支核得**85张实际PNG原页截图**（何泽瑜11、Ch1–3 38、Ch4疲劳30、其他学位论文6），原位分类、全文页名检索、懒加载和原页放大；不再要求逐张点击GitHub链接。页截图是原始参考文献的证据，不是本文原创结果；何泽瑜完整90页PDF仍保存在`references/user-provided/`。
+- `src/current-model.ts`：Codex原生MCP确认的当前BF1双模型92项设置，同一个Paper Studio导航展示；无第二工作室。
+- 两处仅在研究分支PR #42 Draft，正式Pages的main未合并也未部署本次内容。
+
 ## 当前158 m双模型工程设置（2026-11-14 16:36，用户提供本机MCP报告）
 
 - [当前工程配置92项完整记录](models/CURRENT_TOWER_SETTINGS_20261114.md)；[可机读JSON](models/CURRENT_TOWER_SETTINGS_20261114.json)。
