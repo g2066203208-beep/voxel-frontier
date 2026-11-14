@@ -75,6 +75,8 @@ jobs:
               assert z.testzip() is None, 'WORD_CORRUPT_ZIP'
               img=[x for x in z.namelist() if x.startswith('word/media/')]
               assert len(img)==m['unique_figure_sources'], 'WORD_FIGURE_COUNT_MISMATCH'
+              styles=z.read('word/styles.xml')
+              assert b'w:styleId="Compact"' in styles, 'PANDOC_TABLE_COMPACT_STYLE_UNDEFINED'
               raw=z.read('word/document.xml')
               maths=len(re.findall(rb'<m:oMath(?: |>)',raw))
               assert maths>=10, 'MATH_OMML_MISSING'
@@ -126,7 +128,26 @@ jobs:
           for j,tile in enumerate(thumbs):
               out.paste(tile,((j%2)*468,(j//2)*670))
           out.save('s12_current/pdfqa/QA_PAGE_CONTACT_SHEET.png')
-          qa={'status':'AUTOMATED_ALL_PAGE_TEXT_POSITION_QA_PASS',
+          # Real visual regression: original 265-page draft had vertical
+          # pipe-table headers, all anchored at x≈85pt. Text bounding boxes
+          # stayed on-page, so ordinary blank/clipping checks missed it.
+          table_header_checks=[]
+          for i,page in enumerate(doc):
+              for a in page.search_for('场地类别'):
+                  b=[x for x in page.search_for('第一组常规') if abs(x.y0-a.y0)<65]
+                  c=[x for x in page.search_for('罕遇地震') if abs(x.y0-a.y0)<65]
+                  if b and c:
+                      b,c=b[0],c[0]
+                      table_header_checks.append({
+                          'page':i+1,'x_points':[round(a.x0,2),round(b.x0,2),round(c.x0,2)],
+                          'y_points':[round(a.y0,2),round(b.y0,2),round(c.y0,2)]})
+          assert len(table_header_checks)==1, 'MISSING_OR_DUPLICATE_TABLE_GEOMETRY_ANCHOR'
+          g=table_header_checks[0]
+          xs,ys=g['x_points'],g['y_points']
+          assert xs[1]-xs[0]>35 and xs[2]-xs[1]>35 and max(ys)-min(ys)<25, (
+              'VERTICAL_PIPE_TABLE_LAYOUT_REGRESSION:'+str(g))
+          qa={'status':'AUTOMATED_ALL_PAGE_TEXT_POSITION_AND_TABLE_GEOMETRY_QA_PASS',
+              'horizontal_table_header_geometry':g,
               'pdf_pages':len(doc),'blank_page_indices':blank,
               'offpage_text_spans':clipped,'sampled_pages':[x+1 for x in sample],
               'limitation':'Automated full-page scan and seven preview pages only; human Word visual QA not claimed'}
