@@ -1,5 +1,7 @@
 # 风机论文工作室 — START HERE
 
+> **2026-11-14最新全链审查入口**：[论文、GitHub与唯一工作室14项真实问题和整改状态](governance/RESEARCH_GLOBAL_AUDIT_20261114.md)。已整理三版Word、六章正文、Codex当前BF1真实模型、风/地震证据、原始文献和工作室发布状态；Ch2身份分离、Ch3/Ch4章节排除问题已修复，最新Word装配及真实材料疲劳/同态风震仍HOLD。正式0/12验收不代表历史工作量为零。
+
 > [!IMPORTANT]
 > **论文每次写入前必读：[最新进度与交接日志](https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/governance/COMMAND_ROOM.md#read-before-write)**
 > 先读当前快照、已完成成果和最近交接，再改正文、模型、脚本或任务书；写后登记实物、状态变化和下一责任人。活动研究在 PR #42 分支，main 上的旧状态不能代替研究进度。此入口不表示研究结果已合并或 Pages 已更新。
