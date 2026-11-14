@@ -54,3 +54,8 @@
 4. **权限界限**：原生Abaqus/CAE工程及地震物理不属于本助手执行、审查或派发范围，保留Codex已报告的历史事实。
 
 证据总入口：[论文工作区](../manuscript/final-thesis/README.md)｜[12阶段定义](THESIS_COMPLETION_12_STAGE_CRITICAL_PATH_20261024.md)｜[指挥室](COMMAND_ROOM.md)｜[模型设置](../models/CURRENT_TOWER_SETTINGS_20261114.md)。
+
+## 2026-11-14后续整改回执｜S12 Word与原页图库
+
+- **原页图库已落地唯一工作室研究分支**：新增`src/source-evidence.ts`收录真实GitHub目录中的85张PNG（何原文11、Ch1–3方法38、Ch4疲劳30、对照论文6），在`src/main.ts`中增加同站原位导航；85张懒加载缩略图可分类检索、同页放大，`src/style.css`适配移动阅读，`src/source-evidence.test.ts`设置无外链页面和85张数量门禁。PNG源文件不重拷贝、未更改原版；按固定原始提交SHA引用。**此处是85张已保存的关键原页，不是所有论文PDF全文或何的90页每页图。** 研究PR #42依然Draft，`main`/Pages尚未发布最新图库。
+- **当前六章Word链已修复为基于事件checkout提交的动态SHA收据，而不是把11月初Ch3/Ch4 SHA写死**：`s12_build_current_six_chapter.py`逐章排除工作区、阻止科学小节误置、核对30条活跃参考文献、完整附录A.14和论文原图，`.github/workflows/s12-current-six-chapter-docx.yml`执行可编辑Word与PDF全页自动文字位置检查。物理研究不因Word自动生成晋级；只在真实CI成功及原件输出可验证后宣布Word已生成。
