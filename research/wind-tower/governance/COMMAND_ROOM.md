@@ -1,3 +1,7 @@
+## 2026-11-15 07时｜S12历史18NTM高度站点控制排序科研增量 END（v0.31.4）
+
+- 开工PR#42 Open/Draft，HEAD `861a0fab1e018f777e1274d09eba2b8998cc6fcc`；直接复算原18NTM×60通道CSV（1080行，Git blob `4f77ec9a2027c593ea22cac5abae98de32d407f5`）。基底+9高度站的Mx/My共20通道，最高DEL4均为U19p202140_NTM_S04；Mx领先第二名3.561–3.584%，My领先2.706–3.037%。[期刊§4.31](../manuscript/journal-wind-fatigue-results.md)新增源级数表与反证条件，[科研commit ae7d1147](https://github.com/g2066203208-beep/voxel-frontier/commit/ae7d11474d29e241ec29b5cefac19383ae851889)。同一18实例的相关输出站点不能当独立重复，缺箱/材料局部应力/同态WE仍HOLD。12阶段晋级0/12，DLC1.2 0/126；下次转期刊核心数值的其他原始来源，避免重复此排序。不触碰Abaqus/CAE、冻结母本、main、昂贵RUN或PR合并。
+
 ## 2026-11-14 23时｜S12期刊正文证据链顺序修复 END（v0.31.3）
 
 - PR#42开工Open/Draft、HEAD `408b9a270dc38543296b669752dd8780ea320683`；依序核对根/研究AGENTS、指挥室、白皮书、MASTER/STATUS、12阶段计划、T080与期刊现稿。发现§4.25–4.30六个实质结果段落被放在Conclusions和Data availability之后，损害期刊论文论证顺序；已在同一现行稿中整体移动到Discussion末尾、Conclusions之前，并修复§4.30公式邻接歧义。科研稿commit [52bad60c](https://github.com/g2066203208-beep/voxel-frontier/commit/52bad60c726be50f1e25f66c05ac5e774e1331cc)，blob `01c4592c7c4a617490408c875e10fb8cb62952cc`；T080已记录，白皮书v0.31.2→v0.31.3。
