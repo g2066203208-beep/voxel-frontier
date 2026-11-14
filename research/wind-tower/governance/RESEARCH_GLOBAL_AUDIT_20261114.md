@@ -59,3 +59,9 @@
 
 - **原页图库已落地唯一工作室研究分支**：新增`src/source-evidence.ts`收录真实GitHub目录中的85张PNG（何原文11、Ch1–3方法38、Ch4疲劳30、对照论文6），在`src/main.ts`中增加同站原位导航；85张懒加载缩略图可分类检索、同页放大，`src/style.css`适配移动阅读，`src/source-evidence.test.ts`设置无外链页面和85张数量门禁。PNG源文件不重拷贝、未更改原版；按固定原始提交SHA引用。**此处是85张已保存的关键原页，不是所有论文PDF全文或何的90页每页图。** 研究PR #42依然Draft，`main`/Pages尚未发布最新图库。
 - **当前六章Word链已修复为基于事件checkout提交的动态SHA收据，而不是把11月初Ch3/Ch4 SHA写死**：`s12_build_current_six_chapter.py`逐章排除工作区、阻止科学小节误置、核对30条活跃参考文献、完整附录A.14和论文原图，`.github/workflows/s12-current-six-chapter-docx.yml`执行可编辑Word与PDF全页自动文字位置检查。物理研究不因Word自动生成晋级；只在真实CI成功及原件输出可验证后宣布Word已生成。
+
+### 2026-11-14 S12最终结果：新版本装配/永久归档验收通过（非送审验收）
+
+- **I03装配阻塞的替代构建已完成**：现行`s12_build_current_six_chapter.py`自动锁当前Git源，旧`s12_build_six_chapter_reader.cjs`保持原有11月版本仅供历史追踪、不再作为新Word生产基线。[当前版本Action #43586214517](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43586214517) completed/success：六章+附录A、30条参考文献、47图、63表、779 OMML数学节点；Word SHA256 `9b770c40bff3c052dcd509733137fee4a5c25a29a1ae454038c0fcf380e4a0bf`，自动PDF 265页，零空白页/越界文字。四个此前漏入小节已在Word中逐项检出；负向假SHA拒绝测试PASS。
+- **永久二进制**：[现行265页Word和PDF及来源/QA收据](../manuscript/final-thesis/deliverables/20261114/)已由[GitHub Actions #43586710092](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43586710092)确实成功写入本研究分支，远端列目录确认DOCX=5,261,634B、PDF=10,038,968B；旧三版Word未覆盖。工作室研究页已直接链接新版Word/PDF，保留同页85张参考原文图；[工作室CI #43586091882](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43586091882)测试23/23 PASS（后续页面文案再编译以最新运行日志为准）。
+- **仍然HOLD**：Word/LibreOffice全265页人工逐页视觉终审、Microsoft Word分页一致性、GB/T7714及部分标准原文终审、原始Word所有媒体逐图迁移比对未完成；模型与实际长期材料Miner、纯风外力和完整地震/同状态W/E/WE/真实Pareto物理证据仍不足，正式12阶段0/12不因Word生成而晋级。
