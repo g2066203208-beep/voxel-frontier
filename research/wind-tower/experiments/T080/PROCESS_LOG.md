@@ -1,3 +1,11 @@
+## 2026-11-14 22时｜S10首个NTM疲劳试点前的真实风速块年频率（非CAE，仅统计输入）
+
+- SOURCE：2026-10-31 ERA5 2005–2025年31-bin真实原表，Git blob `1bae743b385d4f24c8b5af3e0b445aae30d40c6f`、184080总小时；已有DLC1.2暂定126槽位矩阵，Git blob `1e6b774443606200156f40d57352ce097a88ee35`，只有9/11/19三箱×6独立seed的18原始NTM有历史OUTB SHA、其余108槽位无同级来源。正式2025 IEC条款、实际ROSCO运行状态未独立核读。
+- 方法：已归档600s有效窗口、每箱六个独立seed仅在**条件性均等代表性假设**下，计算单case年度重复块 `B_{b,s}=8760(H_b/184080)×3600/(6×600)`；按全部小时概率而非只对三箱归一化。因为6×600s=1h，数值恰与年箱小时 `8760H_b/184080`相等，不能把这一巧合误认为年疲劳或每次风况必定重复。
+- RUN：已生成18行真实原工况身份[CSV](../T062/S10_NTM18_600S_ANNUAL_BLOCK_CLOCK_20261114.csv)及SHA/Git blob固定的[Node程序](../T062/s10_ntm18_600s_annual_block_clock_20261114.mjs)：9–10m/s原5,736小时→单seed272.964797914个600s块/年；11–12m/s原1,426小时→**单seed67.860495437**；19–20m/s原2小时→单seed0.095176010。源归档S01试点为`U11p4_NTM_S01`，非ETM。原生[GitHub Actions #43602567874](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43602567874) SUCCESS；18×CSV生成结果与git提交完全cmp相等，原31行与126行身份SHA错误各一拒绝测试成功；原BF1/BF8+Miner源级门禁仍SUCCESS。没有重跑OpenFAST、Abaqus或fe-safe。
+- UI：唯一工作室的研究总览已原位添加首个NTM风况和三风速箱/seed的真实统计结果，并标识未获BF1局部应力、未验证机组状态及材料寿命不可得；同站原85张原图与186页Word/PDF未重建也未删除。官方软件方法依据：Dassault [fe-safe](https://www.3ds.com/products/simulia/fe-safe)说明能使用载荷块和金属/焊接疲劳方法；[2024 Tutorial 106](https://docs.software.vt.edu/abaqusv2024/English/FesafeTutorialsPdf/FesafeTutorials.pdf)给出ODB数据/载荷组合/寿命以完整重复次数计量的示例，**不据此声称本机fe-safe安装、许可或结果存在**。
+- 科学限制：三个代表风速源箱仅7164/106900运行统计小时（约6.70%），不同风速缺失、运行状态概率、实际BF1局部材料应力和匹配S–N尚未完成；此CSV不得当成正式设备运行谱或20年损伤。已有的原生结构计算由既定分工处理，本助手不执行/准备/审查/派发相关作业；研究分支PR#42不合并main。REF=原2024 fe-safe教程及既有风机研究文献；STANDARD无新增授权规范条款；OFFICIAL=Dassault 2024/官方网页；FIG无新增；TAB=18行及3箱源级汇总；RUN仅Node CI；物理寿命PASS=false。
+
 ## 2026-11-14 21:30后｜S10真实疲劳输入身份闭合、BF1/BF8防混算、186页新稿及唯一工作室（非CAE）
 
 - SOURCE：GitHub原有18NTM/18ETM、2026-10-30真实1574条ETM毛截面雨流原CSV（SHA256 `646065838456b6465e321c4c6fd24966f180f275df99c615000577557219ff83`）及2880行NTM近底10测点×16方位名义应力原CSV（SHA256 `d45f047f5d622fb834d63728c13cead49b614b6cf42e598918e55242ed45f94b`）；引用原31段、ERA5及Ch4现稿，未重算原物理风场。
