@@ -1,3 +1,8 @@
+## 2026-11-14 21:30后｜新版186页研究稿（替代下方185页历史状态）
+
+- **当前唯一六章可编辑论文**：[Word](deliverables/20261114/DTU10MW_158m_CURRENT_six_chapter_research_20261114.docx)｜[PDF](deliverables/20261114/DTU10MW_158m_CURRENT_six_chapter_research_20261114.pdf)｜[源及页QA](deliverables/20261114/)。最新真正[构建Actions #43600833734](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43600833734)与[永久归档Actions #43601210801](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43601210801)均SUCCESS。六章Ch4新增2026-11-14原始疲劳循环身份核验：1574行ETM/2880行NTM的真实数据源准入及BF1/BF8互斥，非材料寿命。源提交`cf1c1573`，DOCX SHA256 `ec6af12b40f26163dbd45a83a430590c88aa6ae7fddd2dee9f2e37c73a5136a5`、5,265,685字节，47图/63表/812 OMML，PDF **186页**、10,033,981字节，自动0空白/0越界与表头横排验证通过；**尚非送审终稿**。
+- 最新来源级疲劳[Node+Python CI #43601113995](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43601113995)真实成功：原始1574毛截面循环+2880名义应力统计、6种污染拒绝、Miner 13项合成拒绝/初态与BF分支互斥。**不得将来源级通过写成材料局部应力/20年寿命完成。** 下方185页说明只是上一版历史，原8/9/11月Word与前版均可在Git历史中恢复。
+
 # 最终学位论文工作区 — ACTIVE
 
 ## 2026-11-14最新版可编辑研究稿（185页，非送审稿）
