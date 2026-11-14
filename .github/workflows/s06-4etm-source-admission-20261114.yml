@@ -1,0 +1,44 @@
+name: S06 four-ETM 31-segment source admission (NO SOLVER)
+on:
+  push:
+    branches: [research/t080-seismic-integration-gates-20261022]
+    paths:
+      - '.github/workflows/s06-4etm-source-admission-20261114.yml'
+      - 'research/wind-tower/experiments/T077/recovery/s06_4etm_external_source_admission_20261114.mjs'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-admission:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify 4 ETM x 31 segments + reject unsafe external-wind claims
+        shell: bash
+        run: |
+          set -euo pipefail
+          node research/wind-tower/experiments/T077/recovery/s06_4etm_external_source_admission_20261114.mjs \
+            --self-test --output "$RUNNER_TEMP/s06_4etm_source_admission.json"
+          node - "$RUNNER_TEMP/s06_4etm_source_admission.json" <<'JS'
+          const fs = require('node:fs');
+          const x = JSON.parse(fs.readFileSync(process.argv[2],'utf8'));
+          if(x.cases!==4||x.batches!==16||x.full_history_rows!==1488124 ||
+             x.negative_mutations_rejected!==6||x.physical_pass!==false||
+             x.exact_600s_same_state_crossbatch_certified!==false||
+             x.external_wind_load_physics_admitted!==false){
+             process.exitCode=1;throw Error('source gate unsafe admission');
+          }
+          console.log('S06_4ETM_SOURCE_JOIN_PASS_6_TAMPERS_REJECTED_PHYSICAL_HOLD');
+          JS
+      - name: Retain source-only native Node result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s06-4etm-31seg-source-admission-20261114
+          path: ${{ runner.temp }}/s06_4etm_source_admission.json
+          retention-days: 30
+          if-no-files-found: warn
