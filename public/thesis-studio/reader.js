@@ -321,10 +321,11 @@ function bind(){
   clearTimeout(R.timer);R.timer=setTimeout(()=>{if(!$("original-documents").hidden)renderPage();},200);
  });
 }
-async function attach(docs){
+async function attach(docs,initialId){
  if(!Array.isArray(docs)||!docs.length)return;
  R.documents=docs;bind();updateDocs();
- if(!R.id)await select(docs[0].id);
+ if(!R.id)await select(initialId||docs[0].id);
+ else if(initialId&&initialId!==R.id)await select(initialId);
 }
 function toggleDoc(id){return select(id);}
 window.JYReader={attach,select:toggleDoc};
