@@ -24,6 +24,8 @@ jobs:
           sparse-checkout: |
             public/thesis-studio
             scripts/test-jiayu-library.cjs
+            index.html
+            research-notes.html
           sparse-checkout-cone-mode: false
       - name: Node.js 22
         uses: actions/setup-node@v4
