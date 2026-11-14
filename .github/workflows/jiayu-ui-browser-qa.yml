@@ -1,0 +1,44 @@
+name: Jiayu Academic UI Browser QA
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/jiayu-ui-browser-qa.yml'
+      - 'scripts/qa-jiayu-browser.cjs'
+      - 'public/thesis-studio/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  browser-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout browser tests
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            scripts/qa-jiayu-browser.cjs
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
+      - name: Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Chromium browser testing
+        run: |
+          npm install --no-save --ignore-scripts playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Test published Jiayu studio
+        run: node scripts/qa-jiayu-browser.cjs
+      - name: Upload UI screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jiayu-academic-ui-qa
+          path: artifacts/ui/
+          if-no-files-found: ignore
+          retention-days: 14

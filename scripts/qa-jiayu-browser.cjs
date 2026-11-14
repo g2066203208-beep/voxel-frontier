@@ -1,0 +1,73 @@
+#!/usr/bin/env node
+"use strict";
+const assert=require("node:assert/strict");
+const path=require("node:path");
+const fs=require("node:fs");
+const {chromium}=require("playwright");
+const URL_SITE="https://g2066203208-beep.github.io/voxel-frontier/thesis-studio/";
+const out=path.join(process.cwd(),"artifacts","ui");
+fs.mkdirSync(out,{recursive:true});
+async function main(){
+ const browser=await chromium.launch({headless:true,args:["--no-sandbox","--disable-dev-shm-usage"]});
+ const page=await browser.newPage({viewport:{width:1440,height:900},deviceScaleFactor:1});
+ const fail=[];
+ page.on("pageerror",e=>fail.push("PAGE_ERROR "+e.message));
+ page.on("response",r=>{
+  if(r.status()===404&&r.url().includes("/voxel-frontier/thesis-studio/"))fail.push("MISSING_ASSET "+r.url());
+ });
+ const response=await page.goto(URL_SITE,{waitUntil:"domcontentloaded",timeout:60000});
+ assert.equal(response.status(),200,"site HTTP 200");
+ await page.locator("#module-grid .module-card").first().waitFor({timeout:30000});
+ assert.equal((await page.locator(".doc-access").count()),3,"three original sources on homepage");
+ assert.equal((await page.locator(".metric-grid").count()),0,"remove vanity metrics");
+ assert.equal((await page.locator(".original-source-preview").count()),0,"no distracting embedded PDF thumbnails on homepage");
+ await page.screenshot({path:path.join(out,"jiayu-home-desktop.png"),fullPage:true});
+ await page.locator('[data-open-document="jiayu-gov"]').click();
+ await page.locator("#figures-view").waitFor({state:"visible",timeout:10000});
+ assert.equal((await page.locator("#reader-doc-list .reader-doc").count()),3,"all PDF sources in reader");
+ await page.waitForFunction(()=>{
+  const canvas=document.getElementById("reader-canvas");
+  const status=document.getElementById("reader-status");
+  return canvas&&canvas.width>100&&canvas.height>100&&status&&status.textContent.includes("页");
+ },{timeout:75000}).catch(async e=>{
+  console.log("READER_STATUS",await page.locator("#reader-status").innerText());
+  console.log("FALLBACK_NOTE",await page.locator("#reader-fallback-note").innerText());
+  throw e;
+ });
+ let pageCount=await page.locator("#reader-total").innerText();
+ console.log("PDF_READER_OK gov pages",pageCount);
+ assert.ok(pageCount.includes("/"),"reader pagination visible");
+ await page.locator("#reader-next").click();
+ await page.waitForFunction(()=>document.getElementById("reader-page")?.value==="2",{timeout:15000});
+ await page.locator("#reader-zoom-in").click();
+ await page.waitForTimeout(500);
+ assert.notEqual(await page.locator("#reader-zoom-label").innerText(),"适合宽度");
+ await page.locator("#reader-text-mode").click();
+ await page.locator("#reader-reflow").waitFor({state:"visible",timeout:15000});
+ await page.locator("#reader-text-mode").click();
+ await page.locator('#reader-doc-list .reader-doc[data-id="he-thesis"]').click();
+ await page.waitForFunction(()=>{
+  const status=document.getElementById("reader-status");
+  const h=document.getElementById("reader-title");
+  return h?.textContent.includes("何泽宇")&&status?.textContent.includes("页");
+ },{timeout:75000});
+ await page.screenshot({path:path.join(out,"jiayu-reader-desktop.png"),fullPage:false});
+ console.log("PDF_READER_OK He thesis pages",await page.locator("#reader-total").innerText());
+ await page.locator("#figure-search").fill("RotD");
+ assert.ok((await page.locator("#figure-grid .figure-card").count())<=24,"pagination must limit rendered figures");
+ await page.locator("#figure-search").fill("");
+ assert.equal((await page.locator("#figure-grid .figure-card").count()),24,"24 images per page");
+ await page.locator("#figure-show-all").click();
+ assert.equal((await page.locator("#figure-count").innerText()).includes("541"),true,"all 541 original images accessible");
+ await page.screenshot({path:path.join(out,"jiayu-gallery-desktop.png"),fullPage:false});
+ const mobile=await browser.newPage({viewport:{width:390,height:844},deviceScaleFactor:1});
+ await mobile.goto(URL_SITE,{waitUntil:"domcontentloaded",timeout:60000});
+ await mobile.locator("#module-grid .module-card").first().waitFor({timeout:30000});
+ const size=await mobile.evaluate(()=>({scroll:document.documentElement.scrollWidth,visible:document.documentElement.clientWidth}));
+ assert.ok(size.scroll-size.visible<=7,"mobile has no horizontal overflow: "+JSON.stringify(size));
+ await mobile.screenshot({path:path.join(out,"jiayu-home-mobile.png"),fullPage:true});
+ if(fail.length)throw Error("Browser errors:\n"+fail.slice(0,15).join("\n"));
+ console.log("JIAYU_BROWSER_QA_PASS: homepage, PDF.js page render, navigation, zoom, text, He source, gallery paging, 390px mobile");
+ await browser.close();
+}
+main().catch(e=>{console.error(e);process.exitCode=1;});
