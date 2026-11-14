@@ -74,6 +74,6 @@ PROJECT.md              产品范围与后续方向
 ## 统一工作室
 
 - [湖北嘉鱼风机工作室](https://g2066203208-beep.github.io/voxel-frontier/thesis-studio/)（唯一入口）
-- 同一导航集成：16项科研专题、论文写作与研究记录、3,235份GitHub资料检索、本地上传下载及投稿。
+- 同一导航集成：16项科研专题、论文写作与研究记录、3,235份GitHub资料检索、本地上传下载、科研原图与投稿。\n- 研究原图：直接发布146份科研图文件，索引541份原始图像；首页、各专题及图集支持预览、放大和原图下载。
 - 旧站主页直接转入统一入口；原写作/附件数据沿用同域名浏览器存储，不做迁移或清空。
 - [原始科学指挥室](https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/governance/COMMAND_ROOM.md)。

@@ -32,6 +32,33 @@ const html=read("library.html");
 for(const id of ["remote-list","local-list","dropzone","submit-issue","remote-bundle","local-zip","remote-refresh","file-input"]){
  assert.ok(html.includes('id="'+id+'"'),"missing UI control "+id);
 }
+
+const figureIndex=JSON.parse(read("data/figure-index.json"));
+assert.equal(figureIndex.total,figureIndex.images.length,"figure catalog completeness");
+assert.ok(figureIndex.total>=500,"expected GitHub original figure inventory");
+assert.ok(figureIndex.hosted>=140,"expected published original research images");
+const featuredNames=[
+ "figure2-1-word-zh.png",
+ "mesh-convergence-zh.png",
+ "FIG_S05_03_ROTD_PUBLICATION.svg",
+ "FIG4_S10_ETM4_TENSION_DEL4_AZIMUTH_TRADEOFF_20261109.svg"
+];
+for(const n of featuredNames){
+  const matched=figureIndex.images.find(x=>x.h&&x.n===n);
+  assert.ok(matched,"missing original image "+n);
+}
+let hostedFiles=0;
+for(const f of figureIndex.images.filter(x=>x.h)){
+  assert.ok(!f.p.startsWith("references/"),"third-party reference scan was republished");
+  assert.ok(!f.p.includes("../"),"unexpected image path");
+  const asset=path.join(base,"figures",f.p);
+  const stat=fs.statSync(asset);
+  assert.equal(stat.size,f.s,"copied Git blob must match source size "+f.p);
+  hostedFiles++;
+}
+assert.equal(hostedFiles,figureIndex.hosted,"hosted image tally");
+new Function(read("figures.js"));
+
 const home=read("index.html");
 const notes=fs.readFileSync(path.resolve(__dirname,"../research-notes.html"),"utf8");
 assert.ok(notes.includes('class="embedded-mode"'),"legacy drafts embedded rather than separate studio");
@@ -41,6 +68,11 @@ assert.ok(home.includes('href="#library"'),"unified file library navigation");
 assert.ok(home.includes('id="library-view"'),"file library embedded in single studio");
 assert.ok(home.includes('id="notes-view"'),"original research records embedded in single studio");
 assert.ok(home.includes('id="notes-frame"'),"original paper drafts kept accessible");
+assert.ok(home.includes('id="figures-view"'),"unified scientific figure gallery");
+assert.ok(home.includes('id="figure-lightbox"'),"large original preview");
+assert.ok(home.includes('id="featured-figures"'),"real research images on home");
+assert.ok(home.includes('figure2-1-word-zh.png'),"original tower diagram replaces decorative art");
+
 (async()=>{
  const blob=await sandbox.zipFiles([{name:"测试.csv",blob:new Blob(["abc"],{type:"text/plain"})},{name:"data.txt",blob:new Blob(["123456789"])}]);
  const data=Buffer.from(await blob.arrayBuffer());
@@ -52,5 +84,5 @@ assert.ok(home.includes('id="notes-frame"'),"original paper drafts kept accessib
  assert.equal(data.readUInt16LE(data.length-22+10),2,"ZIP entry count");
  assert.ok(data.includes(Buffer.from("123456789")),"file payload retained");
  await assert.rejects(sandbox.zipFiles([{name:"huge.bin",blob:{size:101*1024*1024}}]),/100 MB/);
- console.log("JIAYU_LIBRARY_TEST_PASS",idx.fileCount,"indexed files / 14 groups / ZIP UTF8 CRC / HTML controls");
+ console.log("JIAYU_STUDIO_QA_PASS",idx.fileCount,"files",figureIndex.total,"images",figureIndex.hosted,"original hosted images / ZIP UTF8 CRC / UI controls");
 })().catch(e=>{console.error(e);process.exitCode=1;});
