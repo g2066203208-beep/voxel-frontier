@@ -607,11 +607,11 @@ export function sourceEvidencePage(): string {
    const pretty = f.filename.replace(/\.png$/i,'').replaceAll('_',' ');
    return '<figure class="source-figure" data-source-card="' + i + '"><button type="button" data-evidence-open="' + i + '" aria-label="原位放大 '+h(alt)+'"><img loading="lazy" decoding="async" src="'+h(src)+'" alt="'+h(alt)+'"></button><figcaption><strong>'+h(pretty)+'</strong><small>'+h(f.category)+' · 原始文献页截图</small></figcaption></figure>';
  }).join('');
- return '<div class="evidence-page"><header class="evidence-title"><div class="eyebrow">PRIMARY SOURCE / ORIGINAL PAGE EVIDENCE</div><h1>参考文献原页证据库</h1><p>84张原始论文页截图在当前工作室直接阅读、筛选和放大，不跳转GitHub。截图用于研究方法核查，不作为本文原创计算结果。</p></header>'+
- '<section class="evidence-tools"><label for="evidence-category">文献类型</label><select id="evidence-category"><option value="all">全部原页（84）</option><option value="he">何泽瑜原文（11）</option><option value="source">模型、风场与整机（38）</option><option value="fatigue">疲劳文献（30）</option><option value="thesis">学位论文对照（5）</option></select><input id="evidence-search" type="search" placeholder="检索REF编号、作者、原文页或图号" aria-label="检索参考原页"/><output id="evidence-count" aria-live="polite">84 / 84</output></section>'+
+ return '<div class="evidence-page"><header class="evidence-title"><div class="eyebrow">PRIMARY SOURCE / ORIGINAL PAGE EVIDENCE</div><h1>参考文献原页证据库</h1><p>85张原始论文页截图在当前工作室直接阅读、筛选和放大，不跳转GitHub。截图用于研究方法核查，不作为本文原创计算结果。</p></header>'+
+ '<section class="evidence-tools"><label for="evidence-category">文献类型</label><select id="evidence-category"><option value="all">全部原页（85）</option><option value="he">何泽瑜原文（11）</option><option value="source">模型、风场与整机（38）</option><option value="fatigue">疲劳文献（30）</option><option value="thesis">学位论文对照（6）</option></select><input id="evidence-search" type="search" placeholder="检索REF编号、作者、原文页或图号" aria-label="检索参考原页"/><output id="evidence-count" aria-live="polite">85 / 85</output></section>'+
  '<div class="evidence-grid" id="evidence-grid">'+cards+'</div><p class="evidence-no-result" id="evidence-empty" hidden>没有符合条件的原页。</p>'+
  '<div id="evidence-viewer" class="evidence-viewer" hidden><div class="evidence-viewer-bar"><span id="evidence-caption"></span><button type="button" id="evidence-close" aria-label="关闭原页放大">关闭</button></div><div class="evidence-viewer-image"><img id="evidence-large" alt="原文页放大"></div></div>'+
- '<p class="evidence-rights">资料范围：GitHub研究分支现存的11+38+30+5张关键原页，不是何泽瑜整本90页的逐页图片，也不是全部文献PDF全文。原著作权及引用归原作者或出版方；禁止将证据截图冒充论文原创图。</p></div>';
+ '<p class="evidence-rights">资料范围：GitHub研究分支现存的11+38+30+6张关键原页，不是何泽瑜整本90页的逐页图片，也不是全部文献PDF全文。原著作权及引用归原作者或出版方；禁止将证据截图冒充论文原创图。</p></div>';
 }
 export function mountSourceEvidence(root: HTMLElement): void {
  const search=root.querySelector<HTMLInputElement>('#evidence-search'), category=root.querySelector<HTMLSelectElement>('#evidence-category'), count=root.querySelector<HTMLOutputElement>('#evidence-count'), empty=root.querySelector<HTMLElement>('#evidence-empty');
