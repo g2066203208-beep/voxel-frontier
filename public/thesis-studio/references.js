@@ -1,12 +1,12 @@
 "use strict";
 (function(){
-const S={data:null,promise:null,mounted:false,tab:"pdf",category:"",topic:"",query:"",page:0,imagePage:0,imageGroup:"",imageQuery:"",perPage:18,imagesPerPage:24};
+const S={data:null,promise:null,mounted:false,tab:"pdf",category:"",topic:"",query:"",page:0,imagePage:0,imageGroup:"",imageQuery:"",perPage:18,imagesPerPage:24,masterQuery:"",masterPage:0,masterFilter:"all",masterPerPage:20};
 const $=id=>document.getElementById(id);
 const E=(tag,cls,text)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=String(text);return n;};
 const src=f=>"./figures/"+f.p.split("/").map(encodeURIComponent).join("/");
 async function load(){
  if(S.data)return S.data;
- if(!S.promise)S.promise=fetch("./data/reference-index.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw Error("reference-index "+r.status);return r.json()}).then(d=>{if(d.total!==81||d.images.length!==395)throw Error("reference index incomplete");return S.data=d}).catch(e=>{S.promise=null;throw e});
+ if(!S.promise)S.promise=fetch("./data/reference-index.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw Error("reference-index "+r.status);return r.json()}).then(d=>{if(d.total!==81||d.images.length!==395||d.masterCount!==163)throw Error("reference index incomplete");return S.data=d}).catch(e=>{S.promise=null;throw e});
  return S.promise;
 }
 const listDocs=()=>S.data.entries.filter(x=>(!S.category||x.category===S.category)&&(!S.topic||x.topic===S.topic)&&(!S.query||[x.title,x.name,x.author,x.doi,x.id,x.topic].join(" ").toLowerCase().includes(S.query)));
@@ -33,6 +33,41 @@ function renderDocs(){
  $("reference-doc-page").textContent=(S.page+1)+" / "+pages;
  $("reference-doc-prev").disabled=S.page===0;$("reference-doc-next").disabled=S.page===pages-1;
 }
+
+function masterRow(ref){
+ const el=E("article","reference-row"),info=E("div","reference-info");
+ const meta=E("div","reference-item-meta");
+ meta.append(E("span","reference-label",ref.priority||"—"),E("span","",ref.id),E("span","",ref.year||"—"));
+ const title=E("strong","reference-item-title",ref.title);
+ const bottom=E("div","reference-item-bottom");
+ bottom.append(E("span","",ref.theme),E("span","",ref.hasFile?"原件已登记":"原件未归档"));
+ info.append(meta,title,bottom);
+ const side=E("div","reference-row-action");
+ if(ref.archiveName){
+  const source=S.data.entries.find(x=>x.name===ref.archiveName);
+  if(source?.url){
+   const b=E("button","reference-read","原文阅读");b.type="button";
+   b.addEventListener("click",()=>window.JYFigures?.focusReference(source));side.append(b);
+  }
+ }
+ if(!side.children.length)side.append(E("small","reference-restricted","未取得可阅原文"));
+ el.append(info,side);return el;
+}
+function renderMaster(){
+ if(!S.data)return;
+ const q=S.masterQuery;
+ const list=S.data.master.filter(x=>
+  (S.masterFilter==="all"||(S.masterFilter==="available"&&x.accessible)||(S.masterFilter==="missing"&&!x.accessible))&&
+  (!q||[x.id,x.title,x.theme,x.doiOrSource,x.year].join(" ").toLowerCase().includes(q))
+ );
+ const pages=Math.max(1,Math.ceil(list.length/S.masterPerPage));
+ S.masterPage=Math.max(0,Math.min(S.masterPage,pages-1));
+ $("reference-master-count").textContent=list.length+" / "+S.data.masterCount+" 条学术记录";
+ $("reference-master-list").replaceChildren(...list.slice(S.masterPage*S.masterPerPage,(S.masterPage+1)*S.masterPerPage).map(masterRow));
+ $("reference-master-page").textContent=(S.masterPage+1)+" / "+pages;
+ $("reference-master-prev").disabled=S.masterPage===0;$("reference-master-next").disabled=S.masterPage===pages-1;
+}
+
 function imageCard(f){
  const card=E("article","reference-scan"),button=E("button","reference-scan-preview");
  button.type="button";button.title=f.n;button.setAttribute("aria-label","放大原页 "+f.n);
@@ -60,16 +95,17 @@ function openImage(f){
 function changeTab(tab){
  S.tab=tab;
  for(const b of document.querySelectorAll("[data-reference-tab]")){const active=b.dataset.referenceTab===tab;b.classList.toggle("selected",active);b.setAttribute("aria-selected",String(active))}
- $("reference-pdfs").hidden=tab!=="pdf";$("reference-scans").hidden=tab!=="images";
- if(tab==="images")renderImages();else renderDocs();
+ $("reference-pdfs").hidden=tab!=="pdf";$("reference-scans").hidden=tab!=="images";$("reference-master").hidden=tab!=="master";
+ if(tab==="images")renderImages();else if(tab==="master")renderMaster();else renderDocs();
 }
 function mount(root){
  const section=E("section","references-library");section.id="reference-library";
  section.innerHTML=[
  "<header class='reference-header'><div><span class='section-kicker'>LITERATURE & ORIGINAL SOURCES</span><h2>参考文献原始资料</h2></div><span id='reference-summary'></span></header>",
- "<div class='reference-tabs' role='tablist' aria-label='文献与原图'><button type='button' data-reference-tab='pdf' class='selected' role='tab' aria-selected='true'>参考文献 PDF</button><button type='button' data-reference-tab='images' role='tab' aria-selected='false'>原始页图</button></div>",
+ "<div class='reference-tabs' role='tablist' aria-label='文献与原图'><button type='button' data-reference-tab='pdf' class='selected' role='tab' aria-selected='true'>原始 PDF（81）</button><button type='button' data-reference-tab='images' role='tab' aria-selected='false'>原始页图（395）</button><button type='button' data-reference-tab='master' role='tab' aria-selected='false'>参考文献主表（163）</button></div>",
  "<section id='reference-pdfs'><div class='reference-controls'><input type='search' id='reference-search' placeholder='检索作者、题名、DOI、REF编号…' aria-label='文献检索'><select id='reference-category' aria-label='文献来源'><option value=''>全部来源</option></select><select id='reference-topic' aria-label='研究专题'><option value=''>全部专题</option></select></div><div class='reference-counter' id='reference-doc-count'></div><div id='reference-doc-list' class='reference-doc-list'></div><div class='reference-pager'><button type='button' id='reference-doc-prev'>上一页</button><span id='reference-doc-page'></span><button type='button' id='reference-doc-next'>下一页</button></div></section>",
- "<section id='reference-scans' hidden><div class='reference-controls'><input type='search' id='reference-image-search' placeholder='检索原页名称、页码…' aria-label='原始页图检索'><select id='reference-image-group' aria-label='页图来源'><option value=''>全部来源</option></select></div><div class='reference-counter' id='reference-image-count'></div><div id='reference-image-list' class='reference-scan-grid'></div><div class='reference-pager'><button type='button' id='reference-image-prev'>上一页</button><span id='reference-image-page'></span><button type='button' id='reference-image-next'>下一页</button></div></section>"
+ "<section id='reference-scans' hidden><div class='reference-controls'><input type='search' id='reference-image-search' placeholder='检索原页名称、页码…' aria-label='原始页图检索'><select id='reference-image-group' aria-label='页图来源'><option value=''>全部来源</option></select></div><div class='reference-counter' id='reference-image-count'></div><div id='reference-image-list' class='reference-scan-grid'></div><div class='reference-pager'><button type='button' id='reference-image-prev'>上一页</button><span id='reference-image-page'></span><button type='button' id='reference-image-next'>下一页</button></div></section>",
+ "<section id='reference-master' hidden><div class='reference-controls'><input type='search' id='reference-master-search' placeholder='检索 REF 编号、题名、DOI、主题…' aria-label='参考文献主表检索'><select id='reference-master-filter' aria-label='全文来源状态'><option value='all'>全部记录</option><option value='available'>原文可阅读</option><option value='missing'>原文待取得</option></select></div><div class='reference-counter' id='reference-master-count'></div><div id='reference-master-list' class='reference-doc-list'></div><div class='reference-pager'><button id='reference-master-prev' type='button'>上一页</button><span id='reference-master-page'></span><button id='reference-master-next' type='button'>下一页</button></div></section>"
  ].join("");
  root.prepend(section);
  const dialog=E("dialog","ref-zoom-dialog");dialog.id="ref-zoom-dialog";
@@ -82,7 +118,7 @@ function mount(root){
  for(const k of Object.keys(S.data.groups)){const o=E("option","",k);o.value=k;cat.append(o);}
  for(const k of [...new Set(S.data.entries.map(x=>x.topic))].sort((a,b)=>a.localeCompare(b,"zh"))){const o=E("option","",k);o.value=k;topic.append(o);}
  for(const [k,v] of Object.entries(S.data.imageGroups)){const o=E("option","",k+" · "+v);o.value=k;group.append(o);}
- $("reference-summary").textContent=S.data.total+" PDF · "+S.data.originalImageCount+" 原页";
+ $("reference-summary").textContent=S.data.total+" PDF · "+S.data.originalImageCount+" 原页 · "+S.data.masterCount+" 条书目";
  $("reference-search").addEventListener("input",e=>{S.query=e.target.value.toLowerCase();S.page=0;renderDocs()});
  cat.addEventListener("change",e=>{S.category=e.target.value;S.page=0;renderDocs()});
  topic.addEventListener("change",e=>{S.topic=e.target.value;S.page=0;renderDocs()});
@@ -92,6 +128,10 @@ function mount(root){
  group.addEventListener("change",e=>{S.imageGroup=e.target.value;S.imagePage=0;renderImages()});
  $("reference-image-prev").addEventListener("click",()=>{S.imagePage--;renderImages();section.scrollIntoView({block:"start"})});
  $("reference-image-next").addEventListener("click",()=>{S.imagePage++;renderImages();section.scrollIntoView({block:"start"})});
+ $("reference-master-search").addEventListener("input",e=>{S.masterQuery=e.target.value.toLowerCase();S.masterPage=0;renderMaster()});
+ $("reference-master-filter").addEventListener("change",e=>{S.masterFilter=e.target.value;S.masterPage=0;renderMaster()});
+ $("reference-master-prev").addEventListener("click",()=>{S.masterPage--;renderMaster();section.scrollIntoView({block:"start"})});
+ $("reference-master-next").addEventListener("click",()=>{S.masterPage++;renderMaster();section.scrollIntoView({block:"start"})});
  S.mounted=true;renderDocs();
 }
 async function show(root){
