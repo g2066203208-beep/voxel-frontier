@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.30.7**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.30.8**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -228,3 +228,5 @@
 | 2026-11-13 15时 | **v0.29.5 PATCH** | S10真实ERA5 19–20m/s稀疏非零2/184080小时频率的Clopper–Pearson敏感性：假设独立小时，95%频率区间1.3157854e-6至3.9246986e-5，既有六seed M4固定下两通道贡献区间见原T062文档；独立小时不可信，不是设计置信界。 | SOURCE 31-bin SHA256 e4058620a36b23bb218103875d4dc5b0711fc45d418b23a2208c2fc9c16c9102；SciPy解析复算PASS，风机物理RUN无，12阶段0/12。 | [T062原研究文件](../experiments/T062/S10_ERA5_ZERO_TAIL_IDENTIFIABILITY_20261113.md)；[科研提交](https://github.com/g2066203208-beep/voxel-frontier/commit/4436bfa6b33c45a7446a930690aef81c120c71b2)。 |
 
 | 2026-11-13 17时 | **v0.29.7 PATCH** | S12期刊§4.24修正DEL四次幂筛查与原始时程四阶矩混称，建立周期数、600s、Neq与年化范围四次幂的精确条件映射及拒绝恒等式；非新物理结果。 | SOURCE历史rainflow SHA256 b362bcd7c37ccc56e21035de39448b5e761ec03f371b6b2f3eb30f41b013630d；方法PASS，Miner/缺箱HOLD；12阶段0/12。 | [期刊正文](../manuscript/journal-wind-fatigue-results.md)；[commit](https://github.com/g2066203208-beep/voxel-frontier/commit/ea34ff83fa043357babb6a1b49019295985e2f89)。 |
+
+| 2026-11-14 12时 | **v0.30.8 PATCH** | S10历史72行雨流旧/修正对照：新增可复用配对六seed bootstrap JS与期刊§4.27两行统计表；20,000次、固定随机种子、Mx放大2.711841（百分位2.526745–2.909949）、My放大2.158878（1.394863–3.807152）。 | SOURCE blob e03bdb1ddc98daa2e8726b0fe1b11a858af03b27；V8真实源复算PASS，Node原生尚未运行；仅条件seed统计，96.1082%缺箱/Miner/同态W HOLD，12阶段晋级0/12。 | [JS](../experiments/T062/s10_paired_rainflow_bootstrap_20261114.mjs)；[期刊§4.27](../manuscript/journal-wind-fatigue-results.md)；[科学提交](https://github.com/g2066203208-beep/voxel-frontier/commit/e2a36733e6f0ea9d5676cf1d2577a2457c03b652)。 |
