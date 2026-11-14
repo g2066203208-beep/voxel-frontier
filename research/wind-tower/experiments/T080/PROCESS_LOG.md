@@ -1,3 +1,15 @@
+## 2026-11-14 17:40｜用户本机158m双模型设置92项归档与唯一工作室内嵌（非Abaqus）
+
+READ-BEFORE-WRITE：已读根/研究AGENTS、COMMAND_ROOM最新S11交接（开工原HEAD aa3b872ec2160042d102b86648f7dc1bbf965083）、白皮书v0.30.13、T080过程；用户2026-11-14 16:36报告全文直接提供于本轮对话。SOURCE=**USER_SUPPLIED_LOCAL_MCP_REPORT**，报告所述本机原件`D:\Codex-research-native\JOINT_VIEW_20261114\CURRENT_TOWER_SETTINGS.json`与`D:\Codex-research-native\EONLY_THESIS_ALIGNED_20261111\REPAIR_AND_VALIDATION_REPORT.md`**本轮未直接读取**；没有Abaqus/CAE/INP/ODB新读取、审查、准备或求解。报告数据不能冒充原件哈希验收。
+
+DOC/TAB=把完整报告整理成**9组92项**当前设置/历史验证分域：[Markdown](../../models/CURRENT_TOWER_SETTINGS_20261114.md) commit 8fe6a5c6，[JSON](../../models/CURRENT_TOWER_SETTINGS_20261114.json) commit f2bc6213；当前展示工程`TOWER_AND_FOUNDATION_SEPARATE.cae`、塔架模型`DTU158_HybridTower_Global_RNA_OFFICIAL_RP`、`FOUNDATION_COLLEAGUE`独立未连接、31组嵌入环筋/31组纵筋、BF1 36×140mm²×1280MPa=6.4512MN、30处×6DOF线性弹簧、RNA、Gravity/Modal/E-only及2×32040点@0.005s地震输入均逐项入库；**当前Jobs=0**，历史`DTU158_ALIGNED_GM_VERIFY.odb`中的四阶频率、PT轴力6.359523MN、竖向合反力25.806843MN**严格标为独立历史修复结果**。质量重复计入约10.155t、30段接缝线性化、统一5%阻尼、E-only完整时程未运行、W/E/WE未完成均列为HOLD，不等于新的物理验收。
+
+STUDIO=仅更新原有Paper Studio：新增`src/current-model.ts`的完整92项**原位阅读+筛选**（commit 8b90ac51），现有`src/main.ts`左导航加入“当前工程设置 · 11.14”（commit af83600a），`src/style.css`支持小屏/表格（commit 53043d7），历史`src/engineering.ts`三维模型来源另标T070（commit f3fdb884），`src/current-model.test.ts`验证来源/条数/独立历史归属（commit c6d62e61），研究总README索引（commit 7f1cc9d5）；未另建工作室，也未把文本假称为实时CAE三维网格。
+
+RUN=独立[GitHub Actions #43581408696](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43581408696)、job #132406726460：**completed/success**，Node22 `npm test` **21/21 PASS, 0 FAIL**，`tsc --noEmit && vite build` PASS，stdout `CURRENT_TOWER_STUDIO_SOURCE_TEST_AND_TYPESCRIPT_BUILD_PASS`。工作流`.github/workflows/current-model-studio-source-ci.yml` commit cfc5e747，只有源测试/构建，无求解器。REF/STANDARD/OFFICIAL=本次无新增规范或论文来源；FIG=0；TAB=92项JSON/MD原文归档；SOURCE深度=user-report而非原件，构建PASS不代表物理或网站发布PASS。
+
+状态：白皮书预计v0.30.13→v0.30.14 PATCH；正式S01–S12仍0/12 PASS、DLC1.2=0/126、真实E/WE与材料Miner HOLD。网站Pages的正式发布工作流只监听`main`；PR #42仍Draft，不合并、不宣称在线网站已经更新。下一责任：本ChatGPT完成版本/指挥室交接与GitHub回读；如未来有另行授权的本机源文件可增补原件身份，本助手不触碰本机CAE工作。
+
 ## 2026-11-14 17时后｜S11区间Pareto稳健支配方法源码（非物理验收）
 
 SOURCE=既有S11二次代理准入程序 blob 50705cd38b6eca45f1c0db4a2a72ae93c1f33d73；新增方法源码 [s11_interval_pareto_admission_20261114.mjs](../../manuscript/final-thesis/assemble/s11_interval_pareto_admission_20261114.mjs)，blob c6d79f2620708542eacd352b74d04515f1dfe087，科学提交 a6ae022bbff3dfef7bbbb6e0610fc2a69a8d70e9。方法将质量、损伤、漂移最小化与频率最大化统一为区间最坏端支配判据；对约束区分robust_feasible与possible_feasible，拒绝重复ID、无穷值及反序区间；自测试含确定支配、区间重叠不得支配及三类坏输入。**本轮只完成GitHub源码持久化和远端回读，原生Node CLI未运行**（本地容器无法解析GitHub raw域名），不能声称6/6测试已执行；所有数据仅解析fixture，非真实DOE、风机设计可行性或材料损伤。REF/STANDARD/OFFICIAL无新增；RUN=NOT_RUN；FIG/TAB=无；SHA256=NOT_MEASURED；12阶段晋级0/12，DLC1.2 0/126。下一唯一动作：在可用原生Node环境运行现有自测试并修复失败，随后以真实DOE响应替换fixture；若真实DOE不可得则切S12现有正文，不继续方法堆叠。禁区未触碰。
