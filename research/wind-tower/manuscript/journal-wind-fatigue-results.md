@@ -587,15 +587,15 @@ This diagnostic supplies a falsifiable **seed-influence** claim: for the fixed a
 
 The preceding wind-bin partial-identification result concerns the support of the *wind-speed* distribution. It does not, by itself, resolve the distinct problem of identifying the distribution of turbine *operating states* conditional on wind speed. Let $H_b$ denote ERA5 hours in bin $b$, $q_{s|b}$ the proportion of those hours spent in operating state $s$, and $r_{b,s}$ the fourth-power moment rate of the specified tower-load channel (in $(\mathrm{MN\,m})^4/\mathrm{h}$) under that state. The all-hours annualized screening moment is
 
-$
+$$
 K_{\mathrm{all}}=\frac{8760}{H}\sum_b H_b\sum_s q_{s|b}r_{b,s},\qquad \sum_s q_{s|b}=1.
-$
+$$
 
 Here $H=184080\,\mathrm{h}$ is the historical exposure denominator; the factor $8760/H$ defines an average non-leap-year equivalent and does not mean that 21 years contained only $21\times8760$ actual hours. If the scientific estimand is instead *operating-hour-conditional*, its denominator and state mixture must change together:
 
-$
+$$
 K_{\mathrm{op}|\mathrm{op}}=8760\frac{\sum_b H_b q_{\mathrm{op}|b}r_{b,\mathrm{op}}}{\sum_b H_b q_{\mathrm{op}|b}},
-$
+$$
 
 provided the operating-hours denominator is nonzero. The first expression includes whatever load rates are defined for shutdown/parked states; the second explicitly conditions on operation and must not be interpreted as an all-hours annual moment. For a material damage calculation, $r$ must be replaced by a material-specific damage rate after local stress and fatigue-law validation, not by a load DEL raised to the fourth power.
 
