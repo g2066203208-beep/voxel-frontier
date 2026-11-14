@@ -1,3 +1,10 @@
+## 2026-11-14 19时后｜Ch4§4.2.4新公式已进入永久导师Word/PDF（S12；非CAE）
+
+- SOURCE：第四章新正文commit 82453ba0/源blob 0beff9b5；最新同次checkout六章源SHA256 `31f323039484d50b2426d80f5c10d20bb03992e8ce5a63f5e5dbe084d05bfdb4`。旧265页Word来自bd950076源，已由本次新版本取代，旧二进制在Git History可追溯。
+- RUN：真实 [构建Actions #43588545415](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43588545415) completed/success，artifact 14111606048；Word SHA256 `b355bac8324bee0a5d7715df51a8cfd6000696a2a3cf9899b0bba9e40d7f0d95`、5,263,255 B，六章+附录A、30条书目、47图、63表、801个OMML公式对象，PDF 265页，全文自动文本位置检查无越界/空白页，假SHA拒绝测试成功。源状态仅为导师研究稿，不代表送审物理PASS。
+- ARCHIVE：修改[归档工作流](../../../.github/workflows/s12-archive-current-20261114.yml)到已确认运行ID+源SHA+Word二进制SHA强校验（commit 0e085afa），[归档Actions #43589481448](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43589481448) completed/success；实际研究分支永久提交 `5126f8d299e34c3e73c6fbbd808529780a3fcd3c`，远端[产物及收据](../../manuscript/final-thesis/deliverables/20261114/)的README与ASSEMBLY_SOURCE_MANIFEST已回读，明确source_git_commit 82453ba0及新Word SHA。历史Word仍存，不动main/PR合并。
+- LIMIT：265页全人工视觉检查、Word分页、GB/T7714及历史插图逐图继承尚未通过；无材料局部应力/全年Miner、正式E/W/WE或结构Pareto新增物理验证；正式12阶段仍0/12，DLC1.2正式0/126。REF/STANDARD/OFFICIAL无新增；FIG/TAB沿用现47图/63表，不虚增源实验。
+
 ## 2026-11-14 19时｜S12 Ch4§4.2.4 长期概率与运行状态估计量统一（非CAE）
 
 SOURCE=现行Ch4 blob 661313b6、ERA5历史184080h及三箱7164h（既有§4.7.28）；REF=既有REF023/REF143原页索引，本轮未新增原文读取；STANDARD=无新增授权条文；RUN=解析公式推导、非物理RUN；FIG/TAB=无新增图表。将原先含糊的“P_j求和为1或条件归一化”改为无条件p_j、箱内运行状态r_jk与短时局部材料损伤率的联合概率年化公式，写明8760 h/year与闰年处理，给出条件路径等价式和三箱错误归一化25.695倍反例；原始Ch4新增提交82453ba0de6ab27b34092aadb4ad7d4f0c127d6b，新blob 0beff9b5791af3dac20b98e52faab9f204377198。该公式为方法纠错而非新物理结果；当前无完整状态概率、材料局部应力及完整风箱，年度Miner/寿命HOLD，12阶段晋级0/12、正式DLC1.2 0/126。现行265页Word在本提交之前构建，尚未包含本次修订，需下次重新装配。禁止Abaqus/CAE、冻结母本、main、PR合并及昂贵RUN。
