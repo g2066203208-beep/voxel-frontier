@@ -18,7 +18,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: S12_CURRENT_20261114_SIXCHAPTER_WORD_PDF_SOURCE_QA
-          run-id: 43593104348
+          run-id: 43600833734
           github-token: ${{ github.token }}
           path: stage
       - name: Verify source identity and exact DOCX/PDF receipts
@@ -34,10 +34,10 @@ jobs:
           assert len(manifest)==len(docs)==len(pdfs)==1,(manifest,docs,pdfs)
           m=json.loads(manifest[0].read_text())
           assert m['stage']=='SOURCE_ASSEMBLED_NOT_THESIS_OR_PHYSICS_PASS'
-          assert m['source_git_commit']=='d1aeee95338cc0b548285e24b165bf67cf757e40'
+          assert m['source_git_commit']=='cf1c157380b9928d80c119fba6e67cc756e22cbd'
           assert m['reference_count']==30 and m['figure_occurrences']==47
           def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
-          assert sha(docs[0])=='f668af5c7c8597bded6e9195835f853d4b786a5043e23cc1d0a9da2a523260b6'
+          assert sha(docs[0])=='ec6af12b40f26163dbd45a83a430590c88aa6ae7fddd2dee9f2e37c73a5136a5'
           base=root/'research/wind-tower/manuscript/final-thesis'
           for s in m['chapters']:
               path=base/'chapters'/s['name']
@@ -49,7 +49,7 @@ jobs:
           assert len(qa)==1
           q=json.loads(qa[0].read_text())
           assert q['status']=='AUTOMATED_ALL_PAGE_TEXT_POSITION_AND_TABLE_GEOMETRY_QA_PASS'
-          assert q['pdf_pages']==185 and not q['offpage_text_spans'] and not q['blank_page_indices']
+          assert q['pdf_pages']==186 and not q['offpage_text_spans'] and not q['blank_page_indices']
           g=q['horizontal_table_header_geometry']
           assert g['x_points'][1]-g['x_points'][0]>35 and g['x_points'][2]-g['x_points'][1]>35
           assert max(g['y_points'])-min(g['y_points'])<25
@@ -72,14 +72,15 @@ jobs:
 
           This is a reading draft, NOT a thesis submission or physical acceptance.
           Six current Markdown chapters, 30 references and appendix A were included.
-          Includes the revised Ch4 §4.2.4 annual damage probability estimand;
-          previous 265-page vertical-table version remains recoverable in Git history.
+          Includes Ch4 §4.2.4 annual damage estimator and §4.3.5 source-verified fatigue input;
+          BF1 current branch must not reuse historical BF8 effective prestress.
+          previous 265-page vertical-table version and 185-page corrected version remain in Git history.
           Version length differs because source at build commit changed as well as layout.
 
-          Source commit: d1aeee95338cc0b548285e24b165bf67cf757e40
-          Successful build: https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43593104348
-          Word SHA256: f668af5c7c8597bded6e9195835f853d4b786a5043e23cc1d0a9da2a523260b6
-          PDF has 185 pages; automatic page scan found no blank/off-page text. PDF table-header geometry check rejects collapsed vertical table layouts.
+          Source commit: cf1c157380b9928d80c119fba6e67cc756e22cbd
+          Successful build: https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43600833734
+          Word SHA256: ec6af12b40f26163dbd45a83a430590c88aa6ae7fddd2dee9f2e37c73a5136a5
+          PDF has 186 pages; automatic page scan found no blank/off-page text. PDF table-header geometry check rejects collapsed vertical table layouts.
           Word has 47 embedded research figures, 63 tables, 812 OMML equations. Reference.docx explicitly defines Pandoc Compact table style.
           Manifests and automated source/structural/page QA receipts are alongside.
           The August, September and previous November Word originals are untouched.
@@ -93,7 +94,7 @@ jobs:
           # only the verified new binary deliverables in this confined directory.
           git add -f "$output"
           git diff --cached --quiet && { echo "VERIFIED_DELIVERABLE_ALREADY_PRESENT"; exit 0; }
-          git commit -m "docs(S12): archive corrected 185-page horizontal-table Word PDF and receipts"
+          git commit -m "docs(S12): archive 186-page updated fatigue-source Word PDF and receipts"
           git fetch origin research/t080-seismic-integration-gates-20261022
           git rebase origin/research/t080-seismic-integration-gates-20261022
           git push origin HEAD:research/t080-seismic-integration-gates-20261022
