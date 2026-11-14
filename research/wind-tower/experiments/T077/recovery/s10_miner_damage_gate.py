@@ -23,7 +23,8 @@ from pathlib import Path
 
 FIELDS = ('material_id','bin_id','seed_id','bin_probability','duration_s',
           'expected_seeds_per_bin','stress_range_MPa','mean_stress_MPa','cycles','N_allow_cycles',
-          'stress_owner','material_model_ref','stress_source_sha256')
+          'stress_owner','material_model_ref','stress_source_sha256',
+          'model_branch','initial_state_sha256')
 SECONDS_PER_YEAR = 8760 * 3600
 ERA5_31BIN_SHA256 = 'e4058620a36b23bb218103875d4dc5b0711fc45d418b23a2208c2fc9c16c9102'
 
@@ -83,6 +84,10 @@ def calculate(raw, years=20.0, operating_fraction=None, probability_basis='condi
     probabilities = {}
     expected_seed_counts = {}
     material_models = {}
+    material_branches = {}
+    material_initial_states = {}
+    global_branches = set()
+    global_initial_states = set()
     seen = set()
     for row in rows:
         material, bin_id, seed = (row[k].strip() for k in ('material_id','bin_id','seed_id'))
@@ -94,6 +99,20 @@ def calculate(raw, years=20.0, operating_fraction=None, probability_basis='condi
         sha = row['stress_source_sha256'].strip().lower()
         if not model or len(sha) != 64 or any(c not in '0123456789abcdef' for c in sha):
             raise ValueError('missing material model or stress source SHA256')
+        branch = row['model_branch'].strip()
+        if branch not in ('BF1_CURRENT','BF8_CODE_DESIGN'):
+            raise ValueError('invalid or missing model_branch')
+        initial_state_sha = row['initial_state_sha256'].strip().lower()
+        if len(initial_state_sha) != 64 or any(c not in '0123456789abcdef' for c in initial_state_sha):
+            raise ValueError('invalid initial_state_sha256')
+        if material in material_branches and material_branches[material] != branch:
+            raise ValueError('mixed BF1/BF8 model branches')
+        if material in material_initial_states and material_initial_states[material] != initial_state_sha:
+            raise ValueError('mixed initial state provenance for material')
+        material_branches[material] = branch
+        material_initial_states[material] = initial_state_sha
+        global_branches.add(branch)
+        global_initial_states.add(initial_state_sha)
         p = _positive(row['bin_probability'], 'bin_probability')
         if p > 1:
             raise ValueError('probability exceeds 1')
@@ -109,7 +128,7 @@ def calculate(raw, years=20.0, operating_fraction=None, probability_basis='condi
         count = _positive(row['cycles'], 'cycles', True)
         nallow = _positive(row['N_allow_cycles'], 'N_allow_cycles')
         key = (material,bin_id,seed)
-        meta = (p,duration,sha,model,expected_seeds)
+        meta = (p,duration,sha,model,expected_seeds,branch,initial_state_sha)
         if key in settings and settings[key] != meta:
             raise ValueError('inconsistent seed metadata')
         settings[key] = meta
@@ -129,6 +148,8 @@ def calculate(raw, years=20.0, operating_fraction=None, probability_basis='condi
             raise ValueError('duplicate cycle record')
         seen.add(identity)
         samples[key] += count/nallow
+    if len(global_branches) != 1 or len(global_initial_states) != 1:
+        raise ValueError('mixed model branch or initial PT/gravity state across materials')
     out = []
     for material in sorted(material_models):
         bins = sorted({b for (m,b) in probabilities if m == material})
@@ -195,6 +216,8 @@ def calculate(raw, years=20.0, operating_fraction=None, probability_basis='condi
                      if seed_sampling_estimable else None)
         relative_se = (annual_se/annual if annual > 0 else None) if annual_se is not None else None
         out.append({'material_id':material,'material_model_ref':material_models[material],
+                    'model_branch':material_branches[material],
+                    'initial_state_sha256':material_initial_states[material],
                     'bin_count':len(bins),'bin_breakdown':bin_breakdown,
                     'annual_damage_conditional':annual,  # deprecated field name; corrected value
                     'annual_damage':annual,'probability_basis':probability_basis,
@@ -215,7 +238,7 @@ def calculate(raw, years=20.0, operating_fraction=None, probability_basis='condi
                         'fixed wind probabilities, operating fraction and material law; '
                         'sample-variance SE only, no confidence interval or physical uncertainty'),
                     'status':'CONDITIONAL_NO_PHYSICAL_PASS'})
-    return {'source_sha256':hashlib.sha256(raw).hexdigest(),'input_schema_version':3,
+    return {'source_sha256':hashlib.sha256(raw).hexdigest(),'input_schema_version':4,
             'probability_basis':probability_basis,'operating_fraction':operating_fraction,
             'row_count':len(rows),
             'seconds_per_year':SECONDS_PER_YEAR,'results':out}
@@ -226,7 +249,8 @@ def selftest(probability_source=None):
     base = dict(material_id='SYNTH_STEEL',duration_s='100',expected_seeds_per_bin='2',
                 stress_range_MPa='10',mean_stress_MPa='5',N_allow_cycles='1000',
                 stress_owner='VERIFIED_LOCAL_MATERIAL_STRESS',
-                material_model_ref='SYNTHETIC_TEST_ONLY',stress_source_sha256='a'*64)
+                material_model_ref='SYNTHETIC_TEST_ONLY',stress_source_sha256='a'*64,
+                model_branch='BF1_CURRENT',initial_state_sha256='b'*64)
     rows=[]
     for b,p,counts in [('B1',.25,[1,2]),('B2',.75,[3,5])]:
         for i,count in enumerate(counts):
@@ -278,7 +302,9 @@ def selftest(probability_source=None):
     assert abs(breakdown[1]['max_seed_damage_per_second']-.00005)<1e-14
     tests=[dict(rows[0],stress_owner='LOAD_DEL'),
            dict(rows[0],stress_source_sha256='UNKNOWN'),
-           dict(rows[0],N_allow_cycles='0')]
+           dict(rows[0],N_allow_cycles='0'),
+           dict(rows[0],model_branch='UNIDENTIFIED'),
+           dict(rows[0],initial_state_sha256='UNKNOWN')]
     for altered in tests:
         try: calculate(encode([altered]+rows[1:]),operating_fraction=.5)
         except ValueError: pass
@@ -314,7 +340,7 @@ def selftest(probability_source=None):
     source_check = (validate_era5_probability_source(probability_source)
                     if probability_source is not None else None)
     return {'status':'PASS_SYNTHETIC_ONLY','annual_expected':expected,
-            'design_20y_expected':20*expected,'negative_tests':11,
+            'design_20y_expected':20*expected,'negative_tests':13,
             'seed_contract_tests':5,'bin_contribution_checks':4,
             'probability_contract_negative_tests':5,
             'conditional_unconditional_equivalence':True,'operating_fraction':.5,
@@ -384,7 +410,9 @@ def integration_selftest():
                         'stress_range_MPa':str(rng),'mean_stress_MPa':str(mean),
                         'cycles':str(count),'N_allow_cycles':str(n_allow),
                         'stress_owner':'VERIFIED_LOCAL_MATERIAL_STRESS',
-                        'material_model_ref':model,'stress_source_sha256':sha})
+                        'material_model_ref':model,'stress_source_sha256':sha,
+                         'model_branch':'BF1_CURRENT',
+                         'initial_state_sha256':'b'*64})
 
     def encode(items):
         out = io.StringIO(newline='')
@@ -456,6 +484,12 @@ def integration_selftest():
     reject(lambda:calculate(encode([dict(r,material_model_ref='WRONG_MODEL')
            if r['material_id']=='SYNTH_CONCRETE' and r['seed_id']=='S01'
            else r for r in rows]),operating_fraction=.5), 'mixed material')
+    reject(lambda:calculate(encode([dict(r,model_branch='BF8_CODE_DESIGN')
+            if i==0 else r for i,r in enumerate(rows)]),
+            operating_fraction=.5), 'mixed BF1/BF8')
+    reject(lambda:calculate(encode([dict(r,initial_state_sha256='c'*64)
+            if i==0 else r for i,r in enumerate(rows)]),
+            operating_fraction=.5), 'mixed initial state')
     reject(lambda:calculate(raw_cycles), 'operating_fraction required')
 
     return {'status':'PASS_SYNTHETIC_END_TO_END_ONLY',
