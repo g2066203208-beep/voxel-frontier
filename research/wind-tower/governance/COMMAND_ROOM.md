@@ -1,3 +1,11 @@
+## 2026-11-14 18时｜论文/GitHub/唯一工作室全链审查收尾（白皮书v0.30.15）
+
+- 本次READ-BEFORE-WRITE START见本文件前段（开工head `98db5886cce4e704b6db5f7387078f4a7e54b2ec`），仅处理文献/论文结构/源版本归档及单体工作室，不做任何Abaqus/CAE执行、审核或派工。当前HEAD在收尾前为`2e5cbb0f89a8710f3cfd8258d7ea1e20a1782ec7`；PR #42 Open/Draft。
+- **真实成果**：[完整14项审查/证据链接/整改分级](RESEARCH_GLOBAL_AUDIT_20261114.md) commit d07986e8，直接核六章、3个历史Word（189/147/193页）、原始何泽瑜90页PDF（10,193,750字节）、11张何原图+38张Ch1–3+30张Ch4+5张学位论文对照原图，36历史风、4ETM×31段真实源收据、ESM波与真实E-only步骤尚未运行的边界。来源标签纠正为“Codex本机Abaqus MCP读取确认/用户转录、本助手未二次读取JSON/CAE/ODB”；Ch2§2.1.5区分BF1当前双模型、历史修复Modal、T057 BF8候选。
+- **修复**：Ch3§3.5.10与Ch4§4.7.27–29误置于`# 工作区证据与门禁（不进入最终Word）`后，已逐段原文迁回正确章节，Ch4§4.10.1移动到4.10标题后；Ch3/Ch4最新blob 7788b98c/661313b6，Ch2新blob cf13105a。何PDF旧“待上传”错误清单已纠正；三个已有入口`research README`、`final-thesis README`、`CURRENT_GAPS`均回链本次总审查。唯一Paper Studio `src/engineering.ts`研究索引替换旧main叙述为当前六章、模型、参考原件及14个问题状态，`src/current-model.ts`明确Codex来源。
+- **真实CI**：[GitHub Actions #43584202996](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43584202996)原生Node22 **22/22 test PASS、TS/Vite BUILD PASS**；`src/current-model.test.ts`新增4节Word排除门禁以防再次遗漏；前面构建失败（HTML模板中的字面反引号TS1005）已改并保留日志，不冒称从未失败。[S12旧CI #43578654634](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43578654634)仍因旧Ch3源SHA不符失败，193页Word只是11/13历史精修，最新Word还**没有**生成。白皮书**v0.30.14→v0.30.15** commit 2e5cbb0f；T080日志commit f85aaa74。
+- **状态与下一唯一非CAE动作**：12阶段正式0/12、计划DLC1.2正式0/126（保留历史36风/31段/Word成果），纯风外载归属、600s跨批同态、材料Miner、完整E-only实际响应、W/E/WE及实际结构优化HOLD。优先修复S12源哈希装配链并给出最新可编辑Word、全页图/式/引文QA；不做/派发Abaqus任务、不改T057/T070冻结母本、不运行昂贵物理、不合并Draft PR、不宣称Pages发布。
+
 ## 2026-11-14 17:54｜论文、GitHub、工作室全链整体验证及整改台账 START（非CAE）
 
 - 执行者：ChatGPT；read_base_sha=`98db5886cce4e704b6db5f7387078f4a7e54b2ec`，PR #42 Open/Draft。已读根/研究AGENTS、当前指挥室17:40最近交接、白皮书v0.30.14、T080最新过程、S01–S12关键路径、论文STATUS与WORKSPACE_MASTER。
