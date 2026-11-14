@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.30.13**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.30.14**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -31,6 +31,7 @@
 
 | 日期（Asia/Shanghai） | 白皮书版本 | 开发与证据增量 | 科学状态 | 远端事务 |
 |---|---|---|---|---|
+| 2026-11-14 17:40 | **v0.30.14 PATCH** | 当前`TOWER_AND_FOUNDATION_SEPARATE.cae`用户提供本机MCP报告经9类92项逐项源级归档为MD/JSON，当前模型/独立历史修复验证严格区分；同一Paper Studio中新增`当前工程设置`原位检索页，旧T070三维另标历史，单一仓库README索引。 | 原始本机JSON/CAE/ODB未读取，只是用户报告归档；[GitHub Actions #43581408696](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43581408696) Node22测试**21/21 PASS**、TypeScript/Vite构建PASS，非物理或Pages部署；当前Jobs=0，完整E-only未运行、W/E/WE与材料疲劳等保持HOLD，12阶段0/12。 | [模型92项Markdown](../models/CURRENT_TOWER_SETTINGS_20261114.md)、[可机读JSON](../models/CURRENT_TOWER_SETTINGS_20261114.json)、[同工作室渲染源码](../../src/current-model.ts)、[T080过程](../experiments/T080/PROCESS_LOG.md)。 |
 | 2026-11-14 17时后 | **v0.30.13 PATCH** | S11新增区间Pareto稳健支配/可能可行区分与反例拒绝式Node模块，继承已有二次代理准入，不生成物理响应。 | GitHub源码已持久化；原生Node自测NOT_RUN、真实DOE/物理约束HOLD；12阶段晋级0/12，DLC1.2 0/126。 | [源码](../manuscript/final-thesis/assemble/s11_interval_pareto_admission_20261114.mjs)、[科学提交](https://github.com/g2066203208-beep/voxel-frontier/commit/a6ae022bbff3dfef7bbbb6e0610fc2a69a8d70e9)。 |
 | 2026-11-14 17时 | **v0.30.12 PATCH** | S06四ETM历史31段来源恢复核查：16件SOURCE归档、4×31×12001=1,488,124行、1,296,108同批相邻接缝时点；12跨批边界72个相关系数0.905575–0.999999958且均零最优离散延迟，但不能证明4次600s运行完全同态；历史295通道只有RotThrust/RtAero系数等，未保存可直接闭合整塔纯气动力六分量。新增12行真实边界表、9源hash收据、可运行Node脚本及只读原生CI；Ch3§3.8.3已纳入。 | [GitHub Actions #43578427372](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43578427372) native Node22 SUCCESS（6项坏源拒绝），artifact #14107557674；原16 ZIP二进制本轮未重下载、跨批完整同态和外力/惯性去重仍HOLD。S06 PARTIAL、S07/S09 HOLD、12整阶段0/12，DLC1.2 0/126。 | [12行证据表](../experiments/T077/recovery/S06_4ETM_12BOUNDARY_AERO_HOLD_20261114.csv)、[科研来源账](../experiments/T077/recovery/S06_4ETM_CROSSBATCH_EXTERNAL_RECEIPT_20261114.json)、[程序](../experiments/T077/recovery/s06_4etm_external_source_admission_20261114.mjs)、[Ch3正式正文](../manuscript/final-thesis/chapters/03_场址风环境与整机随机风控制载荷.md)。 |
 | 2026-11-14 16时后 | **v0.30.11 PATCH** | S06/S07 11个真实历史来源跨收据闭合：18/18 NTM OUTB身份、同位峰值与运行/控制记录完整join；100—700s×0.05s=216018历史塔底六分量行。31/31段仅映射(9+9+9+4)；原生4批为0.1s STEADY，非600s NTM。建立只读源级拒绝式Node检查器并用V8真实源PASS+5篡改拒绝PASS；新增18行CSV、JSON、科学说明。 | 仅SOURCE/程序门禁增量；独立原OUTB重解码/原生Node CLI NOT_RUN；纯外气动力、惯性归属、31段全塔同步、WE及材料Miner HOLD，整阶段0/12、正式DLC1.2 0/126。 | [S06证据核验](../experiments/T062/S06_W_CROSSSOURCE_ADMISSION_20261114.md)、[源码](../experiments/T062/s06_w_crosssource_admission_20261114.mjs)、[T080过程](../experiments/T080/PROCESS_LOG.md)。 |
