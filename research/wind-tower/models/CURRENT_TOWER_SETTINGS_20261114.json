@@ -2,15 +2,17 @@
   "schema_version": "1.0",
   "snapshot_id": "DTU158_JOINT_VIEW_20261114_1636",
   "report_timestamp": "2026-11-14 16:36 (Asia/Shanghai)",
-  "evidence_status": "USER_SUPPLIED_LOCAL_MCP_REPORT_NOT_INDEPENDENTLY_VERIFIED",
-  "note": "这是用户提供的本机Abaqus MCP读取文字报告的版本化归档；本轮仅做文档整理与网页展示，未直接读取CAE/ODB/原始JSON或原生计算日志。",
+  "evidence_status": "CODEX_ABAQUS_MCP_LIVE_READ_CONFIRMED_RELAYED_TRANSCRIPT_ORIGINAL_FILE_NOT_REREAD",
+  "note": "2026-11-14 16:36的92项设置由用户授权的Codex通过本机Abaqus MCP实际读取确认，用户将读取结果全文转入本对话；本助手据此归档。Codex原生读取事实与本助手未重新访问原始CAE/ODB/JSON是两件不同的事；没有新增求解或独立物理验收。",
   "provenance": {
-    "source_kind": "USER_SUPPLIED_CONVERSATION_TRANSCRIPT_OF_LOCAL_MCP_READ",
+    "source_kind": "CODEX_LIVE_ABAQUS_MCP_READ_RELAYED_BY_USER_NOT_NATIVE_REREAD_BY_THIS_ASSISTANT",
     "original_configuration_report_windows_path": "D:\\Codex-research-native\\JOINT_VIEW_20261114\\CURRENT_TOWER_SETTINGS.json",
     "historical_validation_report_windows_path": "D:\\Codex-research-native\\EONLY_THESIS_ALIGNED_20261111\\REPAIR_AND_VALIDATION_REPORT.md",
     "original_files_available_to_this_assistant": false,
     "independent_native_verification_this_turn": false,
-    "distinction": "当前展示工程的模型/步骤与独立修复工程既有结果分属不同文件；禁止将两者作为同一个已求解工程。"
+    "distinction": "当前展示工程的模型/步骤与独立修复工程既有结果分属不同文件；禁止将两者作为同一个已求解工程。",
+    "codex_confirmed_native_mcp_read_as_reported_by_user": true,
+    "data_transferred_as_full_text_conversation": true
   },
   "kpis": [
     {
@@ -26,7 +28,7 @@
     {
       "label": "环筋组数",
       "value": "31",
-      "detail": "报告称已恢复参与"
+      "detail": "Codex确认31组全部恢复参与"
     },
     {
       "label": "当前Jobs",
@@ -186,8 +188,8 @@
         },
         {
           "parameter": "原生检查结论",
-          "value": "历史报告称未出现未嵌入或过约束报错",
-          "qualification": "本次未重新读取本机日志"
+          "value": "Codex原生读取报告：未报未嵌入或过约束错误",
+          "qualification": "本助手未二次读取日志，已保留Codex报告事实"
         },
         {
           "parameter": "质量重复计入风险",
