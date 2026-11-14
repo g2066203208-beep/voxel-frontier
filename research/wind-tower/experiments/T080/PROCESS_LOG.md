@@ -1,3 +1,11 @@
+## 2026-11-14 20时后｜S12论文PDF隐藏表格错版的真实修复与185页永久归档（非CAE）
+
+- SOURCE：已归档旧265页DOCX/PDF，运行ID#43588545415，SHA256 `b355bac8324bee0a5d7715df51a8cfd6000696a2a3cf9899b0bba9e40d7f0d95`；从Actions下载原始产物后实际全页文本分析与抽样可视检查。旧第8、12页等管道表头同一x纵向排列，自动零空白/零越界不能证明表格可读。
+- ROOT/CHANGE：Pandoc表格单元格引用`Compact`样式但reference.docx未定义；给`s12_build_advisor_docx.py`模板增加`Compact`段落样式(9.5pt/1.15行距/0段后)，而不是逐表硬改数字；科学源、前述原始图和物理数据不改。生成器提交`517e257334c91bbe932d77b5c77cc8c8c41e5084`；`s12-current-six-chapter-docx.yml`增未定义样式拒绝及3列横向表头实测门禁，提交`d1aeee95338cc0b548285e24b165bf67cf757e40`；过时固定SHA旧版构建仅限手动复现，提交`7d8274e256a40f4a9383d0c81ca16b12aa1e2eaf`。
+- RUN：GitHub原生[新构建#43593104348](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43593104348) completed/success，源提交`d1aeee95`及SHA256 `ea1e9469868566abbc6289a7c19fa95f067ffce18acbdbe90f1ec25559eec75f`，Word SHA256 `f668af5c7c8597bded6e9195835f853d4b786a5043e23cc1d0a9da2a523260b6`、5,264,805 bytes，47图/63表/812 OMML，PDF 185页、无自动空白/文字越界、表头x位置85.15/170.20/272.20pt，y位置565.23/567.28/567.28pt（横向排列）。与本地试验204页差异包含并行Ch4§4.7.30新增，不能全归因于修表。
+- ARCHIVE：[归档Actions#43593614731](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43593614731)第一次`fatal error in commit_refs_rules`，复核所有源SHA/Word/PDF后重试，第二次`completed/success`；永久[Word/PDF/四收据](../../manuscript/final-thesis/deliverables/20261114/)在PR#42研究分支已回读Word=5,264,805B/PDF=10,022,256B，非临时Actions artifact。原265页旧稿仍保留历史，原始三版历史Word未覆盖。REF/STANDARD/OFFICIAL无新增条款，FIG/TAB沿用47/63，未做Abaqus/CAE/物理RUN。
+- SCIENCE：这是**可读性和文档二进制验收实修**而非全185页人工视觉/Word同页对照/GB/T7714/旧媒体逐图/学位送审PASS；纯气动力、跨批600秒严格同态、材料年Miner、E/W/WE、真实结构Pareto继续HOLD，正式12阶段0/12，DLC1.2=0/126；PR#42 Draft不并main。
+
 ## 2026-11-14 20时｜S12 Ch4§4.7.30 年度载荷四次幂部分识别定理（非CAE）
 
 READ：PR#42 Open/Draft，开工HEAD 5b24673d88796342d364111d6a9f45b137ef659e；研究AGENTS、指挥室v0.30.19、白皮书、MASTER/STATUS、12阶段及T080最近交接。SOURCE：继承§4.7.26/29已核ERA5 184080h、三箱7164h和真实修正雨流载荷四次幂（Mx 3.961131e9、My 6.599138e12 (MN·m)^4/year）；未重新解码原OUTB。RUN：新增非负分解定理与零贡献/任意大缺失率两项构造性反例，明确同定义完整年度载荷四次幂的条件性下界及无有限上界，不是置信下界或Miner损伤。FIG/TAB：继承已有数值，无新增物理图；REF/STANDARD/OFFICIAL无新授权核读。正文commit e622cbbb2a4118aa8cd1defc09f762770c503fac、blob 44ef65d74d36f308b2463ede98662d6601220cd0。12阶段晋级0/12、正式DLC1.2 0/126；未改冻结母本/main，未合并PR，未触碰Abaqus/CAE或昂贵生产RUN。
