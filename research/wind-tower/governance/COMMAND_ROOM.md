@@ -1,3 +1,8 @@
+## 2026-11-14 19时｜GitHub状态总表旧条目纠偏 START（非CAE）
+
+- 执行者：ChatGPT；read_base_sha=`4ad4bb72d5968b4f8ec8aa57c839c0f82bb8d612`；PR#42 Open/Draft。已读根/研究AGENTS、指挥室v0.30.16最近S12交接、白皮书v0.30.16、T080过程、全局14项审查和论文README；再次核查265页Word/PDF归档成功收据及85页工作室证据。
+- 本次仅修复总审查表I03/I11/I12及当前Word行中与后续成功交付矛盾的旧状态、论文README旧装配器过时备注，保留历史失败与HOLD；按规范同步T080过程、白皮书PATCH版本和本指挥室交接。禁止Abaqus/CAE/INP/ODB，禁止物理PASS造假，禁止修改冻结T057/T070、main/合并Draft PR。
+
 ## 2026-11-14 18时后｜S12真实265页Word/PDF永久归档＋同站85原页图库 END（白皮书v0.30.16）
 
 - READ-BEFORE-WRITE START见本文件同日S12开工项（read_base_sha `e214c9c785b17fff6644bc335f6d3945317db267`）；本次收尾前PR#42 HEAD=`067db6dcf05c5b6cddf51f605f5a1aa1c913dc53`、Open/Draft。继承现行Ch1–Ch6、历史三版Word、Codex原生MCP确认BF1当前工程92项、历史36风/ERA5/ESM源；仅处理非Abaqus论文产物、自动构建、原图展示。
