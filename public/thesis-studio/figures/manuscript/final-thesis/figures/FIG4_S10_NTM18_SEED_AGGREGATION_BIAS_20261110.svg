@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="570" viewBox="0 0 1200 570">
+<rect width="1200" height="570" fill="white"/>
+<text x="40" y="44" font-family="Arial" font-size="24" font-weight="bold" fill="#22313d">Six-seed nominal DEL: aggregation operator bias</text>
+<text x="40" y="69" font-family="Arial" font-size="14" fill="#536475">BASE 0 m | three archived NTM wind bins | reference = fixed-azimuth power mean</text>
+<rect x="40" y="105" width="535" height="360" rx="8" fill="#f7fafb" stroke="#dbe3e9"/>
+<text x="58" y="137" font-family="Arial" font-size="20" font-weight="bold" fill="#22313d">m = 4</text>
+<line x1="130" x2="130" y1="151" y2="430" stroke="#e0e6ea"/>
+<text x="130" y="452" font-family="Arial" font-size="12" text-anchor="middle">-10%</text>
+<line x1="180" x2="180" y1="151" y2="430" stroke="#e0e6ea"/>
+<text x="180" y="452" font-family="Arial" font-size="12" text-anchor="middle">-5%</text>
+<line x1="230" x2="230" y1="151" y2="430" stroke="#778994"/>
+<text x="230" y="452" font-family="Arial" font-size="12" text-anchor="middle">0%</text>
+<line x1="280" x2="280" y1="151" y2="430" stroke="#e0e6ea"/>
+<text x="280" y="452" font-family="Arial" font-size="12" text-anchor="middle">5%</text>
+<line x1="330" x2="330" y1="151" y2="430" stroke="#e0e6ea"/>
+<text x="330" y="452" font-family="Arial" font-size="12" text-anchor="middle">10%</text>
+<line x1="380" x2="380" y1="151" y2="430" stroke="#e0e6ea"/>
+<text x="380" y="452" font-family="Arial" font-size="12" text-anchor="middle">15%</text>
+<line x1="430" x2="430" y1="151" y2="430" stroke="#e0e6ea"/>
+<text x="430" y="452" font-family="Arial" font-size="12" text-anchor="middle">20%</text>
+<text x="52" y="212" font-family="Arial" font-size="13" fill="#304653">9.344 m/s</text>
+<line x1="208.92463090176696" x2="230" y1="191" y2="191" stroke="#b65347" stroke-width="6"/>
+<circle cx="208.92463090176696" cy="191" r="4" fill="#b65347"/>
+<text x="202.92463090176696" y="195" font-family="Arial" font-size="12" text-anchor="end" fill="#b65347">-2.108%</text>
+<line x1="230" x2="230" y1="207" y2="207" stroke="#3c9580" stroke-width="6"/>
+<circle cx="230" cy="207" r="4" fill="#3c9580"/>
+<line x1="230" x2="374.2399088285551" y1="223" y2="223" stroke="#365e96" stroke-width="6"/>
+<circle cx="374.2399088285551" cy="223" r="4" fill="#365e96"/>
+<text x="380.2399088285551" y="227" font-family="Arial" font-size="12" text-anchor="start" fill="#365e96">14.424%</text>
+<text x="52" y="295" font-family="Arial" font-size="13" fill="#304653">11.400 m/s</text>
+<line x1="212.64153286701338" x2="230" y1="274" y2="274" stroke="#b65347" stroke-width="6"/>
+<circle cx="212.64153286701338" cy="274" r="4" fill="#b65347"/>
+<text x="206.64153286701338" y="278" font-family="Arial" font-size="12" text-anchor="end" fill="#b65347">-1.736%</text>
+<line x1="230" x2="230" y1="290" y2="290" stroke="#3c9580" stroke-width="6"/>
+<circle cx="230" cy="290" r="4" fill="#3c9580"/>
+<line x1="230" x2="361.95252256197244" y1="306" y2="306" stroke="#365e96" stroke-width="6"/>
+<circle cx="361.95252256197244" cy="306" r="4" fill="#365e96"/>
+<text x="367.95252256197244" y="310" font-family="Arial" font-size="12" text-anchor="start" fill="#365e96">13.195%</text>
+<text x="52" y="378" font-family="Arial" font-size="13" fill="#304653">19.202 m/s</text>
+<line x1="224.8802703199028" x2="230" y1="357" y2="357" stroke="#b65347" stroke-width="6"/>
+<circle cx="224.8802703199028" cy="357" r="4" fill="#b65347"/>
+<text x="218.8802703199028" y="361" font-family="Arial" font-size="12" text-anchor="end" fill="#b65347">-0.512%</text>
+<line x1="230" x2="230.04074579971137" y1="373" y2="373" stroke="#3c9580" stroke-width="6"/>
+<circle cx="230.04074579971137" cy="373" r="4" fill="#3c9580"/>
+<line x1="230" x2="320.18190513374026" y1="389" y2="389" stroke="#365e96" stroke-width="6"/>
+<circle cx="320.18190513374026" cy="389" r="4" fill="#365e96"/>
+<text x="326.18190513374026" y="393" font-family="Arial" font-size="12" text-anchor="start" fill="#365e96">9.018%</text>
+<rect x="630" y="105" width="535" height="360" rx="8" fill="#f7fafb" stroke="#dbe3e9"/>
+<text x="648" y="137" font-family="Arial" font-size="20" font-weight="bold" fill="#22313d">m = 10</text>
+<line x1="720" x2="720" y1="151" y2="430" stroke="#e0e6ea"/>
+<text x="720" y="452" font-family="Arial" font-size="12" text-anchor="middle">-10%</text>
+<line x1="770" x2="770" y1="151" y2="430" stroke="#e0e6ea"/>
+<text x="770" y="452" font-family="Arial" font-size="12" text-anchor="middle">-5%</text>
+<line x1="820" x2="820" y1="151" y2="430" stroke="#778994"/>
+<text x="820" y="452" font-family="Arial" font-size="12" text-anchor="middle">0%</text>
+<line x1="870" x2="870" y1="151" y2="430" stroke="#e0e6ea"/>
+<text x="870" y="452" font-family="Arial" font-size="12" text-anchor="middle">5%</text>
+<line x1="920" x2="920" y1="151" y2="430" stroke="#e0e6ea"/>
+<text x="920" y="452" font-family="Arial" font-size="12" text-anchor="middle">10%</text>
+<line x1="970" x2="970" y1="151" y2="430" stroke="#e0e6ea"/>
+<text x="970" y="452" font-family="Arial" font-size="12" text-anchor="middle">15%</text>
+<line x1="1020" x2="1020" y1="151" y2="430" stroke="#e0e6ea"/>
+<text x="1020" y="452" font-family="Arial" font-size="12" text-anchor="middle">20%</text>
+<text x="642" y="212" font-family="Arial" font-size="13" fill="#304653">9.344 m/s</text>
+<line x1="752.5483953959067" x2="820" y1="191" y2="191" stroke="#b65347" stroke-width="6"/>
+<circle cx="752.5483953959067" cy="191" r="4" fill="#b65347"/>
+<text x="746.5483953959067" y="195" font-family="Arial" font-size="12" text-anchor="end" fill="#b65347">-6.745%</text>
+<line x1="820" x2="820" y1="207" y2="207" stroke="#3c9580" stroke-width="6"/>
+<circle cx="820" cy="207" r="4" fill="#3c9580"/>
+<line x1="820" x2="958.272152778683" y1="223" y2="223" stroke="#365e96" stroke-width="6"/>
+<circle cx="958.272152778683" cy="223" r="4" fill="#365e96"/>
+<text x="964.272152778683" y="227" font-family="Arial" font-size="12" text-anchor="start" fill="#365e96">13.827%</text>
+<text x="642" y="295" font-family="Arial" font-size="13" fill="#304653">11.400 m/s</text>
+<line x1="734.4304583703323" x2="820" y1="274" y2="274" stroke="#b65347" stroke-width="6"/>
+<circle cx="734.4304583703323" cy="274" r="4" fill="#b65347"/>
+<text x="728.4304583703323" y="278" font-family="Arial" font-size="12" text-anchor="end" fill="#b65347">-8.557%</text>
+<line x1="820" x2="820" y1="290" y2="290" stroke="#3c9580" stroke-width="6"/>
+<circle cx="820" cy="290" r="4" fill="#3c9580"/>
+<line x1="820" x2="970.9608839386267" y1="306" y2="306" stroke="#365e96" stroke-width="6"/>
+<circle cx="970.9608839386267" cy="306" r="4" fill="#365e96"/>
+<text x="976.9608839386267" y="310" font-family="Arial" font-size="12" text-anchor="start" fill="#365e96">15.096%</text>
+<text x="642" y="378" font-family="Arial" font-size="13" fill="#304653">19.202 m/s</text>
+<line x1="803.8391305907414" x2="820" y1="357" y2="357" stroke="#b65347" stroke-width="6"/>
+<circle cx="803.8391305907414" cy="357" r="4" fill="#b65347"/>
+<text x="797.8391305907414" y="361" font-family="Arial" font-size="12" text-anchor="end" fill="#b65347">-1.616%</text>
+<line x1="820" x2="820.0651203501504" y1="373" y2="373" stroke="#3c9580" stroke-width="6"/>
+<circle cx="820.0651203501504" cy="373" r="4" fill="#3c9580"/>
+<line x1="820" x2="902.6131952199454" y1="389" y2="389" stroke="#365e96" stroke-width="6"/>
+<circle cx="902.6131952199454" cy="389" r="4" fill="#365e96"/>
+<text x="908.6131952199454" y="393" font-family="Arial" font-size="12" text-anchor="start" fill="#365e96">8.261%</text>
+<text x="40" y="510" font-family="Arial" font-size="14" fill="#b65347">● Arithmetic at fixed azimuth</text>
+<text x="410" y="510" font-family="Arial" font-size="14" fill="#3c9580">● Per-seed adaptive azimuth</text>
+<text x="805" y="510" font-family="Arial" font-size="14" fill="#365e96">● Maximum single seed</text>
+<text x="40" y="545" font-family="Arial" font-size="13" fill="#536475">Percent relative to fixed-location six-seed power mean; not local material stress, Miner damage or formal DLC1.2.</text>
+</svg>

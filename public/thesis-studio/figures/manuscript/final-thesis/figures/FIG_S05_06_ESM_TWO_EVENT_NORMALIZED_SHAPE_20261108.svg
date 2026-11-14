@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="550" viewBox="0 0 1180 550">
+<rect width="100%" height="100%" fill="#fff"/><style>text{font-family:Arial,sans-serif;fill:#202735}.title{font-size:21px;font-weight:bold}.axis{font-size:14px}.small{font-size:12px}</style>
+<text x="52" y="36" class="title">Two ESM events at IT.NVL: conditional 5% SDOF spectral comparison</text>
+<text x="52" y="64" class="small">Processed records, 4 common periods; no hazard matching, low-frequency admission, or tower response implied</text>
+<text x="70" y="105" class="axis">(a) GM PSA / GM PSA at T=4 s</text><text x="660" y="105" class="axis">(b) HNE / HNN PSA: event-specific direction</text>
+<path d="M100 125 V430 H535 M690 125 V430 H1125" stroke="#3e4757" stroke-width="1.4" fill="none"/>
+<path d="M100 157.68 H535 M690 245.15 H1125" stroke="#999" stroke-dasharray="6 4"/>
+<path d="M100.00 157.68 L330.00 223.33 L356.56 241.20 L560.00 334.26" stroke="#0068a0" stroke-width="3" fill="none"/><path d="M100.00 157.68 L330.00 299.09 L356.56 302.39 L560.00 346.46" stroke="#c34d25" stroke-width="3" fill="none"/>
+<path d="M690.00 309.58 L920.00 232.65 L946.56 207.38 L1150.00 161.55" stroke="#0068a0" stroke-width="3" fill="none"/><path d="M690.00 362.90 L920.00 328.66 L946.56 321.99 L1150.00 347.22" stroke="#c34d25" stroke-width="3" fill="none"/>
+<circle cx="100.00" cy="157.68" r="5" fill="#0068a0"/><circle cx="330.00" cy="223.33" r="5" fill="#0068a0"/><circle cx="356.56" cy="241.20" r="5" fill="#0068a0"/><circle cx="560.00" cy="334.26" r="5" fill="#0068a0"/><circle cx="100.00" cy="157.68" r="5" fill="#c34d25"/><circle cx="330.00" cy="299.09" r="5" fill="#c34d25"/><circle cx="356.56" cy="302.39" r="5" fill="#c34d25"/><circle cx="560.00" cy="346.46" r="5" fill="#c34d25"/><circle cx="690.00" cy="309.58" r="5" fill="#0068a0"/><circle cx="920.00" cy="232.65" r="5" fill="#0068a0"/><circle cx="946.56" cy="207.38" r="5" fill="#0068a0"/><circle cx="1150.00" cy="161.55" r="5" fill="#0068a0"/><circle cx="690.00" cy="362.90" r="5" fill="#c34d25"/><circle cx="920.00" cy="328.66" r="5" fill="#c34d25"/><circle cx="946.56" cy="321.99" r="5" fill="#c34d25"/><circle cx="1150.00" cy="347.22" r="5" fill="#c34d25"/>
+<text class="axis" x="100.00" y="455" text-anchor="middle">4</text><text class="axis" x="690.00" y="455" text-anchor="middle">4</text><text class="axis" x="330.00" y="455" text-anchor="middle">6</text><text class="axis" x="920.00" y="455" text-anchor="middle">6</text><text class="axis" x="356.56" y="455" text-anchor="middle">6.23</text><text class="axis" x="946.56" y="455" text-anchor="middle">6.23</text><text class="axis" x="560.00" y="455" text-anchor="middle">8</text><text class="axis" x="1150.00" y="455" text-anchor="middle">8</text>
+<text x="280" y="488" class="axis">Period (s)</text><text x="880" y="488" class="axis">Period (s)</text>
+<rect x="80" y="505" width="15" height="4" fill="#0068a0"/><text x="101" y="511" class="small">IT-2012-0008, MP fc=0.04 Hz, reported SNR lc=0.09 Hz</text>
+<rect x="660" y="505" width="15" height="4" fill="#c34d25"/><text x="681" y="511" class="small">IT-2012-0009, MP fc=0.08 Hz; SNR acceptance not established</text>
+<text x="60" y="538" class="small">ESM v3 historical derived spectra; both events from 2012 Emilia sequence, NOT independent hazard records.</text>
+</svg>

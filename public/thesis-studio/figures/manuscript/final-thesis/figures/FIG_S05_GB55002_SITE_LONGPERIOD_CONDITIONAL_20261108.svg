@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="570" viewBox="0 0 1100 570">
+<rect width="1100" height="570" fill="#ffffff"/>
+<text x="46" y="44" font-family="Arial,Helvetica,sans-serif" font-size="25" font-weight="700" fill="#162d44">GB 55002-2021: conditional seismic-input parameters for Group I</text>
+<text x="46" y="69" font-family="Arial,Helvetica,sans-serif" font-size="15" font-weight="400" fill="#536b7c">Historical probe T = 6.230958 s; NOT a verified 158 m tower mode or a site design spectrum</text>
+<rect x="38" y="92" width="523" height="384" rx="9" fill="#f6f9fb" stroke="#dce5eb"/>
+<rect x="578" y="92" width="484" height="384" rx="9" fill="#f6f9fb" stroke="#dce5eb"/>
+<text x="56" y="122" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="700" fill="#203247">A  Long-period probe / conditional Tg</text>
+<text x="595" y="122" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="700" fill="#203247">B  Minimum alpha-max by hazard level</text>
+<text x="56" y="145" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="400" fill="#627688">T/Tg (dimensionless); smaller Tg gives larger ratio</text>
+<text x="595" y="145" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="400" fill="#627688">6-degree / 0.05g reference; NOT Sa(T)</text>
+<line x1="143" y1="165" x2="143" y2="425" stroke="#e1e8ed"/>
+<text x="138" y="446" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="400" fill="#647887">0</text>
+<line x1="243.85714285714286" y1="165" x2="243.85714285714286" y2="425" stroke="#e1e8ed"/>
+<text x="238.85714285714286" y="446" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="400" fill="#647887">10</text>
+<line x1="344.7142857142857" y1="165" x2="344.7142857142857" y2="425" stroke="#e1e8ed"/>
+<text x="339.7142857142857" y="446" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="400" fill="#647887">20</text>
+<line x1="445.57142857142856" y1="165" x2="445.57142857142856" y2="425" stroke="#e1e8ed"/>
+<text x="440.57142857142856" y="446" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="400" fill="#647887">30</text>
+<text x="58" y="200" font-family="Arial,Helvetica,sans-serif" font-size="15" font-weight="700" fill="#203247">I0</text>
+<rect x="143" y="184" width="314.218" height="15" rx="2" fill="#1976a3"/>
+<rect x="143" y="202" width="251.375" height="15" rx="2" fill="#d47b37"/>
+<text x="464.2182986130577" y="196" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="400" fill="#17516e">31.15</text>
+<text x="401.37463889044614" y="215" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="400" fill="#96511e">24.92</text>
+<text x="58" y="252" font-family="Arial,Helvetica,sans-serif" font-size="15" font-weight="700" fill="#203247">I1</text>
+<rect x="143" y="236" width="251.375" height="15" rx="2" fill="#1976a3"/>
+<rect x="143" y="254" width="209.479" height="15" rx="2" fill="#d47b37"/>
+<text x="401.37463889044614" y="248" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="400" fill="#17516e">24.92</text>
+<text x="359.47886574203847" y="267" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="400" fill="#96511e">20.77</text>
+<text x="58" y="304" font-family="Arial,Helvetica,sans-serif" font-size="15" font-weight="700" fill="#203247">II</text>
+<rect x="143" y="288" width="179.553" height="15" rx="2" fill="#1976a3"/>
+<rect x="143" y="306" width="157.109" height="15" rx="2" fill="#d47b37"/>
+<text x="329.5533134931758" y="300" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="400" fill="#17516e">17.80</text>
+<text x="307.1091493065288" y="319" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="400" fill="#96511e">15.58</text>
+<text x="58" y="356" font-family="Arial,Helvetica,sans-serif" font-size="15" font-weight="700" fill="#203247">III</text>
+<rect x="143" y="340" width="139.653" height="15" rx="2" fill="#1976a3"/>
+<rect x="143" y="358" width="125.687" height="15" rx="2" fill="#d47b37"/>
+<text x="289.652577161359" y="352" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="400" fill="#17516e">13.85</text>
+<text x="275.68731944522307" y="371" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="400" fill="#96511e">12.46</text>
+<text x="58" y="408" font-family="Arial,Helvetica,sans-serif" font-size="15" font-weight="700" fill="#203247">IV</text>
+<rect x="143" y="392" width="96.683" height="15" rx="2" fill="#1976a3"/>
+<rect x="143" y="410" width="89.777" height="15" rx="2" fill="#d47b37"/>
+<text x="246.68255341940238" y="404" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="400" fill="#17516e">9.59</text>
+<text x="239.7766567465879" y="423" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="400" fill="#96511e">8.90</text>
+<rect x="59" y="458" width="12" height="10" fill="#1976a3"/>
+<text x="78" y="467" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="400" fill="#536b7c">Frequent / design Tg</text>
+<rect x="259" y="458" width="12" height="10" fill="#d47b37"/>
+<text x="278" y="467" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="400" fill="#536b7c">Rare Tg = base + 0.05 s</text>
+<rect x="685" y="383.333" width="76" height="32.667" rx="3" fill="#6b99b5"/>
+<text x="698" y="372.3333333333333" font-family="Arial,Helvetica,sans-serif" font-size="17" font-weight="700" fill="#1b3b51">0.04</text>
+<text x="683" y="443" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="400" fill="#536b7c">frequent</text>
+<rect x="801" y="318.000" width="76" height="98.000" rx="3" fill="#1976a3"/>
+<text x="814" y="307" font-family="Arial,Helvetica,sans-serif" font-size="17" font-weight="700" fill="#1b3b51">0.12</text>
+<text x="799" y="443" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="400" fill="#536b7c">design</text>
+<rect x="917" y="187.333" width="76" height="228.667" rx="3" fill="#d47b37"/>
+<text x="930" y="176.3333333333333" font-family="Arial,Helvetica,sans-serif" font-size="17" font-weight="700" fill="#1b3b51">0.28</text>
+<text x="915" y="443" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="400" fill="#536b7c">rare</text>
+<line x1="664" y1="416" x2="1050" y2="416" stroke="#e1e8ed"/>
+<text x="613" y="420" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="400" fill="#647887">0.0</text>
+<line x1="664" y1="334.3333333333333" x2="1050" y2="334.3333333333333" stroke="#e1e8ed"/>
+<text x="613" y="338.3333333333333" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="400" fill="#647887">0.1</text>
+<line x1="664" y1="252.66666666666663" x2="1050" y2="252.66666666666663" stroke="#e1e8ed"/>
+<text x="613" y="256.66666666666663" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="400" fill="#647887">0.2</text>
+<line x1="664" y1="171" x2="1050" y2="171" stroke="#e1e8ed"/>
+<text x="613" y="175" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="400" fill="#647887">0.3</text>
+<text x="596" y="467" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="400" fill="#627688">Alpha-max is a lower bound on the spectral peak,</text>
+<text x="596" y="483" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="400" fill="#627688">not the value of the spectrum at T = 6.23 s.</text>
+<line x1="46" y1="510" x2="1056" y2="510" stroke="#cdd9e2"/>
+<text x="46" y="532" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="400" fill="#465d70">Source: GB 55002-2021, printed pp. 3, 12-13; site class and wind-turbine applicability unverified.</text>
+<text x="46" y="550" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="400" fill="#9a4c39">No target spectrum, ground-motion scaling, seismic safety, or coupled W/E/WE result is claimed.</text>
+</svg>

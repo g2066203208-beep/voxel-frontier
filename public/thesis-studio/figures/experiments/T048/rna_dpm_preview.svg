@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700">
+<style>
+text{font-family:Arial,"Microsoft YaHei",sans-serif;fill:#111}.t{font-size:28px;font-weight:700}.s{font-size:18px}.n{font-size:16px}.beam{stroke:#222;stroke-width:7;fill:none}.thin{stroke:#555;stroke-width:3;fill:none}.mass{fill:#fff;stroke:#111;stroke-width:3}.tower{fill:none;stroke:#777;stroke-width:5}.dash{stroke:#777;stroke-width:2;stroke-dasharray:8 7}
+</style>
+<text x="50" y="50" class="t">T048 DTU 10 MW — Abaqus 分布参数 RNA（DPM）</text>
+<text x="50" y="83" class="s">三片柔性 B31 叶片（51站/片） + 独立 Hub + 独立 Nacelle；不是单点 RNA</text>
+
+<text x="80" y="130" class="s">正视图（X-Y）</text>
+<line x1="330" y1="600" x2="330" y2="350" class="tower"/>
+<circle cx="330" cy="300" r="18" class="mass"/>
+<text x="355" y="305" class="n">Rotor apex / Hub</text>
+<line x1="330" y1="300" x2="330" y2="120" class="beam"/>
+<line x1="330" y1="300" x2="174" y2="390" class="beam"/>
+<line x1="330" y1="300" x2="486" y2="390" class="beam"/>
+<circle cx="330" cy="350" r="7" class="mass"/>
+<text x="345" y="355" class="n">O158 tower-top</text>
+<circle cx="330" cy="360" r="12" class="mass"/>
+<text x="350" y="386" class="n">Nacelle mass/inertia（偏置在侧视图显示）</text>
+<text x="90" y="635" class="n">每片叶片：真实展向质量 + CG偏置 + ri_x/ri_y + E,G,Ix,Iy,Ip,A,kx,ky</text>
+
+<text x="680" y="130" class="s">侧视图（Z-Y）</text>
+<line x1="850" y1="600" x2="850" y2="350" class="tower"/>
+<circle cx="850" cy="350" r="7" class="mass"/>
+<text x="865" y="355" class="n">O = (0,158,0)</text>
+<line x1="850" y1="335" x2="710" y2="300" class="thin"/>
+<circle cx="710" cy="300" r="18" class="mass"/>
+<text x="590" y="280" class="n">Hub / rotor apex</text>
+<circle cx="900" cy="365" r="15" class="mass"/>
+<text x="920" y="370" class="n">Nacelle CM</text>
+<line x1="850" y1="350" x2="710" y2="300" class="dash"/>
+<text x="695" y="410" class="n">OverHang = -7.1 m</text>
+<text x="695" y="435" class="n">ShftTilt = -5°</text>
+<text x="695" y="460" class="n">Twr2Shft = 2.75 m</text>
+<text x="695" y="485" class="n">Rotor apex height ≈ 161.369 m</text>
+
+<rect x="70" y="655" width="1060" height="2" fill="#bbb"/>
+<text x="80" y="685" class="n">T048 status: Abaqus input generator implemented; solver/data-check + modal validation pending.</text>
+</svg>

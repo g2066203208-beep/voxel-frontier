@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg
+  PUBLIC '-//W3C//DTD SVG 1.0//EN'
+  'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'>
+<svg width="720" height="652" preserveAspectRatio="xMinYMin meet" viewBox="0 0 720 652" xmlns="http://www.w3.org/2000/svg" version="1.0" fill-rule="evenodd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<title>...</title>
+	<desc>...</desc>
+	<clipPath id="clip">
+		<rect x="0" y="0" width="720" height="652"/>
+	</clipPath>
+	<g id="group" transform="scale(1,-1) translate(0,-652)" style="clip-path: url(#clip)">
+		<g transform="">
+			<text x="240.0" y="627" style="font-family: SimHei; font-size: 15px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,1254) scale(1,-1)">整塔网格对照与前30阶模态有效质量</text>
+			<text x="187.2" y="608" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,1216) scale(1,-1)">RUN-T026-032 / 034 / 035：同一重力平衡路径与源模型参数</text>
+			<path d="M 73,369.814815 L 319,369.814815 Z" style="stroke: rgb(87%,89%,92%); stroke-linecap: butt; stroke-width: 0.45;"/>
+			<text x="34.0" y="366.81481481481484" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,733) scale(1,-1)">-0.05</text>
+			<path d="M 73,392.530864 L 319,392.530864 Z" style="stroke: rgb(87%,89%,92%); stroke-linecap: butt; stroke-width: 0.45;"/>
+			<text x="59.6" y="389.5308641975309" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,779) scale(1,-1)">0</text>
+			<path d="M 73,437.962963 L 319,437.962963 Z" style="stroke: rgb(87%,89%,92%); stroke-linecap: butt; stroke-width: 0.45;"/>
+			<text x="46.8" y="434.96296296296293" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,869) scale(1,-1)">0.1</text>
+			<path d="M 73,483.395062 L 319,483.395062 Z" style="stroke: rgb(87%,89%,92%); stroke-linecap: butt; stroke-width: 0.45;"/>
+			<text x="46.8" y="480.39506172839504" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,960) scale(1,-1)">0.2</text>
+			<path d="M 73,528.82716 L 319,528.82716 Z" style="stroke: rgb(87%,89%,92%); stroke-linecap: butt; stroke-width: 0.45;"/>
+			<text x="46.8" y="525.8271604938271" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,1051) scale(1,-1)">0.3</text>
+			<path d="M 87.124233,363 L 87.124233,359 Z" style="stroke: rgb(14%,17%,20%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<text x="74.32423300950883" y="347" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,694) scale(1,-1)">3360</text>
+			<path d="M 218.926029,363 L 218.926029,359 Z" style="stroke: rgb(14%,17%,20%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<text x="202.9260294279369" y="347" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,694) scale(1,-1)">15120</text>
+			<path d="M 304.875767,363 L 304.875767,359 Z" style="stroke: rgb(14%,17%,20%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<text x="288.8757669904911" y="347" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,694) scale(1,-1)">40320</text>
+			<path d="M 73,363 L 319,363 Z" style="stroke: rgb(14%,17%,20%); stroke-linecap: butt; stroke-width: 0.8;"/>
+			<path d="M 73,363 L 73,547 Z" style="stroke: rgb(14%,17%,20%); stroke-linecap: butt; stroke-width: 0.8;"/>
+			<text x="151.2" y="329" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,658) scale(1,-1)">塔筒实体单元数</text>
+			<g transform=" matrix(0,1,-1,0,30,455)">
+				<text x="-60.800000000000004" y="0" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,0) scale(1,-1)">相对M3的频率差（%）</text>
+			</g>
+			<text x="73" y="563" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,1126) scale(1,-1)">（a）前四阶水平模态</text>
+			<polyline points="87.12423 523.7986, 218.926 469.9452, 304.8758 392.5309" style="stroke: rgb(13%,41%,63%); stroke-linecap: butt; stroke-width: 1.25; fill: None; fill-rule: evenodd;"/>
+			<circle cx="87.12423300950883" cy="523.7985965913574" r="2.6" style="stroke: rgb(13%,41%,63%); stroke-linecap: butt; stroke-width: 0.9; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<circle cx="218.9260294279369" cy="469.9451679169725" r="2.6" style="stroke: rgb(13%,41%,63%); stroke-linecap: butt; stroke-width: 0.9; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<circle cx="304.8757669904911" cy="392.5308641975309" r="2.6" style="stroke: rgb(13%,41%,63%); stroke-linecap: butt; stroke-width: 0.9; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<polyline points="87.12423 523.2659, 218.926 469.631, 304.8758 392.5309" style="stroke: rgb(85%,48%,15%); stroke-linecap: butt; stroke-width: 1.25; fill: None; fill-rule: evenodd; stroke-dasharray: 3, 2;"/>
+			<circle cx="87.12423300950883" cy="523.2658934790112" r="2.6" style="stroke: rgb(85%,48%,15%); stroke-linecap: butt; stroke-width: 0.9; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<circle cx="218.9260294279369" cy="469.63100967121943" r="2.6" style="stroke: rgb(85%,48%,15%); stroke-linecap: butt; stroke-width: 0.9; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<circle cx="304.8757669904911" cy="392.5308641975309" r="2.6" style="stroke: rgb(85%,48%,15%); stroke-linecap: butt; stroke-width: 0.9; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<polyline points="87.12423 368.7757, 218.926 413.0759, 304.8758 392.5309" style="stroke: rgb(15%,17%,20%); stroke-linecap: butt; stroke-width: 1.25; fill: None; fill-rule: evenodd;"/>
+			<circle cx="87.12423300950883" cy="368.77568628928896" r="2.6" style="stroke: rgb(15%,17%,20%); stroke-linecap: butt; stroke-width: 0.9; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<circle cx="218.9260294279369" cy="413.07588292898197" r="2.6" style="stroke: rgb(15%,17%,20%); stroke-linecap: butt; stroke-width: 0.9; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<circle cx="304.8757669904911" cy="392.5308641975309" r="2.6" style="stroke: rgb(15%,17%,20%); stroke-linecap: butt; stroke-width: 0.9; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<polyline points="87.12423 394.3667, 218.926 421.2916, 304.8758 392.5309" style="stroke: rgb(49%,34%,58%); stroke-linecap: butt; stroke-width: 1.25; fill: None; fill-rule: evenodd; stroke-dasharray: 3, 2;"/>
+			<circle cx="87.12423300950883" cy="394.3666528982492" r="2.6" style="stroke: rgb(49%,34%,58%); stroke-linecap: butt; stroke-width: 0.9; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<circle cx="218.9260294279369" cy="421.2915538421479" r="2.6" style="stroke: rgb(49%,34%,58%); stroke-linecap: butt; stroke-width: 0.9; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<circle cx="304.8757669904911" cy="392.5308641975309" r="2.6" style="stroke: rgb(49%,34%,58%); stroke-linecap: butt; stroke-width: 0.9; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<path d="M 77,588 L 95,588 Z" style="stroke: rgb(13%,41%,63%); stroke-linecap: butt; stroke-width: 1.5;"/>
+			<text x="100" y="585" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,1170) scale(1,-1)">第1阶</text>
+			<path d="M 155,588 L 173,588 Z" style="stroke: rgb(85%,48%,15%); stroke-linecap: butt; stroke-width: 1.5; stroke-dasharray: 3, 2;"/>
+			<text x="178" y="585" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,1170) scale(1,-1)">第2阶</text>
+			<path d="M 233,588 L 251,588 Z" style="stroke: rgb(15%,17%,20%); stroke-linecap: butt; stroke-width: 1.5;"/>
+			<text x="256" y="585" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,1170) scale(1,-1)">第3阶</text>
+			<path d="M 311,588 L 329,588 Z" style="stroke: rgb(49%,34%,58%); stroke-linecap: butt; stroke-width: 1.5; stroke-dasharray: 3, 2;"/>
+			<text x="334" y="585" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,1170) scale(1,-1)">第4阶</text>
+			<path d="M 417,391.307692 L 663,391.307692 Z" style="stroke: rgb(87%,89%,92%); stroke-linecap: butt; stroke-width: 0.45;"/>
+			<text x="378.0" y="388.30769230769255" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,776) scale(1,-1)">1.578</text>
+			<path d="M 417,447.923077 L 663,447.923077 Z" style="stroke: rgb(87%,89%,92%); stroke-linecap: butt; stroke-width: 0.45;"/>
+			<text x="378.0" y="444.92307692307764" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,889) scale(1,-1)">1.582</text>
+			<path d="M 417,504.538462 L 663,504.538462 Z" style="stroke: rgb(87%,89%,92%); stroke-linecap: butt; stroke-width: 0.45;"/>
+			<text x="378.0" y="501.53846153846274" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,1003) scale(1,-1)">1.586</text>
+			<path d="M 431.124233,363 L 431.124233,359 Z" style="stroke: rgb(14%,17%,20%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<text x="418.3242330095088" y="347" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,694) scale(1,-1)">3360</text>
+			<path d="M 562.926029,363 L 562.926029,359 Z" style="stroke: rgb(14%,17%,20%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<text x="546.9260294279369" y="347" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,694) scale(1,-1)">15120</text>
+			<path d="M 648.875767,363 L 648.875767,359 Z" style="stroke: rgb(14%,17%,20%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<text x="632.8757669904911" y="347" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,694) scale(1,-1)">40320</text>
+			<path d="M 417,363 L 663,363 Z" style="stroke: rgb(14%,17%,20%); stroke-linecap: butt; stroke-width: 0.8;"/>
+			<path d="M 417,363 L 417,547 Z" style="stroke: rgb(14%,17%,20%); stroke-linecap: butt; stroke-width: 0.8;"/>
+			<text x="495.2" y="329" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,658) scale(1,-1)">塔筒实体单元数</text>
+			<g transform=" matrix(0,1,-1,0,374,455)">
+				<text x="-73.60000000000001" y="0" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,0) scale(1,-1)">参考点位移（mm / 1 kN）</text>
+			</g>
+			<text x="417" y="563" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,1126) scale(1,-1)">（b）切线柔度</text>
+			<polyline points="431.1242 411.0774, 562.926 439.6803, 648.8758 507.1876" style="stroke: rgb(13%,41%,63%); stroke-linecap: butt; stroke-width: 1.25; fill: None; fill-rule: evenodd;"/>
+			<circle cx="431.1242330095088" cy="411.0774438427039" r="2.6" style="stroke: rgb(13%,41%,63%); stroke-linecap: butt; stroke-width: 0.9; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<circle cx="562.9260294279369" cy="439.68029439449276" r="2.6" style="stroke: rgb(13%,41%,63%); stroke-linecap: butt; stroke-width: 0.9; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<circle cx="648.8757669904911" cy="507.18756941648644" r="2.6" style="stroke: rgb(13%,41%,63%); stroke-linecap: butt; stroke-width: 0.9; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<polyline points="431.1242 411.0379, 562.926 439.6473, 648.8758 507.1596" style="stroke: rgb(85%,48%,15%); stroke-linecap: butt; stroke-width: 1.25; fill: None; fill-rule: evenodd; stroke-dasharray: 3, 2;"/>
+			<circle cx="431.1242330095088" cy="411.0378984533818" r="2.6" style="stroke: rgb(85%,48%,15%); stroke-linecap: butt; stroke-width: 0.9; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<circle cx="562.9260294279369" cy="439.64733990339096" r="2.6" style="stroke: rgb(85%,48%,15%); stroke-linecap: butt; stroke-width: 0.9; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<circle cx="648.8757669904911" cy="507.15955809904995" r="2.6" style="stroke: rgb(85%,48%,15%); stroke-linecap: butt; stroke-width: 0.9; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<path d="M 438,588 L 456,588 Z" style="stroke: rgb(13%,41%,63%); stroke-linecap: butt; stroke-width: 1.5;"/>
+			<text x="461" y="585" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,1170) scale(1,-1)">X向加载 / U1</text>
+			<path d="M 573,588 L 591,588 Z" style="stroke: rgb(85%,48%,15%); stroke-linecap: butt; stroke-width: 1.5; stroke-dasharray: 3, 2;"/>
+			<text x="596" y="585" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,1170) scale(1,-1)">Z向加载 / U3</text>
+			<path d="M 73,98 L 319,98 Z" style="stroke: rgb(87%,89%,92%); stroke-linecap: butt; stroke-width: 0.45;"/>
+			<text x="40.4" y="95.0" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,190) scale(1,-1)">2596</text>
+			<path d="M 73,144 L 319,144 Z" style="stroke: rgb(87%,89%,92%); stroke-linecap: butt; stroke-width: 0.45;"/>
+			<text x="40.4" y="141.0" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,282) scale(1,-1)">2598</text>
+			<path d="M 73,190 L 319,190 Z" style="stroke: rgb(87%,89%,92%); stroke-linecap: butt; stroke-width: 0.45;"/>
+			<text x="40.4" y="187.0" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,374) scale(1,-1)">2600</text>
+			<path d="M 73,236 L 319,236 Z" style="stroke: rgb(87%,89%,92%); stroke-linecap: butt; stroke-width: 0.45;"/>
+			<text x="40.4" y="233.0" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,466) scale(1,-1)">2602</text>
+			<path d="M 73,282 L 319,282 Z" style="stroke: rgb(87%,89%,92%); stroke-linecap: butt; stroke-width: 0.45;"/>
+			<text x="40.4" y="279.0" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,558) scale(1,-1)">2604</text>
+			<path d="M 87.124233,98 L 87.124233,94 Z" style="stroke: rgb(14%,17%,20%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<text x="74.32423300950883" y="82" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,164) scale(1,-1)">3360</text>
+			<path d="M 218.926029,98 L 218.926029,94 Z" style="stroke: rgb(14%,17%,20%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<text x="202.9260294279369" y="82" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,164) scale(1,-1)">15120</text>
+			<path d="M 304.875767,98 L 304.875767,94 Z" style="stroke: rgb(14%,17%,20%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<text x="288.8757669904911" y="82" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,164) scale(1,-1)">40320</text>
+			<path d="M 73,98 L 319,98 Z" style="stroke: rgb(14%,17%,20%); stroke-linecap: butt; stroke-width: 0.8;"/>
+			<path d="M 73,98 L 73,282 Z" style="stroke: rgb(14%,17%,20%); stroke-linecap: butt; stroke-width: 0.8;"/>
+			<text x="151.2" y="64" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,128) scale(1,-1)">塔筒实体单元数</text>
+			<g transform=" matrix(0,1,-1,0,30,190)">
+				<text x="-60.800000000000004" y="0" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,0) scale(1,-1)">模型积分总质量（t）</text>
+			</g>
+			<text x="73" y="298" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,596) scale(1,-1)">（c）网格体积差异</text>
+			<polyline points="87.12423 136.2289, 218.926 222.993, 304.8758 253.3996" style="stroke: rgb(15%,17%,20%); stroke-linecap: butt; stroke-width: 1.25; fill: None; fill-rule: evenodd;"/>
+			<circle cx="87.12423300950883" cy="136.22893801064856" r="2.6" style="stroke: rgb(15%,17%,20%); stroke-linecap: butt; stroke-width: 0.9; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<circle cx="218.9260294279369" cy="222.99303069027337" r="2.6" style="stroke: rgb(15%,17%,20%); stroke-linecap: butt; stroke-width: 0.9; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<circle cx="304.8757669904911" cy="253.3996069012892" r="2.6" style="stroke: rgb(15%,17%,20%); stroke-linecap: butt; stroke-width: 0.9; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<path d="M 417,98 L 663,98 Z" style="stroke: rgb(87%,89%,92%); stroke-linecap: butt; stroke-width: 0.45;"/>
+			<text x="403.6" y="95.0" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,190) scale(1,-1)">0</text>
+			<path d="M 417,134.8 L 663,134.8 Z" style="stroke: rgb(87%,89%,92%); stroke-linecap: butt; stroke-width: 0.45;"/>
+			<text x="397.2" y="131.8" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,263) scale(1,-1)">20</text>
+			<path d="M 417,171.6 L 663,171.6 Z" style="stroke: rgb(87%,89%,92%); stroke-linecap: butt; stroke-width: 0.45;"/>
+			<text x="397.2" y="168.60000000000002" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,337) scale(1,-1)">40</text>
+			<path d="M 417,208.4 L 663,208.4 Z" style="stroke: rgb(87%,89%,92%); stroke-linecap: butt; stroke-width: 0.45;"/>
+			<text x="397.2" y="205.39999999999998" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,410) scale(1,-1)">60</text>
+			<path d="M 417,245.2 L 663,245.2 Z" style="stroke: rgb(87%,89%,92%); stroke-linecap: butt; stroke-width: 0.45;"/>
+			<text x="397.2" y="242.20000000000002" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,484) scale(1,-1)">80</text>
+			<path d="M 417,282 L 663,282 Z" style="stroke: rgb(87%,89%,92%); stroke-linecap: butt; stroke-width: 0.45;"/>
+			<text x="390.8" y="279.0" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,558) scale(1,-1)">100</text>
+			<path d="M 417,98 L 417,94 Z" style="stroke: rgb(14%,17%,20%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<text x="413.8" y="82" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,164) scale(1,-1)">0</text>
+			<path d="M 458,98 L 458,94 Z" style="stroke: rgb(14%,17%,20%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<text x="454.8" y="82" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,164) scale(1,-1)">5</text>
+			<path d="M 499,98 L 499,94 Z" style="stroke: rgb(14%,17%,20%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<text x="492.6" y="82" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,164) scale(1,-1)">10</text>
+			<path d="M 540,98 L 540,94 Z" style="stroke: rgb(14%,17%,20%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<text x="533.6" y="82" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,164) scale(1,-1)">15</text>
+			<path d="M 581,98 L 581,94 Z" style="stroke: rgb(14%,17%,20%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<text x="574.6" y="82" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,164) scale(1,-1)">20</text>
+			<path d="M 622,98 L 622,94 Z" style="stroke: rgb(14%,17%,20%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<text x="615.6" y="82" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,164) scale(1,-1)">25</text>
+			<path d="M 663,98 L 663,94 Z" style="stroke: rgb(14%,17%,20%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<text x="656.6" y="82" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,164) scale(1,-1)">30</text>
+			<path d="M 417,98 L 663,98 Z" style="stroke: rgb(14%,17%,20%); stroke-linecap: butt; stroke-width: 0.8;"/>
+			<path d="M 417,98 L 417,282 Z" style="stroke: rgb(14%,17%,20%); stroke-linecap: butt; stroke-width: 0.8;"/>
+			<text x="501.6" y="64" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,128) scale(1,-1)">提取模态阶数</text>
+			<g transform=" matrix(0,1,-1,0,374,190)">
+				<text x="-67.2" y="0" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,0) scale(1,-1)">累计有效质量占比（%）</text>
+			</g>
+			<text x="417" y="298" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,596) scale(1,-1)">（d）M3模态有效质量</text>
+			<polyline points="417 98, 425.2 190.3387, 433.4 190.3387, 441.6 227.3514, 449.8 227.3514, 458 227.3795, 466.2 242.1505, 474.4 242.1505, 482.6 253.3644, 490.8 253.3644, 499 253.3644, 507.2 260.7763, 515.4 260.7763, 523.6 260.7764, 531.8 260.7764, 540 260.7764, 548.2 265.1955, 556.4 265.1955, 564.6 265.1955, 572.8 265.1955, 581 268.1009, 589.2 268.1009, 597.4 268.1009, 605.6 268.1009, 613.8 268.1009, 622 268.1009, 630.2 268.1009, 638.4 268.1009, 646.6 270.6712, 654.8 270.6712, 663 270.6712" style="stroke: rgb(13%,41%,63%); stroke-linecap: butt; stroke-width: 1.25; fill: None; fill-rule: evenodd;"/>
+			<polyline points="417 98, 425.2 98, 433.4 98.00235, 441.6 98.00235, 449.8 98.02741, 458 98.02741, 466.2 98.02741, 474.4 98.10103, 482.6 98.10103, 490.8 98.17144, 499 224.886, 507.2 224.886, 515.4 225.1904, 523.6 225.1904, 531.8 225.1904, 540 225.1904, 548.2 225.1904, 556.4 225.1943, 564.6 225.1943, 572.8 225.1943, 581 225.1943, 589.2 225.2634, 597.4 257.1013, 605.6 257.1013, 613.8 257.1013, 622 257.1013, 630.2 257.1013, 638.4 257.1013, 646.6 257.1013, 654.8 257.1014, 663 257.1014" style="stroke: rgb(85%,48%,15%); stroke-linecap: butt; stroke-width: 1.25; fill: None; fill-rule: evenodd; stroke-dasharray: 4, 2;"/>
+			<polyline points="417 98, 425.2 98, 433.4 191.1878, 441.6 191.1878, 449.8 229.7441, 458 229.7441, 466.2 229.7441, 474.4 243.4825, 482.6 243.4825, 490.8 253.5473, 499 253.5716, 507.2 253.5716, 515.4 260.831, 523.6 260.831, 531.8 260.8311, 540 260.8311, 548.2 260.8311, 556.4 265.2246, 564.6 265.2246, 572.8 265.2246, 581 265.2246, 589.2 268.1069, 597.4 268.1122, 605.6 268.1122, 613.8 268.1122, 622 268.1122, 630.2 268.1122, 638.4 268.1122, 646.6 268.1122, 654.8 270.6757, 663 270.6757" style="stroke: rgb(15%,17%,20%); stroke-linecap: butt; stroke-width: 1.25; fill: None; fill-rule: evenodd;"/>
+			<path d="M 455,320 L 473,320 Z" style="stroke: rgb(13%,41%,63%); stroke-linecap: butt; stroke-width: 1.5;"/>
+			<text x="478" y="317" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,634) scale(1,-1)">X</text>
+			<path d="M 526,320 L 544,320 Z" style="stroke: rgb(85%,48%,15%); stroke-linecap: butt; stroke-width: 1.5; stroke-dasharray: 4, 2;"/>
+			<text x="549" y="317" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,634) scale(1,-1)">Y</text>
+			<path d="M 597,320 L 615,320 Z" style="stroke: rgb(15%,17%,20%); stroke-linecap: butt; stroke-width: 1.5;"/>
+			<text x="620" y="317" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,634) scale(1,-1)">Z</text>
+			<text x="73" y="44" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,88) scale(1,-1)">M2至M3：频率变化0.045%–0.170%；双向柔度变化0.301%；满足预登记0.5%预算。</text>
+			<text x="73" y="28" style="font-family: SimHei; font-size: 12.8px;fill: rgb(14%,17%,20%); stroke:none;" transform="translate(0,56) scale(1,-1)">M3的X/Y/Z有效质量占总质量93.843% / 86.468% / 93.845%；不据此认定模态充分。</text>
+		</g>
+	</g>
+</svg>

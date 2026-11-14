@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540">
+<rect width="960" height="540" fill="white"/>
+<text x="80" y="27" font-family="Arial" font-size="19">ESM RotD: full-band scalar-scale infeasibility</text>
+<rect x="80" y="267.8" width="845" height="62.39999999999998" fill="#eaf3e8"/>
+<line x1="80" x2="925" y1="455" y2="455" stroke="#ddd"/>
+<text x="66" y="459" text-anchor="end" font-family="Arial" font-size="12">0.0</text>
+<line x1="80" x2="925" y1="377" y2="377" stroke="#ddd"/>
+<text x="66" y="381" text-anchor="end" font-family="Arial" font-size="12">0.5</text>
+<line x1="80" x2="925" y1="330.2" y2="330.2" stroke="#ddd"/>
+<text x="66" y="334.2" text-anchor="end" font-family="Arial" font-size="12">0.8</text>
+<line x1="80" x2="925" y1="299" y2="299" stroke="#ddd"/>
+<text x="66" y="303" text-anchor="end" font-family="Arial" font-size="12">1.0</text>
+<line x1="80" x2="925" y1="267.8" y2="267.8" stroke="#ddd"/>
+<text x="66" y="271.8" text-anchor="end" font-family="Arial" font-size="12">1.2</text>
+<line x1="80" x2="925" y1="221" y2="221" stroke="#ddd"/>
+<text x="66" y="225" text-anchor="end" font-family="Arial" font-size="12">1.5</text>
+<line x1="80" x2="925" y1="143" y2="143" stroke="#ddd"/>
+<text x="66" y="147" text-anchor="end" font-family="Arial" font-size="12">2.0</text>
+<line x1="80" x2="925" y1="65" y2="65" stroke="#ddd"/>
+<text x="66" y="69" text-anchor="end" font-family="Arial" font-size="12">2.5</text>
+<text x="80" y="477" text-anchor="middle" font-family="Arial" font-size="12">1.25</text>
+<text x="178.21506573501017" y="477" text-anchor="middle" font-family="Arial" font-size="12">1.5</text>
+<text x="333.18694154323873" y="477" text-anchor="middle" font-family="Arial" font-size="12">2</text>
+<text x="551.6075328675051" y="477" text-anchor="middle" font-family="Arial" font-size="12">3</text>
+<text x="706.5794086757337" y="477" text-anchor="middle" font-family="Arial" font-size="12">4</text>
+<text x="826.7849342649898" y="477" text-anchor="middle" font-family="Arial" font-size="12">5</text>
+<text x="925" y="477" text-anchor="middle" font-family="Arial" font-size="12">6</text>
+<polyline fill="none" stroke="#17678d" stroke-width="2.5" points="80.00,199.64 112.28,222.92 146.19,244.95 178.22,266.47 180.11,268.12 214.03,279.49 247.95,241.10 281.87,229.97 315.79,217.28 333.19,233.89 349.71,255.98 383.63,264.14 417.55,263.93 451.47,278.54 453.39,280.58 485.39,310.56 519.30,313.88 551.61,324.59 553.22,325.10 587.14,339.08 621.06,347.60 634.65,348.68 654.98,355.17 688.90,368.89 706.58,374.36 722.82,381.60 756.74,387.97 790.66,398.36 824.58,394.24 826.78,394.39 858.50,386.28 892.41,380.57 925.00,385.51"/>
+<polyline fill="none" stroke="#bd4d30" stroke-width="2.5" points="80.00,189.83 112.28,230.99 146.19,255.05 178.22,283.42 180.11,285.44 214.03,304.74 247.95,270.05 281.87,272.39 315.79,254.30 333.19,254.43 349.71,282.27 383.63,288.20 417.55,296.26 451.47,307.49 453.39,308.17 485.39,315.23 519.30,333.83 551.61,348.85 553.22,348.92 587.14,357.46 621.06,360.41 634.65,362.52 654.98,367.46 688.90,378.75 706.58,383.35 722.82,387.56 756.74,400.01 790.66,408.17 824.58,402.48 826.78,401.33 858.50,391.79 892.41,394.17 925.00,392.76"/>
+<polyline fill="none" stroke="#17678d" stroke-width="2.5" stroke-dasharray="7 5" points="80.00,149.78 112.28,177.60 146.19,203.94 178.22,229.66 180.11,231.62 214.03,245.22 247.95,199.33 281.87,186.03 315.79,170.86 333.19,190.71 349.71,217.11 383.63,226.88 417.55,226.62 451.47,244.08 453.39,246.52 485.39,282.36 519.30,286.32 551.61,299.13 553.22,299.74 587.14,316.44 621.06,326.63 634.65,327.92 654.98,335.67 688.90,352.08 706.58,358.62 722.82,367.27 756.74,374.88 790.66,387.30 824.58,382.38 826.78,382.56 858.50,372.86 892.41,366.04 925.00,371.94"/>
+<polyline fill="none" stroke="#bd4d30" stroke-width="2.5" stroke-dasharray="7 5" points="80.00,92.38 112.28,148.66 146.19,181.56 178.22,220.36 180.11,223.12 214.03,249.51 247.95,202.07 281.87,205.28 315.79,180.54 333.19,180.72 349.71,218.79 383.63,226.90 417.55,237.92 451.47,253.28 453.39,254.21 485.39,263.86 519.30,289.30 551.61,309.83 553.22,309.93 587.14,321.61 621.06,325.65 634.65,328.54 654.98,335.28 688.90,350.73 706.58,357.01 722.82,362.78 756.74,379.81 790.66,390.95 824.58,383.17 826.78,381.60 858.50,368.56 892.41,371.82 925.00,369.88"/>
+<text x="80" y="49" font-family="Arial" font-size="12" fill="#17678d">RotD50 blue</text>
+<text x="260" y="49" font-family="Arial" font-size="12" fill="#bd4d30">RotD100 red</text>
+<text x="440" y="49" font-family="Arial" font-size="12">Solid: linear minimax; dashed: prior log-LS</text>
+<text x="430" y="503" font-family="Arial" font-size="14">Period (s), log axis</text>
+<text x="15" y="295" transform="rotate(-90 15 295)" font-family="Arial" font-size="14">Scaled PSA / target</text>
+<text x="80" y="531" font-family="Arial" font-size="11">Processed ESM IT-2012-0008 / IT.NVL; illustrative target only, not seismic design admission.</text>
+</svg>

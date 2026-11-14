@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1150" height="530" viewBox="0 0 1150 530">
+<rect width="1150" height="530" fill="white"/>
+<text x="575" y="34" font-family="Arial" font-size="20" text-anchor="middle">Time mean vs range^4-weighted rainflow cycle mean</text>
+<rect x="85" y="85" width="375" height="375" fill="#f8fafc" stroke="#cbd5e1"/>
+<line x1="85" y1="460" x2="460" y2="85" stroke="#64748b" stroke-dasharray="5,5"/>
+<circle cx="144.17" cy="324.11" r="4.5" fill="#2166ac" opacity=".75"><title>U09p343881_ETM_S01 28.00%</title></circle>
+<circle cx="151.08" cy="393.59" r="4.5" fill="#2166ac" opacity=".75"><title>U09p343881_ETM_S02 0.12%</title></circle>
+<circle cx="123.14" cy="400.86" r="4.5" fill="#2166ac" opacity=".75"><title>U09p343881_ETM_S03 8.30%</title></circle>
+<circle cx="121.29" cy="387.43" r="4.5" fill="#2166ac" opacity=".75"><title>U09p343881_ETM_S04 14.45%</title></circle>
+<circle cx="145.20" cy="342.21" r="4.5" fill="#2166ac" opacity=".75"><title>U09p343881_ETM_S05 20.95%</title></circle>
+<circle cx="137.73" cy="403.73" r="4.5" fill="#2166ac" opacity=".75"><title>U09p343881_ETM_S06 1.32%</title></circle>
+<circle cx="140.97" cy="342.63" r="4.5" fill="#2166ac" opacity=".75"><title>U09p343881_NTM_S01 22.68%</title></circle>
+<circle cx="144.57" cy="386.96" r="4.5" fill="#2166ac" opacity=".75"><title>U09p343881_NTM_S02 4.91%</title></circle>
+<circle cx="125.71" cy="418.30" r="4.5" fill="#2166ac" opacity=".75"><title>U09p343881_NTM_S03 0.39%</title></circle>
+<circle cx="124.13" cy="383.56" r="4.5" fill="#2166ac" opacity=".75"><title>U09p343881_NTM_S04 14.70%</title></circle>
+<circle cx="140.46" cy="382.66" r="4.5" fill="#2166ac" opacity=".75"><title>U09p343881_NTM_S05 8.10%</title></circle>
+<circle cx="133.94" cy="400.30" r="4.5" fill="#2166ac" opacity=".75"><title>U09p343881_NTM_S06 4.08%</title></circle>
+<circle cx="201.10" cy="332.31" r="4.5" fill="#2166ac" opacity=".75"><title>U11p4_ETM_S01 3.50%</title></circle>
+<circle cx="215.06" cy="334.92" r="4.5" fill="#2166ac" opacity=".75"><title>U11p4_ETM_S02 1.45%</title></circle>
+<circle cx="197.11" cy="329.76" r="4.5" fill="#2166ac" opacity=".75"><title>U11p4_ETM_S03 5.55%</title></circle>
+<circle cx="175.41" cy="365.42" r="4.5" fill="#2166ac" opacity=".75"><title>U11p4_ETM_S04 1.37%</title></circle>
+<circle cx="206.83" cy="309.54" r="4.5" fill="#2166ac" opacity=".75"><title>U11p4_ETM_S05 8.51%</title></circle>
+<circle cx="199.19" cy="296.93" r="4.5" fill="#2166ac" opacity=".75"><title>U11p4_ETM_S06 14.86%</title></circle>
+<circle cx="206.07" cy="332.21" r="4.5" fill="#2166ac" opacity=".75"><title>U11p4_NTM_S01 2.00%</title></circle>
+<circle cx="215.24" cy="351.47" r="4.5" fill="#2166ac" opacity=".75"><title>U11p4_NTM_S02 6.29%</title></circle>
+<circle cx="204.10" cy="382.08" r="4.5" fill="#2166ac" opacity=".75"><title>U11p4_NTM_S03 12.33%</title></circle>
+<circle cx="190.66" cy="367.02" r="4.5" fill="#2166ac" opacity=".75"><title>U11p4_NTM_S04 3.96%</title></circle>
+<circle cx="211.32" cy="321.78" r="4.5" fill="#2166ac" opacity=".75"><title>U11p4_NTM_S05 3.49%</title></circle>
+<circle cx="205.89" cy="328.13" r="4.5" fill="#2166ac" opacity=".75"><title>U11p4_NTM_S06 3.27%</title></circle>
+<circle cx="356.36" cy="135.04" r="4.5" fill="#2166ac" opacity=".75"><title>U19p202140_ETM_S01 11.02%</title></circle>
+<circle cx="353.56" cy="278.66" r="4.5" fill="#2166ac" opacity=".75"><title>U19p202140_ETM_S02 18.05%</title></circle>
+<circle cx="358.13" cy="155.19" r="4.5" fill="#2166ac" opacity=".75"><title>U19p202140_ETM_S03 6.49%</title></circle>
+<circle cx="312.84" cy="261.93" r="4.5" fill="#2166ac" opacity=".75"><title>U19p202140_ETM_S04 6.73%</title></circle>
+<circle cx="357.53" cy="122.23" r="4.5" fill="#2166ac" opacity=".75"><title>U19p202140_ETM_S05 13.39%</title></circle>
+<circle cx="340.77" cy="171.84" r="4.5" fill="#2166ac" opacity=".75"><title>U19p202140_ETM_S06 6.88%</title></circle>
+<circle cx="355.96" cy="156.40" r="4.5" fill="#2166ac" opacity=".75"><title>U19p202140_NTM_S01 6.72%</title></circle>
+<circle cx="352.56" cy="230.46" r="4.5" fill="#2166ac" opacity=".75"><title>U19p202140_NTM_S02 7.88%</title></circle>
+<circle cx="354.34" cy="142.39" r="4.5" fill="#2166ac" opacity=".75"><title>U19p202140_NTM_S03 9.97%</title></circle>
+<circle cx="321.25" cy="258.71" r="4.5" fill="#2166ac" opacity=".75"><title>U19p202140_NTM_S04 7.75%</title></circle>
+<circle cx="355.18" cy="121.29" r="4.5" fill="#2166ac" opacity=".75"><title>U19p202140_NTM_S05 14.13%</title></circle>
+<circle cx="343.96" cy="144.19" r="4.5" fill="#2166ac" opacity=".75"><title>U19p202140_NTM_S06 12.00%</title></circle>
+<text x="272.5" y="68" text-anchor="middle" font-family="Arial" font-size="17">TwrBsMxt</text>
+<text x="272.5" y="496" text-anchor="middle" font-family="Arial" font-size="13">Time mean (MN m)</text>
+<text transform="translate(37 272.5) rotate(-90)" text-anchor="middle" font-family="Arial" font-size="13">Weighted cycle mean (MN m)</text>
+<rect x="645" y="85" width="375" height="375" fill="#f8fafc" stroke="#cbd5e1"/>
+<line x1="645" y1="460" x2="1020" y2="85" stroke="#64748b" stroke-dasharray="5,5"/>
+<circle cx="863.88" cy="210.32" r="4.5" fill="#c0392b" opacity=".75"><title>U09p343881_ETM_S01 6.28%</title></circle>
+<circle cx="915.94" cy="202.01" r="4.5" fill="#c0392b" opacity=".75"><title>U09p343881_ETM_S02 2.39%</title></circle>
+<circle cx="870.34" cy="216.62" r="4.5" fill="#c0392b" opacity=".75"><title>U09p343881_ETM_S03 3.63%</title></circle>
+<circle cx="860.00" cy="215.18" r="4.5" fill="#c0392b" opacity=".75"><title>U09p343881_ETM_S04 6.13%</title></circle>
+<circle cx="904.20" cy="174.94" r="4.5" fill="#c0392b" opacity=".75"><title>U09p343881_ETM_S05 4.87%</title></circle>
+<circle cx="882.05" cy="324.65" r="4.5" fill="#c0392b" opacity=".75"><title>U09p343881_ETM_S06 19.99%</title></circle>
+<circle cx="918.48" cy="193.43" r="4.5" fill="#c0392b" opacity=".75"><title>U09p343881_NTM_S01 1.27%</title></circle>
+<circle cx="924.63" cy="190.85" r="4.5" fill="#c0392b" opacity=".75"><title>U09p343881_NTM_S02 1.90%</title></circle>
+<circle cx="904.30" cy="210.05" r="4.5" fill="#c0392b" opacity=".75"><title>U09p343881_NTM_S03 1.76%</title></circle>
+<circle cx="903.77" cy="190.93" r="4.5" fill="#c0392b" opacity=".75"><title>U09p343881_NTM_S04 1.94%</title></circle>
+<circle cx="918.90" cy="176.12" r="4.5" fill="#c0392b" opacity=".75"><title>U09p343881_NTM_S05 1.83%</title></circle>
+<circle cx="914.35" cy="196.31" r="4.5" fill="#c0392b" opacity=".75"><title>U09p343881_NTM_S06 1.05%</title></circle>
+<circle cx="874.40" cy="191.01" r="4.5" fill="#c0392b" opacity=".75"><title>U11p4_ETM_S01 7.90%</title></circle>
+<circle cx="933.54" cy="209.50" r="4.5" fill="#c0392b" opacity=".75"><title>U11p4_ETM_S02 6.79%</title></circle>
+<circle cx="896.06" cy="251.89" r="4.5" fill="#c0392b" opacity=".75"><title>U11p4_ETM_S03 8.22%</title></circle>
+<circle cx="875.58" cy="240.80" r="4.5" fill="#c0392b" opacity=".75"><title>U11p4_ETM_S04 2.26%</title></circle>
+<circle cx="933.15" cy="216.89" r="4.5" fill="#c0392b" opacity=".75"><title>U11p4_ETM_S05 8.04%</title></circle>
+<circle cx="911.73" cy="243.96" r="4.5" fill="#c0392b" opacity=".75"><title>U11p4_ETM_S06 9.41%</title></circle>
+<circle cx="939.20" cy="156.49" r="4.5" fill="#c0392b" opacity=".75"><title>U11p4_NTM_S01 1.64%</title></circle>
+<circle cx="983.71" cy="150.20" r="4.5" fill="#c0392b" opacity=".75"><title>U11p4_NTM_S02 4.74%</title></circle>
+<circle cx="956.43" cy="175.67" r="4.5" fill="#c0392b" opacity=".75"><title>U11p4_NTM_S03 4.65%</title></circle>
+<circle cx="945.21" cy="184.45" r="4.5" fill="#c0392b" opacity=".75"><title>U11p4_NTM_S04 4.31%</title></circle>
+<circle cx="983.23" cy="154.55" r="4.5" fill="#c0392b" opacity=".75"><title>U11p4_NTM_S05 5.37%</title></circle>
+<circle cx="967.87" cy="238.94" r="4.5" fill="#c0392b" opacity=".75"><title>U11p4_NTM_S06 17.12%</title></circle>
+<circle cx="692.08" cy="386.41" r="4.5" fill="#c0392b" opacity=".75"><title>U19p202140_ETM_S01 8.32%</title></circle>
+<circle cx="681.29" cy="423.18" r="4.5" fill="#c0392b" opacity=".75"><title>U19p202140_ETM_S02 0.17%</title></circle>
+<circle cx="699.61" cy="371.03" r="4.5" fill="#c0392b" opacity=".75"><title>U19p202140_ETM_S03 10.53%</title></circle>
+<circle cx="687.33" cy="397.92" r="4.5" fill="#c0392b" opacity=".75"><title>U19p202140_ETM_S04 6.29%</title></circle>
+<circle cx="689.50" cy="404.82" r="4.5" fill="#c0392b" opacity=".75"><title>U19p202140_ETM_S05 3.38%</title></circle>
+<circle cx="686.11" cy="398.87" r="4.5" fill="#c0392b" opacity=".75"><title>U19p202140_ETM_S06 6.40%</title></circle>
+<circle cx="700.58" cy="398.25" r="4.5" fill="#c0392b" opacity=".75"><title>U19p202140_NTM_S01 1.88%</title></circle>
+<circle cx="693.55" cy="413.00" r="4.5" fill="#c0392b" opacity=".75"><title>U19p202140_NTM_S02 0.48%</title></circle>
+<circle cx="706.51" cy="370.86" r="4.5" fill="#c0392b" opacity=".75"><title>U19p202140_NTM_S03 8.29%</title></circle>
+<circle cx="699.44" cy="388.60" r="4.5" fill="#c0392b" opacity=".75"><title>U19p202140_NTM_S04 5.20%</title></circle>
+<circle cx="699.76" cy="396.23" r="4.5" fill="#c0392b" opacity=".75"><title>U19p202140_NTM_S05 2.76%</title></circle>
+<circle cx="697.97" cy="389.41" r="4.5" fill="#c0392b" opacity=".75"><title>U19p202140_NTM_S06 5.43%</title></circle>
+<text x="832.5" y="68" text-anchor="middle" font-family="Arial" font-size="17">TwrBsMyt</text>
+<text x="832.5" y="496" text-anchor="middle" font-family="Arial" font-size="13">Time mean (MN m)</text>
+<text transform="translate(597 272.5) rotate(-90)" text-anchor="middle" font-family="Arial" font-size="13">Weighted cycle mean (MN m)</text>
+<text x="575" y="515" text-anchor="middle" font-family="Arial" font-size="12">Historical load moments only; no material fatigue correction or lifetime estimate.</text>
+</svg>

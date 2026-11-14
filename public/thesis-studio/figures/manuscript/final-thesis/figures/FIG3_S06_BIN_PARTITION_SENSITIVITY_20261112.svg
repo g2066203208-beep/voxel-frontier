@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="555" viewBox="0 0 1080 555">
+<rect width="1080" height="555" fill="white"/>
+<text x="45" y="39" font-family="Arial" font-size="22" font-weight="bold">Wind-bin occupancy depends on arbitrary partition</text>
+<text x="45" y="63" font-family="Arial" font-size="14">Same 18 NTM sources / 184,080 ERA5 hours / zero validated DLC1.2 slots</text>
+<text x="45" y="113" font-family="Arial" font-size="15">1 m width / 0 m phase</text>
+<rect x="305" y="94" width="70.05" height="24" fill="#295c80"/>
+<text x="386.05" y="113" font-family="Arial" font-size="14">3.892% (7164 h)</text>
+<text x="45" y="152" font-family="Arial" font-size="15">2 m width / 0 m phase</text>
+<rect x="305" y="133" width="191.25" height="24" fill="#8298a7"/>
+<text x="507.25" y="152" font-family="Arial" font-size="14">10.625% (19559 h)</text>
+<text x="45" y="191" font-family="Arial" font-size="15">2 m width / 1 m phase</text>
+<rect x="305" y="172" width="107.43" height="24" fill="#8298a7"/>
+<text x="423.43" y="191" font-family="Arial" font-size="14">5.969% (10987 h)</text>
+<text x="45" y="230" font-family="Arial" font-size="15">3 m width / 0 m phase</text>
+<rect x="305" y="211" width="339.30" height="24" fill="#8298a7"/>
+<text x="655.30" y="230" font-family="Arial" font-size="14">18.850% (34699 h)</text>
+<text x="45" y="269" font-family="Arial" font-size="15">3 m width / 1 m phase</text>
+<rect x="305" y="250" width="200.75" height="24" fill="#8298a7"/>
+<text x="516.75" y="269" font-family="Arial" font-size="14">11.153% (20530 h)</text>
+<text x="45" y="308" font-family="Arial" font-size="15">3 m width / 2 m phase</text>
+<rect x="305" y="289" width="100.85" height="24" fill="#8298a7"/>
+<text x="416.85" y="308" font-family="Arial" font-size="14">5.603% (10314 h)</text>
+<text x="45" y="347" font-family="Arial" font-size="15">4 m width / 0 m phase</text>
+<rect x="305" y="328" width="191.65" height="24" fill="#8298a7"/>
+<text x="507.65" y="347" font-family="Arial" font-size="14">10.647% (19599 h)</text>
+<text x="45" y="386" font-family="Arial" font-size="15">4 m width / 1 m phase</text>
+<rect x="305" y="367" width="107.58" height="24" fill="#8298a7"/>
+<text x="423.58" y="386" font-family="Arial" font-size="14">5.977% (11002 h)</text>
+<text x="45" y="425" font-family="Arial" font-size="15">4 m width / 2 m phase</text>
+<rect x="305" y="406" width="537.58" height="24" fill="#c16b39"/>
+<text x="853.58" y="425" font-family="Arial" font-size="14">29.866% (54977 h)</text>
+<text x="45" y="464" font-family="Arial" font-size="15">4 m width / 3 m phase</text>
+<rect x="305" y="445" width="343.30" height="24" fill="#8298a7"/>
+<text x="659.30" y="464" font-family="Arial" font-size="14">19.072% (35108 h)</text>
+<text x="45" y="513" font-family="Arial" font-size="14">Integer boundaries only, diagnostic [4,25) m/s. Three actual speeds: 9.343881, 11.4, 19.202140 m/s.</text>
+<text x="45" y="538" font-family="Arial" font-size="14">Bin occupancy is not physical load validation, interpolation or an IEC sampling plan.</text>
+</svg>

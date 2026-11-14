@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="600" viewBox="0 0 1000 600">
+<rect width="1000" height="600" fill="#ffffff"/><text x="100" y="37" font-family="Arial" font-size="24" font-weight="bold" fill="#1b2936">NTM My control-bin reversal: exact seed-label relabeling</text><text x="100" y="64" font-family="Arial" font-size="15" fill="#536374">720 permutations × 46,656 six-draw bootstrap resamples; historical 158 m load-DEL only</text>
+<line x1="100" y1="490" x2="930" y2="490" stroke="#e4e9ee"/><text x="88" y="495" text-anchor="end" font-family="Arial" font-size="13" fill="#51606b">0</text>
+<line x1="100" y1="330" x2="930" y2="330" stroke="#e4e9ee"/><text x="88" y="335" text-anchor="end" font-family="Arial" font-size="13" fill="#51606b">20</text>
+<line x1="100" y1="170" x2="930" y2="170" stroke="#e4e9ee"/><text x="88" y="175" text-anchor="end" font-family="Arial" font-size="13" fill="#51606b">40</text>
+<rect x="101.00" y="162.00" width="25.67" height="328.00" fill="#577f9c"/>
+<rect x="128.67" y="426.00" width="25.67" height="64.00" fill="#577f9c"/>
+<rect x="156.33" y="410.00" width="25.67" height="80.00" fill="#577f9c"/>
+<rect x="184.00" y="354.00" width="25.67" height="136.00" fill="#577f9c"/>
+<rect x="211.67" y="266.00" width="25.67" height="224.00" fill="#577f9c"/>
+<rect x="239.33" y="346.00" width="25.67" height="144.00" fill="#577f9c"/>
+<rect x="267.00" y="194.00" width="25.67" height="296.00" fill="#577f9c"/>
+<rect x="294.67" y="370.00" width="25.67" height="120.00" fill="#577f9c"/>
+<rect x="322.33" y="362.00" width="25.67" height="128.00" fill="#577f9c"/>
+<rect x="350.00" y="386.00" width="25.67" height="104.00" fill="#577f9c"/>
+<rect x="377.67" y="290.00" width="25.67" height="200.00" fill="#577f9c"/>
+<rect x="405.33" y="274.00" width="25.67" height="216.00" fill="#577f9c"/>
+<rect x="433.00" y="394.00" width="25.67" height="96.00" fill="#577f9c"/>
+<rect x="460.67" y="258.00" width="25.67" height="232.00" fill="#577f9c"/>
+<rect x="488.33" y="106.00" width="25.67" height="384.00" fill="#577f9c"/>
+<rect x="516.00" y="146.00" width="25.67" height="344.00" fill="#577f9c"/>
+<rect x="543.67" y="266.00" width="25.67" height="224.00" fill="#577f9c"/>
+<rect x="571.33" y="354.00" width="25.67" height="136.00" fill="#577f9c"/>
+<rect x="599.00" y="314.00" width="25.67" height="176.00" fill="#577f9c"/>
+<rect x="626.67" y="314.00" width="25.67" height="176.00" fill="#577f9c"/>
+<rect x="654.33" y="242.00" width="25.67" height="248.00" fill="#577f9c"/>
+<rect x="682.00" y="258.00" width="25.67" height="232.00" fill="#577f9c"/>
+<rect x="709.67" y="338.00" width="25.67" height="152.00" fill="#577f9c"/>
+<rect x="737.33" y="194.00" width="25.67" height="296.00" fill="#577f9c"/>
+<rect x="765.00" y="282.00" width="25.67" height="208.00" fill="#577f9c"/>
+<rect x="792.67" y="290.00" width="25.67" height="200.00" fill="#577f9c"/>
+<rect x="820.33" y="314.00" width="25.67" height="176.00" fill="#577f9c"/>
+<rect x="848.00" y="298.00" width="25.67" height="192.00" fill="#577f9c"/>
+<rect x="875.67" y="290.00" width="25.67" height="200.00" fill="#577f9c"/>
+<rect x="903.33" y="442.00" width="25.67" height="48.00" fill="#577f9c"/>
+<line x1="104.03" y1="90" x2="104.03" y2="490" stroke="#b94b3b" stroke-width="2.5" stroke-dasharray="4 4"/><text x="108" y="118" font-family="Arial" font-size="14" fill="#b94b3b">identity: 0.073%</text>
+<line x1="541.28" y1="90" x2="541.28" y2="490" stroke="#1b7662" stroke-width="2.5" stroke-dasharray="8 4"/><text x="549.2846417010667" y="139" font-family="Arial" font-size="14" fill="#1b7662">independent: 7.975%</text>
+<line x1="521.66" y1="90" x2="521.66" y2="490" stroke="#a5792e" stroke-width="2.5" stroke-dasharray="8 4"/><text x="529.6573311995277" y="160" font-family="Arial" font-size="14" fill="#a5792e">relabel mean: 7.620%</text>
+<line x1="100" y1="490" x2="100" y2="497" stroke="#344"/><text x="100" y="518" text-anchor="middle" font-family="Arial" font-size="13">0%</text>
+<line x1="266" y1="490" x2="266" y2="497" stroke="#344"/><text x="266" y="518" text-anchor="middle" font-family="Arial" font-size="13">3%</text>
+<line x1="432" y1="490" x2="432" y2="497" stroke="#344"/><text x="432" y="518" text-anchor="middle" font-family="Arial" font-size="13">6%</text>
+<line x1="598" y1="490" x2="598" y2="497" stroke="#344"/><text x="598" y="518" text-anchor="middle" font-family="Arial" font-size="13">9%</text>
+<line x1="764" y1="490" x2="764" y2="497" stroke="#344"/><text x="764" y="518" text-anchor="middle" font-family="Arial" font-size="13">12%</text>
+<line x1="930" y1="490" x2="930" y2="497" stroke="#344"/><text x="930" y="518" text-anchor="middle" font-family="Arial" font-size="13">15%</text>
+<line x1="100" y1="490" x2="930" y2="490" stroke="#333"/><text x="515" y="555" text-anchor="middle" font-family="Arial" font-size="17">Conditional reversal probability under a label permutation</text><text transform="translate(34 290) rotate(-90)" text-anchor="middle" font-family="Arial" font-size="17">Number of permutations</text><text x="100" y="587" font-family="Arial" font-size="12" fill="#5b6872">Source: T062 72-row historical rainflow-derived DEL; no cross-speed physical pairing established; not a population confidence interval.</text></svg>

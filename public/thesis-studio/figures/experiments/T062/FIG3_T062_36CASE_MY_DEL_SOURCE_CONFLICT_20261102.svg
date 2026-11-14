@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1130 620" role="img" aria-label="36 archived OpenFAST load DELs for tower base My. Legacy claim requires different source.">
+<rect width="1130" height="620" fill="#ffffff"/>
+<text x="36.00" y="41.00" font-family="Arial, sans-serif" font-size="23" fill="#203045" font-weight="bold" text-anchor="start">36 archived OpenFAST cases  |  tower-base My load-DEL</text>
+<text x="36.00" y="67.00" font-family="Arial, sans-serif" font-size="13" fill="#56677a" font-weight="normal" text-anchor="start">m=4, Neq=100,000; 600 s each. Six actual seeds in each turbulence/wind-speed group.</text>
+<line x1="260.00" x2="260.00" y1="95" y2="540" stroke="#e6eaf0" stroke-width="1"/>
+<text x="260.00" y="563.00" font-family="Arial, sans-serif" font-size="13" fill="#56677a" font-weight="normal" text-anchor="middle">0</text>
+<line x1="380.00" x2="380.00" y1="95" y2="540" stroke="#e6eaf0" stroke-width="1"/>
+<text x="380.00" y="563.00" font-family="Arial, sans-serif" font-size="13" fill="#56677a" font-weight="normal" text-anchor="middle">5</text>
+<line x1="500.00" x2="500.00" y1="95" y2="540" stroke="#e6eaf0" stroke-width="1"/>
+<text x="500.00" y="563.00" font-family="Arial, sans-serif" font-size="13" fill="#56677a" font-weight="normal" text-anchor="middle">10</text>
+<line x1="620.00" x2="620.00" y1="95" y2="540" stroke="#e6eaf0" stroke-width="1"/>
+<text x="620.00" y="563.00" font-family="Arial, sans-serif" font-size="13" fill="#56677a" font-weight="normal" text-anchor="middle">15</text>
+<line x1="740.00" x2="740.00" y1="95" y2="540" stroke="#e6eaf0" stroke-width="1"/>
+<text x="740.00" y="563.00" font-family="Arial, sans-serif" font-size="13" fill="#56677a" font-weight="normal" text-anchor="middle">20</text>
+<line x1="860.00" x2="860.00" y1="95" y2="540" stroke="#e6eaf0" stroke-width="1"/>
+<text x="860.00" y="563.00" font-family="Arial, sans-serif" font-size="13" fill="#56677a" font-weight="normal" text-anchor="middle">25</text>
+<line x1="980.00" x2="980.00" y1="95" y2="540" stroke="#e6eaf0" stroke-width="1"/>
+<text x="980.00" y="563.00" font-family="Arial, sans-serif" font-size="13" fill="#56677a" font-weight="normal" text-anchor="middle">30</text>
+<text x="620.00" y="598.00" font-family="Arial, sans-serif" font-size="12" fill="#56677a" font-weight="normal" text-anchor="middle">My load-DEL  (MN·m)   —   same 36 source OUTB; solid=corrected rainflow, orange hollow=historical wrong-comparator output</text>
+<text x="35.00" y="151.00" font-family="Arial, sans-serif" font-size="16" fill="#203045" font-weight="normal" text-anchor="start">9.344 m/s  NTM</text>
+<line x1="500.33" x2="601.16" y1="146" y2="146" stroke="#b9c6d4" stroke-width="3"/>
+<circle cx="601.16" cy="132.50" r="4.8" fill="#566f90" stroke="#ffffff" stroke-width="1.4"/>
+<circle cx="517.36" cy="137.90" r="4.8" fill="#566f90" stroke="#ffffff" stroke-width="1.4"/>
+<circle cx="552.95" cy="143.30" r="4.8" fill="#566f90" stroke="#ffffff" stroke-width="1.4"/>
+<circle cx="587.81" cy="148.70" r="4.8" fill="#566f90" stroke="#ffffff" stroke-width="1.4"/>
+<circle cx="500.33" cy="154.10" r="4.8" fill="#566f90" stroke="#ffffff" stroke-width="1.4"/>
+<circle cx="551.82" cy="159.50" r="4.8" fill="#566f90" stroke="#ffffff" stroke-width="1.4"/>
+<text x="1030.00" y="150.00" font-family="Arial, sans-serif" font-size="12" fill="#536576" font-weight="normal" text-anchor="start">n=6  |  12.16 mean</text>
+<text x="35.00" y="223.00" font-family="Arial, sans-serif" font-size="16" fill="#203045" font-weight="bold" text-anchor="start">9.344 m/s  ETM</text>
+<line x1="631.81" x2="884.56" y1="218" y2="218" stroke="#b9c6d4" stroke-width="3"/>
+<circle cx="779.07" cy="204.50" r="4.8" fill="#197c83" stroke="#ffffff" stroke-width="1.4"/>
+<circle cx="673.34" cy="209.90" r="4.8" fill="#197c83" stroke="#ffffff" stroke-width="1.4"/>
+<circle cx="708.91" cy="215.30" r="4.8" fill="#197c83" stroke="#ffffff" stroke-width="1.4"/>
+<circle cx="774.41" cy="220.70" r="4.8" fill="#197c83" stroke="#ffffff" stroke-width="1.4"/>
+<circle cx="631.81" cy="226.10" r="4.8" fill="#197c83" stroke="#ffffff" stroke-width="1.4"/>
+<circle cx="884.56" cy="231.50" r="4.8" fill="#197c83" stroke="#ffffff" stroke-width="1.4"/>
+<text x="1030.00" y="222.00" font-family="Arial, sans-serif" font-size="12" fill="#536576" font-weight="normal" text-anchor="start">n=6  |  20.08 mean</text>
+<text x="35.00" y="295.00" font-family="Arial, sans-serif" font-size="16" fill="#203045" font-weight="normal" text-anchor="start">11.4 m/s  NTM</text>
+<line x1="582.79" x2="695.56" y1="290" y2="290" stroke="#b9c6d4" stroke-width="3"/>
+<circle cx="582.79" cy="276.50" r="4.8" fill="#566f90" stroke="#ffffff" stroke-width="1.4"/>
+<circle cx="618.84" cy="281.90" r="4.8" fill="#566f90" stroke="#ffffff" stroke-width="1.4"/>
+<circle cx="612.29" cy="287.30" r="4.8" fill="#566f90" stroke="#ffffff" stroke-width="1.4"/>
+<circle cx="695.56" cy="292.70" r="4.8" fill="#566f90" stroke="#ffffff" stroke-width="1.4"/>
+<circle cx="629.73" cy="298.10" r="4.8" fill="#566f90" stroke="#ffffff" stroke-width="1.4"/>
+<circle cx="689.65" cy="303.50" r="4.8" fill="#566f90" stroke="#ffffff" stroke-width="1.4"/>
+<text x="1030.00" y="294.00" font-family="Arial, sans-serif" font-size="12" fill="#536576" font-weight="normal" text-anchor="start">n=6  |  15.76 mean</text>
+<text x="35.00" y="367.00" font-family="Arial, sans-serif" font-size="16" fill="#203045" font-weight="bold" text-anchor="start">11.4 m/s  ETM</text>
+<line x1="728.72" x2="903.26" y1="362" y2="362" stroke="#b9c6d4" stroke-width="3"/>
+<circle cx="728.72" cy="348.50" r="4.8" fill="#197c83" stroke="#ffffff" stroke-width="1.4"/>
+<circle cx="801.10" cy="353.90" r="4.8" fill="#197c83" stroke="#ffffff" stroke-width="1.4"/>
+<circle cx="812.13" cy="359.30" r="4.8" fill="#197c83" stroke="#ffffff" stroke-width="1.4"/>
+<circle cx="903.26" cy="364.70" r="6.5" fill="#197c83" stroke="#ffffff" stroke-width="1.4"/>
+<circle cx="839.04" cy="370.10" r="4.8" fill="#197c83" stroke="#ffffff" stroke-width="1.4"/>
+<circle cx="837.64" cy="375.50" r="4.8" fill="#197c83" stroke="#ffffff" stroke-width="1.4"/>
+<text x="1030.00" y="366.00" font-family="Arial, sans-serif" font-size="12" fill="#536576" font-weight="normal" text-anchor="start">n=6  |  23.35 mean</text>
+<text x="35.00" y="439.00" font-family="Arial, sans-serif" font-size="16" fill="#203045" font-weight="normal" text-anchor="start">19.202 m/s  NTM</text>
+<line x1="629.05" x2="708.79" y1="434" y2="434" stroke="#b9c6d4" stroke-width="3"/>
+<circle cx="662.34" cy="420.50" r="4.8" fill="#566f90" stroke="#ffffff" stroke-width="1.4"/>
+<circle cx="668.70" cy="425.90" r="4.8" fill="#566f90" stroke="#ffffff" stroke-width="1.4"/>
+<circle cx="629.05" cy="431.30" r="4.8" fill="#566f90" stroke="#ffffff" stroke-width="1.4"/>
+<circle cx="708.79" cy="436.70" r="4.8" fill="#566f90" stroke="#ffffff" stroke-width="1.4"/>
+<circle cx="664.97" cy="442.10" r="4.8" fill="#566f90" stroke="#ffffff" stroke-width="1.4"/>
+<circle cx="684.23" cy="447.50" r="4.8" fill="#566f90" stroke="#ffffff" stroke-width="1.4"/>
+<text x="1030.00" y="438.00" font-family="Arial, sans-serif" font-size="12" fill="#536576" font-weight="normal" text-anchor="start">n=6  |  17.07 mean</text>
+<text x="35.00" y="511.00" font-family="Arial, sans-serif" font-size="16" fill="#203045" font-weight="bold" text-anchor="start">19.202 m/s  ETM</text>
+<line x1="758.79" x2="843.75" y1="506" y2="506" stroke="#b9c6d4" stroke-width="3"/>
+<circle cx="800.41" cy="492.50" r="4.8" fill="#197c83" stroke="#ffffff" stroke-width="1.4"/>
+<circle cx="795.41" cy="497.90" r="4.8" fill="#197c83" stroke="#ffffff" stroke-width="1.4"/>
+<circle cx="758.79" cy="503.30" r="4.8" fill="#197c83" stroke="#ffffff" stroke-width="1.4"/>
+<circle cx="843.75" cy="508.70" r="4.8" fill="#197c83" stroke="#ffffff" stroke-width="1.4"/>
+<circle cx="793.70" cy="514.10" r="4.8" fill="#197c83" stroke="#ffffff" stroke-width="1.4"/>
+<circle cx="825.02" cy="519.50" r="4.8" fill="#197c83" stroke="#ffffff" stroke-width="1.4"/>
+<text x="1030.00" y="510.00" font-family="Arial, sans-serif" font-size="12" fill="#536576" font-weight="normal" text-anchor="start">n=6  |  22.62 mean</text>
+<line x1="936.25" x2="936.25" y1="94" y2="540" stroke="#c36d32" stroke-dasharray="5,5" stroke-width="1.5"/>
+<circle cx="936.25" cy="363" r="7" fill="#ffffff" stroke="#c36d32" stroke-width="2.3"/>
+<text x="1000.00" y="105.00" font-family="Arial, sans-serif" font-size="13" fill="#a55221" font-weight="bold" text-anchor="start">Historic S03=28.177</text>
+<text x="1000.00" y="122.00" font-family="Arial, sans-serif" font-size="11" fill="#a55221" font-weight="normal" text-anchor="start">old comparator</text>
+<text x="898.26" y="338.00" font-family="Arial, sans-serif" font-size="11" fill="#197c83" font-weight="normal" text-anchor="end">S04=26.802 (current)</text>
+<text x="37.00" y="540.00" font-family="Arial, sans-serif" font-size="11" fill="#536576" font-weight="normal" text-anchor="start">NTM: slate   |   ETM: teal   |   hollow orange marker: legacy claim, not an extra OUTB observation</text>
+</svg>

@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="690" viewBox="0 0 1120 690">
+<rect width="1120" height="690" fill="#fff"/>
+<text x="52" y="43" font-family="Arial" font-size="24" font-weight="bold" fill="#173045">High-wind direction: Bayes inversion of ERA5 source frequencies</text>
+<text x="52" y="68" font-family="Arial" font-size="14" fill="#566b7a">100 m; 2005–2025; H: V100 ≥ P95 = 8.385 m/s. Scenario P(H) = 5% (not verified exact count).</text>
+<text x="52" y="110" font-family="Arial" font-size="17" font-weight="bold" fill="#203d50">A  Directional high-wind enrichment: P(d | H) / P(d)</text>
+<line x1="78" y1="361" x2="1060" y2="361" stroke="#dce5e9" stroke-dasharray="2 4"/>
+<text x="44" y="365" font-family="Arial" font-size="12">0</text>
+<line x1="78" y1="289.3333333333333" x2="1060" y2="289.3333333333333" stroke="#bf693b" stroke-dasharray="6 5"/>
+<text x="44" y="293.3333333333333" font-family="Arial" font-size="12">1</text>
+<line x1="78" y1="217.66666666666666" x2="1060" y2="217.66666666666666" stroke="#dce5e9" stroke-dasharray="2 4"/>
+<text x="44" y="221.66666666666666" font-family="Arial" font-size="12">2</text>
+<line x1="78" y1="146" x2="1060" y2="146" stroke="#dce5e9" stroke-dasharray="2 4"/>
+<text x="44" y="150" font-family="Arial" font-size="12">3</text>
+<rect x="90" y="214.382" width="32" height="146.618" rx="3" fill="#cf7045"/>
+<text x="106" y="384" font-family="Arial" font-size="12" text-anchor="middle">N</text>
+<rect x="149" y="188.739" width="32" height="172.261" rx="3" fill="#cf7045"/>
+<text x="165" y="384" font-family="Arial" font-size="12" text-anchor="middle">NNE</text>
+<rect x="208" y="334.017" width="32" height="26.983" rx="3" fill="#5089aa"/>
+<text x="224" y="384" font-family="Arial" font-size="12" text-anchor="middle">NE</text>
+<rect x="267" y="351.782" width="32" height="9.218" rx="3" fill="#5089aa"/>
+<text x="283" y="384" font-family="Arial" font-size="12" text-anchor="middle">ENE</text>
+<rect x="326" y="345.633" width="32" height="15.367" rx="3" fill="#5089aa"/>
+<text x="342" y="384" font-family="Arial" font-size="12" text-anchor="middle">E</text>
+<rect x="385" y="349.542" width="32" height="11.458" rx="3" fill="#5089aa"/>
+<text x="401" y="384" font-family="Arial" font-size="12" text-anchor="middle">ESE</text>
+<rect x="444" y="357.299" width="32" height="3.701" rx="3" fill="#5089aa"/>
+<text x="460" y="384" font-family="Arial" font-size="12" text-anchor="middle">SE</text>
+<rect x="503" y="356.058" width="32" height="4.942" rx="3" fill="#5089aa"/>
+<text x="519" y="384" font-family="Arial" font-size="12" text-anchor="middle">SSE</text>
+<rect x="562" y="339.178" width="32" height="21.822" rx="3" fill="#5089aa"/>
+<text x="578" y="384" font-family="Arial" font-size="12" text-anchor="middle">S</text>
+<rect x="621" y="171.729" width="32" height="189.271" rx="3" fill="#cf7045"/>
+<text x="637" y="384" font-family="Arial" font-size="12" text-anchor="middle">SSW</text>
+<rect x="680" y="272.682" width="32" height="88.318" rx="3" fill="#5089aa"/>
+<text x="696" y="384" font-family="Arial" font-size="12" text-anchor="middle">SW</text>
+<rect x="739" y="358.254" width="32" height="2.746" rx="3" fill="#5089aa"/>
+<text x="755" y="384" font-family="Arial" font-size="12" text-anchor="middle">WSW</text>
+<rect x="798" y="360.578" width="32" height="0.422" rx="3" fill="#5089aa"/>
+<text x="814" y="384" font-family="Arial" font-size="12" text-anchor="middle">W</text>
+<rect x="857" y="357.372" width="32" height="3.628" rx="3" fill="#5089aa"/>
+<text x="873" y="384" font-family="Arial" font-size="12" text-anchor="middle">WNW</text>
+<rect x="916" y="346.425" width="32" height="14.575" rx="3" fill="#5089aa"/>
+<text x="932" y="384" font-family="Arial" font-size="12" text-anchor="middle">NW</text>
+<rect x="975" y="321.998" width="32" height="39.002" rx="3" fill="#5089aa"/>
+<text x="991" y="384" font-family="Arial" font-size="12" text-anchor="middle">NNW</text>
+<text x="75" y="414" font-family="Arial" font-size="12" fill="#99603e">Dashed reference = 1; orange = three most frequent high-wind sectors.</text>
+<text x="52" y="453" font-family="Arial" font-size="17" font-weight="bold" fill="#203d50">B  Cumulative high-wind directional exposure (top k sectors)</text>
+<rect x="105" y="569.293" width="67" height="42.707" rx="3" fill="#5b9b8d"/>
+<text x="138" y="558.293" font-family="Arial" font-size="12" text-anchor="middle">37.1%</text>
+<text x="138" y="634" font-family="Arial" font-size="12" text-anchor="middle">k=1</text>
+<rect x="225" y="541.696" width="67" height="70.304" rx="3" fill="#5b9b8d"/>
+<text x="258" y="530.696" font-family="Arial" font-size="12" text-anchor="middle">61.1%</text>
+<text x="258" y="634" font-family="Arial" font-size="12" text-anchor="middle">k=2</text>
+<rect x="345" y="518.583" width="67" height="93.417" rx="3" fill="#5b9b8d"/>
+<text x="378" y="507.583" font-family="Arial" font-size="12" text-anchor="middle">81.2%</text>
+<text x="378" y="634" font-family="Arial" font-size="12" text-anchor="middle">k=3</text>
+<rect x="465" y="511.512" width="67" height="100.488" rx="3" fill="#5b9b8d"/>
+<text x="498" y="500.512" font-family="Arial" font-size="12" text-anchor="middle">87.4%</text>
+<text x="498" y="634" font-family="Arial" font-size="12" text-anchor="middle">k=4</text>
+<rect x="585" y="507.303" width="67" height="104.697" rx="3" fill="#5b9b8d"/>
+<text x="618" y="496.303" font-family="Arial" font-size="12" text-anchor="middle">91.0%</text>
+<text x="618" y="634" font-family="Arial" font-size="12" text-anchor="middle">k=5</text>
+<rect x="705" y="504.900" width="67" height="107.100" rx="3" fill="#5b9b8d"/>
+<text x="738" y="493.900" font-family="Arial" font-size="12" text-anchor="middle">93.1%</text>
+<text x="738" y="634" font-family="Arial" font-size="12" text-anchor="middle">k=6</text>
+<rect x="825" y="502.646" width="67" height="109.354" rx="3" fill="#5b9b8d"/>
+<text x="858" y="491.646" font-family="Arial" font-size="12" text-anchor="middle">95.1%</text>
+<text x="858" y="634" font-family="Arial" font-size="12" text-anchor="middle">k=7</text>
+<rect x="945" y="500.864" width="67" height="111.136" rx="3" fill="#5b9b8d"/>
+<text x="978" y="489.864" font-family="Arial" font-size="12" text-anchor="middle">96.6%</text>
+<text x="978" y="634" font-family="Arial" font-size="12" text-anchor="middle">k=8</text>
+<text x="52" y="669" font-family="Arial" font-size="12" fill="#586d7d">R5 Table 3-3 printed frequencies; directional exposure only, not turbine load, local stress or fatigue damage.</text>
+</svg>

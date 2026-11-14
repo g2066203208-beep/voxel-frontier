@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="480" viewBox="0 0 1100 480">
+<rect width="1100" height="480" fill="white"/>
+<text x="78" y="35" font-family="Arial" font-size="21" font-weight="bold" fill="#202a34">Real synchronized tower-base M–T and M–V–T coincidence | 18 NTM</text>
+<text x="78" y="57" font-family="Arial" font-size="12" fill="#505e69">q = max over time of the minimum of separately normalized instantaneous magnitudes; NOT structural utilization</text>
+<line x1="78" y1="350.00" x2="1030" y2="350.00" stroke="#e2e7eb"/>
+<text x="68" y="354.00" text-anchor="end" font-family="Arial" font-size="12" fill="#48545e">0.65</text>
+<line x1="78" y1="307.50" x2="1030" y2="307.50" stroke="#e2e7eb"/>
+<text x="68" y="311.50" text-anchor="end" font-family="Arial" font-size="12" fill="#48545e">0.70</text>
+<line x1="78" y1="265.00" x2="1030" y2="265.00" stroke="#e2e7eb"/>
+<text x="68" y="269.00" text-anchor="end" font-family="Arial" font-size="12" fill="#48545e">0.75</text>
+<line x1="78" y1="222.50" x2="1030" y2="222.50" stroke="#e2e7eb"/>
+<text x="68" y="226.50" text-anchor="end" font-family="Arial" font-size="12" fill="#48545e">0.80</text>
+<line x1="78" y1="180.00" x2="1030" y2="180.00" stroke="#e2e7eb"/>
+<text x="68" y="184.00" text-anchor="end" font-family="Arial" font-size="12" fill="#48545e">0.85</text>
+<line x1="78" y1="137.50" x2="1030" y2="137.50" stroke="#e2e7eb"/>
+<text x="68" y="141.50" text-anchor="end" font-family="Arial" font-size="12" fill="#48545e">0.90</text>
+<line x1="78" y1="95.00" x2="1030" y2="95.00" stroke="#e2e7eb"/>
+<text x="68" y="99.00" text-anchor="end" font-family="Arial" font-size="12" fill="#48545e">0.95</text>
+<line x1="78" y1="360" x2="1030" y2="360" stroke="#4a525a"/>
+<line x1="73.0" y1="197.18" x2="83.0" y2="246.68" stroke="#9ba9b1" stroke-width="1.2"/>
+<circle cx="73.0" cy="197.18" r="4.7" fill="#176c99"/>
+<rect x="79.0" y="242.68" width="8" height="8" fill="#c46b35"/>
+<text x="78.0" y="380" text-anchor="middle" font-family="Arial" font-size="10" fill="#3c4650">S01</text>
+<line x1="125.0" y1="218.53" x2="135.0" y2="249.01" stroke="#9ba9b1" stroke-width="1.2"/>
+<circle cx="125.0" cy="218.53" r="4.7" fill="#176c99"/>
+<rect x="131.0" y="245.01" width="8" height="8" fill="#c46b35"/>
+<text x="130.0" y="380" text-anchor="middle" font-family="Arial" font-size="10" fill="#3c4650">S02</text>
+<line x1="177.0" y1="189.83" x2="187.0" y2="232.49" stroke="#9ba9b1" stroke-width="1.2"/>
+<circle cx="177.0" cy="189.83" r="4.7" fill="#176c99"/>
+<rect x="183.0" y="228.49" width="8" height="8" fill="#c46b35"/>
+<text x="182.0" y="380" text-anchor="middle" font-family="Arial" font-size="10" fill="#3c4650">S03</text>
+<line x1="229.0" y1="219.95" x2="239.0" y2="239.47" stroke="#9ba9b1" stroke-width="1.2"/>
+<circle cx="229.0" cy="219.95" r="4.7" fill="#176c99"/>
+<rect x="235.0" y="235.47" width="8" height="8" fill="#c46b35"/>
+<text x="234.0" y="380" text-anchor="middle" font-family="Arial" font-size="10" fill="#3c4650">S04</text>
+<line x1="281.0" y1="159.39" x2="291.0" y2="234.17" stroke="#9ba9b1" stroke-width="1.2"/>
+<circle cx="281.0" cy="159.39" r="4.7" fill="#176c99"/>
+<rect x="287.0" y="230.17" width="8" height="8" fill="#c46b35"/>
+<text x="286.0" y="380" text-anchor="middle" font-family="Arial" font-size="10" fill="#3c4650">S05</text>
+<line x1="333.0" y1="242.99" x2="343.0" y2="242.99" stroke="#9ba9b1" stroke-width="1.2"/>
+<circle cx="333.0" cy="242.99" r="4.7" fill="#176c99"/>
+<rect x="339.0" y="238.99" width="8" height="8" fill="#c46b35"/>
+<text x="338.0" y="380" text-anchor="middle" font-family="Arial" font-size="10" fill="#3c4650">S06</text>
+<line x1="385.0" y1="271.40" x2="395.0" y2="302.04" stroke="#9ba9b1" stroke-width="1.2"/>
+<circle cx="385.0" cy="271.40" r="4.7" fill="#176c99"/>
+<rect x="391.0" y="298.04" width="8" height="8" fill="#c46b35"/>
+<text x="390.0" y="380" text-anchor="middle" font-family="Arial" font-size="10" fill="#3c4650">S01</text>
+<line x1="437.0" y1="175.99" x2="447.0" y2="199.61" stroke="#9ba9b1" stroke-width="1.2"/>
+<circle cx="437.0" cy="175.99" r="4.7" fill="#176c99"/>
+<rect x="443.0" y="195.61" width="8" height="8" fill="#c46b35"/>
+<text x="442.0" y="380" text-anchor="middle" font-family="Arial" font-size="10" fill="#3c4650">S02</text>
+<line x1="489.0" y1="187.88" x2="499.0" y2="231.76" stroke="#9ba9b1" stroke-width="1.2"/>
+<circle cx="489.0" cy="187.88" r="4.7" fill="#176c99"/>
+<rect x="495.0" y="227.76" width="8" height="8" fill="#c46b35"/>
+<text x="494.0" y="380" text-anchor="middle" font-family="Arial" font-size="10" fill="#3c4650">S03</text>
+<line x1="541.0" y1="255.40" x2="551.0" y2="260.02" stroke="#9ba9b1" stroke-width="1.2"/>
+<circle cx="541.0" cy="255.40" r="4.7" fill="#176c99"/>
+<rect x="547.0" y="256.02" width="8" height="8" fill="#c46b35"/>
+<text x="546.0" y="380" text-anchor="middle" font-family="Arial" font-size="10" fill="#3c4650">S04</text>
+<line x1="593.0" y1="204.14" x2="603.0" y2="258.50" stroke="#9ba9b1" stroke-width="1.2"/>
+<circle cx="593.0" cy="204.14" r="4.7" fill="#176c99"/>
+<rect x="599.0" y="254.50" width="8" height="8" fill="#c46b35"/>
+<text x="598.0" y="380" text-anchor="middle" font-family="Arial" font-size="10" fill="#3c4650">S05</text>
+<line x1="645.0" y1="156.99" x2="655.0" y2="158.79" stroke="#9ba9b1" stroke-width="1.2"/>
+<circle cx="645.0" cy="156.99" r="4.7" fill="#176c99"/>
+<rect x="651.0" y="154.79" width="8" height="8" fill="#c46b35"/>
+<text x="650.0" y="380" text-anchor="middle" font-family="Arial" font-size="10" fill="#3c4650">S06</text>
+<line x1="697.0" y1="289.03" x2="707.0" y2="303.08" stroke="#9ba9b1" stroke-width="1.2"/>
+<circle cx="697.0" cy="289.03" r="4.7" fill="#176c99"/>
+<rect x="703.0" y="299.08" width="8" height="8" fill="#c46b35"/>
+<text x="702.0" y="380" text-anchor="middle" font-family="Arial" font-size="10" fill="#3c4650">S01</text>
+<line x1="749.0" y1="289.83" x2="759.0" y2="313.10" stroke="#9ba9b1" stroke-width="1.2"/>
+<circle cx="749.0" cy="289.83" r="4.7" fill="#176c99"/>
+<rect x="755.0" y="309.10" width="8" height="8" fill="#c46b35"/>
+<text x="754.0" y="380" text-anchor="middle" font-family="Arial" font-size="10" fill="#3c4650">S02</text>
+<line x1="801.0" y1="266.55" x2="811.0" y2="272.05" stroke="#9ba9b1" stroke-width="1.2"/>
+<circle cx="801.0" cy="266.55" r="4.7" fill="#176c99"/>
+<rect x="807.0" y="268.05" width="8" height="8" fill="#c46b35"/>
+<text x="806.0" y="380" text-anchor="middle" font-family="Arial" font-size="10" fill="#3c4650">S03</text>
+<line x1="853.0" y1="255.26" x2="863.0" y2="264.84" stroke="#9ba9b1" stroke-width="1.2"/>
+<circle cx="853.0" cy="255.26" r="4.7" fill="#176c99"/>
+<rect x="859.0" y="260.84" width="8" height="8" fill="#c46b35"/>
+<text x="858.0" y="380" text-anchor="middle" font-family="Arial" font-size="10" fill="#3c4650">S04</text>
+<line x1="905.0" y1="209.84" x2="915.0" y2="232.42" stroke="#9ba9b1" stroke-width="1.2"/>
+<circle cx="905.0" cy="209.84" r="4.7" fill="#176c99"/>
+<rect x="911.0" y="228.42" width="8" height="8" fill="#c46b35"/>
+<text x="910.0" y="380" text-anchor="middle" font-family="Arial" font-size="10" fill="#3c4650">S05</text>
+<line x1="957.0" y1="290.62" x2="967.0" y2="307.48" stroke="#9ba9b1" stroke-width="1.2"/>
+<circle cx="957.0" cy="290.62" r="4.7" fill="#176c99"/>
+<rect x="963.0" y="303.48" width="8" height="8" fill="#c46b35"/>
+<text x="962.0" y="380" text-anchor="middle" font-family="Arial" font-size="10" fill="#3c4650">S06</text>
+<text x="208.0" y="405" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#24333e">9.343881 m/s</text>
+<line x1="364.0" y1="90" x2="364.0" y2="360" stroke="#b7c0c7" stroke-dasharray="4,4"/>
+<text x="520.0" y="405" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#24333e">11.4 m/s</text>
+<line x1="676.0" y1="90" x2="676.0" y2="360" stroke="#b7c0c7" stroke-dasharray="4,4"/>
+<text x="832.0" y="405" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#24333e">19.202140 m/s</text>
+<circle cx="78" cy="432" r="5" fill="#176c99"/><text x="90" y="436" font-family="Arial" font-size="12" fill="#33414b">q(M,T)</text>
+<rect x="177" y="427" width="9" height="9" fill="#c46b35"/><text x="192" y="436" font-family="Arial" font-size="12" fill="#33414b">q(M,V,T)</text>
+<text x="78" y="463" font-family="Arial" font-size="11" fill="#586773">Original OUTB 100–700 s, 0.05 s, 18×12001 samples. No 95%-95% M/T simultaneous sample in any case.</text>
+</svg>

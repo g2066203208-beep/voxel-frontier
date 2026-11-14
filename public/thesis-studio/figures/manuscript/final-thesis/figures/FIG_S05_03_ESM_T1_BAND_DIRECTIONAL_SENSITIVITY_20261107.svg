@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="660" viewBox="0 0 1080 660" role="img" aria-labelledby="title desc">
+<title id="title">Conditional period-band directional sensitivity of real processed ESM record</title>
+<desc id="desc">Six sampled periods, 5% damping, plus or minus 10% around provisional beam T1; not site hazard, design spectrum, continuous envelope or structural response.</desc>
+<rect width="1080" height="660" fill="white"/>
+<text x="70" y="45" font-family="Arial,sans-serif" font-size="24" font-weight="bold">Conditional period-band sensitivity of real ESM spectra</text>
+<text x="70" y="76" font-family="Arial,sans-serif" font-size="15">IT-2012-0008 · IT.NVL · processed HNE/HNN · 5% damping · unscaled PSA</text>
+<rect x="125" y="135" width="810" height="385" fill="#FAFCFE" stroke="#B6C2CA"/>
+<line x1="125" y1="520.00" x2="935" y2="520.00" stroke="#E3E9EF"/><text x="112" y="525.00" text-anchor="end" font-family="Arial,sans-serif" font-size="13">0.010</text>
+<line x1="125" y1="448.70" x2="935" y2="448.70" stroke="#E3E9EF"/><text x="112" y="453.70" text-anchor="end" font-family="Arial,sans-serif" font-size="13">0.015</text>
+<line x1="125" y1="377.41" x2="935" y2="377.41" stroke="#E3E9EF"/><text x="112" y="382.41" text-anchor="end" font-family="Arial,sans-serif" font-size="13">0.020</text>
+<line x1="125" y1="306.11" x2="935" y2="306.11" stroke="#E3E9EF"/><text x="112" y="311.11" text-anchor="end" font-family="Arial,sans-serif" font-size="13">0.025</text>
+<line x1="125" y1="234.81" x2="935" y2="234.81" stroke="#E3E9EF"/><text x="112" y="239.81" text-anchor="end" font-family="Arial,sans-serif" font-size="13">0.030</text>
+<line x1="125" y1="163.52" x2="935" y2="163.52" stroke="#E3E9EF"/><text x="112" y="168.52" text-anchor="end" font-family="Arial,sans-serif" font-size="13">0.035</text>
+<line x1="150.97" y1="135" x2="150.97" y2="520" stroke="#EDF0F3"/><text x="150.97" y="544" text-anchor="middle" font-family="Arial,sans-serif" font-size="12">5.648</text>
+<line x1="379.88" y1="135" x2="379.88" y2="520" stroke="#EDF0F3"/><text x="379.88" y="544" text-anchor="middle" font-family="Arial,sans-serif" font-size="12">6.000</text>
+<line x1="389.55" y1="135" x2="389.55" y2="520" stroke="#EDF0F3"/><text x="389.55" y="544" text-anchor="middle" font-family="Arial,sans-serif" font-size="12">6.015</text>
+<line x1="530.00" y1="135" x2="530.00" y2="520" stroke="#EDF0F3"/><text x="530.00" y="544" text-anchor="middle" font-family="Arial,sans-serif" font-size="12">6.231</text>
+<line x1="643.63" y1="135" x2="643.63" y2="520" stroke="#EDF0F3"/><text x="643.63" y="544" text-anchor="middle" font-family="Arial,sans-serif" font-size="12">6.406</text>
+<line x1="914.23" y1="135" x2="914.23" y2="520" stroke="#EDF0F3"/><text x="914.23" y="544" text-anchor="middle" font-family="Arial,sans-serif" font-size="12">6.822</text>
+<line x1="530.00" y1="135" x2="530.00" y2="520" stroke="#596875" stroke-width="2" stroke-dasharray="5 5"/>
+<polyline fill="none" stroke="#386CB0" stroke-width="2.6" points="150.97,255.16 379.88,241.14 389.55,241.61 530.00,253.67 643.63,270.26 914.23,295.91"/>
+<circle cx="150.97" cy="255.16" r="4" fill="#386CB0"><title>HNE T=5.647819s PSA=0.028572885m/s2</title></circle>
+<circle cx="379.88" cy="241.14" r="4" fill="#386CB0"><title>HNE T=6.000000s PSA=0.029556721m/s2</title></circle>
+<circle cx="389.55" cy="241.61" r="4" fill="#386CB0"><title>HNE T=6.014872s PSA=0.029523264m/s2</title></circle>
+<circle cx="530.00" cy="253.67" r="4" fill="#386CB0"><title>HNE T=6.230958s PSA=0.028677766m/s2</title></circle>
+<circle cx="643.63" cy="270.26" r="4" fill="#386CB0"><title>HNE T=6.405781s PSA=0.027514262m/s2</title></circle>
+<circle cx="914.23" cy="295.91" r="4" fill="#386CB0"><title>HNE T=6.822095s PSA=0.025715583m/s2</title></circle>
+<polyline fill="none" stroke="#2E8B73" stroke-width="2.6" points="150.97,199.02 379.88,267.83 389.55,271.15 530.00,323.05 643.63,365.70 914.23,451.60"/>
+<circle cx="150.97" cy="199.02" r="4" fill="#2E8B73"><title>HNN T=5.647819s PSA=0.032510310m/s2</title></circle>
+<circle cx="379.88" cy="267.83" r="4" fill="#2E8B73"><title>HNN T=6.000000s PSA=0.027684642m/s2</title></circle>
+<circle cx="389.55" cy="271.15" r="4" fill="#2E8B73"><title>HNN T=6.014872s PSA=0.027452085m/s2</title></circle>
+<circle cx="530.00" cy="323.05" r="4" fill="#2E8B73"><title>HNN T=6.230958s PSA=0.023811945m/s2</title></circle>
+<circle cx="643.63" cy="365.70" r="4" fill="#2E8B73"><title>HNN T=6.405781s PSA=0.020821346m/s2</title></circle>
+<circle cx="914.23" cy="451.60" r="4" fill="#2E8B73"><title>HNN T=6.822095s PSA=0.014796857m/s2</title></circle>
+<polyline fill="none" stroke="#BE593F" stroke-width="2.6" points="150.97,226.52 379.88,273.88 389.55,275.82 530.00,285.91 643.63,289.49 914.23,329.71"/>
+<circle cx="150.97" cy="226.52" r="4" fill="#BE593F"><title>RotD50 T=5.647819s PSA=0.030581918m/s2</title></circle>
+<circle cx="379.88" cy="273.88" r="4" fill="#BE593F"><title>RotD50 T=6.000000s PSA=0.027260524m/s2</title></circle>
+<circle cx="389.55" cy="275.82" r="4" fill="#BE593F"><title>RotD50 T=6.014872s PSA=0.027124121m/s2</title></circle>
+<circle cx="530.00" cy="285.91" r="4" fill="#BE593F"><title>RotD50 T=6.230958s PSA=0.026416996m/s2</title></circle>
+<circle cx="643.63" cy="289.49" r="4" fill="#BE593F"><title>RotD50 T=6.405781s PSA=0.026165526m/s2</title></circle>
+<circle cx="914.23" cy="329.71" r="4" fill="#BE593F"><title>RotD50 T=6.822095s PSA=0.023344908m/s2</title></circle>
+<polyline fill="none" stroke="#713DA6" stroke-width="2.6" points="150.97,194.65 379.88,205.26 389.55,206.07 530.00,226.07 643.63,246.71 914.23,284.10"/>
+<circle cx="150.97" cy="194.65" r="4" fill="#713DA6"><title>RotD100 T=5.647819s PSA=0.032816553m/s2</title></circle>
+<circle cx="379.88" cy="205.26" r="4" fill="#713DA6"><title>RotD100 T=6.000000s PSA=0.032072585m/s2</title></circle>
+<circle cx="389.55" cy="206.07" r="4" fill="#713DA6"><title>RotD100 T=6.014872s PSA=0.032015618m/s2</title></circle>
+<circle cx="530.00" cy="226.07" r="4" fill="#713DA6"><title>RotD100 T=6.230958s PSA=0.030612978m/s2</title></circle>
+<circle cx="643.63" cy="246.71" r="4" fill="#713DA6"><title>RotD100 T=6.405781s PSA=0.029165842m/s2</title></circle>
+<circle cx="914.23" cy="284.10" r="4" fill="#713DA6"><title>RotD100 T=6.822095s PSA=0.026543664m/s2</title></circle>
+<line x1="125" y1="107" x2="155" y2="107" stroke="#386CB0" stroke-width="4"/><text x="161" y="112" font-family="Arial,sans-serif" font-size="14">HNE</text>
+<line x1="315" y1="107" x2="345" y2="107" stroke="#2E8B73" stroke-width="4"/><text x="351" y="112" font-family="Arial,sans-serif" font-size="14">HNN</text>
+<line x1="505" y1="107" x2="535" y2="107" stroke="#BE593F" stroke-width="4"/><text x="541" y="112" font-family="Arial,sans-serif" font-size="14">RotD50</text>
+<line x1="695" y1="107" x2="725" y2="107" stroke="#713DA6" stroke-width="4"/><text x="731" y="112" font-family="Arial,sans-serif" font-size="14">RotD100</text>
+<text x="530" y="583" text-anchor="middle" font-family="Arial,sans-serif" font-size="16">Oscillator period T (s) — sampled ±10% provisional T1 band</text>
+<text x="36" y="330" transform="rotate(-90 36 330)" text-anchor="middle" font-family="Arial,sans-serif" font-size="16">Pseudo spectral acceleration (m/s²)</text>
+<text x="70" y="618" font-family="Arial,sans-serif" font-size="14">Sampled RotD50 0.023345–0.030582 m/s²; nominal 0.026417; HNE/HNN dominance changes.</text>
+<text x="70" y="643" font-family="Arial,sans-serif" font-size="12" fill="#76545B">Not a continuous-period bound; long-period SNR, site hazard and physical T1 remain unverified.</text></svg>

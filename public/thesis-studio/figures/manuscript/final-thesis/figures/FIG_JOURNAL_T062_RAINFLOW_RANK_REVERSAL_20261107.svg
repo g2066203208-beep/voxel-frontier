@@ -1,0 +1,151 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1320" height="700" viewBox="0 0 1320 700" role="img" aria-labelledby="title desc">
+<title id="title">Legacy versus corrected rainflow DEL ranking for 36 historical cases per channel</title>
+<desc id="desc">Mx: 12 of 630 pairwise inversions; My: 102 of 630 inversions and a changed controlling realization. Load-level diagnostic, not fatigue life.</desc>
+<rect width="1320" height="700" fill="white"/>
+<text x="65" y="53" font-family="Arial,sans-serif" font-size="25" font-weight="700" fill="#193145">Rainflow correction changes load-screening ranks</text>
+<text x="65" y="82" font-family="Arial,sans-serif" font-size="15" fill="#566878">36 historical 600 s cases per channel · fourth-power load DEL · rank 1 is the highest</text>
+<circle cx="935" cy="110" r="6" fill="#267F94"/><text x="949" y="115" font-family="Arial,sans-serif" font-size="14" fill="#33495B">NTM</text>
+<circle cx="1025" cy="110" r="6" fill="#C16934"/><text x="1039" y="115" font-family="Arial,sans-serif" font-size="14" fill="#33495B">ETM</text>
+<line x1="1114" y1="110" x2="1147" y2="110" stroke="#8899A9" stroke-width="2" stroke-dasharray="6 5"/><text x="1158" y="115" font-family="Arial,sans-serif" font-size="13" fill="#33495B">No shift</text>
+<text x="122" y="135" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="#1A3449">(a) Tower-base Mx</text>
+<rect x="122" y="158" width="403" height="403" fill="#FAFCFE" stroke="#9EAFBE"/>
+<line x1="122.00" y1="158" x2="122.00" y2="561" stroke="#E2E9F0"/>
+<line x1="122" y1="158.00" x2="525" y2="158.00" stroke="#E2E9F0"/>
+<text x="122.00" y="583" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#516376">1</text>
+<text x="110" y="162.00" text-anchor="end" font-family="Arial,sans-serif" font-size="12" fill="#516376">1</text>
+<line x1="179.57" y1="158" x2="179.57" y2="561" stroke="#E2E9F0"/>
+<line x1="122" y1="215.57" x2="525" y2="215.57" stroke="#E2E9F0"/>
+<text x="179.57" y="583" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#516376">6</text>
+<text x="110" y="219.57" text-anchor="end" font-family="Arial,sans-serif" font-size="12" fill="#516376">6</text>
+<line x1="248.66" y1="158" x2="248.66" y2="561" stroke="#E2E9F0"/>
+<line x1="122" y1="284.66" x2="525" y2="284.66" stroke="#E2E9F0"/>
+<text x="248.66" y="583" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#516376">12</text>
+<text x="110" y="288.66" text-anchor="end" font-family="Arial,sans-serif" font-size="12" fill="#516376">12</text>
+<line x1="317.74" y1="158" x2="317.74" y2="561" stroke="#E2E9F0"/>
+<line x1="122" y1="353.74" x2="525" y2="353.74" stroke="#E2E9F0"/>
+<text x="317.74" y="583" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#516376">18</text>
+<text x="110" y="357.74" text-anchor="end" font-family="Arial,sans-serif" font-size="12" fill="#516376">18</text>
+<line x1="386.83" y1="158" x2="386.83" y2="561" stroke="#E2E9F0"/>
+<line x1="122" y1="422.83" x2="525" y2="422.83" stroke="#E2E9F0"/>
+<text x="386.83" y="583" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#516376">24</text>
+<text x="110" y="426.83" text-anchor="end" font-family="Arial,sans-serif" font-size="12" fill="#516376">24</text>
+<line x1="455.91" y1="158" x2="455.91" y2="561" stroke="#E2E9F0"/>
+<line x1="122" y1="491.91" x2="525" y2="491.91" stroke="#E2E9F0"/>
+<text x="455.91" y="583" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#516376">30</text>
+<text x="110" y="495.91" text-anchor="end" font-family="Arial,sans-serif" font-size="12" fill="#516376">30</text>
+<line x1="525.00" y1="158" x2="525.00" y2="561" stroke="#E2E9F0"/>
+<line x1="122" y1="561.00" x2="525" y2="561.00" stroke="#E2E9F0"/>
+<text x="525.00" y="583" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#516376">36</text>
+<text x="110" y="565.00" text-anchor="end" font-family="Arial,sans-serif" font-size="12" fill="#516376">36</text>
+<line x1="122" y1="158" x2="525" y2="561" stroke="#8899A9" stroke-width="2" stroke-dasharray="6 5"/>
+<circle class="case" cx="363.80" cy="388.29" r="5" fill="#C16934" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U09p343881_ETM_S01: 22 to 21</title></circle>
+<circle class="case" cx="352.29" cy="399.80" r="5" fill="#C16934" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U09p343881_ETM_S02: 21 to 22</title></circle>
+<circle class="case" cx="421.37" cy="480.40" r="5" fill="#C16934" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U09p343881_ETM_S03: 27 to 29</title></circle>
+<circle class="case" cx="317.74" cy="353.74" r="5" fill="#C16934" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U09p343881_ETM_S04: 18 to 18</title></circle>
+<circle class="case" cx="386.83" cy="411.31" r="5" fill="#C16934" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U09p343881_ETM_S05: 24 to 23</title></circle>
+<circle class="case" cx="340.77" cy="376.77" r="5" fill="#C16934" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U09p343881_ETM_S06: 20 to 20</title></circle>
+<circle class="case" cx="467.43" cy="514.94" r="5" fill="#267F94" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U09p343881_NTM_S01: 31 to 32</title></circle>
+<circle class="case" cx="490.46" cy="549.49" r="5" fill="#267F94" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U09p343881_NTM_S02: 33 to 35</title></circle>
+<circle class="case" cx="525.00" cy="561.00" r="5" fill="#267F94" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U09p343881_NTM_S03: 36 to 36</title></circle>
+<circle class="case" cx="455.91" cy="491.91" r="5" fill="#267F94" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U09p343881_NTM_S04: 30 to 30</title></circle>
+<circle class="case" cx="513.49" cy="537.97" r="5" fill="#267F94" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U09p343881_NTM_S05: 35 to 34</title></circle>
+<circle class="case" cx="478.94" cy="526.46" r="5" fill="#267F94" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U09p343881_NTM_S06: 32 to 33</title></circle>
+<circle class="case" cx="294.71" cy="330.71" r="5" fill="#C16934" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U11p4_ETM_S01: 16 to 16</title></circle>
+<circle class="case" cx="306.23" cy="342.23" r="5" fill="#C16934" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U11p4_ETM_S02: 17 to 17</title></circle>
+<circle class="case" cx="329.26" cy="365.26" r="5" fill="#C16934" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U11p4_ETM_S03: 19 to 19</title></circle>
+<circle class="case" cx="283.20" cy="296.17" r="5" fill="#C16934" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U11p4_ETM_S04: 15 to 13</title></circle>
+<circle class="case" cx="260.17" cy="319.20" r="5" fill="#C16934" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U11p4_ETM_S05: 13 to 15</title></circle>
+<circle class="case" cx="271.69" cy="307.69" r="5" fill="#C16934" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U11p4_ETM_S06: 14 to 14</title></circle>
+<circle class="case" cx="409.86" cy="445.86" r="5" fill="#267F94" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U11p4_NTM_S01: 26 to 26</title></circle>
+<circle class="case" cx="398.34" cy="434.34" r="5" fill="#267F94" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U11p4_NTM_S02: 25 to 25</title></circle>
+<circle class="case" cx="501.97" cy="503.43" r="5" fill="#267F94" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U11p4_NTM_S03: 34 to 31</title></circle>
+<circle class="case" cx="375.31" cy="422.83" r="5" fill="#267F94" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U11p4_NTM_S04: 23 to 24</title></circle>
+<circle class="case" cx="444.40" cy="468.89" r="5" fill="#267F94" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U11p4_NTM_S05: 29 to 28</title></circle>
+<circle class="case" cx="432.89" cy="457.37" r="5" fill="#267F94" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U11p4_NTM_S06: 28 to 27</title></circle>
+<circle class="case" cx="133.51" cy="169.51" r="5" fill="#C16934" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U19p202140_ETM_S01: 2 to 2</title></circle>
+<circle class="case" cx="122.00" cy="158.00" r="5" fill="#C16934" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U19p202140_ETM_S02: 1 to 1</title></circle>
+<circle class="case" cx="237.14" cy="261.63" r="5" fill="#C16934" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U19p202140_ETM_S03: 11 to 10</title></circle>
+<circle class="case" cx="145.03" cy="181.03" r="5" fill="#C16934" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U19p202140_ETM_S04: 3 to 3</title></circle>
+<circle class="case" cx="168.06" cy="204.06" r="5" fill="#C16934" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U19p202140_ETM_S05: 5 to 5</title></circle>
+<circle class="case" cx="156.54" cy="192.54" r="5" fill="#C16934" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U19p202140_ETM_S06: 4 to 4</title></circle>
+<circle class="case" cx="202.60" cy="238.60" r="5" fill="#267F94" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U19p202140_NTM_S01: 8 to 8</title></circle>
+<circle class="case" cx="191.09" cy="227.09" r="5" fill="#267F94" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U19p202140_NTM_S02: 7 to 7</title></circle>
+<circle class="case" cx="248.66" cy="284.66" r="5" fill="#267F94" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U19p202140_NTM_S03: 12 to 12</title></circle>
+<circle class="case" cx="179.57" cy="215.57" r="5" fill="#267F94" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U19p202140_NTM_S04: 6 to 6</title></circle>
+<circle class="case" cx="225.63" cy="273.14" r="5" fill="#267F94" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U19p202140_NTM_S05: 10 to 11</title></circle>
+<circle class="case" cx="214.11" cy="250.11" r="5" fill="#267F94" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U19p202140_NTM_S06: 9 to 9</title></circle>
+<text x="323.5" y="614" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#2E4558">Legacy DEL rank</text>
+<text x="55" y="359.5" transform="rotate(-90 55 359.5)" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#2E4558">Corrected DEL rank</text>
+<text x="122" y="642" font-family="Arial,sans-serif" font-size="14" fill="#2B4357">12/630 inverted pairs · ρ = 0.99537 · Top-5 5/5</text>
+<text x="754" y="135" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="#1A3449">(b) Tower-base My</text>
+<rect x="754" y="158" width="403" height="403" fill="#FAFCFE" stroke="#9EAFBE"/>
+<line x1="754.00" y1="158" x2="754.00" y2="561" stroke="#E2E9F0"/>
+<line x1="754" y1="158.00" x2="1157" y2="158.00" stroke="#E2E9F0"/>
+<text x="754.00" y="583" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#516376">1</text>
+<text x="742" y="162.00" text-anchor="end" font-family="Arial,sans-serif" font-size="12" fill="#516376">1</text>
+<line x1="811.57" y1="158" x2="811.57" y2="561" stroke="#E2E9F0"/>
+<line x1="754" y1="215.57" x2="1157" y2="215.57" stroke="#E2E9F0"/>
+<text x="811.57" y="583" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#516376">6</text>
+<text x="742" y="219.57" text-anchor="end" font-family="Arial,sans-serif" font-size="12" fill="#516376">6</text>
+<line x1="880.66" y1="158" x2="880.66" y2="561" stroke="#E2E9F0"/>
+<line x1="754" y1="284.66" x2="1157" y2="284.66" stroke="#E2E9F0"/>
+<text x="880.66" y="583" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#516376">12</text>
+<text x="742" y="288.66" text-anchor="end" font-family="Arial,sans-serif" font-size="12" fill="#516376">12</text>
+<line x1="949.74" y1="158" x2="949.74" y2="561" stroke="#E2E9F0"/>
+<line x1="754" y1="353.74" x2="1157" y2="353.74" stroke="#E2E9F0"/>
+<text x="949.74" y="583" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#516376">18</text>
+<text x="742" y="357.74" text-anchor="end" font-family="Arial,sans-serif" font-size="12" fill="#516376">18</text>
+<line x1="1018.83" y1="158" x2="1018.83" y2="561" stroke="#E2E9F0"/>
+<line x1="754" y1="422.83" x2="1157" y2="422.83" stroke="#E2E9F0"/>
+<text x="1018.83" y="583" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#516376">24</text>
+<text x="742" y="426.83" text-anchor="end" font-family="Arial,sans-serif" font-size="12" fill="#516376">24</text>
+<line x1="1087.91" y1="158" x2="1087.91" y2="561" stroke="#E2E9F0"/>
+<line x1="754" y1="491.91" x2="1157" y2="491.91" stroke="#E2E9F0"/>
+<text x="1087.91" y="583" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#516376">30</text>
+<text x="742" y="495.91" text-anchor="end" font-family="Arial,sans-serif" font-size="12" fill="#516376">30</text>
+<line x1="1157.00" y1="158" x2="1157.00" y2="561" stroke="#E2E9F0"/>
+<line x1="754" y1="561.00" x2="1157" y2="561.00" stroke="#E2E9F0"/>
+<text x="1157.00" y="583" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#516376">36</text>
+<text x="742" y="565.00" text-anchor="end" font-family="Arial,sans-serif" font-size="12" fill="#516376">36</text>
+<line x1="754" y1="158" x2="1157" y2="561" stroke="#8899A9" stroke-width="2" stroke-dasharray="6 5"/>
+<circle class="case" cx="823.09" cy="284.66" r="5" fill="#C16934" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U09p343881_ETM_S01: 7 to 12</title></circle>
+<circle class="case" cx="972.77" cy="388.29" r="5" fill="#C16934" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U09p343881_ETM_S02: 20 to 21</title></circle>
+<circle class="case" cx="1087.91" cy="330.71" r="5" fill="#C16934" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U09p343881_ETM_S03: 30 to 16</title></circle>
+<circle class="case" cx="846.11" cy="296.17" r="5" fill="#C16934" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U09p343881_ETM_S04: 9 to 13</title></circle>
+<circle class="case" cx="1076.40" cy="434.34" r="5" fill="#C16934" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U09p343881_ETM_S05: 29 to 25</title></circle>
+<circle class="case" cx="788.54" cy="169.51" r="5" fill="#C16934" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U09p343881_ETM_S06: 4 to 2</title></circle>
+<circle class="case" cx="1099.43" cy="491.91" r="5" fill="#267F94" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U09p343881_NTM_S01: 31 to 30</title></circle>
+<circle class="case" cx="1133.97" cy="549.49" r="5" fill="#267F94" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U09p343881_NTM_S02: 34 to 35</title></circle>
+<circle class="case" cx="1145.49" cy="526.46" r="5" fill="#267F94" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U09p343881_NTM_S03: 35 to 33</title></circle>
+<circle class="case" cx="1064.89" cy="503.43" r="5" fill="#267F94" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U09p343881_NTM_S04: 28 to 31</title></circle>
+<circle class="case" cx="1157.00" cy="561.00" r="5" fill="#267F94" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U09p343881_NTM_S05: 36 to 36</title></circle>
+<circle class="case" cx="1122.46" cy="537.97" r="5" fill="#267F94" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U09p343881_NTM_S06: 33 to 34</title></circle>
+<circle class="case" cx="1041.86" cy="319.20" r="5" fill="#C16934" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U11p4_ETM_S01: 26 to 15</title></circle>
+<circle class="case" cx="834.60" cy="238.60" r="5" fill="#C16934" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U11p4_ETM_S02: 8 to 8</title></circle>
+<circle class="case" cx="754.00" cy="227.09" r="8" fill="#C16934" fill-opacity="0.88" stroke="#18364B" stroke-width="2.6"><title>U11p4_ETM_S03: 1 to 7</title></circle>
+<circle class="case" cx="765.51" cy="158.00" r="8" fill="#C16934" fill-opacity="0.88" stroke="#18364B" stroke-width="2.6"><title>U11p4_ETM_S04: 2 to 1</title></circle>
+<circle class="case" cx="800.06" cy="192.54" r="5" fill="#C16934" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U11p4_ETM_S05: 5 to 4</title></circle>
+<circle class="case" cx="777.03" cy="204.06" r="5" fill="#C16934" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U11p4_ETM_S06: 3 to 5</title></circle>
+<circle class="case" cx="1110.94" cy="514.94" r="5" fill="#267F94" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U11p4_NTM_S01: 32 to 32</title></circle>
+<circle class="case" cx="961.26" cy="468.89" r="5" fill="#267F94" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U11p4_NTM_S02: 19 to 28</title></circle>
+<circle class="case" cx="938.23" cy="480.40" r="5" fill="#267F94" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U11p4_NTM_S03: 17 to 29</title></circle>
+<circle class="case" cx="892.17" cy="353.74" r="5" fill="#267F94" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U11p4_NTM_S04: 13 to 18</title></circle>
+<circle class="case" cx="949.74" cy="445.86" r="5" fill="#267F94" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U11p4_NTM_S05: 18 to 26</title></circle>
+<circle class="case" cx="811.57" cy="365.26" r="5" fill="#267F94" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U11p4_NTM_S06: 6 to 19</title></circle>
+<circle class="case" cx="880.66" cy="250.11" r="5" fill="#C16934" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U19p202140_ETM_S01: 12 to 9</title></circle>
+<circle class="case" cx="915.20" cy="261.63" r="5" fill="#C16934" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U19p202140_ETM_S02: 15 to 10</title></circle>
+<circle class="case" cx="926.71" cy="307.69" r="5" fill="#C16934" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U19p202140_ETM_S03: 16 to 14</title></circle>
+<circle class="case" cx="869.14" cy="181.03" r="5" fill="#C16934" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U19p202140_ETM_S04: 11 to 3</title></circle>
+<circle class="case" cx="903.69" cy="273.14" r="5" fill="#C16934" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U19p202140_ETM_S05: 14 to 11</title></circle>
+<circle class="case" cx="857.63" cy="215.57" r="5" fill="#C16934" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U19p202140_ETM_S06: 10 to 6</title></circle>
+<circle class="case" cx="995.80" cy="422.83" r="5" fill="#267F94" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U19p202140_NTM_S01: 22 to 24</title></circle>
+<circle class="case" cx="1030.34" cy="399.80" r="5" fill="#267F94" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U19p202140_NTM_S02: 25 to 22</title></circle>
+<circle class="case" cx="1053.37" cy="457.37" r="5" fill="#267F94" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U19p202140_NTM_S03: 27 to 27</title></circle>
+<circle class="case" cx="984.29" cy="342.23" r="5" fill="#267F94" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U19p202140_NTM_S04: 21 to 17</title></circle>
+<circle class="case" cx="1007.31" cy="411.31" r="5" fill="#267F94" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U19p202140_NTM_S05: 23 to 23</title></circle>
+<circle class="case" cx="1018.83" cy="376.77" r="5" fill="#267F94" fill-opacity="0.88" stroke="white" stroke-width="1"><title>U19p202140_NTM_S06: 24 to 20</title></circle>
+<text x="955.5" y="614" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#2E4558">Legacy DEL rank</text>
+<text x="687" y="359.5" transform="rotate(-90 687 359.5)" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#2E4558">Corrected DEL rank</text>
+<text x="754" y="642" font-family="Arial,sans-serif" font-size="14" fill="#2B4357">102/630 inverted pairs · ρ = 0.85946 · Top-5 4/5</text>
+<text x="754" y="678" font-family="Arial,sans-serif" font-size="13" fill="#9C4F2A">My control: U11p4_ETM_S03 (new rank 7) → U11p4_ETM_S04 (old rank 2)</text>
+</svg>

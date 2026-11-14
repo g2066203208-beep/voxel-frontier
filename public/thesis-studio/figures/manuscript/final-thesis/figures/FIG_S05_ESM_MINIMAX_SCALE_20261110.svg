@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="770" viewBox="0 0 1040 770">
+<rect width="1040" height="770" fill="#ffffff"/>
+<text x="40" y="43" fill="#162a45" font-family="Arial, sans-serif" font-size="23" font-weight="bold">ESM IT.NVL: minimum unavoidable mismatch under one positive scale</text>
+<text x="40" y="68" fill="#243447" font-family="Arial, sans-serif" font-size="14" >Two 2012 events | 5% pseudo-acceleration | 4 common sampled periods | not a design spectrum</text>
+<text x="100" y="99" fill="#162a45" font-family="Arial, sans-serif" font-size="19" font-weight="bold">A  Geometric-mean PSA: optimal maximum error = 22.441%</text>
+<line x1="100" y1="348.2" x2="980" y2="348.2" stroke="#e2e8f0" stroke-width="1"/>
+<text x="45" y="353.2" fill="#526174" font-family="Arial, sans-serif" font-size="13" >-60%</text>
+<line x1="100" y1="296.6" x2="980" y2="296.6" stroke="#e2e8f0" stroke-width="1"/>
+<text x="45" y="301.6" fill="#526174" font-family="Arial, sans-serif" font-size="13" >-30%</text>
+<line x1="100" y1="245" x2="980" y2="245" stroke="#64748b" stroke-width="2"/>
+<text x="45" y="250" fill="#526174" font-family="Arial, sans-serif" font-size="13" >0%</text>
+<line x1="100" y1="193.4" x2="980" y2="193.4" stroke="#e2e8f0" stroke-width="1"/>
+<text x="45" y="198.4" fill="#526174" font-family="Arial, sans-serif" font-size="13" >30%</text>
+<line x1="100" y1="141.8" x2="980" y2="141.8" stroke="#e2e8f0" stroke-width="1"/>
+<text x="45" y="146.8" fill="#526174" font-family="Arial, sans-serif" font-size="13" >60%</text>
+<line x1="100" y1="262.2" x2="980" y2="262.2" stroke="#c2410c" stroke-width="1.2" stroke-dasharray="7 5"/>
+<line x1="100" y1="227.8" x2="980" y2="227.8" stroke="#c2410c" stroke-width="1.2" stroke-dasharray="7 5"/>
+<polyline points="100,283.5988075688263 540,206.40119243117365 590.8107078303367,219.6399863151579 980,264.11373796968553" fill="none" stroke="#1768a0" stroke-width="3"/>
+<circle cx="100" cy="283.5988075688263" r="5" fill="#1768a0"/>
+<circle cx="540" cy="206.40119243117365" r="5" fill="#1768a0"/>
+<circle cx="590.8107078303367" cy="219.6399863151579" r="5" fill="#1768a0"/>
+<circle cx="980" cy="264.11373796968553" r="5" fill="#1768a0"/>
+<text x="82" y="379" fill="#526174" font-family="Arial, sans-serif" font-size="13" >4</text>
+<text x="522" y="379" fill="#526174" font-family="Arial, sans-serif" font-size="13" >6</text>
+<text x="572.8107078303367" y="379" fill="#526174" font-family="Arial, sans-serif" font-size="13" >6.231</text>
+<text x="962" y="379" fill="#526174" font-family="Arial, sans-serif" font-size="13" >8</text>
+<text x="100" y="422" fill="#162a45" font-family="Arial, sans-serif" font-size="19" font-weight="bold">B  HNE and HNN together: optimal maximum error = 55.173%</text>
+<line x1="100" y1="671.2" x2="980" y2="671.2" stroke="#e2e8f0" stroke-width="1"/>
+<text x="45" y="676.2" fill="#526174" font-family="Arial, sans-serif" font-size="13" >-60%</text>
+<line x1="100" y1="619.6" x2="980" y2="619.6" stroke="#e2e8f0" stroke-width="1"/>
+<text x="45" y="624.6" fill="#526174" font-family="Arial, sans-serif" font-size="13" >-30%</text>
+<line x1="100" y1="568" x2="980" y2="568" stroke="#64748b" stroke-width="2"/>
+<text x="45" y="573" fill="#526174" font-family="Arial, sans-serif" font-size="13" >0%</text>
+<line x1="100" y1="516.4" x2="980" y2="516.4" stroke="#e2e8f0" stroke-width="1"/>
+<text x="45" y="521.4" fill="#526174" font-family="Arial, sans-serif" font-size="13" >30%</text>
+<line x1="100" y1="464.8" x2="980" y2="464.8" stroke="#e2e8f0" stroke-width="1"/>
+<text x="45" y="469.8" fill="#526174" font-family="Arial, sans-serif" font-size="13" >60%</text>
+<line x1="100" y1="585.2" x2="980" y2="585.2" stroke="#c2410c" stroke-width="1.2" stroke-dasharray="7 5"/>
+<line x1="100" y1="550.8" x2="980" y2="550.8" stroke="#c2410c" stroke-width="1.2" stroke-dasharray="7 5"/>
+<polyline points="100,577.6959148949602 540,473.10223896672665 590.8107078303367,482.6769041420645 980,489.967953765841" fill="none" stroke="#0b806d" stroke-width="3"/>
+<circle cx="100" cy="577.6959148949602" r="5" fill="#0b806d"/>
+<circle cx="540" cy="473.10223896672665" r="5" fill="#0b806d"/>
+<circle cx="590.8107078303367" cy="482.6769041420645" r="5" fill="#0b806d"/>
+<circle cx="980" cy="489.967953765841" r="5" fill="#0b806d"/>
+<polyline points="100,649.569337612889 540,602.9457129596069 590.8107078303367,615.1566812651465 980,662.8977610332734" fill="none" stroke="#b34b3c" stroke-width="3"/>
+<circle cx="100" cy="649.569337612889" r="5" fill="#b34b3c"/>
+<circle cx="540" cy="602.9457129596069" r="5" fill="#b34b3c"/>
+<circle cx="590.8107078303367" cy="615.1566812651465" r="5" fill="#b34b3c"/>
+<circle cx="980" cy="662.8977610332734" r="5" fill="#b34b3c"/>
+<text x="82" y="702" fill="#526174" font-family="Arial, sans-serif" font-size="13" >4</text>
+<text x="522" y="702" fill="#526174" font-family="Arial, sans-serif" font-size="13" >6</text>
+<text x="572.8107078303367" y="702" fill="#526174" font-family="Arial, sans-serif" font-size="13" >6.231</text>
+<text x="962" y="702" fill="#526174" font-family="Arial, sans-serif" font-size="13" >8</text>
+<text x="101" y="752" fill="#243447" font-family="Arial, sans-serif" font-size="13" >Periods (s): 4, 6, 6.231, 8; orange dashed lines = illustrative ±10%, NOT a code limit.</text>
+<rect x="690" y="113" width="14" height="5" fill="#1768a0"/><text x="710" y="120" fill="#243447" font-family="Arial, sans-serif" font-size="13" >GM</text>
+<rect x="758" y="113" width="14" height="5" fill="#0b806d"/><text x="778" y="120" fill="#243447" font-family="Arial, sans-serif" font-size="13" >HNE</text>
+<rect x="837" y="113" width="14" height="5" fill="#b34b3c"/><text x="857" y="120" fill="#243447" font-family="Arial, sans-serif" font-size="13" >HNN</text>
+</svg>

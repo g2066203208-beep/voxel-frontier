@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="600" viewBox="0 0 1080 600">
+<rect width="1080" height="600" fill="white"/>
+<text x="540" y="35" font-size="20" text-anchor="middle">Time-mean agreement does not identify nonlinear cycle-mean sensitivity</text>
+<rect x="95" y="70" width="870" height="430" fill="#f8fafc" stroke="#94a3b8"/>
+<line x1="95" x2="95" y1="70" y2="500" stroke="#d6dee8"/>
+<text x="95" y="521" font-size="13" text-anchor="middle">-30</text>
+<line x1="240" x2="240" y1="70" y2="500" stroke="#d6dee8"/>
+<text x="240" y="521" font-size="13" text-anchor="middle">-20</text>
+<line x1="385" x2="385" y1="70" y2="500" stroke="#d6dee8"/>
+<text x="385" y="521" font-size="13" text-anchor="middle">-10</text>
+<line x1="530" x2="530" y1="70" y2="500" stroke="#d6dee8"/>
+<text x="530" y="521" font-size="13" text-anchor="middle">0</text>
+<line x1="675" x2="675" y1="70" y2="500" stroke="#d6dee8"/>
+<text x="675" y="521" font-size="13" text-anchor="middle">10</text>
+<line x1="820" x2="820" y1="70" y2="500" stroke="#d6dee8"/>
+<text x="820" y="521" font-size="13" text-anchor="middle">20</text>
+<line x1="965" x2="965" y1="70" y2="500" stroke="#d6dee8"/>
+<text x="965" y="521" font-size="13" text-anchor="middle">30</text>
+<line x1="95" x2="965" y1="500" y2="500" stroke="#d6dee8"/>
+<text x="80" y="504" font-size="13" text-anchor="end">0</text>
+<line x1="95" x2="965" y1="414" y2="414" stroke="#d6dee8"/>
+<text x="80" y="418" font-size="13" text-anchor="end">5</text>
+<line x1="95" x2="965" y1="328" y2="328" stroke="#d6dee8"/>
+<text x="80" y="332" font-size="13" text-anchor="end">10</text>
+<line x1="95" x2="965" y1="242" y2="242" stroke="#d6dee8"/>
+<text x="80" y="246" font-size="13" text-anchor="end">15</text>
+<line x1="95" x2="965" y1="156" y2="156" stroke="#d6dee8"/>
+<text x="80" y="160" font-size="13" text-anchor="end">20</text>
+<line x1="95" x2="965" y1="70" y2="70" stroke="#d6dee8"/>
+<text x="80" y="74" font-size="13" text-anchor="end">25</text>
+<circle cx="936.058" cy="351.659" r="5" fill="#2166ac" fill-opacity=".72"><title>U09p343881_ETM_S01 TwrBsMxt: 28.004% vs 8.624%</title></circle>
+<circle cx="621.033" cy="485.489" r="5" fill="#d94835" fill-opacity=".72"><title>U09p343881_ETM_S01 TwrBsMyt: 6.278% vs 0.844%</title></circle>
+<circle cx="531.717" cy="332.246" r="5" fill="#2166ac" fill-opacity=".72"><title>U09p343881_ETM_S02 TwrBsMxt: 0.118% vs 9.753%</title></circle>
+<circle cx="495.401" cy="488.819" r="5" fill="#d94835" fill-opacity=".72"><title>U09p343881_ETM_S02 TwrBsMyt: -2.386% vs 0.650%</title></circle>
+<circle cx="650.366" cy="392.906" r="5" fill="#2166ac" fill-opacity=".72"><title>U09p343881_ETM_S03 TwrBsMxt: 8.301% vs 6.226%</title></circle>
+<circle cx="582.618" cy="486.139" r="5" fill="#d94835" fill-opacity=".72"><title>U09p343881_ETM_S03 TwrBsMyt: 3.629% vs 0.806%</title></circle>
+<circle cx="739.539" cy="397.349" r="5" fill="#2166ac" fill-opacity=".72"><title>U09p343881_ETM_S04 TwrBsMxt: 14.451% vs 5.968%</title></circle>
+<circle cx="618.821" cy="483.844" r="5" fill="#d94835" fill-opacity=".72"><title>U09p343881_ETM_S04 TwrBsMyt: 6.126% vs 0.939%</title></circle>
+<circle cx="833.737" cy="421.343" r="5" fill="#2166ac" fill-opacity=".72"><title>U09p343881_ETM_S05 TwrBsMxt: 20.947% vs 4.573%</title></circle>
+<circle cx="600.619" cy="482.373" r="5" fill="#d94835" fill-opacity=".72"><title>U09p343881_ETM_S05 TwrBsMyt: 4.870% vs 1.025%</title></circle>
+<circle cx="549.180" cy="138.971" r="5" fill="#2166ac" fill-opacity=".72"><title>U09p343881_ETM_S06 TwrBsMxt: 1.323% vs 20.990%</title></circle>
+<circle cx="240.154" cy="410.765" r="5" fill="#d94835" fill-opacity=".72"><title>U09p343881_ETM_S06 TwrBsMyt: -19.989% vs 5.188%</title></circle>
+<circle cx="858.815" cy="425.562" r="5" fill="#2166ac" fill-opacity=".72"><title>U09p343881_NTM_S01 TwrBsMxt: 22.677% vs 4.328%</title></circle>
+<circle cx="511.628" cy="482.766" r="5" fill="#d94835" fill-opacity=".72"><title>U09p343881_NTM_S01 TwrBsMyt: -1.267% vs 1.002%</title></circle>
+<circle cx="601.164" cy="441.465" r="5" fill="#2166ac" fill-opacity=".72"><title>U09p343881_NTM_S02 TwrBsMxt: 4.908% vs 3.403%</title></circle>
+<circle cx="502.452" cy="492.605" r="5" fill="#d94835" fill-opacity=".72"><title>U09p343881_NTM_S02 TwrBsMyt: -1.900% vs 0.430%</title></circle>
+<circle cx="535.645" cy="440.424" r="5" fill="#2166ac" fill-opacity=".72"><title>U09p343881_NTM_S03 TwrBsMxt: 0.389% vs 3.464%</title></circle>
+<circle cx="504.494" cy="491.906" r="5" fill="#d94835" fill-opacity=".72"><title>U09p343881_NTM_S03 TwrBsMyt: -1.759% vs 0.471%</title></circle>
+<circle cx="743.122" cy="430.356" r="5" fill="#2166ac" fill-opacity=".72"><title>U09p343881_NTM_S04 TwrBsMxt: 14.698% vs 4.049%</title></circle>
+<circle cx="558.154" cy="487.783" r="5" fill="#d94835" fill-opacity=".72"><title>U09p343881_NTM_S04 TwrBsMyt: 1.942% vs 0.710%</title></circle>
+<circle cx="647.428" cy="452.654" r="5" fill="#2166ac" fill-opacity=".72"><title>U09p343881_NTM_S05 TwrBsMxt: 8.098% vs 2.753%</title></circle>
+<circle cx="556.521" cy="489.851" r="5" fill="#d94835" fill-opacity=".72"><title>U09p343881_NTM_S05 TwrBsMyt: 1.829% vs 0.590%</title></circle>
+<circle cx="589.146" cy="361.778" r="5" fill="#2166ac" fill-opacity=".72"><title>U09p343881_NTM_S06 TwrBsMxt: 4.079% vs 8.036%</title></circle>
+<circle cx="514.834" cy="488.610" r="5" fill="#d94835" fill-opacity=".72"><title>U09p343881_NTM_S06 TwrBsMyt: -1.046% vs 0.662%</title></circle>
+<circle cx="580.753" cy="302.973" r="5" fill="#2166ac" fill-opacity=".72"><title>U11p4_ETM_S01 TwrBsMxt: 3.500% vs 11.455%</title></circle>
+<circle cx="644.536" cy="483.512" r="5" fill="#d94835" fill-opacity=".72"><title>U11p4_ETM_S01 TwrBsMyt: 7.899% vs 0.959%</title></circle>
+<circle cx="509.027" cy="357.038" r="5" fill="#2166ac" fill-opacity=".72"><title>U11p4_ETM_S02 TwrBsMxt: -1.446% vs 8.312%</title></circle>
+<circle cx="431.548" cy="484.131" r="5" fill="#d94835" fill-opacity=".72"><title>U11p4_ETM_S02 TwrBsMyt: -6.790% vs 0.923%</title></circle>
+<circle cx="610.426" cy="358.784" r="5" fill="#2166ac" fill-opacity=".72"><title>U11p4_ETM_S03 TwrBsMxt: 5.547% vs 8.210%</title></circle>
+<circle cx="410.868" cy="463.343" r="5" fill="#d94835" fill-opacity=".72"><title>U11p4_ETM_S03 TwrBsMyt: -8.216% vs 2.131%</title></circle>
+<circle cx="549.803" cy="306.841" r="5" fill="#2166ac" fill-opacity=".72"><title>U11p4_ETM_S04 TwrBsMxt: 1.366% vs 11.230%</title></circle>
+<circle cx="497.162" cy="484.291" r="5" fill="#d94835" fill-opacity=".72"><title>U11p4_ETM_S04 TwrBsMyt: -2.265% vs 0.913%</title></circle>
+<circle cx="653.347" cy="440.117" r="5" fill="#2166ac" fill-opacity=".72"><title>U11p4_ETM_S05 TwrBsMxt: 8.507% vs 3.482%</title></circle>
+<circle cx="413.362" cy="484.117" r="5" fill="#d94835" fill-opacity=".72"><title>U11p4_ETM_S05 TwrBsMyt: -8.044% vs 0.923%</title></circle>
+<circle cx="745.452" cy="299.073" r="5" fill="#2166ac" fill-opacity=".72"><title>U11p4_ETM_S06 TwrBsMxt: 14.859% vs 11.682%</title></circle>
+<circle cx="393.494" cy="452.134" r="5" fill="#d94835" fill-opacity=".72"><title>U11p4_ETM_S06 TwrBsMyt: -9.414% vs 2.783%</title></circle>
+<circle cx="559.034" cy="421.716" r="5" fill="#2166ac" fill-opacity=".72"><title>U11p4_NTM_S01 TwrBsMxt: 2.002% vs 4.551%</title></circle>
+<circle cx="553.845" cy="492.126" r="5" fill="#d94835" fill-opacity=".72"><title>U11p4_NTM_S01 TwrBsMyt: 1.644% vs 0.458%</title></circle>
+<circle cx="438.774" cy="398.228" r="5" fill="#2166ac" fill-opacity=".72"><title>U11p4_NTM_S02 TwrBsMxt: -6.291% vs 5.917%</title></circle>
+<circle cx="461.328" cy="493.688" r="5" fill="#d94835" fill-opacity=".72"><title>U11p4_NTM_S02 TwrBsMyt: -4.736% vs 0.367%</title></circle>
+<circle cx="351.150" cy="388.036" r="5" fill="#2166ac" fill-opacity=".72"><title>U11p4_NTM_S03 TwrBsMxt: -12.335% vs 6.510%</title></circle>
+<circle cx="462.603" cy="483.983" r="5" fill="#d94835" fill-opacity=".72"><title>U11p4_NTM_S03 TwrBsMyt: -4.648% vs 0.931%</title></circle>
+<circle cx="472.649" cy="383.640" r="5" fill="#2166ac" fill-opacity=".72"><title>U11p4_NTM_S04 TwrBsMxt: -3.955% vs 6.765%</title></circle>
+<circle cx="467.467" cy="493.012" r="5" fill="#d94835" fill-opacity=".72"><title>U11p4_NTM_S04 TwrBsMyt: -4.313% vs 0.406%</title></circle>
+<circle cx="580.610" cy="472.799" r="5" fill="#2166ac" fill-opacity=".72"><title>U11p4_NTM_S05 TwrBsMxt: 3.490% vs 1.581%</title></circle>
+<circle cx="452.079" cy="492.776" r="5" fill="#d94835" fill-opacity=".72"><title>U11p4_NTM_S05 TwrBsMyt: -5.374% vs 0.420%</title></circle>
+<circle cx="577.414" cy="403.194" r="5" fill="#2166ac" fill-opacity=".72"><title>U11p4_NTM_S06 TwrBsMxt: 3.270% vs 5.628%</title></circle>
+<circle cx="281.722" cy="441.047" r="5" fill="#d94835" fill-opacity=".72"><title>U11p4_NTM_S06 TwrBsMyt: -17.123% vs 3.428%</title></circle>
+<circle cx="689.862" cy="299.349" r="5" fill="#2166ac" fill-opacity=".72"><title>U19p202140_ETM_S01 TwrBsMxt: 11.025% vs 11.666%</title></circle>
+<circle cx="650.590" cy="450.113" r="5" fill="#d94835" fill-opacity=".72"><title>U19p202140_ETM_S01 TwrBsMyt: 8.317% vs 2.900%</title></circle>
+<circle cx="268.318" cy="208.901" r="5" fill="#2166ac" fill-opacity=".72"><title>U19p202140_ETM_S02 TwrBsMxt: -18.047% vs 16.924%</title></circle>
+<circle cx="532.500" cy="471.849" r="5" fill="#d94835" fill-opacity=".72"><title>U19p202140_ETM_S02 TwrBsMyt: 0.172% vs 1.637%</title></circle>
+<circle cx="624.154" cy="390.723" r="5" fill="#2166ac" fill-opacity=".72"><title>U19p202140_ETM_S03 TwrBsMxt: 6.493% vs 6.353%</title></circle>
+<circle cx="682.695" cy="464.190" r="5" fill="#d94835" fill-opacity=".72"><title>U19p202140_ETM_S03 TwrBsMyt: 10.531% vs 2.082%</title></circle>
+<circle cx="432.464" cy="272.892" r="5" fill="#2166ac" fill-opacity=".72"><title>U19p202140_ETM_S04 TwrBsMxt: -6.727% vs 13.204%</title></circle>
+<circle cx="621.181" cy="468.965" r="5" fill="#d94835" fill-opacity=".72"><title>U19p202140_ETM_S04 TwrBsMyt: 6.288% vs 1.804%</title></circle>
+<circle cx="724.152" cy="414.428" r="5" fill="#2166ac" fill-opacity=".72"><title>U19p202140_ETM_S05 TwrBsMxt: 13.390% vs 4.975%</title></circle>
+<circle cx="578.995" cy="472.673" r="5" fill="#d94835" fill-opacity=".72"><title>U19p202140_ETM_S05 TwrBsMyt: 3.379% vs 1.589%</title></circle>
+<circle cx="629.824" cy="251.631" r="5" fill="#2166ac" fill-opacity=".72"><title>U19p202140_ETM_S06 TwrBsMxt: 6.884% vs 14.440%</title></circle>
+<circle cx="622.810" cy="453.300" r="5" fill="#d94835" fill-opacity=".72"><title>U19p202140_ETM_S06 TwrBsMyt: 6.401% vs 2.715%</title></circle>
+<circle cx="627.456" cy="364.445" r="5" fill="#2166ac" fill-opacity=".72"><title>U19p202140_NTM_S01 TwrBsMxt: 6.721% vs 7.881%</title></circle>
+<circle cx="557.291" cy="483.171" r="5" fill="#d94835" fill-opacity=".72"><title>U19p202140_NTM_S01 TwrBsMyt: 1.882% vs 0.978%</title></circle>
+<circle cx="415.692" cy="350.630" r="5" fill="#2166ac" fill-opacity=".72"><title>U19p202140_NTM_S02 TwrBsMxt: -7.883% vs 8.684%</title></circle>
+<circle cx="523.013" cy="484.991" r="5" fill="#d94835" fill-opacity=".72"><title>U19p202140_NTM_S02 TwrBsMyt: -0.482% vs 0.873%</title></circle>
+<circle cx="674.571" cy="437.822" r="5" fill="#2166ac" fill-opacity=".72"><title>U19p202140_NTM_S03 TwrBsMxt: 9.970% vs 3.615%</title></circle>
+<circle cx="650.209" cy="476.486" r="5" fill="#d94835" fill-opacity=".72"><title>U19p202140_NTM_S03 TwrBsMyt: 8.290% vs 1.367%</title></circle>
+<circle cx="417.586" cy="358.423" r="5" fill="#2166ac" fill-opacity=".72"><title>U19p202140_NTM_S04 TwrBsMxt: -7.753% vs 8.231%</title></circle>
+<circle cx="605.365" cy="480.493" r="5" fill="#d94835" fill-opacity=".72"><title>U19p202140_NTM_S04 TwrBsMyt: 5.198% vs 1.134%</title></circle>
+<circle cx="734.916" cy="434.909" r="5" fill="#2166ac" fill-opacity=".72"><title>U19p202140_NTM_S05 TwrBsMxt: 14.132% vs 3.784%</title></circle>
+<circle cx="570.013" cy="486.184" r="5" fill="#d94835" fill-opacity=".72"><title>U19p202140_NTM_S05 TwrBsMyt: 2.760% vs 0.803%</title></circle>
+<circle cx="704.029" cy="383.977" r="5" fill="#2166ac" fill-opacity=".72"><title>U19p202140_NTM_S06 TwrBsMxt: 12.002% vs 6.746%</title></circle>
+<circle cx="608.671" cy="478.624" r="5" fill="#d94835" fill-opacity=".72"><title>U19p202140_NTM_S06 TwrBsMyt: 5.426% vs 1.243%</title></circle>
+<text x="540" y="545" text-anchor="middle" font-size="15">Signed weighted-minus-time mean / |time mean| (%)</text>
+<text transform="translate(25 285) rotate(-90)" text-anchor="middle" font-size="15">Quadratic collapse gap (%)</text>
+<circle cx="760" cy="567" r="5" fill="#2166ac"/><text x="774" y="572" font-size="13">Mx</text>
+<circle cx="825" cy="567" r="5" fill="#d94835"/><text x="839" y="572" font-size="13">My</text>
+<text x="90" y="583" font-size="12">Historical load-only diagnostic; not a material fatigue correction.</text>
+</svg>

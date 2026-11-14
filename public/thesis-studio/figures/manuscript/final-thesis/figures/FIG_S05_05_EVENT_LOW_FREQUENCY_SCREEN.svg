@@ -1,0 +1,116 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="690" viewBox="0 0 1280 690">
+<style>text{font-family:"Noto Sans CJK SC","Microsoft YaHei",Arial,sans-serif;fill:#26303b}</style>
+<rect width="1280" height="690" fill="#fff"/>
+<text x="67.00" y="46.00" font-size="24" font-weight="600">图 S05-05  多事件长周期源数据筛查</text>
+<text x="67.00" y="75.00" font-size="14" >三独立事件 · 五台站 · 周期4–10s</text>
+<line x1="67.00" y1="99.00" x2="1213.00" y2="99.00" stroke="#dfe5e9" stroke-width="1" />
+<text x="89.00" y="136.00" font-size="17" font-weight="600">(a) 候选台站谱形</text>
+<line x1="105.00" y1="479.91" x2="545.00" y2="479.91" stroke="#e6e9ec" stroke-width="1" />
+<text x="92.00" y="483.91" font-size="12" text-anchor="end">0.001</text>
+<line x1="105.00" y1="379.94" x2="545.00" y2="379.94" stroke="#e6e9ec" stroke-width="1" />
+<text x="92.00" y="383.94" font-size="12" text-anchor="end">0.01</text>
+<line x1="105.00" y1="279.97" x2="545.00" y2="279.97" stroke="#e6e9ec" stroke-width="1" />
+<text x="92.00" y="283.97" font-size="12" text-anchor="end">0.1</text>
+<line x1="105.00" y1="180.00" x2="545.00" y2="180.00" stroke="#e6e9ec" stroke-width="1" />
+<text x="92.00" y="184.00" font-size="12" text-anchor="end">1</text>
+<line x1="105.00" y1="180.00" x2="105.00" y2="510.00" stroke="#edf0f1" stroke-width="1" />
+<text x="105.00" y="534.00" font-size="12" text-anchor="middle">4</text>
+<line x1="251.67" y1="180.00" x2="251.67" y2="510.00" stroke="#edf0f1" stroke-width="1" />
+<text x="251.67" y="534.00" font-size="12" text-anchor="middle">6</text>
+<line x1="398.33" y1="180.00" x2="398.33" y2="510.00" stroke="#edf0f1" stroke-width="1" />
+<text x="398.33" y="534.00" font-size="12" text-anchor="middle">8</text>
+<line x1="545.00" y1="180.00" x2="545.00" y2="510.00" stroke="#edf0f1" stroke-width="1" />
+<text x="545.00" y="534.00" font-size="12" text-anchor="middle">10</text>
+<line x1="105.00" y1="180.00" x2="105.00" y2="510.00" stroke="#3b4651" stroke-width="1" />
+<line x1="105.00" y1="510.00" x2="545.00" y2="510.00" stroke="#3b4651" stroke-width="1" />
+<text x="325.00" y="569.00" font-size="14" text-anchor="middle">周期 T (s)</text>
+<text x="45.00" y="345.00" transform="rotate(-90 45.00 345.00)" text-anchor="middle" font-size="14">双水平PSA均值 (m/s²)</text>
+<polyline points="105.00,205.89 251.67,223.43 398.33,244.61 545.00,263.07" fill="none" stroke="#256a85" stroke-width="2.7"  stroke-linejoin="round"/>
+<circle cx="105.00" cy="205.89" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<circle cx="251.67" cy="223.43" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<circle cx="398.33" cy="244.61" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<circle cx="545.00" cy="263.07" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<line x1="105.00" y1="579.00" x2="124.00" y2="579.00" stroke="#256a85" stroke-width="3" />
+<text x="130.00" y="583.00" font-size="12" >台站1</text>
+<polyline points="105.00,322.38 251.67,316.23 398.33,332.58 545.00,345.27" fill="none" stroke="#bc6d52" stroke-width="2.7"  stroke-linejoin="round"/>
+<circle cx="105.00" cy="322.38" r="2.4" fill="white" stroke="#bc6d52" stroke-width="1.4"/>
+<circle cx="251.67" cy="316.23" r="2.4" fill="white" stroke="#bc6d52" stroke-width="1.4"/>
+<circle cx="398.33" cy="332.58" r="2.4" fill="white" stroke="#bc6d52" stroke-width="1.4"/>
+<circle cx="545.00" cy="345.27" r="2.4" fill="white" stroke="#bc6d52" stroke-width="1.4"/>
+<line x1="256.00" y1="579.00" x2="275.00" y2="579.00" stroke="#bc6d52" stroke-width="3" />
+<text x="281.00" y="583.00" font-size="12" >台站2</text>
+<polyline points="105.00,336.43 251.67,338.65 398.33,350.69 545.00,378.79" fill="none" stroke="#378372" stroke-width="2.7"  stroke-linejoin="round"/>
+<circle cx="105.00" cy="336.43" r="2.4" fill="white" stroke="#378372" stroke-width="1.4"/>
+<circle cx="251.67" cy="338.65" r="2.4" fill="white" stroke="#378372" stroke-width="1.4"/>
+<circle cx="398.33" cy="350.69" r="2.4" fill="white" stroke="#378372" stroke-width="1.4"/>
+<circle cx="545.00" cy="378.79" r="2.4" fill="white" stroke="#378372" stroke-width="1.4"/>
+<line x1="407.00" y1="579.00" x2="426.00" y2="579.00" stroke="#378372" stroke-width="3" />
+<text x="432.00" y="583.00" font-size="12" >台站3</text>
+<polyline points="105.00,395.11 251.67,427.88 398.33,456.07 545.00,482.71" fill="none" stroke="#8067a2" stroke-width="2.7"  stroke-linejoin="round"/>
+<circle cx="105.00" cy="395.11" r="2.4" fill="white" stroke="#8067a2" stroke-width="1.4"/>
+<circle cx="251.67" cy="427.88" r="2.4" fill="white" stroke="#8067a2" stroke-width="1.4"/>
+<circle cx="398.33" cy="456.07" r="2.4" fill="white" stroke="#8067a2" stroke-width="1.4"/>
+<circle cx="545.00" cy="482.71" r="2.4" fill="white" stroke="#8067a2" stroke-width="1.4"/>
+<line x1="105.00" y1="600.00" x2="124.00" y2="600.00" stroke="#8067a2" stroke-width="3" />
+<text x="130.00" y="604.00" font-size="12" >台站4</text>
+<polyline points="105.00,322.33 251.67,334.31 398.33,367.71 545.00,387.97" fill="none" stroke="#8b969e" stroke-width="2.7"  stroke-linejoin="round"/>
+<circle cx="105.00" cy="322.33" r="2.4" fill="white" stroke="#8b969e" stroke-width="1.4"/>
+<circle cx="251.67" cy="334.31" r="2.4" fill="white" stroke="#8b969e" stroke-width="1.4"/>
+<circle cx="398.33" cy="367.71" r="2.4" fill="white" stroke="#8b969e" stroke-width="1.4"/>
+<circle cx="545.00" cy="387.97" r="2.4" fill="white" stroke="#8b969e" stroke-width="1.4"/>
+<line x1="256.00" y1="600.00" x2="275.00" y2="600.00" stroke="#8b969e" stroke-width="3" />
+<text x="281.00" y="604.00" font-size="12" >台站5</text>
+<text x="680.00" y="136.00" font-size="17" font-weight="600">(b) 美国记录去均值影响</text>
+<line x1="696.00" y1="510.00" x2="1136.00" y2="510.00" stroke="#e6e9ec" stroke-width="1" />
+<text x="683.00" y="514.00" font-size="12" text-anchor="end">0.1</text>
+<line x1="696.00" y1="420.79" x2="1136.00" y2="420.79" stroke="#e6e9ec" stroke-width="1" />
+<text x="683.00" y="424.79" font-size="12" text-anchor="end">1</text>
+<line x1="696.00" y1="331.57" x2="1136.00" y2="331.57" stroke="#e6e9ec" stroke-width="1" />
+<text x="683.00" y="335.57" font-size="12" text-anchor="end">10</text>
+<line x1="696.00" y1="242.36" x2="1136.00" y2="242.36" stroke="#e6e9ec" stroke-width="1" />
+<text x="683.00" y="246.36" font-size="12" text-anchor="end">100</text>
+<line x1="696.00" y1="180.00" x2="1136.00" y2="180.00" stroke="#e6e9ec" stroke-width="1" />
+<text x="683.00" y="184.00" font-size="12" text-anchor="end">500</text>
+<line x1="696.00" y1="180.00" x2="696.00" y2="510.00" stroke="#edf0f1" stroke-width="1" />
+<text x="696.00" y="534.00" font-size="12" text-anchor="middle">4</text>
+<line x1="842.67" y1="180.00" x2="842.67" y2="510.00" stroke="#edf0f1" stroke-width="1" />
+<text x="842.67" y="534.00" font-size="12" text-anchor="middle">6</text>
+<line x1="989.33" y1="180.00" x2="989.33" y2="510.00" stroke="#edf0f1" stroke-width="1" />
+<text x="989.33" y="534.00" font-size="12" text-anchor="middle">8</text>
+<line x1="1136.00" y1="180.00" x2="1136.00" y2="510.00" stroke="#edf0f1" stroke-width="1" />
+<text x="1136.00" y="534.00" font-size="12" text-anchor="middle">10</text>
+<line x1="696.00" y1="180.00" x2="696.00" y2="510.00" stroke="#3b4651" stroke-width="1" />
+<line x1="696.00" y1="510.00" x2="1136.00" y2="510.00" stroke="#3b4651" stroke-width="1" />
+<text x="916.00" y="569.00" font-size="14" text-anchor="middle">周期 T (s)</text>
+<text x="636.00" y="345.00" transform="rotate(-90 636.00 345.00)" text-anchor="middle" font-size="14">基线敏感性比 (—)</text>
+<polyline points="696.00,471.88 842.67,452.20 989.33,424.73 1136.00,403.72" fill="none" stroke="#256a85" stroke-width="2.7"  stroke-linejoin="round"/>
+<circle cx="696.00" cy="471.88" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<circle cx="842.67" cy="452.20" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<circle cx="989.33" cy="424.73" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<circle cx="1136.00" cy="403.72" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<line x1="696.00" y1="579.00" x2="715.00" y2="579.00" stroke="#256a85" stroke-width="3" />
+<text x="721.00" y="583.00" font-size="12" >US台站1</text>
+<polyline points="696.00,392.07 842.67,397.65 989.33,386.53 1136.00,375.77" fill="none" stroke="#bc6d52" stroke-width="2.7"  stroke-linejoin="round"/>
+<circle cx="696.00" cy="392.07" r="2.4" fill="white" stroke="#bc6d52" stroke-width="1.4"/>
+<circle cx="842.67" cy="397.65" r="2.4" fill="white" stroke="#bc6d52" stroke-width="1.4"/>
+<circle cx="989.33" cy="386.53" r="2.4" fill="white" stroke="#bc6d52" stroke-width="1.4"/>
+<circle cx="1136.00" cy="375.77" r="2.4" fill="white" stroke="#bc6d52" stroke-width="1.4"/>
+<line x1="847.00" y1="579.00" x2="866.00" y2="579.00" stroke="#bc6d52" stroke-width="3" />
+<text x="872.00" y="583.00" font-size="12" >US台站2</text>
+<polyline points="696.00,372.07 842.67,369.54 989.33,356.37 1136.00,327.94" fill="none" stroke="#378372" stroke-width="2.7"  stroke-linejoin="round"/>
+<circle cx="696.00" cy="372.07" r="2.4" fill="white" stroke="#378372" stroke-width="1.4"/>
+<circle cx="842.67" cy="369.54" r="2.4" fill="white" stroke="#378372" stroke-width="1.4"/>
+<circle cx="989.33" cy="356.37" r="2.4" fill="white" stroke="#378372" stroke-width="1.4"/>
+<circle cx="1136.00" cy="327.94" r="2.4" fill="white" stroke="#378372" stroke-width="1.4"/>
+<line x1="998.00" y1="579.00" x2="1017.00" y2="579.00" stroke="#378372" stroke-width="3" />
+<text x="1023.00" y="583.00" font-size="12" >US台站3</text>
+<polyline points="696.00,268.91 842.67,239.26 989.33,213.94 1136.00,190.08" fill="none" stroke="#8067a2" stroke-width="2.7"  stroke-linejoin="round"/>
+<circle cx="696.00" cy="268.91" r="2.4" fill="white" stroke="#8067a2" stroke-width="1.4"/>
+<circle cx="842.67" cy="239.26" r="2.4" fill="white" stroke="#8067a2" stroke-width="1.4"/>
+<circle cx="989.33" cy="213.94" r="2.4" fill="white" stroke="#8067a2" stroke-width="1.4"/>
+<circle cx="1136.00" cy="190.08" r="2.4" fill="white" stroke="#8067a2" stroke-width="1.4"/>
+<line x1="696.00" y1="600.00" x2="715.00" y2="600.00" stroke="#8067a2" stroke-width="3" />
+<text x="721.00" y="604.00" font-size="12" >US台站4</text>
+<line x1="67.00" y1="644.00" x2="1213.00" y2="644.00" stroke="#dfe5e9" stroke-width="1" />
+<text x="67.00" y="669.00" font-size="12" >记录处理不统一、低频质量未验收；不能直接用作设计选波。</text>
+</svg>

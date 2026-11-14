@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="690" viewBox="0 0 1280 690">
+<style>text{font-family:"Noto Sans CJK SC","Microsoft YaHei",Arial,sans-serif;fill:#26303b}</style>
+<rect width="1280" height="690" fill="#fff"/>
+<text x="67.00" y="46.00" font-size="24" font-weight="600">图 S08-02  三向加速度强度与持续时间</text>
+<text x="67.00" y="75.00" font-size="14" >ESM IT-2012-0008 / NVL · 32040点 · Δt=0.005s</text>
+<line x1="67.00" y1="99.00" x2="1213.00" y2="99.00" stroke="#dfe5e9" stroke-width="1" />
+<text x="89.00" y="136.00" font-size="17" font-weight="600">(a) 三分量峰值</text>
+<line x1="105.00" y1="510.00" x2="545.00" y2="510.00" stroke="#e6e9ec" stroke-width="1" />
+<text x="92.00" y="514.00" font-size="12" text-anchor="end">0</text>
+<line x1="105.00" y1="455.00" x2="545.00" y2="455.00" stroke="#e6e9ec" stroke-width="1" />
+<text x="92.00" y="459.00" font-size="12" text-anchor="end">0.1</text>
+<line x1="105.00" y1="400.00" x2="545.00" y2="400.00" stroke="#e6e9ec" stroke-width="1" />
+<text x="92.00" y="404.00" font-size="12" text-anchor="end">0.2</text>
+<line x1="105.00" y1="345.00" x2="545.00" y2="345.00" stroke="#e6e9ec" stroke-width="1" />
+<text x="92.00" y="349.00" font-size="12" text-anchor="end">0.3</text>
+<line x1="105.00" y1="290.00" x2="545.00" y2="290.00" stroke="#e6e9ec" stroke-width="1" />
+<text x="92.00" y="294.00" font-size="12" text-anchor="end">0.4</text>
+<line x1="105.00" y1="235.00" x2="545.00" y2="235.00" stroke="#e6e9ec" stroke-width="1" />
+<text x="92.00" y="239.00" font-size="12" text-anchor="end">0.5</text>
+<line x1="105.00" y1="180.00" x2="545.00" y2="180.00" stroke="#e6e9ec" stroke-width="1" />
+<text x="92.00" y="184.00" font-size="12" text-anchor="end">0.6</text>
+<line x1="141.67" y1="180.00" x2="141.67" y2="510.00" stroke="#edf0f1" stroke-width="1" />
+<text x="141.67" y="534.00" font-size="12" text-anchor="middle">1</text>
+<line x1="325.00" y1="180.00" x2="325.00" y2="510.00" stroke="#edf0f1" stroke-width="1" />
+<text x="325.00" y="534.00" font-size="12" text-anchor="middle">2</text>
+<line x1="508.33" y1="180.00" x2="508.33" y2="510.00" stroke="#edf0f1" stroke-width="1" />
+<text x="508.33" y="534.00" font-size="12" text-anchor="middle">3</text>
+<line x1="105.00" y1="180.00" x2="105.00" y2="510.00" stroke="#3b4651" stroke-width="1" />
+<line x1="105.00" y1="510.00" x2="545.00" y2="510.00" stroke="#3b4651" stroke-width="1" />
+<text x="325.00" y="569.00" font-size="14" text-anchor="middle">1 HNE / 2 HNN / 3 HNZ</text>
+<text x="45.00" y="345.00" transform="rotate(-90 45.00 345.00)" text-anchor="middle" font-size="14">PGA (m/s²)</text>
+<polyline points="141.67,248.62 325.00,228.37 508.33,350.90" fill="none" stroke="#256a85" stroke-width="2.7"  stroke-linejoin="round"/>
+<circle cx="141.67" cy="248.62" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<circle cx="325.00" cy="228.37" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<circle cx="508.33" cy="350.90" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<line x1="105.00" y1="579.00" x2="124.00" y2="579.00" stroke="#256a85" stroke-width="3" />
+<text x="130.00" y="583.00" font-size="12" >PGA</text>
+<text x="680.00" y="136.00" font-size="17" font-weight="600">(b) 5%和95%能量到时</text>
+<line x1="696.00" y1="510.00" x2="1136.00" y2="510.00" stroke="#e6e9ec" stroke-width="1" />
+<text x="683.00" y="514.00" font-size="12" text-anchor="end">20</text>
+<line x1="696.00" y1="427.50" x2="1136.00" y2="427.50" stroke="#e6e9ec" stroke-width="1" />
+<text x="683.00" y="431.50" font-size="12" text-anchor="end">30</text>
+<line x1="696.00" y1="345.00" x2="1136.00" y2="345.00" stroke="#e6e9ec" stroke-width="1" />
+<text x="683.00" y="349.00" font-size="12" text-anchor="end">40</text>
+<line x1="696.00" y1="262.50" x2="1136.00" y2="262.50" stroke="#e6e9ec" stroke-width="1" />
+<text x="683.00" y="266.50" font-size="12" text-anchor="end">50</text>
+<line x1="696.00" y1="180.00" x2="1136.00" y2="180.00" stroke="#e6e9ec" stroke-width="1" />
+<text x="683.00" y="184.00" font-size="12" text-anchor="end">60</text>
+<line x1="732.67" y1="180.00" x2="732.67" y2="510.00" stroke="#edf0f1" stroke-width="1" />
+<text x="732.67" y="534.00" font-size="12" text-anchor="middle">1</text>
+<line x1="916.00" y1="180.00" x2="916.00" y2="510.00" stroke="#edf0f1" stroke-width="1" />
+<text x="916.00" y="534.00" font-size="12" text-anchor="middle">2</text>
+<line x1="1099.33" y1="180.00" x2="1099.33" y2="510.00" stroke="#edf0f1" stroke-width="1" />
+<text x="1099.33" y="534.00" font-size="12" text-anchor="middle">3</text>
+<line x1="696.00" y1="180.00" x2="696.00" y2="510.00" stroke="#3b4651" stroke-width="1" />
+<line x1="696.00" y1="510.00" x2="1136.00" y2="510.00" stroke="#3b4651" stroke-width="1" />
+<text x="916.00" y="569.00" font-size="14" text-anchor="middle">1 HNE / 2 HNN / 3 HNZ</text>
+<text x="636.00" y="345.00" transform="rotate(-90 636.00 345.00)" text-anchor="middle" font-size="14">记录时刻 (s)</text>
+<polyline points="732.67,404.76 916.00,403.57 1099.33,437.41" fill="none" stroke="#256a85" stroke-width="2.7"  stroke-linejoin="round"/>
+<circle cx="732.67" cy="404.76" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<circle cx="916.00" cy="403.57" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<circle cx="1099.33" cy="437.41" r="2.4" fill="white" stroke="#256a85" stroke-width="1.4"/>
+<line x1="696.00" y1="579.00" x2="715.00" y2="579.00" stroke="#256a85" stroke-width="3" />
+<text x="721.00" y="583.00" font-size="12" >Arias 5%</text>
+<polyline points="732.67,257.49 916.00,254.52 1099.33,268.52" fill="none" stroke="#bc6d52" stroke-width="2.7"  stroke-linejoin="round"/>
+<circle cx="732.67" cy="257.49" r="2.4" fill="white" stroke="#bc6d52" stroke-width="1.4"/>
+<circle cx="916.00" cy="254.52" r="2.4" fill="white" stroke="#bc6d52" stroke-width="1.4"/>
+<circle cx="1099.33" cy="268.52" r="2.4" fill="white" stroke="#bc6d52" stroke-width="1.4"/>
+<line x1="847.00" y1="579.00" x2="866.00" y2="579.00" stroke="#bc6d52" stroke-width="3" />
+<text x="872.00" y="583.00" font-size="12" >Arias 95%</text>
+<line x1="67.00" y1="644.00" x2="1213.00" y2="644.00" stroke="#dfe5e9" stroke-width="1" />
+<text x="67.00" y="669.00" font-size="12" >PGA及Arias显著持续时间仅用于输入表征，非158m混塔地震响应。</text>
+</svg>

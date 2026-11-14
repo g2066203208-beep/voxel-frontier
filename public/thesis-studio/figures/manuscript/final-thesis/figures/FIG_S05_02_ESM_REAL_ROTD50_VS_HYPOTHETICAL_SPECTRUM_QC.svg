@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="670" viewBox="0 0 1160 670" role="img" aria-label="Real ESM RotD50 spectrum compared with hypothetical research reference spectrum, not site design">
+<rect width="1160" height="670" fill="#fff"/>
+<text x="68" y="42" font-size="23" font-family="Arial,sans-serif" font-weight="700" fill="#172C42">REAL ESM RotD50 vs HYPOTHETICAL RESEARCH SPECTRUM</text>
+<text x="68" y="69" font-size="14" font-family="Arial,sans-serif" fill="#4D6171">IT-2012-0008 / IT.NVL / MP processed record  |  5% damping  |  Δt = 0.005 s  |  32,040 samples</text>
+<text x="68" y="92" font-size="13" font-family="Arial,sans-serif" fill="#53687B">Uniform log-LS fit: s = 0.980397; 12 periods 0.5–6 s; RMS log residual = 0.534707.</text>
+<line x1="68" y1="109" x2="1092" y2="109" stroke="#CCD4DC"/>
+<text x="108" y="131" font-size="15" font-family="Arial,sans-serif" font-weight="600" fill="#2B4054">Pseudo-spectral acceleration: real record and assumed target (m/s²)</text>
+<line x1="108" x2="1085" y1="479.10" y2="479.10" stroke="#E5EBF0" stroke-width="1"/>
+<text x="96" y="483.10" text-anchor="end" font-size="12" font-family="Arial,sans-serif" fill="#44596B">0.02</text>
+<line x1="108" x2="1085" y1="396.61" y2="396.61" stroke="#E5EBF0" stroke-width="1"/>
+<text x="96" y="400.61" text-anchor="end" font-size="12" font-family="Arial,sans-serif" fill="#44596B">0.05</text>
+<line x1="108" x2="1085" y1="334.21" y2="334.21" stroke="#E5EBF0" stroke-width="1"/>
+<text x="96" y="338.21" text-anchor="end" font-size="12" font-family="Arial,sans-serif" fill="#44596B">0.1</text>
+<line x1="108" x2="1085" y1="271.80" y2="271.80" stroke="#E5EBF0" stroke-width="1"/>
+<text x="96" y="275.80" text-anchor="end" font-size="12" font-family="Arial,sans-serif" fill="#44596B">0.2</text>
+<line x1="108" x2="1085" y1="189.31" y2="189.31" stroke="#E5EBF0" stroke-width="1"/>
+<text x="96" y="193.31" text-anchor="end" font-size="12" font-family="Arial,sans-serif" fill="#44596B">0.5</text>
+<line x1="108" x2="1085" y1="147.00" y2="147.00" stroke="#E5EBF0" stroke-width="1"/>
+<text x="96" y="151.00" text-anchor="end" font-size="12" font-family="Arial,sans-serif" fill="#44596B">0.8</text>
+<line x1="108.00" x2="108.00" y1="147" y2="505" stroke="#F0F2F5"/>
+<text x="108.00" y="529" text-anchor="middle" font-size="12" font-family="Arial,sans-serif" fill="#44596B">0.5</text>
+<line x1="240.23" x2="240.23" y1="147" y2="505" stroke="#F0F2F5"/>
+<text x="240.23" y="529" text-anchor="middle" font-size="12" font-family="Arial,sans-serif" fill="#44596B">0.75</text>
+<line x1="334.06" x2="334.06" y1="147" y2="505" stroke="#F0F2F5"/>
+<text x="334.06" y="529" text-anchor="middle" font-size="12" font-family="Arial,sans-serif" fill="#44596B">1</text>
+<line x1="466.29" x2="466.29" y1="147" y2="505" stroke="#F0F2F5"/>
+<text x="466.29" y="529" text-anchor="middle" font-size="12" font-family="Arial,sans-serif" fill="#44596B">1.5</text>
+<line x1="560.11" x2="560.11" y1="147" y2="505" stroke="#F0F2F5"/>
+<text x="560.11" y="529" text-anchor="middle" font-size="12" font-family="Arial,sans-serif" fill="#44596B">2</text>
+<line x1="692.35" x2="692.35" y1="147" y2="505" stroke="#F0F2F5"/>
+<text x="692.35" y="529" text-anchor="middle" font-size="12" font-family="Arial,sans-serif" fill="#44596B">3</text>
+<line x1="786.17" x2="786.17" y1="147" y2="505" stroke="#F0F2F5"/>
+<text x="786.17" y="529" text-anchor="middle" font-size="12" font-family="Arial,sans-serif" fill="#44596B">4</text>
+<line x1="918.40" x2="918.40" y1="147" y2="505" stroke="#F0F2F5"/>
+<text x="918.40" y="529" text-anchor="middle" font-size="12" font-family="Arial,sans-serif" fill="#44596B">6</text>
+<line x1="1012.23" x2="1012.23" y1="147" y2="505" stroke="#F0F2F5"/>
+<text x="1012.23" y="529" text-anchor="middle" font-size="12" font-family="Arial,sans-serif" fill="#44596B">8</text>
+<line x1="1085.00" x2="1085.00" y1="147" y2="505" stroke="#F0F2F5"/>
+<text x="1085.00" y="529" text-anchor="middle" font-size="12" font-family="Arial,sans-serif" fill="#44596B">10</text>
+<line x1="108" y1="147" x2="108" y2="505" stroke="#718092" stroke-width="1.2"/>
+<line x1="108" y1="505" x2="1085" y2="505" stroke="#718092" stroke-width="1.2"/>
+<text x="596.50" y="558" text-anchor="middle" font-size="15" font-family="Arial,sans-serif" fill="#2A4053">Oscillator period T (s, logarithmic axis)</text>
+<polyline points="108.00,183.02 240.23,228.08 334.06,243.56 406.83,266.38 466.29,308.48 560.11,308.52 632.89,333.93 692.35,364.30 742.62,387.05 786.17,416.56 858.94,452.29 918.40,451.22" fill="none" stroke="#6B879A" stroke-width="2" stroke-dasharray="5 4" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="108.00" cy="183.02" r="2.4" fill="#fff" stroke="#6B879A" stroke-width="1.4"/>
+<circle cx="240.23" cy="228.08" r="2.4" fill="#fff" stroke="#6B879A" stroke-width="1.4"/>
+<circle cx="334.06" cy="243.56" r="2.4" fill="#fff" stroke="#6B879A" stroke-width="1.4"/>
+<circle cx="406.83" cy="266.38" r="2.4" fill="#fff" stroke="#6B879A" stroke-width="1.4"/>
+<circle cx="466.29" cy="308.48" r="2.4" fill="#fff" stroke="#6B879A" stroke-width="1.4"/>
+<circle cx="560.11" cy="308.52" r="2.4" fill="#fff" stroke="#6B879A" stroke-width="1.4"/>
+<circle cx="632.89" cy="333.93" r="2.4" fill="#fff" stroke="#6B879A" stroke-width="1.4"/>
+<circle cx="692.35" cy="364.30" r="2.4" fill="#fff" stroke="#6B879A" stroke-width="1.4"/>
+<circle cx="742.62" cy="387.05" r="2.4" fill="#fff" stroke="#6B879A" stroke-width="1.4"/>
+<circle cx="786.17" cy="416.56" r="2.4" fill="#fff" stroke="#6B879A" stroke-width="1.4"/>
+<circle cx="858.94" cy="452.29" r="2.4" fill="#fff" stroke="#6B879A" stroke-width="1.4"/>
+<circle cx="918.40" cy="451.22" r="2.4" fill="#fff" stroke="#6B879A" stroke-width="1.4"/>
+<polyline points="108.00,184.80 240.23,229.87 334.06,245.34 406.83,268.16 466.29,310.26 560.11,310.30 632.89,335.71 692.35,366.09 742.62,388.83 786.17,418.35 858.94,454.07 918.40,453.00" fill="none" stroke="#146D9B" stroke-width="3.4"  stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="108.00" cy="184.80" r="3.4" fill="#fff" stroke="#146D9B" stroke-width="1.4"/>
+<circle cx="240.23" cy="229.87" r="3.4" fill="#fff" stroke="#146D9B" stroke-width="1.4"/>
+<circle cx="334.06" cy="245.34" r="3.4" fill="#fff" stroke="#146D9B" stroke-width="1.4"/>
+<circle cx="406.83" cy="268.16" r="3.4" fill="#fff" stroke="#146D9B" stroke-width="1.4"/>
+<circle cx="466.29" cy="310.26" r="3.4" fill="#fff" stroke="#146D9B" stroke-width="1.4"/>
+<circle cx="560.11" cy="310.30" r="3.4" fill="#fff" stroke="#146D9B" stroke-width="1.4"/>
+<circle cx="632.89" cy="335.71" r="3.4" fill="#fff" stroke="#146D9B" stroke-width="1.4"/>
+<circle cx="692.35" cy="366.09" r="3.4" fill="#fff" stroke="#146D9B" stroke-width="1.4"/>
+<circle cx="742.62" cy="388.83" r="3.4" fill="#fff" stroke="#146D9B" stroke-width="1.4"/>
+<circle cx="786.17" cy="418.35" r="3.4" fill="#fff" stroke="#146D9B" stroke-width="1.4"/>
+<circle cx="858.94" cy="454.07" r="3.4" fill="#fff" stroke="#146D9B" stroke-width="1.4"/>
+<circle cx="918.40" cy="453.00" r="3.4" fill="#fff" stroke="#146D9B" stroke-width="1.4"/>
+<polyline points="108.00,240.06 240.23,272.91 334.06,296.22 406.83,314.30 466.29,329.07 560.11,343.50 632.89,347.50 692.35,351.69 742.62,356.09 786.17,360.71 858.94,370.73 918.40,382.00" fill="none" stroke="#B35B3E" stroke-width="3"  stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="108.00" cy="240.06" r="2.4" fill="#fff" stroke="#B35B3E" stroke-width="1.4"/>
+<circle cx="240.23" cy="272.91" r="2.4" fill="#fff" stroke="#B35B3E" stroke-width="1.4"/>
+<circle cx="334.06" cy="296.22" r="2.4" fill="#fff" stroke="#B35B3E" stroke-width="1.4"/>
+<circle cx="406.83" cy="314.30" r="2.4" fill="#fff" stroke="#B35B3E" stroke-width="1.4"/>
+<circle cx="466.29" cy="329.07" r="2.4" fill="#fff" stroke="#B35B3E" stroke-width="1.4"/>
+<circle cx="560.11" cy="343.50" r="2.4" fill="#fff" stroke="#B35B3E" stroke-width="1.4"/>
+<circle cx="632.89" cy="347.50" r="2.4" fill="#fff" stroke="#B35B3E" stroke-width="1.4"/>
+<circle cx="692.35" cy="351.69" r="2.4" fill="#fff" stroke="#B35B3E" stroke-width="1.4"/>
+<circle cx="742.62" cy="356.09" r="2.4" fill="#fff" stroke="#B35B3E" stroke-width="1.4"/>
+<circle cx="786.17" cy="360.71" r="2.4" fill="#fff" stroke="#B35B3E" stroke-width="1.4"/>
+<circle cx="858.94" cy="370.73" r="2.4" fill="#fff" stroke="#B35B3E" stroke-width="1.4"/>
+<circle cx="918.40" cy="382.00" r="2.4" fill="#fff" stroke="#B35B3E" stroke-width="1.4"/>
+<line x1="108" x2="142" y1="578" y2="578" stroke="#6B879A" stroke-width="2" stroke-dasharray="5 4"/><text x="150" y="583" font-size="13.5" font-family="Arial,sans-serif" fill="#34495A">Real RotD50</text>
+<line x1="408" x2="442" y1="578" y2="578" stroke="#146D9B" stroke-width="3.4" /><text x="450" y="583" font-size="13.5" font-family="Arial,sans-serif" fill="#34495A">Scaled real (s × RotD50)</text>
+<line x1="708" x2="742" y1="578" y2="578" stroke="#B35B3E" stroke-width="3" /><text x="750" y="583" font-size="13.5" font-family="Arial,sans-serif" fill="#34495A">Hypothetical target</text>
+<line x1="68" x2="1092" y1="604" y2="604" stroke="#D4DCE4"/>
+<text x="68" y="627" font-size="12" font-family="Arial,sans-serif" fill="#506477">SOURCE: ESM v3 / IT-2012-0008 / IT.NVL / MP; CSV data archived in T079/real-records; plotted without smoothing.</text>
+<text x="68" y="648" font-size="12" font-family="Arial,sans-serif" font-weight="600" fill="#A24634">HYPOTHETICAL TARGET ONLY: 9/12 periods outside ±30% ILLUSTRATIVE guide; NOT a code tolerance or Jiayu design spectrum.</text>
+</svg>

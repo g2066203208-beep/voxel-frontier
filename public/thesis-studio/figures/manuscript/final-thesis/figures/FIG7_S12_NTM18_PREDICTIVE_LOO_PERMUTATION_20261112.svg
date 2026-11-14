@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="940" height="430" viewBox="0 0 940 430">
+<rect width="940" height="430" fill="#fff"/>
+<text x="32" y="31" font-family="Arial" font-size="19" font-weight="bold" fill="#182a3b">Exact permutation calibration of leave-one-seed prediction</text>
+<text x="32" y="52" font-family="Arial" font-size="12" fill="#596775">18 historical NTM cases; 720 permutations per speed and predictor; not population inference</text>
+<line x1="235.00" y1="85" x2="235.00" y2="372" stroke="#e9edf0" stroke-width="1" stroke-dasharray="none"/>
+<text x="235.00" y="392" text-anchor="middle" font-family="Arial" font-size="12" fill="#485867">0.0</text>
+<line x1="294.09" y1="85" x2="294.09" y2="372" stroke="#e9edf0" stroke-width="1" stroke-dasharray="none"/>
+<line x1="353.18" y1="85" x2="353.18" y2="372" stroke="#e9edf0" stroke-width="1" stroke-dasharray="none"/>
+<text x="353.18" y="392" text-anchor="middle" font-family="Arial" font-size="12" fill="#485867">0.4</text>
+<line x1="412.27" y1="85" x2="412.27" y2="372" stroke="#e9edf0" stroke-width="1" stroke-dasharray="none"/>
+<line x1="471.36" y1="85" x2="471.36" y2="372" stroke="#e9edf0" stroke-width="1" stroke-dasharray="none"/>
+<text x="471.36" y="392" text-anchor="middle" font-family="Arial" font-size="12" fill="#485867">0.8</text>
+<line x1="530.45" y1="85" x2="530.45" y2="372" stroke="#7b858e" stroke-width="1.8" stroke-dasharray="5,4"/>
+<line x1="589.55" y1="85" x2="589.55" y2="372" stroke="#e9edf0" stroke-width="1" stroke-dasharray="none"/>
+<text x="589.55" y="392" text-anchor="middle" font-family="Arial" font-size="12" fill="#485867">1.2</text>
+<line x1="648.64" y1="85" x2="648.64" y2="372" stroke="#e9edf0" stroke-width="1" stroke-dasharray="none"/>
+<line x1="707.73" y1="85" x2="707.73" y2="372" stroke="#e9edf0" stroke-width="1" stroke-dasharray="none"/>
+<text x="707.73" y="392" text-anchor="middle" font-family="Arial" font-size="12" fill="#485867">1.6</text>
+<line x1="766.82" y1="85" x2="766.82" y2="372" stroke="#e9edf0" stroke-width="1" stroke-dasharray="none"/>
+<line x1="825.91" y1="85" x2="825.91" y2="372" stroke="#e9edf0" stroke-width="1" stroke-dasharray="none"/>
+<text x="825.91" y="392" text-anchor="middle" font-family="Arial" font-size="12" fill="#485867">2.0</text>
+<line x1="885.00" y1="85" x2="885.00" y2="372" stroke="#e9edf0" stroke-width="1" stroke-dasharray="none"/>
+<text x="34" y="112" font-family="Arial" font-size="13" fill="#223748">9.344 m/s / pitch</text>
+<line x1="462.34" y1="108" x2="652.33" y2="108" stroke="#9aa8b5" stroke-width="7" stroke-linecap="round" opacity=".65"/>
+<circle cx="524.87" cy="108" r="6" fill="#1b5c84" stroke="#fff" stroke-width="1.5"/>
+<text x="892" y="112" text-anchor="end" font-family="Arial" font-size="12" fill="#1b5c84">0.981</text>
+<text x="34" y="155" font-family="Arial" font-size="13" fill="#223748">9.344 m/s / power</text>
+<line x1="437.02" y1="151" x2="710.96" y2="151" stroke="#9aa8b5" stroke-width="7" stroke-linecap="round" opacity=".65"/>
+<circle cx="541.46" cy="151" r="6" fill="#a56620" stroke="#fff" stroke-width="1.5"/>
+<text x="892" y="155" text-anchor="end" font-family="Arial" font-size="12" fill="#a56620">1.037</text>
+<text x="34" y="198" font-family="Arial" font-size="13" fill="#223748">11.400 m/s / pitch</text>
+<line x1="449.73" y1="194" x2="804.94" y2="194" stroke="#9aa8b5" stroke-width="7" stroke-linecap="round" opacity=".65"/>
+<circle cx="770.43" cy="194" r="6" fill="#1b5c84" stroke="#fff" stroke-width="1.5"/>
+<text x="892" y="198" text-anchor="end" font-family="Arial" font-size="12" fill="#1b5c84">1.812</text>
+<text x="34" y="241" font-family="Arial" font-size="13" fill="#223748">11.400 m/s / power</text>
+<line x1="423.71" y1="237" x2="656.83" y2="237" stroke="#9aa8b5" stroke-width="7" stroke-linecap="round" opacity=".65"/>
+<circle cx="561.43" cy="237" r="6" fill="#a56620" stroke="#fff" stroke-width="1.5"/>
+<text x="892" y="241" text-anchor="end" font-family="Arial" font-size="12" fill="#a56620">1.105</text>
+<text x="34" y="284" font-family="Arial" font-size="13" fill="#223748">19.202 m/s / pitch</text>
+<line x1="488.60" y1="280" x2="664.53" y2="280" stroke="#9aa8b5" stroke-width="7" stroke-linecap="round" opacity=".65"/>
+<circle cx="629.61" cy="280" r="6" fill="#1b5c84" stroke="#fff" stroke-width="1.5"/>
+<text x="892" y="284" text-anchor="end" font-family="Arial" font-size="12" fill="#1b5c84">1.336</text>
+<text x="34" y="327" font-family="Arial" font-size="13" fill="#223748">19.202 m/s / power</text>
+<line x1="453.69" y1="323" x2="684.58" y2="323" stroke="#9aa8b5" stroke-width="7" stroke-linecap="round" opacity=".65"/>
+<circle cx="486.99" cy="323" r="6" fill="#a56620" stroke="#fff" stroke-width="1.5"/>
+<text x="892" y="327" text-anchor="end" font-family="Arial" font-size="12" fill="#a56620">0.853</text>
+<text x="560" y="416" text-anchor="middle" font-family="Arial" font-size="13" fill="#354858">LOO RMSE ratio (predictor / bin mean; 1 = equal)</text>
+<text x="235" y="72" font-family="Arial" font-size="11" fill="#657581">Grey: permutation 5–95% envelope; colored dot: observed</text>
+</svg>

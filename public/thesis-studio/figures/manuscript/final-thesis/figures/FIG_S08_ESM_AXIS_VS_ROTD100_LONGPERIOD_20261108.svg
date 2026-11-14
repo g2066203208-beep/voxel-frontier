@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700" role="img" aria-labelledby="title desc">
+<title id="title">Real ESM: fixed horizontal axes versus RotD100 pseudo-displacement</title>
+<desc id="desc">21 sampled 4 to 10 second periods of a processed real ESM two-horizontal record. RotD100 may exceed both fixed-axis oscillator spectral displacements. This is not a tower response or design spectrum.</desc>
+<rect width="1200" height="700" fill="#ffffff"/>
+<text x="95" y="39" font-size="24" font-family="Arial,sans-serif" font-weight="bold" fill="#1f3447">ESM NVL · long-period directional selection bias</text>
+<text x="95" y="66" font-size="14" font-family="Arial,sans-serif" fill="#506273">IT-2012-0008 · processed HNE/HNN · 5% damping · 21 sampled periods (4–9.346 s)</text>
+<rect x="394.65" y="151" width="232.24" height="192" fill="#edf3f7"/>
+<rect x="394.65" y="435" width="232.24" height="155" fill="#edf3f7"/>
+<line x1="95" x2="1120" y1="343.00" y2="343.00" stroke="#e1e8ec"/><text x="80" y="347.00" text-anchor="end" font-family="Arial" font-size="12" fill="#536779">0.0</text>
+<line x1="95" x2="1120" y1="304.60" y2="304.60" stroke="#e1e8ec"/><text x="80" y="308.60" text-anchor="end" font-family="Arial" font-size="12" fill="#536779">6.8</text>
+<line x1="95" x2="1120" y1="266.20" y2="266.20" stroke="#e1e8ec"/><text x="80" y="270.20" text-anchor="end" font-family="Arial" font-size="12" fill="#536779">13.6</text>
+<line x1="95" x2="1120" y1="227.80" y2="227.80" stroke="#e1e8ec"/><text x="80" y="231.80" text-anchor="end" font-family="Arial" font-size="12" fill="#536779">20.4</text>
+<line x1="95" x2="1120" y1="189.40" y2="189.40" stroke="#e1e8ec"/><text x="80" y="193.40" text-anchor="end" font-family="Arial" font-size="12" fill="#536779">27.2</text>
+<line x1="95" x2="1120" y1="151.00" y2="151.00" stroke="#e1e8ec"/><text x="80" y="155.00" text-anchor="end" font-family="Arial" font-size="12" fill="#536779">34.0</text>
+<line x1="95" x2="95" y1="151" y2="343" stroke="#5d6f7b"/><line x1="95" x2="1120" y1="343" y2="343" stroke="#5d6f7b"/>
+<text x="95" y="134" font-size="16" font-family="Arial" font-weight="bold" fill="#1f3447">PSD (mm)</text>
+<line x1="95" x2="1120" y1="590.00" y2="590.00" stroke="#e1e8ec"/><text x="80" y="594.00" text-anchor="end" font-family="Arial" font-size="12" fill="#536779">0.0</text>
+<line x1="95" x2="1120" y1="559.00" y2="559.00" stroke="#e1e8ec"/><text x="80" y="563.00" text-anchor="end" font-family="Arial" font-size="12" fill="#536779">2.0</text>
+<line x1="95" x2="1120" y1="528.00" y2="528.00" stroke="#e1e8ec"/><text x="80" y="532.00" text-anchor="end" font-family="Arial" font-size="12" fill="#536779">4.0</text>
+<line x1="95" x2="1120" y1="497.00" y2="497.00" stroke="#e1e8ec"/><text x="80" y="501.00" text-anchor="end" font-family="Arial" font-size="12" fill="#536779">6.0</text>
+<line x1="95" x2="1120" y1="466.00" y2="466.00" stroke="#e1e8ec"/><text x="80" y="470.00" text-anchor="end" font-family="Arial" font-size="12" fill="#536779">8.0</text>
+<line x1="95" x2="1120" y1="435.00" y2="435.00" stroke="#e1e8ec"/><text x="80" y="439.00" text-anchor="end" font-family="Arial" font-size="12" fill="#536779">10.0</text>
+<line x1="95" x2="95" y1="435" y2="590" stroke="#5d6f7b"/><line x1="95" x2="1120" y1="590" y2="590" stroke="#5d6f7b"/>
+<text x="95" y="418" font-size="16" font-family="Arial" font-weight="bold" fill="#1f3447">RotD100 excess (%)</text>
+<line x1="510.77" x2="510.77" y1="150" y2="590" stroke="#6d7e88" stroke-dasharray="5,5"/>
+<polyline points="95.00,237.23 117.81,238.62 167.75,250.06 220.92,261.10 277.55,239.24 281.36,236.50 337.86,206.13 402.09,196.21 467.73,192.38 470.50,191.81 510.77,185.40 543.35,183.19 620.94,173.59 654.09,171.44 703.56,175.07 791.56,192.57 840.45,198.33 885.28,206.25 985.09,214.89 1026.82,209.94 1091.38,210.43" fill="none" stroke="#236c84" stroke-width="3"/>
+<polyline points="95.00,237.07 117.81,238.47 167.75,249.09 220.92,255.12 277.55,235.07 281.36,232.07 337.86,201.28 402.09,194.83 467.73,179.56 470.50,179.04 510.77,174.76 543.35,173.59 620.94,168.13 654.09,167.39 703.56,169.14 791.56,179.72 840.45,187.67 885.28,194.95 985.09,204.41 1026.82,206.44 1091.38,206.37" fill="none" stroke="#c56a43" stroke-width="3"/>
+<polyline points="95.00,587.58 117.81,587.80 167.75,573.83 220.92,476.80 277.55,527.75 281.36,525.46 337.86,535.09 402.09,575.40 467.73,458.06 470.50,459.15 510.77,485.40 543.35,496.96 620.94,540.09 654.09,553.41 703.56,535.26 791.56,457.64 840.45,475.78 885.28,461.91 985.09,463.15 1026.82,549.27 1091.38,542.49" fill="none" stroke="#3c617c" stroke-width="2.5"/>
+<circle cx="95.00" cy="587.58" r="4.2" fill="#bf8756"><title>T=4.000 s; fixed-axis=HNN; excess=0.156%</title></circle>
+<circle cx="117.81" cy="587.80" r="4.2" fill="#bf8756"><title>T=4.122 s; fixed-axis=HNN; excess=0.142%</title></circle>
+<circle cx="167.75" cy="573.83" r="4.2" fill="#bf8756"><title>T=4.390 s; fixed-axis=HNN; excess=1.043%</title></circle>
+<circle cx="220.92" cy="476.80" r="4.2" fill="#bf8756"><title>T=4.676 s; fixed-axis=HNN; excess=7.304%</title></circle>
+<circle cx="277.55" cy="527.75" r="4.2" fill="#bf8756"><title>T=4.980 s; fixed-axis=HNN; excess=4.016%</title></circle>
+<circle cx="281.36" cy="525.46" r="4.2" fill="#bf8756"><title>T=5.000 s; fixed-axis=HNN; excess=4.164%</title></circle>
+<circle cx="337.86" cy="535.09" r="4.2" fill="#bf8756"><title>T=5.303 s; fixed-axis=HNN; excess=3.543%</title></circle>
+<circle cx="402.09" cy="575.40" r="4.2" fill="#bf8756"><title>T=5.648 s; fixed-axis=HNN; excess=0.942%</title></circle>
+<circle cx="467.73" cy="458.06" r="4.2" fill="#2d788c"><title>T=6.000 s; fixed-axis=HNE; excess=8.512%</title></circle>
+<circle cx="470.50" cy="459.15" r="4.2" fill="#2d788c"><title>T=6.015 s; fixed-axis=HNE; excess=8.442%</title></circle>
+<circle cx="510.77" cy="485.40" r="4.2" fill="#2d788c"><title>T=6.231 s; fixed-axis=HNE; excess=6.748%</title></circle>
+<circle cx="543.35" cy="496.96" r="4.2" fill="#2d788c"><title>T=6.406 s; fixed-axis=HNE; excess=6.003%</title></circle>
+<circle cx="620.94" cy="540.09" r="4.2" fill="#2d788c"><title>T=6.822 s; fixed-axis=HNE; excess=3.220%</title></circle>
+<circle cx="654.09" cy="553.41" r="4.2" fill="#2d788c"><title>T=7.000 s; fixed-axis=HNE; excess=2.361%</title></circle>
+<circle cx="703.56" cy="535.26" r="4.2" fill="#2d788c"><title>T=7.265 s; fixed-axis=HNE; excess=3.532%</title></circle>
+<circle cx="791.56" cy="457.64" r="4.2" fill="#2d788c"><title>T=7.738 s; fixed-axis=HNE; excess=8.539%</title></circle>
+<circle cx="840.45" cy="475.78" r="4.2" fill="#2d788c"><title>T=8.000 s; fixed-axis=HNE; excess=7.369%</title></circle>
+<circle cx="885.28" cy="461.91" r="4.2" fill="#2d788c"><title>T=8.241 s; fixed-axis=HNE; excess=8.264%</title></circle>
+<circle cx="985.09" cy="463.15" r="4.2" fill="#bf8756"><title>T=8.776 s; fixed-axis=HNN; excess=8.184%</title></circle>
+<circle cx="1026.82" cy="549.27" r="4.2" fill="#bf8756"><title>T=9.000 s; fixed-axis=HNN; excess=2.628%</title></circle>
+<circle cx="1091.38" cy="542.49" r="4.2" fill="#bf8756"><title>T=9.346 s; fixed-axis=HNN; excess=3.065%</title></circle>
+<text x="95.00" y="612" text-anchor="middle" font-size="13" font-family="Arial" fill="#4b6070">4</text>
+<text x="281.36" y="612" text-anchor="middle" font-size="13" font-family="Arial" fill="#4b6070">5</text>
+<text x="467.73" y="612" text-anchor="middle" font-size="13" font-family="Arial" fill="#4b6070">6</text>
+<text x="654.09" y="612" text-anchor="middle" font-size="13" font-family="Arial" fill="#4b6070">7</text>
+<text x="840.45" y="612" text-anchor="middle" font-size="13" font-family="Arial" fill="#4b6070">8</text>
+<text x="1026.82" y="612" text-anchor="middle" font-size="13" font-family="Arial" fill="#4b6070">9</text>
+<text x="600" y="640" text-anchor="middle" font-size="15" font-family="Arial" fill="#233a4d">Oscillator period T (s)</text>
+<line x1="96" x2="125" y1="95" y2="95" stroke="#c56a43" stroke-width="3"/><text x="132" y="100" font-size="13" font-family="Arial">RotD100 PSD</text>
+<line x1="277" x2="306" y1="95" y2="95" stroke="#236c84" stroke-width="3"/><text x="313" y="100" font-size="13" font-family="Arial">max(HNE,HNN) PSD</text>
+<circle cx="565" cy="95" r="5" fill="#2d788c"/><text x="578" y="100" font-size="13" font-family="Arial">HNE dominant</text>
+<circle cx="715" cy="95" r="5" fill="#bf8756"/><text x="728" y="100" font-size="13" font-family="Arial">HNN dominant</text>
+<text x="95" y="665" font-size="12" font-family="Arial" fill="#596b77">Nominal 6.231 s is from an unvalidated linear beam proxy; shaded ±10% is a sensitivity assumption.</text>
+<text x="95" y="685" font-size="12" font-family="Arial" fill="#8a5050">Processed-record SNR, site target spectrum, full modal response and W/E/WE remain unverified.</text></svg>

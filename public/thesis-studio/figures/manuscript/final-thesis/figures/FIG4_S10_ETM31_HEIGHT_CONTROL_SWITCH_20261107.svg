@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1260" height="820" viewBox="0 0 1260 820">
+<rect width="1260" height="820" fill="#ffffff"/>
+<style>text{font-family:Arial,Helvetica,sans-serif;fill:#202934}.title{font-size:22px;font-weight:700}.sub{font-size:16px;font-weight:700}.axis{font-size:13px}.note{font-size:12px;fill:#475467}</style>
+<text x="50" y="42" class="title">ETM 31-section control-case switching: four historical cases</text>
+<text x="50" y="69" class="note">Synchronous gross-annulus elastic stress; 16 azimuths; 600 s; diagnostic exponents only (not material fatigue)</text>
+<text x="88" y="102" class="sub">(a) m = 4 nominal-stress DEL</text>
+<line x1="88" y1="687.00" x2="558" y2="687.00" stroke="#E4E8EE"/>
+<text x="76" y="691.00" text-anchor="end" class="axis">0</text>
+<line x1="88" y1="636.82" x2="558" y2="636.82" stroke="#E4E8EE"/>
+<text x="76" y="640.82" text-anchor="end" class="axis">10</text>
+<line x1="88" y1="586.64" x2="558" y2="586.64" stroke="#E4E8EE"/>
+<text x="76" y="590.64" text-anchor="end" class="axis">20</text>
+<line x1="88" y1="536.46" x2="558" y2="536.46" stroke="#E4E8EE"/>
+<text x="76" y="540.46" text-anchor="end" class="axis">30</text>
+<line x1="88" y1="486.29" x2="558" y2="486.29" stroke="#E4E8EE"/>
+<text x="76" y="490.29" text-anchor="end" class="axis">40</text>
+<line x1="88" y1="436.11" x2="558" y2="436.11" stroke="#E4E8EE"/>
+<text x="76" y="440.11" text-anchor="end" class="axis">50</text>
+<line x1="88" y1="385.93" x2="558" y2="385.93" stroke="#E4E8EE"/>
+<text x="76" y="389.93" text-anchor="end" class="axis">60</text>
+<line x1="88" y1="335.75" x2="558" y2="335.75" stroke="#E4E8EE"/>
+<text x="76" y="339.75" text-anchor="end" class="axis">70</text>
+<line x1="88" y1="285.57" x2="558" y2="285.57" stroke="#E4E8EE"/>
+<text x="76" y="289.57" text-anchor="end" class="axis">80</text>
+<line x1="88" y1="235.39" x2="558" y2="235.39" stroke="#E4E8EE"/>
+<text x="76" y="239.39" text-anchor="end" class="axis">90</text>
+<line x1="88" y1="185.21" x2="558" y2="185.21" stroke="#E4E8EE"/>
+<text x="76" y="189.21" text-anchor="end" class="axis">100</text>
+<line x1="88" y1="135.04" x2="558" y2="135.04" stroke="#E4E8EE"/>
+<text x="76" y="139.04" text-anchor="end" class="axis">110</text>
+<line x1="88.00" y1="125" x2="88.00" y2="687" stroke="#EEF1F4"/>
+<text x="88.00" y="711" text-anchor="middle" class="axis">0</text>
+<line x1="198.59" y1="125" x2="198.59" y2="687" stroke="#EEF1F4"/>
+<text x="198.59" y="711" text-anchor="middle" class="axis">2</text>
+<line x1="309.18" y1="125" x2="309.18" y2="687" stroke="#EEF1F4"/>
+<text x="309.18" y="711" text-anchor="middle" class="axis">4</text>
+<line x1="419.76" y1="125" x2="419.76" y2="687" stroke="#EEF1F4"/>
+<text x="419.76" y="711" text-anchor="middle" class="axis">6</text>
+<line x1="530.35" y1="125" x2="530.35" y2="687" stroke="#EEF1F4"/>
+<text x="530.35" y="711" text-anchor="middle" class="axis">8</text>
+<rect x="88" y="125" width="470" height="562" fill="none" stroke="#7C8895"/>
+<text x="323" y="735" text-anchor="middle" class="axis">Equivalent nominal stress (MPa)</text>
+<text x="33" y="406" transform="rotate(-90 33 406)" text-anchor="middle" class="axis">Height above base (m)</text>
+<line x1="88" y1="595.68" x2="558" y2="595.68" stroke="#B64747" stroke-width="1.3" stroke-dasharray="5 5"/>
+<line x1="88" y1="266.87" x2="558" y2="266.87" stroke="#B64747" stroke-width="1.3" stroke-dasharray="5 5"/>
+<polyline points="466.00,678.15 471.30,659.75 476.70,641.34 480.11,622.94 480.49,604.53 480.12,586.84 477.02,568.43 474.53,550.03 474.89,531.62 474.19,513.22 472.99,495.52 472.89,477.11 474.33,458.71 475.01,440.31 475.38,421.90 478.25,404.20 477.48,385.80 467.30,367.39 452.52,348.99 446.02,330.58 448.97,312.89 442.79,294.48 427.55,276.08 412.63,257.67 410.45,239.27 423.98,221.57 423.55,203.16 406.65,184.76 350.17,166.35 304.70,147.95 297.92,132.38" fill="none" stroke="#146B91" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="476.42,678.15 479.78,659.75 483.14,641.34 484.41,622.94 482.57,604.53 479.98,586.84 474.53,568.43 469.62,550.03 467.34,531.62 463.93,513.22 460.18,495.52 457.43,477.11 456.38,458.71 455.11,440.31 454.83,421.90 458.84,404.20 460.00,385.80 452.71,367.39 441.03,348.99 437.51,330.58 443.18,312.89 439.89,294.48 427.30,276.08 414.55,257.67 414.95,239.27 431.30,221.57 433.32,203.16 418.07,184.76 361.06,166.35 314.66,147.95 308.14,132.38" fill="none" stroke="#C45B32" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="439.80,678.15 441.57,659.75 443.20,641.34 442.77,622.94 439.41,604.53 435.42,586.84 428.88,568.43 422.81,550.03 419.04,531.62 414.28,513.22 409.38,495.52 405.28,477.11 402.64,458.71 399.97,440.31 399.03,421.90 402.46,404.20 404.57,385.80 399.96,367.39 391.48,348.99 390.07,330.58 396.54,312.89 395.23,294.48 385.78,276.08 376.21,257.67 378.13,239.27 394.08,221.57 397.21,203.16 384.84,184.76 334.76,166.35 293.92,147.95 288.96,132.38" fill="none" stroke="#777E89" stroke-width="1.8" stroke-linejoin="round"/>
+<polyline points="428.70,678.15 431.10,659.75 433.44,641.34 433.87,622.94 431.52,604.53 428.56,586.84 423.14,568.43 418.28,550.03 415.77,531.62 412.25,513.22 408.50,495.52 405.74,477.11 404.45,458.71 403.25,440.31 403.27,421.90 407.13,404.20 409.66,385.80 405.07,367.39 396.66,348.99 395.53,330.58 402.57,312.89 401.81,294.48 392.67,276.08 383.37,257.67 385.66,239.27 402.20,221.57 405.62,203.16 393.15,184.76 341.79,166.35 300.06,147.95 295.32,132.38" fill="none" stroke="#8D6AAB" stroke-width="1.8" stroke-linejoin="round"/>
+<text x="685" y="102" class="sub">(b) m = 10 nominal-stress DEL</text>
+<line x1="685" y1="687.00" x2="1155" y2="687.00" stroke="#E4E8EE"/>
+<text x="673" y="691.00" text-anchor="end" class="axis">0</text>
+<line x1="685" y1="636.82" x2="1155" y2="636.82" stroke="#E4E8EE"/>
+<text x="673" y="640.82" text-anchor="end" class="axis">10</text>
+<line x1="685" y1="586.64" x2="1155" y2="586.64" stroke="#E4E8EE"/>
+<text x="673" y="590.64" text-anchor="end" class="axis">20</text>
+<line x1="685" y1="536.46" x2="1155" y2="536.46" stroke="#E4E8EE"/>
+<text x="673" y="540.46" text-anchor="end" class="axis">30</text>
+<line x1="685" y1="486.29" x2="1155" y2="486.29" stroke="#E4E8EE"/>
+<text x="673" y="490.29" text-anchor="end" class="axis">40</text>
+<line x1="685" y1="436.11" x2="1155" y2="436.11" stroke="#E4E8EE"/>
+<text x="673" y="440.11" text-anchor="end" class="axis">50</text>
+<line x1="685" y1="385.93" x2="1155" y2="385.93" stroke="#E4E8EE"/>
+<text x="673" y="389.93" text-anchor="end" class="axis">60</text>
+<line x1="685" y1="335.75" x2="1155" y2="335.75" stroke="#E4E8EE"/>
+<text x="673" y="339.75" text-anchor="end" class="axis">70</text>
+<line x1="685" y1="285.57" x2="1155" y2="285.57" stroke="#E4E8EE"/>
+<text x="673" y="289.57" text-anchor="end" class="axis">80</text>
+<line x1="685" y1="235.39" x2="1155" y2="235.39" stroke="#E4E8EE"/>
+<text x="673" y="239.39" text-anchor="end" class="axis">90</text>
+<line x1="685" y1="185.21" x2="1155" y2="185.21" stroke="#E4E8EE"/>
+<text x="673" y="189.21" text-anchor="end" class="axis">100</text>
+<line x1="685" y1="135.04" x2="1155" y2="135.04" stroke="#E4E8EE"/>
+<text x="673" y="139.04" text-anchor="end" class="axis">110</text>
+<line x1="685.00" y1="125" x2="685.00" y2="687" stroke="#EEF1F4"/>
+<text x="685.00" y="711" text-anchor="middle" class="axis">0</text>
+<line x1="808.68" y1="125" x2="808.68" y2="687" stroke="#EEF1F4"/>
+<text x="808.68" y="711" text-anchor="middle" class="axis">5</text>
+<line x1="932.37" y1="125" x2="932.37" y2="687" stroke="#EEF1F4"/>
+<text x="932.37" y="711" text-anchor="middle" class="axis">10</text>
+<line x1="1056.05" y1="125" x2="1056.05" y2="687" stroke="#EEF1F4"/>
+<text x="1056.05" y="711" text-anchor="middle" class="axis">15</text>
+<rect x="685" y="125" width="470" height="562" fill="none" stroke="#7C8895"/>
+<text x="920" y="735" text-anchor="middle" class="axis">Equivalent nominal stress (MPa)</text>
+<text x="630" y="406" transform="rotate(-90 630 406)" text-anchor="middle" class="axis">Height above base (m)</text>
+<polyline points="1090.88,678.15 1097.11,659.75 1103.45,641.34 1107.65,622.94 1108.57,604.53 1108.64,586.84 1105.77,568.43 1103.53,550.03 1104.33,531.62 1103.96,513.22 1103.02,495.52 1103.24,477.11 1105.07,458.71 1105.89,440.31 1105.95,421.90 1108.52,404.20 1106.97,385.80 1095.09,367.39 1078.26,348.99 1070.26,330.58 1072.38,312.89 1064.60,294.48 1047.02,276.08 1029.85,257.67 1026.11,239.27 1038.88,221.57 1036.60,203.16 1017.06,184.76 956.63,166.35 908.18,147.95 900.11,132.38" fill="none" stroke="#146B91" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="1035.30,678.15 1039.05,659.75 1042.79,641.34 1044.60,622.94 1043.52,604.53 1041.69,586.84 1037.24,568.43 1033.22,550.03 1031.55,531.62 1028.84,513.22 1025.71,495.52 1023.57,477.11 1023.08,458.71 1022.34,440.31 1022.04,421.90 1025.38,404.20 1025.68,385.80 1018.43,367.39 1006.98,348.99 1002.74,330.58 1006.76,312.89 1002.55,294.48 989.92,276.08 977.21,257.67 976.39,239.27 989.85,221.57 990.68,203.16 976.25,184.76 925.13,166.35 883.62,147.95 877.31,132.38" fill="none" stroke="#C45B32" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="969.14,678.15 971.37,659.75 973.50,641.34 974.00,622.94 972.11,604.53 969.64,586.84 965.08,568.43 960.85,550.03 958.46,531.62 955.17,513.22 951.67,495.52 948.74,477.11 946.92,458.71 945.03,440.31 944.58,421.90 947.31,404.20 948.91,385.80 944.93,367.39 937.70,348.99 936.25,330.58 941.23,312.89 939.68,294.48 931.28,276.08 922.76,257.67 923.65,239.27 936.10,221.57 937.92,203.16 927.06,184.76 885.65,166.35 851.99,147.95 847.60,132.38" fill="none" stroke="#777E89" stroke-width="1.8" stroke-linejoin="round"/>
+<polyline points="971.49,678.15 974.99,659.75 978.54,641.34 980.55,622.94 980.23,604.53 979.37,586.84 976.52,568.43 974.10,550.03 973.72,531.62 972.48,513.22 970.92,495.52 970.20,477.11 970.71,458.71 971.27,440.31 972.51,421.90 975.97,404.20 977.06,385.80 971.18,367.39 961.75,348.99 959.03,330.58 964.00,312.89 962.02,294.48 952.72,276.08 943.51,257.67 944.72,239.27 958.43,221.57 960.68,203.16 949.23,184.76 904.32,166.35 867.89,147.95 863.55,132.38" fill="none" stroke="#8D6AAB" stroke-width="1.8" stroke-linejoin="round"/>
+<line x1="90" y1="757" x2="117" y2="757" stroke="#146B91" stroke-width="3"/>
+<text x="125" y="762" class="axis">9.344 m/s ETM S06</text>
+<line x1="375" y1="757" x2="402" y2="757" stroke="#C45B32" stroke-width="3"/>
+<text x="410" y="762" class="axis">11.4 m/s ETM S04</text>
+<line x1="90" y1="780" x2="117" y2="780" stroke="#777E89" stroke-width="3"/>
+<text x="125" y="785" class="axis">19.202 m/s ETM S04</text>
+<line x1="375" y1="780" x2="402" y2="780" stroke="#8D6AAB" stroke-width="3"/>
+<text x="410" y="785" class="axis">19.202 m/s ETM S06</text>
+<text x="692" y="762" class="note">m4 transitions: CSEG05/06 and CSEG23/24.</text>
+<text x="692" y="782" class="note">Six m4 segments fail hypothetical symmetric +/-0.5% rank stability.</text>
+<text x="692" y="802" class="note">ETM screening; not DLC1.2, local stress, PT or Miner damage.</text>
+</svg>

@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="760" viewBox="0 0 1100 760" role="img" aria-label="ERA5 wind direction, all hours versus high-wind hours">
+<rect width="1100" height="760" fill="white"/>
+<text x="72" y="53" font-family="Arial,sans-serif" font-size="27" font-weight="700" fill="#142c42">ERA5 100 m wind direction: all hours vs high-wind hours</text>
+<text x="72" y="82" font-family="Arial,sans-serif" font-size="15" fill="#50657a">2005–2025 | 16 wind-from sectors | V100 ≥ P95 = 8.385 m/s</text>
+<rect x="73" y="106" width="15" height="12" rx="2" fill="#327ca8"/><text x="96" y="117" font-family="Arial,sans-serif" font-size="14" fill="#23394c">All hours</text>
+<rect x="245" y="106" width="15" height="12" rx="2" fill="#e18c37"/><text x="268" y="117" font-family="Arial,sans-serif" font-size="14" fill="#23394c">Conditional on V100 ≥ P95</text>
+<line x1="145.0" y1="140" x2="145.0" y2="648" stroke="#e2eaf0"/>
+<text x="145.0" y="138" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#536b7f">0%</text>
+<line x1="328.8" y1="140" x2="328.8" y2="648" stroke="#e2eaf0"/>
+<text x="328.8" y="138" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#536b7f">10%</text>
+<line x1="512.5" y1="140" x2="512.5" y2="648" stroke="#e2eaf0"/>
+<text x="512.5" y="138" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#536b7f">20%</text>
+<line x1="696.3" y1="140" x2="696.3" y2="648" stroke="#e2eaf0"/>
+<text x="696.3" y="138" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#536b7f">30%</text>
+<line x1="880.0" y1="140" x2="880.0" y2="648" stroke="#e2eaf0"/>
+<text x="880.0" y="138" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#536b7f">40%</text>
+<text x="107" y="169" text-anchor="end" font-family="Arial,sans-serif" font-size="15" font-weight="700" fill="#15354c">N</text>
+<rect x="145" y="154" width="215.54" height="11" rx="2" fill="#327ca8"/>
+<rect x="145" y="168" width="441.00" height="11" rx="2" fill="#e18c37"/>
+<text x="366.5" y="164" font-family="Arial,sans-serif" font-size="11" fill="#285778">11.73</text>
+<text x="592.0" y="178" font-family="Arial,sans-serif" font-size="11" fill="#a45c1d">24.00</text>
+<text x="107" y="200" text-anchor="end" font-family="Arial,sans-serif" font-size="15" font-weight="700" fill="#15354c">NNE</text>
+<rect x="145" y="185" width="283.89" height="11" rx="2" fill="#327ca8"/>
+<rect x="145" y="199" width="682.45" height="11" rx="2" fill="#e18c37"/>
+<text x="434.9" y="195" font-family="Arial,sans-serif" font-size="11" fill="#285778">15.45</text>
+<text x="833.4" y="209" font-family="Arial,sans-serif" font-size="11" fill="#a45c1d">37.14</text>
+<text x="107" y="231" text-anchor="end" font-family="Arial,sans-serif" font-size="15" font-weight="400" fill="#15354c">NE</text>
+<rect x="145" y="216" width="178.61" height="11" rx="2" fill="#327ca8"/>
+<rect x="145" y="230" width="67.25" height="11" rx="2" fill="#e18c37"/>
+<text x="329.6" y="226" font-family="Arial,sans-serif" font-size="11" fill="#285778">9.72</text>
+<text x="218.3" y="240" font-family="Arial,sans-serif" font-size="11" fill="#a45c1d">3.66</text>
+<text x="107" y="262" text-anchor="end" font-family="Arial,sans-serif" font-size="15" font-weight="400" fill="#15354c">ENE</text>
+<rect x="145" y="247" width="151.41" height="11" rx="2" fill="#327ca8"/>
+<rect x="145" y="261" width="19.48" height="11" rx="2" fill="#e18c37"/>
+<text x="302.4" y="257" font-family="Arial,sans-serif" font-size="11" fill="#285778">8.24</text>
+<text x="170.5" y="271" font-family="Arial,sans-serif" font-size="11" fill="#a45c1d">1.06</text>
+<text x="107" y="293" text-anchor="end" font-family="Arial,sans-serif" font-size="15" font-weight="400" fill="#15354c">E</text>
+<rect x="145" y="278" width="167.95" height="11" rx="2" fill="#327ca8"/>
+<rect x="145" y="292" width="36.02" height="11" rx="2" fill="#e18c37"/>
+<text x="318.9" y="288" font-family="Arial,sans-serif" font-size="11" fill="#285778">9.14</text>
+<text x="187.0" y="302" font-family="Arial,sans-serif" font-size="11" fill="#a45c1d">1.96</text>
+<text x="107" y="324" text-anchor="end" font-family="Arial,sans-serif" font-size="15" font-weight="400" fill="#15354c">ESE</text>
+<rect x="145" y="309" width="140.20" height="11" rx="2" fill="#327ca8"/>
+<rect x="145" y="323" width="22.42" height="11" rx="2" fill="#e18c37"/>
+<text x="291.2" y="319" font-family="Arial,sans-serif" font-size="11" fill="#285778">7.63</text>
+<text x="173.4" y="333" font-family="Arial,sans-serif" font-size="11" fill="#a45c1d">1.22</text>
+<text x="107" y="355" text-anchor="end" font-family="Arial,sans-serif" font-size="15" font-weight="400" fill="#15354c">SE</text>
+<rect x="145" y="340" width="88.94" height="11" rx="2" fill="#327ca8"/>
+<rect x="145" y="354" width="4.59" height="11" rx="2" fill="#e18c37"/>
+<text x="239.9" y="350" font-family="Arial,sans-serif" font-size="11" fill="#285778">4.84</text>
+<text x="155.6" y="364" font-family="Arial,sans-serif" font-size="11" fill="#a45c1d">0.25</text>
+<text x="107" y="386" text-anchor="end" font-family="Arial,sans-serif" font-size="15" font-weight="400" fill="#15354c">SSE</text>
+<rect x="145" y="371" width="74.60" height="11" rx="2" fill="#327ca8"/>
+<rect x="145" y="385" width="5.15" height="11" rx="2" fill="#e18c37"/>
+<text x="225.6" y="381" font-family="Arial,sans-serif" font-size="11" fill="#285778">4.06</text>
+<text x="156.1" y="395" font-family="Arial,sans-serif" font-size="11" fill="#a45c1d">0.28</text>
+<text x="107" y="417" text-anchor="end" font-family="Arial,sans-serif" font-size="15" font-weight="400" fill="#15354c">S</text>
+<rect x="145" y="402" width="93.53" height="11" rx="2" fill="#327ca8"/>
+<rect x="145" y="416" width="28.48" height="11" rx="2" fill="#e18c37"/>
+<text x="244.5" y="412" font-family="Arial,sans-serif" font-size="11" fill="#285778">5.09</text>
+<text x="179.5" y="426" font-family="Arial,sans-serif" font-size="11" fill="#a45c1d">1.55</text>
+<text x="107" y="448" text-anchor="end" font-family="Arial,sans-serif" font-size="15" font-weight="700" fill="#15354c">SSW</text>
+<rect x="145" y="433" width="139.83" height="11" rx="2" fill="#327ca8"/>
+<rect x="145" y="447" width="369.34" height="11" rx="2" fill="#e18c37"/>
+<text x="290.8" y="443" font-family="Arial,sans-serif" font-size="11" fill="#285778">7.61</text>
+<text x="520.3" y="457" font-family="Arial,sans-serif" font-size="11" fill="#a45c1d">20.10</text>
+<text x="107" y="479" text-anchor="end" font-family="Arial,sans-serif" font-size="15" font-weight="400" fill="#15354c">SW</text>
+<rect x="145" y="464" width="91.69" height="11" rx="2" fill="#327ca8"/>
+<rect x="145" y="478" width="113.01" height="11" rx="2" fill="#e18c37"/>
+<text x="242.7" y="474" font-family="Arial,sans-serif" font-size="11" fill="#285778">4.99</text>
+<text x="264.0" y="488" font-family="Arial,sans-serif" font-size="11" fill="#a45c1d">6.15</text>
+<text x="107" y="510" text-anchor="end" font-family="Arial,sans-serif" font-size="15" font-weight="400" fill="#15354c">WSW</text>
+<rect x="145" y="495" width="47.96" height="11" rx="2" fill="#327ca8"/>
+<rect x="145" y="509" width="1.84" height="11" rx="2" fill="#e18c37"/>
+<text x="199.0" y="505" font-family="Arial,sans-serif" font-size="11" fill="#285778">2.61</text>
+<text x="152.8" y="519" font-family="Arial,sans-serif" font-size="11" fill="#a45c1d">0.10</text>
+<text x="107" y="541" text-anchor="end" font-family="Arial,sans-serif" font-size="15" font-weight="400" fill="#15354c">W</text>
+<rect x="145" y="526" width="31.24" height="11" rx="2" fill="#327ca8"/>
+<rect x="145" y="540" width="0.18" height="11" rx="2" fill="#e18c37"/>
+<text x="182.2" y="536" font-family="Arial,sans-serif" font-size="11" fill="#285778">1.70</text>
+<text x="151.2" y="550" font-family="Arial,sans-serif" font-size="11" fill="#a45c1d">0.01</text>
+<text x="107" y="572" text-anchor="end" font-family="Arial,sans-serif" font-size="15" font-weight="400" fill="#15354c">WNW</text>
+<rect x="145" y="557" width="29.03" height="11" rx="2" fill="#327ca8"/>
+<rect x="145" y="571" width="1.47" height="11" rx="2" fill="#e18c37"/>
+<text x="180.0" y="567" font-family="Arial,sans-serif" font-size="11" fill="#285778">1.58</text>
+<text x="152.5" y="581" font-family="Arial,sans-serif" font-size="11" fill="#a45c1d">0.08</text>
+<text x="107" y="603" text-anchor="end" font-family="Arial,sans-serif" font-size="15" font-weight="400" fill="#15354c">NW</text>
+<rect x="145" y="588" width="32.52" height="11" rx="2" fill="#327ca8"/>
+<rect x="145" y="602" width="6.61" height="11" rx="2" fill="#e18c37"/>
+<text x="183.5" y="598" font-family="Arial,sans-serif" font-size="11" fill="#285778">1.77</text>
+<text x="157.6" y="612" font-family="Arial,sans-serif" font-size="11" fill="#a45c1d">0.36</text>
+<text x="107" y="634" text-anchor="end" font-family="Arial,sans-serif" font-size="15" font-weight="400" fill="#15354c">NNW</text>
+<rect x="145" y="619" width="70.56" height="11" rx="2" fill="#327ca8"/>
+<rect x="145" y="633" width="38.40" height="11" rx="2" fill="#e18c37"/>
+<text x="221.6" y="629" font-family="Arial,sans-serif" font-size="11" fill="#285778">3.84</text>
+<text x="189.4" y="643" font-family="Arial,sans-serif" font-size="11" fill="#a45c1d">2.09</text>
+<line x1="72" y1="666" x2="1027" y2="666" stroke="#d6e2ea"/>
+<text x="73" y="699" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#17344b">N + NNE + SSW: 34.79% → 81.24%</text>
+<text x="73" y="724" font-family="Arial,sans-serif" font-size="14" fill="#38556b">Total variation distance ≈ 0.476 (rounded table); not a fatigue result.</text>
+<text x="73" y="746" font-family="Arial,sans-serif" font-size="12" fill="#647b8b">SOURCE: original R5 Word table 3-3 and figures 3-3(a,b). High-wind sum 100.01% from rounding.</text>
+</svg>

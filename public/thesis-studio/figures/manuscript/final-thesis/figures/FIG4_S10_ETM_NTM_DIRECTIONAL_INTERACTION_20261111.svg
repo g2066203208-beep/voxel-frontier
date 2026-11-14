@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="660" viewBox="0 0 1080 660"><rect width="1080" height="660" fill="white"/><text x="80" y="53" font-family="Arial" font-size="25" font-weight="bold">Historical ETM–NTM directional interaction by wind-speed bin</text><text x="80" y="85" font-family="Arial" font-size="16" fill="#444">Paired by wind-speed and seed label; 18 archived load-screening cases, not independent trials</text>
+<line x1="110" x2="960" y1="535" y2="535" stroke="#e5e5e5"/><text x="92" y="540" font-size="15" font-family="Arial" text-anchor="end">0</text>
+<line x1="110" x2="960" y1="489.44444444444446" y2="489.44444444444446" stroke="#e5e5e5"/><text x="92" y="494.44444444444446" font-size="15" font-family="Arial" text-anchor="end">1</text>
+<line x1="110" x2="960" y1="443.8888888888889" y2="443.8888888888889" stroke="#e5e5e5"/><text x="92" y="448.8888888888889" font-size="15" font-family="Arial" text-anchor="end">2</text>
+<line x1="110" x2="960" y1="398.33333333333337" y2="398.33333333333337" stroke="#e5e5e5"/><text x="92" y="403.33333333333337" font-size="15" font-family="Arial" text-anchor="end">3</text>
+<line x1="110" x2="960" y1="352.7777777777778" y2="352.7777777777778" stroke="#e5e5e5"/><text x="92" y="357.7777777777778" font-size="15" font-family="Arial" text-anchor="end">4</text>
+<line x1="110" x2="960" y1="307.2222222222222" y2="307.2222222222222" stroke="#e5e5e5"/><text x="92" y="312.2222222222222" font-size="15" font-family="Arial" text-anchor="end">5</text>
+<line x1="110" x2="960" y1="261.6666666666667" y2="261.6666666666667" stroke="#e5e5e5"/><text x="92" y="266.6666666666667" font-size="15" font-family="Arial" text-anchor="end">6</text>
+<line x1="110" x2="960" y1="216.1111111111111" y2="216.1111111111111" stroke="#e5e5e5"/><text x="92" y="221.1111111111111" font-size="15" font-family="Arial" text-anchor="end">7</text>
+<line x1="110" x2="960" y1="170.5555555555556" y2="170.5555555555556" stroke="#e5e5e5"/><text x="92" y="175.5555555555556" font-size="15" font-family="Arial" text-anchor="end">8</text>
+<line x1="110" x2="960" y1="125" y2="125" stroke="#e5e5e5"/><text x="92" y="130" font-size="15" font-family="Arial" text-anchor="end">9</text>
+<text x="35" y="330" transform="rotate(-90 35 330)" font-family="Arial" font-size="17">Difference-in-differences (percentage points)</text>
+<text x="270" y="572" font-family="Arial" font-size="17" text-anchor="middle">9.344 m/s</text>
+<circle cx="227.50" cy="332.05" r="6.3" fill="#245a81" opacity=".78"><title>U09p343881_S01: 4.455018 pp</title></circle>
+<circle cx="244.50" cy="255.75" r="6.3" fill="#245a81" opacity=".78"><title>U09p343881_S02: 6.129856 pp</title></circle>
+<circle cx="261.50" cy="424.42" r="6.3" fill="#245a81" opacity=".78"><title>U09p343881_S03: 2.427414 pp</title></circle>
+<circle cx="278.50" cy="458.01" r="6.3" fill="#245a81" opacity=".78"><title>U09p343881_S04: 1.690045 pp</title></circle>
+<circle cx="295.50" cy="471.88" r="6.3" fill="#245a81" opacity=".78"><title>U09p343881_S05: 1.385616 pp</title></circle>
+<circle cx="312.50" cy="151.06" r="6.3" fill="#245a81" opacity=".78"><title>U09p343881_S06: 8.427972 pp</title></circle>
+<line x1="206" x2="334" y1="348.86059927574075" y2="348.86059927574075" stroke="#111" stroke-width="3"/><text x="270" y="334.86059927574075" font-family="Arial" font-size="15" text-anchor="middle">mean 4.086</text>
+<text x="545" y="572" font-family="Arial" font-size="17" text-anchor="middle">11.400 m/s</text>
+<circle cx="502.50" cy="243.32" r="6.3" fill="#a34d32" opacity=".78"><title>U11p4_S01: 6.402813 pp</title></circle>
+<circle cx="519.50" cy="451.22" r="6.3" fill="#a34d32" opacity=".78"><title>U11p4_S02: 1.839138 pp</title></circle>
+<circle cx="536.50" cy="512.19" r="6.3" fill="#a34d32" opacity=".78"><title>U11p4_S03: 0.500755 pp</title></circle>
+<circle cx="553.50" cy="354.69" r="6.3" fill="#a34d32" opacity=".78"><title>U11p4_S04: 3.957957 pp</title></circle>
+<circle cx="570.50" cy="471.38" r="6.3" fill="#a34d32" opacity=".78"><title>U11p4_S05: 1.396607 pp</title></circle>
+<circle cx="587.50" cy="229.86" r="6.3" fill="#a34d32" opacity=".78"><title>U11p4_S06: 6.698106 pp</title></circle>
+<line x1="481" x2="609" y1="377.10918025574074" y2="377.10918025574074" stroke="#111" stroke-width="3"/><text x="545" y="363.10918025574074" font-family="Arial" font-size="15" text-anchor="middle">mean 3.466</text>
+<text x="820" y="572" font-family="Arial" font-size="17" text-anchor="middle">19.202 m/s</text>
+<circle cx="777.50" cy="450.15" r="6.3" fill="#4b7c48" opacity=".78"><title>U19p202140_S01: 1.862646 pp</title></circle>
+<circle cx="794.50" cy="194.43" r="6.3" fill="#4b7c48" opacity=".78"><title>U19p202140_S02: 7.475979 pp</title></circle>
+<circle cx="811.50" cy="442.82" r="6.3" fill="#4b7c48" opacity=".78"><title>U19p202140_S03: 2.023425 pp</title></circle>
+<circle cx="828.50" cy="339.00" r="6.3" fill="#4b7c48" opacity=".78"><title>U19p202140_S04: 4.302485 pp</title></circle>
+<circle cx="845.50" cy="516.54" r="6.3" fill="#4b7c48" opacity=".78"><title>U19p202140_S05: 0.405210 pp</title></circle>
+<circle cx="862.50" cy="251.54" r="6.3" fill="#4b7c48" opacity=".78"><title>U19p202140_S06: 6.222193 pp</title></circle>
+<line x1="756" x2="884" y1="365.746398747037" y2="365.746398747037" stroke="#111" stroke-width="3"/><text x="820" y="351.746398747037" font-family="Arial" font-size="15" text-anchor="middle">mean 3.715</text>
+<text x="110" y="613" font-family="Arial" font-size="14" fill="#444">Dots: six labelled seeds per bin; black line: within-bin mean. All 18 differences &gt; 0.</text><text x="110" y="637" font-family="Arial" font-size="14" fill="#444">Descriptive only: three wind-speed bins; no 5% significance claim (conditional 3-bin sign-flip p = 0.125).</text></svg>

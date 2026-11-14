@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="660" viewBox="0 0 1100 660" data-source-sha256="d6b942f0674ae129bead497b7c3ab5913cfee9c9f08ba615a8103f15bd5a7237">
+<title>RNA component mass source accounting</title>
+<desc>Source accounting, not mass CG inertia or dynamic verification.</desc>
+<rect width="1100" height="660" fill="#ffffff"/>
+<text x="60" y="48" font-size="28" font-weight="700" fill="#18354b">RNA组件质量来源与积分口径对照</text>
+<text x="60" y="78" font-size="16" fill="#4b6573">SOURCE ACCOUNTING ONLY | Not a mass / CG / inertia or dynamic validation</text>
+<rect x="40" y="100" width="1020" height="286" rx="10" fill="#f5f8fa"/>
+<text x="65" y="133" font-size="18" fill="#18354b">A  Component subtotal relative to HAWC2 reference (kg)</text>
+<line x1="480" y1="150" x2="480" y2="357" stroke="#d5e0e7"/>
+<text x="480" y="373" text-anchor="middle" font-size="12">0</text>
+<line x1="560" y1="150" x2="560" y2="357" stroke="#d5e0e7"/>
+<text x="560" y="373" text-anchor="middle" font-size="12">10</text>
+<line x1="640" y1="150" x2="640" y2="357" stroke="#d5e0e7"/>
+<text x="640" y="373" text-anchor="middle" font-size="12">20</text>
+<line x1="720" y1="150" x2="720" y2="357" stroke="#d5e0e7"/>
+<text x="720" y="373" text-anchor="middle" font-size="12">30</text>
+<line x1="800" y1="150" x2="800" y2="357" stroke="#d5e0e7"/>
+<text x="800" y="373" text-anchor="middle" font-size="12">40</text>
+<line x1="880" y1="150" x2="880" y2="357" stroke="#d5e0e7"/>
+<text x="880" y="373" text-anchor="middle" font-size="12">50</text>
+<text x="65" y="180" font-size="15">HAWC2 reference components</text>
+<rect x="480" y="165" width="0.00" height="20" fill="#6b8494"/>
+<circle cx="480.00" cy="175" r="4" fill="#6b8494"/>
+<text x="925" y="180" font-size="15">+0.0000 kg</text>
+<text x="65" y="235" font-size="15">R2 input stations / trapezoid</text>
+<rect x="480" y="220" width="363.15" height="20" fill="#28749a"/>
+<circle cx="843.15" cy="230" r="4" fill="#28749a"/>
+<text x="925" y="235" font-size="15">+45.3936 kg</text>
+<text x="65" y="290" font-size="15">R2 51 midpoint reconstruction</text>
+<rect x="480" y="275" width="208.46" height="20" fill="#28749a"/>
+<circle cx="688.46" cy="285" r="4" fill="#28749a"/>
+<text x="925" y="290" font-size="15">+26.0569 kg</text>
+<text x="65" y="345" font-size="15">R2 archived ED.sum print</text>
+<rect x="480" y="330" width="208.13" height="20" fill="#bc7b3c"/>
+<circle cx="688.13" cy="340" r="4" fill="#bc7b3c"/>
+<text x="925" y="345" font-size="15">+26.0162 kg</text>
+<rect x="40" y="401" width="1020" height="224" rx="10" fill="#f5f8fa"/>
+<text x="65" y="433" font-size="18" fill="#18354b">B  R2 midpoint minus HAWC2: source decomposition (kg)</text>
+<line x1="600" y1="445" x2="600" y2="608" stroke="#6b8494"/>
+<text x="65" y="467" font-size="15">Blade station properties</text>
+<rect x="600.00" y="452" width="245.72" height="20" fill="#28749a"/>
+<text x="925" y="467" font-size="15">+49.1436 kg</text>
+<text x="65" y="513" font-size="15">Blade integration method</text>
+<rect x="503.32" y="498" width="96.68" height="20" fill="#bc7b3c"/>
+<text x="925" y="513" font-size="15">-19.3367 kg</text>
+<text x="65" y="559" font-size="15">Nacelle source difference</text>
+<rect x="581.25" y="544" width="18.75" height="20" fill="#bc7b3c"/>
+<text x="925" y="559" font-size="15">-3.7500 kg</text>
+<text x="65" y="605" font-size="15">Total R2 minus HAWC2</text>
+<rect x="600.00" y="590" width="130.28" height="20" fill="#18354b"/>
+<text x="925" y="605" font-size="15">+26.0569 kg</text>
+<text x="60" y="649" font-size="13" fill="#526875">T038 OpenFAST R2/HAWC2 component ledger; ED.sum is a rounded archival print. NOT physical PASS.</text>
+</svg>

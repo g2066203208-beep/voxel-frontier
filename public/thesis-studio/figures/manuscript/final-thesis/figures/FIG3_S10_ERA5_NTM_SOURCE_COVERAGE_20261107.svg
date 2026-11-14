@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="790" viewBox="0 0 1180 790" role="img" aria-label="ERA5 observed wind-bin annual exposure and archived NTM source coverage">
+<rect width="1180" height="790" fill="#ffffff"/>
+<text x="72" y="55" text-anchor="start" font-family="Arial,Helvetica,sans-serif" font-size="28" font-weight="700" fill="#16364b">ERA5 operating-bin exposure and archived NTM sources</text>
+<text x="72" y="86" text-anchor="start" font-family="Arial,Helvetica,sans-serif" font-size="16" font-weight="400" fill="#516e83">2005–2025 · 184,080 hourly samples · 161.369 m hub · diagnostic 4–25 m/s window</text>
+<text x="72" y="114" text-anchor="start" font-family="Arial,Helvetica,sans-serif" font-size="15" font-weight="600" fill="#a06425">Source availability only: NOT formal DLC 1.2, not material fatigue and not a design hazard ranking.</text>
+<text x="107" y="153" text-anchor="start" font-family="Arial,Helvetica,sans-serif" font-size="15" font-weight="600" fill="#344a5b">ERA5 equivalent annual hours per 1 m/s wind-speed bin</text>
+<line x1="107" y1="549.00" x2="1092" y2="549.00" stroke="#d9e3e9"/>
+<text x="95" y="554" text-anchor="end" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="400" fill="#617589">0</text>
+<line x1="107" y1="473.80" x2="1092" y2="473.80" stroke="#d9e3e9"/>
+<text x="95" y="478.8" text-anchor="end" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="400" fill="#617589">300</text>
+<line x1="107" y1="398.60" x2="1092" y2="398.60" stroke="#d9e3e9"/>
+<text x="95" y="403.6" text-anchor="end" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="400" fill="#617589">600</text>
+<line x1="107" y1="323.40" x2="1092" y2="323.40" stroke="#d9e3e9"/>
+<text x="95" y="328.4" text-anchor="end" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="400" fill="#617589">900</text>
+<line x1="107" y1="248.20" x2="1092" y2="248.20" stroke="#d9e3e9"/>
+<text x="95" y="253.2" text-anchor="end" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="400" fill="#617589">1200</text>
+<line x1="107" y1="173.00" x2="1092" y2="173.00" stroke="#d9e3e9"/>
+<text x="95" y="178" text-anchor="end" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="400" fill="#617589">1500</text>
+<rect x="115.00" y="227.80" width="30.90" height="321.205" rx="2" fill="#acc9d9"/>
+<text x="130.45" y="574" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="400" fill="#394f60">4</text>
+<rect x="161.90" y="253.54" width="30.90" height="295.463" rx="2" fill="#acc9d9"/>
+<text x="177.36" y="574" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="400" fill="#394f60">5</text>
+<rect x="208.81" y="310.50" width="30.90" height="238.503" rx="2" fill="#acc9d9"/>
+<text x="224.26" y="574" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="400" fill="#394f60">6</text>
+<rect x="255.71" y="376.43" width="30.90" height="172.573" rx="2" fill="#acc9d9"/>
+<text x="271.17" y="574" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="400" fill="#394f60">7</text>
+<rect x="302.62" y="438.72" width="30.90" height="110.281" rx="2" fill="#acc9d9"/>
+<text x="318.07" y="574" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="400" fill="#394f60">8</text>
+<rect x="349.52" y="480.58" width="30.90" height="68.423" rx="2" fill="#d58c38"/>
+<text x="364.98" y="574" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="400" fill="#394f60">9</text>
+<circle cx="364.98" cy="587" r="3.3" fill="#cf7722"/>
+<rect x="396.43" y="511.44" width="30.90" height="37.564" rx="2" fill="#acc9d9"/>
+<text x="411.88" y="574" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="400" fill="#394f60">10</text>
+<rect x="443.33" y="531.99" width="30.90" height="17.010" rx="2" fill="#d58c38"/>
+<text x="458.79" y="574" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="400" fill="#394f60">11</text>
+<circle cx="458.79" cy="587" r="3.3" fill="#cf7722"/>
+<rect x="490.24" y="540.96" width="30.90" height="8.040" rx="2" fill="#acc9d9"/>
+<text x="505.69" y="574" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="400" fill="#394f60">12</text>
+<rect x="537.14" y="545.62" width="30.90" height="3.376" rx="2" fill="#acc9d9"/>
+<text x="552.60" y="574" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="400" fill="#394f60">13</text>
+<rect x="584.05" y="547.50" width="30.90" height="1.503" rx="2" fill="#acc9d9"/>
+<text x="599.50" y="574" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="400" fill="#394f60">14</text>
+<rect x="630.95" y="548.27" width="30.90" height="0.728" rx="2" fill="#acc9d9"/>
+<text x="646.40" y="574" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="400" fill="#394f60">15</text>
+<rect x="677.86" y="548.69" width="30.90" height="0.310" rx="2" fill="#acc9d9"/>
+<text x="693.31" y="574" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="400" fill="#394f60">16</text>
+<rect x="724.76" y="548.83" width="30.90" height="0.167" rx="2" fill="#acc9d9"/>
+<text x="740.21" y="574" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="400" fill="#394f60">17</text>
+<rect x="771.67" y="548.99" width="30.90" height="0.012" rx="2" fill="#acc9d9"/>
+<text x="787.12" y="574" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="400" fill="#394f60">18</text>
+<rect x="818.57" y="548.98" width="30.90" height="0.024" rx="2" fill="#d58c38"/>
+<text x="834.02" y="574" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="400" fill="#394f60">19</text>
+<circle cx="834.02" cy="587" r="3.3" fill="#cf7722"/>
+<rect x="865.48" y="549.00" width="30.90" height="0.000" rx="2" fill="#acc9d9"/>
+<text x="880.93" y="574" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="400" fill="#394f60">20</text>
+<rect x="912.38" y="549.00" width="30.90" height="0.000" rx="2" fill="#acc9d9"/>
+<text x="927.83" y="574" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="400" fill="#394f60">21</text>
+<rect x="959.29" y="549.00" width="30.90" height="0.000" rx="2" fill="#acc9d9"/>
+<text x="974.74" y="574" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="400" fill="#394f60">22</text>
+<rect x="1006.19" y="549.00" width="30.90" height="0.000" rx="2" fill="#acc9d9"/>
+<text x="1021.64" y="574" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="400" fill="#394f60">23</text>
+<rect x="1053.10" y="549.00" width="30.90" height="0.000" rx="2" fill="#acc9d9"/>
+<text x="1068.55" y="574" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="400" fill="#394f60">24</text>
+<text x="599.5" y="616" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="15" font-weight="500" fill="#354f61">Wind-speed bin lower bound (m/s); each bin has width 1 m/s</text>
+<rect x="108" y="647" width="21" height="14" rx="2" fill="#acc9d9"/>
+<text x="140" y="661" text-anchor="start" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="400" fill="#273e4c">No archived NTM case (18 bins)</text>
+<rect x="450" y="647" width="21" height="14" rx="2" fill="#d58c38"/>
+<text x="483" y="661" text-anchor="start" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="400" fill="#273e4c">Archived screening cases only (9, 11, 19 m/s; 6 seeds/bin)</text>
+<line x1="105" y1="685" x2="1092" y2="685" stroke="#bbcdd8"/>
+<text x="107" y="721" text-anchor="start" font-family="Arial,Helvetica,sans-serif" font-size="27" font-weight="700" fill="#1d5c77">6.70%</text>
+<text x="228" y="721" text-anchor="start" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="400" fill="#273e4c">of diagnostic operating hours have archived NTM source bins</text>
+<text x="737" y="721" text-anchor="start" font-family="Arial,Helvetica,sans-serif" font-size="27" font-weight="700" fill="#a96927">18/126</text>
+<text x="866" y="721" text-anchor="start" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="400" fill="#273e4c">screening slots; 0 formal verified</text>
+<text x="107" y="758" text-anchor="start" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="400" fill="#687f90">Input: 31-bin ERA5-derived CSV + 126-slot NTM source table. Zero observed hours above 20 m/s ≠ zero design hazard.</text>
+<!-- SOURCE SHA256: ERA5=e4058620a36b23bb218103875d4dc5b0711fc45d418b23a2208c2fc9c16c9102; NTM matrix=d4e25023f343ea76f2de5ce90c7d24dd985df770ec9f4747d203391010431e67 -->
+</svg>

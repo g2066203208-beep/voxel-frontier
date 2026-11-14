@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="560" viewBox="0 0 1160 560">
+<rect width="1160" height="560" fill="#ffffff"/>
+<text x="52" y="48" font-family="Arial" font-size="24" font-weight="bold" fill="#15273d">Wind-bin holdout: fixed-design nominal DEL4</text>
+<text x="52" y="74" font-family="Arial" font-size="13" fill="#53677b">18 historical NTM seed-cases; 10 correlated near-base stations; all six seeds of a held bin excluded from training</text>
+<rect x="60" y="94" width="13" height="13" fill="#23639a"/><text x="80" y="106" font-family="Arial" font-size="13" fill="#263d54">Observed</text>
+<rect x="210" y="94" width="13" height="13" fill="#e18c36"/><text x="230" y="106" font-family="Arial" font-size="13" fill="#263d54">Linear 2-bin</text>
+<rect x="360" y="94" width="13" height="13" fill="#43927b"/><text x="380" y="106" font-family="Arial" font-size="13" fill="#263d54">Nearest-bin</text>
+<text x="54" y="155" font-family="Arial" font-size="17" font-weight="bold" fill="#15273d">A. Mean maximum-azimuth DEL4 (MPa)</text>
+<text x="648" y="155" font-family="Arial" font-size="17" font-weight="bold" fill="#15273d">B. Holdout RMSE (MPa)</text>
+<text x="55" y="199" font-family="Arial" font-size="13" fill="#33485d">9.34 m/s (extra)</text>
+<rect x="210" y="188" width="120.30" height="15" rx="2" fill="#23639a"/><text x="337.3032942512022" y="200" font-family="Arial" font-size="11" fill="#2b3d50">3.18</text>
+<rect x="210" y="208" width="152.46" height="15" rx="2" fill="#e18c36"/><text x="369.45513091027254" y="220" font-family="Arial" font-size="11" fill="#2b3d50">4.04</text>
+<rect x="210" y="228" width="155.79" height="15" rx="2" fill="#43927b"/><text x="372.7932623530474" y="240" font-family="Arial" font-size="11" fill="#2b3d50">4.12</text>
+<rect x="780" y="188" width="83.70" height="18" rx="2" fill="#e18c36"/><text x="871.6984175528264" y="202" font-family="Arial" font-size="12" fill="#2b3d50">0.935</text>
+<rect x="780" y="213" width="90.95" height="18" rx="2" fill="#43927b"/><text x="878.9503702042243" y="227" font-family="Arial" font-size="12" fill="#2b3d50">1.017</text>
+<text x="55" y="297" font-family="Arial" font-size="13" fill="#33485d">11.40 m/s (inter)</text>
+<rect x="210" y="286" width="155.79" height="15" rx="2" fill="#23639a"/><text x="372.79326235304745" y="298" font-family="Arial" font-size="11" fill="#2b3d50">4.12</text>
+<rect x="210" y="306" width="130.35" height="15" rx="2" fill="#e18c36"/><text x="347.3472753008509" y="318" font-family="Arial" font-size="11" fill="#2b3d50">3.45</text>
+<rect x="210" y="326" width="120.30" height="15" rx="2" fill="#43927b"/><text x="337.3032942512022" y="338" font-family="Arial" font-size="11" fill="#2b3d50">3.18</text>
+<rect x="780" y="286" width="72.41" height="18" rx="2" fill="#e18c36"/><text x="860.4056344525286" y="300" font-family="Arial" font-size="12" fill="#2b3d50">0.809</text>
+<rect x="780" y="311" width="93.14" height="18" rx="2" fill="#43927b"/><text x="881.1436975605964" y="325" font-family="Arial" font-size="12" fill="#2b3d50">1.041</text>
+<text x="55" y="395" font-family="Arial" font-size="13" fill="#33485d">19.20 m/s (extra)</text>
+<rect x="210" y="384" width="168.46" height="15" rx="2" fill="#23639a"/><text x="385.460121058663" y="396" font-family="Arial" font-size="11" fill="#2b3d50">4.46</text>
+<rect x="210" y="404" width="290.46" height="15" rx="2" fill="#e18c36"/><text x="507.463337249554" y="416" font-family="Arial" font-size="11" fill="#2b3d50">7.69</text>
+<rect x="210" y="424" width="155.79" height="15" rx="2" fill="#43927b"/><text x="372.7932623530474" y="436" font-family="Arial" font-size="11" fill="#2b3d50">4.12</text>
+<rect x="780" y="384" width="289.91" height="18" rx="2" fill="#e18c36"/><text x="1077.908343422546" y="398" font-family="Arial" font-size="12" fill="#2b3d50">3.240</text>
+<rect x="780" y="409" width="38.09" height="18" rx="2" fill="#43927b"/><text x="826.0886750619783" y="423" font-family="Arial" font-size="12" fill="#2b3d50">0.426</text>
+<line x1="210" y1="174" x2="210" y2="467" stroke="#9fb1bf"/>
+<line x1="780" y1="174" x2="780" y2="467" stroke="#9fb1bf"/>
+<text x="54" y="506" font-family="Arial" font-size="13" fill="#9c402d">HOLD: three wind bins cannot establish wind-speed generalization; 10 stations are NOT 10 independent realizations.</text>
+<text x="54" y="529" font-family="Arial" font-size="12" fill="#53677b">Historical gross nominal stress, maximum over 16 azimuths, m=4; not material Miner damage, site lifetime, or geometry DOE.</text>
+</svg>
