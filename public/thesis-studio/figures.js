@@ -111,7 +111,7 @@ function bind(){
 async function show(){
  try{
   const d=await ready();bind();renderGrid();
-  await window.JYReader?.attach(d.documents,S.doc||undefined);
+  await window.JYReader?.attach(S.referenceDoc?[...d.documents,S.referenceDoc]:d.documents,S.doc||undefined);
   if($("he-original-pages").open)renderHe();
  }catch(e){console.error(e);$("figure-grid").replaceChildren(E("p","figure-empty","资料目录载入失败"));}
 }
@@ -153,6 +153,14 @@ async function moduleFigures(id,target){
   }
  }catch(e){console.error(e);}
 }
+async function focusReference(doc){
+ if(!doc||!doc.url)return;
+ S.doc=doc.id;S.referenceDoc=doc;
+ if(location.hash!=="#figures")location.hash="#figures";
+ const data=await ready();
+ await window.JYReader?.attach([...data.documents,doc],doc.id);
+ document.getElementById("original-documents")?.scrollIntoView({block:"start",behavior:"smooth"});
+}
 async function focusDoc(id){
  S.doc=id;
  if(location.hash!=="#figures")location.hash="#figures";
@@ -160,5 +168,5 @@ async function focusDoc(id){
  await window.JYReader?.select(id);
  $("original-documents")?.scrollIntoView({block:"start",behavior:"smooth"});
 }
-window.JYFigures={show,overview,moduleFigures,focusDoc};
+window.JYFigures={show,overview,moduleFigures,focusDoc,focusReference};
 })();
