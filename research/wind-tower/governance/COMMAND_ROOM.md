@@ -1,3 +1,10 @@
+## 2026-11-14 17:40｜158m当前双模型设置入库及唯一论文工作室展示收尾（白皮书v0.30.14）
+
+- READ-BEFORE-WRITE START见本文件同日下午条目，`read_base_sha=aa3b872ec2160042d102b86648f7dc1bbf965083`。本次只归档用户报告，不做CAE/Abaqus实际工作。当前双模型工程`TOWER_AND_FOUNDATION_SEPARATE.cae`的92项设置、当前Jobs=0及与独立历史`DTU158_ALIGNED_GM_VERIFY.odb`算例结果的区别已原位写入[MD](../models/CURRENT_TOWER_SETTINGS_20261114.md) commit 8fe6a5c6 / [JSON](../models/CURRENT_TOWER_SETTINGS_20261114.json) commit f2bc6213。用户报告的本机原始JSON/修复验收MD/CAE/ODB**本助手没有直接读取**，来源级别仅`USER_SUPPLIED_LOCAL_MCP_REPORT`，绝非本轮原生检查PASS。
+- **唯一工作室**：现有`src/main.ts`新增“当前工程设置 · 11.14”内嵌导航，`src/current-model.ts`将9组92项参数、当前/历史标签、未完成项**直接呈现在页面内**，带本地筛选；`src/style.css`完成紧凑表格/响应式；旧`src/engineering.ts`三维查看器明确标注历史T070、非最新双模型工程。源码提交8b90ac51/af83600a/53043d7b/f3fdb884；研究README入口7f1cc9d5，测试c6d62e61，workflow cfc5e747。没有另开工作室，也没有导入私有本机CAE文件。
+- **远端真实CI**：[Actions #43581408696](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43581408696) completed/success，job #132406726460，**21/21 tests PASS、0 FAIL，`tsc --noEmit && vite build` PASS**，无Abaqus/CAE运行。T080流程commit 3f6a5325；白皮书v0.30.13→**v0.30.14** commit 5e8f29ab。
+- 科学门禁无晋级：正式0/12、DLC1.2 0/126，当前E-only完整160.195s计算尚未运行、W/E/WE与材料寿命HOLD，旧BF1与T057/T078不同数值不能相互覆盖。网站正式部署工作流只针对main；**PR #42仍Draft，不合并、未更新正式Pages**。下一责任：仅在原件独立可得且用户另行授权时由相应执行方补原生来源；本助手仅持续非CAE论文、数据、文献及工作室维护。冻结母本、main和高成本计算未碰。
+
 ## 2026-11-14｜当前158m双模型工程设置快照与唯一论文工作室内嵌 START
 
 - 执行者：ChatGPT（仅文档/前端，非CAE）；read_base_sha=`aa3b872ec2160042d102b86648f7dc1bbf965083`，PR #42=`open`/Draft=`true`。已读根及研究AGENTS、指挥室最新S11 17时交接、白皮书v0.30.13及T080最新过程；已定位论文工作室`src/main.ts`/`src/engineering.ts`现有单体应用与旧T070三维展示，确认不新增第二工作室。
