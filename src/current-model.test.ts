@@ -1,5 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import snapshot from '../research/wind-tower/models/CURRENT_TOWER_SETTINGS_20261114.json';
 import { currentModelPage } from './current-model';
 
@@ -33,4 +35,28 @@ test('current and historical models are explicitly separated in inline studio co
   assert.ok(page.includes('完整地震时程求解'));
   assert.ok(page.includes('未运行'));
   assert.ok(page.includes('基础顶面荷载文件'));
+});
+
+test('newly authored Ch3/Ch4 research sections remain before Word exclusion fence', () => {
+  const root = join(process.cwd(), 'research', 'wind-tower', 'manuscript', 'final-thesis', 'chapters');
+  const get = (name: string) => readFileSync(join(root, name), 'utf8');
+  const ch3 = get('03_场址风环境与整机随机风控制载荷.md');
+  const ch4 = get('04_10MW混合塔架风致疲劳性能分析.md');
+  const fence = '\n# 工作区证据与门禁（不进入最终Word）';
+  for (const [chapter, ids] of [
+    [ch3, ['### 3.5.10']],
+    [ch4, ['### 4.7.27', '### 4.7.28', '### 4.7.29', '### 4.10.1']]
+  ] as const) {
+    const boundary = chapter.indexOf(fence);
+    assert.ok(boundary > 0, 'expected workspace fence');
+    for (const section of ids) {
+      const i = chapter.indexOf(section);
+      assert.ok(i >= 0 && i < boundary, section + ' must be part of the manuscript');
+      assert.equal(chapter.indexOf(section, i + section.length), -1, 'duplicate ' + section);
+    }
+    assert.doesNotMatch(chapter.slice(boundary), /^### \d+\.\d+\.\d+ /gm);
+  }
+  assert.ok(ch3.indexOf('### 3.5.10') < ch3.indexOf('\n## 3.6 '));
+  assert.ok(ch4.indexOf('### 4.7.29') < ch4.indexOf('\n## 4.8 '));
+  assert.ok(ch4.indexOf('### 4.10.1') > ch4.indexOf('\n## 4.10 '));
 });
