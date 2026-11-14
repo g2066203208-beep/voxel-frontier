@@ -1,3 +1,9 @@
+## 2026-11-14 16:51后｜S06四ETM×31段跨批证据与纯外载来源追查 START
+
+- 执行者：ChatGPT；read_base_sha=`924dd913660b6eab73b38e4bc5d8e43e2b887d2f`；PR#42 Open/Draft。已读研究AGENTS、指挥室最近交接、白皮书v0.30.11、T080过程及T077真实16批历史归档、四ETM每批600秒来源收据与跨批相位指纹。继承前一轮18NTM塔底6分量核验，不重复NTM统计。
+- 本轮增量：核对原有4组ETM×31段各四批完整600秒历史时程是否能由现存原件证明**同运行相位/同初态**，审计历史Actions原始16件可取性及跨批分界J09/J18/J27；同时查OpenFAST/AeroDyn真实外部气动力、质量/惯性账是否归档并可转换；能做的源级/数值QC直接完成并提交，不用汇总文档取代证明。
+- 拟改T077/recovery现有S06证据链或T062源级审查、T080原过程、白皮书和指挥室交接；不能据高相关或同钟标签宣称跨批完整同步。禁止任何Abaqus工作、冻结母本改动、昂贵生产求解、main或PR合并。
+
 ## 2026-11-14 16时后｜S06/S07 18NTM同步风载证据准入收尾（白皮书v0.30.11）
 
 - 开工READ-BEFORE-WRITE见本文件同日START，read_base_sha=`2a1b0af307f17455338d91bfffcb1f88b66fdb95`。真实11源CSV/JSON已跨表核18/18个原OUTB SHA、12,001×18=216,018个100—700s/0.05s历史塔底六分量响应记录、18例同位峰时及运行/控制记录；新[18例CSV](../experiments/T062/S06_W_CROSSSOURCE_ADMISSION_18CASE_20261114.csv)、[来源SHA/状态JSON](../experiments/T062/S06_W_CROSSSOURCE_ADMISSION_RECEIPT_20261114.json)、[同源Node检查器](../experiments/T062/s06_w_crosssource_admission_20261114.mjs)、[证据说明](../experiments/T062/S06_W_CROSSSOURCE_ADMISSION_20261114.md)均已落盘且由GitHub创建收据确认，科学提交依次3f551aac / 224c57d7 / fc2d5fee / b82222ad；T080过程更新commit 0bc31ba1；白皮书**v0.30.10→v0.30.11** commit 88b07b7e。
