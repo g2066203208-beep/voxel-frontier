@@ -1,3 +1,10 @@
+## 2026-11-14 19时后｜S12全265页真实PDF视觉复核及Word表格样式修复 START（非CAE）
+
+- 执行者：ChatGPT；read_base_sha=`bfbc7645dda4f761d9fc0ecf8245d34cdb8d3746`，PR #42 Open/Draft。已读根/研究AGENTS、现行指挥室v0.30.19、白皮书、S12脚本及最新源锁、完整Word/PDF构建/归档收据。
+- 本次直接从原生已成功Actions artifact #14111606048 **实际下载** 5,263,255字节Word及10,052,419字节PDF，Word SHA256核对`b355bac8324bee0a5d7715df51a8cfd6000696a2a3cf9899b0bba9e40d7f0d95`；逐页程序扫描265页并渲染完整全页缩略图及异常页。发现原先自动“0空白/0越界”不能捕捉的**系统性表格错版**：例如旧PDF p8四列表头全部x≈85.2pt、y≈151.7/174.6/197.5/220.4pt依次纵排，p12五列表头同样纵排；26页提取文字<300字符，不宜送审。
+- 已在独立本地副本完成最小因果试验：Pandoc表格段落引用未定义的`Compact`样式；仅在DOCX加入有定义的`Compact`段落样式（9.5pt/1.15行距/0段后）后，63表恢复横向列布局、PDF=204页、0空白/0越界、稀疏<300字页从26降到0；x坐标由旧p12四个表头相同变为横向分布（约85/170/272pt）。以上仅为本地视觉/结构修复试验，未上传新生产二进制，不代表GB/T7714/论文物理验收。
+- 本次范围：在既有`s12_build_advisor_docx.py`的reference.docx模板内明确创建`Compact`样式，修复生成器根因；增加PDF横向表头检测拒绝式门禁，依靠GitHub Actions真实生成并用新Word/PDF产物逐页复核，再同步README/T080/白皮书和指挥室。禁止Abaqus/CAE、冻结T057/T070、main/PR合并/物理验收冒升。
+
 ## 2026-11-14 19时后｜S12最新Ch4§4.2.4导师Word/PDF归档修复 END（白皮书v0.30.19）
 
 - 继承本文件19时后START；本次真实[新构建Actions #43588545415](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43588545415)及[归档Actions #43589481448](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43589481448)均`completed/success`，归档commit `5126f8d299e34c3e73c6fbbd808529780a3fcd3c`、源commit `82453ba0`，已远端回读新版ASSEMBLY_SOURCE_MANIFEST和README。新Word SHA256 `b355bac8324bee0a5d7715df51a8cfd6000696a2a3cf9899b0bba9e40d7f0d95`，265页/47图/63表/**801 OMML**，自动页位置检查0越界0空白；§4.2.4新年度概率估计量已被动态源装配链包含。
