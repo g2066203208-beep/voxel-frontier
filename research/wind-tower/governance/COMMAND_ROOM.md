@@ -1,3 +1,9 @@
+## 2026-11-14 19时｜I03/I11/I12审查表现行状态纠偏 END（白皮书v0.30.17）
+
+- 继承本页19时START及v0.30.16 S12成功记录；本次独立远端Actions API查证#43586214517(Word/PDF构建)、#43586710092(永久归档)、#43586894698(唯一工作室)和#43578427372(四ETM门禁)均`completed/success`，未执行新原生物理计算。
+- 已将[全局14问题审查表](RESEARCH_GLOBAL_AUDIT_20261114.md)中I03、I11、I12与Word成果行、工作室成果行、Word后续顺序更新为现行状态（commit `188af27c`）；[六章论文README](../manuscript/final-thesis/README.md)删改旧装配锁过期的误导结语（commit `9c76b201`）；[T080过程](../experiments/T080/PROCESS_LOG.md)留痕（commit `5b768a0b`）；开发白皮书**v0.30.16→v0.30.17**（commit `7cf730d4`）。旧失败CI仍保留。
+- **真实结论**：六章Word/PDF 265页现稿和85张原文关键页已在研究分支，且自动构建/归档成功；全页人工视觉/Word版面对照、GB/T7714、旧稿图片继承HOLD；纯风外力、600s跨批完整同态、材料年Miner、完整E-only、W/E/WE及实际Pareto物理验收HOLD；12阶段0/12、正式DLC1.2 0/126。本次仅纠正文档状态，没有Abaqus相关动作，不改冻结T057/T070、main或合并Draft PR#42。下一非CAE重点：对现行265页稿做真实视觉/引用/图表一致性检查，所缺物理源保留HOLD。
+
 ## 2026-11-14 19时｜GitHub状态总表旧条目纠偏 START（非CAE）
 
 - 执行者：ChatGPT；read_base_sha=`4ad4bb72d5968b4f8ec8aa57c839c0f82bb8d612`；PR#42 Open/Draft。已读根/研究AGENTS、指挥室v0.30.16最近S12交接、白皮书v0.30.16、T080过程、全局14项审查和论文README；再次核查265页Word/PDF归档成功收据及85页工作室证据。
