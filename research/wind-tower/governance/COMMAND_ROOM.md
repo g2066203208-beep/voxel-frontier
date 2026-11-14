@@ -1,3 +1,10 @@
+## 2026-11-14 16时后｜S06/S07风侧六分量证据全链核验 START（非Abaqus）
+
+- 执行者：ChatGPT；read_base_sha=`2a1b0af307f17455338d91bfffcb1f88b66fdb95`，PR #42 Open/Draft；已读根/研究 AGENTS、COMMAND_ROOM最新进度及历史交接、白皮书v0.30.10、MASTER/STATUS、12阶段、T080日志和S06/S07原OUTB时程/31段测点/控制器/通道来源收据。
+- 继承18组NTM同源OUTB（100—700s、dt=0.05s）、已有9个近底原始gauge、31段四批测点规划及旧的外力/惯性HOLD；不重复历史36例OpenFAST计算或小统计。
+- 本次增量：实际核对18case原始SHA、同时间六分量峰值、四批31测点映射以及反力/外力归属，优先保存可机读、可复核的**来源判定**与拒绝测试；拟改T062风源核验文件、T080过程记录与开发白皮书索引。若原始外载分解/同态初态不存在，必须明确HOLD，不制造通过结论。
+- 禁区：不执行/准备/派发任何Abaqus工作，不动冻结T057/T070、main或合并PR，不启动昂贵物理RUN。责任方：本ChatGPT，收尾另行登记。
+
 ## 2026-11-14 16时｜S10真实雨流修正倍率单seed影响（0/12）
 
 - READ-BEFORE-WRITE：已读研究AGENTS、指挥室、白皮书v0.30.9、MASTER/STATUS、12阶段、T080、期刊§4.28及72行真实雨流源；PR#42活动分支，源CSV blob e03bdb1ddc98daa2e8726b0fe1b11a858af03b27。继承既有Bootstrap，不重复随机抽样。
