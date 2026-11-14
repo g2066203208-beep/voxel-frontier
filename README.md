@@ -1,4 +1,4 @@
-# 论文工作室 · Paper Studio
+# 湖北嘉鱼风机工作室
 
 > [!IMPORTANT]
 > **论文每次写入前必读：[最新进度与交接日志](https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/governance/COMMAND_ROOM.md#read-before-write)**
@@ -6,7 +6,7 @@
 
 一个在浏览器中使用的科研工作台，把论文写作、论文审查、研究复盘、实验记录、执行步骤、模型文件、数据与参考文献放在同一个项目里。
 
-**在线工作台：** [打开论文工作室](https://g2066203208-beep.github.io/voxel-frontier/)
+**唯一入口：** [湖北嘉鱼风机工作室](https://g2066203208-beep.github.io/voxel-frontier/thesis-studio/)
 
 **新增10 MW混塔可视化：** [打开158m混塔数据看板](https://g2066203208-beep.github.io/voxel-frontier/wind-twin.html)（Three.js三维示意；T072 36工况载荷包络、T077 31段配筋、T078预应力数据直接来自研究文件；[来源与限制](research/wind-tower/workflow/WIND_TWIN_VIEWER_20261008.md)）。
 
@@ -28,7 +28,7 @@
 
 这是一个静态前端应用。记录保存在当前浏览器的 `localStorage`，附件保存在 `IndexedDB`。数据跟随浏览器配置文件和网站地址，不会自动上传到 GitHub，也不会在不同设备之间自动同步。清除网站数据或使用其他浏览器会影响本地记录；请定期导出项目备份。
 
-正式研究流程与工程输入由GitHub管理：[MASTER科研总流程](research/wind-tower/workflow/MASTER_RESEARCH_PROTOCOL.md)。首页进入正式研究区；原有项目模块是浏览器草稿，不能误认为已同步GitHub。
+正式研究流程与工程输入由GitHub管理：[MASTER科研总流程](research/wind-tower/workflow/MASTER_RESEARCH_PROTOCOL.md)。统一工作室“论文写作与研究记录”包含原浏览器草稿模块，不能误认为已同步GitHub。
 
 工程模型区显示由GitHub Actions实际读取STEP生成的三维装配，支持部件选择/隔离、线框、PNG出图及CAE审计元数据查看。当前STEP单位存在冲突，页面明确警告。没有执行有限元求解、完整CAE二进制解码或CAE修改，不会自动验证科学结论。
 
@@ -71,12 +71,9 @@ PROJECT.md              产品范围与后续方向
 
 仓库当前源码已改为论文工作室。仓库路径沿用现有地址，便于继续使用已连接的 GitHub Pages。
 
-## 湖北嘉鱼风机工作室（公开科研工作台）
+## 统一工作室
 
-**[打开湖北嘉鱼风机工作室](https://g2066203208-beep.github.io/voxel-frontier/thesis-studio/)**
-
-- 16个专题：前期研究、场址调研、风资源、风荷载、地震、混塔结构、基础与SSI、联合工况、疲劳、优化、文献规范、论文、报告、数据复现与学术治理。
-- 13套学术报告模板：[报告体系目录](docs/jiayu-wind-studio/README.md)。
-- 论文已有真实研究成果仍以[活动研究分支指挥室](https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/governance/COMMAND_ROOM.md)为准；公开网页是学术资料入口，不是正式验收进度表。
-
-- [GitHub 研究资料中心（3,235份研究文件分类索引、上传与下载）](https://g2066203208-beep.github.io/voxel-frontier/thesis-studio/library.html)
+- [湖北嘉鱼风机工作室](https://g2066203208-beep.github.io/voxel-frontier/thesis-studio/)（唯一入口）
+- 同一导航集成：16项科研专题、论文写作与研究记录、3,235份GitHub资料检索、本地上传下载及投稿。
+- 旧站主页直接转入统一入口；原写作/附件数据沿用同域名浏览器存储，不做迁移或清空。
+- [原始科学指挥室](https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/governance/COMMAND_ROOM.md)。

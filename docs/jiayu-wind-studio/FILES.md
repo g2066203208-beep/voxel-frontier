@@ -1,6 +1,6 @@
 # 湖北嘉鱼风机工作室 · 文件资料中心
 
-版本：v1.2.0
+版本：v1.3.0
 
 资料库在 `public/thesis-studio/data/repository-index.json` 中索引公开仓库活动研究分支的 `3235` 个文件（含数据、脚本、文献、论文、研究报告、模型与归档）。目录文件只含路径、分类、文件大小和来源分支，不复制大型二进制或受限标准全文。
 
@@ -13,6 +13,6 @@
 源分支：`research/t080-seismic-integration-gates-20261022`，抓取提交：`88997ab840836297ad9c56d9c08f95b5d09ff6f1`。科学结论和阶段进度以活动指挥室为准；目录数量不等于研究完成量。
 
 新增开发文件：
-`public/thesis-studio/library.html`、`library.js`、`data/repository-index.json`、`.github/ISSUE_TEMPLATE/academic-material.yml`。
+`public/thesis-studio/index.html#library`（单一用户入口）、`library.js`、`data/repository-index.json`、`.github/ISSUE_TEMPLATE/academic-material.yml`。
 
-验收：页面交互与文件存储、单文件导出和压缩包格式应通过真实浏览器测试；静态门户不能提供未经登录的跨设备实时共享上传。
+文件资料、论文记录均整合在一个工作室导航中；对外统一入口为 `https://g2066203208-beep.github.io/voxel-frontier/thesis-studio/`。

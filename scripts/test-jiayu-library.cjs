@@ -33,7 +33,14 @@ for(const id of ["remote-list","local-list","dropzone","submit-issue","remote-bu
  assert.ok(html.includes('id="'+id+'"'),"missing UI control "+id);
 }
 const home=read("index.html");
-assert.ok(home.includes('href="./library.html"'),"library entry on academic dashboard");
+const notes=fs.readFileSync(path.resolve(__dirname,"../research-notes.html"),"utf8");
+assert.ok(notes.includes('class="embedded-mode"'),"legacy drafts embedded rather than separate studio");
+const redirect=fs.readFileSync(path.resolve(__dirname,"../index.html"),"utf8");
+assert.ok(redirect.includes("./thesis-studio/"),"old home redirects to canonical studio");
+assert.ok(home.includes('href="#library"'),"unified file library navigation");
+assert.ok(home.includes('id="library-view"'),"file library embedded in single studio");
+assert.ok(home.includes('id="notes-view"'),"original research records embedded in single studio");
+assert.ok(home.includes('id="notes-frame"'),"original paper drafts kept accessible");
 (async()=>{
  const blob=await sandbox.zipFiles([{name:"测试.csv",blob:new Blob(["abc"],{type:"text/plain"})},{name:"data.txt",blob:new Blob(["123456789"])}]);
  const data=Buffer.from(await blob.arrayBuffer());
