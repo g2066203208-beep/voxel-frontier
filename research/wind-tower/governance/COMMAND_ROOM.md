@@ -1,3 +1,10 @@
+## 2026-11-14 22时｜S10 NTM年载荷块频率来源核验及fe-safe研究路线首步 END（白皮书v0.31.1）
+
+- START在本文件同日21:30后；开工HEAD=`f2da031d2b8f0e7fb4455151bc55220f5621c2a1`，核对AGENTS及v0.31.0疲劳身份、已完成1574条ETM毛截面循环、2880行NTM统计、36历史风/ERA5，沿用新S10 Miner和研究分支PR#42。
+- 已交付**非CAE实算**：[21年ERA5 31箱源](../experiments/T062/S10_ERA5_2005_2025_HUB_1MS_BINS_20261031.csv) + [126源槽位矩阵](../experiments/T062/S10_ERA5_21BIN_6SEED_NTM_SOURCE_COVERAGE_20261031.csv) → [18组逐工况600秒出现权重](../experiments/T062/S10_NTM18_600S_ANNUAL_BLOCK_CLOCK_20261114.csv)，源码[Node复算与2个源污染拒绝测试](../experiments/T062/s10_ntm18_600s_annual_block_clock_20261114.mjs)。三箱9/11/19m/s每seed年600秒载荷块272.964797914/67.860495437/0.095176010；首个试点身份`U11p4_NTM_S01`，对应源OUTB SHA256 `bcebcb7971b2e0dcc459ff38748045ce02ec9559ce79d173187dee82fb796a79`。这只表示全小时气候下等分六seed的**条件性统计年时钟**，非真实BF1材料寿命或已验证机组状态。
+- 真实[GitHub Actions #43602567874](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43602567874)完成SUCCESS：18行结果与git CSV逐字节一致，两个源文件修改各被拒绝，已有真实疲劳源+Miner分支门禁仍通过。[唯一工作室 UI #43602689933](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43602689933) SUCCESS；新控制表与首个NTM试点放在原研究总览，不造第二工作室、不宣布main Pages已发布。T080过程已增真实SOURCE/RUN/错误边界，白皮书**v0.31.0→v0.31.1**；六章186页研究Word/PDF沿用已完成永久归档，无本轮生成新版论文的虚假宣称。
+- 物理前置仍缺：当前BF1且具有已证实局部材料应力的正常运行风响应、每材料对应的正确疲劳曲线、正式操作风速箱覆盖；地震W/E/WE独立，仍不满足完整年Miner/20年寿命。fe-safe使用官方2024 Tutorial 106与达索说明作为选型依据，但本助手本轮**未取得/运行本机fe-safe或Abaqus结果，也没有新建本机相关输入/脚本/模型**。不改冻结母本、不合并PR#42，正式12阶段仍0/12、规划正式DLC1.2 0/126。收尾时PR#42 Open/Draft，HEAD=`5f0992f48c9b`。
+
 ## 2026-11-14 21:30后｜S10历史NTM600秒载荷块年频率可复算桥接 START（非CAE）
 
 - ChatGPT；read_base_sha=`f2da031d2b8f0e7fb4455151bc55220f5621c2a1`；已读根/研究AGENTS、指挥室现行v0.31.0交接、S10/BF1疲劳合同、原31行ERA5表、126行21bin×6seed原始身份以及fe-safe官方方法（Dassault 2024教程/官方产品说明）。研究分支PR#42 Draft，main不动。
