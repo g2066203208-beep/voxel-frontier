@@ -1,3 +1,12 @@
+## 2026-11-14 21:30后｜S10真实疲劳输入身份闭合、BF1/BF8防混算、186页新稿及唯一工作室（非CAE）
+
+- SOURCE：GitHub原有18NTM/18ETM、2026-10-30真实1574条ETM毛截面雨流原CSV（SHA256 `646065838456b6465e321c4c6fd24966f180f275df99c615000577557219ff83`）及2880行NTM近底10测点×16方位名义应力原CSV（SHA256 `d45f047f5d622fb834d63728c13cead49b614b6cf42e598918e55242ed45f94b`）；引用原31段、ERA5及Ch4现稿，未重算原物理风场。
+- FIX：`T064/FATIGUE_PRODUCTION_OUTPUT_CONTRACT_20261006.md`明确当前BF1=36×140mm²、名义初始6.4512MN；BF8=36×8×140mm²、名义初始51.6096MN、T078有效39.754MN为独立设计候选。旧合同误将BF8的1120mm²/位置称现有PT已纠正。新`s10_fatigue_readiness_source_gate_20261114.mjs`原始SHA硬锁、1574/2880全量行、3个历史DEL4/DEL10 oracle重算及6污染负测；`s10_miner_damage_gate.py`Schema v3→v4，增加`model_branch`及`initial_state_sha256`强制字段和同批全部材料/种子PT初态一致性，合成单元/四材料集成测试新增分支/初态混用拒绝。
+- RUN：原生[GitHub Actions #43601113995](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43601113995) completed/success：1,574 ETM+2,880 NTM真实来源检查、6负测与Python Miner真实执行（13项合成非法输入拒绝、四材料端到端合成雨流+Miner）；三真实控制点CSEG16/17/04的循环数407.5/520.5/628、DEL4=7.052732/7.037162/7.169089 MPa，与历史原收据一致；没有真实局部材料点疲劳或寿命数值。
+- WORD/UI：Ch4§4.3.5/§4.4.1补实测来源和BF1/BF8分支定义；唯一工作室`src/engineering.ts`同站原位列出三控制点数字、材料前置门禁、当前BF1设计及正文入口；[UI Actions #43601300928](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43601300928)SUCCESS。六章新[构建#43600833734](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43600833734)SUCCESS，源commit `cf1c1573`、Word SHA256 `ec6af12b40f26163dbd45a83a430590c88aa6ae7fddd2dee9f2e37c73a5136a5`，47图/63表/812 OMML，PDF**186页**/自动0空白0越界/表头几何正常；[永久归档#43601210801](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43601210801)SUCCESS，已远端回读Word=5,265,685B/PDF=10,033,981B、四份收据。原先185/265页和历史三版原件保留Git历史。
+- REF：继承REF018/007/023/041/143适用边界，未声称新增全文或疲劳材料S–N参数验收；STANDARD：无新增授权IEC条文；OFFICIAL：原GitHub Actions+OpenFAST历史来源；FIG/TAB：原47图/63表，工作室新增3行真实同定义控制数表；误差：SHA身份/已存源DEL一致，不给材料模型误差界。
+- HOLD：现存毛截面记录不可用作BF1材料点局部应力，BF8两种Pe/P0均值假设不可替代BF1 PT平衡；未有完整运行NTM风箱、材料N_allow正式准入、年Miner、地震事件W/WE材料循环及结构Pareto。原12阶段0/12，规划DLC1.2 0/126；只完成可用的非CAE实证/核验/文稿工作，不审核/派发Abaqus、不动main或合并Draft PR。
+
 ## 2026-11-14 20时后｜S12论文PDF隐藏表格错版的真实修复与185页永久归档（非CAE）
 
 - SOURCE：已归档旧265页DOCX/PDF，运行ID#43588545415，SHA256 `b355bac8324bee0a5d7715df51a8cfd6000696a2a3cf9899b0bba9e40d7f0d95`；从Actions下载原始产物后实际全页文本分析与抽样可视检查。旧第8、12页等管道表头同一x纵向排列，自动零空白/零越界不能证明表格可读。
