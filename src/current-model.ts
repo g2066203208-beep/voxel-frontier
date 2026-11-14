@@ -24,13 +24,13 @@ export function currentModelPage(): string {
     '<h1>158 m混合塔架 · 当前工程配置</h1>' +
     '<p class="tower-snapshot-subtitle">TOWER_AND_FOUNDATION_SEPARATE.cae / DTU158_HybridTower_Global_RNA_OFFICIAL_RP</p>' +
     '<div class="tower-snapshot-meta"><span>报告时间　' + escapeHtml(snapshot.report_timestamp) + '</span>' +
-    '<span>来源　用户提供的本机MCP读取报告</span><span>本轮原件复核　未进行</span></div></header>' +
+    '<span>来源　Codex本机Abaqus MCP读取确认</span><span>本助手二次原件复核　未进行</span></div></header>' +
     '<section class="tower-metrics" aria-label="关键参数">' + snapshot.kpis.map(metric =>
       '<div class="tower-metric"><span>' + escapeHtml(metric.label) + '</span><strong>' +
       escapeHtml(metric.value) + '</strong><small>' + escapeHtml(metric.detail) + '</small></div>'
     ).join('') + '</section>' +
     '<section class="tower-evidence"><h2>版本与证据边界</h2>' +
-    '<p>以下92项为报告原文的结构化归档，尚未直接读取本机 CAE / ODB / 原始JSON。当前双模型工程没有Job；已求解的重力、模态、PT反力来自独立修复工程。页面下列数值不代表本次新增物理计算或独立验收。</p>' +
+    '<p>以下92项由Codex原生MCP实际读取确认、用户转交完整报告，本助手按原文结构化归档；本助手未再次读取本机CAE / ODB / 原始JSON。当前双模型工程没有Job；已求解的重力、模态、PT反力来自独立修复工程。页面下列数值不代表本次新增物理计算或独立验收。</p>' +
     '<p>现有三维查看器使用历史T070参考数据，不是这份当前双模型工程的实时渲染；两者不可混称。</p></section>' +
     '<div class="tower-index"><label for="tower-config-search">检索模型设置</label><input id="tower-config-search" type="search" autocomplete="off" placeholder="搜索材料、BF1、环筋、地震、反力…"/>' +
     '<span id="tower-config-count" role="status">92 / 92 项</span></div>' +
