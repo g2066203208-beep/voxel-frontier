@@ -1,3 +1,9 @@
+## 2026-11-14 18时后｜S12当前六章Word装配链与引用/图件门禁修复 START（仅非CAE）
+
+- 执行者ChatGPT；read_base_sha=`e214c9c785b17fff6644bc335f6d3945317db267`，PR#42 Open/Draft。已读根与研究AGENTS、指挥室最近v0.30.15交接、T080最新过程、v0.30.15白皮书；核对`s12_build_six_chapter_reader.cjs`旧硬编码SHA与旧CI #43578654634源不一致、`s12_build_advisor_docx.py`真实DOCX生成/校验逻辑、`MASTER_MANUSCRIPT.md`以及参考文献`S12_ACTIVE_REFERENCES_20261110.md`。
+- 继承真实三版Word、现有193页精修版和6章最新正文；旧Word/历史物理源不覆盖。计划新增或改进**非CAE**六章源身份与图、引用门禁、Word构建工作流，并在GitHub Actions真实执行；若可行交付当次生成的DOCX及来源/失败清单。拟改`manuscript/final-thesis/assemble/`安全新增脚本和CI、工作室索引/README、T080日志、白皮书和本指挥室交接。禁止做、准备、审核、派发Abaqus/CAE/INP/ODB、冻结T057/T070、昂贵生产RUN或合并PR/main；不足的真正材料疲劳/风震等只保持HOLD。
+- 证据等级：本次Word是**可编辑的最新六章导师研究稿**，绝不自动称送审合格；须检查图件存在、六章完整、SHA来源和参考文献，图/表/公式排版仍需渲染复核。下一责任：本助手完成非CAE装配和审查收尾。
+
 ## 2026-11-14 18时｜论文/GitHub/唯一工作室全链审查收尾（白皮书v0.30.15）
 
 - 本次READ-BEFORE-WRITE START见本文件前段（开工head `98db5886cce4e704b6db5f7387078f4a7e54b2ec`），仅处理文献/论文结构/源版本归档及单体工作室，不做任何Abaqus/CAE执行、审核或派工。当前HEAD在收尾前为`2e5cbb0f89a8710f3cfd8258d7ea1e20a1782ec7`；PR #42 Open/Draft。
