@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.30.10**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.30.11**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -31,6 +31,7 @@
 
 | 日期（Asia/Shanghai） | 白皮书版本 | 开发与证据增量 | 科学状态 | 远端事务 |
 |---|---|---|---|---|
+| 2026-11-14 16时后 | **v0.30.11 PATCH** | S06/S07 11个真实历史来源跨收据闭合：18/18 NTM OUTB身份、同位峰值与运行/控制记录完整join；100—700s×0.05s=216018历史塔底六分量行。31/31段仅映射(9+9+9+4)；原生4批为0.1s STEADY，非600s NTM。建立只读源级拒绝式Node检查器并用V8真实源PASS+5篡改拒绝PASS；新增18行CSV、JSON、科学说明。 | 仅SOURCE/程序门禁增量；独立原OUTB重解码/原生Node CLI NOT_RUN；纯外气动力、惯性归属、31段全塔同步、WE及材料Miner HOLD，整阶段0/12、正式DLC1.2 0/126。 | [S06证据核验](../experiments/T062/S06_W_CROSSSOURCE_ADMISSION_20261114.md)、[源码](../experiments/T062/s06_w_crosssource_admission_20261114.mjs)、[T080过程](../experiments/T080/PROCESS_LOG.md)。 |
 | 2026-11-14 16时 | **v0.30.10 PATCH** | S10真实18NTM三箱六seed穷举18个成对删一影响情形，新增期刊§4.29：Mx修正/旧A4倍率2.711840825、删一范围[2.642926567,2.765755444]；My 2.158877790、删一范围[1.946192798,2.951764365]；11.4m/s S06删去使My+36.7268%。SOURCE Git blob e03bdb1d。 | V8源表直接解析与确定性穷举PASS，原生CLI NOT_RUN；三箱条件载荷统计，96.1082%缺箱、Miner/WE HOLD，12阶段0/12。 | [期刊§4.29](../manuscript/journal-wind-fatigue-results.md)、[科学提交](https://github.com/g2066203208-beep/voxel-frontier/commit/ef093c8af76ba8c1b9df572893b1123688e6c1a1)、[T080日志](../experiments/T080/PROCESS_LOG.md)。 |
 | 2026-11-14 14时 | **v0.30.9 PATCH** | S10由真实18NTM两通道共享OUTB seed做20,000次联合配对重抽样，新增期刊§4.28及可复用Node脚本；同时条件95%敏感性带Mx[2.504570,2.936265]、My[1.205523,3.866167]，非材料寿命。SOURCE blob e03bdb1d。 | V8真实源直接运算PASS，Node CLI NOT_RUN；缺箱/Miner/WE HOLD，12阶段晋级0/12。 | [期刊§4.28](../manuscript/journal-wind-fatigue-results.md)、[程序](../experiments/T062/s10_joint_channel_seed_bootstrap_20261114.mjs)、[科学提交](https://github.com/g2066203208-beep/voxel-frontier/commit/30d23eace74909e8264184d556ddfd355ab262ab)。 |
 | 2026-11-14 11时 | **v0.30.7 PATCH** | S10历史雨流闭合修正向三NTM箱部分年度A4传播：Mx旧1.460680e9→修正3.961131e9 (2.711841×)；My旧3.056745e12→修正6.599138e12 (2.158878×)，历史72行源blob e03bdb1d；新增Ch4§4.7.29两行表和分箱反例。 | V8源级派生复算与既有Ch4数值oracle一致；非新物理RUN，材料Miner、缺箱HOLD；12阶段晋级0/12，DLC1.2 0/126。 | [科学提交eda5ad40](https://github.com/g2066203208-beep/voxel-frontier/commit/eda5ad406046d8a4d258840581ca7698d0bdd728)；[Ch4§4.7.29](../manuscript/final-thesis/chapters/04_10MW混合塔架风致疲劳性能分析.md)。 |
