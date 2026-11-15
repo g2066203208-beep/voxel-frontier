@@ -1,3 +1,7 @@
+## 2026-11-15 20时｜S11高风速箱外推局部非保守反例（本轮新增）
+
+READ：研究AGENTS、指挥室READ-BEFORE-WRITE、白皮书v0.31.16、MASTER/STATUS、T080与原S11程序/7行验证表；PR#42 Open/Draft；基线HEAD 6a4dbf9bfbf2dd2f118004570ec71e533c6fe388。SOURCE=1984行原始归档CSV，Git blob b5effa2a493cec0a9af8a10a3b93df0ff997d2d0，历史SHA256 16c9864ef7a344e5b97338c31ce26de6adb86c0f0f64942ef894fe9983926b2b（本轮未独立重哈希）；程序依据既有 s11_etm4_case_vs_bin_holdout.cjs。RUN=连接器JavaScript直接读CSV，按4case×31段×16方位提取最大DEL4，9.343881/11.4m/s两点线性外推19.202140m/s，两高风速seed完全留出；62单元中14处低估、48处高估，mean signed error +0.562295016 MPa、RMSE 0.813992907 MPa；最差CSEG_15/S06低估0.478019740 MPa（预测5.223735699/观测5.701755440）。这是已有总体RMSE之外的真实局部非保守反例，直接写入期刊正文新小节，科研commit c16c671de1daadf00e23a7d9e9d2e1bcad8c5682。FIG无、TAB新6列；REF/STANDARD/OFFICIAL无新增原件。31段相关、仅两个高风seed，不能把14/62当独立失败率或材料安全验收。STATUS：源表算术PASS，物理泛化HOLD；12阶段晋级0/12、DLC1.2 0/126。下一唯一动作：若完整真实特征—响应矩阵仍可读，进行分组留出局部最差误差对照，否则切S12正式章节装配；不重复总体RMSE。禁区、冻结母本、main、昂贵RUN、PR合并未触碰。
+
 ## 2026-11-15｜T083 V3“直接改模”任务书正式交付（纠正V2不改模错误）
 
 - **用户本轮明示权限和目的**：应由本助手完成原文对照和具体改法并直接交付，**Codex应修改模型而不是再做审计**。V2“不让改”错误由新V3纠正。本轮ChatGPT仍未访问用户Windows原生CAE，也没有冒充已改模/已完成新Job。
