@@ -1,3 +1,7 @@
+## 2026-11-15 15时｜S06全36例塔身气动开关源级核验 END（v0.31.12）
+
+- 读取T035 36行AeroDyn原始SHA256映射，35例属于7EBAA0BD…、1例U11p4_NTM_S01属于E258D2E8…；两份canonical输入直接读取均为TwrAero=False、NTwOuts=0、TwrPotent=0、TwrShadow=0。将期刊此前“仅单例已证”的适用域纠正为**36/36归档配置均未启用塔身分布气动力**。源级映射PASS；原始运行时输入身份与外力/惯性归属仍HOLD，不冒充独立风载或局部疲劳。正文commit adb543aed5cf0cdeb4794c1cf6a9ec5de77c6b04；T080同步记录源Git blob与边界。无新物理RUN，12阶段晋级0/12、正式DLC1.2 0/126。禁区未触碰。
+
 ## 2026-11-15 14:08后｜T082 BF1 Stage-1本机报告小文件GitHub成功保全 END（v0.31.11）
 
 - 用户本轮转交Codex独立本机成果：`BF1_GRAVITY_DATACHECK`与`BF1_MODAL_30`，DataCheck/Gravity/30阶模态报告成功、Gravity 10增量/0回退/30次迭代，36PT S11均值1.261692GPa、合力6.358926MN，反力与重力差0.223N，f1/f2/f30=0.13525/0.13580/23.518Hz。**只有Codex报告，未核读独立CAE/ODB及输出表，本助手不能视为原生审计PASS。** 原件仍用户本机；T082此前不存在远端。
