@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.31.11**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.31.12**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -32,7 +32,7 @@
 | 2026-11-15 14时 | **v0.31.10 PATCH** | S12期刊真实源模型适用域纠错：T035锁定U11p4_NTM_S01 TwrAero=False，新增反力非唯一逆映射三点构造反例及逐case反证门禁；科研commit [195e192c](https://github.com/g2066203208-beep/voxel-frontier/commit/195e192cc19029fa97520b4b7698823384c7f13d)。 | 仅原件字段与数学适用域纠错；原始全速归档SHA继承、未重解码/新物理RUN；12阶段0/12，DLC1.2 0/126，外部气动/材料疲劳HOLD。 | [期刊源级限定段落](../manuscript/journal-wind-fatigue-results.md)、[T080过程](../experiments/T080/PROCESS_LOG.md) |
 
 
-| 日期（Asia/Shanghai） | 白皮书版本 | 开发与证据增量 | 科学状态 | 远端事务 |
+| 2026-11-15 15时 | **v0.31.12 PATCH** | T035 36行AeroDyn输入SHA映射35+1两族；两份原文件TwrAero=False、NTwOuts=0、TwrPotent=0、TwrShadow=0，完成36/36历史配置源级闭合；[科研正文commit adb543ae](https://github.com/g2066203208-beep/voxel-frontier/commit/adb543aed5cf0cdeb4794c1cf6a9ec5de77c6b04)。 | 源级PASS，原始执行身份/完整外载/惯性/材料局部疲劳HOLD；无新生产RUN，12阶段0/12，DLC1.2 0/126。 | [期刊源级纠错](../manuscript/journal-wind-fatigue-results.md)、[T080](../experiments/T080/PROCESS_LOG.md) |\n| 日期（Asia/Shanghai） | 白皮书版本 | 开发与证据增量 | 科学状态 | 远端事务 |
 |---|---|---|---|---|
 | 2026-11-15 14:08后 | **v0.31.11 PATCH** | T082首次将Codex用户报告的BF1本机Gravity/DataCheck/Modal真实计算结果建立**远端身份可追溯的非原件回执**：36根PT平均S11=1.261692GPa、总力=6.358926MN；重力反力差报告0.223N；Gravity 10增量0回退30迭代，30阶模态f1/f2/f30=0.13525/0.13580/23.518Hz。远端PR#42分支HEAD已前移，原T082仍不存在，本次通过Contents API成功上传[不冒充原件的T082交接](../experiments/T082/BF1_GRAVITY_MODAL_20261115/REMOTE_STATUS_AND_HANDOFF.md)及[T080过程](../experiments/T080/PROCESS_LOG.md)，证实小文本写入不受同样阻塞。 | **只承认Codex用户转交数值；本助手无本机ODB/日志/CSV，结构科学独立验收NOT_DONE；大型CAE/ODB仍未归档；风荷载映射、材料应力、fe-safe寿命、W/E/WE继续HOLD**。不可凭本记录晋级正式12阶段或DLC1.2，主分支不动。 | [T082文字回执](../experiments/T082/BF1_GRAVITY_MODAL_20261115/REMOTE_STATUS_AND_HANDOFF.md) |
 | 2026-11-15 09:29后 | **v0.31.8 PATCH** | S06源存在性纠错：真实GitHub分支T061只存36工况塔底统计，但源T062历史Actions #42842305092已恢复**18NTM×12001=216018行**同刻塔底六分量，gzip SHA256 45cc308625ead8411d1565adc66c99e7ee8d0a979e5c3c6c18f23e744ba74dd1（artifact 13775054290，有效至2026-12-10）；目标U11p4_NTM_S01原BTS 436968166字节LFS对象及part-019.zip原OUTB均有源身份。**新查实对应AeroDyn原始SHA E258D2E8FC76…配置TwrAero=False、NTwOuts=0，未启用塔身气动力**，旧TwrBs全时程不是独立纯外施风力，不能从内力唯一分解惯性/重力/外载。新[源证据与HOLD文件](../experiments/T062/S06_U11_NTM_SOURCE_PRESENT_AERO_EXTERNAL_LOAD_HOLD_20261115.md)及[T080日志](../experiments/T080/PROCESS_LOG.md)。 | 仅源级核验；没有读取436MB实际LFS字节、没有新OpenFAST或Abaqus运行、没有外载映射或BF1材料疲劳PASS，12阶段0/12、正式DLC1.2 0/126不变。 | [T035原AeroDyn](../experiments/T035/openfast-input-audit/AERODYN_E258D2E8FC76.dat)、[T062源门禁](../experiments/T062/S06_U11_NTM_SOURCE_PRESENT_AERO_EXTERNAL_LOAD_HOLD_20261115.md) |
