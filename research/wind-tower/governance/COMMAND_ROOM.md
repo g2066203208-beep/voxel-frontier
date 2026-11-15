@@ -1,3 +1,9 @@
+## 2026-11-15 09:29｜S06 OpenFAST原风源与外力可用性纠错 START（仅非CAE源）
+
+- 执行者ChatGPT，read_base_sha=`eeca5eb3ac7c8fd02b8dce36b08af611b12ded64`；已读根/研究AGENTS、最新指挥室、白皮书v0.31.7、T080记录、T035原始AeroDyn源及36工况身份、T061统计、T062 18NTM全速率Actions恢复脚本/收据、LFS风场记录与外力HOLD。
+- 继承全部36历史风源、18NTM的216018行600s同步底六分量回复文件以及原PDF/论文/工作室和风速块权重；不重算、不冒称纯外载。不碰Abaqus/CAE/ODB/fe-safe/冻结母本、main、PR合并。
+- 本轮只查证仓库是否缺风源/全时程，锁定`U11p4_NTM_S01`真正的AeroDyn输入参数（`TwrAero=False`及`NTwOuts=0`），定位原Actions可取的同步反力时程，给出纯外部载荷缺口/原风源的非CAE优先路径；写原任务简明证据说明、T080、白皮书和交接。无新运行结果，不晋级物理PASS。
+
 ## 2026-11-15 10时｜S12真实18NTM量化误差条件证书 END（白皮书v0.31.7）
 
 - 已继承v0.31.6的真实18NTM控制工况与跨轴反例；从T062 1080行CSV实际读取塔底36行半步/雨流等效循环数/DEL4，利用固定雨流配对和计数前提下的Minkowski界，冠军相对最强竞争者的保守差额Mx=919.749652 kN·m、My=1972.874690 kN·m；[期刊§4.34](../manuscript/journal-wind-fatigue-results.md)，[科研提交5c976ad5](https://github.com/g2066203208-beep/voxel-frontier/commit/5c976ad52386dba21569dc4e498a12bdf7e965d3)，[T080过程](../experiments/T080/PROCESS_LOG.md)。原源Git blob `4f77ec9a2027c593ea22cac5abae98de32d407f5`；旧SHA256继承未重算。V8真实源表条件算术PASS，**雨流拓扑变化未验、OUTB未重解码**，不冒充无条件物理稳健性。
