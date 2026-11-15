@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.31.22**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.31.23**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -28,6 +28,11 @@
 - 下一独立非Abaqus动作：核对/恢复可证明同模型、运行状态、时间网格和起点的W侧真实时程；没有可追溯来源时记录HOLD并转向S05/S10可独立研究，不造数据。
 
 ## 4. 版本变更记录（只记录真实持久化事务）
+
+### 2026-11-16｜v0.31.23 PATCH — S10 ERA5三箱覆盖对统一风速偏移的源级敏感性
+
+- **科研正文**：[期刊5行整数偏移敏感性表](../manuscript/journal-wind-fatigue-results.md)与[T080过程](../experiments/T080/PROCESS_LOG.md)；SOURCE=31行ERA5分箱 Git blob `1bae743b385d4f24c8b5af3e0b445aae30d40c6f`，历史SHA256 `e4058620a36b23bb218103875d4dc5b0711fc45d418b23a2208c2fc9c16c9102`（未重哈希）。RUN=连接器V8正向/逆向整数分箱计算；统一偏移-2/-1/0/+1/+2m/s时活动小时55204/79973/106900/134068/159270，三历史screen-only箱匹配1709/3823/7164/12395/20217小时，条件覆盖3.095790/4.780363/6.701590/9.245308/12.693539%；0偏移历史回归精确。科学commit [213ed6fc](https://github.com/g2066203208-beep/voxel-frontier/commit/213ed6fca0598458c88b38e3e84c84565e53b5f8)。**仅直方图整数标签敏感性METHOD PASS**；偏移不是观测误差分布，匹配小时不代表OpenFAST工况物理等价或疲劳风险覆盖；正式DLC1.2 0/126、局部材料Miner/WE HOLD；12阶段晋级0/12。无Abaqus/CAE及昂贵生产RUN。
+
 
 ### 2026-11-16｜v0.31.22 PATCH — S10缺箱载荷四次矩贡献占比的解析拒绝阈值
 
