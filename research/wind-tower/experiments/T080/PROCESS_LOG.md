@@ -1,3 +1,11 @@
+## 2026-11-15 09:29｜U11p4_NTM_S01原始外载不存在误判及TwrAero=False原因核验（仅OpenFAST来源）
+
+- SOURCE：完整研究分支树3831条，T061原36工况统计，T062原18NTM OUTB SHA+对应ZIP和BTS LFS pointer，2026-11-10原生Actions fullrate历史收据及artifact实时列表，T035 36工况AeroDyn文件身份和目标U11p4_NTM_S01原始10,088字节输入。
+- 已证实源存在：历史BTS为436,968,166字节LFS对象（SHA256=a4d141c7eac94204ab9737efd914ad310a31ed83a9eafdeaad453be9a1979245）；原OUTB在part-019.zip（SHA256=bcebcb7971b2e0dcc459ff38748045ce02ec9559ce79d173187dee82fb796a79），12,001点，100–700s；底六分量18例216,018同步行已由Actions #42842305092原生归档artifact 13775054290，fullrate gzip SHA256=45cc308625ead8411d1565adc66c99e7ee8d0a979e5c3c6c18f23e744ba74dd1，2026-12-10T15:14:58Z到期。T061仅统计表不代表完整时程不存在。
+- 真实物理源身份新发现：T035 AERODYN_CASE_HASHES.tsv把目标唯一绑定原AeroDyn SHA256 E258D2E8FC7664B93F3E6A792C46EC38BEA327859F95C3B200391E9F2BB1A568，该dat实际字段TwrAero=False、NTwOuts=0、TwrPotent=0、TwrShadow=0。原OpenFAST塔身独立气动力未开启，历史TwrBs截面反力包括响应归属，不是独立可施加外力；不能由底六分量唯一逆算缺失气动/重力/惯性/接口。
+- 新增唯一证据文档 [S06目标工况源存在与纯外力HOLD](../T062/S06_U11_NTM_SOURCE_PRESENT_AERO_EXTERNAL_LOAD_HOLD_20261115.md)，原36风/论文/85张原图不重复覆盖。非CAE SOURCE下一步：恢复并锁SHA的原BTS/OUTB/历史Actions包；若需要塔身空气动力，明确建立新源版本下的OpenFAST风侧气动响应，不把原反力误称外载；需独立通过实际力、作用点、逐时钟坐标、单位和惯性/重力归属守恒后才有外力准入。
+- RUN：GitHub连接器读取真实文件/工作流/Actions artifact元数据与配置字段；未下载或重新哈希LFS原物理字节、未新运行TurbSim/OpenFAST/Abaqus/fe-safe、没有本机映射/材料寿命结果。REF=历史T035/T061/T062/T035原字段注释；STANDARD=无新增标准原条文；OFFICIAL=GitHub历史Actions/仓库源；FIG无，TAB=身份矩阵。HOLD保持：纯外载、BF1局部应力、年Miner及W/E/WE，不晋级12阶段或正式DLC1.2。严守用户分工不触碰Abaqus/CAE/ODB、冻结母本、main或PR合并。
+
 ## 2026-11-15 10时｜S12量化半步对历史NTM控制工况的条件误差证书（非CAE）
 
 - READ：根/研究AGENTS、COMMAND_ROOM最新交接、白皮书v0.31.6、六章MASTER/STATUS、T080、期刊§4.33及真实T062 1080行统计表；研究分支基线HEAD `07f0f0054c1fb02ed4510828df5c94cd1c175a02`，比较API显示与该SHA identical。PR Draft来自前次交接，本轮连接器未独立返回PR元数据，不能冒称最新状态核验。
