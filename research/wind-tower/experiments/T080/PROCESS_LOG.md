@@ -1,3 +1,5 @@
+## 2026-11-15 14时｜S12期刊源模型适用域纠错：T035原U11p4_NTM_S01 AeroDyn SHA256 E258D2E8FC7664B93F3E6A792C46EC38BEA327859F95C3B200391E9F2BB1A568 中 TwrAero=False、NTwOuts=0、TwrPotent=0、TwrShadow=0；该case塔身分布气动力未启用，历史塔底反力不唯一确定外部风力分布。新增期刊正文严格区分历史载荷筛查与完整塔身气动/独立外力重建；给出三点(+1,-2,+1)同合力同一阶矩反例、逐case核验及自由体守恒可证伪条件。SOURCE=T035原文件及T062历史全速归档收据（gzip SHA256 45cc308625ead8411d1565adc66c99e7ee8d0a979e5c3c6c18f23e744ba74dd1，未本轮重哈希）；RUN=无新物理求解，REF/STANDARD=无新增授权原页，FIG/TAB=无新增；这是实质论文物理适用域纠错而非物理PASS。12阶段晋级0/12，正式DLC1.2 0/126；禁止范围未触碰。科研正文commit 195e192cc19029fa97520b4b7698823384c7f13d。
+
 ## 2026-11-15 12时｜S12双轴top-k最小候选集真实源表复算（0/12）
 
 READ: PR#42 Open/Draft、HEAD `927b51ca9f2eba2d295d2e893a94722690c8faec`；研究AGENTS、指挥室、白皮书v0.31.8、MASTER/STATUS、12阶段、T079/T080及期刊§4.33–4.34。SOURCE=T062 1080行原表Git blob `4f77ec9a2027c593ea22cac5abae98de32d407f5`，仅取TwrBsMxt/TwrBsMyt的DEL_m4_Nref600，18×2真实数值。RUN=V8直接排序并逐k作集合交并，k=1/2/3/4/5/6/8/10的交集1/1/1/2/3/4/6/9、并集1/3/5/6/7/8/10/11；Mx top3与My top3仅共同S04，单轴top3仅覆盖另轴top3的1/3，双轴需5个不同历史case。TAB=期刊§4.35八行；FIG无。严格限定历史18例负载筛查，非正式DLC/独立外力/局部Miner/未来seed；没有新增OUTB字节复验、原件SHA256沿用历史记录，REF/STANDARD/OFFICIAL无新增授权原页。12阶段晋级0/12，DLC1.2=0/126。未碰Abaqus/CAE、冻结母本、main、昂贵RUN或PR合并。
