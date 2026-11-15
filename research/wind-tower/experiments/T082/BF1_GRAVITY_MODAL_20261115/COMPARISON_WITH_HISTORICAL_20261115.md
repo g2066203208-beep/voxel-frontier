@@ -18,7 +18,7 @@
 
 ## 2. 与2026-11-11既有BF1修复工程：重复性与增量
 
-历史来源：[CURRENT_TOWER_SETTINGS_20261114.md](../../models/CURRENT_TOWER_SETTINGS_20261114.md)第09节。历史Job `DTU158_EONLY_THESIS_ALIGNED_G0`、历史ODB `DTU158_ALIGNED_GM_VERIFY.odb`，**不同于本次独立Job名称**。历史来源为Codex转交原生读取报告，本轮未拿到旧ODB做逐字节比较。
+历史来源：[CURRENT_TOWER_SETTINGS_20261114.md](../../../models/CURRENT_TOWER_SETTINGS_20261114.md)第09节。历史Job `DTU158_EONLY_THESIS_ALIGNED_G0`、历史ODB `DTU158_ALIGNED_GM_VERIFY.odb`，**不同于本次独立Job名称**。历史来源为Codex转交原生读取报告，本轮未拿到旧ODB做逐字节比较。
 
 | 指标 | 历史BF1修复工程 | 本次T082 | 结论 |
 |---|---|---|---|
@@ -48,7 +48,7 @@
 | 普通钢筋身份 | 当前2026-11-14设置快照钢塔及普通筋S345，31组纵筋和31组环筋 | T057 HRB335；T077另有HRB500设计成果；不可混用 |
 | 物理验收的继承 | T082对当前BF1重力/模态成功 | BF8支路仍须按其自身原件与门禁判断，T082不为其补发PASS |
 
-历史来源：[T057](../T057/README.md)、[T070](../T070/README.md)、[T078长期损失报告](../T078/T078_PRESTRESS_DESIGN_REPORT.md)、[当前模型设置](../../models/CURRENT_TOWER_SETTINGS_20261114.md)。**不能把BF1=6.358926MN与BF8长期39.753559MN比较后称预应力损失异常；数量和荷载阶段都不同。**
+历史来源：[T057](../../T057/README.md)、[T070](../../T070/README.md)、[T078长期损失报告](../../T078/T078_PRESTRESS_DESIGN_REPORT.md)、[当前模型设置](../../../models/CURRENT_TOWER_SETTINGS_20261114.md)。**不能把BF1=6.358926MN与BF8长期39.753559MN比较后称预应力损失异常；数量和荷载阶段都不同。**
 
 ## 4. 当前问题与不重复执行边界
 
