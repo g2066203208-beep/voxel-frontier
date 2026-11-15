@@ -1,3 +1,11 @@
+## 2026-11-15 16时后｜T082重算重复性/模型版本差异清单已完成（非新物理求解）
+
+- SOURCE：已经远端原字节保留的T082 7个小文件；历史[2026-11-14模型设置快照](../../models/CURRENT_TOWER_SETTINGS_20261114.md)第09节（原2026-11-11独立修复工程）；原[T057](../T057/README.md)、[T070](../T070/README.md)、[T078长期PT](../T078/T078_PRESTRESS_DESIGN_REPORT.md)。新增集中[T082与历史BF1及BF8差异对照](../T082/BF1_GRAVITY_MODAL_20261115/COMPARISON_WITH_HISTORICAL_20261115.md)，具有具体逐项数表、P0/P1风险、禁止重复列表。
+- 查明**重复**：原历史BF1修复Job已完成重力/30阶，旧f1–f4=0.13525/0.13580/0.70348/0.73802Hz与T082精度内完全一致；旧PT≈6.359523MN与新6.358925978MN差≈597.022N（0.0094%）；旧塔底/PT锚竖反力及0.223N残差与新接近。本次主要是独立Job及36行PT、30阶频率源表的证据强化，**不是新风动力/疲劳/地震结论**，没有足够旧新二进制证据宣称模型全字段一致。
+- 查明**不同支路**：当前BF1=36×140mm²，初始6.4512MN、Gravity后6.358926MN、30接缝180线性SPRING2；T057/T070/T078 BF8为36×8×140mm²，初始51.6096MN，T078长期Pe≈39.753559MN，接触+摩擦。现行BF1 S345与T057 HRB335、T077 HRB500结果不能混装。保留当前BF1不私改。
+- STILL HOLD：最终论文模型身份、真正外施风载与RNA/惯性分账、BF1局部材料动态应力/年度Miner和正式DLC1.2覆盖、质量重复计入约10.155t风险、非线性接缝机理、参与质量独立提取、E/WE响应和真实优化。原生CAE/ODB仍未远端归档；T082 STAGE1_COMPLETE不因此撤销。12阶段0/12为整链门禁而不是已完成成果的归零。
+- DELIVER：对照文件、新白皮书v0.31.14及工作室可见对比摘要，保留原T082 7原始提取小文件未改。本轮RUN仅GitHub文献源级对读和保存，没有Abaqus/CAE/FE新求解，不改main/冻结父本，不合并PR #42。
+
 ## 2026-11-15 15:46后｜T082 BF1 Stage-1真实数据包完成远端逐字节归档（非新增求解）
 
 - SOURCE：本次用户实际上传 `T082_DATA_PACKAGE_20261115.zip`，已从ZIP读取7个小文件，压缩包5.7KB/解压16093字节；原数据文件 [T082](../T082/BF1_GRAVITY_MODAL_20261115/README.md)、[36 PT平衡表](../T082/BF1_GRAVITY_MODAL_20261115/BF1_PT36_GRAVITY_BALANCE.csv)、[72条S11提取](../T082/BF1_GRAVITY_MODAL_20261115/BF1_PT36_GRAVITY_STRESS.csv)、[30阶频率](../T082/BF1_GRAVITY_MODAL_20261115/BF1_MODAL_30_FREQUENCIES.csv)、[JSON报告](../T082/BF1_GRAVITY_MODAL_20261115/BF1_STAGE1_GRAVITY_MODAL_REPORT.json)、[日志摘要](../T082/BF1_GRAVITY_MODAL_20261115/BF1_RUN_LOG_SUMMARY.txt)、[原始SHA256清单](../T082/BF1_GRAVITY_MODAL_20261115/SHA256SUMS.txt)全部经GitHub Contents API落盘；**远端7个Git blob SHA与用户ZIP内7文件本地Git blob SHA逐一一致**，不是用文字模拟文件。
