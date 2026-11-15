@@ -1,3 +1,7 @@
+## 2026-11-15 12时｜S12双轴top-k历史负载候选集 END（v0.31.9）
+
+- PR#42 Open/Draft，基线 `927b51ca9f2eba2d295d2e893a94722690c8faec`。源T062原1080行CSV blob `4f77ec9a2027c593ea22cac5abae98de32d407f5`；Mx/My历史18NTM塔底DEL4排名前k的集合并集在k=1/2/3/4/5/6/8/10时分别为1/3/5/6/7/8/10/11。双轴各保留top3需要5个历史case，Mx单轴top3仅覆盖My top3的1/3。科研正文[§4.35](../manuscript/journal-wind-fatigue-results.md)，T080过程已记；无新物理运行、无OUTB重新解码、未重算SHA256，正式DLC1.2 0/126、12阶段晋级0/12。下一优先动作：停止重复18NTM排序，转S05真实地震谱/原始时程可复算成果或正式论文装配。
+
 ## 2026-11-15 09:29后｜S06 原风场/全速率已存、外部风载HOLD、AeroDyn塔载关闭核验 END（v0.31.8）
 
 - 依据本页本轮START；研究分支HEAD收尾前 `779045a91ff7`，PR#42 Open/Draft未合并。全分支Git树3831项且未截断，原U11p4_NTM_S01 BTS LFS有物理大文件指针、原OUTB part-019 ZIP有历史SHA，T061只包含min/max/RMS统计而非全部时程。

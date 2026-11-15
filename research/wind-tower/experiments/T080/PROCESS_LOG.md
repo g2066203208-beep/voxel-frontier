@@ -1,3 +1,7 @@
+## 2026-11-15 12时｜S12双轴top-k最小候选集真实源表复算（0/12）
+
+READ: PR#42 Open/Draft、HEAD `927b51ca9f2eba2d295d2e893a94722690c8faec`；研究AGENTS、指挥室、白皮书v0.31.8、MASTER/STATUS、12阶段、T079/T080及期刊§4.33–4.34。SOURCE=T062 1080行原表Git blob `4f77ec9a2027c593ea22cac5abae98de32d407f5`，仅取TwrBsMxt/TwrBsMyt的DEL_m4_Nref600，18×2真实数值。RUN=V8直接排序并逐k作集合交并，k=1/2/3/4/5/6/8/10的交集1/1/1/2/3/4/6/9、并集1/3/5/6/7/8/10/11；Mx top3与My top3仅共同S04，单轴top3仅覆盖另轴top3的1/3，双轴需5个不同历史case。TAB=期刊§4.35八行；FIG无。严格限定历史18例负载筛查，非正式DLC/独立外力/局部Miner/未来seed；没有新增OUTB字节复验、原件SHA256沿用历史记录，REF/STANDARD/OFFICIAL无新增授权原页。12阶段晋级0/12，DLC1.2=0/126。未碰Abaqus/CAE、冻结母本、main、昂贵RUN或PR合并。
+
 ## 2026-11-15 09:29｜U11p4_NTM_S01原始外载不存在误判及TwrAero=False原因核验（仅OpenFAST来源）
 
 - SOURCE：完整研究分支树3831条，T061原36工况统计，T062原18NTM OUTB SHA+对应ZIP和BTS LFS pointer，2026-11-10原生Actions fullrate历史收据及artifact实时列表，T035 36工况AeroDyn文件身份和目标U11p4_NTM_S01原始10,088字节输入。

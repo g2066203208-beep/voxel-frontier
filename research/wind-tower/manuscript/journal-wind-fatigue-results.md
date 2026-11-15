@@ -645,6 +645,27 @@ Both conditional gaps are strictly positive; the competing cases maximizing the 
 
 SOURCE: `experiments/T062/S06_18NTM_ORIGINAL_9GAGE_LOAD_DEL_20261031.csv`, 1,080 rows, Git blob `4f77ec9a2027c593ea22cac5abae98de32d407f5`, inherited SHA256 `95de6578cf379d1b2e1d99a68c26954a68e93cc8bfc4bdcd63dd324ae2999a0f` (not independently rehashed in this pass). RUN: direct V8 source-row evaluation of all 18 cases per axis and comparison of leader lower against every other upper. REF/STANDARD/OFFICIAL: no newly reviewed primary pages or authorized design clauses. The numerical pass is an archived-source conditional check, not a fresh OUTB or physical validation.
 
+### 4.35 Cross-axis top-k screening coverage from archived NTM load DEL4
+
+The full-order discordance established in Section 4.33 has a practical screening implication: selecting the highest-ranked k cases in one bending axis does not necessarily retain the k most demanding cases in the other. For each axis, sort the same 18 archived 600 s NTM realizations by base fourth-power moment DEL (not the separately tabulated DEL10); define \(A_k\) and \(B_k\) as the first k case identities under Mx and My, respectively. The smallest **union-of-axis top-k candidate set** is \(U_k=A_k\cup B_k\), with size \(|U_k|=2k-|A_k\cap B_k|\). This is an exact finite-archive screening statement, not a probability estimate.
+
+| k per axis | Intersection | Required union cases | Cases saved vs 2k independent selections |
+|---:|---:|---:|---:|
+| 1 | 1 | 1 | 1 |
+| 2 | 1 | 3 | 1 |
+| 3 | 1 | **5** | 1 |
+| 4 | 2 | 6 | 2 |
+| 5 | 3 | **7** | 3 |
+| 6 | 4 | 8 | 4 |
+| 8 | 6 | 10 | 6 |
+| 10 | 9 | 11 | 9 |
+
+For example, the Mx top-three identities are `U19p202140_NTM_S04`, `U19p202140_NTM_S02`, `U19p202140_NTM_S01`; the My top-three are `U19p202140_NTM_S04`, `U11p4_NTM_S04`, `U11p4_NTM_S06`. Their intersection is only the shared first-place case. Thus a three-case Mx-only shortlist captures **one of three** My top-three cases, whereas a five-case union preserves all three of each axis. The largest My DEL4 case remains `U19p202140_NTM_S04` (67,188.111 kN m); the next My case is `U11p4_NTM_S04` (65,207.838 kN m). These values are load diagnostics rather than local material stresses.
+
+This finite-set union is the minimum case set satisfying the *specified* requirement of retaining both axes' top k identities. It is **not** a proof of multiobjective Pareto optimality, annual damage coverage, wind-bin completeness, or the minimum number of simulations needed to characterize future operating conditions. The cases share three observed wind bins and six seeds each; ties are absent in the selected DEL4 columns. An independent countercheck uses the inclusion-exclusion identity and the original case IDs; any newly recovered case, revised rainflow topology, or change to the DEL exponent can falsify the proposed shortlist for its revised population.
+
+SOURCE/TAB: original 1,080-row `experiments/T062/S06_18NTM_ORIGINAL_9GAGE_LOAD_DEL_20261031.csv`, Git blob `4f77ec9a2027c593ea22cac5abae98de32d407f5`, inherited SHA256 `95de6578cf379d1b2e1d99a68c26954a68e93cc8bfc4bdcd63dd324ae2999a0f` (not independently byte-rehashed). RUN: independent direct V8 computation of 18 case identities × 2 axes, strict column `DEL_m4_Nref600`, exact top-k set operations and cross-axis top-three names. REF/STANDARD/OFFICIAL: no new authorized clauses or primary paper pages. FIG: none. This is a new decision-relevant derived table from existing real archive values, not a new physical run.
+
 ## 5. Conclusions
 
 In 36 archived 600 s OpenFAST screening cases for a 158 m concrete–steel hybrid tower, correcting a historical rainflow closure error changes 102/630 My and 12/630 Mx pairwise load-DEL rankings and the My controlling realization. A separate reconciliation of 18 NTM cases shows that the 100,000- versus 600-reference-cycle DEL convention changes amplitudes by the expected factor 3.593041; this is a definition change, not a new load response. Agreement of scalar DEL and cycle count does not establish equality of cycle multisets.
