@@ -1,3 +1,10 @@
+## 2026-11-15 15:46后｜BF1第一阶段完成成果正式接入工作室与GitHub（白皮书v0.31.13）
+
+- **第一阶段不是未完成**：独立Codex本机原生`BF1_GRAVITY_DATACHECK`和`BF1_MODAL_30`已完成。用户实际提供的T082 ZIP内7个提取文件在研究分支[原T082目录](../experiments/T082/BF1_GRAVITY_MODAL_20261115/README.md)按原字节入仓；7/7远端Git blob SHA与ZIP本地Git blob SHA一致，36处PT平衡表/72条S11记录/30阶频率/报告/日志摘要/校验单均非伪造。与只有转交文字的旧T082记录相比，本轮已得到真正可读、可校验的提取物。
+- **计算事实**：Data Check与Gravity成功（8输入警告、0错误，10增量、0回退、30平衡迭代，788秒）；Modal成功（9输入警告、0错误、30阶，879秒），f1/f2/f30=0.13525/0.13580/23.518Hz。36×140mm²×1280MPa=6.4512MN初始BF1，Gravity平衡总PT=6.358925978MN；36条元素平均S11=1.261691662GPa；塔底+PT下锚RFy减模型重力=-0.223125N；72条积分点S11为每处两条重复记录，不是72根PT。源CAE/ODB实际字节仍在用户本机，远端SHA256仅为源身份，**本助手没有独立本机二进制审计或新原生RUN，但不因此否认Codex已完成的第一阶段**。
+- **当前HOLD只针对下一物理链**：历史`U11p4_NTM_S01` BTS/OUTB与18NTM同步塔底六分量响应已有归档；历史AeroDyn的`TwrAero=False`、TwrBs为结构响应，不能直接当外施气动力。尚待真正外载来源、坐标/单位/作用点与RNA质量、重力/惯性归属闭合；BF1 600s动力、局部材料应力、年度Miner、同态W/E/WE尚未形成。正式12阶段0/12仅指整链验收，非T082任务完成率。
+- **实际写入**：本轮更新[原T082字节](../experiments/T082/BF1_GRAVITY_MODAL_20261115/README.md)、[T080过程](../experiments/T080/PROCESS_LOG.md)、[白皮书](DEVELOPMENT_WHITEPAPER.md) v0.31.12→v0.31.13以及现有唯一网站`src/engineering.ts`研究总览结果板块；仅研究分支，main不变，PR#42保持Draft，无本机Abaqus执行/派发、无冻结母本覆盖或600秒无源风载施加。
+
 ## 2026-11-15 15时｜S06全36例塔身气动开关源级核验 END（v0.31.12）
 
 - 读取T035 36行AeroDyn原始SHA256映射，35例属于7EBAA0BD…、1例U11p4_NTM_S01属于E258D2E8…；两份canonical输入直接读取均为TwrAero=False、NTwOuts=0、TwrPotent=0、TwrShadow=0。将期刊此前“仅单例已证”的适用域纠正为**36/36归档配置均未启用塔身分布气动力**。源级映射PASS；原始运行时输入身份与外力/惯性归属仍HOLD，不冒充独立风载或局部疲劳。正文commit adb543aed5cf0cdeb4794c1cf6a9ec5de77c6b04；T080同步记录源Git blob与边界。无新物理RUN，12阶段晋级0/12、正式DLC1.2 0/126。禁区未触碰。
