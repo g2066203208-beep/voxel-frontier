@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.31.4**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.31.5**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -247,3 +247,5 @@
 | 2026-11-13 17时 | **v0.29.7 PATCH** | S12期刊§4.24修正DEL四次幂筛查与原始时程四阶矩混称，建立周期数、600s、Neq与年化范围四次幂的精确条件映射及拒绝恒等式；非新物理结果。 | SOURCE历史rainflow SHA256 b362bcd7c37ccc56e21035de39448b5e761ec03f371b6b2f3eb30f41b013630d；方法PASS，Miner/缺箱HOLD；12阶段0/12。 | [期刊正文](../manuscript/journal-wind-fatigue-results.md)；[commit](https://github.com/g2066203208-beep/voxel-frontier/commit/ea34ff83fa043357babb6a1b49019295985e2f89)。 |
 
 | 2026-11-14 12时 | **v0.30.8 PATCH** | S10历史72行雨流旧/修正对照：新增可复用配对六seed bootstrap JS与期刊§4.27两行统计表；20,000次、固定随机种子、Mx放大2.711841（百分位2.526745–2.909949）、My放大2.158878（1.394863–3.807152）。 | SOURCE blob e03bdb1ddc98daa2e8726b0fe1b11a858af03b27；V8真实源复算PASS，Node原生尚未运行；仅条件seed统计，96.1082%缺箱/Miner/同态W HOLD，12阶段晋级0/12。 | [JS](../experiments/T062/s10_paired_rainflow_bootstrap_20261114.mjs)；[期刊§4.27](../manuscript/journal-wind-fatigue-results.md)；[科学提交](https://github.com/g2066203208-beep/voxel-frontier/commit/e2a36733e6f0ea9d5676cf1d2577a2457c03b652)。 |
+
+| 2026-11-15 08时 | **v0.31.5 PATCH** | S12在原18NTM×60通道/1080行CSV（Git blob `4f77ec9a2027c593ea22cac5abae98de32d407f5`）上独立计算18工况的完整排序：Mx/My各9高度站相对塔底共2754个案例对比较，逆序0；18组Spearman rho=1，最高测站/base逐case DEL4比Mx 0.971546–0.977878、My 0.974280–0.979399。期刊§4.32新增完整排序可证伪命题、两行真实数表与非独立性说明；[科学commit f226d626](https://github.com/g2066203208-beep/voxel-frontier/commit/f226d62688a7ff70b1bc2960c2a80de97e890e4b)，新稿blob `aa9ba4778d6c03f0676d1054041af11bca0fb9d5`。 | V8真实归档源表算术PASS；非新物理RUN，原OUTB字节未重读、CSV SHA256未独立取得；正式12阶段0/12、DLC1.2 0/126，局部材料Miner与同态WE仍HOLD。 | [期刊§4.32](../manuscript/journal-wind-fatigue-results.md)、[T080过程](../experiments/T080/PROCESS_LOG.md) |
