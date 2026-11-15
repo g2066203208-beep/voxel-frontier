@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.31.20**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.31.21**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -28,6 +28,12 @@
 - 下一独立非Abaqus动作：核对/恢复可证明同模型、运行状态、时间网格和起点的W侧真实时程；没有可追溯来源时记录HOLD并转向S05/S10可独立研究，不造数据。
 
 ## 4. 版本变更记录（只记录真实持久化事务）
+
+### 2026-11-15｜v0.31.21 PATCH — S10气候质量覆盖的完整风箱最小集合（非疲劳风险最优）
+
+- 科研正文：[`journal-wind-fatigue-results.md`](../manuscript/journal-wind-fatigue-results.md)新增5行数表、交换论证及反例；SOURCE=ERA5小时分箱 Git blob `1bae743b385d4f24c8b5af3e0b445aae30d40c6f`，历史SHA256 `e4058620a36b23bb218103875d4dc5b0711fc45d418b23a2208c2fc9c16c9102`，126-slot源覆盖 blob `1e6b774443606200156f40d57352ce097a88ee35`。RUN=JS源级整数小时求和；95%条件运行小时最小7箱/42槽，99%最小9箱/54槽；历史3个screen-only箱仅6.7016%条件小时；**非疲劳损伤覆盖、非IEC规定、正式DLC1.2仍0/126**。METHOD arithmetic PASS / physical HOLD；无新增物理RUN、无Abaqus、无授权标准原页，12阶段晋级0/12。
+
+
 
 ### 2026-11-15｜v0.31.20 PATCH — T085何泽瑜论文全文源级复核：30处接缝与RNA研究决策冻结
 
