@@ -1,3 +1,9 @@
+## 2026-11-15 15时｜S06 36/36历史AeroDyn塔身气动开关源级闭合（非物理RUN）
+
+- SOURCE：直接读取T035原始36行AERODYN_CASE_HASHES.tsv（Git blob 52a7c0ef290d6195aee625fec4ca27e16de952c5），按SHA256分组得35行7EBAA0BD…（9774字节）及1行E258D2E8…（10088字节，U11p4_NTM_S01）。直接读取两份canonical AeroDyn源文件（Git blobs df9ce12316a9219b5fd62a6e630de9fb46634b87 / 366ae27d65d1feca6da0ba9eb186348913158fcb）：两者TwrAero=False、NTwOuts=0、TwrPotent=0、TwrShadow=0。因此在T035执行身份映射成立的前提下，**36/36历史工况均关闭塔身分布气动力**，不再仅是单例结论。源级输入判定PASS；逐运行执行文件身份/控制器/自由体外载归属仍HOLD。
+- RUN：GitHub源文本直接逐行枚举36行并核对两份源文件4字段；无新OpenFAST/TurbSim或结构生产运行。程序为本轮连接器JS只读计算，未单独提交程序，不能宣称原生CLI测试。SOURCE字节SHA256沿用T035历史记录，本轮仅获取Git blob，未独立计算字节SHA256。REF=无新增论文原页；STANDARD=无授权条文；OFFICIAL=OpenFAST历史输入字段；FIG=无；TAB=35+1配置分组，已入期刊源级论证。
+- 科学边界：关闭塔身气动力不等于无叶轮气动力、无塔底响应或旧DEL失效；但历史响应不能充当完整塔面气动力或独立外载。期刊稿对应段落已原位纠正，科研commit adb543aed5cf0cdeb4794c1cf6a9ec5de77c6b04；12阶段本轮晋级0/12、正式DLC1.2=0/126。下一唯一非CAE动作：用已有36例真实输出与配置对照，检查运行状态来源/塔顶接口六分量是否存在可审计的同刻源，不重复塔身气动开关统计。
+
 ## 2026-11-15 14:08后｜T082 Codex本机BF1重力/模态报告接入及LFS失败最小远端保全（非CAE）
 
 - SOURCE：用户在本会话转交Codex本机成果文字；本人未读取本机原始CAE/ODB/INP/日志/表CSV。Codex报告BF1_GRAVITY_DATACHECK通过，Gravity 10增量/0回退/30平衡迭代；BF1 PT36平均S11=1.261692GPa、总力=6.358926MN；全支座竖向反力和重力差0.223N；BF1_MODAL_30成功，f1/f2/f30=0.13525/0.13580/23.518Hz。独立副本原件留本机，风载映射/600s风动力与材料疲劳仍HOLD。
