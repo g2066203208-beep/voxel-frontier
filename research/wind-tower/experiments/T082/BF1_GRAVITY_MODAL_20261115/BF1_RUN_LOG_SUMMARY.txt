@@ -1,0 +1,8 @@
+BF1_GRAVITY_DATACHECK
+Data Check: PASS; ANALYSIS DATACHECK COMPLETE; 8 input warnings; 0 errors.
+Analysis: COMPLETED SUCCESSFULLY; 10 increments; 0 cutbacks; 30 equilibrium iterations; wallclock 788 s; 0 analysis warnings; 0 errors.
+
+BF1_MODAL_30
+Data Check: PASS; ANALYSIS DATACHECK COMPLETE; 9 input warnings; 0 errors.
+Analysis: COMPLETED SUCCESSFULLY; 30 modes written; 0 cutbacks; 0 errors; wallclock 879 s.
+Solver range warning: more eigenvalues were found in the broad requested range than the 30 requested. All 30 requested modes were written; no negative eigenvalue warning.
