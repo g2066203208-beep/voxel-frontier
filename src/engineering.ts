@@ -22,6 +22,13 @@ export function researchPage() {
  <div class="tower-metric"><span>12阶段正式验收</span><strong>0 / 12</strong><small>已有来源、方法成果不能抹零</small></div>
  <div class="tower-metric"><span>规划正式DLC1.2</span><strong>0 / 126</strong><small>126是研究暂定矩阵，非IEC固定标准</small></div>
  </section>
+ <section class="panel research-intro" aria-label="T082 BF1第一阶段已完成">
+ <h2>BF1第一阶段 · 已完成（2026-11-15）</h2>
+ <p><strong>真实本机计算：</strong>独立副本 <code>BF1_GRAVITY_DATACHECK</code> Data Check通过（8条输入警告/0错误），Gravity分析成功，10增量、0回退、30平衡迭代、788秒。36处PT每处140 mm²、初始1280 MPa；平衡后平均S11为<strong>1.261692 GPa</strong>，总力<strong>6.358926 MN</strong>（初始6.4512 MN）。塔底与PT下锚竖向反力合计残差<strong>-0.223125 N</strong>。</p>
+ <p><code>BF1_MODAL_30</code>成功提取<strong>30阶模态</strong>，f1/f2/f30为<strong>0.13525 / 0.13580 / 23.518 Hz</strong>，879秒。该阶段不需因第二阶段HOLD而重算。来源为Codex本机原生运行的提取包；本网页只展示已获上传字节的结果，原生CAE/ODB仍保留本机SHA登记，不宣称本网页独立复验ODB。</p>
+ <p><strong>仅第二阶段风动力HOLD：</strong><code>U11p4_NTM_S01</code>历史BTS/OUTB与18NTM塔底六分量响应已有归档，但历史TwrBs为结构响应、并非外施气动力，历史AeroDyn <code>TwrAero=False</code>。外载所有权/位置/坐标/单位/RNA惯性及重力归属尚未闭合，不施加不明风载；600秒材料应力及寿命未运行。</p>
+ <div class="research-links"><a class="button primary" href="${branch}experiments/T082/BF1_GRAVITY_MODAL_20261115/README.md" target="_blank" rel="noopener">T082原始提取包目录</a><a href="${branch}experiments/T082/BF1_GRAVITY_MODAL_20261115/BF1_PT36_GRAVITY_BALANCE.csv" target="_blank" rel="noopener">PT 36处实际表</a><a href="${branch}experiments/T082/BF1_GRAVITY_MODAL_20261115/BF1_MODAL_30_FREQUENCIES.csv" target="_blank" rel="noopener">30阶模态原表</a><a href="${branch}experiments/T082/BF1_GRAVITY_MODAL_20261115/BF1_STAGE1_GRAVITY_MODAL_REPORT.json" target="_blank" rel="noopener">Job及反力报告</a></div>
+ </section>
  <section class="panel research-intro"><h2>当前模型与历史物理基线</h2>
  <p>Codex已原生确认 <code>TOWER_AND_FOUNDATION_SEPARATE.cae</code> 的92项当前配置：31组纵筋与环筋、BF1初始6.4512 MN、30处线性接缝、E-only已配置。当前工程Jobs=0；历史PT平衡后6.359523 MN和Gravity/30阶模态来自独立修复工程。T057 BF8与旧T070三维基准不是当前工程。</p>
  <div class="research-links"><a href="#" data-view="current-model" class="button primary">在工作室内查看92项设置</a><a href="${model}" target="_blank" rel="noopener">模型来源档案</a></div></section>
