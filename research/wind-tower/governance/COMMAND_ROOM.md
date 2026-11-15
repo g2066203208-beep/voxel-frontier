@@ -1,3 +1,8 @@
+## 2026-11-15 10时｜S12真实18NTM量化误差条件证书 END（白皮书v0.31.7）
+
+- 已继承v0.31.6的真实18NTM控制工况与跨轴反例；从T062 1080行CSV实际读取塔底36行半步/雨流等效循环数/DEL4，利用固定雨流配对和计数前提下的Minkowski界，冠军相对最强竞争者的保守差额Mx=919.749652 kN·m、My=1972.874690 kN·m；[期刊§4.34](../manuscript/journal-wind-fatigue-results.md)，[科研提交5c976ad5](https://github.com/g2066203208-beep/voxel-frontier/commit/5c976ad52386dba21569dc4e498a12bdf7e965d3)，[T080过程](../experiments/T080/PROCESS_LOG.md)。原源Git blob `4f77ec9a2027c593ea22cac5abae98de32d407f5`；旧SHA256继承未重算。V8真实源表条件算术PASS，**雨流拓扑变化未验、OUTB未重解码**，不冒充无条件物理稳健性。
+- 开工分支基线HEAD `07f0f0054c1fb02ed4510828df5c94cd1c175a02` 经compare API一致；PR#42 Draft状态仅继承上轮已确认交接，本轮无法从连接器独立获取PR元数据，故不声称新核验。正式12阶段本轮晋级0/12，DLC1.2=0/126。最大非CAE HOLD仍为完整风箱、机组状态、局部应力及同态WE；下一动作转有原始字节的雨流拓扑重提取或S05实测谱，不再重复条件统计。未触碰禁区。
+
 ## 2026-11-15 09时｜S12真实NTM双轴全序不等价 END（白皮书v0.31.6）
 
 - PR#42开工Open/Draft、基线HEAD `5234b2bb1bddb6a635a9ab192702e2a95a242d9a`；继承§4.31–4.32历史18NTM同轴高度排序，另问Mx与My是否能互相替代全序筛查。真实T062 1080行源表18案例塔底双轴DEL4穷举153对：**126同序、27逆序、0并列，Kendall tau-a=0.647058824**；同一首名但第二名不同。[新期刊§4.33](../manuscript/journal-wind-fatigue-results.md)与[源锁Node程序](../experiments/T062/s12_ntm18_cross_axis_rank_20261115.cjs)，科研commit `c953d061b877446743913174ab7e3a05c00e0ef9`；T080已记误差边界，白皮书v0.31.5→v0.31.6。
