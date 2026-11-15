@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.31.23**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.31.24**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -28,6 +28,12 @@
 - 下一独立非Abaqus动作：核对/恢复可证明同模型、运行状态、时间网格和起点的W侧真实时程；没有可追溯来源时记录HOLD并转向S05/S10可独立研究，不造数据。
 
 ## 4. 版本变更记录（只记录真实持久化事务）
+
+### 2026-11-16｜v0.31.24 PATCH — S12将ERA5分箱偏移敏感性装配为正式第三章可入稿正文
+
+- **实质成果**：[Ch3§3.9.1五行数表与分子/分母敏感性论证](../manuscript/final-thesis/chapters/03_场址风环境与整机随机风控制载荷.md)；[T080过程](../experiments/T080/PROCESS_LOG.md)。SOURCE=历史31箱ERA5整数小时Git blob 1bae743b385d4f24c8b5af3e0b445aae30d40c6f，历史SHA256 e4058620a36b23bb218103875d4dc5b0711fc45d418b23a2208c2fc9c16c9102（未重哈希）；RUN=沿用既有双路径整数分箱，并新增+1 m/s匹配小时+73.02%/运行小时+25.41%、−1 m/s匹配小时−46.64%/运行小时−25.19%的分解；科研commit [09321447](https://github.com/g2066203208-beep/voxel-frontier/commit/093214472bd1f7181bd2f17ea9025432f9e1a6b6)。**新增正式学位论文正文而非新物理仿真**；未完成Word页级视觉QA，正式DLC1.2 0/126、局部材料Miner及同态WE HOLD；12阶段晋级0/12。无Abaqus/CAE及昂贵RUN。
+
+
 
 ### 2026-11-16｜v0.31.23 PATCH — S10 ERA5三箱覆盖对统一风速偏移的源级敏感性
 
