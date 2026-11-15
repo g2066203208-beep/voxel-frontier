@@ -1,3 +1,10 @@
+## 2026-11-15 14:08后｜T082 Codex本机BF1重力/模态报告接入及LFS失败最小远端保全（非CAE）
+
+- SOURCE：用户在本会话转交Codex本机成果文字；本人未读取本机原始CAE/ODB/INP/日志/表CSV。Codex报告BF1_GRAVITY_DATACHECK通过，Gravity 10增量/0回退/30平衡迭代；BF1 PT36平均S11=1.261692GPa、总力=6.358926MN；全支座竖向反力和重力差0.223N；BF1_MODAL_30成功，f1/f2/f30=0.13525/0.13580/23.518Hz。独立副本原件留本机，风载映射/600s风动力与材料疲劳仍HOLD。
+- GITHUB：API实时查PR#42 Open/Draft，先读远端HEAD f88093749fa8d19c234ffceb20bee91797dfc490，未发现远端T082。Codex本机报告旧远端0cd0c325（非当前HEAD），本地提交4777cf4f/835579d/7c35d19c均未见推送。**通过GitHub Contents API成功小文本写入**[T082远端交接记录](../T082/BF1_GRAVITY_MODAL_20261115/REMOTE_STATUS_AND_HANDOFF.md)，commit 09bb0e50a9a08b7acfd0d59bcdf6d4abcee0906a。没有原始二进制字节，不声称原生计算附件已上云。
+- 上传障碍：用户转告LFS预算超限及普通push失败，但没附两次stderr，不能从现象单独推断第二次push原因。GitHub官方LFS按owner预算管理，额度耗尽时LFS写入被阻断，移除pointer不能自动删除远端LFS累计储存/未推送历史依赖。禁止强推、覆盖共享历史、将大ODB/CAE硬塞普通Git。保持本机备份，优先小文本/原件SHA清单独立提交；大件需得到足够LFS预算或授权持久存储才归档。
+- RUN：本人真实GitHub远端目录+HEAD+Contents API读写，无任何本机CAE/求解/模型复核；REF=用户Codex转告，OFFICIAL=GitHub LFS官方计费说明，STANDARD=无新规范，FIG/TAB=只有文字元数据；正式12阶段及DLC1.2不因文本上传晋级，材料疲劳与W/E/WE HOLD；保持main和冻结母本不动。
+
 ## 2026-11-15 14时｜S12期刊源模型适用域纠错：T035原U11p4_NTM_S01 AeroDyn SHA256 E258D2E8FC7664B93F3E6A792C46EC38BEA327859F95C3B200391E9F2BB1A568 中 TwrAero=False、NTwOuts=0、TwrPotent=0、TwrShadow=0；该case塔身分布气动力未启用，历史塔底反力不唯一确定外部风力分布。新增期刊正文严格区分历史载荷筛查与完整塔身气动/独立外力重建；给出三点(+1,-2,+1)同合力同一阶矩反例、逐case核验及自由体守恒可证伪条件。SOURCE=T035原文件及T062历史全速归档收据（gzip SHA256 45cc308625ead8411d1565adc66c99e7ee8d0a979e5c3c6c18f23e744ba74dd1，未本轮重哈希）；RUN=无新物理求解，REF/STANDARD=无新增授权原页，FIG/TAB=无新增；这是实质论文物理适用域纠错而非物理PASS。12阶段晋级0/12，正式DLC1.2 0/126；禁止范围未触碰。科研正文commit 195e192cc19029fa97520b4b7698823384c7f13d。
 
 ## 2026-11-15 12时｜S12双轴top-k最小候选集真实源表复算（0/12）
