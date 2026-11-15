@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.31.9**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.31.10**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -28,6 +28,9 @@
 - 下一独立非Abaqus动作：核对/恢复可证明同模型、运行状态、时间网格和起点的W侧真实时程；没有可追溯来源时记录HOLD并转向S05/S10可独立研究，不造数据。
 
 ## 4. 版本变更记录（只记录真实持久化事务）
+
+| 2026-11-15 14时 | **v0.31.10 PATCH** | S12期刊真实源模型适用域纠错：T035锁定U11p4_NTM_S01 TwrAero=False，新增反力非唯一逆映射三点构造反例及逐case反证门禁；科研commit [195e192c](https://github.com/g2066203208-beep/voxel-frontier/commit/195e192cc19029fa97520b4b7698823384c7f13d)。 | 仅原件字段与数学适用域纠错；原始全速归档SHA继承、未重解码/新物理RUN；12阶段0/12，DLC1.2 0/126，外部气动/材料疲劳HOLD。 | [期刊源级限定段落](../manuscript/journal-wind-fatigue-results.md)、[T080过程](../experiments/T080/PROCESS_LOG.md) |
+
 
 | 日期（Asia/Shanghai） | 白皮书版本 | 开发与证据增量 | 科学状态 | 远端事务 |
 |---|---|---|---|---|
