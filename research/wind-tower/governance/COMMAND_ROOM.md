@@ -1,3 +1,8 @@
+## 2026-11-15 09时｜S12真实NTM双轴全序不等价 END（白皮书v0.31.6）
+
+- PR#42开工Open/Draft、基线HEAD `5234b2bb1bddb6a635a9ab192702e2a95a242d9a`；继承§4.31–4.32历史18NTM同轴高度排序，另问Mx与My是否能互相替代全序筛查。真实T062 1080行源表18案例塔底双轴DEL4穷举153对：**126同序、27逆序、0并列，Kendall tau-a=0.647058824**；同一首名但第二名不同。[新期刊§4.33](../manuscript/journal-wind-fatigue-results.md)与[源锁Node程序](../experiments/T062/s12_ntm18_cross_axis_rank_20261115.cjs)，科研commit `c953d061b877446743913174ab7e3a05c00e0ef9`；T080已记误差边界，白皮书v0.31.5→v0.31.6。
+- V8直接源表配对PASS，原生Node CLI NOT_RUN、OUTB未重解码，153对相关非独立实验；不宣称正式DLC、材料Miner、同态WE或12阶段PASS。12阶段本轮晋级0/12，正式DLC1.2 0/126；最大非CAE HOLD为完整运行风箱/机组状态/材料局部应力/同态WE。下一唯一实质动作：源级雨流循环闭合/量化误差独立复算，原件不可用立即切换其他有源非CAE研究。禁区Abaqus/CAE、冻结母本、main、昂贵RUN及PR合并均未触碰。
+
 ## 2026-11-15 08时｜S12真实18NTM全序高度一致性 END（白皮书v0.31.5）
 
 - 开工PR#42 Open/Draft，HEAD `c8e763baf2b8e6f93d6d723cd413c1bbff58b886`；依序核读研究AGENTS、指挥室、白皮书、MASTER/STATUS、12阶段计划、T080及期刊。继承§4.31已完成20/20控制工况一致性，不重复其结果。
