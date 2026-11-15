@@ -5,10 +5,10 @@
 > **证据等级**：何文的“原文”以原始PDF对应页为准，文字检索来自PDF原文提取，表3-2/3-3亦已与原始整页PNG核对；“原文未披露”不是模型计算错误，“方法一致”也不意味着全部参数吻合。何文第3章Abaqus实体塔模型与第4～5章OpenSEES混合模型严格分开。
 
 ## 文件与来源
-- 原件：[He_Zeyu_2024_hybrid_tower_thesis.pdf](../../references/user-provided/He_Zeyu_2024_hybrid_tower_thesis.pdf)，PDF共90页；[原文文本（保留PDF分页）](../T067/REF008_He2024.txt)；[原图PDF第33、34、35页等](../../references/evidence-screenshots/he-zeyu-tower-original/)。
-- 当前模型：[92项Codex原生读取快照](../../models/CURRENT_TOWER_SETTINGS_20261114.json)；[当前92项人读版](../../models/CURRENT_TOWER_SETTINGS_20261114.md)。
-- 本次计算：[T082 BF1 Stage-1报告](../T082/BF1_GRAVITY_MODAL_20261115/BF1_STAGE1_GRAVITY_MODAL_REPORT.json)。历史改型只用于区别身份：[T053](../T053/README.md)、[T057](../T057/README.md)、[T078](../T078/T078_PRESTRESS_DESIGN_REPORT.md)。
-- 表格直接证据：[何文Table3-2/3-3逐行几何源](../../references/extracts/REF008-he2024-geometry.tsv)。
+- 原件：[He_Zeyu_2024_hybrid_tower_thesis.pdf](../references/user-provided/He_Zeyu_2024_hybrid_tower_thesis.pdf)，PDF共90页；[原文文本（保留PDF分页）](../experiments/T067/REF008_He2024.txt)；[原图PDF第33、34、35页等](../references/evidence-screenshots/he-zeyu-tower-original/)。
+- 当前模型：[92项Codex原生读取快照](../models/CURRENT_TOWER_SETTINGS_20261114.json)；[当前92项人读版](../models/CURRENT_TOWER_SETTINGS_20261114.md)。
+- 本次计算：[T082 BF1 Stage-1报告](../experiments/T082/BF1_GRAVITY_MODAL_20261115/BF1_STAGE1_GRAVITY_MODAL_REPORT.json)。历史改型只用于区别身份：[T053](../experiments/T053/README.md)、[T057](../experiments/T057/README.md)、[T078](../experiments/T078/T078_PRESTRESS_DESIGN_REPORT.md)。
+- 表格直接证据：[何文Table3-2/3-3逐行几何源](../references/extracts/REF008-he2024-geometry.tsv)。
 
 ## 首要发现（P0/P1）
 1. **原型的纵筋总数真正对上了**：何文表3-2的31段内外纵筋逐行合计5440根，2026-11-14快照的纵筋T3D2=5440个，算术完全一致；**逐段节点/直径/面积/保护层**仍无当前CAE明细，不能从汇总倒推出全部还原。
