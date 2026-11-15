@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.31.18**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.31.19**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -28,6 +28,10 @@
 - 下一独立非Abaqus动作：核对/恢复可证明同模型、运行状态、时间网格和起点的W侧真实时程；没有可追溯来源时记录HOLD并转向S05/S10可独立研究，不造数据。
 
 ## 4. 版本变更记录（只记录真实持久化事务）
+
+### 2026-11-15｜v0.31.19 PATCH — S11整风速箱留出局部低估拒绝门槛与RMSE冲突
+
+- **真实增量**：[期刊九行数表与拒绝测试](../manuscript/journal-wind-fatigue-results.md)，[T080源级过程日志](../experiments/T080/PROCESS_LOG.md)。SOURCE=1984行真实历史ETM截面表Git blob `b5effa2a493cec0a9af8a10a3b93df0ff997d2d0`，历史SHA256 `16c9864ef7a344e5b97338c31ce26de6adb86c0f0f64942ef894fe9983926b2b`（本轮未重新哈希）；RUN=连接器JS全行解析、按风速箱分组排除并比较mean/nearest/linear三种代理，9折模型-箱组合。11.4m/s线性RMSE 0.169327MPa较nearest 0.198851MPa低，但最大低估0.308233MPa较nearest 0.206520MPa更大；高风速线性14/62低估而nearest 0/62。提出前瞻epsilon拒绝规则，epsilon=0时三模型均至少一折FAIL。科学commit `bf71ab4ef271ea61a50ac42845cefb70c2ad816e`；非新物理RUN、非材料寿命、非正式优化PASS；12阶段晋级0/12，DLC1.2=0/126。
 
 ### 2026-11-15｜v0.31.18 PATCH — T084本机Codex V3 Gravity首增量不收敛定向修复任务
 
