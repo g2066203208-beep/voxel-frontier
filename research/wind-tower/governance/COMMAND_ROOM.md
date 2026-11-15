@@ -1,3 +1,10 @@
+## 2026-11-15 09:29后｜S06 原风场/全速率已存、外部风载HOLD、AeroDyn塔载关闭核验 END（v0.31.8）
+
+- 依据本页本轮START；研究分支HEAD收尾前 `779045a91ff7`，PR#42 Open/Draft未合并。全分支Git树3831项且未截断，原U11p4_NTM_S01 BTS LFS有物理大文件指针、原OUTB part-019 ZIP有历史SHA，T061只包含min/max/RMS统计而非全部时程。
+- 已证据定位原生[Actions #42842305092 artifact 13775054290](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/42842305092/artifacts/13775054290)：`S06_18NTM_W_BASE6_FULLRATE_216018ROW.csv.gz`，18工况各12001点、同步底六分量，SHA256 `45cc308625ead8411d1565adc66c99e7ee8d0a979e5c3c6c18f23e744ba74dd1`，API确认截至2026-12-10尚可用；本轮没有下载该二进制，继承原2026-11-10成功归档证据。
+- 新实证：原T035逐case hash表表明该NTM S01对应的AeroDyn文件SHA `E258D2E8FC7664B93F3E6A792C46EC38BEA327859F95C3B200391E9F2BB1A568`，`TwrAero=False`、`NTwOuts=0`、`TwrPotent=0`、`TwrShadow=0`；旧OpenFAST没计算塔身气动载荷。**旧塔底反力全时程存在，但作为外载仍不合格**。纯外风力/重力/惯性、坐标/作用点映射HOLD；BF1材质应力与Miner仍HOLD，正式12阶段0/12、DLC1.2 0/126。
+- 新[源级问题定位文档](../experiments/T062/S06_U11_NTM_SOURCE_PRESENT_AERO_EXTERNAL_LOAD_HOLD_20261115.md)，更新[T080事实过程](../experiments/T080/PROCESS_LOG.md)，白皮书v0.31.7→v0.31.8；本轮全部是GitHub源码/历史Actions元数据的查证，**没有**任何新的OpenFAST/TurbSim/Abaqus/fe-safe求解、没有审核或派发本机CAE，未动main或冻结母本。非CAE下一科学环节是从同一BTS恢复完整独立气动/塔顶输入并证明自由体映射后方可用于材料应力；源缺失时应明确HOLD，而非以TwrBs替代。
+
 ## 2026-11-15 09:29｜S06 OpenFAST原风源与外力可用性纠错 START（仅非CAE源）
 
 - 执行者ChatGPT，read_base_sha=`eeca5eb3ac7c8fd02b8dce36b08af611b12ded64`；已读根/研究AGENTS、最新指挥室、白皮书v0.31.7、T080记录、T035原始AeroDyn源及36工况身份、T061统计、T062 18NTM全速率Actions恢复脚本/收据、LFS风场记录与外力HOLD。
