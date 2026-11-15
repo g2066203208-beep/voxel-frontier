@@ -1,3 +1,11 @@
+## 2026-11-15 15:46后｜T082 BF1 Stage-1真实数据包完成远端逐字节归档（非新增求解）
+
+- SOURCE：本次用户实际上传 `T082_DATA_PACKAGE_20261115.zip`，已从ZIP读取7个小文件，压缩包5.7KB/解压16093字节；原数据文件 [T082](../T082/BF1_GRAVITY_MODAL_20261115/README.md)、[36 PT平衡表](../T082/BF1_GRAVITY_MODAL_20261115/BF1_PT36_GRAVITY_BALANCE.csv)、[72条S11提取](../T082/BF1_GRAVITY_MODAL_20261115/BF1_PT36_GRAVITY_STRESS.csv)、[30阶频率](../T082/BF1_GRAVITY_MODAL_20261115/BF1_MODAL_30_FREQUENCIES.csv)、[JSON报告](../T082/BF1_GRAVITY_MODAL_20261115/BF1_STAGE1_GRAVITY_MODAL_REPORT.json)、[日志摘要](../T082/BF1_GRAVITY_MODAL_20261115/BF1_RUN_LOG_SUMMARY.txt)、[原始SHA256清单](../T082/BF1_GRAVITY_MODAL_20261115/SHA256SUMS.txt)全部经GitHub Contents API落盘；**远端7个Git blob SHA与用户ZIP内7文件本地Git blob SHA逐一一致**，不是用文字模拟文件。
+- RUN：`BF1_GRAVITY_DATACHECK`与`BF1_MODAL_30`是Codex已完成的本机原生计算，本次没有重跑；前者Data Check 8个输入警告、0错误，Gravity 10增量/0回退/30平衡迭代、788秒，后者Data Check 9个输入警告、0错误，30阶提取完成、879秒，特征值宽范围提示但无负特征值警告。REPORT与36行PT表、30行模态表已核对；PT初始36×140mm²×1280MPa=6.4512MN，Gravity后总力6.358925978MN，平均S11约1.261691662GPa；底支承RFy=32,144,630.890625N、PT下锚RFy=-6,337,787.84375N，合计对重力25,806,843.27N的残差=-0.223125N。72条S11原始记录为36个元素各重复两条相同值，独立平均时不得作为72根PT计数。30阶f1/f2/f30=0.13525/0.13580/23.518Hz。各源文件哈希与用户ZIP SHA256SUMS一致。
+- EVIDENCE STATE：**T082 BF1 Stage-1 原生JOB已完成，上传提取物SOURCE-BYTES VERIFIED**；本助手未访问Windows本地原始CAE/ODB/INP/DAT/MSG/STA，不宣称二进制独立复验或新增物理验算。SHA256清单仍标识本机CAE/ODB源文件，远端无大型原生件；不要求因远端证据不足重算已完成阶段。
+- WIND HOLD：600秒 `U11p4_NTM_S01`外施风载归属、坐标/作用点/单位/RNA重力惯性分账尚未闭合。已存历史BTS/OUTB及18NTM六分量**塔底响应**不能直接施加为纯外风力，历史TwrAero=False；后续600s材料动态应力、分材料Miner、同态W/E/WE仍未做。正式12阶段0/12、DLC1.2 0/126保持原门禁口径，不否定T082实际完成。
+- DELIVER：已更新唯一工作室 `src/engineering.ts` 研究总览的T082结果块；白皮书升级v0.31.12→v0.31.13；PR#42保持Draft，不合并main，不覆盖冻结父本。本轮仅上传用户已提供的文件、计算来源级一致性与更新网站和治理，不接触本机Abaqus。
+
 ## 2026-11-15 15时｜S06 36/36历史AeroDyn塔身气动开关源级闭合（非物理RUN）
 
 - SOURCE：直接读取T035原始36行AERODYN_CASE_HASHES.tsv（Git blob 52a7c0ef290d6195aee625fec4ca27e16de952c5），按SHA256分组得35行7EBAA0BD…（9774字节）及1行E258D2E8…（10088字节，U11p4_NTM_S01）。直接读取两份canonical AeroDyn源文件（Git blobs df9ce12316a9219b5fd62a6e630de9fb46634b87 / 366ae27d65d1feca6da0ba9eb186348913158fcb）：两者TwrAero=False、NTwOuts=0、TwrPotent=0、TwrShadow=0。因此在T035执行身份映射成立的前提下，**36/36历史工况均关闭塔身分布气动力**，不再仅是单例结论。源级输入判定PASS；逐运行执行文件身份/控制器/自由体外载归属仍HOLD。
