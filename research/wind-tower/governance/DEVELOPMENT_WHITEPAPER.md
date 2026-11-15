@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.31.19**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.31.20**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -28,6 +28,12 @@
 - 下一独立非Abaqus动作：核对/恢复可证明同模型、运行状态、时间网格和起点的W侧真实时程；没有可追溯来源时记录HOLD并转向S05/S10可独立研究，不造数据。
 
 ## 4. 版本变更记录（只记录真实持久化事务）
+
+### 2026-11-15｜v0.31.20 PATCH — T085何泽瑜论文全文源级复核：30处接缝与RNA研究决策冻结
+
+- **唯一新版指令**：[T085 接缝接触定版与Codex执行](../audit/T085_HE2024_JOINT_CONTACT_FINAL_DECISION_AND_CODEX_DIRECTIVE_20261115.md)。逐页检索He2024共91个文本分页段、重点查PDF33/36/44–46/78及用户2026-11-15新`C:\\MC\\new.cae`源快照6206行。He明确PT压紧、钢段焊接、法兰及OpenSees共节点；**未明确给出Abaqus接缝Hard Contact、μ=0.5、Finite Sliding或摩擦律**，不能把我们提出的接触当作何原生配置，也不能以He集中RNA强行简化原BF1。
+- 科学定版：冻结母本R2 RNA、几何、配筋、C70/C65/S345、CDP、36PT、风震接口及T082成功结果；旧T083/T084 V3失败作为历史诊断件保留，不再作为正式改模的控制指令；只在新独立`BF1_JOINT_CONTACT_V1`中把30处混凝土环缝建成受压可开合的面接触+摩擦，`μ=0.5`为未经He证实的基准假设，设置μ=0/0.3/0.5/0.7用于隔离与敏感性而非材料实测；要求先局部小模型诊断再全塔计算，验收必须有新的Gravity/PT/Modal证据。
+- SOURCE=原He论文文本及用户已贴BF1源快照；OFFICIAL=Dassault Abaqus 2026接触文档；REF无新增PDF；RUN=源级文本审阅与研究分支任务落盘；FIG/TAB无新增论文成图；**本轮没有本机Abaqus新运行或物理PASS**。PR#42保持Draft，main不动。
 
 ### 2026-11-15｜v0.31.19 PATCH — S11整风速箱留出局部低估拒绝门槛与RMSE冲突
 
