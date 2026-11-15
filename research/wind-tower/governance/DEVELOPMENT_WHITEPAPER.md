@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.31.17**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.31.18**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -28,6 +28,12 @@
 - 下一独立非Abaqus动作：核对/恢复可证明同模型、运行状态、时间网格和起点的W侧真实时程；没有可追溯来源时记录HOLD并转向S05/S10可独立研究，不造数据。
 
 ## 4. 版本变更记录（只记录真实持久化事务）
+
+### 2026-11-15｜v0.31.18 PATCH — T084本机Codex V3 Gravity首增量不收敛定向修复任务
+
+- **任务实际交付**：[T084 V3 Gravity首增量修复（Codex本机任务书）](../experiments/T084/T084_V3_GRAVITY_FIRST_INCREMENT_RECOVERY_CODEX_TASK_20261115.md)。用户报告本机`C:\\mc\\BF1_HE2024_ALIGNMENT_V3_20261115` DataCheck PASS、Gravity首增量接触/材料不收敛、Modal暂停、36 PT未平衡、风HOLD；本地ZIP约400MB，SHA256=`BFE94849548CB02AF0AE77572C5472E8373CBB3EC1875DA7A96EB72D16D6A3CB`。这只是用户转交，**未由本助手读取本机实际MSG/DAT/STA/INP、不得断言唯一根因**。
+- **直接执行范围**：Codex在C盘已有目录原地诊断；按真实日志区分接缝面法向/初始开闭/重复SPRING2与Tie、PT加载和锚固、CDP、网格和RNA；必要时独立单因子诊断；仅在`T084_GRAVITY_FIX`独立副本中实际修正再做DataCheck→Gravity，成功后36PT平衡/竖向反力→30模态→可行时4m推覆；严格保留接触物理和He原文来源，不能靠任意稳定化/把CDP弹性化假装验收，不上传400MB。
+- **交付和限制**：任务书在研究分支真实落盘；本轮未实际在用户Windows上运行Abaqus，也未获取失败日志、不能宣称Gravity已修复。已有T082 BF1 Gravity/Modal成功保持原状态；当前V3仍Gravity FAIL，Modal/PT未完、外载HOLD。main与PR#42不合并。
 
 ### 2026-11-15｜v0.31.17 PATCH — S11高风速箱留出时局部非保守外推反例
 
