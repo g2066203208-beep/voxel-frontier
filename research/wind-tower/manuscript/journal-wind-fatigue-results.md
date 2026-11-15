@@ -608,6 +608,21 @@ The last column is computed **case by case** as `DEL4(TwHt9)/DEL4(TwrBs)`, not a
 
 **SOURCE:** `experiments/T062/S06_18NTM_ORIGINAL_9GAGE_LOAD_DEL_20261031.csv`, Git blob `4f77ec9a2027c593ea22cac5abae98de32d407f5`, 1,080 rows, 18 distinct case IDs and 60 channels. **RUN:** independent JavaScript/V8 CSV parsing, two component-specific base rankings, nine gauge rankings each, exhaustive 153-pair inversion counting and per-case height/base ratios; this is a deterministic source-table computation, not an original OUTB re-decode or native Node CLI run. **TAB:** above two-row result; **FIG:** none; **REF/STANDARD/OFFICIAL:** no newly inspected document or authorized clause. **Uncertainty and error budget:** rank counts are exact for the rounded archived CSV values (no ties observed); uncertainty from original OUTB decoding, channel definition, 600 s window, unrepresented wind bins and dependent seeds is not bounded by this test. No material Miner, annual-life or W/E/WE claim follows.
 
+### 4.33 Cross-axis rank non-equivalence despite height-wise rank invariance
+
+The preceding height-wise finding (Section 4.32) must not be interpreted as invariance across load components. A distinct, falsifiable question is whether the 18 historical NTM cases have the same fourth-power load-DEL ranking for base bending about the two local axes. From the archived 1,080-row, 18-case × 60-channel source table, the base `TwrBsMxt` and `TwrBsMyt` DEL4 values were paired by exact case ID (kN m, the same 600 s window and reference-cycle convention). Of the 153 unordered case pairs, **126 are concordant, 27 discordant and zero tied**, giving Kendall's tau-a = (126−27)/153 = **0.647058824**. The common largest case is `U19p202140_NTM_S04`, but the second-largest Mx case is `U19p202140_NTM_S02`, whereas the second-largest My case is `U11p4_NTM_S04`. Thus the weaker proposition “both axes share the same top case” holds, while the stronger proposition “their complete rankings coincide” is **falsified by 27 explicit pairs**. This does not contradict Section 4.32: rankings can be invariant *with height within an axis* while differing *between axes*.
+
+| Historical base DEL4 comparison | Value |
+|---|---:|
+| Paired NTM realizations | 18 |
+| Unordered pairs | 153 |
+| Concordant / discordant / tied | 126 / 27 / 0 |
+| Kendall tau-a (Mx versus My) | 0.647058824 |
+| Common highest case | U19p202140_NTM_S04 |
+| Mx second case / My second case | U19p202140_NTM_S02 / U11p4_NTM_S04 |
+
+The result concerns **load** DEL4 from only three historical wind bins and six seeds each; the 153 comparisons are dependent pairwise functions of the same 18 cases, not independent experiments or a significance test. It neither resolves component coordinate sign/ownership nor establishes local material stress, fatigue damage or design-life control. It does demonstrate that a screening rule transferring a complete priority ordering from Mx to My is unsafe even within the observed archive; a future independent data set with zero cross-axis inversions would falsify its generalization beyond this archive. The reproducible source-locked program is [`s12_ntm18_cross_axis_rank_20261115.cjs`](../experiments/T062/s12_ntm18_cross_axis_rank_20261115.cjs); its source CSV has inherited SHA256 `95de6578cf379d1b2e1d99a68c26954a68e93cc8bfc4bdcd63dd324ae2999a0f` (Git blob `4f77ec9a2027c593ea22cac5abae98de32d407f5`). The independent V8 calculation on the fetched source rows passed the 153-pair count and ordering checks; the newly committed Node CLI itself has **not** been executed in a native Node environment, so CLI PASS remains pending. No new original OUTB decoding or structural simulation was performed.
+
 ## 5. Conclusions
 
 In 36 archived 600 s OpenFAST screening cases for a 158 m concrete–steel hybrid tower, correcting a historical rainflow closure error changes 102/630 My and 12/630 Mx pairwise load-DEL rankings and the My controlling realization. A separate reconciliation of 18 NTM cases shows that the 100,000- versus 600-reference-cycle DEL convention changes amplitudes by the expected factor 3.593041; this is a definition change, not a new load response. Agreement of scalar DEL and cycle count does not establish equality of cycle multisets.
