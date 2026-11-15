@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.31.12**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.31.13**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -28,6 +28,13 @@
 - 下一独立非Abaqus动作：核对/恢复可证明同模型、运行状态、时间网格和起点的W侧真实时程；没有可追溯来源时记录HOLD并转向S05/S10可独立研究，不造数据。
 
 ## 4. 版本变更记录（只记录真实持久化事务）
+
+### 2026-11-15｜v0.31.13 PATCH — T082用户原始提取包远端字节归档
+
+- **实物**：现有T082目录新增7个用户实际上传提取文件（36处PT平衡CSV、72条原始S11、30阶模态CSV、JSON报告、求解日志摘要、README、SHA256清单）；逐件Git blob SHA与本次ZIP原字节完全相同，未伪造原始CAE/ODB。
+- **运行状态**：Codex已完成BF1第一阶段DataCheck、Gravity与30阶Modal（Gravity 10增量/0回退/30迭代；36 PT 平衡合力6.358925978MN；RFy合计残差-0.223125N；f1/f2/f30=0.13525/0.13580/23.518Hz）。本助手核验提取包一致性，不重复原生RUN、不冒称二进制ODB审计。保持**STAGE1_COMPLETE / WIND_HOLD**，不能误把尚未远端二进制复验写成“第一阶段未完成”。
+- **范围**：仅更新本研究分支的T082原始小文件、[T080事实过程](../experiments/T080/PROCESS_LOG.md)、唯一工作室研究总览；历史BTS/OUTB和塔底六分量响应已在仓库，尚不能当纯外施风载；600s风动力、材料动态应力/Miner、W/E/WE未完成；正式12阶段0/12及规划DLC1.2 0/126门禁不变；PR#42 Draft、main及冻结母本不变。
+- **源**：[T082提取物目录说明](../experiments/T082/BF1_GRAVITY_MODAL_20261115/README.md) / [原始SHA256](../experiments/T082/BF1_GRAVITY_MODAL_20261115/SHA256SUMS.txt) / [JSON运行报告](../experiments/T082/BF1_GRAVITY_MODAL_20261115/BF1_STAGE1_GRAVITY_MODAL_REPORT.json)。无新增参考文献或标准原页，无新结构求解。
 
 | 2026-11-15 14时 | **v0.31.10 PATCH** | S12期刊真实源模型适用域纠错：T035锁定U11p4_NTM_S01 TwrAero=False，新增反力非唯一逆映射三点构造反例及逐case反证门禁；科研commit [195e192c](https://github.com/g2066203208-beep/voxel-frontier/commit/195e192cc19029fa97520b4b7698823384c7f13d)。 | 仅原件字段与数学适用域纠错；原始全速归档SHA继承、未重解码/新物理RUN；12阶段0/12，DLC1.2 0/126，外部气动/材料疲劳HOLD。 | [期刊源级限定段落](../manuscript/journal-wind-fatigue-results.md)、[T080过程](../experiments/T080/PROCESS_LOG.md) |
 
