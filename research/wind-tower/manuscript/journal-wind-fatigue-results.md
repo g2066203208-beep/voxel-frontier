@@ -623,6 +623,28 @@ The preceding height-wise finding (Section 4.32) must not be interpreted as inva
 
 The result concerns **load** DEL4 from only three historical wind bins and six seeds each; the 153 comparisons are dependent pairwise functions of the same 18 cases, not independent experiments or a significance test. It neither resolves component coordinate sign/ownership nor establishes local material stress, fatigue damage or design-life control. It does demonstrate that a screening rule transferring a complete priority ordering from Mx to My is unsafe even within the observed archive; a future independent data set with zero cross-axis inversions would falsify its generalization beyond this archive. The reproducible source-locked program is [`s12_ntm18_cross_axis_rank_20261115.cjs`](../experiments/T062/s12_ntm18_cross_axis_rank_20261115.cjs); its source CSV has inherited SHA256 `95de6578cf379d1b2e1d99a68c26954a68e93cc8bfc4bdcd63dd324ae2999a0f` (Git blob `4f77ec9a2027c593ea22cac5abae98de32d407f5`). The independent V8 calculation on the fetched source rows passed the 153-pair count and ordering checks; the newly committed Node CLI itself has **not** been executed in a native Node environment, so CLI PASS remains pending. No new original OUTB decoding or structural simulation was performed.
 
+### 4.34 Conditional quantization certificate for the observed NTM control case
+
+A different question from rank agreement is whether **finite output rounding alone** could reverse the leading base-moment load-DEL case. The 18-case source table reports, for each channel, a quantization half-step δ (kN m), rainflow equivalent cycle count C, and fourth-power DEL evaluated at Nref=600. Under the explicitly testable **fixed rainflow cycle-pairing and fixed counts** assumption, perturbing each original time sample by at most δ perturbs each paired range by at most 2δ. Minkowski's inequality for the weighted fourth-power norm therefore gives a case-wise conditional absolute DEL error bound
+
+\[
+B_i=2\delta_i\left(\frac{C_i}{600}\right)^{1/4},\qquad
+|DEL_{4,i}^{perturbed}-DEL_{4,i}|\le B_i.
+\]
+
+This is a *conditional numerical certificate*, **not** a guarantee that the rainflow stack preserves its turning points or cycle pairing after rounding. The source-table half-step must itself correctly describe the underlying stored output precision. A full unconditional certificate would require the original 12,001-sample traces and a rainflow re-extraction across admissible quantization perturbations.
+
+Direct evaluation of all 18 base cases for each bending axis gives:
+
+| Archived NTM base channel (kN m) | Leader DEL4 | Leader B | Largest competing upper DEL4+B | Leader lower minus largest competitor upper |
+|---|---:|---:|---:|---:|
+| TwrBsMxt | 26,655.028831 | 1.235304 | 25,734.043876 | **919.749652** |
+| TwrBsMyt | 67,188.111211 | 3.582458 | 65,211.654062 | **1,972.874690** |
+
+Both conditional gaps are strictly positive; the competing cases maximizing the upper bounds are `U19p202140_NTM_S02` for Mx and `U11p4_NTM_S04` for My. Hence, **if cycle identities/counts remain unchanged**, independently perturbing each of the archived 18 cases within its reported half-step cannot displace `U19p202140_NTM_S04` as the base DEL4 leader in either component. The result does not certify the full cross-axis order (Section 4.33), which can be sensitive at smaller pairwise margins. It does not address rainflow topology changes, source-model error, finite-seed uncertainty, missing wind bins, local stress, or material Miner damage.
+
+SOURCE: `experiments/T062/S06_18NTM_ORIGINAL_9GAGE_LOAD_DEL_20261031.csv`, 1,080 rows, Git blob `4f77ec9a2027c593ea22cac5abae98de32d407f5`, inherited SHA256 `95de6578cf379d1b2e1d99a68c26954a68e93cc8bfc4bdcd63dd324ae2999a0f` (not independently rehashed in this pass). RUN: direct V8 source-row evaluation of all 18 cases per axis and comparison of leader lower against every other upper. REF/STANDARD/OFFICIAL: no newly reviewed primary pages or authorized design clauses. The numerical pass is an archived-source conditional check, not a fresh OUTB or physical validation.
+
 ## 5. Conclusions
 
 In 36 archived 600 s OpenFAST screening cases for a 158 m concrete–steel hybrid tower, correcting a historical rainflow closure error changes 102/630 My and 12/630 Mx pairwise load-DEL rankings and the My controlling realization. A separate reconciliation of 18 NTM cases shows that the 100,000- versus 600-reference-cycle DEL convention changes amplitudes by the expected factor 3.593041; this is a definition change, not a new load response. Agreement of scalar DEL and cycle count does not establish equality of cycle multisets.
