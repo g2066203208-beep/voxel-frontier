@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.31.13**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.31.14**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -28,6 +28,13 @@
 - 下一独立非Abaqus动作：核对/恢复可证明同模型、运行状态、时间网格和起点的W侧真实时程；没有可追溯来源时记录HOLD并转向S05/S10可独立研究，不造数据。
 
 ## 4. 版本变更记录（只记录真实持久化事务）
+
+### 2026-11-15｜v0.31.14 PATCH — T082与历史BF1/BF8重复性及论文模型差异正式归档
+
+- **新增真实研究文档**：[T082与历史BF1/BF8对照、遗留问题及禁止重复清单](../experiments/T082/BF1_GRAVITY_MODAL_20261115/COMPARISON_WITH_HISTORICAL_20261115.md)。历史2026-11-11修复工程已有Gravity/30阶Modal，f1/f2/f3/f4与本次T082一致，历史6.359523MN与本次6.358925978MN相差约597.022N（0.0094%）；本次增量为独立Job、36根PT和30阶频率原表，**不冒充新风动力/疲劳/地震结果**。
+- **分支差异**：T082为BF1 36×140mm²，初始6.4512MN，Gravity后6.358925978MN，线性SPRING2；T057/T070/T078 BF8为288股初始51.6096MN、T078长期设计Pe≈39.753559MN、接缝接触/摩擦。不能拼接两套应力、材料、接缝或荷载阶段数据。
+- **P0/P1问题完整列出**：正式目标模型的PT/钢筋/接缝身份、真实外载归属、BF1动态材料应力/正式风速运行覆盖/Miner、长期PT阶段、质量嵌入重复口径、振型参与质量、E/WE与高保真优化；另外原生CAE/ODB未在线备份。T082 Stage-1保持COMPLETE，风动力HOLD，正式研究12阶段0/12、规划DLC1.2 0/126管理门禁未擅晋级。
+- **变更范围**：只添加分析对照文档，并在T080、唯一网站研究总览及本白皮书和指挥室同步索引；原始7个提取文件原字节不改，原件CAE/ODB保留本机，未运行Abaqus/新OpenFAST、未动main/冻结母本/PR合并。
 
 ### 2026-11-15｜v0.31.13 PATCH — T082用户原始提取包远端字节归档
 
