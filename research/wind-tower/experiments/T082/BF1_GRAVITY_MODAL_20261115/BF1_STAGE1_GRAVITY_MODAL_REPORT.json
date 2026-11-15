@@ -1,0 +1,82 @@
+{
+  "status": "STAGE1_COMPLETE_WIND_HOLD",
+  "source": {
+    "cae": "C:\\MC\\new.cae",
+    "model": "DTU158_HybridTower_Global_RNA_OFFICIAL_RP",
+    "original_modified": false,
+    "isolated_directory": "outputs/mc/bf1_gravity_run",
+    "identity_checks": {
+      "pt_instance": "PT_36x15p2-1",
+      "pt_element_count": 36,
+      "pt_section_area_each_m2": 0.00014,
+      "initial_pt_stress_pa": 1280000000.0,
+      "gravity_step": "Static, nlgeom=YES, 1.0 step time",
+      "tower_base_fixed": true,
+      "pt_bottom_fixed": true,
+      "modal_definition_from_source": "Lanczos, 30 modes, mass normalization, vectors=18"
+    }
+  },
+  "gravity_job": {
+    "job_name": "BF1_GRAVITY_DATACHECK",
+    "datacheck": "PASS, ANALYSIS DATACHECK COMPLETE, 8 input warnings, 0 errors",
+    "analysis": "COMPLETED SUCCESSFULLY",
+    "wallclock_s": 788,
+    "increments": 10,
+    "cutbacks": 0,
+    "equilibrium_iterations": 30,
+    "analysis_warnings": 0,
+    "errors": 0,
+    "odb": "bf1_gravity_run/BF1_GRAVITY_DATACHECK.odb",
+    "odb_sha256": "FB74A23E27A9C224129FC6794539AE61F7ABBF2FF357ECFEE7E3D60D1215BE60",
+    "files": ["BF1_GRAVITY_DATACHECK.inp", "BF1_GRAVITY_DATACHECK.dat", "BF1_GRAVITY_DATACHECK.msg", "BF1_GRAVITY_DATACHECK.sta", "BF1_GRAVITY_DATACHECK.odb"]
+  },
+  "equilibrium": {
+    "model_total_mass_kg": 2630667.0,
+    "model_cg_global_m": [-7.4677205e-17, 86.42919, -0.1596649],
+    "rna_rigid_mass_kg": 673998.5,
+    "rna_cg_global_m": [-1.2954256e-16, 160.2978, -0.62318401],
+    "rna_inertia_at_cg_kg_m2": [108024600.0, 107994040.0, 162482390.0],
+    "gravity_load_n": 25806843.27,
+    "tower_base_rf_xyz_n": [-0.0068403265, 32144630.890625, -1636.84668],
+    "tower_base_rf_moment_about_origin_n_m": [4841295.15577, -0.03358066, 0.0],
+    "pt_bottom_support_rf_xyz_n": [0.0000559084, -6337787.84375, 1636.83345],
+    "pt_bottom_rf_moment_about_origin_n_m": [8339.720387, 0.0000003014, 0.0],
+    "vertical_reaction_sum_n": 25806843.046875,
+    "vertical_balance_residual_n": -0.223125
+  },
+  "pt_balance": {
+    "odb_step_frame": "Gravity, frame 10, step time 1.0",
+    "element_count": 36,
+    "integration_point_stress_records": 72,
+    "sigma11_min_pa": 1259788416.0,
+    "sigma11_max_pa": 1263594880.0,
+    "sigma11_mean_pa": 1261691662.2222223,
+    "nominal_initial_total_force_n": 6451200.0,
+    "post_gravity_total_force_from_element_mean_n": 6358925.9776,
+    "force_loss_from_nominal_n": 92274.0224,
+    "csv": "bf1_gravity_run/BF1_PT36_GRAVITY_BALANCE.csv"
+  },
+  "modal_job": {
+    "job_name": "BF1_MODAL_30",
+    "datacheck": "PASS, ANALYSIS DATACHECK COMPLETE, 9 input warnings, 0 errors",
+    "analysis": "COMPLETED SUCCESSFULLY",
+    "wallclock_s": 879,
+    "gravity_preceding_state": "Recomputed and converged in 10 increments, 0 cutbacks",
+    "requested_modes": 30,
+    "extracted_modes": 30,
+    "negative_eigenvalue_warnings": 0,
+    "analysis_warning": "One benign warning: more eigenvalues lie in the broad requested range than the 30 requested; the solver found all requested modes (30 written to ODB).",
+    "frequency_mode1_hz": 0.13525,
+    "frequency_mode2_hz": 0.1358,
+    "frequency_mode30_hz": 23.518,
+    "odb": "bf1_gravity_run/BF1_MODAL_30.odb",
+    "odb_sha256": "E9E805BD451E54E6B770031527FED41614816625448F26CE85AE2B8F4301730E",
+    "isolated_cae_sha256": "05817D488E4C311975123EF2A8E09497F1348350B723F050DDD211246B08DF5C",
+    "frequency_csv": "bf1_gravity_run/BF1_MODAL_30_FREQUENCIES.csv",
+    "files": ["BF1_MODAL_30.inp", "BF1_MODAL_30.dat", "BF1_MODAL_30.msg", "BF1_MODAL_30.odb"]
+  },
+  "wind_stage": {
+    "status": "HOLD",
+    "reason": "Historical TwrBs is structural response, not external force; source AeroDyn has TwrAero=False and NTwOuts=0. No validated independent tower/RNA external-load mapping has been applied."
+  }
+}
