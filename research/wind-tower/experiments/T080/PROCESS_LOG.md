@@ -1,3 +1,9 @@
+## 2026-11-15 08时｜S12原始18NTM全序高度一致性源级增量（非CAE）
+
+- READ：根/研究AGENTS、指挥室READ-BEFORE-WRITE与最新交接、白皮书v0.31.4、六章MASTER/STATUS、12阶段计划、T080及期刊§4.31；开工PR#42 Open/Draft、HEAD `c8e763baf2b8e6f93d6d723cd413c1bbff58b886`。SOURCE=`T062/S06_18NTM_ORIGINAL_9GAGE_LOAD_DEL_20261031.csv`，1,080行，Git blob `4f77ec9a2027c593ea22cac5abae98de32d407f5`。RUN=独立V8解析原CSV，对18个工况在塔底和9高度站Mx/My逐通道排序；每分量每高度153对比较，18个高度×分量组合共2754对，**零逆序**，18/18 Spearman rho=1；TwHt9/base逐case DEL4比Mx=0.9715457292–0.9778784424，My=0.9742797618–0.9793985244。科研commit [f226d626](https://github.com/g2066203208-beep/voxel-frontier/commit/f226d62688a7ff70b1bc2960c2a80de97e890e4b)，新正文[§4.32](../../manuscript/journal-wind-fatigue-results.md)。
+- 这是在§4.31已知20/20最大值一致之外新增的**完整18案例排序恒等性**，不是重复最大值核验；依赖同一批18个相关运行，2754对不独立，不能作p值、时间历程比例或疲劳高度结论。TAB=§4.32两行；FIG无；REF/STANDARD/OFFICIAL无新增核读。误差：归档CSV精度内无并列，OUTB原始字节未重解码，输入字节SHA256未独立取得；仅SOURCE级结果PASS，正式12阶段晋级0/12、DLC1.2 0/126。最大非CAE HOLD仍是正式风速箱/真实机组状态/局部材料应力及同态W/E/WE。下一唯一动作：以原始雨流循环账本开展未做过的独立误差或机制检验，若原件不可访问立即换方向；不重复本轮排序。
+- 不执行、准备或派发Abaqus/CAE，不触碰冻结母本、main、不合并PR或启动昂贵RUN。
+
 ## 2026-11-15 07时｜S12真实18NTM沿高度控制工况稳定性（非CAE）
 
 - READ：根/研究AGENTS、指挥室、白皮书v0.31.3、MASTER/STATUS、T080及期刊正文；开工PR#42 Open/Draft，HEAD `861a0fab1e018f777e1274d09eba2b8998cc6fcc`。SOURCE=原始18NTM×60通道=1080行CSV，Git blob `4f77ec9a2027c593ea22cac5abae98de32d407f5`；RUN=连接器V8逐通道降序独立排序，20/20通道最大值均为U19p202140_NTM_S04；Mx第二名均U19p202140_NTM_S02、领先3.560559–3.583709%；My第二名均U11p4_NTM_S04、领先2.705722–3.036864%。原始时程未重算、无原生Node CLI。TAB=期刊§4.31新两行压缩表；FIG无新增；REF/STANDARD/OFFICIAL无新增原文或条款。科研commit `ae7d11474d29e241ec29b5cefac19383ae851889`，期刊blob `f6b348cbaa163419b525820082ed3fd01b7096fb`。
