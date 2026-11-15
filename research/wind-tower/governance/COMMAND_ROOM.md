@@ -1,3 +1,9 @@
+## 2026-11-15 20:07｜S11 ETM跨风速箱局部非保守反例 END（白皮书v0.31.17）
+
+- READ：基线HEAD `6a4dbf9bfbf2dd2f118004570ec71e533c6fe388`，PR#42 Open/Draft；研究AGENTS、指挥室、白皮书、MASTER/STATUS、T080和S11既有程序/真实源CSV。只执行非Abaqus源表数值分析。
+- **新增科学证据**：直接读取真实1984行4ETM×31段×16方位gross-elastic DEL4源表（blob `b5effa2a493cec0a9af8a10a3b93df0ff997d2d0`）；低风速两点线性外推19.202140m/s并留出两个高风seed，62预测中**14处局部低估**、48处高估，mean bias +0.562295016MPa、RMSE 0.813992907MPa、最差CSEG_15/S06 −0.478019740MPa。**平均高估不等于逐段保守**，不把相关62单元当独立失效概率。新增[期刊正文及表](../manuscript/journal-wind-fatigue-results.md)（科研commit [c16c671d](https://github.com/g2066203208-beep/voxel-frontier/commit/c16c671de1daadf00e23a7d9e9d2e1bcad8c5682)），[T080记录](../experiments/T080/PROCESS_LOG.md)，白皮书v0.31.16→v0.31.17。
+- SOURCE SHA256 `16c9864ef7a344e5b97338c31ce26de6adb86c0f0f64942ef894fe9983926b2b`沿用历史未本轮重哈希；RUN仅连接器JS源级复算，TAB新增1、FIG无、REF/STANDARD无新增原件；源表算术PASS、物理泛化HOLD。12阶段晋级0/12，DLC1.2 0/126。最大非Abaqus HOLD=真实独立外部风载及惯性归属、正式风速箱覆盖、材料局部应力。下一唯一动作：以同一真实矩阵比较局部最差误差的拒绝门槛，若已被覆盖则切换论文正式章节装配，不重复总体RMSE。冻结母本、main、PR合并、昂贵RUN与禁区均未触碰。
+
 ## 2026-11-15｜T083 V3直接改模派工完成交付 END（白皮书v0.31.16）
 
 - **用户新指令纠错**：此前由本助手编制的V2“禁止改模型”与用户要把差异实际改对的目标矛盾，现以用户明确指令为准，**V2作废；V3要求本机Codex立即在独立副本实际修改**。ChatGPT负责原文差异核对/目标值与工程假设，Codex仅负责CAE原生操作/验算，不再让Codex重复文献分析。
