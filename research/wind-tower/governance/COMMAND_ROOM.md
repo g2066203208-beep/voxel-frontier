@@ -1,3 +1,9 @@
+## 2026-11-15 08时｜S12真实18NTM全序高度一致性 END（白皮书v0.31.5）
+
+- 开工PR#42 Open/Draft，HEAD `c8e763baf2b8e6f93d6d723cd413c1bbff58b886`；依序核读研究AGENTS、指挥室、白皮书、MASTER/STATUS、12阶段计划、T080及期刊。继承§4.31已完成20/20控制工况一致性，不重复其结果。
+- 新增[期刊§4.32](../manuscript/journal-wind-fatigue-results.md)：对真实18NTM×60通道CSV 1080行（blob `4f77ec9a2027c593ea22cac5abae98de32d407f5`）计算Mx/My各9高度站相对塔底的**完整18工况排序**；每站153对，18站合计2754对零逆序，18个Spearman rho=1。最高测站/base逐case DEL4比Mx=0.971546–0.977878，My=0.974280–0.979399。[科研commit f226d626](https://github.com/g2066203208-beep/voxel-frontier/commit/f226d62688a7ff70b1bc2960c2a80de97e890e4b)；T080日志及白皮书v0.31.4→v0.31.5已更新。
+- 结果仅归档CSV内的排序恒等性，2754对来自18个相关工况，不是独立物理样本；OUTB未重解码，材料局部应力、正式DLC1.2、机组状态和同态WE仍HOLD。12阶段本轮晋级0/12、DLC1.2 0/126。下一唯一实质动作：改查未完成的原始雨流循环误差/机制问题，不再刷高度排序。未触碰Abaqus/CAE、冻结母本、main、昂贵RUN或PR合并。
+
 ## 2026-11-15 07时｜S12历史18NTM高度站点控制排序科研增量 END（v0.31.4）
 
 - 开工PR#42 Open/Draft，HEAD `861a0fab1e018f777e1274d09eba2b8998cc6fcc`；直接复算原18NTM×60通道CSV（1080行，Git blob `4f77ec9a2027c593ea22cac5abae98de32d407f5`）。基底+9高度站的Mx/My共20通道，最高DEL4均为U19p202140_NTM_S04；Mx领先第二名3.561–3.584%，My领先2.706–3.037%。[期刊§4.31](../manuscript/journal-wind-fatigue-results.md)新增源级数表与反证条件，[科研commit ae7d1147](https://github.com/g2066203208-beep/voxel-frontier/commit/ae7d11474d29e241ec29b5cefac19383ae851889)。同一18实例的相关输出站点不能当独立重复，缺箱/材料局部应力/同态WE仍HOLD。12阶段晋级0/12，DLC1.2 0/126；下次转期刊核心数值的其他原始来源，避免重复此排序。不触碰Abaqus/CAE、冻结母本、main、昂贵RUN或PR合并。
