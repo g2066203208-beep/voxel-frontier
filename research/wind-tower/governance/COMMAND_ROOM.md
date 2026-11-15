@@ -1,3 +1,9 @@
+## 2026-11-15 20时后｜T084 V3 Gravity首增量失败本机修复派工 START
+
+- 用户直接提供本机事实：`C:\\mc\\BF1_HE2024_ALIGNMENT_V3_20261115`、同名`_PACKAGE.zip`约400MB，ZIP SHA256=`BFE94849548CB02AF0AE77572C5472E8373CBB3EC1875DA7A96EB72D16D6A3CB`；本地`V3_STAGE_STATUS.md`/`BF1_FATIGUE_RUN_REPORT.json`：DataCheck PASS、Gravity首增量接触/材料不收敛、Modal暂停、36 PT未平衡、风HOLD、原BF1未改。**尚未读取本机DAT/MSG/STA/INP，不判断单一物理根因**。
+- 执行者：本助手仅组织用户已明确要求的本机Codex精确修复任务（无需用户传400MB）；**不得谎称能够向本机Codex对话自动推送或已执行修复**。读取最新PR#42 HEAD `58f509e763fac1fe1cdc33f8913ed36bd9452a81`、根AGENTS/研究AGENTS、指挥室、T083 V3原工作书、白皮书v0.31.17。继承T082 BF1已完成Gravity/Modal；新V3确已DataCheck、Gravity失败不覆盖旧状态。
+- 计划仅新增T084本地Codex原生首增量故障修复任务书（精确本地目录、真实诊断最小试验、接受门槛、输出小文件，不传ZIP），同步白皮书/指挥室，保留PR#42 Draft、main、源CAE及T082证据。
+
 ## 2026-11-15 20:07｜S11 ETM跨风速箱局部非保守反例 END（白皮书v0.31.17）
 
 - READ：基线HEAD `6a4dbf9bfbf2dd2f118004570ec71e533c6fe388`，PR#42 Open/Draft；研究AGENTS、指挥室、白皮书、MASTER/STATUS、T080和S11既有程序/真实源CSV。只执行非Abaqus源表数值分析。
