@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.31.15**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.31.16**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -28,6 +28,13 @@
 - 下一独立非Abaqus动作：核对/恢复可证明同模型、运行状态、时间网格和起点的W侧真实时程；没有可追溯来源时记录HOLD并转向S05/S10可独立研究，不造数据。
 
 ## 4. 版本变更记录（只记录真实持久化事务）
+
+### 2026-11-15｜v0.31.16 PATCH — 改正“只审不改”的派工错误，正式交付BF1原文对齐修改书V3
+
+- **用户明确指令纠偏**：此前V2不让改已被否定。本轮由网页版GPT独立完成He2024原文差异和对应修正路线，**直接给本机Codex真实改模任务**，而不是让Codex重做文献分析。用户本轮授权的是**编写并传递改模任务书**，非本助手亲自访问/执行本机Abaqus。
+- **完整可执行交付**：[T083何文→BF1 V3直接修改执行任务书](../audit/T083_HE2024_BF1_ABAQUS_MODIFICATION_EXECUTION_V3_20261115.md)，已与本会话用户可下载V3的原文逐字节核对一致。含31+4段原表、具体30接缝SPRING2→可分离接触、何文式等质量集中RNA对照、几何/材料/纵筋/锚固有差异即修正、坐标轴和接口映射、4m静力推覆、12m/s 10%TI风验证、200–219s地震+6.48m/s风背景工况构建、Data Check→新Gravity→Modal的修改后副本验算及原生交付约定。
+- **明确证据边界**：He2024未给精确接缝摩擦、RNA总质量、PT股数、原始时程。V3注明接触μ=0.5来自后续T057**项目工程假设**，RNA673998.5kg为**等总质量方法对照**，表3-3“半径”作为原文歧义保留、V3工程对齐分支明确选择D=4.66等**并不冒充He字面原值**。真实风/震输入来源未闭合则动力Job HOLD，绝不造风/地震载荷或把历史塔底反力误当外风力。
+- **计算事实**：本轮只编写/上传/回读原文一致的修改指令，**尚未真正修改用户本机CAE，也没有新增Job/ODB**；T082 BF1旧Gravity/Modal保留已完成状态，须由本机Codex在新副本执行V3的结构改模及必要的新DataCheck/Gravity/Modal。原始资料、冻结T057/T070、main及Draft PR#42不改/不合并。
 
 ### 2026-11-15｜v0.31.15 PATCH — He2024原论文与现行BF1快照92项逐条还原审计
 
