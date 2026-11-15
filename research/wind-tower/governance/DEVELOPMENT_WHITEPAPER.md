@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.31.16**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.31.17**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -28,6 +28,10 @@
 - 下一独立非Abaqus动作：核对/恢复可证明同模型、运行状态、时间网格和起点的W侧真实时程；没有可追溯来源时记录HOLD并转向S05/S10可独立研究，不造数据。
 
 ## 4. 版本变更记录（只记录真实持久化事务）
+
+### 2026-11-15｜v0.31.17 PATCH — S11高风速箱留出时局部非保守外推反例
+
+- **科研实物**：[期刊新增局部外推反例及数表](../manuscript/journal-wind-fatigue-results.md)，[T080原过程记录](../experiments/T080/PROCESS_LOG.md)。SOURCE 1984行4ETM×31段×16方位CSV，Git blob `b5effa2a493cec0a9af8a10a3b93df0ff997d2d0`，历史SHA256 `16c9864ef7a344e5b97338c31ce26de6adb86c0f0f64942ef894fe9983926b2b`（本轮未重哈希）；RUN为直接源级JS统计：高风速箱62段×seed预测中14低估，最差−0.478019740MPa，虽总体偏差+0.562295016MPa；科研commit `c16c671de1daadf00e23a7d9e9d2e1bcad8c5682`。**结论**：整体正偏差不能证明局部保守；仅gross-elastic DEL4筛查，非材料寿命或物理验收。正式12阶段晋级0/12、DLC1.2 0/126，外风载/局部应力/正式覆盖HOLD。
 
 ### 2026-11-15｜v0.31.16 PATCH — 改正“只审不改”的派工错误，正式交付BF1原文对齐修改书V3
 
