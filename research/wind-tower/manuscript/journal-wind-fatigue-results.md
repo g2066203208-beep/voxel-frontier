@@ -727,3 +727,24 @@ The worst local underprediction occurred at CSEG_15 for U19p202140_ETM_S06: pred
 [8] International Electrotechnical Commission (IEC). *IEC 61400-1:2019+AMD1:2025 CSV*, Wind energy generation systems—Part 1: Design requirements. Product metadata: https://webstore.iec.ch/en/publication/111042. **Authorized clauses not read**; no compliance certification.
 
 [9] International Electrotechnical Commission (IEC). *IEC 61400-6:2020+AMD1:2025 CSV*, Wind energy generation systems—Part 6: Tower and foundation design requirements. Product metadata: https://webstore.iec.ch/en/publication/107942. **Authorized clauses not read**; no compliance certification.
+
+
+### Group-excluded wind-bin tests: RMSE versus worst local underprediction
+
+The following retrospective rejection experiment uses the archived 1,984-row four-ETM, 31-section, 16-azimuth synchronous gross-elastic DEL4 table (source Git blob `b5effa2a493cec0a9af8a10a3b93df0ff997d2d0`; historical SHA256 `16c9864ef7a344e5b97338c31ce26de6adb86c0f0f64942ef894fe9983926b2b`). The response for each case and section is the maximum of the 16 azimuthal DEL4 entries. Each complete wind-speed bin is excluded in turn, including both 19.202140 m/s seeds as one group; no section or seed from the held-out bin enters training. Three deliberately simple section-wise predictors are compared: training-case mean, nearest-speed training-bin mean, and ordinary least-squares linear wind-speed regression. The signed error is prediction minus held-out observed DEL4 (MPa); negative errors are nonconservative *for this gross-elastic screening response*, not structural limit-state violations.
+
+| Held-out wind bin (m/s) | Predictor | Held-out section–case cells | Cells underestimated | Worst signed error (MPa) | RMSE (MPa) |
+|---:|---|---:|---:|---:|---:|
+| 9.343881 | Mean | 31 | 31 | −1.018800 | 0.644517 |
+| 9.343881 | Nearest bin | 31 | 18 | −0.371677 | 0.198851 |
+| 9.343881 | Linear | 31 | 7 | −0.115870 | 0.213951 |
+| 11.400000 | Mean | 31 | 31 | −0.581601 | 0.503332 |
+| 11.400000 | Nearest bin | 31 | 13 | −0.206520 | 0.198851 |
+| 11.400000 | Linear | 31 | 24 | −0.308233 | 0.169327 |
+| 19.202140 | Mean | 62 | 0 | +0.139466 | 0.846327 |
+| 19.202140 | Nearest bin | 62 | 0 | +0.231904 | 0.796867 |
+| 19.202140 | Linear | 62 | 14 | −0.478020 | 0.813993 |
+
+This test exposes a model-selection conflict. On the 11.4 m/s holdout, linear regression minimizes RMSE (0.169327 MPa versus 0.198851 MPa for nearest-bin prediction), but its worst underprediction is larger in magnitude (0.308233 versus 0.206520 MPa), and 24 rather than 13 section cells are underestimated. On the high-speed holdout, nearest-bin prediction has both lower RMSE and no observed local underprediction, whereas the linear extrapolator underestimates 14 cells despite a positive mean error. Thus RMSE-minimization alone is not an admissible surrogate-selection criterion when the intended screening objective is avoidance of underestimated critical sections. A transparent *retrospective* rejection rule is `reject if min(prediction − observation) < −epsilon`, with epsilon chosen prospectively from a justified engineering tolerance rather than tuned to these three held-out bins. For the illustrative epsilon=0 MPa, every tested predictor is rejected in at least one complete-bin holdout. This is a failure of the strict non-underprediction gate, **not** proof that every model is physically unsafe or that zero-error extrapolation is feasible.
+
+Numerical method: source rows grouped by exact case and `CSEG_01…31`, maximum of 16 azimuthal `DEL_m4_MPa` values, complete-speed-group exclusion, direct ordinary least squares or arithmetic averages, and independent per-cell signed residuals. The 31 section cells within a case share one wind realization and are spatially correlated; the table does not supply 124 independent tests, confidence intervals for unseen seeds, or material-specific fatigue damage. The three available speed bins are too few for a credible generalization claim. All results are secondary arithmetic on existing simulated outputs, not additional OpenFAST or structural RUNs. **Status: source-derived numerical screening PASS; prospective surrogate acceptance, wind-bin coverage and physical transfer remain HOLD.**
