@@ -1,3 +1,10 @@
+## 2026-11-15 09时｜S12真实18NTM双轴排序反例（非CAE）
+
+- 开工PR#42 Open/Draft，基线HEAD `5234b2bb1bddb6a635a9ab192702e2a95a242d9a`；已读根/研究AGENTS、指挥室、白皮书v0.31.5、六章MASTER/STATUS、12阶段计划、T080及期刊§4.32。继承此前18NTM沿高度同轴完整排序恒等，不重复该结果。
+- 科学问题：同一18个真实归档NTM运行的塔底Mx与My完整DEL4工况排序是否等价？SOURCE=`T062/S06_18NTM_ORIGINAL_9GAGE_LOAD_DEL_20261031.csv`，1080行、18案例×60通道，Git blob `4f77ec9a2027c593ea22cac5abae98de32d407f5`，历史字节SHA256 `95de6578cf379d1b2e1d99a68c26954a68e93cc8bfc4bdcd63dd324ae2999a0f`。RUN=连接器V8读取实际CSV并独立枚举153个配对，126同序/27逆序/0并列，Kendall tau-a=0.6470588235294118；两个轴首名同为U19p202140_NTM_S04，但次名Mx=U19p202140_NTM_S02、My=U11p4_NTM_S04。FIG无；TAB=期刊§4.33一表；新来源锁Node程序`T062/s12_ntm18_cross_axis_rank_20261115.cjs`、期刊§4.33已提交。原生Node CLI NOT_RUN、OUTB未重解码。
+- 科学判定：历史归档表的双轴全序等价假设被27对反例拒绝；与同轴跨高度零逆序不矛盾。153配对不是153次独立物理运行，三箱/六seed不能代表正式DLC1.2、局部材料Miner、同态W/E/WE。REF/STANDARD/OFFICIAL无新增原文核读；误差边界为CSV记录精度与源表派生，非结构物理误差；12阶段本轮晋级0/12，正式DLC1.2 0/126。下一唯一动作：以真实雨流循环账本检查会改变DEL控制选择的循环闭合/量化误差，原件不可用则转独立有源S05或S10。
+- 禁区：未执行、准备、审核、派发Abaqus/CAE；未改T057/T070冻结母本、main、未合并PR、未启动昂贵RUN。
+
 ## 2026-11-15 08时｜S12原始18NTM全序高度一致性源级增量（非CAE）
 
 - READ：根/研究AGENTS、指挥室READ-BEFORE-WRITE与最新交接、白皮书v0.31.4、六章MASTER/STATUS、12阶段计划、T080及期刊§4.31；开工PR#42 Open/Draft、HEAD `c8e763baf2b8e6f93d6d723cd413c1bbff58b886`。SOURCE=`T062/S06_18NTM_ORIGINAL_9GAGE_LOAD_DEL_20261031.csv`，1,080行，Git blob `4f77ec9a2027c593ea22cac5abae98de32d407f5`。RUN=独立V8解析原CSV，对18个工况在塔底和9高度站Mx/My逐通道排序；每分量每高度153对比较，18个高度×分量组合共2754对，**零逆序**，18/18 Spearman rho=1；TwHt9/base逐case DEL4比Mx=0.9715457292–0.9778784424，My=0.9742797618–0.9793985244。科研commit [f226d626](https://github.com/g2066203208-beep/voxel-frontier/commit/f226d62688a7ff70b1bc2960c2a80de97e890e4b)，新正文[§4.32](../../manuscript/journal-wind-fatigue-results.md)。
