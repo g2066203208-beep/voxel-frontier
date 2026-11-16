@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.5**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.6**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -28,6 +28,12 @@
 - 下一独立非Abaqus动作：核对/恢复可证明同模型、运行状态、时间网格和起点的W侧真实时程；没有可追溯来源时记录HOLD并转向S05/S10可独立研究，不造数据。
 
 ## 4. 版本变更记录（只记录真实持久化事务）
+
+### 2026-11-16｜v0.32.6 PATCH — S10真实18NTM六seed异方差与18槽条件优化
+
+- SOURCE=历史72行DEL4 CSV blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`，继承SHA256 `b362bcd7c37ccc56e21035de39448b5e761ec03f371b6b2f3eb30f41b013630d`（未重新哈希）；RUN=V8源级读取18 NTM×双通道，计算三箱每箱六seed四次矩样本SD，穷举18槽、每箱≥2整数分配。Mx:6/6/6 V4.392088520→11/5/2 V2.988448272，条件减少31.9584%；My:6/6/6 V21943388.201136→10/6/2 V15803887.866431，条件减少27.9788%。
+- 实物：[可运行Node源程序](../experiments/T080/s10_empirical_seed_variance_allocation.cjs) commit [38a2999a](https://github.com/g2066203208-beep/voxel-frontier/commit/38a2999ab2eef9f7839dfda79aaf13ed926cbf04)；[期刊§4.30六行真实数表及两行整数分配表](../manuscript/journal-wind-fatigue-results.md) commit [26758f47](https://github.com/g2066203208-beep/voxel-frontier/commit/26758f47cee1ba4c79090b3f7646f2db7ee0e35b)。RUN=连接器JS实际算术；原生Node CLI NOT_RUN。TAB=8行；FIG无；REF/STANDARD/OFFICIAL无新原页。方法PASS仅限已观测pilot plug-in，未来独立seed/21箱/材料Miner/真实结构物理HOLD。12阶段0/12，正式DLC1.2 0/126；不涉及任何Abaqus/CAE、冻结母本、main或Draft合并。
+
 
 ### 2026-11-16｜v0.32.5 — T091 单站原位阅读真实ERA5 / 地震 / 风载 / 六章论文全文
 
