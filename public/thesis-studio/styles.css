@@ -425,7 +425,7 @@ body{font-size:14px}
 .atlas-complete{border-top:1px solid #e2eae7;padding-top:34px}
 .atlas-toolbar{display:grid;grid-template-columns:minmax(0,1fr) minmax(200px,250px);gap:12px;max-width:1020px}
 .atlas-toolbar label{min-width:0;display:flex;flex-direction:column;gap:7px;color:#526f70;font-size:10px;font-weight:680}
-.atlas-toolbar input,.atlas-toolbar select{width:100%;height:42px;border:1px solid #d9e5e2;border-radius:7px;color:#2c5050;background:#fff;padding:0 12px;font:12px inherit}
+.atlas-toolbar input,.atlas-toolbar select{width:100%;height:42px;border:1px solid #d9e5e2;border-radius:7px;color:#2c5050;background:#fff;padding:0 12px;font-size:12px;font-family:inherit}
 .atlas-counter{font:650 11px/1.7 ui-monospace,Consolas,monospace;color:#56807c;margin:18px 0}
 .atlas-file-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;max-width:1020px}
 .atlas-file-card{margin:0;min-width:0;background:#fff;border:1px solid #e1e9e7;border-radius:10px;overflow:hidden;content-visibility:auto;contain-intrinsic-size:auto 430px}
@@ -439,3 +439,6 @@ body{font-size:14px}
 .literature-atlas .atlas-journal-list{margin-top:15px}
 #figures-view .complete-figure-catalog[hidden]{display:none!important}
 @media(max-width:760px){.atlas-paper-grid{grid-template-columns:1fr}.atlas-toolbar{grid-template-columns:1fr}.atlas-journal-image-wrap{padding:9px}.atlas-caption{padding:13px}.literature-atlas{padding:15px}}
+
+/* Reader-first mode: no download prompts in research figure/literature viewers. */
+#figures-view #reader-download,#figure-download,#ref-zoom-download{display:none!important}
