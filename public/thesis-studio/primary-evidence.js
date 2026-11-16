@@ -198,6 +198,16 @@ async function showModule(id,root){
  const area=E("section","evidence-module-inline");
  area.append(head("本专题真实科研原始数据","完整数值和科研图表直接在当前工作室阅读，不必打开外部文件。"));
  root.prepend(area);
+ if(id==="structure"){
+  const hold=E("div","evidence-local-handoff");
+  hold.append(E("p","evidence-wave-note","本机Codex阶段进度 · 2026-11-16 16:32 · 用户转录，尚非原始日志核验"));
+  const steps=E("div","evidence-handoff-steps");
+  for(const [name,status] of [["L1 混凝土","报告通过"],["L2 配筋","报告通过"],["L3 两段接触","报告失败"],["L4 真实PT","未验证"],["R7","已中断"]]){
+   const entry=E("span","evidence-handoff-step",name+" · "+status);steps.append(entry);
+  }
+  hold.append(steps,E("p","evidence-hint","L3当前边界条件失败不能等同于已证明唯一根因。真实原生INP/MSG/STA/ODB尚未由本次对话上传。"));
+  area.append(hold);
+ }
  try{
   const m=await load();
   for(const id of map[id]){
