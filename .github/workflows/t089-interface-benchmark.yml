@@ -1,0 +1,42 @@
+name: T089 Independent Interface Mathematical Benchmark
+
+on:
+  push:
+    branches:
+      - research/t080-seismic-integration-gates-20261022
+    paths:
+      - 'research/wind-tower/methods/interface-benchmark/**'
+      - '.github/workflows/t089-interface-benchmark.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  independent-cpp17-unit-tests:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile and test independent mathematical kernel
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd research/wind-tower/methods/interface-benchmark
+          g++ --version
+          g++ -std=c++17 -O2 -Wall -Wextra -Werror -pedantic interface.cpp tests.cpp -o /tmp/t089-interface-tests
+          /tmp/t089-interface-tests
+      - name: Reproducible synthetic CSV (not experiments)
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd research/wind-tower/methods/interface-benchmark
+          g++ -std=c++17 -O2 -Wall -Wextra -Werror -pedantic interface.cpp example.cpp -o /tmp/t089-interface-example
+          /tmp/t089-interface-example > /tmp/t089-synthetic-interface.csv
+          test "$(wc -l < /tmp/t089-synthetic-interface.csv)" -eq 16
+          head -3 /tmp/t089-synthetic-interface.csv
+      - uses: actions/upload-artifact@v4
+        with:
+          name: t089-synthetic-math-benchmark
+          path: /tmp/t089-synthetic-interface.csv
+          retention-days: 14
