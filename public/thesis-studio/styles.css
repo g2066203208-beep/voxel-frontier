@@ -542,3 +542,13 @@ body{font-size:14px}
 .thesis-loading{font-size:12px;color:#718783}
 @media(max-width:900px){.evidence-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.evidence-dataset-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){#evidence-view .academic-heading,#thesis-view .academic-heading{padding:14px}.evidence-stats{grid-template-columns:1fr 1fr}.evidence-dataset-grid,.thesis-chapter-tabs{grid-template-columns:1fr}.evidence-detail,.evidence-module-source{padding:11px}.evidence-table th,.evidence-table td{padding:7px 9px;font-size:10px}.thesis-full-article{padding:18px 14px;font-size:13px}}
+
+/* T091 source files opened in current studio without GitHub navigation */
+.source-inline-open{font:inherit;line-height:1.65;text-align:left;border:0;background:transparent;padding:0;color:#176e70;font-weight:650;cursor:pointer;overflow-wrap:anywhere}
+.source-inline-open:hover{text-decoration:underline;text-underline-offset:3px;color:#0e5152}
+.source-inline-detail{grid-column:1/-1;min-width:0;width:100%;padding:19px;background:#fff;border:1px solid #dce9e5;border-radius:9px;margin:0 0 18px;scroll-margin-top:78px}
+.source-inline-detail .source-inline-body{min-width:0;width:100%}
+.source-inline-detail .thesis-full-article{border:none;padding:16px 8px 26px}
+.source-inline-detail .evidence-table-scroll{max-height:660px}
+.source-inline-detail .thesis-code{max-height:850px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere}
+@media(max-width:600px){.source-inline-detail{padding:12px}.source-inline-detail .thesis-full-article{padding:12px 0}}
