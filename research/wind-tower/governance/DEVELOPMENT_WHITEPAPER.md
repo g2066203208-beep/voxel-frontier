@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.1**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.3**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -28,6 +28,20 @@
 - 下一独立非Abaqus动作：核对/恢复可证明同模型、运行状态、时间网格和起点的W侧真实时程；没有可追溯来源时记录HOLD并转向S05/S10可独立研究，不造数据。
 
 ## 4. 版本变更记录（只记录真实持久化事务）
+
+### 2026-11-16｜v0.32.3 — T090授权期刊PDF原始整页图40张，唯一工作室站内直读
+
+- 用户直接要求「先前提及二次开发论文的逐页原文截图，直接放工作室、不跳转不下载」。在唯一GitHub Pages工作室 main 上新增 `public/thesis-studio/journal-pages.js`、`data/development-paper-pages.json`、`.github/scripts/render-authorized-journal-pages.py`、`.github/workflows/t090-journal-original-pages.yml`，并接到现有 `#literature` 而非另建页面。按原像素比例连续展示、懒加载、来源标注。
+- T090 GitHub Actions `43830215791` 与 `43830735265` 均SUCCESS；已从大学学术库/MDPI正式OA PDF经题名与DOI检查后生成 Jonscher2023 `18` 张、Dong2025 `22` 张整页125 dpi JPEG。逐页目录与原PDF SHA256已通过GitHub文件回读，Jonscher SHA256 `7f1ba7c70a57663a9f42258c33f81efe5680892d57b82cd785b7f3e39413c381`，Dong SHA256 `4580759f71790350f94de9cb518d12723ffd144334b649df6e788f27e15a4552`；首次页原像素/题名视觉核对PASS。两文均CC BY4.0，注明作者、DOI与许可证。
+- **六篇直接二次开发论文不是40张来源**：Gong2022全文可读但再发布许可未知；Zeng2024 ASCE、Yang2024 Wiley、Yan2025/Tong2025 Elsevier出版版本受限，Tan2026 Elsevier出版社开放获取但出版社原PDF因HTTP403/400未下载、准确再分发许可未确认。因此6篇仅列元数据、实现接口和状态；未公开镜像其整篇全文，不以他文替代。UI Browser QA的PASS由独立运行结论判定；仅Pages构建PASS不能代替浏览器全站验收。
+- 网站 `https://g2066203208-beep.github.io/voxel-frontier/thesis-studio/#literature`；main版本由v1.7.1→v1.7.2。旧研究/原始CAE/原有M0 BF1结果均不变，M1全塔重力与地震/疲劳仍HOLD；Draft PR#42未合并，无Abaqus任务。T090是文献展示工程，不是新论文物理结果。
+
+### 2026-11-16｜v0.32.2 — T089独立C++17材料点数学算法核与六篇二次开发方法审查
+
+- 新增 `research/wind-tower/methods/interface-benchmark/{interface.hpp,interface.cpp,tests.cpp,example.cpp,README.md}`，实现参考恒μ接触材料点黏着/滑移返回映射与未标定的示例性指数累计滑移弱化律，全部为**非Abaqus数学原型**；不含实际商业求解器接口、FE接触搜索、PT传力及整塔物理求解。
+- GitHub Actions `t089-interface-benchmark.yml` 研究分支可编译运行C++17测试、合成CSV；run `43831307992` SUCCESS。24条数学单元断言不代表论文材料性能已独立验证或预测优于内置接触。期刊对应Gong2022 FRIC、Zeng/Li2024 UMAT、Yang2024 UEL/MPC、Yan2025 UMAT、Tong2025 UEL/Python；Tan2026为实验校准FE+解析承载方法，不能错写为用户子程序。拟创新仅在真实接缝构造与独立路径留出试验支撑时评价。
+- 继续保护T086/T087文献矩阵、原3张版权允许的Jonscher图、旧BF1模型及物理成果；12阶段0/12、正式DLC1.2 0/126，当前未取得独立实验样本、M2尚非本构成果。
+
 
 ### 2026-11-16｜v0.32.1 PATCH — S12绪论接缝与风震先行研究竞争性论证
 
