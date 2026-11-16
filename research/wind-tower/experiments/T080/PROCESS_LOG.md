@@ -39,3 +39,8 @@ READ-BEFORE-WRITE：PR#42 Open/Draft，开工HEAD=e71ae35f9dd69fcfddff6f412e9962
 ## 2026-11-16 13时｜S12第五章§5.4.10前瞻校准层级与优化约束准入（v0.31.30）
 
 READ-BEFORE-WRITE：PR#42 Open/Draft，开工HEAD `58c1f1a6ed9fa300f05ebccc4442cfa62230f06a`；已读根/研究AGENTS、指挥室、白皮书、MASTER/STATUS、12阶段、T079/T080和Ch5。SOURCE=既有ETM 1984行历史表 blob `b5effa2a493cec0a9af8a10a3b93df0ff997d2d0`，历史SHA256 `16c9864ef7a344e5b97338c31ce26de6adb86c0f0f64942ef894fe9983926b2b`（未重新字节哈希）。RUN=解析秩证明/可证伪反例，无新物理RUN。正式Ch5新增§5.4.10：明确完整风箱最大跨31段×seed残差定义、split-conformal 95%有限阈值所需n≥19、现3箱训练/校准/测试分离后n_cal≤1、50%秩界、禁止将124行当独立箱，区分后验oracle与前瞻保证，并建立未知风箱/不同设计向量的拒绝条件。TAB=沿用期刊5行秩表；FIG无；REF/STANDARD/OFFICIAL无新外部原页。科研commit `4e9988b43e9b5c3c67e259aa00135a5ef5a75006`；数学论证PASS，交换性、未见风箱泛化、局部材料疲劳和结构优化物理约束HOLD；12阶段晋级0/12、正式DLC1.2 0/126。未触碰Abaqus/CAE、冻结母本、main、昂贵生产RUN或Draft合并。下一唯一动作：S06/S07寻找同一158m真实风侧可用时程与外载归属的现有源级闭合证据；若原件不可取得直接切换S10分材料概率统计而非重复秩界。
+
+
+## 2026-11-16 14时｜S10真实ERA5条件下126槽整数分层分配实验（v0.31.31）
+
+READ-BEFORE-WRITE：PR#42 Open/Draft，基线HEAD `3e2d5ebef542a90df32e297fd291cfafb66169b0`；已读根/研究AGENTS、指挥室、白皮书、MASTER/STATUS、12阶段、T079/T080、期刊稿和ERA5原31行表。S06/S07没有在本轮取得新的同态真实风侧时程，按反卡死规则切换S10。SOURCE=184080小时ERA5分箱 blob `1bae743b385d4f24c8b5af3e0b445aae30d40c6f`，历史SHA256 `e4058620a36b23bb218103875d4dc5b0711fc45d418b23a2208c2fc9c16c9102`（本轮未重新字节哈希）；RUN=连接器V8独立执行21箱整数贪心最优与无改进单槽交换，原生Node CLI NOT_RUN；程序 `experiments/T080/s10_stratified_seed_allocation.cjs`，提交 `b9f0f9eba862888c17304c22d24665950f1b0b16`。TAB=期刊新增两行126槽数表：等6槽目标0.030313965504，等方差整数最优0.008717593421，条件方差减少71.2423%；FIG无。REF/STANDARD/OFFICIAL无新原页，单槽最低配额为假设而非IEC规定。METHOD PASS，异方差、实际seed收敛、正式DLC1.2 0/126、材料局部Miner、同态风侧HOLD；12阶段晋级0/12。无Abaqus/CAE、冻结母本、main、昂贵RUN或PR合并。下一唯一动作：S06/S07定位同一158m模型已归档的原始六分量风侧时程及外载/惯性归属，若缺源则S10针对实际已有多seed方差而非等方差假设建立对照。
