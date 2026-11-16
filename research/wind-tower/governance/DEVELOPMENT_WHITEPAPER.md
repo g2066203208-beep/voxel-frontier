@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.7**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.8**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -28,6 +28,10 @@
 - 下一独立非Abaqus动作：核对/恢复可证明同模型、运行状态、时间网格和起点的W侧真实时程；没有可追溯来源时记录HOLD并转向S05/S10可独立研究，不造数据。
 
 ## 4. 版本变更记录（只记录真实持久化事务）
+### 2026-11-16｜v0.32.8 PATCH — S10六seed三三互补留出对18槽分配的前瞻反例
+
+- SOURCE=T062真实72行DEL4，Git blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`，历史SHA256 `b362bcd7c37ccc56e21035de39448b5e761ec03f371b6b2f3eb30f41b013630d`（本轮未重哈希）。RUN=连接器V8实算20种3pilot/3holdout互补seed索引；Mx 20/20改善，平均holdout方差比0.742199；My仅16/20改善，4反例，最坏1.898212，平均0.869375。实物程序 `experiments/T080/s10_ntm_pilot_holdout_20split.cjs` [commit 2bb29394](https://github.com/g2066203208-beep/voxel-frontier/commit/2bb2939446cab279a6d0b5b840a36919cae93b55)，期刊数表 `manuscript/journal-wind-fatigue-results.md` [commit f3c5b893](https://github.com/g2066203208-beep/voxel-frontier/commit/f3c5b89357ea15e06ea123c44162f756c6349706)；过程日志 `experiments/T080/PROCESS_LOG.md` [commit ac3656e2](https://github.com/g2066203208-beep/voxel-frontier/commit/ac3656e2d50f06ab60e29471eef38a6974a5f689)。TEST=V8源级算术，原生Node CLI NOT_RUN；TAB两行，FIG无，REF/STANDARD/OFFICIAL无新增。20折互相重叠且每折holdout只有3seed，不能冒充独立未来样本或物理优化PASS。12阶段晋级0/12，正式DLC1.2 0/126；S06同步W侧与材料局部应力HOLD。
+
 ### 2026-11-16｜v0.32.7 — T092全部GitHub文献81原件/163书目/395原页站内逐篇连续阅读
 
 - 用户追问“工作室才展示几篇？GitHub有的全部一个不漏原文展示”。源级盘点 `public/thesis-studio/data/reference-index.json`：**81份PDF档案**，其中**79份indexed有原文件URL、2份restricted（LFS指针与元数据）**，来源组30用户提供、46开放文献、4场址官方、1规范；另**163条参考书目**只有**73条标记accessible**，余90条没有可追溯原文。**395张参考原页图**（已含在旧541图中）、24篇水平接缝专题竞争资料以及合法2篇/40张完整原PDF页图均保留，绝不把81、163、395、24互换口径或宣称163篇全文已归档。
