@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.12**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.13**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -440,3 +440,8 @@
 - **v0.32.11｜2026-11-16 21时｜S10三seed方差区间精确拒绝门槛**：S06同态真实W侧原件搜索未获得可核同步六分量数据，切换独立S10统计不确定性；正态独立附加假设下，n=3每箱样本方差95% CI系数[0.271085,39.497890]、n=6系数[0.389636,6.015315]，说明20个重叠留出不能构成20个独立试验，10/6/2仍是未来抽样槽位非既有seed。SOURCE=T062 72行Git blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`，历史SHA256 `b362bcd7c37ccc56e21035de39448b5e761ec03f371b6b2f3eb30f41b013630d`（未重算）；RUN=独立SciPy chi2.ppf分位数，非物理RUN；TAB=2行，FIG=0；[期刊正文](../manuscript/journal-wind-fatigue-results.md) [commit dc871ddf](https://github.com/g2066203208-beep/voxel-frontier/commit/dc871ddf2658719a7eb14eeefce11f71d0899b9e)、[T080过程](../experiments/T080/PROCESS_LOG.md) [commit d4d93ce](https://github.com/g2066203208-beep/voxel-frontier/commit/d4d93ce323c3ba8856e9d2d33ff324311c0dbc16)。数学PASS；四次矩非正态/未知风箱/未来独立seed/材料Miner/同态W HOLD，12阶段晋级0/12、DLC1.2 0/126。无Abaqus/CAE或PR合并。
 
 - **v0.32.12｜2026-11-16 23时｜S05双水平旋转PSA方法程序（PATCH）**：SOURCE/RUN=合成正弦单元测试（非地震物理数据）；[源程序](../experiments/T080/s05_rotd_horizontal_spectra.py) local test-file SHA256 `c59766b616001ac197689089f3236472d5ee795aebdb914809e25a843b4a40ec`; committed source blob `469e7342d306fb55062d79b3c1031d0aca4284fa` (remote byte SHA256 not verified)、[期刊方法数表](../manuscript/journal-wind-fatigue-results.md) commit `9c8dba90470d6b1d4b995497c52c63c97082fd20`、[T080日志](../experiments/T080/PROCESS_LOG.md) commit `13b33c1efb026b55d7ec4730dd45bbdca034832d`；Newmark平均加速度法RotD50/100三周期数表，旋转/缩放/顺序/零值/输入拒绝五项Python原生PASS；REF/STANDARD/OFFICIAL无新增，FIG=0 TAB=1；ESM真实记录、官方谱、数值收敛及物理适用性HOLD；12阶段晋级0/12、DLC1.2 0/126。未触碰Abaqus/CAE、冻结母本、main或PR合并。
+
+
+### 2026-11-17｜v0.32.13 PATCH — S05双水平RotD100连续方位精确包络
+
+- 实质SOURCE级数学/程序增量：线性同阻尼双水平Newmark响应在采样时刻的RotD100连续方位上确界为ω²max hypot(uE,uN)，并给出cos(Δθ/2)角度离散严格下界。已在[原T080 Python程序](../experiments/T080/s05_rotd_horizontal_spectra.py)增加实现及拒绝测试，Git blob `f36f6cc1fc88f79f3eb548d794209157c1dd3508`，科研commit `bc6955fc4360da2f313719a5a23c47233c90b701`；[期刊三行数表与证明](../manuscript/journal-wind-fatigue-results.md) commit `7c2bc84352eacc4a3d14f1c980bc9f96b615630d`；T080过程日志commit `c55e1286c763c52f9e696f4fbfca4c5a1d305156`。独立Python合成信号复算T=0.5/1/2s精确方位RotD100=1.423726525/3.044241179/1.147079099 m/s²；原5°方向网格低估，理论最大0.095178%。数学证明及独立本地算例PASS，Git提交后完整模块CLI未运行；原件字节SHA256未重算，Git blob不是SHA256。REF/STANDARD/OFFICIAL无新授权原页；真实ESM谱、时间步长收敛、场址/目标谱与物理风震HOLD。12阶段晋级0/12，DLC1.2 0/126；未触碰禁止范围。
