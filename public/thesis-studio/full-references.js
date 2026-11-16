@@ -193,7 +193,7 @@ function pump(){
    }
  }).finally(()=>{
   if(token===S.token){node.dataset.rendering="false";S.busy--;pump()}
- })();
+ });
  if(S.busy<2)pump()
 }
 function seek(number){
