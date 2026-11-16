@@ -21,3 +21,7 @@ body.embedded-mode .toast{position:fixed;right:15px;bottom:15px}
 .library-original-preview .record-heading h2{font-size:21px!important;overflow-wrap:anywhere}
 .library-original-preview .record-document{padding:12px!important}
 @media(max-width:900px){.library-reading-grid{grid-template-columns:1fr;gap:12px}.library-file-pane{max-height:45vh}.library-original-preview{max-height:82vh;padding:15px!important}}
+
+.library-file-pane .file-table-head{display:grid!important;grid-template-columns:minmax(0,1fr) 76px!important;align-items:center;gap:6px}
+.library-file-pane .file-table-head span:first-child{grid-column:1;white-space:nowrap;min-width:0}
+.library-file-pane .file-table-head span:last-child{grid-column:2;white-space:nowrap;min-width:0;text-align:right}
