@@ -1,3 +1,7 @@
+## 2026-11-17 04时｜S12四ETM×31段名义应力DEL分量主导性（v0.32.17）
+
+READ-BEFORE-WRITE：研究AGENTS、指挥室最新交接、白皮书v0.32.16、MASTER/STATUS、12阶段、T079/T080及Ch4均已读取；PR#42 Open/Draft，起始HEAD bfaa0edfd1ed405792c9d1a7949612133ae001ee。SOURCE=T077原归档124行分量DEL4 CSV，Git blob 99ffe1870109bf505813131bd10e60ab7f1bdaea。RUN=GitHub连接器JS逐行读取、四工况分组，My分量在124/124站大于Mx与Fz；My/Mx四组范围6.429644–9.874583、6.149136–6.782460、2.502107–2.968615、2.596368–3.128178。新增Ch4 §4.8.6四行数表及可证伪解释，科研commit 0535863787bf4c20facbb3619fc2e5dfb4d06099，blob ffe0e19710944345c477732af5c729470a2d943d。TEST=连接器源级算术PASS，独立CLI NOT_RUN；原CSV字节SHA256未重哈希。TAB4、FIG0、REF/STANDARD/OFFICIAL无新增。注意：单分量DEL无法同步相加得到合成应力DEL，不能推材料局部损伤/Miner；4ETM不是正式DLC1.2。12阶段晋级0/12，DLC1.2 0/126；最大非Abaqus HOLD=同态同步风侧气动力/惯性归属及正式风箱覆盖。下一唯一最优动作=S12利用已有真实同时间戳三分量历史与方位几何做同步名义应力雨流对照，若缺同态原件则转S11有源验证。禁止范围未触碰。
+
 ## 2026-11-17 03时｜S12真实72行DEL4六seed聚合非交换性（v0.32.16）
 
 READ-BEFORE-WRITE：已读研究AGENTS、指挥室、白皮书v0.32.15、MASTER/STATUS、T080及第三章，继承S06同步风侧原件HOLD，不重复原件空查。SOURCE=T062真实72行DEL4 Git blob 1b334e9afdbd792a2f4b1a41cdb150dc3698352d；历史SHA256 b362bcd7c37ccc56e21035de39448b5e761ec03f371b6b2f3eb30f41b013630d（本轮未重哈希）。RUN=连接器JS真实读取72行，按3风速×2湍流×2通道分12组六seed，计算算术均值A和四次矩等效Q；12组严格Q>A，最大9.343881m/s ETM/My的幅值差4.327%、四次矩差18.463%。Jensen解析PASS，原生独立CLI NOT_RUN。TAB=第三章§3.7.28新增12行真实数表，科研commit a550cb121aec813b0d07c86377f200a987587269，Git blob ec421110ecaa69e594b09eeda495440f8bdd8caa；REF/STANDARD/OFFICIAL无新增，FIG无。结论只限load-DEL4的非线性统计，非材料Miner损伤或未来seed总体；正式DLC1.2 0/126、同态风侧/惯性归属、材料局部应力HOLD；12阶段晋级0/12。下一唯一动作=S12对现有Ch4真实局部/名义应力与材料寿命界限做实质正文整合，避免重复seed算术。未执行、准备、审核或派发Abaqus/CAE；不动冻结母本、main、PR合并或昂贵RUN。
