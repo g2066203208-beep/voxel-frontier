@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.14**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.15**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -450,3 +450,8 @@
 ### 2026-11-17｜v0.32.14 PATCH — S05真实ESM方向比值的对数周期分带再分析
 
 - SOURCE=IT-2012-0008/IT.NVL已归档46周期谱 `experiments/T079/real-records/S05_ESM_ROTD46_RECONCILED_20261111.csv`，Git blob `5b7bdda285877f485f3b48cae62f42d5d2ff5a62`，历史SHA256 `ea642b37ca39bde6c1e5b48168e50650adadb00311ca9f24a11102fea82d407c`（本轮未重算）。RUN=连接器JS真实源级46行计算：1.25–2/2–4/4–6/6–9.346437s方向比值对数周期几何均值1.176420/1.138280/1.133745/1.191951，长周期7.737650s比值1.346403，否证该事件中方向比值随周期必然单调衰减；仅限谱插值与原事件。TAB=新增[正式候选第五章§5.2.7五行数表](../manuscript/final-thesis/drafts/05_地震输入与双水平线性梁代理响应_20261109.md)，科研commit [15bb100f](https://github.com/g2066203208-beep/voxel-frontier/commit/15bb100f0ec4cbb84cd25ae5d8ae0a9d4bd68094)，[T080过程](../experiments/T080/PROCESS_LOG.md) commit `663054dc034f13fdfc5972645619c1ed3433a981`。METHOD NUMERIC PASS；原波低频SNR/时间采样、目标谱、真实结构响应HOLD；12阶段晋级0/12、正式DLC1.2=0/126。禁区未触碰。
+
+
+### 2026-11-17｜v0.32.15 PATCH — S06/S12有限截面外载逆问题的非唯一性反例
+
+- SOURCE=历史158m四ETM×31段截面结果与第三章既有来源；RUN=静力平衡解析零空间构造，连接器JS以z=[10,12,14,16]m、A=1kN独立代数验算：总横力0kN、对下方截面合弯矩0kN·m，z=13m内部弯矩扰动2kN·m；属于数学反例，不是新真实气动力。科研正文[第三章§3.8.X](../manuscript/final-thesis/chapters/03_场址风环境与整机随机风控制载荷.md) commit [e14d0d0](https://github.com/g2066203208-beep/voxel-frontier/commit/e14d0d01957054679205263ebf530b4b61996f60)，Git blob e2f0cc2166eaa8b976db059231ecb5ef5a5abd93；[T080日志](../experiments/T080/PROCESS_LOG.md) commit [39a8787](https://github.com/g2066203208-beep/voxel-frontier/commit/39a8787bcbe343eeb0e587d2109fde6d5654847e)。REF/STANDARD/OFFICIAL无新增，TAB/FIG无，源字节SHA256本轮未重算。证明有限截面测量不能唯一反演连续外载，不否定历史36组风及截面DEL；同态风侧独立外载、惯性归属、DLC1.2、材料局部应力HOLD；12阶段晋级0/12、正式DLC1.2=0/126。未触碰禁止范围。
