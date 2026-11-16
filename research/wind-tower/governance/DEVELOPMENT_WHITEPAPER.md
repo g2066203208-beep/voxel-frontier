@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.31.27**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.31.28**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -336,3 +336,6 @@
 | 2026-11-16 09时 | **v0.31.26 PATCH** | S12拟增第五章§5.2.6新增连续论文论证：33周期RotD50统一放大欠包络判据、6/33反例、原谱版本与ESM事件编号身份差异；继承既有T079数值，非新物理RUN。 | SOURCE谱CSV blob 5b7bdda285877f485f3b48cae62f42d5d2ff5a62、历史SHA256 ea642b37ca39bde6c1e5b48168e50650adadb00311ca9f24a11102fea82d407c；稿件装配PASS，事件身份/原波/场址/同态WE HOLD，12阶段0/12、DLC1.2 0/126。 | [章节§5.2.6](../manuscript/final-thesis/drafts/05_地震输入与双水平线性梁代理响应_20261109.md)、[T080](../experiments/T080/PROCESS_LOG.md)、[科研commit](https://github.com/g2066203208-beep/voxel-frontier/commit/9cefeb592b0b0d8b7e683ee58e907f52d5b274f2) |
 
 - **v0.31.27｜2026-11-16 10时｜S05事件身份纠错**：修正`manuscript/final-thesis/drafts/05_地震输入与双水平线性梁代理响应_20261109.md`的§5.2.6，区分IT-2012-0008与IT-2012-0009为相隔58分57秒的两次地震（来源：Ferrara学位论文表2，ITACA/INGV二级引述），撤回未核旧RotD图的事件标签；科研commit `68977175b97f435ef6270c9a49a3b283ceb22ebe`、`4b8bf3aabb51b2ea4768848a4f9116f25d58b737`；原谱Git blob `5b7bdda285877f485f3b48cae62f42d5d2ff5a62`、旧图源blob `99b0b662`，历史SHA256沿用且未重哈希；身份区分二级证据PASS、官方事件API字节与旧图身份HOLD，12阶段0/12、DLC1.2 0/126。
+### 2026-11-16｜v0.31.28 PATCH — S11真实ETM整箱留出后验裕量与逐段差异
+
+- **科研正文**：[期刊S11三行后验裕量数表与拒绝规则](../manuscript/journal-wind-fatigue-results.md)，[T080过程](../experiments/T080/PROCESS_LOG.md)；SOURCE=1984行ETM Git blob `b5effa2a493cec0a9af8a10a3b93df0ff997d2d0`，历史SHA256 `16c9864ef7a344e5b97338c31ce26de6adb86c0f0f64942ef894fe9983926b2b`（未重新字节哈希）；RUN=124观测整风箱留出，mean/nearest/linear全局后验裕量1.018800/0.371677/0.478020 MPa，逐段裕量相对全局总和少36.6011%/54.4594%/58.2451%；科研commit [e58c4529](https://github.com/g2066203208-beep/voxel-frontier/commit/e58c452951057a2ebbbbd63ad01eac3b1670733a)。**仅同样本oracle回顾算术PASS，不是前瞻保守性、局部材料寿命或结构物理PASS**；12阶段晋级0/12，正式DLC1.2 0/126。无Abaqus/CAE、昂贵RUN或PR合并。
