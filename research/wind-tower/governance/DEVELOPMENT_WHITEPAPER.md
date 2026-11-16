@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.10**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.11**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -436,3 +436,5 @@
 ### 2026-11-16｜v0.32.10 PATCH — S10真实NTM双通道minimax及独立留出反例
 
 - SOURCE=T062真实72行DEL4 Git blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`、历史SHA256 `b362bcd7c37ccc56e21035de39448b5e761ec03f371b6b2f3eb30f41b013630d`（未重哈希）；RUN=连接器JS读取真实CSV，穷举18槽共同双通道归一化最小最大方差；全样本10/6/2，Mx/My比0.684595/0.720212；20个重叠pilot/holdout分割，双通道同时改善19/20，My最坏1.340812反例。TAB=期刊正文2表 [科研提交 ae179496](https://github.com/g2066203208-beep/voxel-frontier/commit/ae179496146694db357e0c50810a999b092a8c56)，过程见T080/PROCESS_LOG；FIG=0；REF/STANDARD/OFFICIAL无新增；native Node NOT_RUN，方法条件PASS、独立未来seed与DLC1.2/材料Miner/同态W HOLD；12阶段晋级0/12。未触碰Abaqus/CAE、冻结母本、main或PR合并。
+
+- **v0.32.11｜2026-11-16 21时｜S10三seed方差区间精确拒绝门槛**：S06同态真实W侧原件搜索未获得可核同步六分量数据，切换独立S10统计不确定性；正态独立附加假设下，n=3每箱样本方差95% CI系数[0.271085,39.497890]、n=6系数[0.389636,6.015315]，说明20个重叠留出不能构成20个独立试验，10/6/2仍是未来抽样槽位非既有seed。SOURCE=T062 72行Git blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`，历史SHA256 `b362bcd7c37ccc56e21035de39448b5e761ec03f371b6b2f3eb30f41b013630d`（未重算）；RUN=独立SciPy chi2.ppf分位数，非物理RUN；TAB=2行，FIG=0；[期刊正文](../manuscript/journal-wind-fatigue-results.md) [commit dc871ddf](https://github.com/g2066203208-beep/voxel-frontier/commit/dc871ddf2658719a7eb14eeefce11f71d0899b9e)、[T080过程](../experiments/T080/PROCESS_LOG.md) [commit d4d93ce](https://github.com/g2066203208-beep/voxel-frontier/commit/d4d93ce323c3ba8856e9d2d33ff324311c0dbc16)。数学PASS；四次矩非正态/未知风箱/未来独立seed/材料Miner/同态W HOLD，12阶段晋级0/12、DLC1.2 0/126。无Abaqus/CAE或PR合并。
