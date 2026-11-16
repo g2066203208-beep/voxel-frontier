@@ -1,3 +1,9 @@
+## 2026-11-16 17时｜S10真实NTM六seed异方差与18槽pilot分配 END（白皮书v0.32.6）
+
+- READ-BEFORE-WRITE：已读研究AGENTS、最新T091、白皮书v0.32.5、MASTER/STATUS、12阶段计划、T079/T080及历史72行DEL4源。科研程序提交37714a3e/38a2999a、期刊§4.30提交26758f47、T080过程提交8e8c404d、白皮书提交85af2b7c。SOURCE=历史72行Git blob 1b334e9a，SHA256历史b362bcd7（未重哈希）。
+- 实质结果：三箱各6个真实NTM seed的Mx/My四次矩样本SD与CV六行；18槽每箱≥2穷举条件分配：Mx 6/6/6→11/5/2，pilot方差4.392089→2.988448（−31.9584%）；My 6/6/6→10/6/2，21943388.201→15803887.866（−27.9788%）。这是实测历史seed推导的plug-in设计，不是新增11条RUN、独立测试或正式疲劳；Node CLI NOT_RUN，V8源级算术PASS，未来泛化HOLD。
+- 正式12阶段晋级0/12，DLC1.2 0/126。最大非Abaqus HOLD=正式风箱和同态风侧外载/惯性归属、材料局部应力。下一唯一实质动作S06找回158m同态W侧真实原始时程；若源缺则以真实18 NTM做pilot/validation严格分离而非重复分配。保护main、Draft PR、冻结母本及禁止Abaqus/CAE范围。
+
 ## 2026-11-16｜T091唯一工作室原始数据与论文全文站内展示 END（白皮书v0.32.5）
 
 - 研究HEAD `c111f859edc0311971dcd89c2a29476250b32b12`；main独立部署T091 `v1.8.0`，GitHub Pages最新代码deploy run `43836682561` SUCCESS；科研数据归档Actions `43834186720`、`43834780427` SUCCESS，全部9套来源CSV、6章原文、92项历史模型数据以原Git blob+SHA+行数审计入 `public/thesis-studio/primary-data/`。另保留旧541科研图、395文献证据图、Jonscher18页/Dong22页合法PDF完整原图。
