@@ -629,3 +629,11 @@ body{font-size:14px}
 .corpus-home-open{border:0;padding:10px 0;background:transparent;color:#176e68;font-size:12px;font-weight:710;text-align:left;cursor:pointer}
 .corpus-home-open:hover{text-decoration:underline;text-underline-offset:3px}
 @media(max-width:600px){.corpus-home-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* T093: typeset actual engineering equations with self-hosted KaTeX */
+.thesis-math-display{font-size:1.05em;line-height:1.9;overflow-x:auto;overflow-y:hidden;text-align:center;background:#fcfefd;border:1px solid #e5efe9;border-radius:5px;margin:14px 0 22px;padding:14px 10px;max-width:100%}
+.thesis-math-inline{display:inline-block;max-width:100%;vertical-align:-.12em}
+.thesis-math-error{white-space:pre-wrap;overflow-wrap:anywhere;font:12px/1.8 ui-monospace,Consolas,monospace;color:#975e35}
+.thesis-full-article .katex{font-size:1.08em}
+.thesis-full-article .katex-display{margin:.4em 0;text-align:center;overflow-x:auto;overflow-y:hidden}
+@media(max-width:600px){.thesis-full-article .katex{font-size:.9em}.thesis-math-display{padding:10px 6px}}
