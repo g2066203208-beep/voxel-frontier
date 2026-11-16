@@ -43,6 +43,22 @@ async function main(){
 
  await page.locator('[data-open-document="jiayu-gov"]').click();
  await page.locator("#figures-view").waitFor({state:"visible",timeout:10000});
+ await page.locator("#joint-atlas-gallery .atlas-journal-card").first().waitFor({timeout:30000});
+ assert.equal(await page.locator("#joint-atlas-gallery .atlas-journal-card").count(),5,"five licensed journal originals are inlined");
+ assert.equal(await page.locator("#joint-atlas-papers .atlas-paper").count(),24,"all 24 horizontal-joint papers displayed in original atlas");
+ assert.equal(await page.locator("#atlas-complete-grid .atlas-file-card").count(),541,"all 541 archived original images rendered without pagination");
+ assert.equal(await page.locator("#joint-atlas a").count(),0,"journal atlas has no offsite links or download anchors");
+ assert.equal(await page.locator("#atlas-complete a").count(),0,"full original image reader has no navigation/download links");
+ assert.equal(await page.locator("#joint-atlas .atlas-bibliography").getAttribute("open"),"","24 paper records expanded without click");
+ const firstJournal=page.locator("#joint-atlas-gallery .atlas-journal-img").first();
+ await firstJournal.scrollIntoViewIfNeeded();
+ await page.waitForFunction(()=>{
+  const x=document.querySelector("#joint-atlas-gallery .atlas-journal-img");
+  return x?.complete&&x.naturalWidth>0;
+ },null,{timeout:30000});
+ assert.ok((await firstJournal.evaluate(x=>x.naturalWidth))>0,"pinned Springer original PNG actually loads");
+ await page.screenshot({path:path.join(out,"jiayu-joint-original-inline.png"),fullPage:false});
+ console.log("INLINE_ATLAS_OK: 5 journal figures, 24 papers, 541 complete image cards, original PNG decoded, no atlas links");
  assert.equal((await page.locator("#reader-doc-list .reader-doc").count()),3,"all PDF sources in reader");
  await page.waitForFunction(()=>{
   const canvas=document.getElementById("reader-canvas");
@@ -86,7 +102,7 @@ async function main(){
  assert.ok(size.scroll-size.visible<=7,"mobile has no horizontal overflow: "+JSON.stringify(size));
  await mobile.screenshot({path:path.join(out,"jiayu-home-mobile.png"),fullPage:true});
  if(fail.length)throw Error("Browser errors:\n"+fail.slice(0,15).join("\n"));
- console.log("JIAYU_BROWSER_QA_PASS: homepage, PDF.js page render, navigation, zoom, text, He source, gallery paging, 390px mobile");
+ console.log("JIAYU_BROWSER_QA_PASS: homepage, PDF.js page render, navigation, zoom, text, He source, journal originals, full inline image atlas, gallery paging, 390px mobile");
  await browser.close();
 }
 main().catch(e=>{console.error(e);process.exitCode=1;});
