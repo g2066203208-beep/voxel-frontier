@@ -620,3 +620,12 @@ body{font-size:14px}
 .corpus-master-row{grid-template-columns:64px minmax(0,1fr)}.corpus-master-row .corpus-inline-small,.corpus-master-row .corpus-missing{grid-column:2;justify-self:start}
 .corpus-scan-grid{grid-template-columns:1fr}.corpus-reader{padding:9px}.corpus-pdf-holder{min-height:570px}
 }
+
+/* T092: homepage primary literature corpus entry */
+.corpus-home-entry{background:#f1f8f5;border:1px solid #d4e6df;border-radius:8px;padding:15px 17px;margin-top:16px}
+.corpus-home-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:13px}
+.corpus-home-stats span{font-size:11px;line-height:1.6;color:#53746c}
+.corpus-home-stats b{display:block;font-size:21px;color:#176866;font-weight:770;font-variant-numeric:tabular-nums}
+.corpus-home-open{border:0;padding:10px 0;background:transparent;color:#176e68;font-size:12px;font-weight:710;text-align:left;cursor:pointer}
+.corpus-home-open:hover{text-decoration:underline;text-underline-offset:3px}
+@media(max-width:600px){.corpus-home-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
