@@ -1,3 +1,7 @@
+## 2026-11-16 09时｜S12地震章§5.2.6正式连续正文装配（v0.31.26）
+
+继承T079已核33周期RotD100/50比值，SOURCE=ESM重核谱CSV blob 5b7bdda285877f485f3b48cae62f42d5d2ff5a62，历史SHA256 ea642b37ca39bde6c1e5b48168e50650adadb00311ca9f24a11102fea82d407c（本轮未重哈希）；RUN=无新物理计算，已完成S12拟增第五章§5.2.6连续正文装配，明确c≥1.3644346306的33点条件、c=1.2的6点反例、两版46周期谱图不可互换、事件编号IT2012_0009与IT-2012-0008待原元数据消歧。REF=两篇2026先行DOI仅沿用历史阅读；STANDARD/OFFICIAL无新增原页；TAB=T079两行源级极值；FIG=历史§5.2.5仅作参考。稿件装配PASS，原波/场址/同态WE/物理HOLD；12阶段晋级0/12，DLC1.2 0/126。科研提交9cefeb592b0b0d8b7e683ee58e907f52d5b274f2；未执行或派发Abaqus/CAE、未启动生产RUN。下一唯一动作：核实ESM事件编号原始元数据并在同一稿中闭合来源身份，若不可取得切换S11/S12完整源数据算法。
+
 ## 2026-11-16 08时｜S05 ESM RotD方向性离散放大（v0.31.25）
 
 READ-BEFORE-WRITE：PR#42 Open/Draft，开工HEAD 62e0f7df29bc78bdf5a1e56ca4e7f5a9c2dfa85d；根/研究AGENTS、指挥室、白皮书v0.31.24、MASTER/STATUS、12阶段、T079/T080和33周期源表已读。SOURCE=46行已处理ESM RotD谱 Git blob 5b7bdda285877f485f3b48cae62f42d5d2ff5a62、历史SHA256 ea642b37ca39bde6c1e5b48168e50650adadb00311ca9f24a11102fea82d407c（未重哈希）。RUN=33周期逐行RotD100/RotD50，最大1.3644346306@1.25s，最小1.0661880219@1.81827174432s；6/33超过1.2，1/33超过1.3；离散全周期不低估所需统一系数c≥1.3644346306。TAB=T079 METHOD_PLAN新增两行极值表与数学拒绝条件；FIG无。数学/源级PASS，连续周期、低频SNR、场址谱、结构响应HOLD；REF沿用既有先行研究，STANDARD/OFFICIAL未新读授权原页。科研commit 0d88435a4f64f91708301fd6e650824b43fdfcbe。12阶段晋级0/12，DLC1.2 0/126；未涉及Abaqus/CAE或生产RUN。下一唯一动作：S12将已核地震谱适用边界和RotD方向性结果写入现有地震方法章节，不再重复S05标量拟合。
