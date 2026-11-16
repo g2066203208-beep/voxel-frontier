@@ -113,5 +113,5 @@ async function show(container){
   await choose(S.current);
  }catch(e){container.replaceChildren(E("p","evidence-error","论文原文加载失败："+e.message))}
 }
-window.JYThesisInline={show};
+window.JYThesisInline={show,renderMarkdown:markdown};
 })();
