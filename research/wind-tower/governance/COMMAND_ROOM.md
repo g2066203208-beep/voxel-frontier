@@ -1,3 +1,10 @@
+## 2026-11-16｜T090期刊原文逐页截图归档、同一工作室内直接阅读 START
+
+- 读取研究HEAD `55b1fced643635c822dddb46941985fd4760f292`，继承T089 START、S12 v0.32.1、T088工作室图集、T086/T087文献及原图许可台账。执行域仅限文献原文许可证核对、非Abaqus的PDF页图生成、现有网站源级归档和前端阅读。
+- 用户最新要求把先前提及的二次开发期刊原文逐页直接显示在唯一论文工作室。已核实名义6篇开发论文：Gong2022可在线阅读但未证整篇重发许可、Zeng2024 ASCE版权、Yang2024 Wiley版权、Yan2025/Tong2025 Elsevier受限、Tan2026出版方OA但具体原PDF及许可仍待可再发布核验；不能擅自发布这些全文截图。
+- 同时选择明确CC BY 4.0可再发布的接缝直接背景来源Jonscher2023 Springer与Dong2025 MDPI，由GitHub Actions从出版方/大学原始PDF进行**真实整页**渲染、核验身份、来源SHA与页数，站内连续阅读，不构造替代图、不外跳、不下载。网站main已提交初版文件：`public/thesis-studio/journal-pages.js`、`data/development-paper-pages.json`、`.github/scripts/render-authorized-journal-pages.py`、workflow；研究PR#42继续Draft，无本机或Actions Abaqus工作。
+- 后续按真实工作流成功/失败与图片字节回读登记，不将已生成截图数量扩大为6篇全文已获。
+
 ## 2026-11-16｜T089独立界面本构算法与直接二次开发论文对照 START
 
 - READ-BEFORE-WRITE：研究分支 `research/t080-seismic-integration-gates-20261022`，读取HEAD `680443120d36fef21175391864a3ccc269c5a8f3`；已读根/论文AGENTS、当前指挥室S12及T088/T087、白皮书v0.32.1、T080日志、T086接缝蓝图。继承已有24文献矩阵、M0历史Gravity/Modal成功、M1接触重力HOLD，保护Draft PR#42和main。
