@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.31.32**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.31.33**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -28,6 +28,13 @@
 - 下一独立非Abaqus动作：核对/恢复可证明同模型、运行状态、时间网格和起点的W侧真实时程；没有可追溯来源时记录HOLD并转向S05/S10可独立研究，不造数据。
 
 ## 4. 版本变更记录（只记录真实持久化事务）
+
+### 2026-11-16｜v0.31.33 PATCH — T087水平接缝文献作者纠错、遗漏8试件循环压弯扭试验与期刊否证门槛
+
+- **非Abaqus科研交付：** [24篇统一文献矩阵](../references/joint-contact-literature/literature_matrix.tsv)、[T087文献源级校正及投稿审查门槛](../references/joint-contact-literature/T087_BIBLIOGRAPHY_CORRECTIONS_AND_PUBLICATION_GATES_20261116.md)、[原T086统一原图资料馆](../references/joint-contact-literature/README.md)。在原R01–R23标识不变条件下修正R09/R10/R16/R21/R23作者，新增R24 Ren et al. (2025), *Thin-Walled Structures* 215:113570，DOI 10.1016/j.tws.2025.113570，**8试件循环压弯扭**，修正期刊“首次研究”风险。
+- REF/SOURCE：2025 *Structures* 72:108292、*Engineering Structures* 334:120295、2026 *Structures* 91:112527/92:112870与《振动与冲击》2025 44(4):71–81 出版方/文献索引交叉核验。TAB=24项统一TSV；FIG=原3张Jonscher CC BY 4.0 PNG完整保留及SHA256不变，另两张MDPI仍remote-only；RUN=只有文献元数据、文本审查，未执行、准备、审核、修改或派发Abaqus/CAE工作。
+- 阶段状态：SOURCE/REF 校勘完成，已发布实验覆盖使“首次循环压弯扭”不成立；J20局部成果仅继承用户已有报告，新全塔Gravity、独立本构实验标定、同态风震与分材料疲劳继续HOLD，12阶段0/12、正式DLC1.2=0/126。保护原BF1/T082、main、Draft PR#42；下一非Abaqus目标优先把24篇文献的竞争矩阵装入已有学位论文研究不足和英文期刊引言，逐条引用而不凑数。
+
 
 ### 2026-11-16｜v0.31.32 PATCH — T086混塔接缝原图期刊证据库、C/C++二次开发的实证创新门槛
 
