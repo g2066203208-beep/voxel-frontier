@@ -39,7 +39,7 @@
 | Tan et al., *Engineering Structures* 2026, DOI 10.1016/j.engstruct.2026.123195 | 水平缝压弯剪扭试验＋Abaqus精细FE＋设计公式 | “首次ABAQUS研究多轴接缝承载力” |
 | Wang et al., *Resilient Cities and Structures* 2026, DOI 10.1016/j.rcns.2026.03.002 | 强风与地震混塔数值研究，公开方法中**相邻混凝土段Hard法向＋Penalty切向μ=0.6** | “首次把Hard Contact+Penalty用于混塔风震”；μ=0.6也**不是何泽瑜的原值** |
 | Wang et al., *Journal of Earthquake Engineering* 2026, DOI 10.1080/13632469.2026.2671807 | 160m级混塔三档风速＋3条PEER地震波同步施加 | “首次研究混塔风震同时作用” |
-| Tan et al., *Structures* 2026, DOI 10.1016/j.istruc.2026.112870 | 环缝偏心受压、张开与截面压区的模型；6个试件 | “首次提出环缝开合与压区模型” |
+| 2026 *Structures*（作者尚待出版方核定）, DOI 10.1016/j.istruc.2026.112870 | 环缝偏心受压、张开与截面压区的模型；6个试件 | “首次提出环缝开合与压区模型” |
 
 **筛选结论**：已经高度拥挤的主题为“恒定μ摩擦接触/常规有限元/单一工况弯扭/单纯风震叠加”。新的稿件若没有实证标定、独立验证和工程风险新发现，不宜宣称高创新。
 
