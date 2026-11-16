@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.13**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.14**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -445,3 +445,8 @@
 ### 2026-11-17｜v0.32.13 PATCH — S05双水平RotD100连续方位精确包络
 
 - 实质SOURCE级数学/程序增量：线性同阻尼双水平Newmark响应在采样时刻的RotD100连续方位上确界为ω²max hypot(uE,uN)，并给出cos(Δθ/2)角度离散严格下界。已在[原T080 Python程序](../experiments/T080/s05_rotd_horizontal_spectra.py)增加实现及拒绝测试，Git blob `f36f6cc1fc88f79f3eb548d794209157c1dd3508`，科研commit `bc6955fc4360da2f313719a5a23c47233c90b701`；[期刊三行数表与证明](../manuscript/journal-wind-fatigue-results.md) commit `7c2bc84352eacc4a3d14f1c980bc9f96b615630d`；T080过程日志commit `c55e1286c763c52f9e696f4fbfca4c5a1d305156`。独立Python合成信号复算T=0.5/1/2s精确方位RotD100=1.423726525/3.044241179/1.147079099 m/s²；原5°方向网格低估，理论最大0.095178%。数学证明及独立本地算例PASS，Git提交后完整模块CLI未运行；原件字节SHA256未重算，Git blob不是SHA256。REF/STANDARD/OFFICIAL无新授权原页；真实ESM谱、时间步长收敛、场址/目标谱与物理风震HOLD。12阶段晋级0/12，DLC1.2 0/126；未触碰禁止范围。
+
+
+### 2026-11-17｜v0.32.14 PATCH — S05真实ESM方向比值的对数周期分带再分析
+
+- SOURCE=IT-2012-0008/IT.NVL已归档46周期谱 `experiments/T079/real-records/S05_ESM_ROTD46_RECONCILED_20261111.csv`，Git blob `5b7bdda285877f485f3b48cae62f42d5d2ff5a62`，历史SHA256 `ea642b37ca39bde6c1e5b48168e50650adadb00311ca9f24a11102fea82d407c`（本轮未重算）。RUN=连接器JS真实源级46行计算：1.25–2/2–4/4–6/6–9.346437s方向比值对数周期几何均值1.176420/1.138280/1.133745/1.191951，长周期7.737650s比值1.346403，否证该事件中方向比值随周期必然单调衰减；仅限谱插值与原事件。TAB=新增[正式候选第五章§5.2.7五行数表](../manuscript/final-thesis/drafts/05_地震输入与双水平线性梁代理响应_20261109.md)，科研commit [15bb100f](https://github.com/g2066203208-beep/voxel-frontier/commit/15bb100f0ec4cbb84cd25ae5d8ae0a9d4bd68094)，[T080过程](../experiments/T080/PROCESS_LOG.md) commit `663054dc034f13fdfc5972645619c1ed3433a981`。METHOD NUMERIC PASS；原波低频SNR/时间采样、目标谱、真实结构响应HOLD；12阶段晋级0/12、正式DLC1.2=0/126。禁区未触碰。
