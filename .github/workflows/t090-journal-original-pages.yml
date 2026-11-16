@@ -1,0 +1,58 @@
+name: T090 Licensed Journal Full-Page Originals
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/scripts/render-authorized-journal-pages.py'
+      - '.github/workflows/t090-journal-original-pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: t090-journal-original-pages
+  cancel-in-progress: true
+
+jobs:
+  render-licensed-original-articles:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Ensure original PDF renderer
+        run: |
+          set -euo pipefail
+          command -v pdftoppm || (sudo apt-get update && sudo apt-get install -y poppler-utils)
+      - name: Download, license-gate, identity-check, render all pages
+        run: python3 .github/scripts/render-authorized-journal-pages.py
+      - name: Commit only verified CC BY complete page images
+        run: |
+          set -euo pipefail
+          git config user.name "paper-studio-bot"
+          git config user.email "paper-studio-bot@users.noreply.github.com"
+          git add public/thesis-studio/data/development-paper-pages.json public/thesis-studio/journal-pages
+          if ! git diff --cached --quiet; then
+            git commit -m "docs(studio): publish original CC BY full-page journal image archive"
+            git push origin HEAD:main
+          fi
+      - name: Audit rendered publication pages
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json,pathlib
+          p=pathlib.Path('public/thesis-studio')
+          d=json.loads((p/'data/development-paper-pages.json').read_text())
+          for a in d['articles']:
+              pages=a['pages']
+              if pages:
+                  assert a['license'].startswith('CC BY 4.0')
+                  assert len(pages)>=3
+                  assert all((p/x.removeprefix('./')).is_file() for x in pages)
+                  print(a['id'],len(pages),'verified full sheets')
+              else:
+                  print(a['id'],'no authorized full-page images')
+          PY
