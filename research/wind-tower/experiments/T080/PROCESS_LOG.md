@@ -117,3 +117,8 @@ SOURCE=T062真实72行DEL4 CSV Git blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352
 ## 2026-11-17 05时｜S12四ETM同步毛截面跨指标方位反例（0/12）
 
 SOURCE=T077 1984行16方位同步毛截面雨流CSV Git blob b5effa2a493cec0a9af8a10a3b93df0ff997d2d0；RUN=连接器V8直接分组124截面、4工况×31站。DEL4/DEL10最优方位124/124相同，正峰最优方位124/124与DEL4反向180°；高风速两工况38/62站时均最大方位相差157.5°，以该方位替代DEL4最大方位的损失上限6.095157%/4.704563%。新增Ch4§4.8.7四行真实数表与可证伪解释；TAB4 FIG0，数学统计PASS、独立CLI NOT_RUN、原始字节SHA256未重算。历史screening非DLC1.2；无材料局部应力或Miner。12阶段晋级0/12、正式DLC1.2 0/126；最大非Abaqus HOLD为同步风侧独立外载/惯性归属。下一唯一动作S11：利用既有真实方位响应数据建立按工况分组的留出验证而非再分割同六seed。未执行或派发Abaqus/CAE、未动冻结母本、main、PR合并或昂贵RUN。
+
+
+## 2026-11-17 06时｜S11四ETM留出方位验证（0/12）
+
+READ-BEFORE-WRITE：根/研究AGENTS、指挥室最新v0.32.18、白皮书、MASTER/STATUS、12阶段、T079/T080及Ch4已读；main与活动研究分支区分。SOURCE=T077 1984行16方位真实历史同步毛截面雨流CSV，Git blob `b5effa2a493cec0a9af8a10a3b93df0ff997d2d0`，原始字节SHA256未重新计算。RUN=连接器V8直接读取1984行、4工况整组留出、31段、16角度；三训练工况每站角度min-max归一化等权排序，留出工况计算命中及相对于角度动态范围的归一化后悔。DEL4和最大正峰各124/124首选命中（0°/180°），时均首选20/31、21/31、17/31、15/31合计73/124，前二124/124；时均后悔四折平均0.465573/0.273056/0.372602/0.461997%，最大1.866102/1.462447/1.927394/2.092964%。脚本 `experiments/T080/s11_etm_case_holdout_azimuth.cjs` commit `52da447b04bef4fb9ea9fa1f90fbc50874cd40e0`，Ch4 §4.8.8四行新实数表 commit `d20578b1a8b5ff5d2bd9573857de1d96e6927a3c`。TAB4 FIG0，REF/STANDARD/OFFICIAL无新原页；算术源级PASS，原生Node CLI NOT_RUN，未来seed/其他风况泛化及材料局部Miner HOLD。四折共享训练工况、31站高度相关，不是124个独立样本；动态范围后悔不是材料损伤率。12阶段晋级0/12，DLC1.2 0/126。最大非Abaqus HOLD=真实同态风侧外气动力与惯性归属；下一唯一动作=S12将现有完整T077逐循环range–mean–count与章节中材料模型的可识别量形成严格对应，避免重复四ETM角度拆分。未触碰Abaqus/CAE、冻结母本、main、PR合并或昂贵RUN。
