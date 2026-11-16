@@ -1,3 +1,7 @@
+## 2026-11-16 23时｜S05双水平分量旋转响应谱算法及拒绝测试（v0.32.12）
+
+READ-BEFORE-WRITE：PR#42 Open/Draft，基线HEAD acd3a389502e480e8d66026ec929a3287dfec205；已读研究AGENTS、COMMAND_ROOM、白皮书v0.32.11、STATUS、12阶段计划、T080及期刊末段。上一轮S06原件缺失，按反卡死纪律切换S05。新增可运行Python程序 experiments/T080/s05_rotd_horizontal_spectra.py（SHA256 c59766b616001ac197689089f3236472d5ee795aebdb914809e25a843b4a40ec）；Newmark平均加速度积分、180方向RotD50/100及输入拒绝。RUN=本地Python 3原生执行合成正弦对测试，dt=0.01s、10s、5度步长，T=0.5/1/2s时RotD50分别1.188486323/2.397740019/0.810876286 m/s²；旋转不变、线性缩放、顺序、零输入、长度拒绝均PASS。真实ESM/目标谱没有读取；REF/STANDARD/OFFICIAL无新增，SOURCE=明确标注的算法单元测试，TAB=期刊3行，FIG=0。数值打印舍入<5e-10，但离散误差、原记录基线/单位/方向/地震谱匹配HOLD；未宣称物理验收。12阶段晋级0/12，DLC1.2 0/126。下一唯一动作：从可验证的原始ESM HNE/HNN及台站元数据运行1度谱与dt收敛，再核官方目标谱；若原件不可取则切S12既有原稿的真实证据闭合，不重复合成测试。禁Abaqus/CAE、冻结母本、main、昂贵RUN、PR合并。
+
 ## 2026-11-16 21时｜S10三seed方差估计精确置信区间（v0.32.11）
 
 S06真实158m同态W侧源搜索未获得可验证同步六分量原件，依反卡死规则切换S10独立有限样本不确定性。继承T062历史72行/3箱×6seed，未重新读取OUTB或哈希。SOURCE=既有T062 CSV blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`，历史SHA256 `b362bcd7c37ccc56e21035de39448b5e761ec03f371b6b2f3eb30f41b013630d`（本轮未重算）。RUN=独立SciPy chi2.ppf真实数值计算：正态且独立的额外假设下n=3方差95% CI系数[0.271085,39.497890]，n=6为[0.389636,6.015315]；原变换DEL四次矩非正态风险、20重叠划分及10/6/2需要新增seed均明确限制。TAB=期刊2行；FIG无；REF/STANDARD/OFFICIAL无新增；误差=显示舍入<5e-7，模型形式误差未知。科学新增写入期刊正文commit `dc871ddf2658719a7eb14eeefce11f71d0899b9e`。数学分位数PASS，真实分布/前瞻分配/材料Miner及同步W HOLD。12阶段晋级0/12、DLC1.2 0/126。禁Abaqus/CAE、冻结母本、main、昂贵RUN及PR合并均未触碰。
