@@ -1,3 +1,10 @@
+## 2026-11-16｜T093唯一工作室真实截图与交互验收 START（读取回执）
+
+- 研究读基 `90cfd54e201c47b8bdd584e20e32b29e5e3adc50`，继承T092 v1.9.0、白皮书v0.32.7、全部81PDF/163书目/395原页、T091数据与六章原文及40篇授权页图；用户要求实际打开审美/移动端/全文渲染截图测试，而不只是部署PASS。工作仅在现有main网站及GitHub Actions进行，不触碰Abaqus/CAE、不合并Draft PR#42。
+- **真实失败已证实**：GitHub Actions Chromium run `43840135928` `Test published Jiayu studio` 在`scripts/qa-jiayu-browser.cjs:82` PDF等待超时60s，随后总Job CANCELLED；本次真正取回artifact `14214070190` 中6张PNG，在独立环境解压并逐一打开查看。可视情况：首页研究布局整齐但`精选研究图`捕获时空白；ERA5统计卡片、ESM三轴原质控SVG和研究TSV原文表正确可见；六章正文的工程公式存在未经排版的原LaTeX；40授权期刊原PDF页中实际页面可解码，局部懒加载前存在不稳定视觉占位。**未验证全站完成，更不能称所有79 PDF都成功。**
+- 发现源代码事实：新版`full-references.js`依赖`./vendor/pdf.mjs`，但之前main不存在`vendor`目录，属确定的源码引用缺陷。已修引擎回退并由GitHub Actions合法自托管Apache-2.0 PDF.js `pdf.mjs` / Worker（约800KB/1.96MB）。另加入KaTeX MIT授权源码/公式MathML视图、专业行距与移动端（390px）专项截图、PDF真实页Canvas验收、错误提前终止以免CI挂满12min。浏览器最终PASS尚待最新工作流。
+- 本轮不以自动截图命令本身代替亲眼检查；不把旧修复前截图冒充最新版测试结果。输出T093明确原图、缺陷、修复、验证、仍欠缺的逐篇全站工作报告，结束后提升白皮书版本并回读。
+
 ## 2026-11-16｜T092完整参考文献原文全集 END（v1.9.0 / 白皮书v0.32.7）
 
 - 本次实际源码与发布：main网站 `public/thesis-studio/full-references.js` 新增PDF.js按需连续整篇原文阅读、81份PDF索引全部直接列表、163条主书目全部呈现、395张原始文献证据页连续原图，首页突出显示81/163/395/40；旧40页CC BY原PDF、24篇接缝专题、541图、六章学位论文和ERA5/ESM/风载资料不动。站点 `v1.9.0`，生产main commit `483fb1876355e1d269a73469b71c98d62c9aa320`；Pages run `43839842374` SUCCESS，Paper Studio CI和研究Library QA SUCCESS，浏览器动态图验收run `43840135928`独立执行、未提前宣称PASS。
