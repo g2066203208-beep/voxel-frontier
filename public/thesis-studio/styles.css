@@ -552,3 +552,8 @@ body{font-size:14px}
 .source-inline-detail .evidence-table-scroll{max-height:660px}
 .source-inline-detail .thesis-code{max-height:850px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere}
 @media(max-width:600px){.source-inline-detail{padding:12px}.source-inline-detail .thesis-full-article{padding:12px 0}}
+
+.evidence-local-handoff{grid-column:1/-1;min-width:0;padding:14px;background:#f4f8f7;border:1px solid #dceae5;border-radius:7px;margin:0 0 5px}
+.evidence-handoff-steps{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:8px 0}
+.evidence-handoff-step{font:600 10px/1.65 ui-monospace,Consolas,monospace;padding:5px 8px;border:1px solid #cbded7;color:#456760;background:#fff;border-radius:3px}
+.evidence-local-handoff .evidence-hint{padding:6px 0;margin:0;background:transparent}
