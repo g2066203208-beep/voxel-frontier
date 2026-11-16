@@ -1,3 +1,9 @@
+## 2026-11-16 08时｜S05 ESM谱RotD50/100方向性放大源级新结果（白皮书v0.31.25）
+
+- READ-BEFORE-WRITE：PR#42 Open/Draft，开工HEAD 62e0f7df29bc78bdf5a1e56ca4e7f5a9c2dfa85d；读取根/研究AGENTS、指挥室、白皮书、MASTER/STATUS、12阶段、T079/T080及真实ESM谱源。
+- 科研交付：[T079新增33周期RotD方向性量化及拒绝条件](../experiments/T079/METHOD_PLAN.md)，科研commit [0d88435a](https://github.com/g2066203208-beep/voxel-frontier/commit/0d88435a4f64f91708301fd6e650824b43fdfcbe)。33点RotD100/RotD50最大1.3644346306@1.25s，最小1.0661880219@1.81827s；6/33点超过1.2；若要求离散33点均不低估，统一系数必须≥1.3644346306。SOURCE=已归档ESM处理谱，非新地震物理RUN。白皮书v0.31.24→v0.31.25；12阶段0/12、DLC1.2 0/126，场址设计谱/低频可靠性HOLD。
+- 最大非Abaqus HOLD：正式风速箱、独立外载与惯性归属、材料局部应力；S05额外缺真实场址目标谱。下一唯一动作：S12地震方法正文吸收此源级方向性结论并明确RotD50不等于设计上包络。未动Abaqus/CAE、冻结母本、main、Draft合并及昂贵RUN。
+
 ## 2026-11-16 06时｜S12第三章§3.9.1实质装配（白皮书v0.31.24）
 
 - READ-BEFORE-WRITE：PR#42 Open/Draft，开工HEAD 5f120b8306d08f0345eabfcdd3c9f54af1dd4415；根/研究AGENTS、指挥室、白皮书v0.31.23、MASTER/STATUS、12阶段、T079/T080、Ch3均已读。用户禁止的Abaqus/CAE工作不涉及。
