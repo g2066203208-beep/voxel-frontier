@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.15**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.16**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -455,3 +455,8 @@
 ### 2026-11-17｜v0.32.15 PATCH — S06/S12有限截面外载逆问题的非唯一性反例
 
 - SOURCE=历史158m四ETM×31段截面结果与第三章既有来源；RUN=静力平衡解析零空间构造，连接器JS以z=[10,12,14,16]m、A=1kN独立代数验算：总横力0kN、对下方截面合弯矩0kN·m，z=13m内部弯矩扰动2kN·m；属于数学反例，不是新真实气动力。科研正文[第三章§3.8.X](../manuscript/final-thesis/chapters/03_场址风环境与整机随机风控制载荷.md) commit [e14d0d0](https://github.com/g2066203208-beep/voxel-frontier/commit/e14d0d01957054679205263ebf530b4b61996f60)，Git blob e2f0cc2166eaa8b976db059231ecb5ef5a5abd93；[T080日志](../experiments/T080/PROCESS_LOG.md) commit [39a8787](https://github.com/g2066203208-beep/voxel-frontier/commit/39a8787bcbe343eeb0e587d2109fde6d5654847e)。REF/STANDARD/OFFICIAL无新增，TAB/FIG无，源字节SHA256本轮未重算。证明有限截面测量不能唯一反演连续外载，不否定历史36组风及截面DEL；同态风侧独立外载、惯性归属、DLC1.2、材料局部应力HOLD；12阶段晋级0/12、正式DLC1.2=0/126。未触碰禁止范围。
+
+
+### 2026-11-17｜v0.32.16 PATCH — S12真实六seed载荷DEL四次矩聚合非交换性
+
+- SOURCE=T062真实72行DEL4，Git blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`，历史SHA256 `b362bcd7c37ccc56e21035de39448b5e761ec03f371b6b2f3eb30f41b013630d`（本轮未重算）。RUN=GitHub连接器JS实际读取12组×6seed，比较算术平均A与正确四次矩等效Q，12/12严格Q>A，最大9.343881m/s ETM/My幅值低估4.327%、四次矩低估18.463%（以A⁴为分母）。[第三章§3.7.28十二行实测数表](../manuscript/final-thesis/chapters/03_场址风环境与整机随机风控制载荷.md) commit [a550cb1](https://github.com/g2066203208-beep/voxel-frontier/commit/a550cb121aec813b0d07c86377f200a987587269)，blob `ec421110ecaa69e594b09eeda495440f8bdd8caa`；[T080过程](../experiments/T080/PROCESS_LOG.md) commit [9346dfe](https://github.com/g2066203208-beep/voxel-frontier/commit/9346dfe42a0c19d008698ac03386740ded6ce0d3)。Jensen解析及12组真实数值PASS，原生独立CLI NOT_RUN；TAB=12、FIG=0、REF/STANDARD/OFFICIAL无新增。结果不等于材料Miner损伤、独立未来seed或完整DLC1.2；12阶段晋级0/12、正式DLC1.2 0/126、风侧同步独立外载/惯性归属与局部应力HOLD。未触碰禁止范围。
