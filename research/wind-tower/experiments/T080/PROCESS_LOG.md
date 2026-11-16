@@ -113,3 +113,7 @@ READ-BEFORE-WRITE：已读根/研究AGENTS、指挥室最新T091、白皮书v0.3
 ## 2026-11-16 19时｜S10 双通道共同整数分配及20折拒绝检验（0/12）
 
 SOURCE=T062真实72行DEL4 CSV Git blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`；历史SHA256 `b362bcd7c37ccc56e21035de39448b5e761ec03f371b6b2f3eb30f41b013630d`（未重哈希）。RUN=GitHub连接器JS直接读取原CSV，穷举18槽每箱≥2的整数三元组；共同归一化minimax全样本10/6/2，Mx/My方差比分别0.6845946976/0.7202118343。20种重叠3pilot/3holdout共同seed索引分割，仅pilot决定共同分配，holdout Mx 20/20改善、My 19/20改善、双通道19/20；My最大反例1.3408115474，Mx最大0.8348162761。实质论文正文与两张数表已写 `research/wind-tower/manuscript/journal-wind-fatigue-results.md`，科研commit `ae179496146694db357e0c50810a999b092a8c56`。TEST=连接器JS源级算术；原生Node CLI NOT_RUN，未做新的生产物理RUN。REF/STANDARD/OFFICIAL无新增；FIG无；TAB=2；条件统计方法PASS，未来seed、完整DLC1.2、局部应力/Miner及同态风震HOLD。20折不独立，未计算置信覆盖；正式12阶段晋级0/12、DLC1.2 0/126。最大非Abaqus HOLD=同一158m真实同步外气动力六分量及惯性归属。下一唯一动作S06核实同态原始风侧时程；缺源则切有新原始证据的其他非Abaqus主题，停止六seed拆分细化。不执行/准备/审核Abaqus/CAE，不动冻结T057/T070、main或PR合并。
+
+## 2026-11-17 05时｜S12四ETM同步毛截面跨指标方位反例（0/12）
+
+SOURCE=T077 1984行16方位同步毛截面雨流CSV Git blob b5effa2a493cec0a9af8a10a3b93df0ff997d2d0；RUN=连接器V8直接分组124截面、4工况×31站。DEL4/DEL10最优方位124/124相同，正峰最优方位124/124与DEL4反向180°；高风速两工况38/62站时均最大方位相差157.5°，以该方位替代DEL4最大方位的损失上限6.095157%/4.704563%。新增Ch4§4.8.7四行真实数表与可证伪解释；TAB4 FIG0，数学统计PASS、独立CLI NOT_RUN、原始字节SHA256未重算。历史screening非DLC1.2；无材料局部应力或Miner。12阶段晋级0/12、正式DLC1.2 0/126；最大非Abaqus HOLD为同步风侧独立外载/惯性归属。下一唯一动作S11：利用既有真实方位响应数据建立按工况分组的留出验证而非再分割同六seed。未执行或派发Abaqus/CAE、未动冻结母本、main、PR合并或昂贵RUN。
