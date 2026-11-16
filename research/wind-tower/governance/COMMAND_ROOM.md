@@ -1,3 +1,8 @@
+## 2026-11-16｜T088 工作室原图无跳转阅读页 START
+
+- READ-BEFORE-WRITE：研究HEAD `af7b74b1c1c3e0870b0a7f06c7a07318fe216ce6`、根AGENTS、研究AGENTS、T087最新交接；已读 main 论文工作室 `public/thesis-studio/{index.html,figures.js,references.js,app.js,styles.css}`、541图图片索引（其中395张文献原页）、文献参考目录及T086三图原始文件/授权清单。
+- 用户要求直接在**已有同一个工作室网页**展示所有现有归档图像与T086原始期刊图，不通过GitHub跳转或强制下载。网页修改限main的前端显示、静态源级索引与样式；对研究分支登记源数据和交接，不修改任何Abaqus模型/数据、不合并Draft PR#42。拟完成连续懒加载全图阅读、T086三张固定Git SHA原图和Dong2025两张合法出版方直显图、24文献来源信息同屏；未依法取得原图者明确状态，不冒充图文件存在。main网站推送属用户本轮明确网页实施授权，与研究PR合并分离。验收对源文件/语法/索引/远端及实际Pages部署分别报告。
+
 ## 2026-11-16｜T087文献源级校勘与期刊否证门槛 END（白皮书v0.31.33）
 
 - SOURCE/REF：[原T086统一图库](../references/joint-contact-literature/README.md)与[现行24篇TSV矩阵](../references/joint-contact-literature/literature_matrix.tsv)；修复R09/R10/R16/R21/R23五项作者TBD并增R24 Ren2025 *Thin-Walled Structures* 215:113570（8试件循环压弯扭），[T087增量审稿风险/创新否证表](../references/joint-contact-literature/T087_BIBLIOGRAPHY_CORRECTIONS_AND_PUBLICATION_GATES_20261116.md)同步。论文学术边界进一步收紧：不宣称“首次循环组合受力”、无独立校准数据不宣称演化摩擦新本构、无真实原件不宣称全塔风震疲劳实测。
