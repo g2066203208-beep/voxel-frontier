@@ -23,6 +23,18 @@ async function main(){
  assert.equal((await page.locator(".original-source-preview").count()),0,"no distracting embedded PDF thumbnails on homepage");
  await page.screenshot({path:path.join(out,"jiayu-home-desktop.png"),fullPage:true});
  await page.locator('button[data-view="literature"]').click();
+ await page.locator("#journal-original-pages .journal-page").first().waitFor({timeout:30000});
+ assert.equal(await page.locator("#journal-original-pages .journal-paper").count(),8,"six development papers and two legally archived comparators");
+ assert.equal(await page.locator("#journal-original-pages .journal-page").count(),40,"18+22 genuine PDF page images inline");
+ assert.equal(await page.locator("#journal-original-pages .journal-paper").filter({has:page.locator(".journal-page")}).count(),2,"only two CC BY papers have full page images");
+ assert.equal(await page.locator("#journal-original-pages a").count(),0,"journal original-page reader never navigates away");
+ const firstJ=page.locator("#journal-original-pages .journal-original-sheet").first();
+ await firstJ.scrollIntoViewIfNeeded();
+ await page.waitForFunction(()=>{
+  const n=document.querySelector("#journal-original-pages .journal-original-sheet");
+  return n&&n.complete&&n.naturalWidth>300;
+ },null,{timeout:30000});
+ await page.screenshot({path:path.join(out,"jiayu-full-licensed-paper-page.png"),fullPage:false});
  await page.locator("#reference-doc-list .reference-row").first().waitFor({timeout:30000});
  assert.equal(await page.locator("#reference-doc-list .reference-row").count(),18,"18 references in PDF listing page");
  assert.ok((await page.locator("#reference-summary").innerText()).includes("395"),"395 source page originals");
