@@ -1,3 +1,9 @@
+## 2026-11-16｜T088原图同页直显工作室 END（白皮书v0.32.0）
+
+- GitHub main网站源码已实际更新并成功部署：提交 `6a401eb945ca905c71212e020ea84cc5c55e5dbe`，Pages run [43824379954](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43824379954) SUCCESS、Paper Studio CI [43824379813](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43824379813) SUCCESS；UI Browser QA run [43824556258](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43824556258)执行中，**尚不能用部署PASS替代浏览器内原图验收**。
+- 用户指定唯一现有工作室[科研原图](https://g2066203208-beep.github.io/voxel-frontier/thesis-studio/#figures)/[参考文献](https://g2066203208-beep.github.io/voxel-frontier/thesis-studio/#literature)已改为页面直显。图像数据：3张Jonscher2023 GitHub固定SHA原始PNG（原哈希未变）、2张Dong2025 CC BY 4.0出版方图像直显未镜像，541张研究仓库旧图（其中395张文献原页）不分页连续按需载入；24篇T087文献按原顺序显示作者、DOI和证据边界。新Atlas内部无外链/下载控件，原图许可、作者、图号/DOI直接列于图下，外部图片若拒绝嵌入如实报错。版权未许可/尚缺原件的其他论文插图未伪造，也未宣称“24篇全文所有图已获”。完整变更登记[T080过程](../experiments/T080/PROCESS_LOG.md)，研发白皮书v0.31.33→v0.32.0。
+- 不复制main新增网站文件到研究分支（研究分支尚无该新版目录，避免将旧分支文件覆盖已部署主站）；未合并PR#42，保持Draft；未执行或派发任何Abaqus，科学12阶段仍0/12，正式DLC1.2 0/126、M1新全塔及风震材料寿命继续HOLD。下一非Abaqus动作：等待并读取实际浏览器QA的图片加载与移动端截图；若发现显示失败仅修网站资源与图源，不能用假图替换。
+
 ## 2026-11-16｜T088 工作室原图无跳转阅读页 START
 
 - READ-BEFORE-WRITE：研究HEAD `af7b74b1c1c3e0870b0a7f06c7a07318fe216ce6`、根AGENTS、研究AGENTS、T087最新交接；已读 main 论文工作室 `public/thesis-studio/{index.html,figures.js,references.js,app.js,styles.css}`、541图图片索引（其中395张文献原页）、文献参考目录及T086三图原始文件/授权清单。
