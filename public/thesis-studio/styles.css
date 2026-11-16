@@ -390,3 +390,52 @@ body{font-size:14px}
 .reference-error{color:#a46660;font-size:12px}
 @media(max-width:1100px){.reference-controls{grid-template-columns:minmax(0,1fr) 145px 145px}.reference-scan-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:720px){.references-library{padding:15px 11px}.reference-header{display:block}.reference-header h2{font-size:19px}#reference-summary{display:block;margin-top:8px}.reference-controls{grid-template-columns:1fr 1fr}.reference-controls input{grid-column:1/-1}.reference-scan-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.reference-scan-preview{height:152px}.reference-row{padding:12px 10px}.reference-item-title{font-size:12px}.reference-item-meta{flex-wrap:wrap;gap:7px}.reference-item-bottom{gap:7px}.reference-read{padding:8px;font-size:10px}}
+
+/* T088 full-inline original source atlas: full native aspect, zero redirects/downloads. */
+.inline-atlas{margin:26px 0 30px;max-width:1110px}
+.atlas-head{margin-bottom:20px}
+.atlas-head h2,.literature-atlas h2{font-size:clamp(18px,2vw,24px);font-weight:750;letter-spacing:-.015em;margin:8px 0}
+.atlas-head p,.atlas-intro{max-width:920px;font-size:12px;line-height:1.85;color:#617675;margin:10px 0}
+.atlas-journal-list{display:grid;grid-template-columns:minmax(0,1fr);gap:18px;max-width:1020px}
+.atlas-journal-card{margin:0;min-width:0;background:#fff;border:1px solid #dfe9e7;border-radius:12px;overflow:hidden;box-shadow:0 5px 25px #143c4010}
+.atlas-journal-heading{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;padding:13px 19px;color:#527273;border-bottom:1px solid #edf2f1;font-size:11px}
+.atlas-source-no{font:750 11px ui-monospace,Consolas,monospace;color:#0c6560}
+.atlas-source-kind{font-size:10px;color:#7b9494}
+.atlas-journal-image-wrap{background:#f3f6f5;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60px;padding:18px;overflow:hidden}
+.atlas-journal-img{display:block;width:auto;max-width:100%;height:auto;max-height:none;object-fit:contain;background:#fff}
+.atlas-image-status{margin:9px auto 0;color:#718b8a;font-size:10px;line-height:1.7;text-align:center}
+.atlas-error{color:#a04740!important}
+.atlas-caption{padding:16px 22px 20px;color:#526b6a}
+.atlas-caption>strong{display:block;color:#213d3f;font-size:15px;line-height:1.6;margin-bottom:8px}
+.atlas-caption p{font-size:11px;line-height:1.85;margin:6px 0;overflow-wrap:anywhere}
+.atlas-source-doi{font-family:ui-monospace,Consolas,monospace;font-size:10px!important;color:#446969}
+.atlas-source-description{color:#5c7171}
+.atlas-source-hash{font:9px/1.65 ui-monospace,Consolas,monospace;color:#90a2a1;overflow-wrap:anywhere}
+.atlas-bibliography{margin-top:23px;padding:0 18px 15px;border:1px solid #e1e9e8;border-radius:10px;background:#fff}
+.atlas-bibliography>summary{list-style-position:inside;padding:19px 1px;cursor:pointer;color:#205b5b;font-weight:650;font-size:13px}
+.atlas-paper-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin:4px 0 9px}
+.atlas-paper{border:1px solid #ebf0ef;border-radius:7px;padding:17px;min-width:0;background:#fbfcfc}
+.atlas-paper-top{display:flex;justify-content:space-between;gap:10px;align-items:start}
+.atlas-paper-id{font:750 10px ui-monospace,monospace;color:#216b67}
+.atlas-paper-availability{font-size:10px;color:#8a9696;text-align:right}
+.atlas-paper h3{font-size:12px;line-height:1.65;margin:10px 0;color:#2d4546;overflow-wrap:anywhere}
+.atlas-paper p{font-size:10px;line-height:1.75;margin:5px 0;color:#697e7d;overflow-wrap:anywhere}
+.atlas-paper-note{color:#485f5f!important}
+.atlas-paper-doi{font:10px/1.75 ui-monospace,monospace;color:#3d7770;overflow-wrap:anywhere}
+.atlas-complete{border-top:1px solid #e2eae7;padding-top:34px}
+.atlas-toolbar{display:grid;grid-template-columns:minmax(0,1fr) minmax(200px,250px);gap:12px;max-width:1020px}
+.atlas-toolbar label{min-width:0;display:flex;flex-direction:column;gap:7px;color:#526f70;font-size:10px;font-weight:680}
+.atlas-toolbar input,.atlas-toolbar select{width:100%;height:42px;border:1px solid #d9e5e2;border-radius:7px;color:#2c5050;background:#fff;padding:0 12px;font:12px inherit}
+.atlas-counter{font:650 11px/1.7 ui-monospace,Consolas,monospace;color:#56807c;margin:18px 0}
+.atlas-file-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;max-width:1020px}
+.atlas-file-card{margin:0;min-width:0;background:#fff;border:1px solid #e1e9e7;border-radius:10px;overflow:hidden;content-visibility:auto;contain-intrinsic-size:auto 430px}
+.atlas-file-image{display:block;width:100%;height:auto;aspect-ratio:auto 4/3;object-fit:contain;background:#f4f6f5}
+.atlas-file-caption{display:flex;flex-direction:column;gap:5px;padding:10px 16px 13px;overflow-wrap:anywhere}
+.atlas-file-caption strong{font:650 11px/1.7 ui-monospace,Consolas,monospace;color:#355658}
+.atlas-file-caption span{font-size:10px;color:#78908f}
+.atlas-file-error{padding:50px 20px;text-align:center;font-size:11px;color:#9a4646}
+.atlas-empty{padding:25px;color:#698280}
+.literature-atlas{grid-column:1/-1;max-width:none;border:1px solid #e1e9e7;background:#fbfcfb;border-radius:11px;padding:24px}
+.literature-atlas .atlas-journal-list{margin-top:15px}
+#figures-view .complete-figure-catalog[hidden]{display:none!important}
+@media(max-width:760px){.atlas-paper-grid{grid-template-columns:1fr}.atlas-toolbar{grid-template-columns:1fr}.atlas-journal-image-wrap{padding:9px}.atlas-caption{padding:13px}.literature-atlas{padding:15px}}
