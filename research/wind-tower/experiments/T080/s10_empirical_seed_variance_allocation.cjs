@@ -37,7 +37,7 @@ function analyze(csv){
 }
 function selftest(){
  const mock=['case_id,channel,m,Neq,DEL'];
- for(const [b] of bins)for(let i=1;i<=6;i++)for(const c of ['TwrBsMxt','TwrBsMyt'])mock.push(b+'_NTM_S0'+i+','+c+',4,100000,'+(100+i));
+ for(const [b] of bins)for(let i=1;i<=6;i++)for(const c of ['TwrBsMxt','TwrBsMyt'])for(const regime of ['NTM','ETM'])mock.push(b+'_'+regime+'_S0'+i+','+c+',4,100000,'+(100+i));
  const s=mock.join('\n'),r=analyze(s);
  assert.equal(r.source_rows,36*2);
  for(const c of Object.values(r.channels)){assert.equal(c.pilot_optimum.allocation.reduce((a,b)=>a+b),18);assert.ok(c.pilot_optimum.allocation.every(n=>n>=2));}
