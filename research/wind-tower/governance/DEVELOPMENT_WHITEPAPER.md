@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.31.28**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.31.29**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -339,3 +339,5 @@
 ### 2026-11-16｜v0.31.28 PATCH — S11真实ETM整箱留出后验裕量与逐段差异
 
 - **科研正文**：[期刊S11三行后验裕量数表与拒绝规则](../manuscript/journal-wind-fatigue-results.md)，[T080过程](../experiments/T080/PROCESS_LOG.md)；SOURCE=1984行ETM Git blob `b5effa2a493cec0a9af8a10a3b93df0ff997d2d0`，历史SHA256 `16c9864ef7a344e5b97338c31ce26de6adb86c0f0f64942ef894fe9983926b2b`（未重新字节哈希）；RUN=124观测整风箱留出，mean/nearest/linear全局后验裕量1.018800/0.371677/0.478020 MPa，逐段裕量相对全局总和少36.6011%/54.4594%/58.2451%；科研commit [e58c4529](https://github.com/g2066203208-beep/voxel-frontier/commit/e58c452951057a2ebbbbd63ad01eac3b1670733a)。**仅同样本oracle回顾算术PASS，不是前瞻保守性、局部材料寿命或结构物理PASS**；12阶段晋级0/12，正式DLC1.2 0/126。无Abaqus/CAE、昂贵RUN或PR合并。
+
+- **v0.31.29｜2026-11-16 12时｜S12前瞻校准不可识别性**：[期刊新增五行秩表及可证伪论证](../manuscript/journal-wind-fatigue-results.md)、[T080](../experiments/T080/PROCESS_LOG.md)，科研commit 6f2efed3bc1d83281ab56a1583293079f28d574c；SOURCE=ETM Git blob b5effa2a493cec0a9af8a10a3b93df0ff997d2d0、历史SHA256 16c9864ef7a344e5b97338c31ce26de6adb86c0f0f64942ef894fe9983926b2b（未重哈希）。独立整风箱秩推导得95%有限split-conformal阈值至少19个校准箱，现3箱分离训练/测试后至多1校准箱。数学PASS，交换性、真实外推、物理HOLD；12阶段0/12，正式DLC1.2 0/126。
