@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.31.33**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.0**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -28,6 +28,14 @@
 - 下一独立非Abaqus动作：核对/恢复可证明同模型、运行状态、时间网格和起点的W侧真实时程；没有可追溯来源时记录HOLD并转向S05/S10可独立研究，不造数据。
 
 ## 4. 版本变更记录（只记录真实持久化事务）
+
+### 2026-11-16｜v0.32.0 MINOR — T088现有公开论文工作室期刊原图直显与全部归档图像连续阅读
+
+- 用户明确要求**所有已有原图直接在同一工作室显示，不用跳转或下载**。原主站 `g2066203208-beep/voxel-frontier` 的 main 分支新增 `public/thesis-studio/data/inline-atlas.json`（24条T087文献；5张许可原图）、`public/thesis-studio/inline-atlas.js`，更新 `index.html`、`styles.css`、`figures.js`、`app.js`；541张已入库图像（其中395张文献原页）按原图比例连续懒加载，不再强制分页/打开GitHub/点击下载。水平接缝5图在原图页和文献模块同页直显：3张出版方Springer CC BY 4.0原始PNG由研究分支固定SHA `808a6ca9` 字节托管，2张Dong2025 MDPI CC BY 4.0图由出版方URL直显、**尚未镜像**，外站如拒绝热链则如实提示，绝不假冒已下载。24篇元数据及研究边界直接显示，尚未合法获取的其他原图不伪造。
+- 测试：main新增 `scripts/qa-jiayu-browser.cjs` 验收项，检查5个期刊图卡、24条正文文献信息、541张图片卡、零跳转/下载按钮及首张Jonscher原始PNG浏览器解码；本地使用连接器JS静态语法校验全部改动。main部署工作流成功记录按GitHub Actions实时结果为准，**浏览器QA未成功前不宣称五张图片都实际加载**。
+- 版本性质：新增独立网页连续原图阅读模块，因此MINOR递增v0.31.33→v0.32.0。正式科研阶段12/12仍0，DLC1.2 0/126，原BF1/T082成果不改，M1新全塔和同态风震、材料疲劳仍HOLD；没有执行/准备/审核/派发Abaqus、没有合并PR#42。公开页面的main仅改站点前端和QA代码，由用户本轮明确要求实施；研究分支仅保存科学治理记录，不复制未来会与main冲突的站点文件。
+
+
 
 ### 2026-11-16｜v0.31.33 PATCH — T087水平接缝文献作者纠错、遗漏8试件循环压弯扭试验与期刊否证门槛
 
