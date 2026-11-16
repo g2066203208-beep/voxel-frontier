@@ -1,3 +1,11 @@
+## 2026-11-16｜T093真实浏览器UI终验 END（网站v1.9.1 / 白皮书v0.32.9）
+
+- READ-BEFORE-WRITE研究HEAD `25beab58a9888bf43d8749805824bdad4fdc4c23`，根/研究AGENTS与T092、T093各原图、T093修复源码、最近S10白皮书v0.32.8已继承。用户要求不是讲空话，而是**真正亲自看截图并用浏览器查全站**，本轮已取回旧6张失败证据及最新14张终验截图并目视逐张核查。
+- 修复的真实缺陷：文献PDF读引擎`vendor/pdf.mjs`缺失；`full-references.js` Promise.finally多余`()`造成全文渲染失败；旧`reader.js`移走DOM后仍对空`#reader-search-results`调用`replaceChildren`，导致“何泽瑜标题/政府公文旧第2页”错配；论文第三章原LaTeX没有数学排版。已用PDF.js v5.4.530本地worker、KaTeX v0.16.25与源身份绑定/清空旧画布、现代中文样式修正。
+- 网页main `v1.9.1` Pages `43848813144` SUCCESS、CI `43848813163` SUCCESS、研究图库SHA完整性 `43848813124` SUCCESS；**Chromium run `43849107797` SUCCESS**（14 PNG artifact `14216317869`）。验收日志：9页原L040真PDF第一页Canvas及完整页数、真正90页何泽瑜硕士论文封面及正确资料源ID、政府3页、40张许可期刊页、81PDF/163书目/395来源页/541研究原图齐全，KaTeX实际排版，390px手机文献/论文/ERA5无横向溢出；UI看图证据已验证。
+- 不虚称“每份PDF全页已逐项打开”。这是端到端代表原文/全目录及全部图SHA的真实浏览器与文件完备测试；79 indexed中的其余文件未一一逐页打开，2条restricted缺原件，163条中90条无关联原文，且当前ERA5原逐时/ESM 32040×3完整CSV的HOLD与物理模型HOLD不变。禁Abaqus、保护Draft PR#42不合并。
+- T093实际过程与最终PASS记录：`research/wind-tower/experiments/T093/REAL_BROWSER_VISUAL_QA_20261116.md`，白皮书v0.32.9；用户可在现有 `https://g2066203208-beep.github.io/voxel-frontier/thesis-studio/#literature` 站内看原文。结案范围限网站v1.9.1的代表性视觉/交互QA，不是整篇学位论文送审学术通过。
+
 ## 2026-11-16 18时｜S10 pilot—holdout真实NTM独立评价 END（v0.32.8）
 
 - READ-BEFORE-WRITE起始HEAD `094b13c78504b98964c3b7f600f88042a35c6d8e`，PR#42 Open/Draft；研究分支只写T080原程序、既有期刊稿、T080日志和白皮书，不修改main或冻结模型。SOURCE=T062 72行真实DEL4 Git blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`，历史SHA256 `b362bcd7c37ccc56e21035de39448b5e761ec03f371b6b2f3eb30f41b013630d`（未重哈希）。
