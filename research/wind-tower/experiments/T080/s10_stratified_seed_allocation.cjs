@@ -46,4 +46,33 @@ const out={source,observed_hours:184080,operating_hours:total,bins:21,positive_b
   normalized_variance_equal_sigma_baseline:v0,normalized_variance_equal_sigma_optimized:v1,
   variance_ratio:v0/v1,relative_variance_reduction:1-v1/v0,
   limitations:'Conditional on fixed observed bin probabilities, independent seeds, equal within-bin response variance, and one slot per bin. NOT a fatigue, DLC1.2, or structural safety result.'};
+// 2026-11-16: exact heteroscedastic rejection test for the fixed equal-variance allocation.
+// A scenario is a statistical counterexample, NOT observed seed variance.
+function weightedVariance(allocation,sd){
+  assert.strictEqual(allocation.length,21);assert.strictEqual(sd.length,21);
+  assert(sd.every(x=>Number.isFinite(x)&&x>0));
+  return p.reduce((s,pi,i)=>s+(pi*sd[i])**2/allocation[i],0);
+}
+const lowAllocation=n.map(x=>x<6);
+const adverse=lowAllocation.map(flag=>flag?10:1);
+const badOpt=weightedVariance(n,adverse),badEqual=weightedVariance(baseline,adverse);
+assert(badOpt>badEqual,'adversarial SD must reverse equal-variance ranking');
+const gainTerms=p.map((pi,i)=>pi*pi*(1/6-1/n[i]));
+const B=gainTerms.reduce((s,g,i)=>s+(n[i]>6?g:0),0);
+const A=gainTerms.reduce((s,g,i)=>s+(n[i]<6?-g:0),0);
+assert(A>0&&B>0);
+const criticalSD=Math.sqrt(B/A);
+assert(criticalSD>9&&criticalSD<10);
+const boundary=lowAllocation.map(flag=>flag?criticalSD:1);
+assert(Math.abs(weightedVariance(n,boundary)-weightedVariance(baseline,boundary))<1e-12);
+assert(Math.abs(weightedVariance(n,Array(21).fill(1))-v1)<1e-14);
+assert(Math.abs(weightedVariance(baseline,Array(21).fill(1))-v0)<1e-14);
+out.heteroscedastic_counterexample={
+  assumption:'Only a deliberately adverse hypothetical within-bin SD pattern; no physical seed variance inferred',
+  sd_ratio_critical:criticalSD,variance_ratio_critical:B/A,
+  sd_ratio_test:10,high_sd_bins_mps:lowAllocation.map((flag,i)=>flag?i+4:null).filter(x=>x!==null),
+  adverse_variance_optimized:badOpt,adverse_variance_equal6:badEqual,
+  adverse_relative_variance_change:badOpt/badEqual-1,
+  interpretation:'At 10x SD for bins with n<6, the equal-variance allocation is 5.37% worse than equal-six, in variance. No fatigue or DLC claim.'
+};
 console.log(JSON.stringify(out,null,2));
