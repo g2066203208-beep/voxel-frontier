@@ -73,7 +73,7 @@ const checks=makePanel("研究方法与指标","METHOD & QUALITY GATES");rows(ch
 const sources=makePanel("研究资料","PRIMARY LINKS");sourceList(sources,m.links);right.append(sources);
 const outs=makePanel("成果文件","DELIVERABLES");for(const s of m.outputs)outs.append(E("div","deliverable-item",s));right.append(outs);
 body.append(left,right);
-if(m.id==="literature")window.JYReferences?.show(body);
+if(m.id==="literature")window.JYFullReferences?.show(body);
 window.JYPrimaryEvidence?.showModule(m.id,body);
 if(m.id==="literature")window.JYAtlas?.showLiterature(body);
 if(m.id==="literature")window.JYOriginalPages?.show(body);
