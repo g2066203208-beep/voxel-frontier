@@ -92,7 +92,7 @@ async function show(container){
    const r=await fetch("./primary-data/manifest.json",{cache:"no-store"});if(!r.ok)throw Error("全文目录不可读");
    S.manifest=await r.json();if(S.manifest.chapters.length!==6)throw Error("论文六章来源不完整");
   }
-  const m=S.manifest,toolbar=E("div","thesis-chapter-select"),meta=E("p","thesis-manifest-meta");
+  const m=S.manifest,toolbar=E("div","thesis-chapter-tabs"),meta=E("p","thesis-source-line");
   const article=E("article","thesis-full-article");
   async function choose(id){
    S.current=id;
