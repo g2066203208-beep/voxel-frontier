@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.19**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.20**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -474,3 +474,7 @@
 ### 2026-11-17｜v0.32.19 PATCH — S11真实四ETM按工况留出方位泛化反例
 
 - SOURCE=T077 1984行同步毛截面16方位雨流CSV blob `b5effa2a493cec0a9af8a10a3b93df0ff997d2d0`（SHA256本轮未重算）；RUN=V8源级4次整工况留出、31段/次：DEL4与正峰各124/124首选命中；时均首选73/124、前二124/124，四折平均归一化后悔0.465573/0.273056/0.372602/0.461997%。程序 `experiments/T080/s11_etm_case_holdout_azimuth.cjs` commit `52da447b04bef4fb9ea9fa1f90fbc50874cd40e0`；Ch4 §4.8.8四行真实表 commit `d20578b1a8b5ff5d2bd9573857de1d96e6927a3c`；过程日志 `experiments/T080/PROCESS_LOG.md` commit `12258edc644dbfc80f08dff3fe69e38ae917129c`。TAB4 FIG0，REF/STANDARD/OFFICIAL无新增；源级数值PASS、原生Node CLI NOT_RUN、独立泛化与材料物理HOLD。四折与31站相关，不能声称124次独立验证；12阶段晋级0/12，DLC1.2 0/126，S06真实同态风侧外载/惯性归属HOLD。未执行Abaqus/CAE、冻结母本、main、PR合并或昂贵RUN。
+
+### 2026-11-17｜v0.32.20 PATCH — S12真实1574逐循环均值与条件PT偏置的四次矩分区
+
+- SOURCE=T077三控制点1574行真实历史同步毛截面雨流CSV blob `4b05ec4214c1ff38df71f1e5eb80cbec5a81c38d`；历史SHA256 `646065838456b6465e321c4c6fd24966f180f275df99c615000577557219ff83`（未重哈希）。RUN=连接器V8实际分组，gross/Pe/P0正均值四次矩份额CSEG16为100/74.288449/30.197598%，CSEG17为100/74.666933/30.840051%，CSEG04均0；仅名义毛截面、条件均匀偏置。实物[第四章§4.8.9三行数表及连续科学正文](../manuscript/final-thesis/chapters/04_10MW混合塔架风致疲劳性能分析.md)，科研commit [6ae86b3](https://github.com/g2066203208-beep/voxel-frontier/commit/6ae86b35d15b9d183ef58e0d345df7670e9c7a08)；[T080过程](../experiments/T080/PROCESS_LOG.md)。TAB3 FIG0，REF/STANDARD/OFFICIAL无新原页；算术PASS，独立CLI、材料局部应力/受拉受压映射/Miner及正式DLC1.2 HOLD；12阶段晋级0/12。禁止范围不变。
