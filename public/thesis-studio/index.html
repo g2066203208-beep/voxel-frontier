@@ -11,6 +11,8 @@
   <script defer src="./references.js"></script>
   <script defer src="./inline-atlas.js"></script>
   <script defer src="./journal-pages.js"></script>
+  <script defer src="./primary-evidence.js"></script>
+  <script defer src="./thesis-inline.js"></script>
   <script defer src="./figures.js"></script>
   <script defer src="./app.js"></script>
 </head>
@@ -24,7 +26,7 @@
     </a>
     <div class="sidebar-meta">RESEARCH WORKSPACE <span class="sidebar-meta-chip">JY</span></div>
     <nav id="nav" class="sidebar-nav"></nav>
-    <div class="sidebar-bottom"><a href="#figures" data-unified-view="figures">科研原图 · 图集</a><a href="#library" data-unified-view="library">文件资料 · 上传下载</a><a href="#notes" data-unified-view="notes">论文写作 · 研究记录</a><a href="../wind-twin.html" target="_blank" rel="noopener noreferrer">混塔结构可视化 ↗</a></div>
+    <div class="sidebar-bottom"><a href="#evidence" data-unified-view="evidence">真实科学数据</a><a href="#thesis" data-unified-view="thesis">论文六章全文</a><a href="#figures" data-unified-view="figures">科研原图 · 图集</a><a href="#library" data-unified-view="library">文件资料 · 上传下载</a><a href="#notes" data-unified-view="notes">论文写作 · 研究记录</a><a href="../wind-twin.html" target="_blank" rel="noopener noreferrer">混塔结构可视化 ↗</a></div>
   </aside>
   <div class="workspace">
     <header class="topbar">
@@ -36,7 +38,7 @@
       <section id="overview-view" class="view home-compact">
         <header class="academic-heading">
           <div><span class="section-kicker">HUBEI · JIAYU / WIND ENERGY</span><h1>湖北嘉鱼风机工作室</h1><p>场址 · 风载 · 地震 · 混合塔架 · 疲劳 · 论文</p></div>
-          <div class="academic-actions"><button type="button" id="start-modules" class="btn-home">研究专题</button><button type="button" data-unified-view="figures" class="btn-home emphasis">阅读原件</button><button type="button" data-unified-view="literature" class="btn-home">参考文献</button><button type="button" data-unified-view="library" class="btn-home">文件资料</button></div>
+          <div class="academic-actions"><button type="button" id="start-modules" class="btn-home">研究专题</button><button type="button" data-unified-view="evidence" class="btn-home emphasis">ERA5与地震原始数据</button><button type="button" data-unified-view="thesis" class="btn-home">论文全文</button><button type="button" data-unified-view="figures" class="btn-home emphasis">阅读原件</button><button type="button" data-unified-view="literature" class="btn-home">参考文献</button><button type="button" data-unified-view="library" class="btn-home">文件资料</button></div>
         </header>
         <section class="primary-docs">
           <div class="section-head compact"><div><span class="section-kicker">DOCUMENTS</span><h2>原始文献</h2></div></div>
@@ -127,6 +129,14 @@
             <button type="button" id="figure-next">下一页</button>
           </nav>
         </section>
+      </section>
+      <section id="evidence-view" class="view unified-panel" hidden aria-label="原始科学数据研究室">
+        <header class="academic-heading"><div><span class="section-kicker">VERIFIED RESEARCH DATA · INLINE</span><h1>真实数据 · ERA5 / 地震 / 风载 / 结构</h1><p>原始表格、完整数值、实测波形与统计曲线在同一工作室直接阅读；来源不符即拒绝展示。</p></div></header>
+        <div id="evidence-reader" class="evidence-reader" aria-live="off"></div>
+      </section>
+      <section id="thesis-view" class="view unified-panel" hidden aria-label="六章学位论文全文阅读">
+        <header class="academic-heading"><div><span class="section-kicker">SIX-CHAPTER ORIGINAL MANUSCRIPT</span><h1>学位论文 · 六章完整原文</h1><p>按研究分支逐字节归档六章正文，原图直接内嵌；含证据边界与待验证内容，不冒充已经通过送审。</p></div></header>
+        <div id="thesis-reader" class="thesis-inline-reader"></div>
       </section>
       <section id="library-view" class="view unified-panel" hidden>
         <div class="unified-heading"><span class="section-kicker">RESEARCH DATA</span><h1>文件资料</h1></div>
