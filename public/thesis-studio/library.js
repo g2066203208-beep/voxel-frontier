@@ -109,7 +109,7 @@ for(const x of groups){const opt=document.createElement("option");opt.value=x.na
 updateStats();remoteList();toast("已同步 "+found.length+" 个研究文件");
 }catch(e){toast("同步失败："+e.message.slice(0,65)+"；沿用已发布索引");console.error(e);}finally{btn.disabled=false;btn.textContent=orig;}
 }
-function bind(){for(const b of $("[data-tab]"))b.addEventListener("click",()=>route(b.dataset.tab));$("#upload-shortcut").addEventListener("click",()=>{route("local");$("#file-input").click();});
+function bind(){for(const b of $$("[data-tab]"))b.addEventListener("click",()=>route(b.dataset.tab));$("#upload-shortcut").addEventListener("click",()=>{route("local");$("#file-input").click();});
 $("#export-manifest").addEventListener("click",()=>S.index?exportCSV(S.shown):toast("索引尚未加载"));
 $("#remote-search").addEventListener("input",e=>{S.search=e.target.value;S.page=0;remoteList();});
 $("#group-filter").addEventListener("change",e=>{S.group=e.target.value;S.page=0;remoteList();});
