@@ -68,10 +68,9 @@ function sourceList(panel,arr){for(const x of arr){
  panel.append(row);
 }}
 function renderDetail(m){$("#module-tag").textContent=m.group+" / "+m.scope;const s=$("#module-stage");s.className="stage-chip "+statusClass(m.stage);s.textContent=m.stage;$("#module-english").textContent=m.en;$("#module-title").textContent=m.title;$("#module-description").textContent=m.brief;$("#module-code").textContent=m.short;const body=$("#module-body");clear(body);const left=E("div","module-column"),right=E("div","module-column");
-const q=makePanel("研究问题","RESEARCH QUESTIONS");rows(q,m.questions);left.append(q);
-const checks=makePanel("研究方法与指标","METHOD & QUALITY GATES");rows(checks,m.checks);left.append(checks);
-const sources=makePanel("研究资料","PRIMARY LINKS");sourceList(sources,m.links);right.append(sources);
-const outs=makePanel("成果文件","DELIVERABLES");for(const s of m.outputs)outs.append(E("div","deliverable-item",s));right.append(outs);
+// Show traceable materials first. Do not present planned deliverable names as completed files.
+const sources=makePanel("研究原始资料","SOURCE RECORDS");sourceList(sources,m.links);left.append(sources);
+const checks=makePanel("尚需核验的条件","VALIDATION CRITERIA");rows(checks,m.checks);right.append(checks);
 body.append(left,right);
 if(m.id==="literature")window.JYFullReferences?.show(body);
 window.JYPrimaryEvidence?.showModule(m.id,body);
