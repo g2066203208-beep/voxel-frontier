@@ -2,7 +2,7 @@
 const fs=require("node:fs");
 const path=require("node:path");
 const {chromium}=require("playwright");
-const BASE="https://g2066203208-beep.github.io/voxel-frontier/thesis-studio/";
+const BASE=process.env.STUDIO_BASE||"https://g2066203208-beep.github.io/voxel-frontier/thesis-studio/";
 const OUT="artifacts/visual-audit";
 const views=[
  ["00-overview","overview"],["01-figures","figures"],["02-evidence","evidence"],
@@ -33,13 +33,26 @@ async function run(){
        ["figures","evidence","thesis","library","notes"].includes(id)?id+"-view":"module-view");
       return el&&!el.hidden;
     },id,{timeout:16000});
-    await page.waitForTimeout(id==="figures"||id==="literature"?2200:850);
+    await page.waitForTimeout(id==="figures"||id==="literature"?3000:id==="evidence"||id==="thesis"?5500:1700);
+    if(id==="evidence")await page.waitForFunction(()=>document.querySelectorAll("#evidence-reader .evidence-source-group").length===4,null,{timeout:25000}).catch(()=>{});
+    if(id==="thesis")await page.waitForFunction(()=>document.querySelectorAll("#thesis-view .thesis-full-article[data-source=loaded]").length===6,null,{timeout:25000}).catch(()=>{});
     record.title=await page.locator("#page-title").innerText().catch(()=>"(missing)");
     record.visibleHeadings=await page.locator("h1:visible,h2:visible").allTextContents();
     record.sourceItems=await page.locator("#module-view:not([hidden]) .source-item").count();
     record.bodyLength=await page.locator("body").innerText().then(t=>t.length);
     record.imgBad=await page.locator("img:visible").evaluateAll(nodes=>nodes.filter(i=>i.complete&&i.naturalWidth===0).length);
     record.pageErrors=consoleErrors.splice(0);
+    record.originalFigures=await page.locator(".record-figure").count();
+    record.originalDocuments=await page.locator(".record-document").count();
+    record.scientificDatasetSections=await page.locator("#evidence-view .evidence-source-group").count();
+    record.chapters=await page.locator("#thesis-view .thesis-chapter-section").count();
+    record.renderedChapters=await page.locator('#thesis-view .thesis-full-article[data-source="loaded"]').count();
+    record.inlineFailureCount=await page.locator("#module-body .record-failed,#module-body .evidence-error,#evidence-reader .evidence-error").count();
+    if(id==="library"){
+     const frame=page.frameLocator("#library-frame");
+     record.libraryFiles=await frame.locator("#stat-files").innerText().catch(()=>"unavailable");
+     record.libraryPreview=await frame.locator("#remote-preview").innerText().then(x=>x.slice(0,150)).catch(()=>"unavailable");
+    }
     const target=path.join(OUT,size.name+"-"+slug+".png");
     await page.screenshot({path:target,animations:"disabled",timeout:20000});
     record.screenshot=target;
