@@ -60,6 +60,7 @@ const outs=makePanel("成果文件","DELIVERABLES");for(const s of m.outputs)out
 body.append(left,right);
 if(m.id==="literature")window.JYReferences?.show(body);
 if(m.id==="literature")window.JYAtlas?.showLiterature(body);
+if(m.id==="literature")window.JYOriginalPages?.show(body);
 window.JYFigures?.moduleFigures(m.id,left);
 if(m.id==="literature"){const p=makePanel("现行标准与制订项目","OFFICIAL STANDARDS");for(const n of state.catalog.standards){const item=E("div","source-item");const name=link(n.url,n.name+" · "+n.sub);item.append(name,E("span","",n.kind));p.append(item);}left.append(p);}
 if(m.id==="library"){const p=makePanel("数据与原始证据目录","SOURCE REGISTRY");sourceList(p,state.catalog.datasets.map(x=>({label:x.name,url:x.url,kind:"evidence"})));left.append(p);}
