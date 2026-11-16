@@ -82,7 +82,8 @@ function markdown(text,host){
    !lines[i].trim().startsWith(codeFence)){group.push(lines[i].trim());i++}
   para(group.join(" "));
  }
- host.replaceChildren(result)
+ host.replaceChildren(result);
+ window.JYMathTypeset?.typeset(host);
 }
 async function show(container){
  if(!container)return;
