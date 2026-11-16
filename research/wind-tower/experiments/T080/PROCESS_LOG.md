@@ -26,3 +26,7 @@ SOURCE=ERA5历史184080h、条件运行106900h、历史NTM三箱7164h；沿用ER
 
 SOURCE=既有ERA5 184080小时/4–25m/s 106900小时31-bin CSV blob 1bae743b385d4f24c8b5af3e0b445aae30d40c6f（历史SHA256 e4058620a36b23bb218103875d4dc5b0711fc45d418b23a2208c2fc9c16c9102）及126-slot矩阵 blob 1e6b774443606200156f40d57352ce097a88ee35；RUN=连接器JS按原整数小时排序、累加、检查最小完整风箱数。TAB=英文期刊稿新增5行覆盖表。结果：95%条件运行小时需7箱/42槽，覆盖104287/106900=97.5557%；99%需9箱/54槽，覆盖106387/106900=99.5201%；历史3个screen-only箱覆盖7164/106900=6.7016%，正式DLC1.2仍0/126。最小性通过前一箱数6箱94.6099%、8箱98.8896%反证。统计定义是ERA5样本条件小时覆盖，不是疲劳损伤覆盖或规范要求；零尾部、材料局部应力、风侧外力及惯性归属HOLD。未启动OpenFAST/TurbSim、未执行或派发Abaqus。REF/STANDARD/OFFICIAL无新授权原件；FIG无；12阶段本轮0/12。
 
+
+## 2026-11-16 11时｜S11真实ETM整风箱留出后验保守裕量（v0.31.28）
+
+READ-BEFORE-WRITE：PR#42 Open/Draft，开工HEAD c42313a7a1b82fc6b07aefdc39de16d7519c43b8；根/研究AGENTS、指挥室、白皮书、MASTER/STATUS、12阶段、T079/T080、英文期刊稿和1984行原始CSV均已读。SOURCE=4ETM×31段×16方位真实历史筛查表 Git blob b5effa2a493cec0a9af8a10a3b93df0ff997d2d0，历史SHA256 16c9864ef7a344e5b97338c31ce26de6adb86c0f0f64942ef894fe9983926b2b（本轮未重哈希）；RUN=直接解析1984行，汇总124 case-section DEL4，整风速箱留出（19.20214m/s两seed一同排除），复算mean/nearest/linear残差，并求全局及逐段后验最小非负上调裕量。TAB=期刊新增3行数表：全局裕量分别1.018800/0.371677/0.478020 MPa；逐段裕量总和相对全局统一裕量分别少36.6011%/54.4594%/58.2451%。REF/STANDARD/OFFICIAL无新原页；FIG无；科学commit e58c452951057a2ebbbbd63ad01eac3b1670733a。独立测试=对124观测检查残差+裕量非负，严格整箱排除；但后验裕量使用测试标签，**不得声称独立泛化验证或真实物理保守性**。METHOD arithmetic PASS / external-bin prediction, formal DLC1.2 0/126, local Miner, same-state WE HOLD；12阶段晋级0/12。禁止Abaqus/CAE、冻结母本、main、昂贵RUN与Draft合并均未动。下一唯一动作：转S12将后验校准与真正前瞻保守性验证的区别写入论文优化方法/期刊局限性，避免继续重复同一三箱统计。
