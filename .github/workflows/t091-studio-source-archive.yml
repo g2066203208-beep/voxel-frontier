@@ -10,6 +10,7 @@ on:
 
 permissions:
   contents: write
+  actions: read
 
 concurrency:
   group: t091-inline-primary-archive
@@ -32,6 +33,8 @@ jobs:
           git rev-parse refs/remotes/origin/research/t080-seismic-integration-gates-20261022
       - name: Build exact source copies and optional real ESM waveform
         shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           python3 .github/scripts/build-studio-primary-evidence.py
