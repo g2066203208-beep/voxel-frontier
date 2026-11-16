@@ -90,9 +90,30 @@
       "doi": "10.1007/s13349-023-00693-6",
       "method": "混塔干接缝—预压变化—实测模态；相关物理依据",
       "license": "CC BY 4.0（Springer原始开放许可）",
-      "status": "licensed_pending_pages",
+      "status": "archived_cc_by_pages",
       "source": "https://repo.uni-hannover.de/bitstream/handle/123456789/15031/Influence_of_system_changes.pdf?sequence=1",
-      "pages": []
+      "pages": [
+        "./journal-pages/jonscher2023/page-001.jpg",
+        "./journal-pages/jonscher2023/page-002.jpg",
+        "./journal-pages/jonscher2023/page-003.jpg",
+        "./journal-pages/jonscher2023/page-004.jpg",
+        "./journal-pages/jonscher2023/page-005.jpg",
+        "./journal-pages/jonscher2023/page-006.jpg",
+        "./journal-pages/jonscher2023/page-007.jpg",
+        "./journal-pages/jonscher2023/page-008.jpg",
+        "./journal-pages/jonscher2023/page-009.jpg",
+        "./journal-pages/jonscher2023/page-010.jpg",
+        "./journal-pages/jonscher2023/page-011.jpg",
+        "./journal-pages/jonscher2023/page-012.jpg",
+        "./journal-pages/jonscher2023/page-013.jpg",
+        "./journal-pages/jonscher2023/page-014.jpg",
+        "./journal-pages/jonscher2023/page-015.jpg",
+        "./journal-pages/jonscher2023/page-016.jpg",
+        "./journal-pages/jonscher2023/page-017.jpg",
+        "./journal-pages/jonscher2023/page-018.jpg"
+      ],
+      "source_pdf_sha256": "7f1ba7c70a57663a9f42258c33f81efe5680892d57b82cd785b7f3e39413c381",
+      "render_method": "pdftoppm 125 dpi; full pages; cropped/modified: no"
     },
     {
       "id": "dong2025",
@@ -103,9 +124,34 @@
       "doi": "10.3390/buildings15203786",
       "method": "分段混塔及钢—混过渡段建模和参数灵敏度",
       "license": "CC BY 4.0（MDPI）",
-      "status": "licensed_pending_pages",
-      "source": "https://www.mdpi.com/2075-5309/15/20/3786/pdf",
-      "pages": []
+      "status": "archived_cc_by_pages",
+      "source": "https://mdpi-res.com/d_attachment/buildings/buildings-15-03786/article_deploy/buildings-15-03786.pdf",
+      "pages": [
+        "./journal-pages/dong2025/page-001.jpg",
+        "./journal-pages/dong2025/page-002.jpg",
+        "./journal-pages/dong2025/page-003.jpg",
+        "./journal-pages/dong2025/page-004.jpg",
+        "./journal-pages/dong2025/page-005.jpg",
+        "./journal-pages/dong2025/page-006.jpg",
+        "./journal-pages/dong2025/page-007.jpg",
+        "./journal-pages/dong2025/page-008.jpg",
+        "./journal-pages/dong2025/page-009.jpg",
+        "./journal-pages/dong2025/page-010.jpg",
+        "./journal-pages/dong2025/page-011.jpg",
+        "./journal-pages/dong2025/page-012.jpg",
+        "./journal-pages/dong2025/page-013.jpg",
+        "./journal-pages/dong2025/page-014.jpg",
+        "./journal-pages/dong2025/page-015.jpg",
+        "./journal-pages/dong2025/page-016.jpg",
+        "./journal-pages/dong2025/page-017.jpg",
+        "./journal-pages/dong2025/page-018.jpg",
+        "./journal-pages/dong2025/page-019.jpg",
+        "./journal-pages/dong2025/page-020.jpg",
+        "./journal-pages/dong2025/page-021.jpg",
+        "./journal-pages/dong2025/page-022.jpg"
+      ],
+      "source_pdf_sha256": "4580759f71790350f94de9cb518d12723ffd144334b649df6e788f27e15a4552",
+      "render_method": "pdftoppm 125 dpi; full pages; cropped/modified: no"
     }
   ]
 }
