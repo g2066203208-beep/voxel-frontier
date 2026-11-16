@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.9**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.10**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -431,3 +431,8 @@
 ### 2026-11-16｜v0.31.31 PATCH — S10真实ERA5小时权重下的126槽整数分层抽样设计
 
 - **科研交付**：[可运行Node源程序](../experiments/T080/s10_stratified_seed_allocation.cjs)、[期刊两行数表与方法边界](../manuscript/journal-wind-fatigue-results.md)、[T080过程](../experiments/T080/PROCESS_LOG.md)。SOURCE=ERA5 31行184080小时分箱 blob `1bae743b385d4f24c8b5af3e0b445aae30d40c6f`，历史SHA256 `e4058620a36b23bb218103875d4dc5b0711fc45d418b23a2208c2fc9c16c9102`（未重哈希）。RUN=连接器V8整数分配、离散交换验证；程序提交 `b9f0f9eba862888c17304c22d24665950f1b0b16`；原生Node CLI NOT_RUN。假设21箱每箱≥1槽、126总槽、独立seed及等方差，最优整数分配目标0.008717593421，对比等6槽0.030313965504，条件方差减少71.2423%。**仅统计设计METHOD PASS**，异方差/真实seed收敛/物理疲劳与正式DLC1.2 0/126 HOLD；12阶段晋级0/12。未涉及Abaqus/CAE、冻结母本、main、昂贵生产RUN或PR合并。
+
+
+### 2026-11-16｜v0.32.10 PATCH — S10真实NTM双通道minimax及独立留出反例
+
+- SOURCE=T062真实72行DEL4 Git blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`、历史SHA256 `b362bcd7c37ccc56e21035de39448b5e761ec03f371b6b2f3eb30f41b013630d`（未重哈希）；RUN=连接器JS读取真实CSV，穷举18槽共同双通道归一化最小最大方差；全样本10/6/2，Mx/My比0.684595/0.720212；20个重叠pilot/holdout分割，双通道同时改善19/20，My最坏1.340812反例。TAB=期刊正文2表 [科研提交 ae179496](https://github.com/g2066203208-beep/voxel-frontier/commit/ae179496146694db357e0c50810a999b092a8c56)，过程见T080/PROCESS_LOG；FIG=0；REF/STANDARD/OFFICIAL无新增；native Node NOT_RUN，方法条件PASS、独立未来seed与DLC1.2/材料Miner/同态W HOLD；12阶段晋级0/12。未触碰Abaqus/CAE、冻结母本、main或PR合并。
