@@ -53,8 +53,7 @@ function card(f,compact=false){
  body.append(title,E("span","figure-card-category",f.c));
  const actions=E("div","figure-actions");
  const view=E("button","","预览");view.type="button";view.addEventListener("click",()=>zoom(f));
- const save=E("button","","下载");save.type="button";save.addEventListener("click",()=>download(f));
- actions.append(view,save);body.append(actions);
+ actions.append(view);body.append(actions);
  article.append(button,body);return article;
 }
 function filtered(){
