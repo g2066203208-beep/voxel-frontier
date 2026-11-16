@@ -1,3 +1,10 @@
+## 2026-11-16｜T092完整参考文献原文全集 END（v1.9.0 / 白皮书v0.32.7）
+
+- 本次实际源码与发布：main网站 `public/thesis-studio/full-references.js` 新增PDF.js按需连续整篇原文阅读、81份PDF索引全部直接列表、163条主书目全部呈现、395张原始文献证据页连续原图，首页突出显示81/163/395/40；旧40页CC BY原PDF、24篇接缝专题、541图、六章学位论文和ERA5/ESM/风载资料不动。站点 `v1.9.0`，生产main commit `483fb1876355e1d269a73469b71c98d62c9aa320`；Pages run `43839842374` SUCCESS，Paper Studio CI和研究Library QA SUCCESS，浏览器动态图验收run `43840135928`独立执行、未提前宣称PASS。
+- 口径：81份索引中79份`indexed`、2份`restricted`；163条书目中73条`accessible`有原件，剩余90条是引用记录不是已有全文；395张原页已计入541原图。总数不可累加冒充不同论文数量。79份PDF的原始URL可逐篇直读，但不是79份均已完成浏览器全文每页解码验收。对出版许可不明确的论文不另行批量截图/镜像；元数据与缺失状态如实显示。
+- 实际研发记录：`research/wind-tower/experiments/T092/COMPLETE_REFERENCE_READING_STUDIO_20261116.md`，白皮书v0.32.7；研究HEAD `69fa60ec9654e6361e11f3db9a2f4a78742562d0`、Draft PR#42保护、不合并，未新增任何Abaqus工作；原有科学HOLD不受展示更新影响。
+- 后续浏览器验收如失败，必须以失败日志追溯UI并修复，不能拿Pages部署成功掩盖。此条END仅就已归档网站与源级计数闭合。
+
 ## 2026-11-16｜T092唯一工作室完整文献原文全集 START
 
 - READ-BEFORE-WRITE：研究 HEAD `e639f39d6ce7dd52bc41df2ffa9bd3fea90a179c`，继承T091(v1.8.0)网站与S10(v0.32.6)、根与研究AGENTS、已归档原始数据和论文全文。只更新main现有`thesis-studio`研究阅览入口，不接管Abaqus，不合并Draft PR#42，不删除原论文。
