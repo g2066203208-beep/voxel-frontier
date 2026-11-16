@@ -72,6 +72,11 @@ async function select(id){
  if(R.id===id && R.pdf){return;}
  await closeCurrent();
  const token=R.token;
+ const stage=$("reader-stage");
+ delete stage.dataset.documentId;
+ const oldCanvas=$("reader-canvas");oldCanvas.style.visibility="hidden";oldCanvas.width=1;oldCanvas.height=1;
+ $("reader-sheet").style.width="auto";$("reader-sheet").style.minHeight="0";
+ $("reader-loading").hidden=false;
  R.id=id;R.page=readProgress(id);R.count=0;R.zoom="fit";R.rotation=0;R.textMode=false;
  R.outline=[];R.thumbLimit=12;
  $("reader-fallback").hidden=true;$("reader-sheet").hidden=false;
@@ -79,7 +84,7 @@ async function select(id){
  $("reader-title").textContent=doc.title;
  $("reader-subtitle").textContent=doc.type+" · PDF 原件";
  $("reader-download").href=doc.url;$("reader-download").download=doc.name;
- $("reader-search-results").replaceChildren();
+ const oldResults=$("reader-search-results");if(oldResults)oldResults.replaceChildren();
  $("reader-query").value="";
  $("reader-nav-content").replaceChildren();
  updateDocs();toolbar();status("正在载入文献…");
@@ -92,6 +97,7 @@ async function select(id){
   const pdf=await task.promise;
   if(token!==R.token){try{await pdf.destroy();}catch{}return;}
   R.loading=null;R.pdf=pdf;R.count=pdf.numPages;
+  $("reader-stage").dataset.documentId=doc.id;
   R.page=Math.max(1,Math.min(R.page,R.count));
   status("已加载 · "+R.count+" 页");
   toolbar();
@@ -137,6 +143,7 @@ async function renderPage(){
   R.renderTask=task;
   await task.promise;
   if(token!==R.token||pageNumber!==R.page)return;
+  canvas.style.visibility="visible";
   $("reader-loading").hidden=true;
   status("第 "+pageNumber+" / "+R.count+" 页");
   toolbar();
