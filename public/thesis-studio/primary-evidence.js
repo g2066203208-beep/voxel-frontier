@@ -210,9 +210,9 @@ async function showModule(id,root){
  }
  try{
   const m=await load();
-  for(const id of map[id]){
+  for(const datasetId of map[id]){
    if(!area.isConnected)return;
-   const d=m.datasets.find(x=>x.id===id),section=E("article","evidence-module-source");area.append(section);
+   const d=m.datasets.find(x=>x.id===datasetId),section=E("article","evidence-module-source");area.append(section);
    await dataset(d,section);
   }
   if(id==="seismic"){const section=E("article","evidence-module-source");area.append(section);await wave(m.waveform,section)}
