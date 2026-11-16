@@ -944,3 +944,32 @@ An independently executed algorithmic regression at dt=0.01 s uses a synthetic 1
 | 2.00 | 0.810876286 | 1.146452341 | 0.119639033 |
 
 The executable test verifies 90-degree reorientation invariance (E,N)->(N,-E), acceleration homogeneity under doubling, min <= median <= max, zero excitation and unequal-length rejection. All five tests PASS in Python 3. The source is [s05_rotd_horizontal_spectra.py](../experiments/T080/s05_rotd_horizontal_spectra.py), local test-file SHA256 c59766b616001ac197689089f3236472d5ee795aebdb914809e25a843b4a40ec; committed source Git blob 469e7342d306fb55062d79b3c1031d0aca4284fa (remote SHA256 not verified). The 5-degree spacing is only for the quick test; default production algorithm spacing is 1 degree. No actual ESM HNE/HNN record or target spectrum was loaded. Timestep convergence, baseline correction, anti-alias filtering, orientation metadata and target-spectrum applicability remain HOLD. SOURCE/RUN=synthetic unit regression only; REF/STANDARD/OFFICIAL=none newly verified; FIG=0; TAB=1. The method PASS cannot be used as physical S05 acceptance.
+
+
+### S05 — Exact directional upper envelope of two-component pseudo-acceleration spectra (2026-11-17; method result, not an ESM result)
+
+For two simultaneously sampled horizontal ground-acceleration components, let \(u_E(t_j;T,\zeta)\) and \(u_N(t_j;T,\zeta)\) be the relative displacement responses of identical, linear, zero-initial-state single-degree-of-freedom oscillators. By linearity, the response to a rotated input at azimuth \(\theta\) is \(u_\theta=u_E\cos\theta+u_N\sin\theta\). The Cauchy–Schwarz equality then gives
+\[
+\max_{\theta\in[0,\pi)}\max_j\omega^2|u_\theta(t_j)|
+=\omega^2\max_j\sqrt{u_E(t_j)^2+u_N(t_j)^2},
+\quad\omega=2\pi/T.
+\]
+Thus **RotD100 on the sampled time grid is obtainable without any azimuth search**, by two Newmark oscillator integrations per period. This identity is exact for linear, identically damped oscillators and the same time samples, but is *not* an exact continuous-time peak or a nonlinear structure result. RotD50 still requires a specified azimuth distribution/quadrature and is not replaced by this identity.
+
+For uniform azimuth spacing \(\Delta\theta\) (degrees), the grid maximum \(P_{\Delta}\) satisfies the rigorous geometric enclosure
+\[
+\cos(\Delta\theta/2)P_{100}\leq P_{\Delta}\leq P_{100},
+\qquad
+0\leq 1-P_{\Delta}/P_{100}\leq1-\cos(\Delta\theta/2).
+\]
+The bound follows by selecting the grid axis within half a grid spacing of the maximizing response-vector direction; opposite azimuths are equivalent under the absolute value. It is a **relative angular-discretization bound only**, not a bound on temporal integration, original-record filtering, target-spectrum uncertainty, or site seismic hazard.
+
+| Synthetic two-frequency input (dt=0.01 s, 10 s, 5% damping) | 5° sampled RotD100 (m/s²) | Exact-azimuth sampled-time RotD100 (m/s²) | 5° relative deficit |
+|---|---:|---:|---:|
+| T=0.5 s | 1.423568047 | 1.423726525 | 0.011131% |
+| T=1.0 s | 3.042787662 | 3.044241179 | 0.047746% |
+| T=2.0 s | 1.146452341 | 1.147079099 | 0.054640% |
+
+The worst-case angular bounds are 0.0038077% at 1°, 0.0951778% at 5°, and 0.8555139% at 15°. The existing 5° synthetic regression therefore underestimates the sampled-time exact directional maxima, albeit within the proven 5° bound. This corrects the interpretation of the preceding S05 RotD100 demonstration; the former values are **angular-grid approximations**, not continuous-direction maxima. The original 1° production method has a much smaller angular bound but still requires input-record and time-step validation. An executable extension of \`experiments/T080/s05_rotd_horizontal_spectra.py\` implements the identity and checks grid enclosure, 90° rotation, amplitude homogeneity, zero input, and invalid-input rejection. Independent Python arithmetic of the synthetic example was run; native execution of the newly committed entire module and real ESM application remain pending.
+
+**Evidence and limitations.** SOURCE: explicit synthetic signals \(a_E=0.8\sin(2\pi0.8t)\), \(a_N=0.4\cos(2\pi1.3t)\) m/s², not recorded earthquake motions; RUN: independent local Python Newmark implementation, not a physical wind-turbine calculation; TAB: three rows above; REF/STANDARD/OFFICIAL: no new primary text or licensed clauses reviewed. The proof assumes linear time-invariant oscillator response, synchronized component timestamps, identical damping and sampling, and a common zero initial state. No ESM real-record RotD100, target-spectrum fit, W/E/WE coupling, or material Miner lifetime is claimed. This result provides a reproducible directional numerical error budget for subsequent **real** S05 input assessment and a rejection test for falsely calling coarse-angle spectra exact.
