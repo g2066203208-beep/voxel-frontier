@@ -110,7 +110,7 @@ function bind(){
 }
 async function show(){
  try{
-  const d=await ready();bind();renderGrid();
+  const d=await ready();bind();renderGrid();await window.JYAtlas?.show();
   await window.JYReader?.attach(S.referenceDoc?[...d.documents,S.referenceDoc]:d.documents,S.doc||undefined);
   if($("he-original-pages").open)renderHe();
  }catch(e){console.error(e);$("figure-grid").replaceChildren(E("p","figure-empty","资料目录载入失败"));}
