@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.31.24**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.31.25**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -28,6 +28,11 @@
 - 下一独立非Abaqus动作：核对/恢复可证明同模型、运行状态、时间网格和起点的W侧真实时程；没有可追溯来源时记录HOLD并转向S05/S10可独立研究，不造数据。
 
 ## 4. 版本变更记录（只记录真实持久化事务）
+
+### 2026-11-16｜v0.31.25 PATCH — S05真实ESM RotD50与RotD100的离散方向性放大边界
+
+- **科研结果**：[T079源级33周期数值、两行表与拒绝条件](../experiments/T079/METHOD_PLAN.md)，[T080过程](../experiments/T080/PROCESS_LOG.md)；SOURCE=ESM处理谱blob `5b7bdda285877f485f3b48cae62f42d5d2ff5a62`，历史SHA256 `ea642b37ca39bde6c1e5b48168e50650adadb00311ca9f24a11102fea82d407c`（未重哈希）；RUN=33点逐行比值，RotD100/RotD50范围1.0661880219–1.3644346306，6/33点>1.2，离散全点不低估统一系数至少1.3644346306；科研commit [0d88435a](https://github.com/g2066203208-beep/voxel-frontier/commit/0d88435a4f64f91708301fd6e650824b43fdfcbe)。**源级算术PASS，场址设计谱/连续周期/地震物理HOLD**；12阶段晋级0/12，DLC1.2 0/126。无Abaqus/CAE或昂贵RUN。
+
 
 ### 2026-11-16｜v0.31.24 PATCH — S12将ERA5分箱偏移敏感性装配为正式第三章可入稿正文
 
