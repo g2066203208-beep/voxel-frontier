@@ -1,3 +1,14 @@
+## 2026-11-16｜T090原文PDF逐页合法截图 END（白皮书v0.32.3）
+
+- main唯一论文工作室 `#literature` 增量上线：6篇二次开发/力学方法原文项 + 2篇明确CC BY4.0的接缝物理来源。经Action下载原PDF并核标题/DOI/版权，Jonscher2023 Springer18张完整原始页图、Dong2025 MDPI22张，**真实原PDF的40页JPG** 全部已在 `public/thesis-studio/journal-pages/{jonscher2023,dong2025}` 文件级回读。Source SHA256：`7f1ba7c70a57663a9f42258c33f81efe5680892d57b82cd785b7f3e39413c381` / `4580759f71790350f94de9cb518d12723ffd144334b649df6e788f27e15a4552`；首两篇封面及Jonscher第6页经解码视觉查验；Action `43830215791`、`43830735265`SUCCESS。网页版本v1.7.2、latest main网页代码 `12246a08`；Pages `43831442484` 成功状态须对照部署日志（若RUN尚未完成，以最终结论为准）。
+- 6篇开发论文只有原始出版信息及子程序接口/科学范围可合法展示：Gong2022 PDF可读但再发布权未知；Zeng2024 ASCE、Yang2024 Wiley、Yan2025/Tong2025 Elsevier出版版受限；Tan2026出版方原PDF下载HTTP403/400且确切再分发许可未知。因此**不能声称6篇整篇原文截图全部已归档**；两篇40页CC BY属于关联原文，不伪称是那6篇。全站自动浏览器QA执行独立验收，未PASS时不虚报UI图像100%通过。
+- `research/wind-tower/experiments/T080/PROCESS_LOG.md` 与白皮书v0.32.3已记，main展示更新与研究分支源级日志分离，PR#42继续Draft、不合并，Abaqus原生/模型/结果不动；新接触全塔Gravity仍HOLD。
+
+## 2026-11-16｜T089C++17独立算法框架与二次开发文献 END（白皮书v0.32.2）
+
+- 研究分支新增 `research/wind-tower/methods/interface-benchmark/` `interface.hpp/.cpp`、`tests.cpp`、`example.cpp`、`README.md` 及 `.github/workflows/t089-interface-benchmark.yml`；数学内核涵盖单边法压、恒μ黏滑基准、**合成未验证**滑移弱化候选律，按SI单位保留材料点历史。Github Actions `43831307992` C++17编译、24项断言及合成CSV成功。
+- 直接文献：Gong2022 FRIC、Zeng/Li2024 UMAT、Yang2024 UEL/MPC、Yan2025 UMAT、Tong2025 UEL+Python；Tan2026不是原生子程序而是经试验校准的FE与N-M-V-T解析能力方法。未经本项目真实接缝试验和独立留出评估，不宣称任何候选律优于Abaqus传统模型。无Abaqus接口/模型修复/求解；M0历史物理成果继承，M1及M2物理验证HOLD。
+
 ## 2026-11-16｜T090期刊原文逐页截图归档、同一工作室内直接阅读 START
 
 - 读取研究HEAD `55b1fced643635c822dddb46941985fd4760f292`，继承T089 START、S12 v0.32.1、T088工作室图集、T086/T087文献及原图许可台账。执行域仅限文献原文许可证核对、非Abaqus的PDF页图生成、现有网站源级归档和前端阅读。
