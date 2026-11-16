@@ -1,3 +1,7 @@
+## 2026-11-16 08时｜S05 ESM RotD方向性离散放大（v0.31.25）
+
+READ-BEFORE-WRITE：PR#42 Open/Draft，开工HEAD 62e0f7df29bc78bdf5a1e56ca4e7f5a9c2dfa85d；根/研究AGENTS、指挥室、白皮书v0.31.24、MASTER/STATUS、12阶段、T079/T080和33周期源表已读。SOURCE=46行已处理ESM RotD谱 Git blob 5b7bdda285877f485f3b48cae62f42d5d2ff5a62、历史SHA256 ea642b37ca39bde6c1e5b48168e50650adadb00311ca9f24a11102fea82d407c（未重哈希）。RUN=33周期逐行RotD100/RotD50，最大1.3644346306@1.25s，最小1.0661880219@1.81827174432s；6/33超过1.2，1/33超过1.3；离散全周期不低估所需统一系数c≥1.3644346306。TAB=T079 METHOD_PLAN新增两行极值表与数学拒绝条件；FIG无。数学/源级PASS，连续周期、低频SNR、场址谱、结构响应HOLD；REF沿用既有先行研究，STANDARD/OFFICIAL未新读授权原页。科研commit 0d88435a4f64f91708301fd6e650824b43fdfcbe。12阶段晋级0/12，DLC1.2 0/126；未涉及Abaqus/CAE或生产RUN。下一唯一动作：S12将已核地震谱适用边界和RotD方向性结果写入现有地震方法章节，不再重复S05标量拟合。
+
 ## 2026-11-16 06时｜S12第三章ERA5分箱敏感性实质装配（v0.31.24）
 
 READ-BEFORE-WRITE：PR#42 Open/Draft，开工HEAD 5f120b8306d08f0345eabfcdd3c9f54af1dd4415；读取根/研究AGENTS、指挥室、白皮书v0.31.23、MASTER/STATUS、12阶段、T079/T080及第三章完整§3.9—§3.10。SOURCE=31箱ERA5历史184080小时、Git blob 1bae743b385d4f24c8b5af3e0b445aae30d40c6f、历史SHA256 e4058620a36b23bb218103875d4dc5b0711fc45d418b23a2208c2fc9c16c9102（未重哈希）。RUN=继承上一轮双路径整数分箱，新增分子/分母相对变化分解：+1 m/s时H +73.02%、N +25.41%；−1 m/s时H −46.64%、N −25.19%。TAB=正式Ch3§3.9.1五行源级数据表与可入正文解释；FIG无，Word页面尚未渲染。研究commit 093214472bd1f7181bd2f17ea9025432f9e1a6b6；不冒充新增物理RUN或独立源哈希。REF/STANDARD/OFFICIAL无新授权原页。方法与稿件装配PASS，正式DLC1.2 0/126、材料Miner、风侧外载、同态WE HOLD；12阶段晋级0/12。下一唯一动作：基于第三章新段落对既有导师Word装配流程做可验证更新并逐页视觉核验；若原Word不可取得，转S05官方地震源与谱证据，不再重复偏移分析。未触碰Abaqus/CAE、冻结母本、main、Draft合并或昂贵RUN。
