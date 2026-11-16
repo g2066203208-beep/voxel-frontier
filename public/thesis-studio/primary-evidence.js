@@ -171,25 +171,29 @@ async function selected(host,m){
 async function show(){
  const root=document.getElementById("evidence-reader");
  if(!root)return;
- root.replaceChildren(E("p","evidence-hint","读取科研原件中…"));
+ root.replaceChildren(E("p","evidence-hint","读取全部科研原始记录…"));
  try{
   const m=await load();
-  function paint(){
-   const stats=E("div","evidence-stats");
-   ["21年 · 184,080小时 ERA5衍生统计","18组NTM · 31段参数","46周期地震谱 · "+(m.waveform.src?"32,040点×3真实波形":"源级时程待核验"),"6章论文全文"].forEach(s=>stats.append(E("div","",s)));
-   const filters=E("div","evidence-filter-row");
-   ["全部","风资源","地震源","风荷载","结构历史"].forEach(g=>{
-    const b=E("button","evidence-filter"+(S.group===g?" active":""),g);b.type="button";
-    b.addEventListener("click",()=>{S.group=g;S.selected=m.datasets.find(x=>g==="全部"||x.group===g)?.id||"era5-wind-bins";paint()});filters.append(b);
-   });
-   const grid=E("div","evidence-dataset-grid");
-   let entries=m.datasets.filter(x=>S.group==="全部"||x.group===S.group);
-   if(S.group==="全部"||S.group==="地震源")entries=[{id:"esm-full",title:"ESM三分量同步加速度全时程",group:"地震源",n:m.waveform.rows,note:m.waveform.warning},...entries];
-   if(S.group==="全部"||S.group==="结构历史")entries.push({id:"model-92",title:"完整92项BF1历史模型设置",group:"结构历史",n:92,note:"原始工程设置快照，不是当前R6"});
-   entries.forEach(d=>{const b=E("button","evidence-dataset-card"+(S.selected===d.id?" selected":"" ));b.type="button";
-    b.append(E("small","",d.group+" · "+d.n+"条"),E("strong","",d.title),E("span","",d.note));b.addEventListener("click",()=>{S.selected=d.id;paint()});grid.append(b)});
-   const target=E("section","evidence-detail");root.replaceChildren(stats,filters,grid,target);selected(target,m);
-  }paint()
+  root.replaceChildren();
+  const groups=["风资源","风荷载","地震源","结构历史"];
+  for(const group of groups){
+   const section=E("section","evidence-source-group");
+   section.append(E("h2","",group));
+   root.append(section);
+   for(const entry of m.datasets.filter(x=>x.group===group)){
+    const article=E("article","evidence-detail evidence-record-full");
+    section.append(article);
+    await dataset(entry,article);
+   }
+   if(group==="地震源"){
+    const article=E("article","evidence-detail evidence-record-full");
+    section.append(article);await wave(m.waveform,article);
+   }
+   if(group==="结构历史"){
+    const article=E("article","evidence-detail evidence-record-full");
+    section.append(article);await model(m.model_settings,article);
+   }
+  }
  }catch(e){root.replaceChildren(E("p","evidence-error","原始科研数据无法加载："+e.message))}
 }
 async function showModule(id,root){
@@ -210,9 +214,9 @@ async function showModule(id,root){
  }
  try{
   const m=await load();
-  for(const id of map[id]){
+  for(const datasetId of map[id]){
    if(!area.isConnected)return;
-   const d=m.datasets.find(x=>x.id===id),section=E("article","evidence-module-source");area.append(section);
+   const d=m.datasets.find(x=>x.id===datasetId),section=E("article","evidence-module-source");area.append(section);
    await dataset(d,section);
   }
   if(id==="seismic"){const section=E("article","evidence-module-source");area.append(section);await wave(m.waveform,section)}

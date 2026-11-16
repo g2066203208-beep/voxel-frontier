@@ -90,28 +90,35 @@ async function show(container){
  container.replaceChildren(E("p","thesis-loading","读取六章真实原文中…"));
  try{
   if(!S.manifest){
-   const r=await fetch("./primary-data/manifest.json",{cache:"no-store"});if(!r.ok)throw Error("全文目录不可读");
-   S.manifest=await r.json();if(S.manifest.chapters.length!==6)throw Error("论文六章来源不完整");
+   const r=await fetch("./primary-data/manifest.json",{cache:"no-store"});
+   if(!r.ok)throw Error("全文目录不可读");
+   S.manifest=await r.json();
+   if(S.manifest.chapters.length!==6)throw Error("六章来源目录不完整");
   }
-  const m=S.manifest,toolbar=E("div","thesis-chapter-tabs"),meta=E("p","thesis-source-line");
-  const article=E("article","thesis-full-article");
-  async function choose(id){
-   S.current=id;
-   toolbar.querySelectorAll("button").forEach(b=>b.classList.toggle("selected",b.dataset.chapter===id));
-   const d=m.chapters.find(x=>x.id===id);if(!d)return;
-   meta.textContent="原文 "+d.provenance.path+" · SHA256 "+d.provenance.sha256+" · 版本 "+m.research_commit.slice(0,12);
-   article.replaceChildren(E("p","thesis-loading","读取本章完整原始文字和内嵌科研图…"));
-   try{
-    const r=await fetch(d.src,{cache:"no-store"});if(!r.ok)throw Error("原文HTTP "+r.status);
-    markdown(await r.text(),article);
-   }catch(e){article.replaceChildren(E("p","evidence-error","原文不可读取："+e.message))}
+  const manifest=S.manifest,toolbar=E("nav","thesis-chapter-tabs"),chapters=E("div","thesis-all-chapters");
+  toolbar.setAttribute("aria-label","六章全文目录 · 本页定位");
+  const tasks=[];
+  for(const d of manifest.chapters){
+   const section=E("section","thesis-chapter-section");
+   section.id="manuscript-chapter-"+d.id;
+   section.append(E("h2","thesis-chapter-heading",d.id+" · "+d.title));
+   section.append(E("p","thesis-source-line","原文 "+d.provenance.path+" · SHA256 "+d.provenance.sha256+" · 版本 "+manifest.research_commit.slice(0,12)));
+   const article=E("article","thesis-full-article");
+   article.append(E("p","thesis-loading","读取原始章节…"));
+   section.append(article);chapters.append(section);
+   const nav=E("button","thesis-chapter-tab",d.id+" · "+d.title);nav.type="button";
+   nav.addEventListener("click",()=>section.scrollIntoView({behavior:"smooth",block:"start"}));toolbar.append(nav);
+   tasks.push((async()=>{
+    try{
+     const response=await fetch(d.src,{cache:"no-store"});
+     if(!response.ok)throw Error("原文HTTP "+response.status);
+     markdown(await response.text(),article);
+     article.dataset.source="loaded";
+    }catch(e){article.replaceChildren(E("p","evidence-error","原文不可读取："+e.message));article.dataset.source="failed"}
+   })());
   }
-  m.chapters.forEach(d=>{
-   const b=E("button","thesis-chapter-tab",d.id+" · "+d.title);b.type="button";b.dataset.chapter=d.id;
-   b.addEventListener("click",()=>choose(d.id));toolbar.append(b)
-  });
-  container.replaceChildren(toolbar,meta,article);
-  await choose(S.current);
+  container.replaceChildren(toolbar,chapters);
+  await Promise.all(tasks);
  }catch(e){container.replaceChildren(E("p","evidence-error","论文原文加载失败："+e.message))}
 }
 window.JYThesisInline={show,renderMarkdown:markdown};
