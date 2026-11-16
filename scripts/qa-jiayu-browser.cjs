@@ -21,6 +21,9 @@ async function main(){
  assert.equal((await page.locator(".doc-access").count()),3,"three original sources on homepage");
  assert.equal((await page.locator(".metric-grid").count()),0,"remove vanity metrics");
  assert.equal((await page.locator(".original-source-preview").count()),0,"no distracting embedded PDF thumbnails on homepage");
+ await page.locator("#featured-figures .figure-card").first().waitFor({timeout:18000});
+ const homePictures=await page.locator("#featured-figures .figure-card img").count();
+ assert.ok(homePictures>=2,"homepage must actually display scientific figures, not blank cards");
  await page.screenshot({path:path.join(out,"jiayu-home-desktop.png"),fullPage:true});
  // T091 direct original-data views: no GitHub navigation/download required.
  await page.locator('button[data-view="evidence"]').click();
@@ -80,10 +83,18 @@ async function main(){
  assert.equal(await page.locator("#all-reference-corpus a").count(),0,"complete corpus requires no links/downloads");
  await page.locator('#all-reference-corpus .corpus-file[data-ref="L040"] .corpus-open').click();
  await page.waitForFunction(()=>{
-  const s=document.querySelector("#corpus-pdf-status");
-  const pages=document.querySelectorAll("#corpus-pdf-pages .corpus-pdf-page");
-  return s&&s.textContent.includes("PDF.js已读取")&&pages.length>=2;
- },null,{timeout:60000});
+  const status=document.querySelector("#corpus-pdf-status")?.textContent||"";
+  return status.includes("PDF.js已读取")||status.includes("失败");
+ },null,{timeout:30000}).catch(()=>{});
+ const pdfState=await page.locator("#corpus-pdf-status").innerText();
+ console.log("REAL_ORIGINAL_PDF_STATUS",pdfState);
+ if(!pdfState.includes("PDF.js已读取")){
+  await page.screenshot({path:path.join(out,"jiayu-reference-pdf-failure-diagnostic.png"),fullPage:false});
+  const detail=await page.locator("#corpus-pdf-pages").innerText();
+  throw Error("Original indexed PDF not rendering: "+pdfState+" // "+detail.slice(0,700));
+ }
+ assert.ok((await page.locator("#corpus-pdf-pages .corpus-pdf-page").count())>=2,
+   "real PDF continuous pages created after load");
  await page.locator("#corpus-pdf-page-1 canvas").waitFor({timeout:45000});
  assert.ok((await page.locator("#corpus-pdf-pages .corpus-pdf-page").count())>=2,
    "every genuine publisher PDF page has own position in continuous viewer");
@@ -140,12 +151,11 @@ async function main(){
  },null,{timeout:60000});
  await page.screenshot({path:path.join(out,"jiayu-reader-desktop.png"),fullPage:false});
  console.log("PDF_READER_OK He thesis pages",await page.locator("#reader-total").innerText());
- await page.locator("#figure-search").fill("RotD");
- assert.ok((await page.locator("#figure-grid .figure-card").count())<=24,"pagination must limit rendered figures");
- await page.locator("#figure-search").fill("");
- assert.equal((await page.locator("#figure-grid .figure-card").count()),24,"24 images per page");
- await page.locator("#figure-show-all").click();
- assert.equal((await page.locator("#figure-count").innerText()).includes("541"),true,"all 541 original images accessible");
+ // Modern public complete gallery has exactly 541 inline original cards, not hidden legacy paged UI.
+ assert.equal(await page.locator("#atlas-complete-grid .atlas-file-card").count(),541);
+ await page.locator("#atlas-complete-search").fill("RotD");
+ assert.ok((await page.locator("#atlas-complete-grid .atlas-file-card").count())>0,"visible original figure search works");
+ await page.locator("#atlas-complete-search").fill("");
  await page.screenshot({path:path.join(out,"jiayu-gallery-desktop.png"),fullPage:false});
  const mobile=await browser.newPage({viewport:{width:390,height:844},deviceScaleFactor:1});
  await mobile.goto(URL_SITE,{waitUntil:"domcontentloaded",timeout:60000});
