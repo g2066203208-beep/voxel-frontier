@@ -1,3 +1,9 @@
+## 2026-11-16｜T089独立界面本构算法与直接二次开发论文对照 START
+
+- READ-BEFORE-WRITE：研究分支 `research/t080-seismic-integration-gates-20261022`，读取HEAD `680443120d36fef21175391864a3ccc269c5a8f3`；已读根/论文AGENTS、当前指挥室S12及T088/T087、白皮书v0.32.1、T080日志、T086接缝蓝图。继承已有24文献矩阵、M0历史Gravity/Modal成功、M1接触重力HOLD，保护Draft PR#42和main。
+- 用户要求明确「实现框架在哪、真正二次开发的论文开发了什么」。本次对照期刊Gong2022 FRIC、Zeng/Li2024 UMAT、Yang2024 UEL/MPC、Yan2025 UMAT、Tong2025 UEL、Tan2026解析承载力，并新增**不依赖Abaqus的独立C++17界面材料点算法演示**（库仑常μ基准/假设滑移软化对照）及GitHub Actions单元测试，提供可追溯代码路径和证伪门槛。
+- 本执行者**不编写/准备Abaqus专用子程序、INP/ODB、CAE脚本或原生集成**；不宣称新的物理本构成立或优于商业内置算法；参数仅合成数学验证，独立实验校准仍HOLD。拟改 `research/wind-tower/methods/interface-benchmark/`、`.github/workflows/interface-kernel-ci.yml`、T080日志、白皮书/指挥室；不触碰真实计算母本、main、合并PR。
+
 ## 2026-11-16｜S12 Ch1竞争文献与可证伪创新边界 END（白皮书v0.32.1）
 
 - READ-BEFORE-WRITE：PR#42 Open/Draft；继承T088最新网页与T08724项矩阵、研究AGENTS、白皮书v0.32.0、Ch1、T079/T080及12阶段计划。本轮仅研究侧论文正文，未触碰网站main、任何Abaqus/CAE工作或冻结父本。科研提交 [21d0e7e0](https://github.com/g2066203208-beep/voxel-frontier/commit/21d0e7e0379937b69055e1d7d5db0f6fd57ef629)；[Ch1§1.6.12](../manuscript/final-thesis/chapters/01_绪论.md)新增可入稿连续研究现状及四行先行工作—不可声称—独立验证差异表。以R24循环压弯扭、R10运行疲劳、R17/R18风震等直接竞争文献明确否证“首次”叙事；尚无独立试验/同态风震/材料疲劳实证。T080过程与白皮书v0.32.0→v0.32.1同步；12阶段晋级0/12、DLC1.2 0/126。最大非Abaqus HOLD=正式风箱、同步真实外载/惯性归属、材料局部应力；下一唯一动作获取可核原文的接缝试验变量/误差，否则转S06真实风侧时程恢复。
