@@ -1,0 +1,56 @@
+name: T093 Pin Professional Formula Renderer
+
+on:
+  push:
+    branches: [main]
+    paths: [".github/workflows/t093-vendor-katex.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: t093-katex-assets
+  cancel-in-progress: false
+
+jobs:
+  package-verified-open-source-formula-assets:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Pin self-hosted KaTeX under MIT
+        shell: bash
+        run: |
+          set -euo pipefail
+          dir="$(mktemp -d)"
+          npm pack katex@0.16.25 --pack-destination "$dir" --silent
+          tar -xzf "$dir/katex-0.16.25.tgz" -C "$dir"
+          test -f "$dir/package/LICENSE"
+          test -f "$dir/package/dist/katex.min.css"
+          test -f "$dir/package/dist/katex.min.js"
+          mkdir -p public/thesis-studio/vendor/katex/fonts
+          cp "$dir/package/dist/katex.min.css" public/thesis-studio/vendor/katex/katex.min.css
+          cp "$dir/package/dist/katex.min.js" public/thesis-studio/vendor/katex/katex.min.js
+          cp "$dir/package/LICENSE" public/thesis-studio/vendor/katex/LICENSE.txt
+          cp "$dir/package/dist/fonts/"*.woff2 public/thesis-studio/vendor/katex/fonts/
+          test "$(wc -c < public/thesis-studio/vendor/katex/katex.min.js)" -gt 150000
+          test "$(find public/thesis-studio/vendor/katex/fonts -name '*.woff2' | wc -l)" -ge 10
+          echo "KATEX_LOCALLY_PINNED v0.16.25"
+          sha256sum public/thesis-studio/vendor/katex/katex.min.js public/thesis-studio/vendor/katex/katex.min.css
+      - name: Publish original equation typography assets in the same site
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "paper-studio-bot"
+          git config user.email "paper-studio-bot@users.noreply.github.com"
+          git add public/thesis-studio/vendor/katex
+          if ! git diff --cached --quiet; then
+            git commit -m "style(studio): vendor locally served KaTeX and MIT license for real thesis math typesetting"
+            git push origin HEAD:main
+          fi
