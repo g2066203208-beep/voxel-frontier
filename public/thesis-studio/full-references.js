@@ -114,10 +114,23 @@ function setStatus(value,failed=false){
 }
 async function engine(){
  if(S.library)return S.library;
- const lib=await import("./vendor/pdf.mjs");
- if(!lib.getDocument)throw Error("本地PDF.js不可用");
- lib.GlobalWorkerOptions.workerSrc="./vendor/pdf.worker.mjs";
- return S.library=lib;
+ const sources=[
+  ["./vendor/pdf.mjs","./vendor/pdf.worker.mjs"],
+  ["https://cdn.jsdelivr.net/npm/pdfjs-dist@5.4.530/build/pdf.mjs",
+   "https://cdn.jsdelivr.net/npm/pdfjs-dist@5.4.530/build/pdf.worker.mjs"],
+  ["https://unpkg.com/pdfjs-dist@5.4.530/build/pdf.mjs",
+   "https://unpkg.com/pdfjs-dist@5.4.530/build/pdf.worker.mjs"]
+ ];
+ const errors=[];
+ for(const [uri,worker] of sources){
+  try{
+   const module=await import(uri);
+   if(typeof module.getDocument!=="function")throw Error("Invalid PDF.js module");
+   module.GlobalWorkerOptions.workerSrc=worker;
+   return S.library=module;
+  }catch(e){errors.push(uri+": "+e.message)}
+ }
+ throw Error("PDF.js引擎不可读取："+errors.join(" | "));
 }
 function teardown(){
  S.token++;
