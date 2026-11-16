@@ -1,0 +1,38 @@
+name: T086 archive licensed original research figures
+on:
+  push:
+    branches:
+      - research/t080-seismic-integration-gates-20261022
+    paths:
+      - research/wind-tower/references/joint-contact-literature/figure_manifest.tsv
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  archive:
+    if: github.ref == 'refs/heads/research/t080-seismic-integration-gates-20261022'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Download only verified CC-BY original figures
+        id: figures
+        continue-on-error: true
+        run: python3 research/wind-tower/references/joint-contact-literature/download_licensed_figures.py
+      - name: Commit source-image bytes and their SHA256
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/wind-tower/references/joint-contact-literature/images research/wind-tower/references/joint-contact-literature/FIGURE_SHA256.tsv
+          if ! git diff --cached --quiet; then
+            git commit -m "research(T086): archive verified CC-BY publisher-original figures with hashes"
+            git push origin HEAD:research/t080-seismic-integration-gates-20261022
+          fi
+      - name: Fail visibly if any source was unavailable
+        if: steps.figures.outcome != 'success'
+        run: |
+          echo "::error::Some publisher original images could not be archived; inspect manifest and SHA256 table."
+          exit 1
