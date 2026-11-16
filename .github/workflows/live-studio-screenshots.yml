@@ -20,7 +20,14 @@ jobs:
           npm ci
           npm install --no-save playwright@1.56.1
           npx playwright install --with-deps chromium
+      - name: Build local preview
+        run: |
+          npm run build
+          npm run preview -- --port 4173 > /tmp/studio-preview.log 2>&1 &
+          for i in $(seq 1 40); do curl -fsS http://127.0.0.1:4173/voxel-frontier/thesis-studio/ > /dev/null && break; sleep 1; done
       - name: Capture every studio view
+        env:
+          STUDIO_BASE: http://127.0.0.1:4173/voxel-frontier/thesis-studio/
         run: node scripts/live-studio-screenshots.cjs
       - name: Upload screenshots and audit
         if: always()
