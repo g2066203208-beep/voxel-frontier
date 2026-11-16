@@ -1,3 +1,8 @@
+## 2026-11-16 18时｜S10 pilot—holdout真实NTM独立评价 END（v0.32.8）
+
+- READ-BEFORE-WRITE起始HEAD `094b13c78504b98964c3b7f600f88042a35c6d8e`，PR#42 Open/Draft；研究分支只写T080原程序、既有期刊稿、T080日志和白皮书，不修改main或冻结模型。SOURCE=T062 72行真实DEL4 Git blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`，历史SHA256 `b362bcd7c37ccc56e21035de39448b5e761ec03f371b6b2f3eb30f41b013630d`（未重哈希）。
+- RUN=连接器V8实际独立读取CSV，20种seed索引3pilot/3holdout互补分割，pilot方差决定18槽分配、holdout方差仅评价。Mx 20/20比均分好，平均比0.742199；My 16/20比均分好，4/20反例，最坏1.898212，平均比0.869375。程序commit `2bb29394`、期刊数表 `f3c5b893`、日志 `ac3656e2`、白皮书 `e5642273`。原生Node CLI NOT_RUN；20折重复使用同六seed，不构成20次独立试验；无材料Miner/新物理RUN。12阶段0/12、正式DLC1.2 0/126不变。下一唯一动作S06核实158m真实同态风侧六分量时程；缺源即换新数据源的S10研究，不重复旧split。
+
 ## 2026-11-16｜T093唯一工作室真实截图与交互验收 START（读取回执）
 
 - 研究读基 `90cfd54e201c47b8bdd584e20e32b29e5e3adc50`，继承T092 v1.9.0、白皮书v0.32.7、全部81PDF/163书目/395原页、T091数据与六章原文及40篇授权页图；用户要求实际打开审美/移动端/全文渲染截图测试，而不只是部署PASS。工作仅在现有main网站及GitHub Actions进行，不触碰Abaqus/CAE、不合并Draft PR#42。
