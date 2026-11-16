@@ -58,3 +58,92 @@ def _tests():
     for a in base: print('T=%.2f s RotD50=%.9f RotD100=%.9f min=%.9f m/s2'%a)
     print('PASS: 90-degree invariance, homogeneity, ordering, zero, length rejection')
 if __name__=='__main__': _tests()
+
+
+def rotd100_continuous(east, north, dt, periods, damping=0.05):
+    """Exact continuous-azimuth RotD100 on the sampled Newmark displacement grid.
+
+    Max over azimuth and sampled time commute:
+    max_theta max_t |uE(t)cos(theta)+uN(t)sin(theta)|
+      = max_t hypot(uE(t),uN(t)).
+    The result is exact in azimuth but NOT exact between time samples.
+    """
+    if len(east) != len(north) or len(east) < 2:
+        raise ValueError('component length')
+    if not (math.isfinite(dt) and dt > 0 and
+            math.isfinite(damping) and 0 <= damping < 1):
+        raise ValueError('dt or damping')
+    if any(not math.isfinite(x) for x in east) or any(
+            not math.isfinite(x) for x in north):
+        raise ValueError('nonfinite acceleration')
+    output = []
+    for T in periods:
+        if not (math.isfinite(T) and T > 0):
+            raise ValueError('period')
+        w = 2 * math.pi / T
+        k = w * w
+        c = 2 * damping * w
+        beta = 0.25
+        gamma = 0.5
+        a0 = 1 / (beta * dt * dt)
+        a1 = gamma / (beta * dt)
+        a2 = 1 / (beta * dt)
+        a3 = 1 / (2 * beta) - 1
+        a4 = gamma / beta - 1
+        a5 = dt * (gamma / (2 * beta) - 1)
+        ke = k + a0 + a1 * c
+        states = [[0.0, 0.0, -axis[0]] for axis in (east, north)]
+        peak = 0.0
+        for ae, an in zip(east[1:], north[1:]):
+            displacement = []
+            for state, ag in zip(states, (ae, an)):
+                u, v, acc = state
+                un = (-ag + a0*u + a2*v + a3*acc
+                      + c*(a1*u + a4*v + a5*acc)) / ke
+                accn = a0*(un-u) - a2*v - a3*acc
+                vn = v + dt*((1-gamma)*acc + gamma*accn)
+                state[:] = [un, vn, accn]
+                displacement.append(un)
+            peak = max(peak, math.hypot(*displacement))
+        output.append((T, peak * k))
+    return output
+
+
+def _continuous_tests():
+    dt = 0.01
+    t = [i * dt for i in range(1001)]
+    east = [0.8*math.sin(2*math.pi*0.8*x) for x in t]
+    north = [0.4*math.cos(2*math.pi*1.3*x) for x in t]
+    periods = [0.5, 1.0, 2.0]
+    exact = rotd100_continuous(east, north, dt, periods)
+    for step in (1, 5, 15):
+        grid = rotd(east, north, dt, periods, angle_step=step)
+        lower = math.cos(math.radians(step/2))
+        for (_, true), (_, _, sampled, _) in zip(exact, grid):
+            assert sampled <= true + 1e-10
+            assert sampled >= lower*true - 1e-10
+    assert rotd100_continuous(north, [-x for x in east], dt, periods) == [
+        (T, v) for T, v in exact
+    ] or all(abs(a[1]-b[1]) < 1e-10 for a,b in zip(
+        exact, rotd100_continuous(north, [-x for x in east], dt, periods)))
+    assert all(abs(b[1]-2*a[1]) < 1e-10 for a,b in zip(
+        exact, rotd100_continuous([2*x for x in east],
+                                  [2*x for x in north], dt, periods)))
+    assert rotd100_continuous([0.]*10, [0.]*10, dt, [1.])[0][1] == 0.
+    for bad in (([float('nan')]*3, [0.]*3, 0.01, [1.]),
+                ([0.]*3, [0.]*2, 0.01, [1.]),
+                ([0.]*3, [0.]*3, 0.0, [1.]),
+                ([0.]*3, [0.]*3, 0.01, [0.])):
+        try:
+            rotd100_continuous(*bad)
+        except ValueError:
+            continue
+        raise AssertionError('invalid input accepted')
+    print('PASS: exact sampled-time continuous-azimuth RotD100, '
+          'grid enclosure, rotation, scale, zero, invalid-input rejection')
+    for T, val in exact:
+        print('T=%.2f s continuous RotD100=%.9f m/s2' % (T, val))
+
+
+if __name__ == '__main__':
+    _continuous_tests()
