@@ -1,3 +1,7 @@
+## 2026-11-16 12时｜S12独立风箱校准样本量硬下界（v0.31.29）
+
+- READ-BEFORE-WRITE：PR#42 Open/Draft，开工HEAD=e71ae35f9dd69fcfddff6f412e9962aa227edb18；根/研究AGENTS、指挥室、白皮书、MASTER/STATUS、12阶段、T079/T080及期刊稿已读。新增[期刊五行秩表及证明](../manuscript/journal-wind-fatigue-results.md)：95%有限秩上界需至少19个独立校准风速箱；现仅3箱，留训练/测试后至多1箱校准。SOURCE=历史ETM blob b5effa2a，历史SHA256 16c9864e（未重哈希）；科研commit 6f2efed3；数学PASS、交换性与物理外推HOLD，12阶段晋级0/12、DLC1.2 0/126。下一唯一动作：S12第五章优化约束正文吸收该限制。未触碰Abaqus/CAE、冻结母本、main、昂贵RUN、Draft合并。
+
 ## 2026-11-16 11时｜S11真实ETM整箱留出后验裕量（白皮书v0.31.28）
 
 - READ-BEFORE-WRITE：PR#42 Open/Draft，开工HEAD c42313a7；读取根/研究AGENTS、指挥室、白皮书、MASTER/STATUS、12阶段、T079/T080及1984行ETM原CSV。科研提交 [e58c4529](https://github.com/g2066203208-beep/voxel-frontier/commit/e58c452951057a2ebbbbd63ad01eac3b1670733a)，[期刊三行新数表](../manuscript/journal-wind-fatigue-results.md)；全局后验保守裕量mean/nearest/linear=1.018800/0.371677/0.478020 MPa，逐段相对全局裕量和分别下降36.60%/54.46%/58.25%。源1984行CSV blob b5effa2a，历史SHA256 16c9864e（未重哈希）；这属于同样本oracle诊断，**不代表独立外推PASS**。12阶段晋级0/12、正式DLC1.2 0/126；最大非Abaqus HOLD=正式风箱、同步独立外载与惯性归属、材料局部应力。下一唯一动作转S12，建立真正前瞻校准与验证分离的论文方法正文，不重复三箱裕量审计。无Abaqus/CAE、冻结母本、main、昂贵RUN、PR合并。
