@@ -1,0 +1,247 @@
+{
+  "schema": 1,
+  "task": "T091",
+  "research_branch": "research/t080-seismic-integration-gates-20261022",
+  "research_commit": "01db8f2e39a570ed6b2867f6b2f18eb7313824a0",
+  "scientific_status": "SOURCE DATA DISPLAY; not new simulation or accepted design wave",
+  "datasets": [
+    {
+      "id": "era5-wind-bins",
+      "title": "ERA5衍生风速频率（31箱）",
+      "group": "风资源",
+      "src": "./primary-data/era5-wind-bins.csv",
+      "n": 31,
+      "x": "bin_lower_mps",
+      "y": "p_all_hours",
+      "y2": "p_conditional_4_to_25",
+      "note": "2005–2025衍生工作簿统计，161.368806m动态风切变估计；不是原始184080行ERA5 GRIB/NetCDF。",
+      "provenance": {
+        "path": "research/wind-tower/experiments/T062/S10_ERA5_2005_2025_HUB_1MS_BINS_20261031.csv",
+        "git_blob_sha": "1bae743b385d4f24c8b5af3e0b445aae30d40c6f",
+        "sha256": "e4058620a36b23bb218103875d4dc5b0711fc45d418b23a2208c2fc9c16c9102",
+        "bytes": 2199
+      }
+    },
+    {
+      "id": "era5-direction",
+      "title": "ERA5 100m风向16方位",
+      "group": "风资源",
+      "src": "./primary-data/era5-direction.csv",
+      "n": 16,
+      "x": "sector",
+      "y": "all_pct",
+      "y2": "high_v100_ge_p95_pct",
+      "note": "100m风速的16方位与高风速P95样本占比；不等于161m风向。",
+      "provenance": {
+        "path": "research/wind-tower/experiments/T062/S12_R5_ERA5_100M_DIRECTION_16SECTOR_20261109.csv",
+        "git_blob_sha": "8e2b873b697ce1682becce712a51917156443d22",
+        "sha256": "53417a3d0223beb07a24fa372eaa5662067eb5780836ea4106100cc325942b96",
+        "bytes": 253
+      }
+    },
+    {
+      "id": "esm-spectrum",
+      "title": "真实ESM NVL记录的46周期衍生谱",
+      "group": "地震源",
+      "src": "./primary-data/esm-spectrum.csv",
+      "n": 46,
+      "x": "period_s",
+      "y": "RotD50_PSA_m_s2",
+      "y2": "RotD100_PSA_m_s2",
+      "note": "IT-2012-0008 NVL记录，ESM MP处理波导出的单自由度反应谱；不是场址目标设计谱或混塔响应。",
+      "provenance": {
+        "path": "research/wind-tower/experiments/T079/real-records/S05_ESM_NVL_PSA_PSD_46PERIOD_20261107.csv",
+        "git_blob_sha": "99b0b662fcc776701f15df8e4cbe28c109727c7b",
+        "sha256": "d85bd916c34cc4e0a008a26d07ef49935a4aa90c3feb5d9bb9a5f96a12f1c0cf",
+        "bytes": 10580
+      }
+    },
+    {
+      "id": "esm-component-peaks",
+      "title": "ESM三分量同刻加速度峰值",
+      "group": "地震源",
+      "src": "./primary-data/esm-component-peaks.csv",
+      "n": 5,
+      "x": "metric",
+      "y": "peak_m_s2",
+      "y2": null,
+      "note": "事件IT-2012-0008，台站NVL，单位m/s²；同刻峰值，不能按单轴最大值拼造三分量峰值。",
+      "provenance": {
+        "path": "research/wind-tower/experiments/T079/real-records/S08_ESM_IT2012_NVL_3COMP_COINCIDENT_PEAKS_20261101.csv",
+        "git_blob_sha": "57a7f5372e7fb0b48db6b53c3facac27d1ca7bf6",
+        "sha256": "1b8d4e2f2b47222694a363eb96aa1ec53217a8610b952aa8a519470a9142bc29",
+        "bytes": 654
+      }
+    },
+    {
+      "id": "ntm18-load-summary",
+      "title": "18组NTM真实历史塔底统计",
+      "group": "风荷载",
+      "src": "./primary-data/ntm18-load-summary.csv",
+      "n": 18,
+      "x": "case",
+      "y": "peak_My_MNm",
+      "y2": "DEL4_My_MNm",
+      "note": "OpenFAST历史结构反力统计；不是已经区分的纯塔身外气动力，更不是材料年疲劳寿命。",
+      "provenance": {
+        "path": "research/wind-tower/experiments/T062/S06_NTM18_THREE_QOI_18CASE_20261109.csv",
+        "git_blob_sha": "cf8049a65ed58733b7adcd2a04b6ccc1e5415e71",
+        "sha256": "cf17f4ed29310c649fbceba236a8be5aefc6953e40659f12bd85771404fc87fb",
+        "bytes": 2450
+      }
+    },
+    {
+      "id": "ntm18-annual-clock",
+      "title": "18组NTM工况风箱与年度时钟",
+      "group": "风荷载",
+      "src": "./primary-data/ntm18-annual-clock.csv",
+      "n": 18,
+      "x": "case_id",
+      "y": "annual_bin_hours_all_hours",
+      "y2": "annual_600s_block_repeats_per_seed",
+      "note": "年度风速权重与600s时程重复次数仅为来源账本，不代表完整DLC1.2准入或矿工Miner寿命。",
+      "provenance": {
+        "path": "research/wind-tower/experiments/T062/S10_NTM18_600S_ANNUAL_BLOCK_CLOCK_20261114.csv",
+        "git_blob_sha": "f4166d9df17f813c63415b5de958fbf6c1372112",
+        "sha256": "ef2be95dc831b217cd02f9fad3a2d2ff40eeec7509786a2d6aa2d4e7e47891c8",
+        "bytes": 3387
+      }
+    },
+    {
+      "id": "bf1-30-frequencies",
+      "title": "BF1旧成功模型30阶模态",
+      "group": "结构历史",
+      "src": "./primary-data/bf1-30-frequencies.csv",
+      "n": 30,
+      "x": "mode_number",
+      "y": "frequency_cycles_per_time_unit",
+      "y2": null,
+      "note": "T082旧弹簧接缝模型的历史成功结果；绝非R6全塔新接触模型的模态。",
+      "provenance": {
+        "path": "research/wind-tower/experiments/T082/BF1_GRAVITY_MODAL_20261115/BF1_MODAL_30_FREQUENCIES.csv",
+        "git_blob_sha": "06794ad5570f3442b5157602b738954330e24c8a",
+        "sha256": "34d5ecc4d8a2c8baaa2bd8fbde5907a714361a53ddbc678c7ae5bcfca356a9c0",
+        "bytes": 2617
+      }
+    },
+    {
+      "id": "bf1-rebar-31",
+      "title": "BF1分支31段配筋设计表",
+      "group": "结构历史",
+      "src": "./primary-data/bf1-rebar-31.csv",
+      "n": 31,
+      "x": "segment",
+      "y": "max_utilization",
+      "y2": null,
+      "note": "T077设计分支，不等于2026-11-14本机恢复环筋后的最终逐段原生计算。",
+      "provenance": {
+        "path": "research/wind-tower/experiments/T077/T077_FORMAL_31SEG_REBAR_BF1.csv",
+        "git_blob_sha": "cb9b8a476f07b5392ff18b0c4b9f6a7f5e4880cd",
+        "sha256": "e2fe714c801a62577ba2ed4bb0f46c116ef1e51010e69a5befcce2a1231ddc25",
+        "bytes": 6888
+      }
+    },
+    {
+      "id": "wind-36-envelopes",
+      "title": "36历史风工况六分量包络",
+      "group": "风荷载",
+      "src": "./primary-data/wind-36-envelopes.csv",
+      "n": 36,
+      "x": null,
+      "y": null,
+      "y2": null,
+      "note": "36历史风工况载荷包络；其来源与真实结构疲劳输入需分别审查。",
+      "provenance": {
+        "path": "research/wind-tower/experiments/T072/T072_FORMAL_36CASE_BASE_ENVELOPE.csv",
+        "git_blob_sha": "c4bfb8a8d3f7d0d6ca652e3cd17fde539b0c8f59",
+        "sha256": "b4e3151597a40b229272525b8b882f540bc23314d9c15db3ea0e0573e62ba2c8",
+        "bytes": 6100
+      }
+    }
+  ],
+  "chapters": [
+    {
+      "id": "01",
+      "title": "绪论",
+      "src": "./primary-data/manuscript/01.md",
+      "provenance": {
+        "path": "research/wind-tower/manuscript/final-thesis/chapters/01_绪论.md",
+        "git_blob_sha": "a32a1f702778dd1cb057c8958e99047a736565c1",
+        "sha256": "a1d101bd5e89c168d05ddd37af25546ed480ba2f8d5561345d2e9daa299a54cc",
+        "bytes": 49146
+      }
+    },
+    {
+      "id": "02",
+      "title": "研究对象与模型",
+      "src": "./primary-data/manuscript/02.md",
+      "provenance": {
+        "path": "research/wind-tower/manuscript/final-thesis/chapters/02_研究对象_精细有限元模型与分层验证.md",
+        "git_blob_sha": "cf13105a897d383ed5cd8b8fc0b61d2e44831a6e",
+        "sha256": "a2291a20efe8e9ba50c06ce06fc5aede6cbbd98b4ebed110a9607366dac7da52",
+        "bytes": 27131
+      }
+    },
+    {
+      "id": "03",
+      "title": "风环境与随机风载",
+      "src": "./primary-data/manuscript/03.md",
+      "provenance": {
+        "path": "research/wind-tower/manuscript/final-thesis/chapters/03_场址风环境与整机随机风控制载荷.md",
+        "git_blob_sha": "adfc43e0ce103a528961f0fd244bf97535fb2a12",
+        "sha256": "31e5dcd8a62c3d33b2a0aaf0a351a712cfbf054e784504f4f5c70534e61f9840",
+        "bytes": 164252
+      }
+    },
+    {
+      "id": "04",
+      "title": "风致疲劳性能",
+      "src": "./primary-data/manuscript/04.md",
+      "provenance": {
+        "path": "research/wind-tower/manuscript/final-thesis/chapters/04_10MW混合塔架风致疲劳性能分析.md",
+        "git_blob_sha": "412281be59abad80926bd3d3641d6f4161b0e8cd",
+        "sha256": "36f2b19f7093959818692046d5a47915d39b44fcf2fd68db631a979260254777",
+        "bytes": 175268
+      }
+    },
+    {
+      "id": "05",
+      "title": "参数敏感性与优化",
+      "src": "./primary-data/manuscript/05.md",
+      "provenance": {
+        "path": "research/wind-tower/manuscript/final-thesis/chapters/05_疲劳控制参数敏感性与结构优化.md",
+        "git_blob_sha": "5c52208d012937d668cb287b1edc5f7ad867b6b9",
+        "sha256": "d9dd6925de7266e3cb6e72c425294ada5dd20aaae63eab92ccfb0eeea5e1a77a",
+        "bytes": 56283
+      }
+    },
+    {
+      "id": "06",
+      "title": "结论与展望",
+      "src": "./primary-data/manuscript/06.md",
+      "provenance": {
+        "path": "research/wind-tower/manuscript/final-thesis/chapters/06_结论与展望.md",
+        "git_blob_sha": "627d4c6fb37a8016d83b52613311c43c1756fae4",
+        "sha256": "7a482aadad1717c528bb0dc3fcf72312915e0162eea271af92f0735ccf2cfd3e",
+        "bytes": 8306
+      }
+    }
+  ],
+  "model_settings": {
+    "src": "./primary-data/model-settings-20261114.json",
+    "scope": "2026-11-14 Codex-reported 92-parameter snapshot; NOT R6 current physical model",
+    "provenance": {
+      "path": "research/wind-tower/models/CURRENT_TOWER_SETTINGS_20261114.json",
+      "git_blob_sha": "f20d64763cb6dac7cda83fd4eeb3ad1474eb9dd1",
+      "sha256": "1c2f14ef63b3a47d7d720e8b7b8763a3ba0728ff6021b6be2b9258f3bf737027",
+      "bytes": 20665
+    }
+  },
+  "waveform": {
+    "status": "FULLRATE_NOT_AVAILABLE",
+    "src": null,
+    "rows": 0,
+    "reason": "ValueError: S08_REAL_NUMERIC_SHA256_MISMATCH",
+    "warning": "有原始波身份和SHA凭据，但站内未取得完整32040点，不会以反应谱或代理时程冒充"
+  }
+}
