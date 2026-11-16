@@ -1,0 +1,75 @@
+name: T091 Inline Primary Evidence + Thesis Archive
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/scripts/build-studio-primary-evidence.py"
+      - ".github/workflows/t091-studio-source-archive.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: t091-inline-primary-archive
+  cancel-in-progress: true
+
+jobs:
+  static-read-only-research-evidence:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 1
+      - name: Read active research branch without merging
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin '+refs/heads/research/t080-seismic-integration-gates-20261022:refs/remotes/origin/research/t080-seismic-integration-gates-20261022'
+          git rev-parse refs/remotes/origin/research/t080-seismic-integration-gates-20261022
+      - name: Build exact source copies and optional real ESM waveform
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/build-studio-primary-evidence.py
+      - name: Validate complete source identity without numerical fabrication
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import csv,hashlib,json,pathlib
+          base=pathlib.Path('public/thesis-studio')
+          d=json.loads((base/'primary-data/manifest.json').read_text())
+          assert d['schema']==1 and len(d['datasets'])==9 and len(d['chapters'])==6
+          assert len(json.loads((base/'primary-data/model-settings-20261114.json').read_text())['sections'])==9
+          for x in d['datasets']+d['chapters']:
+              b=(base/x['src'].removeprefix('./')).read_bytes()
+              assert hashlib.sha256(b).hexdigest()==x['provenance']['sha256']
+              if x.get('n'):
+                  assert len(list(csv.DictReader(b.decode('utf-8-sig').splitlines())))==x['n']
+              print(x['id'],len(b),'bytes','sha256',x['provenance']['sha256'][:12])
+          w=d['waveform']
+          if w['src']:
+              b=(base/w['src'].removeprefix('./')).read_bytes()
+              assert hashlib.sha256(b).hexdigest()==w['csv_sha256']
+              rows=list(csv.DictReader(b.decode().splitlines()))
+              assert len(rows)==32040
+              assert set(rows[0])=={'time_s','HNE_acc_m_s2','HNN_acc_m_s2','HNZ_acc_m_s2'}
+              print('ESM full-rate 32040 samples source-verified')
+          else:
+              print('ESM full-rate source unavailable; no fake original waveform')
+          PY
+      - name: Persist verified research evidence in single public studio
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "paper-studio-bot"
+          git config user.email "paper-studio-bot@users.noreply.github.com"
+          git add public/thesis-studio/primary-data
+          if ! git diff --cached --quiet; then
+            git commit -m "docs(studio): publish ERA5 seismic wind primary records and six full thesis chapters inline"
+            git push origin HEAD:main
+          fi
