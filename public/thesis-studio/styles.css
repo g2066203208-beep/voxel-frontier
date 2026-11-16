@@ -442,3 +442,24 @@ body{font-size:14px}
 
 /* Reader-first mode: no download prompts in research figure/literature viewers. */
 #figures-view #reader-download,#figure-download,#ref-zoom-download{display:none!important}
+
+/* T090: publication-authenticated complete original-PDF page reading; no jump/download UI */
+.journal-original-pages{grid-column:1/-1;min-width:0;padding:22px;background:#fff;border:1px solid #dfebe8;border-radius:12px;margin:12px 0 24px}
+.journal-page-intro h2{font-size:clamp(19px,2.25vw,27px);line-height:1.4;margin:10px 0}
+.journal-page-intro p{font-size:12px;line-height:1.85;color:#627a79;max-width:950px;margin:8px 0 23px}
+.journal-paper-list{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
+.journal-paper{min-width:0;padding:18px 18px 20px;background:#fbfcfc;border:1px solid #e6eeec;border-radius:10px}
+.journal-paper-head{display:flex;flex-wrap:wrap;align-items:start;justify-content:space-between;gap:10px}
+.journal-paper-code{font:700 11px ui-monospace,Consolas,monospace;color:#266765}
+.journal-paper-state{font:600 10px/1.65 ui-monospace,Consolas,monospace;color:#4f807b}
+.journal-paper h3{font-size:14px;line-height:1.6;margin:12px 0 9px;overflow-wrap:anywhere}
+.journal-paper-meta,.journal-paper-method,.journal-paper-license,.journal-no-pages{font-size:11px;line-height:1.75;overflow-wrap:anywhere;color:#5e7574;margin:5px 0}
+.journal-paper-method{color:#315b59;font-weight:650}
+.journal-paper-license{font-size:10px}
+.journal-no-pages{margin-top:12px;padding:10px 12px;background:#f0f3f1;border-radius:5px}
+.journal-page-stream{display:grid;grid-template-columns:minmax(0,1fr);gap:18px;max-width:1050px;margin:19px auto 0}
+.journal-page{margin:0;min-width:0;content-visibility:auto;contain-intrinsic-size:auto 1000px;overflow:hidden;background:#fff;border:1px solid #dbe6e3;border-radius:7px;box-shadow:0 3px 14px #112c310d}
+.journal-original-sheet{width:100%;height:auto;display:block;object-fit:contain}
+.journal-page-caption{padding:8px 13px;border-top:1px solid #e7eeeb;color:#61817f;font:10px/1.6 ui-monospace,Consolas,monospace}
+.journal-page-error{padding:12px;color:#ab4e43}
+@media(max-width:700px){.journal-original-pages{padding:12px}.journal-paper{padding:13px}.journal-page-stream{gap:11px}.journal-paper h3{font-size:12px}}
