@@ -1,0 +1,78 @@
+/* Academic source-first reading, 2026-11-16. No fabricated placeholders. */
+:root{--academic-ink:#172c31;--academic-muted:#65787c;--academic-rule:#dae3e1;--academic-paper:#fff}
+#module-view .module-header{padding:26px 34px 24px;border-radius:10px;background:#173a41;color:#fff;margin-bottom:24px}
+#module-view .module-header .module-code{opacity:.14}
+#module-view .module-header .module-description{color:#d8e7e8;font-size:14px}
+#module-view .module-body{display:block!important;max-width:1100px;margin:0 auto;padding-bottom:60px}
+#module-view .module-body>.record-source-workspace,
+#module-view .module-body>.evidence-module-inline,
+#module-view .module-body>.record-thesis-full,
+#module-view .module-body>.corpus-root{width:100%;max-width:none;min-width:0}
+.record-source-workspace{display:flex;flex-direction:column;gap:38px}
+.record-heading{border-bottom:1px solid var(--academic-rule);padding:10px 0 15px;margin-bottom:20px;display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:8px 24px}
+.record-heading h2{font-family:"Noto Serif SC","Source Han Serif SC","Songti SC",serif;margin:0;font-size:24px!important;line-height:1.5;color:var(--academic-ink);font-weight:650}
+.record-detail{font-size:12px;line-height:1.7;overflow-wrap:anywhere;color:var(--academic-muted)}
+.record-sources,.record-pdfs,.record-figures{width:100%;min-width:0}
+.record-document{background:var(--academic-paper);border:1px solid var(--academic-rule);border-radius:8px;padding:24px 30px;margin:18px 0 24px;width:100%;min-width:0;box-shadow:none}
+.record-document .record-heading{padding-top:0;margin-bottom:16px}
+.record-document .record-heading h2{font-size:19px!important;font-family:inherit;font-weight:650}
+.record-document-body{width:100%;min-width:0;overflow-wrap:anywhere;font-size:15px;line-height:1.85}
+.record-document-body .thesis-full-article{padding:0!important;border:0!important;box-shadow:none!important;background:transparent!important;width:100%;max-width:none}
+.record-document-body .thesis-full-article h1,
+.record-document-body .thesis-full-article h2,
+.record-document-body .thesis-full-article h3{scroll-margin-top:24px}
+.record-loading,.record-failed{font-size:13px;padding:14px 16px;background:#f9faf9;color:var(--academic-muted);border-left:2px solid var(--academic-rule)}
+.record-failed{color:#93402e;border-color:#c78778;background:#fff8f6}
+.record-original-figure{margin:0}.record-original-figure img{width:100%;height:auto;object-fit:contain}
+.record-original-figure figcaption,.record-figure figcaption{margin:12px 0 0;font-size:12px;line-height:1.6;color:var(--academic-muted);overflow-wrap:anywhere}
+.record-figure-list{display:grid;grid-template-columns:minmax(0,1fr);gap:30px}
+.record-figure{margin:0;padding:24px 24px 18px;border:1px solid var(--academic-rule);border-radius:6px;background:#fff;min-width:0}
+.record-figure img{display:block;width:100%;max-height:none;height:auto;object-fit:contain;min-height:80px}
+.record-figure[data-failed="true"]{border-color:#b96b5b}
+.record-pdf{background:#f8faf9}
+.record-pdf-pages{display:flex;flex-direction:column;align-items:center;gap:18px}
+.record-pdf-page{box-sizing:border-box;max-width:860px;width:100%;aspect-ratio:0.707;min-height:180px;border:1px solid #cdd8d5;background:#fff;box-shadow:0 4px 16px #213f3f10;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
+.record-pdf-page canvas{display:block;width:100%!important;height:auto!important}
+.record-pdf-page-caption{font-size:11px;color:#66797d;padding:8px 0;background:#fff}
+.record-page-wait{font-size:14px;color:#889b9d}
+.record-data-table{min-width:0;margin:12px 0 20px}
+.record-data-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 8px}
+.record-data-search{min-width:0;width:270px;max-width:100%;border:1px solid var(--academic-rule);border-radius:4px;padding:9px 12px;background:#fff;color:var(--academic-ink)}
+.record-data-scroll{overflow-x:auto;max-width:100%;border:1px solid var(--academic-rule);border-radius:4px}
+.record-table{border-collapse:collapse;min-width:600px;width:100%;font-size:12px;line-height:1.5;font-variant-numeric:tabular-nums}
+.record-table th,.record-table td{padding:8px 11px;text-align:left;border-bottom:1px solid #e8eeec;vertical-align:top;white-space:normal;overflow-wrap:anywhere}
+.record-table thead{background:#edf4f2;color:#2c484e}
+.record-table tbody tr:nth-child(even){background:#f9fbfa}
+.record-data-sentinel{font-size:11px;color:var(--academic-muted);padding:12px 4px}
+.record-raw{white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;line-height:1.7;background:#f5f8f7;border:1px solid #e2eae8;padding:20px;max-height:none}
+.evidence-source-group{margin:0 0 40px}.evidence-source-group>h2{font-size:23px;font-weight:650;margin:12px 0;border-bottom:1px solid var(--academic-rule);padding-bottom:14px}
+.evidence-record-full{margin-bottom:30px!important;max-width:none!important}
+.evidence-source-group .evidence-table-wrap{max-width:100%}
+.thesis-all-chapters{display:flex;flex-direction:column;gap:48px}
+.thesis-chapter-section{padding-bottom:28px;border-bottom:1px solid var(--academic-rule);scroll-margin-top:30px;min-width:0}
+.thesis-chapter-heading{font-family:"Noto Serif SC","Source Han Serif SC","Songti SC",serif;font-size:27px;margin:0 0 12px;color:var(--academic-ink)}
+.thesis-chapter-section .thesis-source-line{font-size:11px;overflow-wrap:anywhere;color:var(--academic-muted);padding:12px 0}
+.thesis-chapter-section .thesis-full-article{width:100%;max-width:100%;margin:0 auto}
+.thesis-chapter-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 26px;position:relative}
+.thesis-chapter-tabs button{white-space:normal;text-align:left;border:1px solid var(--academic-rule);border-radius:4px;font-size:12px;padding:8px 11px;background:#fff;color:#214349}
+.thesis-chapter-tabs button:hover,.thesis-chapter-tabs button:focus-visible{border-color:#158e88}
+#module-view .module-body .module-column{display:none}
+#module-view .module-body .deliverable-item{display:none}
+@media(max-width:720px){
+ #module-view .module-header{padding:20px 18px}
+ #module-view .module-body{padding:0 0 40px}
+ .record-heading h2{font-size:20px!important}
+ .record-document{padding:16px 14px;margin:12px 0 18px}
+ .record-document .record-heading h2{font-size:17px!important}
+ .record-figure{padding:12px}
+ .record-figure-list{gap:20px}
+ .record-pdf-page{min-height:100px}
+ .thesis-chapter-heading{font-size:21px}
+ .thesis-chapter-tabs{gap:5px}
+ .thesis-chapter-tabs button{font-size:11px}
+}
+@media print{
+ .sidebar,.topbar,.menu-toggle,.thesis-chapter-tabs{display:none!important}
+ .workspace,.main-content,#module-view .module-body{width:100%!important;max-width:none!important;margin:0!important;padding:0!important}
+ .record-document,.record-figure{break-inside:avoid;border-color:#bbb;box-shadow:none}
+}
