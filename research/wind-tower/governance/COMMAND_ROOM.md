@@ -1,3 +1,11 @@
+## 2026-11-16｜T091唯一工作室原始数据与论文全文站内展示 END（白皮书v0.32.5）
+
+- 研究HEAD `c111f859edc0311971dcd89c2a29476250b32b12`；main独立部署T091 `v1.8.0`，GitHub Pages最新代码deploy run `43836682561` SUCCESS；科研数据归档Actions `43834186720`、`43834780427` SUCCESS，全部9套来源CSV、6章原文、92项历史模型数据以原Git blob+SHA+行数审计入 `public/thesis-studio/primary-data/`。另保留旧541科研图、395文献证据图、Jonscher18页/Dong22页合法PDF完整原图。
+- 用户不希望跳转GitHub或下载才能阅读：`#evidence` 中ERA5真实衍生风速31箱/16向、ESM46周期原始记录衍生谱/同刻峰和真实三轴源级SVG、18NTM历史塔底数据、旧BF1/T077参数，全部内嵌SVG科学图和可检索全表；`#thesis` 六章全文与原科研SVG站内连续阅读；本项目原始GitHub MD/CSV/TSV/JSON/SVG链接可在同页直接打开。界面不重复建设站点。
+- 真实地震全量32040×3时程官方重取数字SHA发生 `S08_REAL_NUMERIC_SHA256_MISMATCH`，历史Actions附件HTTP401；未把不一致的原始加速度数组放到工作室，仍HOLD。ERA5 184080h数据为来源时钟、当前只复制汇总表而非184080行逐时数据；原图演示和历史数值不等同于新接触全塔科学PASS。
+- 最新本机Codex用户转录：L1/L2报告通过，L3报告失败，L4未验，R7中断；仅用户转录级，不以本助手代替原生日志审查、不执行Abaqus工作。完整技术台账见 `research/wind-tower/experiments/T091/INLINE_SOURCE_STUDIO_REPORT_20261116.md` 和T080 PROCESS_LOG，白皮书v0.32.5；PR#42保持Draft/不合并。
+- 浏览器全站验收Action `43837001680` 已启动；其最终实测PASS/FAIL必须以实际日志单独追认，不能拿部署SUCCESS冒充浏览器截图通过。论文12阶段0/12、正式DLC1.2 0/126及真实接触/材料疲劳HOLD不变。
+
 ## 2026-11-16｜T091唯一工作室 ERA5/地震波/风载/论文原文内嵌 START
 
 - READ-BEFORE-WRITE：研究 HEAD `a0a7a0cd87f7209f2bea7fdc852031b71ba6b2a1`、根AGENTS、研究AGENTS、指挥室最新S10/T090/T089、main唯一工作室 `index.html/app.js/catalog.json`、T062 ERA5 31箱原表和184080小时凭据、16风向扇区、T079 ESM v3谱46行/3分量同刻峰与原始ACC回执、T062 NTM18历史结果/年度600s块、主站已归档541图和40篇页图。PR#42仍Draft，模型初始基准不改。
