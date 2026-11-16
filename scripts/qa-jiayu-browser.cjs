@@ -11,7 +11,7 @@ async function main(){
  const browser=await chromium.launch({headless:true,args:["--no-sandbox","--disable-dev-shm-usage"]});
  const page=await browser.newPage({viewport:{width:1440,height:900},deviceScaleFactor:1});
  const fail=[];
- page.on("pageerror",e=>fail.push("PAGE_ERROR "+e.message));
+ page.on("pageerror",e=>{const trace=e.stack||e.message;fail.push("PAGE_ERROR "+trace);console.error("CHROMIUM_PAGE_ERROR",trace)});
  page.on("response",r=>{
   if(r.status()===404&&r.url().includes("/voxel-frontier/thesis-studio/"))fail.push("MISSING_ASSET "+r.url());
  });
@@ -148,12 +148,24 @@ async function main(){
  await page.locator("#reader-text-mode").click();
  await page.locator('#reader-doc-list .reader-doc[data-id="he-thesis"]').click();
  await page.waitForFunction(()=>{
-  const status=document.getElementById("reader-status");
-  const h=document.getElementById("reader-title");
-  return h?.textContent.includes("何泽瑜")&&status?.textContent.includes("页");
- },null,{timeout:60000});
+  const status=document.getElementById("reader-status")?.textContent||"";
+  const h=document.getElementById("reader-title")?.textContent||"";
+  const stage=document.getElementById("reader-stage");
+  const count=Number((document.getElementById("reader-total")?.textContent||"").replace(/[^0-9]/g,""));
+  const canvas=document.getElementById("reader-canvas");
+  return h.includes("何泽瑜")&&stage?.dataset.documentId==="he-thesis"&&count>=20
+    &&/^第 \d+ \/ \d+ 页/.test(status)
+    &&canvas?.width>100&&canvas.style.visibility==="visible";
+ },null,{timeout:60000}).catch(async e=>{
+  console.log("HE_READER_DIAGNOSTIC",await page.locator("#reader-title").innerText(),
+    await page.locator("#reader-status").innerText(),
+    await page.locator("#reader-total").innerText(),
+    await page.locator("#reader-stage").getAttribute("data-document-id"));
+  await page.screenshot({path:path.join(out,"jiayu-he-reader-failure-diagnostic.png"),fullPage:false});
+  throw e;
+ });
  await page.screenshot({path:path.join(out,"jiayu-reader-desktop.png"),fullPage:false});
- console.log("PDF_READER_OK He thesis pages",await page.locator("#reader-total").innerText());
+ console.log("PDF_READER_OK genuine He thesis pages",await page.locator("#reader-total").innerText());
  // Modern public complete gallery has exactly 541 inline original cards, not hidden legacy paged UI.
  assert.equal(await page.locator("#atlas-complete-grid .atlas-file-card").count(),541);
  await page.locator("#atlas-complete-search").fill("RotD");
