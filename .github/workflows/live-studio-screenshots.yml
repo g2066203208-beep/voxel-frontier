@@ -1,0 +1,31 @@
+name: Live Studio Chromium Screenshots
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  screenshots:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install project and browser
+        run: |
+          npm ci
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Capture every studio view
+        run: node scripts/live-studio-screenshots.cjs
+      - name: Upload screenshots and audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-studio-chromium-screenshots
+          path: artifacts/visual-audit/
+          retention-days: 7
