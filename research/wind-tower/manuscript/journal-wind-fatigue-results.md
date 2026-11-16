@@ -854,3 +854,28 @@ For independent seeds and fixed ERA5 conditional probabilities \(p_i=h_i/106900\
 A deliberately adverse, **hypothetical** heteroscedastic experiment assigns standard deviation \(K\sigma_0\) to bins with fewer than six allocated slots and \(\sigma_0\) elsewhere. Define \(A=\sum_{n_i<6}p_i^2(1/n_i-1/6)\) and \(B=\sum_{n_i>6}p_i^2(1/6-1/n_i)\). Then \(V_{\rm opt}-V_{\rm equal}=\sigma_0^2(K^2A-B)\), and the ranking reverses at \(K_*=\sqrt{B/A}\). Using the archived integer-hour ERA5 source, A=0.000244398551695, B=0.021840770634793, and K*=9.45332665646 (corresponding variance ratio about 89.365). At K=10, the original allocation yields normalized variance **0.0509679638833** versus **0.0483688793486** for six-per-bin: **5.37346% larger**. This is a constructive rejection of unconditional extrapolation from the earlier 71.2423% equal-variance reduction.
 
 The 10x standard-deviation contrast is synthetic and is neither a measured seed property nor a validated tower bound. The source-hour-weighted mathematical counterexample is not a new OpenFAST run, fatigue reduction, material Miner life, or formal DLC1.2 coverage. An admissible prospective allocation requires independent bin-specific seed variance estimates, uncertainty for rare bins, and held-out-seed testing. SOURCE: experiments/T062/S10_ERA5_2005_2025_HUB_1MS_BINS_20261031.csv (Git blob 1bae743b385d4f24c8b5af3e0b445aae30d40c6f; previously recorded SHA256 e4058620a36b23bb218103875d4dc5b0711fc45d418b23a2208c2fc9c16c9102, not rehashed here). RUN: experiments/T080/s10_stratified_seed_allocation.cjs with an explicit adverse-variance test; independent Python recomputation of the integer allocation and threshold. REF/STANDARD/OFFICIAL: no newly inspected primary text; TAB: the numerical comparison above; FIG: none. Native Node CLI NOT_RUN. METHOD/COUNTEREXAMPLE PASS; physical heteroscedasticity, local stress and lifetime HOLD.
+
+
+### 4.30. Empirical six-seed heteroskedasticity and constrained allocation within the *observed* NTM bins (2026-11-16)
+
+Rather than assuming equal response variances across all 21 ERA5 bins, we directly re-read the archived 72-row fourth-power DEL table (Git blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`) and retained the 18 NTM runs (three wind bins × six original seeds), separately for tower-base Mx and My. Define `Y_{b,s}=(DEL4_{b,s}/1000)^4` in `(MN m)^4`, and estimate the sample SD `s_b` from the six independent-seed *observations* in each bin (denominator five). The conditional exposure weights are `p_b=h_b/7164`, with historical ERA5 hours `h=(5736,1426,2)`. Under independent, identically distributed seeds *within* each bin and a fixed pilot variance estimate, the estimated sampling variance of the three-bin conditional mean is `V(n)=sum_b (p_b s_b)^2/n_b`. This is not a full-wind-climate or Miner-damage variance.
+
+| Channel | Bin (m/s historical label) | Six-seed mean Y [(MN m)^4] | Pilot SD [(MN m)^4] | CV |
+|---|---|---:|---:|---:|
+| Mx | 9.343881 | 13.659526 | 5.735598 | 0.419897 |
+| Mx | 11.4 | 39.686354 | 11.457328 | 0.288697 |
+| Mx | 19.202140 | 1893.119803 | 892.052867 | 0.471208 |
+| My | 9.343881 | 23828.522539 | 11985.579154 | 0.502993 |
+| My | 11.4 | 66105.736275 | 31601.368404 | 0.478043 |
+| My | 19.202140 | 86658.441085 | 22047.186541 | 0.254415 |
+
+To illustrate how measured *historical* pilot variability changes a sampling proposal, fix an 18-slot prospective budget and require at least two future independent seeds in each of these three bins. Exhaustive enumeration of all integer allocations satisfying `n_1+n_2+n_3=18` gives:
+
+| Channel | Historical 6/6/6 plug-in V | Pilot-optimal future allocation | Plug-in V at allocation | Plug-in reduction |
+|---|---:|---|---:|---:|
+| Mx | 4.392089 | 11/5/2 | 2.988448 | 31.9584% |
+| My | 21943388.201136 | 10/6/2 | 15803887.866431 | 27.9788% |
+
+The two channels favor **different** allocations, so neither is a simultaneous two-channel optimum. The 19.202140 m/s bin has only two ERA5 hourly observations despite six historical simulations, and its high Mx fourth-power variability is not evidence of a known future tail distribution. Critically, the optimal allocations use the **same six-seed pilot sample to estimate unknown variances**: the reductions are plug-in design comparisons, **not** realized variance reductions, unbiased variance estimates for new designs, or confidence guarantees. Allocation 11/5/2 does not mean eleven independent Mx histories have already been simulated. A genuine evaluation requires additional independent seeds, predeclared pilot/validation separation, explicit channel trade-off, and full DLC1.2 support. With only three represented wind bins, the result cannot justify the earlier 21-bin equal-variance allocation or any fatigue life claim.
+
+SOURCE: original 72-row archive `research/wind-tower/experiments/T062/recomputed-load-fatigue/05_LOAD_DEL_M4_ALL36_RECOMPUTED.csv` (Git blob above; inherited historical SHA256 `b362bcd7c37ccc56e21035de39448b5e761ec03f371b6b2f3eb30f41b013630d`, not independently byte-rehashed). RUN: connector V8 parsed actual six-seed DEL rows and exhaustively enumerated the 18-slot allocations; executable source `research/wind-tower/experiments/T080/s10_empirical_seed_variance_allocation.cjs` (native Node CLI not yet run). TAB: six empirical rows plus two optimization rows; FIG: none. REF/STANDARD/OFFICIAL: no newly licensed source. PASS: observed-table arithmetic and exhaustive integer enumeration; HOLD: prospective seed variance, full-bin representativeness, physical material fatigue and simultaneous-channel design.
