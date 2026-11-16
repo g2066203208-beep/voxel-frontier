@@ -1,0 +1,53 @@
+name: T093 Pin Local PDF Reader Assets
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/t093-vendor-pdfjs.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: t093-pdfjs-assets
+  cancel-in-progress: false
+
+jobs:
+  vendor-two-scripts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Pin locally served source and worker (Apache 2.0)
+        shell: bash
+        run: |
+          set -euo pipefail
+          tmp="$(mktemp -d)"
+          npm pack pdfjs-dist@5.4.530 --pack-destination "$tmp" --silent
+          tar -xzf "$tmp/pdfjs-dist-5.4.530.tgz" -C "$tmp" \
+            package/build/pdf.mjs package/build/pdf.worker.mjs package/LICENSE
+          mkdir -p public/thesis-studio/vendor
+          cp "$tmp/package/build/pdf.mjs" public/thesis-studio/vendor/pdf.mjs
+          cp "$tmp/package/build/pdf.worker.mjs" public/thesis-studio/vendor/pdf.worker.mjs
+          cp "$tmp/package/LICENSE" public/thesis-studio/vendor/LICENSE.txt
+          test "$(wc -c < public/thesis-studio/vendor/pdf.mjs)" -gt 400000
+          test "$(wc -c < public/thesis-studio/vendor/pdf.worker.mjs)" -gt 1000000
+          sha256sum public/thesis-studio/vendor/*.mjs
+      - name: Persist pinned local PDF.js, no third-party CDN required
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "paper-studio-bot"
+          git config user.email "paper-studio-bot@users.noreply.github.com"
+          git add public/thesis-studio/vendor/pdf.mjs public/thesis-studio/vendor/pdf.worker.mjs public/thesis-studio/vendor/LICENSE.txt
+          if ! git diff --cached --quiet; then
+            git commit -m "fix(studio): vendor pinned PDF.js modules for self-contained fulltext reading"
+            git push origin HEAD:main
+          fi
