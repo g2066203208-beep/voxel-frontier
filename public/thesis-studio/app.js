@@ -55,7 +55,18 @@ function renderRoadmap(){const box=$("#roadmap-grid");clear(box);for(const r of 
 function renderOverviewData(){const data=$("#featured-data");clear(data);for(const d of state.catalog.datasets){const row=E("div","evidence-item"),copy=E("div");copy.append(E("strong","",d.name),E("small","",d.domain+" · "+d.status));row.append(copy,link(d.url,"↗"));data.append(row);}const reports=$("#featured-reports");clear(reports);for(const [i,r] of state.catalog.reports.entries()){const a=link(r.url,"","report-link");a.append(E("span","",String(i+1).padStart(2,"0")),E("strong","",r.name));reports.append(a);}}
 function makePanel(title,kicker){const panel=E("section","detail-panel");panel.append(E("span","panel-kicker",kicker),E("h2","",title));return panel;}
 function rows(panel,arr){arr.forEach((s,i)=>{const p=E("div","bullet-block");p.append(E("span","bullet-number",String(i+1).padStart(2,"0")),E("span","",s));panel.append(p);});}
-function sourceList(panel,arr){for(const x of arr){const row=E("div","source-item");row.append(link(x.url,x.label),E("span","",({official:"官方来源",standard:"规范索引",template:"报告模板",evidence:"研究资料"})[x.kind]||"资料"));panel.append(row);}}
+function sourceList(panel,arr){for(const x of arr){
+ const row=E("div","source-item");
+ const can=window.JYSourceInline?.supports(x.url);
+ if(can){
+  const b=E("button","source-inline-open",x.label);
+  b.type="button";b.title="在同一工作室中直接阅读完整原文";
+  b.addEventListener("click",()=>window.JYSourceInline.open(x.url,x.label,$("#module-body")));
+  row.append(b);
+ }else row.append(link(x.url,x.label));
+ row.append(E("span","",can?"站内原文":(({official:"官方来源",standard:"规范索引",template:"报告模板",evidence:"研究资料"})[x.kind]||"资料")));
+ panel.append(row);
+}}
 function renderDetail(m){$("#module-tag").textContent=m.group+" / "+m.scope;const s=$("#module-stage");s.className="stage-chip "+statusClass(m.stage);s.textContent=m.stage;$("#module-english").textContent=m.en;$("#module-title").textContent=m.title;$("#module-description").textContent=m.brief;$("#module-code").textContent=m.short;const body=$("#module-body");clear(body);const left=E("div","module-column"),right=E("div","module-column");
 const q=makePanel("研究问题","RESEARCH QUESTIONS");rows(q,m.questions);left.append(q);
 const checks=makePanel("研究方法与指标","METHOD & QUALITY GATES");rows(checks,m.checks);left.append(checks);
