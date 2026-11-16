@@ -31,6 +31,16 @@ SOURCES = [
         ],
     ),
     dict(
+        id="tan2026",
+        doi="10.1016/j.engstruct.2026.123195",
+        title_hint="Evaluation of load-carrying capacity",
+        page_max=40,
+        urls=[
+            "https://www.sciencedirect.com/science/article/pii/S0141029626011090/pdfft?isDTMRedir=true&download=true",
+            "https://ars.els-cdn.com/content/image/1-s2.0-S0141029626011090-main.pdf",
+        ],
+    ),
+    dict(
         id="dong2025",
         doi="10.3390/buildings15203786",
         title_hint="Structural Analysis Methods",
@@ -65,7 +75,8 @@ def download_pdf(urls: list[str], path: Path) -> str:
 
 def produce_one(spec: dict, entries: list[dict], scratch: Path) -> int:
     a = next(x for x in entries if x["id"] == spec["id"])
-    if not a["license"].startswith("CC BY 4.0") or a["doi"] != spec["doi"]:
+    trial_oa = spec["id"] == "tan2026" and a["status"] == "open_text_pdf_unverified"
+    if (not a["license"].startswith("CC BY 4.0") and not trial_oa) or a["doi"] != spec["doi"]:
         raise RuntimeError(f"license/identity mismatch for {spec['id']}")
     pdf = scratch / f"{spec['id']}.pdf"
     source_url = download_pdf(spec["urls"], pdf)
@@ -76,6 +87,13 @@ def produce_one(spec: dict, entries: list[dict], scratch: Path) -> int:
     compact = " ".join(first.split())
     if spec["title_hint"].lower() not in compact.lower() or spec["doi"].lower() not in compact.lower():
         raise RuntimeError(f"unexpected publisher PDF for {spec['id']}; title/DOI verification failed")
+    if spec["id"] == "tan2026":
+        whole = run("pdftotext", str(pdf), "-").lower().replace(" ", "")
+        if not ("creativecommons.org/licenses/by/4.0" in whole or
+                "creativecommons.org/licenses/by/4.0/" in whole or
+                "ccby4.0" in whole):
+            raise RuntimeError("publisher PDF has no verified CC BY 4.0 license; skip publication")
+        a["license"] = "CC BY 4.0 (verified in publisher original PDF)"
     dest = OUTPUT / spec["id"]
     scratchout = scratch / (spec["id"] + "_pages")
     scratchout.mkdir()
