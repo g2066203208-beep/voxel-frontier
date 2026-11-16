@@ -180,7 +180,7 @@ async function show(module,root){
    for(const record of docs)pdfOriginal(record,pdfBox);
   }catch(e){pdfBox.append(E("p","record-failed",e.message))}
  }
- const sources=(module.links||[]).filter(x=>sourceSpec(x.url));
+ const sources=(module.links||[]).filter(x=>x.kind!=="template"&&sourceSpec(x.url));
  if(sources.length){
   const records=E("section","record-sources");records.append(heading("研究报告与原始数据",sources.length+" 份已登记源码文档"));
   scope.append(records);
