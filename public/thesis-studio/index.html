@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="./styles.css">
   <script defer src="./reader.js"></script>
   <script defer src="./references.js"></script>
+  <script defer src="./inline-atlas.js"></script>
   <script defer src="./figures.js"></script>
   <script defer src="./app.js"></script>
 </head>
@@ -56,6 +57,11 @@
       </section>
       <section id="figures-view" class="view figures-view" hidden>
         <header class="archive-heading"><span class="section-kicker">SOURCE ARCHIVE</span><h1>原始文献与科研图集</h1></header>
+        <section id="joint-atlas" class="inline-atlas" aria-labelledby="joint-atlas-title">
+          <div class="atlas-head"><span class="section-kicker">JOURNAL ORIGINALS · JOINT MECHANICS</span><h2 id="joint-atlas-title">水平接缝 · 期刊原图</h2><p>原图就在本页完整显示，不必打开GitHub或下载。3张已归档的Springer原始PNG、2张开放许可的出版方原图；出版方若阻止嵌入，将如实提示，不使用替代图。</p></div>
+          <div id="joint-atlas-gallery" class="atlas-journal-list" aria-live="off"></div>
+          <details class="atlas-bibliography"><summary>水平接缝24篇核心论文 · 全部文献信息直接阅读</summary><div id="joint-atlas-papers" class="atlas-paper-grid"></div></details>
+        </section>
         <section id="original-documents" class="reader-section">
           <div class="reader-shell" id="reader-shell">
             <aside class="reader-aside" aria-label="文献导航">
@@ -95,7 +101,16 @@
           </div>
         </section>
         <details class="archive-appendix" id="he-original-pages"><summary><span>何泽瑜论文原始页图</span><span id="he-page-count">11页 · 点击展开</span></summary><div id="he-original-grid" class="figure-grid he-page-grid"></div></details>
-        <section class="complete-figure-catalog">
+        <section id="atlas-complete" class="inline-atlas atlas-complete" aria-labelledby="atlas-complete-title">
+          <div class="atlas-head"><span class="section-kicker">COMPLETE REGISTERED IMAGE READER</span><h2 id="atlas-complete-title">工作室全部已归档图片 · 连续阅读</h2><p>541张已归档图像（包含395张文献原页）全部在本页按原始图幅呈现，滚动时按需加载。不分页、不跳转、不要求下载。原图与本研究原创图按文件类别区分。</p></div>
+          <div class="atlas-toolbar">
+            <label><span>检索图号 / 文件名</span><input id="atlas-complete-search" type="search" placeholder="全文图片检索…" autocomplete="off"></label>
+            <label><span>原图类别</span><select id="atlas-complete-category"><option value="">所有已归档图片</option></select></label>
+          </div>
+          <p id="atlas-complete-count" class="atlas-counter" role="status" aria-live="polite">读取原图索引中…</p>
+          <div id="atlas-complete-grid" class="atlas-file-grid"></div>
+        </section>
+        <section class="complete-figure-catalog" hidden>
           <div class="section-head compact"><div><span class="section-kicker">SCIENTIFIC FIGURES</span><h2>科研图集</h2></div><span class="section-note" id="figure-count">—</span></div>
           <div class="figure-toolbar">
             <label class="sr-only" for="figure-search">按图号或文件名检索</label>
