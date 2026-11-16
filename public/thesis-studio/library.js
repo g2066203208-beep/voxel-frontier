@@ -21,7 +21,7 @@ function remoteList(){if(!S.index)return;S.shown=dataFiltered();const pages=Math
 $("#remote-count").textContent=S.shown.length.toLocaleString()+" 项 · 已选 "+S.remoteSelected.size+" 项";$("#remote-pageinfo").textContent=(S.page+1)+" / "+pages+" 页";$("#remote-prev").disabled=S.page===0;$("#remote-next").disabled=S.page>=pages-1;
 if(!arr.length){box.append(Elem("div","empty","未找到匹配文件"));return;}
 const frag=document.createDocumentFragment();for(const f of arr){const row=Elem("div","file-row");const main=Elem("div","file-main"),check=Elem("input","file-check");check.type="checkbox";check.checked=S.remoteSelected.has(f.p);check.setAttribute("aria-label","选择 "+f.n);check.addEventListener("change",()=>{if(check.checked)S.remoteSelected.add(f.p);else S.remoteSelected.delete(f.p);remoteList();});const ico=Elem("span","filetype",(f.e||"FILE").slice(0,4).toUpperCase());const info=Elem("div","file-info");info.append(Elem("span","file-name",f.n),Elem("span","file-path",f.p.replace(/^research\/wind-tower\//,"")));main.append(check,ico,info);const actions=Elem("div","file-actions"),read=Elem("button","","站内阅读");read.type="button";read.addEventListener("click",()=>previewRemote(f));actions.append(read);if(f.l)actions.append(Elem("span","file-size","LFS指针"));row.append(main,textCell(f.g,"file-group"),textCell(bytes(f.s),"file-size"),actions);frag.append(row);}box.append(frag);}
-async function previewRemote(item){
+async function previewRemote(item,auto=false){
  const host=$("#remote-preview");if(!host)return;
  const head=Elem("header","record-heading");
  head.append(Elem("h2","",item.n),Elem("span","record-detail",item.p+" · "+bytes(item.s)+" · "+(S.index.source.sha||"")));
@@ -48,7 +48,7 @@ async function previewRemote(item){
  }else{
   body.append(Elem("p","record-detail","此文件是原生工程/二进制归档，浏览器不能直接解析；不伪造截图或计算结果。"));
  }
- host.scrollIntoView({behavior:"smooth",block:"start"});
+ if(!auto)host.scrollIntoView({behavior:"smooth",block:"start"});
 }
 async function downloadRemote(item){const url=rawUrl(item);if(item.s>70*MiB){window.open(url,"_blank","noopener");return;}try{toast("正在读取 "+item.n);const response=await fetch(url);if(!response.ok)throw new Error("HTTP "+response.status);const data=await response.blob();downloadBlob(data,item.n);toast("已下载 "+item.n);}catch(err){toast("直连下载失败，打开源文件");window.location.href=repoUrl(item);}}
 function csvEscape(x){const val=String(x??"");return '"'+val.replaceAll('"','""')+'"';}
@@ -89,7 +89,7 @@ async function uploadFiles(fileList){const files=Array.from(fileList||[]);if(!fi
 const max=100*MiB,category=$("#upload-category").value,notes=$("#upload-notes").value.trim();let saved=0,skipped=0;for(const f of files){if(f.size>max){skipped++;continue;}try{await putFile(f,category,notes);saved++;}catch(err){skipped++;console.error(err);}}
 await loadLocal();toast("已保存 "+saved+" 个文件"+(skipped?" · "+skipped+" 个未保存":""));}
 async function localZip(){const items=S.local.filter(x=>S.localSelected.has(x.id));if(!items.length){toast("请选择要导出的文件");return;}const entries=[];try{for(const f of items){const blob=await readBlob(f.id);if(!blob)throw Error("文件已不存在："+f.name);entries.push({name:f.id.slice(-5)+"_"+f.name,blob,time:f.createdAt});}const zip=await zipFiles(entries);downloadBlob(zip,"嘉鱼我的资料_"+items.length+"项.zip");toast("已导出 "+items.length+" 项");}catch(err){toast("压缩包导出失败："+err.message.slice(0,65));}}
-async function loadCatalog(){try{const res=await fetch("./data/repository-index.json",{cache:"no-store"});if(!res.ok)throw Error("HTTP "+res.status);const index=await res.json();if(!Array.isArray(index.files)||!index.source?.sha)throw Error("Malformed file index");S.index=index;S.all=index.files;const group=$("#group-filter");for(const x of index.groups){const option=document.createElement("option");option.value=x.name;option.textContent=x.name+" ("+x.count+")";group.append(option);}updateStats();remoteList();const first=S.all.find(x=>!x.l&&/\.(?:md|csv|tsv|json|pdf|svg|png)$/i.test(x.n));if(first)previewRemote(first);}catch(err){$("#remote-list").replaceChildren(Elem("div","empty","GitHub资料索引加载失败"));console.error(err);}}
+async function loadCatalog(){try{const res=await fetch("./data/repository-index.json",{cache:"no-store"});if(!res.ok)throw Error("HTTP "+res.status);const index=await res.json();if(!Array.isArray(index.files)||!index.source?.sha)throw Error("Malformed file index");S.index=index;S.all=index.files;const group=$("#group-filter");for(const x of index.groups){const option=document.createElement("option");option.value=x.name;option.textContent=x.name+" ("+x.count+")";group.append(option);}updateStats();remoteList();const first=S.all.find(x=>!x.l&&/\.(?:md|csv|tsv|json|pdf|svg|png)$/i.test(x.n));if(first)previewRemote(first,true);}catch(err){$("#remote-list").replaceChildren(Elem("div","empty","GitHub资料索引加载失败"));console.error(err);}}
 
 function classifyLive(path,size){
 const rel=path.startsWith("research/wind-tower/")?path.slice(20):path;
