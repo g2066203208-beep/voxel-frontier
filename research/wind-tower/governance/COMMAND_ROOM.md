@@ -1,3 +1,9 @@
+## 2026-11-16 16时｜S10 126槽异方差排序反转 END（白皮书v0.32.4）
+
+- READ-BEFORE-WRITE：PR#42 Open/Draft，开工HEAD 913f251d02e646a5ac1cf9071ab5201e62f5adce；根/研究AGENTS、指挥室T090/T089、白皮书v0.32.3、MASTER/STATUS、12阶段、T079/T080、S10程序、31行ERA5原表及英文期刊稿已读。继承既有ERA5 184080h、运行106900h、21箱126槽及等方差理论71.24%改善，不重复生产RUN。
+- **新增实质科研：** 以真实ERA5条件风速权重和合成异方差构造精确反例；当少于6槽的风箱SD为其他风箱9.45332665646倍时，原整数最优与均分理论方差相等；10倍时原最优0.0509679638833、均分0.0483688793486，原方案反而高5.37346%。独立Python复算；[S10源程序](../experiments/T080/s10_stratified_seed_allocation.cjs)增加拒绝测试（blob d08e72ff9c201c0410e2e2d334ed37c647d0ceca），[英文期刊正文](../manuscript/journal-wind-fatigue-results.md)加入解析证明（blob 5607403e695df99151dc213b4869c085be273c11）；源ERA5 blob 1bae743b385d4f24c8b5af3e0b445aae30d40c6f，历史SHA256 e4058620a36b23bb218103875d4dc5b0711fc45d418b23a2208c2fc9c16c9102（未重算）。原生Node CLI NOT_RUN；数学反例PASS、实际seed方差/材料疲劳HOLD，12阶段晋级0/12、DLC1.2 0/126。
+- 本轮科研commit [3ea6546b](https://github.com/g2066203208-beep/voxel-frontier/commit/3ea6546b2d97d3d2668d644f9a0a5a9d8cc47141)、[b4b865b1](https://github.com/g2066203208-beep/voxel-frontier/commit/b4b865b1aded324d66fe84128347d84a7bd97c4d)，日志commit fd15d470，白皮书commit 6fddb656。最大非Abaqus HOLD仍是正式风箱、真实同步外载/惯性归属、材料局部应力。**下一唯一动作**：S06恢复158m真实同步风侧时程与外载归属；无原件即用真实多seed响应估计箱内异方差，不重复构造合成反例。未执行/准备/审核/派发Abaqus/CAE、未动冻结T057/T070、main或合并PR。
+
 ## 2026-11-16｜T090原文PDF逐页合法截图 END（白皮书v0.32.3）
 
 - main唯一论文工作室 `#literature` 增量上线：6篇二次开发/力学方法原文项 + 2篇明确CC BY4.0的接缝物理来源。经Action下载原PDF并核标题/DOI/版权，Jonscher2023 Springer18张完整原始页图、Dong2025 MDPI22张，**真实原PDF的40页JPG** 全部已在 `public/thesis-studio/journal-pages/{jonscher2023,dong2025}` 文件级回读。Source SHA256：`7f1ba7c70a57663a9f42258c33f81efe5680892d57b82cd785b7f3e39413c381` / `4580759f71790350f94de9cb518d12723ffd144334b649df6e788f27e15a4552`；首两篇封面及Jonscher第6页经解码视觉查验；Action `43830215791`、`43830735265`SUCCESS。网页版本v1.7.2、latest main网页代码 `12246a08`；Pages `43831442484` 成功状态须对照部署日志（若RUN尚未完成，以最终结论为准）。
