@@ -51,6 +51,42 @@ def esm_waveform():
  wave=OUT/"esm-it2012-nvl-3comp.csv"
  source_script="experiments/T079/s05_esm_public_processed_pair.py"
  receipt=json.loads(source("experiments/T079/real-records/S08_ESM_IT2012_NVL_MP_ACCEL_SI_SOURCE_RECEIPT.json"))
+ # An existing immutable official-source export is in a successful historical GitHub Actions artifact.
+ # This avoids silently accepting a different modern ESM server processing revision.
+ try:
+  import zipfile
+  token=os.environ.get("GH_TOKEN")
+  if not token:raise RuntimeError("GitHub token needed for historical source artifact")
+  url="https://api.github.com/repos/g2066203208-beep/voxel-frontier/actions/artifacts/13104869431/zip"
+  req=urllib.request.Request(url,headers={"Authorization":"Bearer "+token,
+   "Accept":"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28",
+   "User-Agent":"CAE-Jiayu-paper-studio-provenance"})
+  with urllib.request.urlopen(req,timeout=45) as remote:
+   raw=remote.read(12_000_001)
+  if len(raw)>12_000_000:raise RuntimeError("Artifact exceeds 12MB guard")
+  with zipfile.ZipFile(io.BytesIO(raw)) as z:
+   matching=[]
+   for name in z.namelist():
+    if name.startswith("/") or ".." in pathlib.PurePosixPath(name).parts:raise RuntimeError("Unsafe artifact member")
+    if not name.lower().endswith(".csv"):continue
+    data=z.read(name)
+    if hashlib.sha256(data).hexdigest()==receipt["csv_sha256"]:
+     matching.append((name,data))
+  if len(matching)!=1:raise RuntimeError("No unique byte-identical ESM source CSV in artifact")
+  name,data=matching[0]
+  check=list(csv.DictReader(io.StringIO(data.decode("utf-8"))))
+  if len(check)!=32040 or list(check[0])!=["time_s","HNE_acc_m_s2","HNN_acc_m_s2","HNZ_acc_m_s2"]:
+   raise RuntimeError("Historical official CSV schema/grid mismatch")
+  wave.write_bytes(data)
+  return {"status":"VERIFIED_ARCHIVED_FULLRATE_32040",
+    "src":"./primary-data/esm-it2012-nvl-3comp.csv","rows":32040,"dt_s":0.005,
+    "source":"ESM v3 DOI:10.13127/esm.3; MP processed ACC; archived Actions source evidence 13104869431",
+    "license":"ESM v3 CC BY 3.0 IT; original stream header and user source receipt",
+    "csv_sha256":receipt["csv_sha256"],"source_zip_sha256":receipt["source_zip_sha256"],
+    "original_numeric_sha256":receipt["numeric_source_sha256_by_stream"],
+    "warning":"真实归档处理波，未施场址目标谱、幅值变换或坐标旋转；不是已验证的设计地震输入或全塔响应"}
+ except Exception as ex:
+  print("Historical frozen ESM artifact unavailable:",type(ex).__name__,str(ex)[:250],file=sys.stderr)
  try:
   with tempfile.TemporaryDirectory() as td:
    script=pathlib.Path(td)/"esm_source.py";script.write_bytes(source(source_script))
