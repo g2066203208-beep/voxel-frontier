@@ -1,0 +1,111 @@
+{
+  "schema": 1,
+  "version": "2026-11-16",
+  "description": "Six user-subroutine/analytical source papers plus two licensed joint/hybrid reference originals; all pages indexed only after successful source-backed rendering",
+  "articles": [
+    {
+      "id": "gong2022",
+      "title": "基于次加载面摩擦模型的接触面剪切特性研究",
+      "authors": "龚涛、刘开富、谢新宇等",
+      "year": 2022,
+      "journal": "浙江大学学报（工学版）",
+      "doi": "10.3785/j.issn.1008-973X.2022.07.008",
+      "method": "FRIC：次加载面摩擦软化与速率效应",
+      "license": "全文可在线阅读；尚未核实公开再发布许可",
+      "status": "rights_not_verified",
+      "source": "https://www.zjujournals.com/eng/CN/10.3785/j.issn.1008-973X.2022.07.008",
+      "pages": []
+    },
+    {
+      "id": "zeng2024",
+      "title": "Formulation, Implementation, and Validation of a 3D Damage-Plasticity Cohesive-Interface Model with Multiple Yield Surfaces for Cyclic Modeling of Mortar Joints",
+      "authors": "Bowen Zeng, Yong Li",
+      "year": 2024,
+      "journal": "Journal of Structural Engineering",
+      "doi": "10.1061/JSENDH.STENG-12558",
+      "method": "UMAT：多屈服面砂浆缝损伤塑性本构",
+      "license": "© ASCE；出版全文未获公开重分发许可",
+      "status": "restricted_fulltext",
+      "source": "https://ascelibrary.org/doi/10.1061/JSENDH.STENG-12558",
+      "pages": []
+    },
+    {
+      "id": "yang2024",
+      "title": "A 3D cohesive-frictional coupled interface model for mesoscale simulation of steel fibre-reinforced concrete",
+      "authors": "Zhenjun Yang, Xin Zhang, Zhenyu Wang, Q. M. Li",
+      "year": 2024,
+      "journal": "International Journal for Numerical Methods in Engineering",
+      "doi": "10.1002/nme.7370",
+      "method": "UEL + user MPC：纤维—基体三维黏聚摩擦界面",
+      "license": "© Wiley；出版全文未获公开重分发许可",
+      "status": "restricted_fulltext",
+      "source": "https://onlinelibrary.wiley.com/doi/10.1002/nme.7370",
+      "pages": []
+    },
+    {
+      "id": "yan2025",
+      "title": "Cyclic cohesive zone modeling for fatigue prediction of concrete-concrete interface in CRTS III slab ballastless track",
+      "authors": "Daobin Yan, Zixuan Shi, Yude Xu",
+      "year": 2025,
+      "journal": "Engineering Structures",
+      "doi": "10.1016/j.engstruct.2025.120136",
+      "method": "UMAT：混凝土界面循环黏聚疲劳及损伤演化",
+      "license": "Elsevier出版版仅预览/机构访问；未获公开重分发许可",
+      "status": "restricted_fulltext",
+      "source": "https://www.sciencedirect.com/science/article/pii/S0141029625005279",
+      "pages": []
+    },
+    {
+      "id": "tong2025",
+      "title": "An efficient strategy for numerical implementation of 3D rebar-concrete interface element for integrating bond-slip behavior in RC structures simulation",
+      "authors": "Zhihao Tong, Lihua Xu, Le Huang, Chunlei Yu, Benhao Gao, Yin Chi",
+      "year": 2025,
+      "journal": "Composite Structures",
+      "doi": "10.1016/j.compstruct.2025.119272",
+      "method": "UEL + Python：三维钢筋—混凝土界面插入与滑移",
+      "license": "Elsevier出版版仅预览/机构访问；未获公开重分发许可",
+      "status": "restricted_fulltext",
+      "source": "https://www.sciencedirect.com/science/article/pii/S0263822325004374",
+      "pages": []
+    },
+    {
+      "id": "tan2026",
+      "title": "Evaluation of load-carrying capacity of horizontal joints in concrete wind turbine towers",
+      "authors": "Ji-Ke Tan, Yun-Hui Zhang, Qiang Li, Wan-Lang Zheng, Mei-Ni Su, Fei Deng",
+      "year": 2026,
+      "journal": "Engineering Structures",
+      "doi": "10.1016/j.engstruct.2026.123195",
+      "method": "精细FE + N–M–V–T承载力解析方法；不是已证实的用户子程序",
+      "license": "出版方标注Creative Commons开放获取，但原版PDF/准确许可及逐页归档未核实",
+      "status": "open_text_pdf_unverified",
+      "source": "https://www.sciencedirect.com/science/article/pii/S0141029626011090",
+      "pages": []
+    },
+    {
+      "id": "jonscher2023",
+      "title": "Influence of system changes on closely spaced modes of a large-scale concrete tower for the application to structural health monitoring",
+      "authors": "Clemens Jonscher et al.",
+      "year": 2023,
+      "journal": "Journal of Civil Structural Health Monitoring",
+      "doi": "10.1007/s13349-023-00693-6",
+      "method": "混塔干接缝—预压变化—实测模态；相关物理依据",
+      "license": "CC BY 4.0（Springer原始开放许可）",
+      "status": "licensed_pending_pages",
+      "source": "https://repo.uni-hannover.de/bitstream/handle/123456789/15031/Influence_of_system_changes.pdf?sequence=1",
+      "pages": []
+    },
+    {
+      "id": "dong2025",
+      "title": "Structural Analysis Methods and Key Influencing Factors on the Performance of Segmented Steel–Concrete Hybrid Wind Turbine Towers",
+      "authors": "Yifan Dong et al.",
+      "year": 2025,
+      "journal": "Buildings",
+      "doi": "10.3390/buildings15203786",
+      "method": "分段混塔及钢—混过渡段建模和参数灵敏度",
+      "license": "CC BY 4.0（MDPI）",
+      "status": "licensed_pending_pages",
+      "source": "https://www.mdpi.com/2075-5309/15/20/3786/pdf",
+      "pages": []
+    }
+  ]
+}
