@@ -1,3 +1,9 @@
+## 2026-11-16｜T087文献源级校勘与期刊否证门槛 END（白皮书v0.31.33）
+
+- SOURCE/REF：[原T086统一图库](../references/joint-contact-literature/README.md)与[现行24篇TSV矩阵](../references/joint-contact-literature/literature_matrix.tsv)；修复R09/R10/R16/R21/R23五项作者TBD并增R24 Ren2025 *Thin-Walled Structures* 215:113570（8试件循环压弯扭），[T087增量审稿风险/创新否证表](../references/joint-contact-literature/T087_BIBLIOGRAPHY_CORRECTIONS_AND_PUBLICATION_GATES_20261116.md)同步。论文学术边界进一步收紧：不宣称“首次循环组合受力”、无独立校准数据不宣称演化摩擦新本构、无真实原件不宣称全塔风震疲劳实测。
+- 审计：原3张Jonscher2023 CC BY原图已存储、哈希台账保持未修改；2张Dong2025出版方图仍远程，版权未知图不搬运。TSV 24项各9列，原R01–R23编号继承。RUN=文献检索/元数据/审稿门槛，未执行、准备、审核或派发Abaqus/CAE；**物理科学完成率不因GitHub更新而变化**。原BF1旧Gravity/Modal成果保留，J20仅用户已有局部报告；全塔新接触/独立实验证据/同态W/E/WE/分材料Miner仍HOLD，12阶段0/12，正式DLC1.2=0/126。
+- [T080过程日志](../experiments/T080/PROCESS_LOG.md)与白皮书v0.31.32→v0.31.33已更新；本轮研究分支提交已落盘，PR#42仍Draft、未合并，main和冻结模型未变。下一责任：论文文献章/英文引言引用24条矩阵并按原始论文证据逐条筛选（不为数量硬塞），优先识别实际接缝构造缺口的可用书面来源。
+
 ## 2026-11-16｜T087期刊文献作者溯源与遗漏试验修正 START
 
 - READ-BEFORE-WRITE：活动研究分支 `research/t080-seismic-integration-gates-20261022`，read_base_sha=`808a6ca99408de5e007272003c556495dc918037`；已读根AGENTS、研究AGENTS、指挥室最新T086、T085、T086原图资料馆/23篇矩阵/研究蓝图及T080过程。本轮为非Abaqus SOURCE/REF 校勘，只改文献矩阵并补一份期刊新颖性审查记录，继续保留T086的3张原PNG及来源SHA，不修改母本、模型或main、不合并PR。核对4条AUTHOR_TBD+1条R10作者及缺项2025 Ren压弯扭8试件论文，所有新结论仅来源层级，绝不宣称M1全塔PASS；准备登记 T087 完成回执。
