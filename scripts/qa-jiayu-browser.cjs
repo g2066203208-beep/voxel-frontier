@@ -53,6 +53,12 @@ async function main(){
   return x?.innerText.includes("184080")&&x?.innerText.length>12000;
  },null,{timeout:30000});
  await page.screenshot({path:path.join(out,"jiayu-six-chapter-thesis-inline.png"),fullPage:false});
+ await page.locator('button[data-view="windResource"]').click();
+ await page.locator('#module-view .source-inline-open').filter({hasText:"风资源证据图谱"}).click();
+ await page.locator('#original-source-inline-reader .evidence-table tbody tr').first().waitFor({timeout:30000});
+ assert.ok((await page.locator('#original-source-inline-reader .evidence-table tbody tr').count())>=1,
+  "GitHub research TSV displays as full original in-page table without redirect");
+ await page.screenshot({path:path.join(out,"jiayu-research-source-inline.png"),fullPage:false});
  await page.locator('button[data-view="literature"]').click();
  await page.locator("#journal-original-pages .journal-page").first().waitFor({timeout:30000});
  assert.equal(await page.locator("#journal-original-pages .journal-paper").count(),8,"six development papers and two legally archived comparators");
