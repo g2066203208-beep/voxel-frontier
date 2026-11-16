@@ -99,7 +99,19 @@ async function dataset(d,host){
 async function wave(w,host){
  host.replaceChildren(head("ESM原始三分量地震加速度时程",
   "IT-2012-0008 / NVL · HNE、HNN、HNZ同步 · 单位m/s²；未经场址目标谱匹配，不能视为正式设计地震波。"));
- if(!w.src){err(host,"完整时程尚未取得可信字节。"+w.warning);return}
+ if(!w.src){
+  const original=E("figure","thesis-inline-figure"),img=E("img");
+  img.src="./figures/manuscript/final-thesis/figures/FIG_S08_04_ESM_REAL_3COMP_ACCELERATION_SOURCE_QC.svg";
+  img.alt="已归档ESM源级真实HNE HNN HNZ三分量加速度原始质控图";img.loading="lazy";
+  img.decoding="async";
+  const note=E("figcaption","",
+  "已归档的真实ESM三分量处理波源级QC原始SVG · 原图SHA256对应研究证据台账；并非设计地震波或158m结构响应");
+  img.addEventListener("error",()=>{img.hidden=true;note.textContent="源级原图加载失败，拒绝使用替代图"});
+  original.append(img,note);
+  host.append(original);
+  err(host,"32,040×3全量原始数值目前尚未完成严格SHA一致性归档："+w.warning);
+  return
+ }
  host.append(E("p","evidence-wave-note",w.source+" · "+w.license+" · "+w.status+" · SHA256 "+w.csv_sha256));
  try{
   const data=await read("full-esm-wave",w.src,w.rows);
