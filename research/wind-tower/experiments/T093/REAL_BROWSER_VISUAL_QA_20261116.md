@@ -42,3 +42,15 @@
 - 第一轮附件：`https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43840135928/artifacts/14214070190`
 - 第二轮附件：`https://github.com/g2066203208-beep/voxel-frontier/actions/runs/43847974558/artifacts/14217045313`
 - GitHub Code：`public/thesis-studio/full-references.js`、`reader.js`、`math-typeset.js`、`thesis-inline.js`、`styles.css`、`scripts/qa-jiayu-browser.cjs`。
+
+## 最终一轮独立验收：PASS（2026-11-16）
+
+- **生产部署**：`Deploy Paper Studio to Pages` run `43848813144` `SUCCESS`，main `eca7899790d5f1fbefffdd65b83434f10ae33ef9`，网站版本 `v1.9.1`；同源 `Paper Studio CI` run `43848813163` SUCCESS，`Jiayu Research Library QA` run `43848813124` SUCCESS。全部541张已归档原图及395张文献来源页原始字节SHA/长度可溯源。
+- **实际Chromium完整浏览器QA**：`Jiayu Academic UI Browser QA` run `43849107797` **SUCCESS**，job `133236757982`；日志明确 `JIAYU_BROWSER_QA_PASS`，不再有PAGE_ERROR。
+- 实际源码原件：`L040`原始期刊`Parameter calculation and verification of concrete plastic damage model of ABAQUS`共9页，站内PDF.js真实第一页Canvas渲染成功、全部页数连续占位；原Springer期刊许可图实际PNG解码，Jonscher整页原图实际阅读；主图集541图DOM存在；81PDF/163书目/395来源页未漏项。
+- 旧PDF文档切换回归：先嘉鱼政府公文3页（目录/放大/文字阅读），再切换**何泽瑜2024硕士论文真实90页PDF**，明确校验`reader-stage.dataset.documentId=he-thesis`、真实90页计数、成功解码画布后才拍照。旧行政文书残留/空节点BUG修复生效，避免再把他文页面误写为何泽瑜原文。
+- **手机端**：Chromium `390×844`对首页、`#literature`、`#thesis`、`#evidence`截图并检查document横向溢出不超过7px，全部通过；网站自托管KaTeX工程公式存在浏览器实际`.katex`渲染节点、非仅静态CSS声明。
+- **截图实物**：QA run `43849107797` artifact `14216317869`共14张PNG，已使用GitHub artifact下载在当前会话容器并实际目视复核，包括`jiayu-81-archived-papers-inline.png`（原文9页PDF真实第一页）、`jiayu-reader-desktop.png`（湖南大学何泽瑜90页原论文真实封面）、`jiayu-literature-mobile.png`、`jiayu-thesis-mobile.png`、`jiayu-evidence-mobile.png`、ERA5/ESM及40页授权刊物截图。PDF源码属于原作者文献，不伪造新测试图片。
+- **结论分级**：以上构成具有截图与自动断言的**典型完整工作流可用性验收PASS**。不等于79份独立原PDF逐份/逐页在全部浏览器及网速下100%验证；2份受限档案仍无PDF、163书目中90条无可关联全文、气象/地震真实科学证据HOLD仍存在。不能将学术网站的体验测试当作整塔计算或论文送审完成。
+
+**本期网站T093视觉功能回归结果：PASS（Chromium桌面1440×900＋手机390×844，14张实际截图）；全量79份每个PDF逐一打开和跨浏览器测试：NOT RUN。**
