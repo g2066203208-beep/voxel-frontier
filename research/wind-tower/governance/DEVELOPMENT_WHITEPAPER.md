@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.0**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.1**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -28,6 +28,12 @@
 - 下一独立非Abaqus动作：核对/恢复可证明同模型、运行状态、时间网格和起点的W侧真实时程；没有可追溯来源时记录HOLD并转向S05/S10可独立研究，不造数据。
 
 ## 4. 版本变更记录（只记录真实持久化事务）
+
+### 2026-11-16｜v0.32.1 PATCH — S12绪论接缝与风震先行研究竞争性论证
+
+- 实质成果：[第一章§1.6.12新增连续正文和四行竞争证据矩阵](../manuscript/final-thesis/chapters/01_绪论.md)；SOURCE=现行24篇[文献矩阵](../references/joint-contact-literature/literature_matrix.tsv) Git blob dc4a91f37fa921d42495a9e986145d74a531c147，T087校勘记录；RUN=先行研究范围交叉比对，科研commit [21d0e7e0](https://github.com/g2066203208-beep/voxel-frontier/commit/21d0e7e0379937b69055e1d7d5db0f6fd57ef629)；TAB=四行竞争性研究矩阵；FIG无；STANDARD/OFFICIAL无新增授权原页。**论文正文/研究定位PASS，独立物理验证与原创性实证HOLD**。12阶段0/12、DLC1.2 0/126；未执行/准备/审核/派发Abaqus，未修改冻结父本、main或合并PR。原始文件SHA256本轮未重新计算。
+
+
 
 ### 2026-11-16｜v0.32.0 MINOR — T088现有公开论文工作室期刊原图直显与全部归档图像连续阅读
 
