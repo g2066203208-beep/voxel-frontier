@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "captured_at_local": "2026-11-16 16:32",
+  "kind": "USER_PASTED_LOCAL_CODEX_STATUS_ONLY",
+  "evidence_grade": "TRANSCRIPT_NOT_NATIVE_SOLVER_LOGS",
+  "scope": "L1-L3 minimal level validation and R7 interrupted, reported by user; no original local INP/MSG/STA/ODB uploaded to GitHub from this turn.",
+  "results": [
+    {
+      "level": "L1",
+      "component": "CSEG20单段C65-CDP混凝土",
+      "conditions": "单段自重",
+      "outcome": "LOCAL_REPORT_PASS",
+      "details": "Data Check和Gravity据本机Codex记录通过，15增量；未在本次收到原生求解日志"
+    },
+    {
+      "level": "L2",
+      "component": "CSEG20混凝土+纵筋/环筋嵌入",
+      "conditions": "真实配筋片段+自重",
+      "outcome": "LOCAL_REPORT_PASS",
+      "details": "先修诊断输入关键字层级，再据本机Codex记录Gravity完成；未在本次收到原生求解日志"
+    },
+    {
+      "level": "L3",
+      "component": "CSEG20/21两段混凝土+J20接触",
+      "conditions": "Hard Contact，μ=0.5，仅自重，不含真实PT",
+      "outcome": "LOCAL_REPORT_FAIL",
+      "details": "Codex报告t≈2.67e-4后切步至最小增量，接触误差、数值奇异及大应变；不能仅凭此断言唯一物理根因是轴向压紧不足"
+    },
+    {
+      "level": "L4",
+      "component": "真实PT与锚固传力局部机制",
+      "conditions": "拟单独验证，避免截断112m连续PT造成不真实端部边界",
+      "outcome": "NOT_STARTED_OR_NOT_EVIDENCED",
+      "details": "用户本轮所贴记录没有L4原生求解通过证据"
+    },
+    {
+      "level": "R7",
+      "component": "全塔稳定化诊断",
+      "conditions": "运行中手动中断",
+      "outcome": "INTERRUPTED_NOT_EVIDENCE",
+      "details": "本轮记录明确R7中断，不得登记成功或失败物理证据"
+    }
+  ],
+  "warning": "此报告仅透明显示用户提供的本机Codex工作摘要；绝不取代Abaqus原始日志与模型验证。"
+}
