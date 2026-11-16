@@ -67,20 +67,25 @@ function sourceList(panel,arr){for(const x of arr){
  row.append(E("span","",can?"站内原文":(({official:"官方来源",standard:"规范索引",template:"报告模板",evidence:"研究资料"})[x.kind]||"资料")));
  panel.append(row);
 }}
-function renderDetail(m){$("#module-tag").textContent=m.group+" / "+m.scope;const s=$("#module-stage");s.className="stage-chip "+statusClass(m.stage);s.textContent=m.stage;$("#module-english").textContent=m.en;$("#module-title").textContent=m.title;$("#module-description").textContent=m.brief;$("#module-code").textContent=m.short;const body=$("#module-body");clear(body);const left=E("div","module-column"),right=E("div","module-column");
-// Show traceable materials first. Do not present planned deliverable names as completed files.
-const sources=makePanel("研究原始资料","SOURCE RECORDS");sourceList(sources,m.links);left.append(sources);
-const checks=makePanel("尚需核验的条件","VALIDATION CRITERIA");rows(checks,m.checks);right.append(checks);
-body.append(left,right);
-if(m.id==="literature")window.JYFullReferences?.show(body);
-window.JYPrimaryEvidence?.showModule(m.id,body);
-if(m.id==="literature")window.JYAtlas?.showLiterature(body);
-if(m.id==="literature")window.JYOriginalPages?.show(body);
-window.JYFigures?.moduleFigures(m.id,left);
-if(m.id==="literature"){const p=makePanel("现行标准与制订项目","OFFICIAL STANDARDS");for(const n of state.catalog.standards){const item=E("div","source-item");const name=link(n.url,n.name+" · "+n.sub);item.append(name,E("span","",n.kind));p.append(item);}left.append(p);}
-if(m.id==="library"){const p=makePanel("数据与原始证据目录","SOURCE REGISTRY");sourceList(p,state.catalog.datasets.map(x=>({label:x.name,url:x.url,kind:"evidence"})));left.append(p);}
-if(m.id==="reports"){const p=makePanel("学术报告模板库","ACADEMIC REPORT TEMPLATES");sourceList(p,state.catalog.reports.map(x=>({...x,label:x.name,kind:"template"})));left.append(p);}
+function renderDetail(m){
+const tag=$("#module-tag");tag.textContent=m.group+" / "+m.scope;
+const stage=$("#module-stage");stage.className="stage-chip "+statusClass(m.stage);stage.textContent=m.stage;
+$("#module-english").textContent=m.en;$("#module-title").textContent=m.title;
+$("#module-description").textContent=m.brief;$("#module-code").textContent=m.short;
+const body=$("#module-body");body.replaceChildren();
+if(m.id==="manuscript"){
+ const full=E("section","record-thesis-full");body.append(full);
+ window.JYThesisInline?.show(full);
 }
+if(m.id==="literature"){
+ window.JYFullReferences?.show(body);
+ window.JYAtlas?.showLiterature(body);
+ window.JYOriginalPages?.show(body);
+}
+window.JYPrimaryEvidence?.showModule(m.id,body);
+window.JYModuleReader?.show(m,body);
+}
+
 function search(){const q=$("#global-search").value.trim().toLowerCase();state.query=q;const box=$("#search-panel");if(!q){box.hidden=true;if(state.view==="overview")$("#overview-view").hidden=false;else if(state.view==="figures")$("#figures-view").hidden=false;else if(state.view==="library")$("#library-view").hidden=false;else if(state.view==="notes")$("#notes-view").hidden=false;else if(state.view==="evidence")$("#evidence-view").hidden=false;else if(state.view==="thesis")$("#thesis-view").hidden=false;else $("#module-view").hidden=false;return;}$("#overview-view").hidden=true;$("#module-view").hidden=true;$("#library-view").hidden=true;$("#notes-view").hidden=true;$("#figures-view").hidden=true;$("#evidence-view").hidden=true;$("#thesis-view").hidden=true;box.hidden=false;clear(box);box.append(E("span","section-kicker","GLOBAL RESEARCH SEARCH"),E("h2","search-title","资料检索"));const matches=[];for(const m of state.catalog.modules){if((m.title+" "+m.en+" "+m.brief+" "+m.checks.join(" ")).toLowerCase().includes(q))matches.push({title:m.title,sub:m.brief,kind:"专题",action:()=>go(m.id)});}
 for(const r of state.catalog.reports){if(r.name.toLowerCase().includes(q))matches.push({title:r.name,sub:"报告模板 · GitHub Markdown",kind:"模板",url:r.url});}
 for(const x of [...state.catalog.datasets,...state.catalog.standards]){if((x.name+" "+(x.sub||"")+" "+(x.desc||"")+" "+(x.domain||"")).toLowerCase().includes(q))matches.push({title:x.name,sub:x.desc||x.sub||"",kind:"证据",url:x.url});}
