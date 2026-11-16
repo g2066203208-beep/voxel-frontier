@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.31.31**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.31.32**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -28,6 +28,14 @@
 - 下一独立非Abaqus动作：核对/恢复可证明同模型、运行状态、时间网格和起点的W侧真实时程；没有可追溯来源时记录HOLD并转向S05/S10可独立研究，不造数据。
 
 ## 4. 版本变更记录（只记录真实持久化事务）
+
+### 2026-11-16｜v0.31.32 PATCH — T086混塔接缝原图期刊证据库、C/C++二次开发的实证创新门槛
+
+- **交付资料馆**：[T086原始期刊图像、文献与研究索引](../references/joint-contact-literature/README.md)；[T086高水平学位/期刊路线及科学门槛](../references/joint-contact-literature/T086_RESEARCH_BLUEPRINT_20261116.md)；[23篇文献逐条核对矩阵](../references/joint-contact-literature/literature_matrix.tsv)；[许可原图下载清单](../references/joint-contact-literature/figure_manifest.tsv)。
+- REF/SOURCE：He2024原论文“预应力压紧”但无Abaqus界面μ/干湿缝算法细节；2022–2026干缝试验Klein/Jonscher/Fürll/Tan/Ren、2025湿缝灌浆Wang、2026风震与Hard/μ0.6先行Wang等、干接缝抗扭及开缝解析方法。**新颖性硬边界**：不能把Abaqus原生Hard＋Penalty、C++编译、普通风震叠加或已有抗扭公式当原创；要有实测构造身份、独立验证的界面演化、跨尺度同态风震-局部材料疲劳与不确定性比较。
+- FIG：GitHub Actions真实下载**3张**Jonscher2023 CC BY 4.0出版方原始PNG，原版字节及SHA256已入库（60,624/888,087/198,713 B）。**两张MDPI开放原图下载失败，仅远程链接，并未入库**；未知授权/NC-ND第三方论文原图不搬运或伪造截图。OFFICIAL：Dassault官方FRIC_COEF/C++接口和接触故障手册，非何文原生模型方法。脚本/工作流仅公开许可图片归档，不运行任何物理计算。
+- RUN：本轮网页版助手只做外部文献/许可核验、图像字节验证、GitHub研究资料和期刊框架；当前用户通报J20局部μ0.5接触法向承压求解24增量PASS、但本助手未读取本机ODB；V1全塔Gravity FAIL、36PT平衡/Modal30 HOLD、FRIC_COEF NOT_RUN，正式材料Miner、同态WE及DLC1.2仍HOLD。继承原BF1 T082 Gravity/Modal真实成功，不触碰原CAE/main/PR Draft合并。
+- 科研阶段：**source-verified literature and original figure archive**，不是物理PASS或成功投稿；若实际混塔是灌浆湿缝，干缝μ0.5/0.655只可作理想化对照，不能宣称真实构造验证。
 
 ### 2026-11-16｜v0.31.25 PATCH — S05真实ESM RotD50与RotD100的离散方向性放大边界
 
