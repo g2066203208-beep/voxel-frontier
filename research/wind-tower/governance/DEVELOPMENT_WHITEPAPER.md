@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.8**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.9**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -28,6 +28,13 @@
 - 下一独立非Abaqus动作：核对/恢复可证明同模型、运行状态、时间网格和起点的W侧真实时程；没有可追溯来源时记录HOLD并转向S05/S10可独立研究，不造数据。
 
 ## 4. 版本变更记录（只记录真实持久化事务）
+### 2026-11-16｜v0.32.9 — T093真实Chromium视觉截图/学术PDF全文与手机适配终验PASS
+
+- 用户要求“确定全部正确显示且专业审美，并亲自测试截图”。从前一轮 `43840135928` CANCELLED及artifact `14214070190` 6张真实浏览器截图开始逐页目视审查；确认ERA5、ESM、期刊原页及论文正文布局，识别PDF.js目录缺失、Promise.finally多余调用、数学公式未排版、旧政府文件图层残留及切换何泽瑜论文时空节点错误。**没有用Pages构建SUCCESS冒充视觉测试PASS。**
+- 实质修复main工作室 `v1.9.1`：自托管Apache-2.0 PDF.js v5.4.530源/Worker、MIT KaTeX v0.16.25完整站内公式字库，PDF逐页懒渲染，原文标题/数据源身份绑定、读者切换清空旧画布，专业手机响应式与源级检索、回归测试和准确错误堆栈。现有81份PDF、163条书目、395张来源页及541图索引没有被删减；无需先下载或跳到GitHub才能在当前站点读已有PDF。
+- **真实生产部署证据** main commit `eca7899790d5f1fbefffdd65b83434f10ae33ef9`、Pages run `43848813144` SUCCESS、CI `43848813163` SUCCESS、source Library QA `43848813124` SUCCESS。**Chromium浏览器** run `43849107797` SUCCESS，artifact `14216317869` **14张截图实际取回并逐张核看**。已核实：9页L040期刊PDF原版第一页真实渲染、旧政府公文3页及何泽瑜2024**真正90页**学位论文切换与画布验收、Jonscher原刊页面、81/163/395索引、541图、6章文章实际MathML公式、ERA5/ESM站内资料与390px手机版无横向溢出。
+- **限制不变**：本轮是代表性端到端测试加静态541图SHA完整性，并非79份PDF的每份每页全部人工/自动打开、所有设备与浏览器100%无误；163条书目中90条无关联全文，2份PDF档案无真实原件，不能伪造受限论文。原B F1/T082与新R6科学验证状态不被UI PASS更改；本人未执行Abaqus/CAE工作。详细T093报告 `research/wind-tower/experiments/T093/REAL_BROWSER_VISUAL_QA_20261116.md`，用户可直接查看Actions截图artifact。
+
 ### 2026-11-16｜v0.32.8 PATCH — S10六seed三三互补留出对18槽分配的前瞻反例
 
 - SOURCE=T062真实72行DEL4，Git blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`，历史SHA256 `b362bcd7c37ccc56e21035de39448b5e761ec03f371b6b2f3eb30f41b013630d`（本轮未重哈希）。RUN=连接器V8实算20种3pilot/3holdout互补seed索引；Mx 20/20改善，平均holdout方差比0.742199；My仅16/20改善，4反例，最坏1.898212，平均0.869375。实物程序 `experiments/T080/s10_ntm_pilot_holdout_20split.cjs` [commit 2bb29394](https://github.com/g2066203208-beep/voxel-frontier/commit/2bb2939446cab279a6d0b5b840a36919cae93b55)，期刊数表 `manuscript/journal-wind-fatigue-results.md` [commit f3c5b893](https://github.com/g2066203208-beep/voxel-frontier/commit/f3c5b89357ea15e06ea123c44162f756c6349706)；过程日志 `experiments/T080/PROCESS_LOG.md` [commit ac3656e2](https://github.com/g2066203208-beep/voxel-frontier/commit/ac3656e2d50f06ab60e29471eef38a6974a5f689)。TEST=V8源级算术，原生Node CLI NOT_RUN；TAB两行，FIG无，REF/STANDARD/OFFICIAL无新增。20折互相重叠且每折holdout只有3seed，不能冒充独立未来样本或物理优化PASS。12阶段晋级0/12，正式DLC1.2 0/126；S06同步W侧与材料局部应力HOLD。
