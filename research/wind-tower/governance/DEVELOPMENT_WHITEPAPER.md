@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.31.25**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.31.26**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -332,3 +332,5 @@
 | 2026-11-15 08时 | **v0.31.5 PATCH** | S12在原18NTM×60通道/1080行CSV（Git blob `4f77ec9a2027c593ea22cac5abae98de32d407f5`）上独立计算18工况的完整排序：Mx/My各9高度站相对塔底共2754个案例对比较，逆序0；18组Spearman rho=1，最高测站/base逐case DEL4比Mx 0.971546–0.977878、My 0.974280–0.979399。期刊§4.32新增完整排序可证伪命题、两行真实数表与非独立性说明；[科学commit f226d626](https://github.com/g2066203208-beep/voxel-frontier/commit/f226d62688a7ff70b1bc2960c2a80de97e890e4b)，新稿blob `aa9ba4778d6c03f0676d1054041af11bca0fb9d5`。 | V8真实归档源表算术PASS；非新物理RUN，原OUTB字节未重读、CSV SHA256未独立取得；正式12阶段0/12、DLC1.2 0/126，局部材料Miner与同态WE仍HOLD。 | [期刊§4.32](../manuscript/journal-wind-fatigue-results.md)、[T080过程](../experiments/T080/PROCESS_LOG.md) |
 
 | 2026-11-15 12时 | **v0.31.9 PATCH** | S12真实18NTM塔底Mx/My DEL4双轴top-k并集复算：k=3时交集1、并集5，单Mx top3仅覆盖My top3的1/3；k=5时并集7；期刊§4.35新增8行可复算表和案例身份，源CSV Git blob `4f77ec9a2027c593ea22cac5abae98de32d407f5`。 | 归档表直接V8数值核验PASS；原OUTB及SHA256未重新获取，正式DLC1.2 0/126、12阶段0/12，局部应力与同态WE HOLD。 | [期刊§4.35](../manuscript/journal-wind-fatigue-results.md)、[T080过程](../experiments/T080/PROCESS_LOG.md) |
+
+| 2026-11-16 09时 | **v0.31.26 PATCH** | S12拟增第五章§5.2.6新增连续论文论证：33周期RotD50统一放大欠包络判据、6/33反例、原谱版本与ESM事件编号身份差异；继承既有T079数值，非新物理RUN。 | SOURCE谱CSV blob 5b7bdda285877f485f3b48cae62f42d5d2ff5a62、历史SHA256 ea642b37ca39bde6c1e5b48168e50650adadb00311ca9f24a11102fea82d407c；稿件装配PASS，事件身份/原波/场址/同态WE HOLD，12阶段0/12、DLC1.2 0/126。 | [章节§5.2.6](../manuscript/final-thesis/drafts/05_地震输入与双水平线性梁代理响应_20261109.md)、[T080](../experiments/T080/PROCESS_LOG.md)、[科研commit](https://github.com/g2066203208-beep/voxel-frontier/commit/9cefeb592b0b0d8b7e683ee58e907f52d5b274f2) |
