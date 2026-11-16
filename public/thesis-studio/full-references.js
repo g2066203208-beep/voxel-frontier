@@ -202,7 +202,7 @@ function seek(number){
  node.scrollIntoView({behavior:"smooth",block:"start"});
  schedule(node)
 }
-async function readDoc(doc){
+async function readDoc(doc,scrollToReader=true){
  if(doc.status!=="indexed"||!doc.url)return;
  teardown();const token=S.token;
  S.current=doc;
@@ -212,7 +212,7 @@ async function readDoc(doc){
  pages.replaceChildren(E("p","corpus-loading","正在载入已归档PDF字节及其真实页面…"));
  $("corpus-pdf-identity").textContent=doc.id+" · "+(doc.license||"许可未标注")+" · 存档路径："+doc.path+" · 源Git SHA："+doc.sha;
  setStatus("原始PDF载入中");
- reader.scrollIntoView({behavior:"smooth",block:"start"});
+ if(scrollToReader)reader.scrollIntoView({behavior:"smooth",block:"start"});
  try{
   const lib=await engine();
   if(token!==S.token)return;
@@ -286,6 +286,8 @@ function mount(root,d){
  const ig=E("div","corpus-scan-grid");ig.id="corpus-scan-grid";scans.append(ig);view.append(scans);
  root.prepend(view);
  S.root=view;S.ready=true;paintFiles();paintMaster();paintScans();
+ const initial=d.entries.find(x=>x.id==="REF008"&&x.status==="indexed")||d.entries.find(x=>x.status==="indexed");
+ if(initial)readDoc(initial,false);
 }
 async function show(root){
  if(!root)return;
