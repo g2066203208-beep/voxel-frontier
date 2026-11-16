@@ -1,3 +1,8 @@
+## 2026-11-16 09时｜S12地震输入方向性证据进入连续论文章节（白皮书v0.31.26）
+
+- 继承T079既有真实33周期结果，新增[拟增第五章§5.2.6](../manuscript/final-thesis/drafts/05_地震输入与双水平线性梁代理响应_20261109.md)可入稿正文，科学commit [9cefeb59](https://github.com/g2066203208-beep/voxel-frontier/commit/9cefeb592b0b0d8b7e683ee58e907f52d5b274f2)。明确c=1.20在6/33周期欠包络、c≥1.3644346306仅保证离散33点；并指出章节与T079事件编号不一致，不能冒充来源身份已闭合。SOURCE=谱CSV blob 5b7bdda2；RUN=继承源级数值、无新物理RUN；12阶段晋级0/12、DLC1.2 0/126。
+- 最大非Abaqus HOLD：正式风箱、独立外载/惯性归属、局部材料应力；S05另有事件身份、场址目标谱和原波低频可靠性。下一唯一动作：ESM官方元数据消歧事件编号，不可得则切换S11/S12独立有源研究。未动禁止的Abaqus/CAE、冻结母本、main、Draft合并或昂贵RUN。
+
 ## 2026-11-16 08时｜S05 ESM谱RotD50/100方向性放大源级新结果（白皮书v0.31.25）
 
 - READ-BEFORE-WRITE：PR#42 Open/Draft，开工HEAD 62e0f7df29bc78bdf5a1e56ca4e7f5a9c2dfa85d；读取根/研究AGENTS、指挥室、白皮书、MASTER/STATUS、12阶段、T079/T080及真实ESM谱源。
