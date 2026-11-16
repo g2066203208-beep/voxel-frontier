@@ -130,7 +130,7 @@ async function showLiterature(root){
    const papers=el("details","atlas-bibliography");
    const summary=el("summary","","24篇水平接缝核心文献 · 文内完整索引");
    const list=el("div","atlas-paper-grid");list.id="literature-atlas-papers";
-   papers.append(summary,list);section.append(papers);
+   papers.open=true;papers.append(summary,list);section.append(papers);
   }
   if(section.parentElement!==root)root.prepend(section);
   renderJournal(byId("literature-journal-gallery"));
