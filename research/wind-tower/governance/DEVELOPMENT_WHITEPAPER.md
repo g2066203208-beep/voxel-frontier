@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.4**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.5**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -28,6 +28,16 @@
 - 下一独立非Abaqus动作：核对/恢复可证明同模型、运行状态、时间网格和起点的W侧真实时程；没有可追溯来源时记录HOLD并转向S05/S10可独立研究，不造数据。
 
 ## 4. 版本变更记录（只记录真实持久化事务）
+
+### 2026-11-16｜v0.32.5 — T091 单站原位阅读真实ERA5 / 地震 / 风载 / 六章论文全文
+
+- 科研原始数据档案：网站main `public/thesis-studio/primary-data/` 来源于活动研究分支，只读复制9套原CSV、6章中文学位论文完整Markdown和旧92项参数快照；Git blob+SHA256+行数审计，GitHub Actions runs `43834186720`、`43834780427` SUCCESS。ERA5统计覆盖2005—2025、184080逐小时来源钟、31个1m/s风箱与16风向扇区；**站内为衍生统计，未原位归档184080行ERA5原小时原件**。
+- 地震原文：ESM IT-2012-0008/NVL 46周期处理记录衍生谱、三分量同刻峰值以及已归档真实三轴波形原SVG直接呈现；同名原始32040×3点完整CSV源级重取时数字SHA `S08_REAL_NUMERIC_SHA256_MISMATCH`，历史工作流附件下载HTTP401，故不展示伪造原始样点；源高通0.04Hz、设计谱匹配、真实嘉鱼危险性适用性均未解除HOLD。
+- 18NTM实际结构底反力My峰/载荷DEL、风箱年度时钟、36历史控制包络与历史T082 30模态及T077 BF1 31段设计均作为**原口径文献/数据**展示，不假称新R6接触模型通过或材料疲劳已算完。
+- 站内 `#evidence` 完整统计图、全值分页/全文筛选；`#thesis` 六章完整正文、表格、公式和源科研SVG图；现有MD/CSV/TSV/JSON/SVG资料项支持在同页读取而非仅GitHub跳转；旧541图、395文献证据图及40张CC BY4.0期刊整页合法截图保持原入口。网站新版 `v1.8.0`，对应T091源级技术报告 `research/wind-tower/experiments/T091/INLINE_SOURCE_STUDIO_REPORT_20261116.md`；主站实际部署/浏览器验收以最新独立Action结果为准，不能用源码写入冒充视觉PASS。
+- 用户最新本机Codex层级试算L1、L2报告成功、L3无PT接触失败、L4未验、R7中断已写入站内明确**用户转录而非原生日志**的只读状态；未做任何Abaqus原生工作。正式工程科学门禁维持12阶段0/12、DLC1.2 0/126。PR#42 Draft、不合并；旧成果保留。
+
+
 
 ### 2026-11-16｜v0.32.4 PATCH — S10 ERA5分层抽样异方差精确反例
 
