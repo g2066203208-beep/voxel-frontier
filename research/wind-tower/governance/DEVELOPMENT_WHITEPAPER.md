@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.16**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.17**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -460,3 +460,8 @@
 ### 2026-11-17｜v0.32.16 PATCH — S12真实六seed载荷DEL四次矩聚合非交换性
 
 - SOURCE=T062真实72行DEL4，Git blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`，历史SHA256 `b362bcd7c37ccc56e21035de39448b5e761ec03f371b6b2f3eb30f41b013630d`（本轮未重算）。RUN=GitHub连接器JS实际读取12组×6seed，比较算术平均A与正确四次矩等效Q，12/12严格Q>A，最大9.343881m/s ETM/My幅值低估4.327%、四次矩低估18.463%（以A⁴为分母）。[第三章§3.7.28十二行实测数表](../manuscript/final-thesis/chapters/03_场址风环境与整机随机风控制载荷.md) commit [a550cb1](https://github.com/g2066203208-beep/voxel-frontier/commit/a550cb121aec813b0d07c86377f200a987587269)，blob `ec421110ecaa69e594b09eeda495440f8bdd8caa`；[T080过程](../experiments/T080/PROCESS_LOG.md) commit [9346dfe](https://github.com/g2066203208-beep/voxel-frontier/commit/9346dfe42a0c19d008698ac03386740ded6ce0d3)。Jensen解析及12组真实数值PASS，原生独立CLI NOT_RUN；TAB=12、FIG=0、REF/STANDARD/OFFICIAL无新增。结果不等于材料Miner损伤、独立未来seed或完整DLC1.2；12阶段晋级0/12、正式DLC1.2 0/126、风侧同步独立外载/惯性归属与局部应力HOLD。未触碰禁止范围。
+
+
+### 2026-11-17｜v0.32.17 PATCH — 四ETM×31段真实名义应力分量DEL主导性
+
+- SOURCE=T077归档124行CSV Git blob `99ffe1870109bf505813131bd10e60ab7f1bdaea`；RUN=连接器JS真实逐行统计：My单分量DEL在124/124站大于Mx/Fz，My/Mx各工况范围6.429644–9.874583、6.149136–6.782460、2.502107–2.968615、2.596368–3.128178；[第四章§4.8.6四行数表](../manuscript/final-thesis/chapters/04_10MW混合塔架风致疲劳性能分析.md) 科研commit [0535863](https://github.com/g2066203208-beep/voxel-frontier/commit/0535863787bf4c20facbb3619fc2e5dfb4d06099)，blob `ffe0e19710944345c477732af5c729470a2d943d`；[T080日志](../experiments/T080/PROCESS_LOG.md) commit [a11dd37](https://github.com/g2066203208-beep/voxel-frontier/commit/a11dd370d42181883e72b12f14d9d2502b6ac1a4)。TEST=源级算术PASS、独立CLI NOT_RUN，原字节SHA256未重算；TAB4 FIG0，无新增REF/STANDARD/OFFICIAL。单分量DEL不含同步相位，不能合成材料损伤；12阶段晋级0/12，DLC1.2 0/126，真实同态风侧与局部材料寿命HOLD；未触碰禁止范围。
