@@ -30,3 +30,8 @@ SOURCE=既有ERA5 184080小时/4–25m/s 106900小时31-bin CSV blob 1bae743b385
 ## 2026-11-16 11时｜S11真实ETM整风箱留出后验保守裕量（v0.31.28）
 
 READ-BEFORE-WRITE：PR#42 Open/Draft，开工HEAD c42313a7a1b82fc6b07aefdc39de16d7519c43b8；根/研究AGENTS、指挥室、白皮书、MASTER/STATUS、12阶段、T079/T080、英文期刊稿和1984行原始CSV均已读。SOURCE=4ETM×31段×16方位真实历史筛查表 Git blob b5effa2a493cec0a9af8a10a3b93df0ff997d2d0，历史SHA256 16c9864ef7a344e5b97338c31ce26de6adb86c0f0f64942ef894fe9983926b2b（本轮未重哈希）；RUN=直接解析1984行，汇总124 case-section DEL4，整风速箱留出（19.20214m/s两seed一同排除），复算mean/nearest/linear残差，并求全局及逐段后验最小非负上调裕量。TAB=期刊新增3行数表：全局裕量分别1.018800/0.371677/0.478020 MPa；逐段裕量总和相对全局统一裕量分别少36.6011%/54.4594%/58.2451%。REF/STANDARD/OFFICIAL无新原页；FIG无；科学commit e58c452951057a2ebbbbd63ad01eac3b1670733a。独立测试=对124观测检查残差+裕量非负，严格整箱排除；但后验裕量使用测试标签，**不得声称独立泛化验证或真实物理保守性**。METHOD arithmetic PASS / external-bin prediction, formal DLC1.2 0/126, local Miner, same-state WE HOLD；12阶段晋级0/12。禁止Abaqus/CAE、冻结母本、main、昂贵RUN与Draft合并均未动。下一唯一动作：转S12将后验校准与真正前瞻保守性验证的区别写入论文优化方法/期刊局限性，避免继续重复同一三箱统计。
+
+
+## 2026-11-16 12时｜S12整箱前瞻保守性不可识别性（v0.31.29）
+
+READ-BEFORE-WRITE：PR#42 Open/Draft，开工HEAD=e71ae35f9dd69fcfddff6f412e9962aa227edb18；已读根/研究AGENTS、指挥室、白皮书、MASTER/STATUS、12阶段、T079/T080、期刊稿。SOURCE=1984行历史ETM CSV Git blob b5effa2a493cec0a9af8a10a3b93df0ff997d2d0，历史SHA256 16c9864ef7a344e5b97338c31ce26de6adb86c0f0f64942ef894fe9983926b2b（未重哈希）。RUN=split-conformal秩推导：n=1/2/3/9/19个独立校准风速箱，有限最大残差阈值的理想交换性覆盖分别50/66.67/75/90/95%；95%有限阈值至少19个校准箱。历史只有3箱，训练与最终测试各留一箱后至多1箱校准；124个相关截面响应不能当作124独立校准箱。TAB=期刊新增5行表及反例；FIG无；REF/STANDARD/OFFICIAL无新增原页。科研提交6f2efed3bc1d83281ab56a1583293079f28d574c。数学方法PASS；交换性、外推保守性、正式DLC1.2 0/126、局部Miner、同态WE HOLD；12阶段晋级0/12。无Abaqus/CAE、冻结母本、main、昂贵RUN、PR合并。下一唯一动作：S12第五章优化约束与期刊讨论吸收前瞻校准限制，不再重复三箱后验裕量。
