@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.6**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.7**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -28,6 +28,13 @@
 - 下一独立非Abaqus动作：核对/恢复可证明同模型、运行状态、时间网格和起点的W侧真实时程；没有可追溯来源时记录HOLD并转向S05/S10可独立研究，不造数据。
 
 ## 4. 版本变更记录（只记录真实持久化事务）
+### 2026-11-16｜v0.32.7 — T092全部GitHub文献81原件/163书目/395原页站内逐篇连续阅读
+
+- 用户追问“工作室才展示几篇？GitHub有的全部一个不漏原文展示”。源级盘点 `public/thesis-studio/data/reference-index.json`：**81份PDF档案**，其中**79份indexed有原文件URL、2份restricted（LFS指针与元数据）**，来源组30用户提供、46开放文献、4场址官方、1规范；另**163条参考书目**只有**73条标记accessible**，余90条没有可追溯原文。**395张参考原页图**（已含在旧541图中）、24篇水平接缝专题竞争资料以及合法2篇/40张完整原PDF页图均保留，绝不把81、163、395、24互换口径或宣称163篇全文已归档。
+- 网站main `v1.9.0`：新增`public/thesis-studio/full-references.js`和响应式学术样式，`#literature`直接显示全部81份PDF档案、163条书目、395张来源原页，不再仅靠原来的18/20分页列表。每份已有原始PDF点击后用现有本地PDF.js 5.4.530同页读取真实页数，生成整篇的连续页容器，IntersectionObserver逐页渲染与9页canvas缓存保护，不新镜像受限出版PDF、不放下载按钮、不跳到外部GitHub。页面首页新加全集81/163/395/40显著入口，旧40合法整页、六章论文、ERA5/ESM、541图不变。
+- 站点部署GitHub Actions `43839842374` **SUCCESS**，对应main commit `483fb1876355e1d269a73469b71c98d62c9aa320`；`Paper Studio CI` 与`Jiayu Research Library QA`同提交SUCCESS。浏览器动态逐页验证另由`Jiayu Academic UI Browser QA` run `43840135928`执行，阶段状态以run最终结论为准。用户参考书目对照记录见`research/wind-tower/experiments/T092/COMPLETE_REFERENCE_READING_STUDIO_20261116.md`。
+- 物理研究原有通过/失败状态不变；不做/不派Abaqus任务，不修改源CA E/ODB/INP，不合并研究Draft PR#42。网页部署成功不能冒充79个PDF的全部逐一字节渲染PASS；对缺失许可/原文的90条书目仅显示元数据。
+
 
 ### 2026-11-16｜v0.32.6 PATCH — S10真实18NTM六seed异方差与18槽条件优化
 
