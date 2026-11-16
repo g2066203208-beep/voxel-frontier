@@ -79,7 +79,7 @@ async function show(root){
  if(section.parentElement!==root)root.prepend(section);
  try {
   const d=await load();
-  section.querySelector("#journal-paper-list").replaceChildren(...d.articles.map(paper));
+  section.querySelector("#journal-paper-list").replaceChildren(...d.articles.slice().sort((a,b)=>Number(b.pages.length>0)-Number(a.pages.length>0)).map(paper));
  }catch(e){
   section.querySelector("#journal-paper-list").replaceChildren(E("p","journal-page-error","原始文献索引加载失败："+e.message));
   console.error(e);
