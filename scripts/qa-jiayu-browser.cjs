@@ -22,6 +22,37 @@ async function main(){
  assert.equal((await page.locator(".metric-grid").count()),0,"remove vanity metrics");
  assert.equal((await page.locator(".original-source-preview").count()),0,"no distracting embedded PDF thumbnails on homepage");
  await page.screenshot({path:path.join(out,"jiayu-home-desktop.png"),fullPage:true});
+ // T091 direct original-data views: no GitHub navigation/download required.
+ await page.locator('button[data-view="evidence"]').click();
+ await page.locator("#evidence-view").waitFor({state:"visible",timeout:15000});
+ await page.locator("#evidence-reader .evidence-detail .evidence-table tbody tr").first().waitFor({timeout:30000});
+ assert.equal(await page.locator("#evidence-reader .evidence-dataset-card").count(),11,
+   "9 source tables + one real-wave source status + 92 parameter archive");
+ assert.equal(await page.locator("#evidence-reader .evidence-detail .evidence-table tbody tr").count(),31,
+   "ERA5 full source bin table should have 31 rows");
+ assert.ok((await page.locator("#evidence-reader").innerText()).includes("184,080"),
+   "ERA5 full 21-year source clock visible");
+ await page.screenshot({path:path.join(out,"jiayu-era5-original-data.png"),fullPage:false});
+ await page.locator("#evidence-reader .evidence-dataset-card").filter({hasText:"ESM三分量同步加速度"}).click();
+ const esmFigure=page.locator("#evidence-reader .evidence-detail .thesis-inline-figure img");
+ await esmFigure.waitFor({timeout:25000});
+ await esmFigure.scrollIntoViewIfNeeded();
+ await page.waitForFunction(()=>{
+   const x=document.querySelector("#evidence-reader .evidence-detail .thesis-inline-figure img");
+   return x&&x.complete&&x.naturalWidth>300;
+ },null,{timeout:30000});
+ await page.screenshot({path:path.join(out,"jiayu-real-esm-3component-original.png"),fullPage:false});
+ await page.locator('button[data-view="thesis"]').click();
+ await page.locator("#thesis-view").waitFor({state:"visible",timeout:15000});
+ await page.locator("#thesis-reader .thesis-full-article h2").first().waitFor({timeout:35000});
+ assert.equal(await page.locator("#thesis-reader .thesis-chapter-tab").count(),6,
+  "six complete original manuscript chapters");
+ await page.locator('#thesis-reader .thesis-chapter-tab[data-chapter="03"]').click();
+ await page.waitForFunction(()=>{
+  const x=document.querySelector("#thesis-reader .thesis-full-article");
+  return x?.innerText.includes("184080")&&x?.innerText.length>12000;
+ },null,{timeout:30000});
+ await page.screenshot({path:path.join(out,"jiayu-six-chapter-thesis-inline.png"),fullPage:false});
  await page.locator('button[data-view="literature"]').click();
  await page.locator("#journal-original-pages .journal-page").first().waitFor({timeout:30000});
  assert.equal(await page.locator("#journal-original-pages .journal-paper").count(),8,"six development papers and two legally archived comparators");
