@@ -1,0 +1,25 @@
+name: Original PDF Source Availability
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  pdfs:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Audit original bytes for each PDF
+        run: node scripts/audit-reference-pdfs.cjs
+      - name: Upload per-source evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: original-pdf-availability
+          path: artifacts/studio-reference-availability.json
+          retention-days: 14
