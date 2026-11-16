@@ -55,6 +55,9 @@ async function main(){
   const x=document.querySelector("#thesis-reader .thesis-full-article");
   return x?.innerText.includes("184080")&&x?.innerText.length>12000;
  },null,{timeout:30000});
+ await page.locator("#thesis-reader .thesis-full-article .katex").first().waitFor({timeout:20000});
+ assert.ok((await page.locator("#thesis-reader .thesis-full-article .katex").count())>0,
+  "real original equations must be typeset as KaTeX MathML, not raw LaTeX");
  await page.screenshot({path:path.join(out,"jiayu-six-chapter-thesis-inline.png"),fullPage:false});
  await page.locator('button[data-view="windResource"]').click();
  await page.locator('#module-view .source-inline-open').filter({hasText:"风资源证据图谱"}).click();
@@ -163,8 +166,23 @@ async function main(){
  const size=await mobile.evaluate(()=>({scroll:document.documentElement.scrollWidth,visible:document.documentElement.clientWidth}));
  assert.ok(size.scroll-size.visible<=7,"mobile has no horizontal overflow: "+JSON.stringify(size));
  await mobile.screenshot({path:path.join(out,"jiayu-home-mobile.png"),fullPage:true});
+ for(const [hash,section,asset] of [
+  ["#literature","#all-reference-corpus","jiayu-literature-mobile.png"],
+  ["#thesis","#thesis-reader","jiayu-thesis-mobile.png"],
+  ["#evidence","#evidence-reader","jiayu-evidence-mobile.png"]
+ ]){
+   await mobile.goto(URL_SITE+hash,{waitUntil:"domcontentloaded",timeout:60000});
+   await mobile.locator(section).waitFor({state:"visible",timeout:40000});
+   const widths=await mobile.evaluate(()=>({scroll:document.documentElement.scrollWidth,
+     viewport:document.documentElement.clientWidth,
+     sheet:document.querySelector("main")?.scrollWidth||0}));
+   assert.ok(widths.scroll-widths.viewport<=7,
+     "390px mobile "+hash+" horizontal overflow: "+JSON.stringify(widths));
+   await mobile.screenshot({path:path.join(out,asset),fullPage:false});
+ }
+
  if(fail.length)throw Error("Browser errors:\n"+fail.slice(0,15).join("\n"));
  console.log("JIAYU_BROWSER_QA_PASS: homepage, PDF.js page render, navigation, zoom, text, He source, journal originals, full inline image atlas, gallery paging, 390px mobile");
  await browser.close();
 }
-main().catch(e=>{console.error(e);process.exitCode=1;});
+main().catch(e=>{console.error(e);process.exit(1);});
