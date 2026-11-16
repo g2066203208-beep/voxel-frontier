@@ -1,3 +1,7 @@
+## 2026-11-16｜T087期刊文献作者溯源与遗漏试验修正 START
+
+- READ-BEFORE-WRITE：活动研究分支 `research/t080-seismic-integration-gates-20261022`，read_base_sha=`808a6ca99408de5e007272003c556495dc918037`；已读根AGENTS、研究AGENTS、指挥室最新T086、T085、T086原图资料馆/23篇矩阵/研究蓝图及T080过程。本轮为非Abaqus SOURCE/REF 校勘，只改文献矩阵并补一份期刊新颖性审查记录，继续保留T086的3张原PNG及来源SHA，不修改母本、模型或main、不合并PR。核对4条AUTHOR_TBD+1条R10作者及缺项2025 Ren压弯扭8试件论文，所有新结论仅来源层级，绝不宣称M1全塔PASS；准备登记 T087 完成回执。
+
 ## 2026-11-16 14时后｜T086水平接缝期刊查新/原始图片/新技术路线 END（白皮书v0.31.32）
 
 - 本轮正式交付：[T086图像资料馆（可直接阅读3张已入库的出版方原始图）](../references/joint-contact-literature/README.md)、[23篇2022–2026论文矩阵](../references/joint-contact-literature/literature_matrix.tsv)、[学位/期刊论文T086研究总蓝图](../references/joint-contact-literature/T086_RESEARCH_BLUEPRINT_20261116.md)及源图清单/许可SHA256/自动校验脚本。真实GitHub Actions成功落库Jonscher2023 CC BY 4.0的Fig1/Fig4/Fig6三个PNG，SHA256实测完整；Dong2025两张MDPI图片下载失败仅展示原出版方链接、未谎称入库；未知版权的Wiley/Elsevier/NC-ND图不公开镜像。
