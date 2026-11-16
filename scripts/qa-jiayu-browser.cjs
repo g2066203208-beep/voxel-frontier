@@ -72,22 +72,25 @@ async function main(){
   return n&&n.complete&&n.naturalWidth>300;
  },null,{timeout:30000});
  await page.screenshot({path:path.join(out,"jiayu-full-licensed-paper-page.png"),fullPage:false});
- await page.locator("#reference-doc-list .reference-row").first().waitFor({timeout:30000});
- assert.equal(await page.locator("#reference-doc-list .reference-row").count(),18,"18 references in PDF listing page");
- assert.ok((await page.locator("#reference-summary").innerText()).includes("395"),"395 source page originals");
- await page.locator('[data-reference-tab="images"]').click();
- assert.equal(await page.locator("#reference-image-list .reference-scan").count(),24,"original source pages paged");
- const heGroup=await page.locator("#reference-image-group option").evaluateAll(options=>options.find(x=>x.textContent.includes("何泽瑜"))?.value);
- assert.ok(heGroup,"He evidence image group");
- await page.locator("#reference-image-group").selectOption(heGroup);
- assert.ok((await page.locator("#reference-image-count").innerText()).includes("18"),"18 He original evidence images");
- await page.locator("#reference-image-list .reference-scan-preview").first().click();
- await page.locator("#ref-zoom-dialog").waitFor({state:"visible",timeout:10000});
- await page.locator("#ref-zoom-close").click();
- await page.locator('[data-reference-tab="master"]').click();
- assert.equal(await page.locator("#reference-master-list .reference-row").count(),20,"163-entry academic source table paged");
- assert.ok((await page.locator("#reference-master-count").innerText()).includes("163"),"all research citations are indexed");
- await page.screenshot({path:path.join(out,"jiayu-reference-atlas.png"),fullPage:false});
+ await page.locator("#all-reference-corpus .corpus-file").first().waitFor({timeout:30000});
+ assert.equal(await page.locator("#all-reference-corpus .corpus-file").count(),81,"all 81 archived reference records in page");
+ assert.equal(await page.locator("#all-reference-corpus .corpus-open").count(),79,"79 existing PDF original sources individually accessible");
+ assert.equal(await page.locator("#all-reference-corpus .corpus-master-row").count(),163,"all 163 academic bibliography records directly shown");
+ assert.equal(await page.locator("#all-reference-corpus .corpus-scan-card").count(),395,"395 source sheets displayed without pagination");
+ assert.equal(await page.locator("#all-reference-corpus a").count(),0,"complete corpus requires no links/downloads");
+ await page.locator('#all-reference-corpus .corpus-file[data-ref="L040"] .corpus-open').click();
+ await page.waitForFunction(()=>{
+  const s=document.querySelector("#corpus-pdf-status");
+  const pages=document.querySelectorAll("#corpus-pdf-pages .corpus-pdf-page");
+  return s&&s.textContent.includes("PDF.js已读取")&&pages.length>=2;
+ },null,{timeout:60000});
+ await page.locator("#corpus-pdf-page-1 canvas").waitFor({timeout:45000});
+ assert.ok((await page.locator("#corpus-pdf-pages .corpus-pdf-page").count())>=2,
+   "every genuine publisher PDF page has own position in continuous viewer");
+ assert.equal(await page.locator("#corpus-fulltext-reader a").count(),0,
+   "selected complete PDF pages have no external navigation or download anchor");
+ await page.screenshot({path:path.join(out,"jiayu-81-archived-papers-inline.png"),fullPage:false});
+ console.log("FULL_REFERENCE_CORPUS_OK: 81 PDF records, 79 indexed originals, 163 citations, 395 original sheets, PDF.js first real page rendered");
  await page.locator('button[data-view="overview"]').click();
 
  await page.locator('[data-open-document="jiayu-gov"]').click();
