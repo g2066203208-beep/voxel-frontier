@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.39**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.40**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -535,3 +535,6 @@
 
 ### 2026-11-18｜v0.32.39 PATCH — S06六分量参考点转换及惯性归属拒绝算法（非物理验收）
 - SOURCE=158m塔112+46m几何；1000N/100N合成载荷明确仅作可证伪代数单元试验。RUN=Node v22.16.0独立CLI执行11组正/反例PASS：基底My=158000 N m、接缝My=46000 N m、回转一致，额外接缝Y力产生基底Mx=−11200 N m；时间/初态/单位/归属错误拒绝。程序 `research/wind-tower/experiments/T080/s06_sixdof_wrench_identity.cjs` [commit e419fab](https://github.com/g2066203208-beep/voxel-frontier/commit/e419fab0bae2e582f147c5b59203d00c52afcbde)；本地执行字节SHA256 `c14402618474f141cd34ed987c5cdb205a499f3a013bf60281d427664923e4cc`（远端字节未重新散列）；[期刊正文四行表](../manuscript/journal-wind-fatigue-results.md) [commit 034ba67](https://github.com/g2066203208-beep/voxel-frontier/commit/034ba6719636f9a5418c08bae399929fa6ddf5e8)；T080日志commit 27cfbfc45f578f91ce567f41cc07638d95752c7f。SOURCE-LEVEL ALGORITHM PASS，真实同态风侧独立外气动力、惯性所有权、材料Miner与WE物理HOLD；TAB4 FIG0 REF/STANDARD/OFFICIAL无新原页，12阶段晋级0/12、DLC1.2 0/126。禁止范围均未触碰。
+
+### 2026-11-18 07时｜v0.32.40 PATCH — S12 Ch3风侧物理归属与参考点正文
+- 实质成果：[现行第三章§3.8.Y](../manuscript/final-thesis/chapters/03_场址风环境与整机随机风控制载荷.md)，科研commit [9ccba8c](https://github.com/g2066203208-beep/voxel-frontier/commit/9ccba8ceef7b1321c84f99e0b0e6fd94753baf16)，Git blob 1e51b7b105b9ca907ae26168de6c994f047b6e85；SOURCE=既有36风/四ETM×31段截面源与158m几何，程序blob 9f7db2f641a4a8a02fb6be0ab12e1cb0e92997bc；RUN=继承历史Node11项解析测试，新增正式论文连续论证/三行证据判别表/参考点误差公式，非新物理RUN；REF/STANDARD/OFFICIAL无新原页，FIG0 TAB3。真实风侧独立气动力/惯性分离/同态WE/材料Miner仍HOLD；12阶段0/12、DLC1.2 0/126；未触碰Abaqus/CAE、冻结母本、main、昂贵RUN或PR合并。
