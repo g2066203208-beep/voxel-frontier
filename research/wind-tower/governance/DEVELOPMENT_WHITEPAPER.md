@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.22**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.23**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -486,3 +486,6 @@
 ### 2026-11-17｜v0.32.22 PATCH — S11真实ETM方位降采样的交错留出反例
 
 - SOURCE=T077 1984行16方位同步毛截面DEL4 Git blob `b5effa2a493cec0a9af8a10a3b93df0ff997d2d0`，历史SHA256 `16c9864ef7a344e5b97338c31ce26de6adb86c0f0f64942ef894fe9983926b2b`（未重哈希）；RUN=V8两次8/8交错方位留出，124组共1984预测，常数/线性/三阶傅里叶平均归一化绝对误差22.217422/6.915107/4.032272%，最大55.431315/28.574137/17.449229%，傅里叶仍有124次超过10%。程序 `experiments/T080/s11_azimuth_interleaved_holdout_fourier.cjs` commit `10c6818d00c4d9872126881a143a2380ea577d37`；Ch4 §4.8.11三行表与正文 commit `e1c4bbf16658448a31e1085d1a6f85839cf01cf3`；T080原过程日志。源级计算PASS、Node CLI NOT_RUN、材料局部应力/完整DLC1.2 HOLD；TAB3 FIG0，REF/STANDARD/OFFICIAL无新增；12阶段晋级0/12，DLC1.2 0/126。无Abaqus/CAE、冻结母本、main、昂贵RUN或PR合并。
+
+### 2026-11-17｜v0.32.23 PATCH — S05现行IEC版本适用域与ESM长周期低频间隔
+- 实质成果：[Ch5§5.2.8四周期×双记录的解析QC数表及连续正文](../manuscript/final-thesis/drafts/05_地震输入与双水平线性梁代理响应_20261109.md)，科研commit [1256e9b](https://github.com/g2066203208-beep/voxel-frontier/commit/1256e9b040219db06a825f9cc752c5f2f8644cc2)，章节Git blob `b45b584cb6f881386674c0c333eb34a455f68c76`。SOURCE/OFFICIAL=IEC 61400-6:2020+AMD1:2025官方2025-06-13合并版出版页与2020原版范围，历史ESM高通0.04/0.08Hz；RUN=R_f=1/(Tf_h)四周期计算，0009在9.35s仅1.337；TAB4 FIG0。授权修订条文、滤波器频响与低频噪声、工址目标谱未获证据，PHYSICAL HOLD；该数表不代表新物理仿真或合规阈值。历史源SHA256未重新散列。12阶段晋级0/12，正式DLC1.2 0/126；禁止Abaqus/CAE、冻结母本、main、昂贵RUN、PR合并均未触碰。
