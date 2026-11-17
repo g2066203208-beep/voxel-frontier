@@ -267,3 +267,8 @@
 - **状态真实边界**：T083 V3已有DataCheck PASS，Gravity首增量 FAIL，PT/Modal NOT RUN，Wind HOLD；原T082 BF1已完成Gravity/Modal，不受此次失败影响。本轮网页版助手仅持久化修复任务和白皮书v0.31.17→v0.31.18、未调用本机Codex会话、更无本机新RUN/ODB。Codex需从任务书所在研究分支读取；GitHub存档并不代表本地Codex已自动执行。
 - PR#42保持Draft，main与冻结成果保留。
 
+
+
+## 2026-11-17 16时｜S10真实雨流统一参考DEL纠偏 END（白皮书v0.32.28）
+
+- READ-BEFORE-WRITE：继承15时交接及根/研究AGENTS、白皮书v0.32.27、MASTER/STATUS、T079/T080与Ch4，PR#42 Draft状态本轮未独立核实。SOURCE=T077 1574条真实循环blob 4b05ec4214c1ff38df71f1e5eb80cbec5a81c38d，历史SHA256 646065838456b6465e321c4c6fd24966f180f275df99c615000577557219ff83未重算。科研[Ch4§4.8.13](../manuscript/final-thesis/chapters/04_10MW混合塔架风致疲劳性能分析.md) commit [327dad1](https://github.com/g2066203208-beep/voxel-frontier/commit/327dad107299403d49c723e19f91947a210b8e9c)：统一Nref=600的三点D4=7.052731838/7.037161801/7.169089049MPa；CSEG16/04固定参考交点m*=4.201510378，纠正旧自身循环归一化交点2.967599327的跨工况DEL误用。TAB3 FIG0；历史原波m4 oracle与缩放恒等式PASS、独立CLI NOT_RUN；12阶段晋级0/12、DLC1.2=0/126。最大非Abaqus HOLD=真实同态风侧独立气动力/惯性归属；下一唯一动作=S06有原件则恢复同步风侧，否则S12期刊稿同步科学纠偏。未动Abaqus/CAE、冻结母本、main、昂贵RUN或PR合并。
