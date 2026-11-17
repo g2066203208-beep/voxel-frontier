@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.26**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.27**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -500,3 +500,7 @@
 
 ### 2026-11-17｜v0.32.26 PATCH — S12现行Ch6真实E-only抽样与同态可识别性结论整合
 - 实质正文 `manuscript/final-thesis/chapters/06_结论与展望.md` §6.1.5，科研commit `b22efb65697dc45aa43e3978076d351ce250ac67`、Git blob `e09fd8eb22f08f9fa426cc4b3d9f80282e924c9a`。SOURCE=候选Ch5真实ESM 0.005/0.1s四QoI及低频处理元数据；RUN=峰时1.165s=233个0.005s采样间隔，线性误差三项分解及B/W/E/WE零交互判据沿用已证明方法；TAB/FIG无新物理产物，REF=两篇2026先行研究既有核读，STANDARD/OFFICIAL无新增授权条文。仅可证明E-only线性代理的抽样差与方法适用边界，非真实风震物理结果；12阶段晋级0/12、正式DLC1.2 0/126。未触碰禁止范围。
+
+
+### 2026-11-17｜v0.32.27 PATCH — S10真实逐循环等效幅值指数敏感性及排序反转
+- 实质科研正文 `manuscript/final-thesis/chapters/04_10MW混合塔架风致疲劳性能分析.md` §4.8.12，科研commit [3345f50](https://github.com/g2066203208-beep/voxel-frontier/commit/3345f50777665425ad186a4a0a786f70b24818bb)，Git blob `e68cc6d62f4eda76635bc721e2e97fa6ac49414f`；过程日志 `experiments/T080/PROCESS_LOG.md` commit [5070843](https://github.com/g2066203208-beep/voxel-frontier/commit/5070843745eeb7f751a68e2cd25f501f33d47f60)。SOURCE=T077真实1574条雨流循环，Git blob `4b05ec4214c1ff38df71f1e5eb80cbec5a81c38d`，历史SHA256 `646065838456b6465e321c4c6fd24966f180f275df99c615000577557219ff83`（未重算）。RUN=V8逐条幂矩计算m=2/4/6/10与二分交点m*=2.967599327；TAB3 FIG0；m4历史对照PASS，独立CLI NOT_RUN。REF/STANDARD/OFFICIAL无新增；不同ETM跨工况排序不能当同风况材料控制点或Miner寿命，12阶段晋级0/12、DLC1.2 0/126，物理HOLD不变。未触碰禁止范围。
