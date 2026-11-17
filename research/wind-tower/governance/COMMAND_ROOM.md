@@ -1,3 +1,7 @@
+## 2026-11-17 11时｜S12真实ESM与E-only误差分层正文 END（白皮书v0.32.24）
+
+- READ-BEFORE-WRITE：PR#42 Open/Draft，基线HEAD c78803f5737fc5ec3527c12c4e628afe94babc1b；已读根/研究AGENTS、10时交接、白皮书v0.32.23、MASTER/STATUS、12阶段、T079/T080及Ch5。新增[Ch5§5.3](../manuscript/final-thesis/drafts/05_地震输入与双水平线性梁代理响应_20261109.md)三节正文，证明处理算子与代理算子误差交互项，使用四QoI真实峰时/幅值数据建立可识别边界；科研[commit becaf85](https://github.com/g2066203208-beep/voxel-frontier/commit/becaf85c3bba57dd963bd6578afca9fe1b89bfce)，章节blob d2e5206037f01fb0cd7da4607768a1be56f8db92。数学PASS、输入滤波/结构算子范数/原波复算/同态W/WE物理HOLD；TAB复用4行、FIG0，12阶段晋级0/12、DLC1.2=0/126。最大非Abaqus HOLD=同态真实风侧独立外气动力与惯性归属。下一唯一动作=S12将候选Ch5讨论以不覆盖现行六章方式装配导师稿；不再重复频带统计。无Abaqus/CAE、冻结母本、main、昂贵RUN或PR合并。
+
 ## 2026-11-17 10时｜S05现行IEC版本与长周期低频间隔 END（白皮书v0.32.23）
 
 - READ-BEFORE-WRITE：根/研究AGENTS、指挥室09时交接、白皮书v0.32.22、MASTER/STATUS、12阶段、T079/T080及Ch5。SOURCE=IEC官方2025-06-13 IEC61400-6:2020+AMD1:2025出版元数据及历史ESM两记录0.04/0.08Hz处理高通；RUN=四周期频率间隔R_f，0009在9.35s仅1.337，不能据此给出幅值误差阈值。新增[Ch5§5.2.8四行数表和正文](../manuscript/final-thesis/drafts/05_地震输入与双水平线性梁代理响应_20261109.md)，科研commit [1256e9b](https://github.com/g2066203208-beep/voxel-frontier/commit/1256e9b040219db06a825f9cc752c5f2f8644cc2)，章节blob b45b584cb6f881386674c0c333eb34a455f68c76。IEC授权修订原条文、滤波器响应与工址目标谱HOLD，TAB4 FIG0，12阶段晋级0/12，DLC1.2=0/126。最大非Abaqus HOLD=同一158m模型同步独立风侧外气动力与惯性归属。下一唯一动作=S12将本节S05低频适用性限制与真实ESM代理结论合并入现行论文方法讨论，不重复分箱/方位统计。无Abaqus/CAE、冻结母本、main、PR合并或昂贵RUN。
