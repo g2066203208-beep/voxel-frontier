@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.36**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.37**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -528,3 +528,5 @@
 - **v0.32.35 PATCH｜2026-11-18 01时 S11**：SOURCE=T077真实1984行16方位DEL4，blob `b5effa2a493cec0a9af8a10a3b93df0ff997d2d0`，历史SHA256 `16c9864ef7a344e5b97338c31ce26de6adb86c0f0f64942ef894fe9983926b2b`未重算；新程序 `research/wind-tower/experiments/T080/s11_same_wind_seed_vs_wind_speed_identifiability.cjs` commit `224405b5bb5b04d3ce4147a35de868a78a789e29`；期刊正文 `research/wind-tower/manuscript/journal-wind-fatigue-results.md` commit `c75037172c80f010db284e8dedfcce520742ea15`。同风速两seed的496对差异mean/RMS=0.123784/0.145382MPa，跨风速对照mean/RMS=0.561811/0.644556MPa，20/496位置seed差异更大；拒绝逐位置普遍主导命题。连接器真实源级算术PASS，Node CLI NOT_RUN，单seed对与空间相关使方差分解/独立泛化HOLD；12阶段晋级0/12，DLC1.2 0/126，材料Miner与同态WE HOLD。
 
 - **v0.32.36 PATCH｜2026-11-18 03时 S10**：SOURCE=T062 72行DEL4 CSV blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`，历史SHA256 `b362bcd7c37ccc56e21035de39448b5e761ec03f371b6b2f3eb30f41b013630d`未重算；RUN=18NTM三箱6³=216独立每箱删1seed组合，条件DEL4 Mx=2097.749940 kN m（范围2039.233464–2155.149718）、My=13402.034259（范围12918.337700–13755.107901）。程序 `research/wind-tower/experiments/T080/s10_ntm_exact_216_seed_deletion_robustness.cjs` commit `50b74facd9816036a26893acc642b59557fcf654`；期刊 `research/wind-tower/manuscript/journal-wind-fatigue-results.md` commit `0766be6f3e4f80e840b3130f5ea66b33f1a30b97`；过程 `research/wind-tower/experiments/T080/PROCESS_LOG.md`。连接器JS真实CSV实算PASS，Node CLI NOT_RUN，TAB2 FIG0；216相关扰动非CI、非完整风气候或材料Miner，12阶段0/12、DLC1.2 0/126，W侧外载HOLD。
+
+- **v0.32.37 PATCH｜2026-11-18 04时 S05**：真实ESM处理记录对假设性目标谱的33周期比值（SOURCE `research/wind-tower/experiments/T079/real-records/S05_ESM_33PERIOD_SCALAR_MINIMAX_20261113.csv` Git blob `6839e497da8ebc11b15fd901118471ce2b865d2c`）做18短周期训练/15长周期留出闭式log-minimax幅值标定；RotD50/100留出比值分别0.310392–0.711830/0.279153–0.632270，全部15点均欠配，拒绝“短周期标定保证长周期谱匹配”命题。真实数表及计算定义见 `research/wind-tower/experiments/T079/PROCESS_LOG.md` commit `17487130d826e10cf628f58a9d5fd13fedfb882f`；源级V8算术PASS，独立CLI/字节SHA256 NOT_RUN，假设目标非授权设计谱、不能宣称场址或结构PASS。12阶段晋级0/12、DLC1.2 0/126；同态W侧风力/惯性HOLD。
