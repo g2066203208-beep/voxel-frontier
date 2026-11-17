@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.20**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.21**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -478,3 +478,7 @@
 ### 2026-11-17｜v0.32.20 PATCH — S12真实1574逐循环均值与条件PT偏置的四次矩分区
 
 - SOURCE=T077三控制点1574行真实历史同步毛截面雨流CSV blob `4b05ec4214c1ff38df71f1e5eb80cbec5a81c38d`；历史SHA256 `646065838456b6465e321c4c6fd24966f180f275df99c615000577557219ff83`（未重哈希）。RUN=连接器V8实际分组，gross/Pe/P0正均值四次矩份额CSEG16为100/74.288449/30.197598%，CSEG17为100/74.666933/30.840051%，CSEG04均0；仅名义毛截面、条件均匀偏置。实物[第四章§4.8.9三行数表及连续科学正文](../manuscript/final-thesis/chapters/04_10MW混合塔架风致疲劳性能分析.md)，科研commit [6ae86b3](https://github.com/g2066203208-beep/voxel-frontier/commit/6ae86b35d15b9d183ef58e0d345df7670e9c7a08)；[T080过程](../experiments/T080/PROCESS_LOG.md)。TAB3 FIG0，REF/STANDARD/OFFICIAL无新原页；算术PASS，独立CLI、材料局部应力/受拉受压映射/Miner及正式DLC1.2 HOLD；12阶段晋级0/12。禁止范围不变。
+
+### 2026-11-17｜v0.32.21 PATCH — S12真实1574雨流循环四次矩尾部集中性
+
+- SOURCE=T077三点1574行逐循环CSV `experiments/T077/recovery/S10_3CONTROL_REAL_GROSS_CYCLES_20261030.csv`，Git blob `4b05ec4214c1ff38df71f1e5eb80cbec5a81c38d`，历史SHA256 `646065838456b6465e321c4c6fd24966f180f275df99c615000577557219ff83`（本轮未重算）。RUN=连接器V8直接读取真实CSV，按count×range^4降序计算最大1%记录贡献CSEG16/17/04=94.325799/96.061008/72.643826%，达到90%四次矩需5/5/13条记录，贡献有效记录数3.510238/3.556504/10.825650（不是独立样本数）。[第四章§4.8.10真实三行表及论文论证](../manuscript/final-thesis/chapters/04_10MW混合塔架风致疲劳性能分析.md)，科研commit [f1662a2](https://github.com/g2066203208-beep/voxel-frontier/commit/f1662a2509a860a7fa8042bfd23a9af5a3d2c3a4)；[T080日志](../experiments/T080/PROCESS_LOG.md) commit [d20fd4c](https://github.com/g2066203208-beep/voxel-frontier/commit/d20fd4c60510ee35afa09ce82289ce233169df12)。TAB3 FIG0，REF/STANDARD/OFFICIAL无新增；源级双精度算术PASS，独立CLI、稳态窗口/极值来源、正式DLC1.2、材料局部应力/Miner HOLD；12阶段晋级0/12，正式DLC1.2 0/126。未触碰禁止范围。
