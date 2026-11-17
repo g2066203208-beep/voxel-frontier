@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.30**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.31**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -515,3 +515,6 @@
 
 ### 2026-11-17｜v0.32.30 PATCH — S06真实四ETM分半差异与边界差异的反例
 - SOURCE=T077 48行分半雨流摘要 `experiments/T077/recovery/S06_S10_4ETM_SPLIT_HALF_RAINFLOW_DEL_SUMMARY_20261105.csv` Git blob ef444776d3a0421e4fd6a68e86ccc2f07a5588ed；RUN=对4ETM×6分量逐m=4/10比较跨31站的分半中位不平衡与边界最大差异，21/24与17/24前者较大；最小比0.439192/0.239161证明并非普遍更大。程序 `experiments/T080/s06_split_half_boundary_discrimination.cjs` commit 954fbadb581bc36f28c278d4f8ce4af144093026；期刊正文 `manuscript/journal-wind-fatigue-results.md` commit 6f6bc85c8f937b912a1719521307e8967d3177bb；T080日志 commit a9f2750baf9d396025379c60c1c43315e229a3cd。TAB2 FIG0；源级V8算术PASS，原生CLI NOT_RUN，原CSV SHA256未重新散列；跨站不同聚合不能归因于边界计数或判定稳态，正式DLC1.2、同态W/WE及材料Miner HOLD；12阶段晋级0/12。REF/STANDARD/OFFICIAL无新原页；未碰Abaqus/CAE、冻结母本、main、昂贵RUN或PR合并。
+
+### 2026-11-17｜v0.32.31 PATCH — S11四ETM整工况留出方位轮廓迁移拒绝试验
+- SOURCE=T077 1984行16方位真实名义应力DEL4，blob b5effa2a493cec0a9af8a10a3b93df0ff997d2d0，历史SHA256 16c9864ef7a344e5b97338c31ce26de6adb86c0f0f64942ef894fe9983926b2b（未重算）。RUN=4折整工况留出、每折496点、留出工况自身均值oracle归一化；跨工况轮廓MAE=9.668295/7.152190/8.784329/8.114963%（平坦对照40.108101/38.204674/26.270326/27.190780%），542/1984点误差>0.1归一化单位，强普适轮廓精度命题FAIL。程序 [commit 70c56e0](https://github.com/g2066203208-beep/voxel-frontier/commit/70c56e041c4df2fca84e4e7357780cd92afdca9f) 路径 experiments/T080/s11_etm_leave_one_case_out_angular_transfer.cjs；期刊稿 [commit 02b776b](https://github.com/g2066203208-beep/voxel-frontier/commit/02b776bcdd5c284cec225295f2ed6d3092476eea) 路径 manuscript/journal-wind-fatigue-results.md；日志 experiments/T080/PROCESS_LOG.md。V8源级数值PASS、Node CLI NOT_RUN；TAB4 FIG0，REF/STANDARD/OFFICIAL无新增原页；不能预测绝对DEL或材料Miner，DLC1.2与同态W/WE HOLD；12阶段晋级0/12。无Abaqus/CAE、冻结母本、main、昂贵RUN、PR合并。
