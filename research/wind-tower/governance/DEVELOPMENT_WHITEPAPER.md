@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.27**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.28**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -504,3 +504,7 @@
 
 ### 2026-11-17｜v0.32.27 PATCH — S10真实逐循环等效幅值指数敏感性及排序反转
 - 实质科研正文 `manuscript/final-thesis/chapters/04_10MW混合塔架风致疲劳性能分析.md` §4.8.12，科研commit [3345f50](https://github.com/g2066203208-beep/voxel-frontier/commit/3345f50777665425ad186a4a0a786f70b24818bb)，Git blob `e68cc6d62f4eda76635bc721e2e97fa6ac49414f`；过程日志 `experiments/T080/PROCESS_LOG.md` commit [5070843](https://github.com/g2066203208-beep/voxel-frontier/commit/5070843745eeb7f751a68e2cd25f501f33d47f60)。SOURCE=T077真实1574条雨流循环，Git blob `4b05ec4214c1ff38df71f1e5eb80cbec5a81c38d`，历史SHA256 `646065838456b6465e321c4c6fd24966f180f275df99c615000577557219ff83`（未重算）。RUN=V8逐条幂矩计算m=2/4/6/10与二分交点m*=2.967599327；TAB3 FIG0；m4历史对照PASS，独立CLI NOT_RUN。REF/STANDARD/OFFICIAL无新增；不同ETM跨工况排序不能当同风况材料控制点或Miner寿命，12阶段晋级0/12、DLC1.2 0/126，物理HOLD不变。未触碰禁止范围。
+
+
+### 2026-11-17｜v0.32.28 PATCH — S10真实1574雨流统一参考DEL口径纠偏
+- 科研实物：Ch4§4.8.13三行真实数表及正文，commit [327dad1](https://github.com/g2066203208-beep/voxel-frontier/commit/327dad107299403d49c723e19f91947a210b8e9c)，blob 7a2f38fa1f00e3d02593e0e4b0efe1dd3caff785；SOURCE=T077真实1574条循环blob 4b05ec4214c1ff38df71f1e5eb80cbec5a81c38d、历史SHA256 646065838456b6465e321c4c6fd24966f180f275df99c615000577557219ff83（未重算）。RUN=固定600参考循环m4三值7.052731838/7.037161801/7.169089049 MPa，与历史原波独立雨流一致；原§4.8.12自身循环均值交点m*=2.967599327不能用作统一DEL交点，固定参考交点m*=4.201510378，m4排名反转。TEST=解析归一化缩放恒等式及翻倍拒绝PASS，独立CLI NOT_RUN；TAB3 FIG0，REF/STANDARD/OFFICIAL无新增。不同ETM、局部材料应力、Miner、DLC1.2、同态WE仍HOLD；12阶段晋级0/12。未触碰Abaqus/CAE、冻结母本、main、昂贵RUN或PR合并。
