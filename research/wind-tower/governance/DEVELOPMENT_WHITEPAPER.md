@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.29**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.30**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -512,3 +512,6 @@
 
 ### 2026-11-17｜v0.32.29 PATCH — S12期刊稿真实雨流归一化纠偏传播
 - 实质成果：既有期刊稿 manuscript/journal-wind-fatigue-results.md 新增S10连续科学讨论、三行真实数表与跨工况排序反例，科研commit 16031ea153dcd6d23dcbbd85367319fdee650ef3，blob b2532e0ee1b06e8e7f5f1043f18b1b5c53fcd905。SOURCE=T077 1574条雨流CSV blob 4b05ec4214c1ff38df71f1e5eb80cbec5a81c38d、历史SHA256 646065838456b6465e321c4c6fd24966f180f275df99c615000577557219ff83（未重新散列）；RUN=继承已核Nref=600 m4三值7.052732/7.037162/7.169089MPa、条件/固定参考交点2.967599327/4.201510378；TAB3 FIG0，独立新CLI NOT_RUN。REF/STANDARD/OFFICIAL无新原页；期刊稿口径纠偏PASS、材料Miner/DLC1.2/同态W/WE HOLD，12阶段晋级0/12。未碰Abaqus/CAE、冻结母本、main、昂贵RUN或PR合并。
+
+### 2026-11-17｜v0.32.30 PATCH — S06真实四ETM分半差异与边界差异的反例
+- SOURCE=T077 48行分半雨流摘要 `experiments/T077/recovery/S06_S10_4ETM_SPLIT_HALF_RAINFLOW_DEL_SUMMARY_20261105.csv` Git blob ef444776d3a0421e4fd6a68e86ccc2f07a5588ed；RUN=对4ETM×6分量逐m=4/10比较跨31站的分半中位不平衡与边界最大差异，21/24与17/24前者较大；最小比0.439192/0.239161证明并非普遍更大。程序 `experiments/T080/s06_split_half_boundary_discrimination.cjs` commit 954fbadb581bc36f28c278d4f8ce4af144093026；期刊正文 `manuscript/journal-wind-fatigue-results.md` commit 6f6bc85c8f937b912a1719521307e8967d3177bb；T080日志 commit a9f2750baf9d396025379c60c1c43315e229a3cd。TAB2 FIG0；源级V8算术PASS，原生CLI NOT_RUN，原CSV SHA256未重新散列；跨站不同聚合不能归因于边界计数或判定稳态，正式DLC1.2、同态W/WE及材料Miner HOLD；12阶段晋级0/12。REF/STANDARD/OFFICIAL无新原页；未碰Abaqus/CAE、冻结母本、main、昂贵RUN或PR合并。
