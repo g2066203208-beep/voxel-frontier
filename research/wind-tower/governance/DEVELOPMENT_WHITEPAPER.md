@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.21**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.22**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -482,3 +482,7 @@
 ### 2026-11-17｜v0.32.21 PATCH — S12真实1574雨流循环四次矩尾部集中性
 
 - SOURCE=T077三点1574行逐循环CSV `experiments/T077/recovery/S10_3CONTROL_REAL_GROSS_CYCLES_20261030.csv`，Git blob `4b05ec4214c1ff38df71f1e5eb80cbec5a81c38d`，历史SHA256 `646065838456b6465e321c4c6fd24966f180f275df99c615000577557219ff83`（本轮未重算）。RUN=连接器V8直接读取真实CSV，按count×range^4降序计算最大1%记录贡献CSEG16/17/04=94.325799/96.061008/72.643826%，达到90%四次矩需5/5/13条记录，贡献有效记录数3.510238/3.556504/10.825650（不是独立样本数）。[第四章§4.8.10真实三行表及论文论证](../manuscript/final-thesis/chapters/04_10MW混合塔架风致疲劳性能分析.md)，科研commit [f1662a2](https://github.com/g2066203208-beep/voxel-frontier/commit/f1662a2509a860a7fa8042bfd23a9af5a3d2c3a4)；[T080日志](../experiments/T080/PROCESS_LOG.md) commit [d20fd4c](https://github.com/g2066203208-beep/voxel-frontier/commit/d20fd4c60510ee35afa09ce82289ce233169df12)。TAB3 FIG0，REF/STANDARD/OFFICIAL无新增；源级双精度算术PASS，独立CLI、稳态窗口/极值来源、正式DLC1.2、材料局部应力/Miner HOLD；12阶段晋级0/12，正式DLC1.2 0/126。未触碰禁止范围。
+
+### 2026-11-17｜v0.32.22 PATCH — S11真实ETM方位降采样的交错留出反例
+
+- SOURCE=T077 1984行16方位同步毛截面DEL4 Git blob `b5effa2a493cec0a9af8a10a3b93df0ff997d2d0`，历史SHA256 `16c9864ef7a344e5b97338c31ce26de6adb86c0f0f64942ef894fe9983926b2b`（未重哈希）；RUN=V8两次8/8交错方位留出，124组共1984预测，常数/线性/三阶傅里叶平均归一化绝对误差22.217422/6.915107/4.032272%，最大55.431315/28.574137/17.449229%，傅里叶仍有124次超过10%。程序 `experiments/T080/s11_azimuth_interleaved_holdout_fourier.cjs` commit `10c6818d00c4d9872126881a143a2380ea577d37`；Ch4 §4.8.11三行表与正文 commit `e1c4bbf16658448a31e1085d1a6f85839cf01cf3`；T080原过程日志。源级计算PASS、Node CLI NOT_RUN、材料局部应力/完整DLC1.2 HOLD；TAB3 FIG0，REF/STANDARD/OFFICIAL无新增；12阶段晋级0/12，DLC1.2 0/126。无Abaqus/CAE、冻结母本、main、昂贵RUN或PR合并。
