@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.25**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.26**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -496,3 +496,7 @@
 ### 2026-11-17｜v0.32.25 PATCH — S12同态风震交互可识别性与峰值非交换性正文
 
 - [候选Ch5§5.4](../manuscript/final-thesis/drafts/05_地震输入与双水平线性梁代理响应_20261109.md) 新增线性零交互准则 I=WE−W−E+B、同步时程必要条件及两时刻峰值非交换性反例；科研commit [26c9973](https://github.com/g2066203208-beep/voxel-frontier/commit/26c9973ae40820bb94a32c08df94cb45f4d1e002)，章节blob 367dae474625b73e2570deaed8d089c1030da996。SOURCE=历史E-only代理与风侧归档（尚不同态）；RUN=数学证明/解析反例，非真实风震物理计算；REF=2026先行风震/PT论文沿用历史核读；STANDARD/OFFICIAL无新增；TAB0 FIG0。数学PASS、同态B/W/E/WE与外气动力归属HOLD，原始SHA256未重算；12阶段晋级0/12、DLC1.2 0/126。禁止Abaqus/CAE、冻结母本、main、昂贵RUN、PR合并。
+
+
+### 2026-11-17｜v0.32.26 PATCH — S12现行Ch6真实E-only抽样与同态可识别性结论整合
+- 实质正文 `manuscript/final-thesis/chapters/06_结论与展望.md` §6.1.5，科研commit `b22efb65697dc45aa43e3978076d351ce250ac67`、Git blob `e09fd8eb22f08f9fa426cc4b3d9f80282e924c9a`。SOURCE=候选Ch5真实ESM 0.005/0.1s四QoI及低频处理元数据；RUN=峰时1.165s=233个0.005s采样间隔，线性误差三项分解及B/W/E/WE零交互判据沿用已证明方法；TAB/FIG无新物理产物，REF=两篇2026先行研究既有核读，STANDARD/OFFICIAL无新增授权条文。仅可证明E-only线性代理的抽样差与方法适用边界，非真实风震物理结果；12阶段晋级0/12、正式DLC1.2 0/126。未触碰禁止范围。
