@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.38**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.39**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -532,3 +532,6 @@
 - **v0.32.37 PATCH｜2026-11-18 04时 S05**：真实ESM处理记录对假设性目标谱的33周期比值（SOURCE `research/wind-tower/experiments/T079/real-records/S05_ESM_33PERIOD_SCALAR_MINIMAX_20261113.csv` Git blob `6839e497da8ebc11b15fd901118471ce2b865d2c`）做18短周期训练/15长周期留出闭式log-minimax幅值标定；RotD50/100留出比值分别0.310392–0.711830/0.279153–0.632270，全部15点均欠配，拒绝“短周期标定保证长周期谱匹配”命题。真实数表及计算定义见 `research/wind-tower/experiments/T079/PROCESS_LOG.md` commit `17487130d826e10cf628f58a9d5fd13fedfb882f`；源级V8算术PASS，独立CLI/字节SHA256 NOT_RUN，假设目标非授权设计谱、不能宣称场址或结构PASS。12阶段晋级0/12、DLC1.2 0/126；同态W侧风力/惯性HOLD。
 
 - **v0.32.38 PATCH｜2026-11-18 05时 S12**：正式地震方法正文整合至 research/wind-tower/experiments/T079/METHOD_PLAN.md，Git blob f36978f84b6243e2e6f204a9119906ba18389406，commit 82c9906dc83942cf62ad948cf3f3b151107b6e53；继承真实ESM 33周期SOURCE blob 6839e497da8ebc11b15fd901118471ce2b865d2c（字节SHA256未重算），18训练/15盲留出，RotD50/100长周期15/15低于0.8示意谱阈值；新增完整无泄漏闭式标定、跨周期拒绝及来源/目标/留出三门禁的可入正文论证，最不利点额外放大下界2.5774/2.8658仅为代数诊断非设计修正。T079日志同步；非新增独立数值RUN，CLI NOT_RUN，授权设计谱及结构响应HOLD，12阶段晋级0/12、DLC1.2=0/126。
+
+### 2026-11-18｜v0.32.39 PATCH — S06六分量参考点转换及惯性归属拒绝算法（非物理验收）
+- SOURCE=158m塔112+46m几何；1000N/100N合成载荷明确仅作可证伪代数单元试验。RUN=Node v22.16.0独立CLI执行11组正/反例PASS：基底My=158000 N m、接缝My=46000 N m、回转一致，额外接缝Y力产生基底Mx=−11200 N m；时间/初态/单位/归属错误拒绝。程序 `research/wind-tower/experiments/T080/s06_sixdof_wrench_identity.cjs` [commit e419fab](https://github.com/g2066203208-beep/voxel-frontier/commit/e419fab0bae2e582f147c5b59203d00c52afcbde)；本地执行字节SHA256 `c14402618474f141cd34ed987c5cdb205a499f3a013bf60281d427664923e4cc`（远端字节未重新散列）；[期刊正文四行表](../manuscript/journal-wind-fatigue-results.md) [commit 034ba67](https://github.com/g2066203208-beep/voxel-frontier/commit/034ba6719636f9a5418c08bae399929fa6ddf5e8)；T080日志commit 27cfbfc45f578f91ce567f41cc07638d95752c7f。SOURCE-LEVEL ALGORITHM PASS，真实同态风侧独立外气动力、惯性所有权、材料Miner与WE物理HOLD；TAB4 FIG0 REF/STANDARD/OFFICIAL无新原页，12阶段晋级0/12、DLC1.2 0/126。禁止范围均未触碰。
