@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.24**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.25**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -492,3 +492,7 @@
 
 ### 2026-11-17｜v0.32.24 PATCH — S12真实ESM处理谱与E-only代理的误差可识别性正文
 - SOURCE=Ch5§5.2.5四QoI历史真实派生表 blob e9aae56c1da761f6ce19fe97b7e97a4bf3d6c62b（SHA256 0566ccfa604e2a4e7538fd9a20fe8d2f36f8e661d024baaf305b3d0d1cbd0af9，未重算）与§5.2.7真实处理谱；RUN=处理算子F与线性响应算子H的误差交互恒等式、范数界及四QoI峰时错位反证，数学PASS、误差界数值HOLD。实质正文 [Ch5§5.3](../manuscript/final-thesis/drafts/05_地震输入与双水平线性梁代理响应_20261109.md) commit [becaf85](https://github.com/g2066203208-beep/voxel-frontier/commit/becaf85c3bba57dd963bd6578afca9fe1b89bfce)，blob d2e5206037f01fb0cd7da4607768a1be56f8db92；TAB复用四行、FIG0、REF/STANDARD/OFFICIAL无新增原页；12阶段晋级0/12、DLC1.2 0/126，风侧外载归属与物理抗震HOLD。未执行Abaqus/CAE、冻结母本、main、昂贵RUN或PR合并。
+
+### 2026-11-17｜v0.32.25 PATCH — S12同态风震交互可识别性与峰值非交换性正文
+
+- [候选Ch5§5.4](../manuscript/final-thesis/drafts/05_地震输入与双水平线性梁代理响应_20261109.md) 新增线性零交互准则 I=WE−W−E+B、同步时程必要条件及两时刻峰值非交换性反例；科研commit [26c9973](https://github.com/g2066203208-beep/voxel-frontier/commit/26c9973ae40820bb94a32c08df94cb45f4d1e002)，章节blob 367dae474625b73e2570deaed8d089c1030da996。SOURCE=历史E-only代理与风侧归档（尚不同态）；RUN=数学证明/解析反例，非真实风震物理计算；REF=2026先行风震/PT论文沿用历史核读；STANDARD/OFFICIAL无新增；TAB0 FIG0。数学PASS、同态B/W/E/WE与外气动力归属HOLD，原始SHA256未重算；12阶段晋级0/12、DLC1.2 0/126。禁止Abaqus/CAE、冻结母本、main、昂贵RUN、PR合并。
