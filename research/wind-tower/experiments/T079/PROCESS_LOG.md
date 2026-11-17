@@ -1,3 +1,7 @@
+## 2026-11-18 05时｜S12地震方法正文装配（v0.32.38）
+
+READ-BEFORE-WRITE：PR#42 Open/Draft，基线HEAD fd4266fed10f6562e0b790c68059ff4a3b9deb49；已读根/研究AGENTS、指挥室、白皮书、MASTER/STATUS、12阶段计划、T079/T080及METHOD_PLAN。科研正文 commit 82c9906dc83942cf62ad948cf3f3b151107b6e53，文件 experiments/T079/METHOD_PLAN.md；SOURCE=既有33周期ESM派生比值表Git blob 6839e497da8ebc11b15fd901118471ce2b865d2c，字节SHA256未重算。RUN=继承04时真实18训练/15留出结果，新增方法章完整盲留出定义、无泄漏闭式系数、0.8–1.2诊断拒绝与最不利长周期所需额外放大下界2.5774/2.8658（代数推导，非可接受的谱修正）；RotD50/100各15/15长周期点拒绝。TEST=对既有结果代数解释，无新增独立CLI或物理计算；TAB2行，FIG0，REF两篇2026先行研究仅沿用，STANDARD/OFFICIAL无新授权原页。假设目标非工址设计谱，33点非独立记录；G-A来源/G-B目标/G-C盲留出方法门禁不等于安全验收。S05/S12 PARTIAL，12阶段晋级0/12，DLC1.2=0/126；同态W侧外气动力与惯性归属仍最大非Abaqus HOLD。下一唯一动作=S06仅在可获取同模型同态风侧原始时程时核对，否则转S12对导师阅读稿做真实源—图—正文链接而非再拆分同一33周期。未触碰Abaqus/CAE、冻结母本、main、PR合并或昂贵RUN。
+
 ## 2026-11-18 04时｜S05真实ESM 33周期谱的短周期标定→长周期留出拒绝试验（非设计谱）
 
 **科学问题/独立否证**：仅在1.25–3.00 s拟合单一谱幅值系数，能否迁移至3.009–10 s长周期段？SOURCE=既有真实ESM处理波RotD50/RotD100与**假设性5%阻尼建筑目标谱**的33行原始比值表 `real-records/S05_ESM_33PERIOD_SCALAR_MINIMAX_20261113.csv`（Git blob `6839e497da8ebc11b15fd901118471ce2b865d2c`，本轮未计算字节SHA256）；18行训练、15行整段留出，按周期而非独立地震事件拆分。定义比值r(T)=PSA_record(T)/PSA_illustrative(T)，训练集正数比值最小最大为r_min/r_max，求解min_k max |ln(k r)|，闭式 k=1/sqrt(r_min*r_max)，训练集不读取任何长周期比值。对照为全33周期oracle拟合（**使用留出集，仅作事后下界，绝非无泄漏基准**）。
