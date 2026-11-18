@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.50**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.51**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -566,3 +566,6 @@
 
 ### 2026-11-18｜v0.32.50 PATCH — S12第五章盲留出控制位置及误差准入证明
 - SOURCE=T077 1984行真实4ETM×31段×16方位毛截面DEL4，Git blob `b5effa2a493cec0a9af8a10a3b93df0ff997d2d0`，历史SHA256 `16c9864ef7a344e5b97338c31ce26de6adb86c0f0f64942ef894fe9983926b2b`（本轮未重哈希）。RUN=继承已有三风速整组留出：单点捕获99.9055%/99.5353%/99.8795%，五点三折100%；新增条件性全场预测误差上界\(\varepsilon\)蕴含预测冠军位置峰值遗漏不超过\(2\varepsilon\)的解析证明，同时明确当前未估计\(\varepsilon\)，故不能将五点历史成功作为工程可靠性。科研实物=[第五章§5.4.6](../manuscript/final-thesis/chapters/05_疲劳控制参数敏感性与结构优化.md) commit [73f6d70](https://github.com/g2066203208-beep/voxel-frontier/commit/73f6d70d336965987417d18a3e63057cc0f4239f)，blob `4a29f26f2a511c79861e4fca34176200a2c1182d`；[T080过程](../experiments/T080/PROCESS_LOG.md) commit [5ba5bef](https://github.com/g2066203208-beep/voxel-frontier/commit/5ba5bef5006b3ad53568dcff6351545c05aafa2e)。TEST=解析证明/历史V8源级数值PASS，原生Node CLI及原CSV字节SHA256 NOT_RUN；TAB3 FIG0，REF/STANDARD/OFFICIAL无新增原页；无新物理RUN、真实DOE、材料Miner、同态W侧或DLC1.2，12阶段晋级0/12、正式DLC1.2 0/126。未触碰禁止范围、冻结母本、main、昂贵RUN或PR合并。
+
+### 2026-11-18｜v0.32.51 PATCH — S10真实NTM缺箱四次矩等贡献临界值
+- SOURCE=T062真实72行DEL4 Git blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`；RUN=18NTM×2通道按ERA5已覆盖小时5736/1426/2计算，缺失99736h的等贡献临界DEL4为Mx 1085.999499、My 6938.197074 kN·m，均仅为已观测条件DEL4的51.7697%；科研[期刊2行数表](../manuscript/journal-wind-fatigue-results.md) commit [fba575a1](https://github.com/g2066203208-beep/voxel-frontier/commit/fba575a127afed1a38af8f1a27ad0d6205e8a7c4)；T080日志commit [9aca2a38](https://github.com/g2066203208-beep/voxel-frontier/commit/9aca2a38465769cf872ae3f46a524fb4cf0b7f99)。TEST=连接器V8真实源级算术PASS，独立CLI/源SHA256复算NOT_RUN；TAB2 FIG0，缺箱实际物理载荷、Miner、DLC1.2、同态W侧均HOLD；12阶段0/12。不触碰Abaqus/CAE、冻结母本、main、昂贵RUN或PR合并。
