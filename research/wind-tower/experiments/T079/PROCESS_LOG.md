@@ -1,3 +1,7 @@
+## 2026-11-18 11时｜S05官方GB18306适用域与长周期目标谱不可识别性
+
+READ-BEFORE-WRITE：PR#42 Open/Draft，基线3903fd111c5a8173a6360d84f6202cfc0e4edbdc；读根/研究AGENTS、指挥室、白皮书、现行STATUS、T079/T080、已有33周期谱及既有方法正文；MASTER旧路径404，未冒称已读。科学增量为直接核对SAMR GB18306-2015现行登记、湖南省地震局标准信息摘要PDF的范围及第6–8节目录、新疆地震局2026-02-27官方答复，并形成短周期相同而长周期尾部不同的构造性反例，正文已写入T079/METHOD_PLAN.md，科研commit da72bd53b4544bb6d1afcb533a8b7a4e05891931，Git blob 72ebde6d86db6c7a110e69bcd8df52f23d93474d。OFFICIAL URLs见方法正文；SOURCE=历史33周期ESM CSV blob 6839e497da8ebc11b15fd901118471ce2b865d2c，未重哈希；STANDARD仅登记/摘要非授权全文；REF=两篇2026先行DOI，无新页级阅读；RUN=数学反例，非新地震数值或物理RUN；TAB0 FIG0。严格限定：两条构造谱不是GB18306合规谱的证明，行政区划参数不能替代具体场地、地震水准、长周期目标谱；真实场址目标谱、同态W/E/WE、材料Miner HOLD，12阶段0/12、DLC1.2 0/126。下一唯一动作：S05只在可取得具体场址官方查询输出与地勘时确定正式谱；否则切S12完成现有论文图表的原始来源与版式闭合。无Abaqus/CAE、冻结母本、main、PR合并、昂贵RUN。
+
 ## 2026-11-18 05时｜S12地震方法正文装配（v0.32.38）
 
 READ-BEFORE-WRITE：PR#42 Open/Draft，基线HEAD fd4266fed10f6562e0b790c68059ff4a3b9deb49；已读根/研究AGENTS、指挥室、白皮书、MASTER/STATUS、12阶段计划、T079/T080及METHOD_PLAN。科研正文 commit 82c9906dc83942cf62ad948cf3f3b151107b6e53，文件 experiments/T079/METHOD_PLAN.md；SOURCE=既有33周期ESM派生比值表Git blob 6839e497da8ebc11b15fd901118471ce2b865d2c，字节SHA256未重算。RUN=继承04时真实18训练/15留出结果，新增方法章完整盲留出定义、无泄漏闭式系数、0.8–1.2诊断拒绝与最不利长周期所需额外放大下界2.5774/2.8658（代数推导，非可接受的谱修正）；RotD50/100各15/15长周期点拒绝。TEST=对既有结果代数解释，无新增独立CLI或物理计算；TAB2行，FIG0，REF两篇2026先行研究仅沿用，STANDARD/OFFICIAL无新授权原页。假设目标非工址设计谱，33点非独立记录；G-A来源/G-B目标/G-C盲留出方法门禁不等于安全验收。S05/S12 PARTIAL，12阶段晋级0/12，DLC1.2=0/126；同态W侧外气动力与惯性归属仍最大非Abaqus HOLD。下一唯一动作=S06仅在可获取同模型同态风侧原始时程时核对，否则转S12对导师阅读稿做真实源—图—正文链接而非再拆分同一33周期。未触碰Abaqus/CAE、冻结母本、main、PR合并或昂贵RUN。
