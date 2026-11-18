@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.51**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.52**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -569,3 +569,6 @@
 
 ### 2026-11-18｜v0.32.51 PATCH — S10真实NTM缺箱四次矩等贡献临界值
 - SOURCE=T062真实72行DEL4 Git blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`；RUN=18NTM×2通道按ERA5已覆盖小时5736/1426/2计算，缺失99736h的等贡献临界DEL4为Mx 1085.999499、My 6938.197074 kN·m，均仅为已观测条件DEL4的51.7697%；科研[期刊2行数表](../manuscript/journal-wind-fatigue-results.md) commit [fba575a1](https://github.com/g2066203208-beep/voxel-frontier/commit/fba575a127afed1a38af8f1a27ad0d6205e8a7c4)；T080日志commit [9aca2a38](https://github.com/g2066203208-beep/voxel-frontier/commit/9aca2a38465769cf872ae3f46a524fb4cf0b7f99)。TEST=连接器V8真实源级算术PASS，独立CLI/源SHA256复算NOT_RUN；TAB2 FIG0，缺箱实际物理载荷、Miner、DLC1.2、同态W侧均HOLD；12阶段0/12。不触碰Abaqus/CAE、冻结母本、main、昂贵RUN或PR合并。
+
+### 2026-11-18｜v0.32.52 PATCH — S05真实ESM双方向联合尺度盲留出拒绝测试
+- SOURCE=T079真实ESM 33周期处理谱CSV Git blob `6839e497da8ebc11b15fd901118471ce2b865d2c`；RUN=18训练/15长周期留出，RotD50/100联合minimax k=0.7035259818，30/30长周期指标点<0.8，最大绝对对数误差1.325289；训练36点中5点低于0.8。实物=[Node可运行程序](../experiments/T079/s05_rotd_joint_scale_holdout.cjs) commit [86c033b](https://github.com/g2066203208-beep/voxel-frontier/commit/86c033b7cdb283ca829cc71f1d27396e3215df35)，[T079方法及5行表](../experiments/T079/METHOD_PLAN.md) commit [61872b4](https://github.com/g2066203208-beep/voxel-frontier/commit/61872b45b9f6ee26b559a0424ec1b9759af5171d)，T080过程commit [adb749f](https://github.com/g2066203208-beep/voxel-frontier/commit/adb749fe8a091c5bd91126de7c7bdb18cbb69a0f)。TEST=连接器V8源级算术PASS，原生Node CLI与字节SHA256复算NOT_RUN；TAB5 FIG0，REF/STANDARD/OFFICIAL无新原页；仅真实处理记录与示意谱的数学诊断，非工址设计谱/结构地震物理验收。12阶段0/12、DLC1.2 0/126；最大非Abaqus HOLD=同态W侧气动力时程/惯性归属；未触碰禁止范围、冻结母本、main或PR合并。
