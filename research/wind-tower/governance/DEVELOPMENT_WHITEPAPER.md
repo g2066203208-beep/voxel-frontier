@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.54**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.55**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -579,3 +579,6 @@
 
 ### 2026-11-19｜v0.32.54 PATCH — S12双方向地震谱诊断进入正式六章结论
 - SOURCE=T079已归档IT-2012-0008/IT.NVL 33周期×RotD50/100，原CSV blob `6839e497da8ebc11b15fd901118471ce2b865d2c`；RUN=继承2026-11-18的18训练/15留出及66点解析oracle，不宣称本轮新物理计算。实物=[正式Ch6 §6.1.6](../manuscript/final-thesis/chapters/06_结论与展望.md)，科研commit [08b518f](https://github.com/g2066203208-beep/voxel-frontier/commit/08b518f2688fc5cfbae45428488014b33e1535e2)，Git blob `6cc453abb87c64f0bd49a636b346bc01ac415fcf`。TAB3 FIG0；将前瞻留出与事后oracle分开，并明确示意谱、非规范诊断带、单事件相关性和2026先行研究的贡献边界。TEST=既有V8数值PASS，本文新增正文逻辑核对；原生CLI、原始字节SHA256本轮NOT_RUN。非新地震结构响应、非独立科学物理结果；12阶段晋级0/12、DLC1.2 0/126。最大非Abaqus HOLD=同态真实独立W侧气动力时程与惯性归属。禁止Abaqus/CAE、冻结母本、main、昂贵RUN、PR合并。
+
+### 2026-11-19｜v0.32.55 PATCH — S10真实NTM六seed四次矩聚合顺序偏差
+- SOURCE=T062 `experiments/T062/recomputed-load-fatigue/05_LOAD_DEL_M4_ALL36_RECOMPUTED.csv` blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`；RUN=36条NTM通道真实数据分6组比较先均值后四次幂与先四次幂后均值，后者的四次矩比前者高2.0233%–8.7990%，最大19.202140m/s/Mxt；严格Jensen反例6/6。科研路径 `manuscript/journal-wind-fatigue-results.md` commit `ddb1571ccc9065cadee58b3d781ad963fb858b24` blob `7c6393a40fda1536613464b20c7c20c0cf488fb4`；T080过程commit `33215b0bc3f709a8ac7920d99e9dcece3e3cfe87`。TEST=连接器V8数值PASS，独立CLI/原CSV SHA256 NOT_RUN；TAB6 FIG0，REF/STANDARD/OFFICIAL无新原页；非材料Miner、非未来seed/正式DLC1.2或物理验收；12阶段晋级0/12、DLC1.2 0/126。
