@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.60**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.61**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -599,3 +599,6 @@
 
 ### 2026-11-19 06时｜v0.32.60 PATCH — S10均值载荷与DEL4不足以识别材料均值修正
 - SOURCE=T062真实72行CSV Git blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`；RUN=直接V8取两通道均值极值及对应DEL4，证明雨流幅值对时程常数平移不变而局部材料均值应力并非如此。My两例：100914.155059/22308.608090与199991.209121/14951.700300 kN·m（均值/DEL4），均值排序与DEL排序相反。实物=`manuscript/journal-wind-fatigue-results.md` [科研commit 2718997](https://github.com/g2066203208-beep/voxel-frontier/commit/2718997f48b6ed8d9a0c7667b21c8727634422f4) blob `edb980383fd61a4b252f921084d56541c3e0892e`；[T080日志commit b9c3feb](https://github.com/g2066203208-beep/voxel-frontier/commit/b9c3febab2bf8bd0e97cfe1caf66d1a8e7afc864)。TEST=连接器V8源级PASS，Node CLI及CSV字节SHA256 NOT_RUN；TAB2 FIG0；REF/STANDARD/OFFICIAL无新原页。未得到循环均值—幅值矩阵、局部应力或材料S–N，不可宣称Miner/寿命；12阶段晋级0/12，DLC1.2 0/126；最大非Abaqus HOLD=同步独立W侧气动力时程及惯性归属。禁止范围、冻结母本、main、昂贵RUN、PR合并均未触碰。
+
+### 2026-11-19｜v0.32.61 PATCH — S12期刊摘要及结论证据重构
+- 交付`manuscript/journal-wind-fatigue-results.md`，blob `e8796078b073f963eb7cb4c508f87f4d1870291b`，[commit 3d37d95](https://github.com/g2066203208-beep/voxel-frontier/commit/3d37d958a0bdba8033dd7171c185905f630cc548)。历史真实源统计不变；Abstract和§5重新明确证据层级、跨通道代理反例、气候缺箱部分识别及材料Miner不可识别。RUN=学术正文重构，无新物理或原生CLI，FIG0 TAB0，正式0/12、DLC1.2 0/126，W侧同态HOLD。详见T080过程。
