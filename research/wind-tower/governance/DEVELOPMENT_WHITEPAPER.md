@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.45**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.46**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -552,3 +552,5 @@
 - **v0.32.44 PATCH｜2026-11-18 11时 S05**：纠正白皮书页眉滞后v0.32.42（既有末尾已有v0.32.43实质记录），本轮真实新增OFFICIAL来源核对和长周期目标谱不可识别性构造性证明；科研正文 research/wind-tower/experiments/T079/METHOD_PLAN.md Git blob 72ebde6d86db6c7a110e69bcd8df52f23d93474d，commit da72bd53b4544bb6d1afcb533a8b7a4e05891931；过程 research/wind-tower/experiments/T079/PROCESS_LOG.md commit d1bb9d1e8a6666092fd92ad6a7b8ad09b89e69b1。官方SAMR标准登记、湖南省地震局摘要和新疆地震局2026-02-27查询答复已核；标准授权全文/场址输出/地勘未得。数学反例PASS，非两条合规设计谱或新地震物理RUN；FIG0 TAB0，12阶段0/12、DLC1.2 0/126，同态W侧HOLD。
 
 - **v0.32.45 PATCH｜2026-11-18 12时 S12**：SOURCE=T062真实72行DEL4 CSV blob 1b334e9afdbd792a2f4b1a41cdb150dc3698352d，历史SHA256 b362bcd7c37ccc56e21035de39448b5e761ec03f371b6b2f3eb30f41b013630d（本轮未重哈希）；科研Ch3 §3.7.29六行ETM/NTM同风速/seed编号载荷DEL4比值表 commit 723856a451c91e9cd75725828dd74f6722277b52，blob 06eef8791779fcaab41e3d31138dddd905913737；36/36历史标签对ETM>NTM，范围1.192757–2.140207；V8源级计算PASS、独立CLI NOT_RUN，FIG0 TAB6；同seed编号不等于物理同态，正式DLC1.2与材料Miner/独立W侧HOLD，12阶段0/12。T080过程commit 37682603362001ab248999a777b7491a2b29ffc2。禁止Abaqus/CAE、冻结母本、main、昂贵RUN及PR合并。
+
+- **v0.32.46 PATCH｜2026-11-18 14时 S11**：SOURCE=T062 36工况×2通道双处理版本72行，Git blob `dd7acbfc07c7db946a438ac9aa8cdc734b3f3fa7`（字节SHA256未重算）；RUN=连接器V8穷举630个两工况集合，四情景maximin最优覆盖0.876210598，三工况覆盖四情景各100%，因此95%与100%阈值最少均需3个历史工况；旧My冠军对修正峰值仅保留0.858330987。程序 `experiments/T080/s11_source_robust_case_cover.cjs` [commit 392b0f9](https://github.com/g2066203208-beep/voxel-frontier/commit/392b0f90b8728eebd4e959da133f81e4b6d7bb37)；[期刊四行表](../manuscript/journal-wind-fatigue-results.md) [commit cbd602c](https://github.com/g2066203208-beep/voxel-frontier/commit/cbd602cc88396320c0f53757c4a58be7dc4d81fa)、blob `f03987dd75709e75105b3f07776c3d9936c88dca`；[T080过程](../experiments/T080/PROCESS_LOG.md) commit `ad8f07bfcb0811c314b8d09b9aca3b3c854f597d`。源级实算PASS、独立Node CLI NOT_RUN；FIG0 TAB4，REF/STANDARD/OFFICIAL无新增；只限历史load-DEL两源筛查，正式DLC1.2=0/126、12阶段晋级0/12，材料Miner/同态独立W侧HOLD。禁止Abaqus/CAE、冻结母本、main、昂贵RUN及PR合并。
