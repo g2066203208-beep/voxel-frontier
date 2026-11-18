@@ -1104,3 +1104,23 @@ A screening DEL is a nonlinear functional of the entire cycle-range distribution
 **Falsifiable implication.** For the observed tower-base bending histories, fourth-power moments are already concentrated in a minority of cycles, especially for My; increasing the *diagnostic* exponent to 10 makes the moment nearly entirely controlled by a few largest weighted ranges. In the most concentrated observed NTM My case at m=10, the largest one percent accounts for 99.998737% of the moment, and a **single cycle contributes 61.7006%**. This is not a universal law for wind turbines, and it is not evidence that any structural material has an S–N slope of 10. It means that changing the cycle closure rule, filtering, simulation length, or treatment of extreme transients may change the ranking much more than a typical-cycle comparison would suggest. The effective-cycle number is a **concentration index, not the count of independent statistical realizations**; the 18 cases within each class are finite observed simulations, not an independent site-level uncertainty distribution. The result cannot be extrapolated to Miner damage without local material stress ranges/means and a justified material-specific law.
 
 **Verification and uncertainty.** Source-level V8 calculation read all 48,070 rows and checked 72 groups, positive moment sums, and top-share bounds; independently reproducible Node implementation: `experiments/T080/s10_rainflow_tail_concentration.cjs`. Node CLI execution and fresh source-byte SHA256 verification are pending. Numeric rounding of the displayed percentages is at most 0.0005 percentage points; physical uncertainty due to cycle closure, 600-s sample length, filtering, controller identity, wind-bin/seed coverage and local stress transfer is not bounded here. This is a load-screening analysis (RUN=source-level statistics; TAB=8; FIG=0; no new STANDARD/OFFICIAL clause or external REF page verified), not physical fatigue or design certification.
+
+
+### 4.X+1. A prospective rejection rule for extreme-cycle censoring (2026-11-18)
+
+**Question.** If an analyst removes the highest-contribution 1% of observed rainflow cycles as apparent outliers, how much can the load DEL change even when the remaining time series is untouched? This is a deterministic counterfactual on the already measured 48,070-cycle archive, **not** a new simulation or an estimate of how many cycles are spurious. For fixed equivalent-cycle denominator N_eq and the same exponent m, let C be the share of the original weighted moment carried by the deleted cycles. Then exactly
+
+\[\frac{DEL_{\mathrm{censored}}}{DEL_{\mathrm{full}}}=(1-C)^{1/m},\qquad \frac{DEL_{\mathrm{full}}-DEL_{\mathrm{censored}}}{DEL_{\mathrm{full}}}=1-(1-C)^{1/m}.\]
+
+Applying this identity to the **published three-decimal-percent median top-1% contribution** in the immediately preceding table gives the following *median-share plug-in* diagnostics. Because there are 18 cases per class and the nonlinear transform is applied to the summary median, these are not claimed to be independently recomputed medians of all 18 individual DEL ratios; the rounding uncertainty of C is at most 0.0005 percentage points.
+
+| Load channel | Class | Diagnostic m | Median top-1% moment share C | Plug-in DEL reduction if those cycles are removed |
+|---|---|---:|---:|---:|
+| TwrBsMyt | ETM | 4 | 72.639% | 27.676% |
+| TwrBsMyt | NTM | 4 | 76.094% | 30.076% |
+| TwrBsMyt | ETM | 10 | 98.531% | 34.430% |
+| TwrBsMyt | NTM | 10 | 98.804% | 35.765% |
+
+For the single historically observed NTM My case with top-1% share 99.998737% (unrounded historical statistic), removing that set while holding N_eq fixed gives a **67.630%** DEL reduction at m=10; deleting only its largest single cycle (61.7006% share) gives a **9.151%** reduction. These are algebraic sensitivity scenarios conditioned on the historical cycles, not evidence that either deletion is scientifically permissible. A real filtering or rainflow-closure change can also change *other* cycle ranges/counts and the denominator, so the identity does not quantify the total effect of such a pipeline change. The result **rejects the unqualified practice of deleting extreme rainflow cycles as outliers without source-level transient and closure investigation**. It is a screening load-moment result, not material S–N calibration, local-stress Miner life, IEC compliance or wind–earthquake validation.
+
+**Independent arithmetic check.** For C=0 the relative DEL reduction is exactly zero; for C approaching one it approaches one; it is monotone increasing in C for m>0. The four table entries use the prior 72-group actual-source result, not four new physical observations. No new official/standard page is claimed.
