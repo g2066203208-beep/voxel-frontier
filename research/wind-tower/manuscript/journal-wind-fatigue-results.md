@@ -1084,3 +1084,23 @@ The new executable [S06 six-DOF source-level gate](../experiments/T080/s06_sixdo
 | Additional +100 N Y at interface, transferred to base | Mx=−11,200 N·m | −11,200 N·m | PASS |
 
 **Scope and falsifiability.** These are exact algebraic unit tests using real tower *geometry* but synthetic forces, not new physical wind simulations, source-file recovery, or independent validation of an OpenFAST output channel. In particular, the historical four-ETM/31-segment archive cannot be promoted to a synchronized independent aerodynamic load history solely because its six channels satisfy wrench arithmetic. The admissibility gate remains HOLD until original 158 m OpenFAST time-series provenance explicitly resolves force-versus-reaction definitions, RNA/tower inertia, frame rotation, reference points, and identical initial state/time grid. It also cannot infer B/W/E/WE interaction, material local stress, Miner damage, or design-code compliance. No new REF/STANDARD/OFFICIAL original pages are asserted; the two 2026 hybrid-tower wind–earthquake/PT papers remain prior art, not novelty exclusions overturned by this algebraic test.
+
+
+### 4.X. Concentration of the observed rainflow load moment in a small number of cycles (2026-11-18)
+
+A screening DEL is a nonlinear functional of the entire cycle-range distribution, not a property of its average cycle. To quantify the effective information support of the existing 36-case archive, we directly re-evaluated the **48,070 historical rainflow cycles** (36 wind cases × 2 base-moment channels; source Git blob `d34adf0caaaecb319fc262d3ba425e77b1f0f086`; historically registered SHA256 `067c60cea61b35398edd186ff509fe759d1c4420395f082d06c666d92d897ecb`). For each case/channel and diagnostic exponent m, define cycle contribution `w_i=n_i(Delta M_i)^m`, its normalized share `p_i=w_i/sum_j w_j`, and effective cycle number `N_eff=1/sum_i p_i^2`. The top-one-percent contribution `C_1%=sum_(largest ceil(0.01 N) weights) p_i` is computed **within each case/channel**, and medians are taken over the 18 distinct historical cases of each turbulence class. The ceiling convention means that the selected number of cycles is not identical across cases.
+
+| m | Channel | Class | Median C1% | Range C1% | Median Neff |
+|---:|---|---|---:|---:|---:|
+| 4 | TwrBsMxt | ETM | 47.451% | 31.917–62.098% | 22.06 |
+| 4 | TwrBsMxt | NTM | 51.133% | 33.958–64.328% | 19.79 |
+| 4 | TwrBsMyt | ETM | 72.639% | 50.230–94.968% | 10.72 |
+| 4 | TwrBsMyt | NTM | 76.094% | 47.096–96.638% | 9.64 |
+| 10 | TwrBsMxt | ETM | 94.538% | 76.170–98.485% | 3.81 |
+| 10 | TwrBsMxt | NTM | 96.106% | 83.059–99.460% | 3.48 |
+| 10 | TwrBsMyt | ETM | 98.531% | 85.810–99.996% | 2.87 |
+| 10 | TwrBsMyt | NTM | 98.804% | 86.427–99.999% | 2.94 |
+
+**Falsifiable implication.** For the observed tower-base bending histories, fourth-power moments are already concentrated in a minority of cycles, especially for My; increasing the *diagnostic* exponent to 10 makes the moment nearly entirely controlled by a few largest weighted ranges. In the most concentrated observed NTM My case at m=10, the largest one percent accounts for 99.998737% of the moment, and a **single cycle contributes 61.7006%**. This is not a universal law for wind turbines, and it is not evidence that any structural material has an S–N slope of 10. It means that changing the cycle closure rule, filtering, simulation length, or treatment of extreme transients may change the ranking much more than a typical-cycle comparison would suggest. The effective-cycle number is a **concentration index, not the count of independent statistical realizations**; the 18 cases within each class are finite observed simulations, not an independent site-level uncertainty distribution. The result cannot be extrapolated to Miner damage without local material stress ranges/means and a justified material-specific law.
+
+**Verification and uncertainty.** Source-level V8 calculation read all 48,070 rows and checked 72 groups, positive moment sums, and top-share bounds; independently reproducible Node implementation: `experiments/T080/s10_rainflow_tail_concentration.cjs`. Node CLI execution and fresh source-byte SHA256 verification are pending. Numeric rounding of the displayed percentages is at most 0.0005 percentage points; physical uncertainty due to cycle closure, 600-s sample length, filtering, controller identity, wind-bin/seed coverage and local stress transfer is not bounded here. This is a load-screening analysis (RUN=source-level statistics; TAB=8; FIG=0; no new STANDARD/OFFICIAL clause or external REF page verified), not physical fatigue or design certification.
