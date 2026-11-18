@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.40**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.41**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -538,3 +538,5 @@
 
 ### 2026-11-18 07时｜v0.32.40 PATCH — S12 Ch3风侧物理归属与参考点正文
 - 实质成果：[现行第三章§3.8.Y](../manuscript/final-thesis/chapters/03_场址风环境与整机随机风控制载荷.md)，科研commit [9ccba8c](https://github.com/g2066203208-beep/voxel-frontier/commit/9ccba8ceef7b1321c84f99e0b0e6fd94753baf16)，Git blob 1e51b7b105b9ca907ae26168de6c994f047b6e85；SOURCE=既有36风/四ETM×31段截面源与158m几何，程序blob 9f7db2f641a4a8a02fb6be0ab12e1cb0e92997bc；RUN=继承历史Node11项解析测试，新增正式论文连续论证/三行证据判别表/参考点误差公式，非新物理RUN；REF/STANDARD/OFFICIAL无新原页，FIG0 TAB3。真实风侧独立气动力/惯性分离/同态WE/材料Miner仍HOLD；12阶段0/12、DLC1.2 0/126；未触碰Abaqus/CAE、冻结母本、main、昂贵RUN或PR合并。
+
+- **v0.32.41 PATCH｜2026-11-18 09时｜S10真实18NTM周向DEL固定方位代表性：T062 2880行，blob 499ce24865ccd42f73471aab4696990da94b79ac；18工况×10测点×16方位，m4/m10各180配对，0°对逐组周向最大比值min=0.9997383832/0.9992246875，mean=0.9999864135/0.9999551824，控制方位0°/180°为170/10和160/20。最差低估0.026162%/0.077531%；源级V8逐行计算PASS、CLI NOT_RUN、原CSV SHA256未重算。科学边界：仅固定局部坐标和现有NTM历史、非独立180试验、非材料Miner或未来风向泛化。正式Ch4实质正文/2行数表 commit aee53be58481bcf07dddd18fe5a00712cec15f9e，blob 5a05b3a0ce8365452d6cc7329bb14de639c79e75；REF/STANDARD/OFFICIAL无新原页；FIG0 TAB2；12阶段晋级0/12，DLC1.2 0/126；同态W侧外气动力/惯性HOLD。禁止范围、冻结母本、main、PR合并、昂贵RUN均未触碰。
