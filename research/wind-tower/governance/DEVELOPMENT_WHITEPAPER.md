@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.59**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.60**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -596,3 +596,6 @@
 
 ### 2026-11-19 05时｜v0.32.59 PATCH — S10真实双通道最大DEL4 seed索引不共现反例
 - SOURCE=T062真实72行DEL4，Git blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`。RUN=V8源级六组配对计算，三组Mx/My最大DEL4来自不同seed；9.343881m/s ETM的Mx最大S04对应My仅为该组My最大值的82.3630%。[可运行程序](https://github.com/g2066203208-beep/voxel-frontier/commit/21bc650c57703b6a85616392c852458fc3680fc4)、[期刊正文及6行表](https://github.com/g2066203208-beep/voxel-frontier/commit/731e190fe6bcb569290086bcb6b48e756f72a72f)、[T080过程](https://github.com/g2066203208-beep/voxel-frontier/commit/8ce5daad697b3e5c9b0979d26c3809f5f320e93f)。TEST=V8真实数值PASS，Node CLI/CSV字节SHA256 NOT_RUN；TAB6 FIG0；REF/标准官方原页无新增。seed极值不共现只反驳通道共用最不利seed的强假设，不能由DEL推断时域同时峰值或材料Miner。12阶段晋级0/12，DLC1.2 0/126；同步真实W侧时程/惯性HOLD，未触碰禁区。
+
+### 2026-11-19 06时｜v0.32.60 PATCH — S10均值载荷与DEL4不足以识别材料均值修正
+- SOURCE=T062真实72行CSV Git blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`；RUN=直接V8取两通道均值极值及对应DEL4，证明雨流幅值对时程常数平移不变而局部材料均值应力并非如此。My两例：100914.155059/22308.608090与199991.209121/14951.700300 kN·m（均值/DEL4），均值排序与DEL排序相反。实物=`manuscript/journal-wind-fatigue-results.md` [科研commit 2718997](https://github.com/g2066203208-beep/voxel-frontier/commit/2718997f48b6ed8d9a0c7667b21c8727634422f4) blob `edb980383fd61a4b252f921084d56541c3e0892e`；[T080日志commit b9c3feb](https://github.com/g2066203208-beep/voxel-frontier/commit/b9c3febab2bf8bd0e97cfe1caf66d1a8e7afc864)。TEST=连接器V8源级PASS，Node CLI及CSV字节SHA256 NOT_RUN；TAB2 FIG0；REF/STANDARD/OFFICIAL无新原页。未得到循环均值—幅值矩阵、局部应力或材料S–N，不可宣称Miner/寿命；12阶段晋级0/12，DLC1.2 0/126；最大非Abaqus HOLD=同步独立W侧气动力时程及惯性归属。禁止范围、冻结母本、main、昂贵RUN、PR合并均未触碰。
