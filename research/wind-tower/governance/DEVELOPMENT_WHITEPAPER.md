@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.57**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.58**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -590,3 +590,6 @@
 
 ### 2026-11-19 03时｜v0.32.57 PATCH — S11真实NTM速度-only双通道代理拒绝
 - SOURCE=T062 72行历史CSV blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`；RUN=18NTM×Mx/My六seed四次矩聚合，三风速整组留出，比较线性/对数线性/均值基线：My高风速外推+73.3024%/+146.0329%，My中风速插值−16.3591%/−17.1197%，Mx对数线性三折误差−0.9457%至+4.6611%，拒绝跨通道通用代理。源级程序 [commit a13c1f9](https://github.com/g2066203208-beep/voxel-frontier/commit/a13c1f948ae401e5c4289fd72534a5e6e56138cd) `experiments/T080/s11_ntm_windspeed_group_holdout_surrogate.cjs`；[期刊6行表与正文 commit 793b956](https://github.com/g2066203208-beep/voxel-frontier/commit/793b9563d7ba60a539f14e514376d6c022510f66)，blob `4f90e5e2baaec354bddb271bb560613042417454`；[T080过程](../experiments/T080/PROCESS_LOG.md) commit `be2277773cced4a26c311e78b78a22e13cdc7f0f`。TEST=连接器V8真实CSV计算PASS，Node CLI/源字节SHA256 NOT_RUN；TAB6 FIG0；REF/STANDARD/OFFICIAL无新增。三风速、无独立湍流描述符，非物理代理验证、材料Miner或正式DLC1.2；12阶段晋级0/12、正式DLC1.2 0/126；W侧同步独立气动力时程及惯性归属HOLD。禁止范围/冻结母本/main/昂贵RUN/PR合并未触碰。
+
+### 2026-11-19｜v0.32.58 PATCH — S12正式第五章代理通道差异与约束准入
+- SOURCE=T062真实NTM 72行CSV Git blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`；继承六行整风速组盲留出数据，RUN=历史V8源级数值PASS，本轮没有新物理计算；[Ch5§5.4.7正式正文](../manuscript/final-thesis/chapters/05_疲劳控制参数敏感性与结构优化.md) commit [ad0ceb1a](https://github.com/g2066203208-beep/voxel-frontier/commit/ad0ceb1abc00b81a47fb75a4dc560368583e1ccf)，新增通道差异的优化单侧上界准入与UNKNOWN/REJECT规则；TAB6 FIG0；原生CLI/原CSV SHA256 NOT_RUN；12阶段0/12、DLC1.2 0/126，材料Miner及同态W/WE HOLD；禁止范围未触碰。
