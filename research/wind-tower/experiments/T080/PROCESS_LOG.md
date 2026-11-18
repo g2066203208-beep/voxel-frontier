@@ -1,3 +1,8 @@
+## 2026-11-18 15时｜S11真实ERA5风箱暴露与NTM来源缺口图（拟v0.32.47）
+- READ-BEFORE-WRITE：PR#42 Open/Draft，基线HEAD d052d5c8a270cc8bf40a3fb7fcd125d21c3b21fe；已读研究AGENTS、指挥室、白皮书v0.32.46、现行MASTER/STATUS、12阶段、T079/T080及期刊稿。既有缺箱识别性与风箱覆盖证明不重复计算，本轮交付可入论文的原始21箱可视化。
+- SOURCE=T062 126行21风箱×6 seed覆盖CSV，Git blob 1e6b774443606200156f40d57352ce097a88ee35（本轮未计算字节SHA256）。RUN=GitHub连接器JS读取原CSV、按S01去重每箱6行，21箱合计106900h，历史三箱7164h=6.7016%，4–9m/s五箱95402h=89.2442%；三条整数总和断言PASS。FIG=1张真实源驱动可编辑SVG manuscript/figures/S11_ERA5_21BIN_EXPOSURE_VS_NTM_SCREENING_20261118.svg，commit 339b48c7dc27f51de4a24f49f04ceb940789e499；期刊图注及来源/限制commit 169ccc36173cc01d5205402be9fb0873b5f4e20a；TAB=0，REF/STANDARD/OFFICIAL无新增原页。
+- TEST=源级21箱去重及106900/7164/95402断言PASS；浏览器/论文PDF视觉验收NOT_RUN，独立Node CLI NOT_RUN；SVG是历史真实ERA5小时的图，不是新气动/结构RUN。ERA5再分析不等于实测；风箱暴露不等于疲劳损伤，DLC1.2=0/126，12阶段晋级0/12，局部Miner/同态W侧独立气动力及惯性归属HOLD。未触碰Abaqus/CAE、冻结母本、main、昂贵RUN或PR合并。
+
 ## 2026-11-18 14时｜S11两种雨流来源下的精确控制工况覆盖否证（拟v0.32.46）
 - READ-BEFORE-WRITE：PR#42 Open/Draft，开工HEAD a0739a2b94a14cdc09df3acd32dcc4a2fbc7df84；已读根/研究AGENTS、指挥室最近交接、白皮书v0.32.45、现行MASTER/STATUS、12阶段、T079/T080与S11既有风速整组留出程序，故不重复既有风速外推统计。
 - SOURCE=T062 72行36工况×2通道历史legacy/corrected DEL4，Git blob dd7acbfc07c7db946a438ac9aa8cdc734b3f3fa7；两源同工况而非独立随机试验；原始CSV字节SHA256本轮未重算。RUN=连接器V8逐行实算四情景最大值并穷举36选2=630组合；最优两工况{U11p4_ETM_S04,U19p202140_ETM_S01}最坏保留0.876210597862838，严格不能达到四情景95%；三工况{U19p202140_ETM_S02,U11p4_ETM_S03,U11p4_ETM_S04}四情景各100%，故最小95%/100%覆盖均为3。My只选旧冠军S03对修正峰值保留0.8583309873，构成来源盲选反例。
