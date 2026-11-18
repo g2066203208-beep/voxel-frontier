@@ -1151,3 +1151,19 @@ The optimal two-case *maximin* set is `{U11p4_ETM_S04, U19p202140_ETM_S01}`, wit
 ![ERA5 wind-bin exposure versus archived NTM support](figures/S11_ERA5_21BIN_EXPOSURE_VS_NTM_SCREENING_20261118.svg)
 
 **Figure caption.** The 21 non-overlapping 1 m/s wind bins in [4,25) m/s contain 106,900 of the 184,080 ERA5-derived hourly estimates (2005–2025). Each bin is counted **once**, not six times for the six planned seed slots. The five [4,9) m/s bins account for 95,402 h, or **89.2442%** of the diagnostic operating-range exposure, yet have no archived NTM source. The three historically screened NTM bins ([9,10), [11,12), [19,20)) represent only 7,164 h (**6.7016%**). Source: `experiments/T062/S10_ERA5_21BIN_6SEED_NTM_SOURCE_COVERAGE_20261031.csv`, Git blob `1e6b774443606200156f40d57352ce097a88ee35`; figure source is editable SVG. The coverage labels describe source availability, **not** formally validated IEC DLC1.2 results (0/126). Exposure concentration does not prove fatigue-damage concentration, because unobserved load moments and operating states remain unknown. The missing 4–9 m/s region must not be filled by extrapolating the three observed NTM speeds without independent verification.
+
+
+### Spatial rank transfer across four archived ETM cases (2026-11-18; descriptive diagnostic)
+
+**Question.** Does high agreement in the full spatial ordering of gross-section fatigue-equivalent stress imply that the highest-ranked monitoring cells are interchangeable between wind cases? We directly re-read the archived 1,984-row T077 table (Git blob `b5effa2a493cec0a9af8a10a3b93df0ff997d2d0`), with four ETM cases × 31 segments × 16 fixed local azimuths, and used `DEL_m4_MPa` at each matched `segment|azimuth_deg` key. Each pair has 496 matched cells. Spearman's coefficient is the Pearson correlation of ascending average ranks (ties averaged). The top-25 overlap counts exact matching cell IDs among the 25 largest DEL4 values; top-25 is an exploratory 5.04%-of-grid diagnostic, **not a code limit**.
+
+| ETM case pair (U in m/s; S seed) | Spearman ρ | Pearson r | Top-25 common cells / 25 | Maximum-DEL cell in each case |
+|---|---:|---:|---:|---|
+| 9.343881 S06 / 11.4 S04 | 0.992459 | 0.997110 | 17 | CSEG05 0° / CSEG04 0° |
+| 9.343881 S06 / 19.202140 S04 | 0.981579 | 0.981939 | 14 | CSEG05 0° / CSEG03 0° |
+| 9.343881 S06 / 19.202140 S06 | 0.986026 | 0.985796 | 13 | CSEG05 0° / CSEG04 0° |
+| 11.4 S04 / 19.202140 S04 | 0.992981 | 0.988519 | 19 | CSEG04 0° / CSEG03 0° |
+| 11.4 S04 / 19.202140 S06 | 0.991027 | 0.988097 | 18 | CSEG04 0° / CSEG04 0° |
+| 19.202140 S04 / 19.202140 S06 | 0.992273 | 0.994071 | 23 | CSEG03 0° / CSEG04 0° |
+
+**Falsifiable finding and counterexample.** All six pairwise rank correlations exceed 0.9815, yet the top-25 overlap ranges from 13/25 to 23/25; the single maximum cell changes from CSEG03 to CSEG05 across the four cases. Thus global spatial rank agreement does **not** guarantee preservation of a fixed small control-cell subset. The same-speed 19.202140 m/s two-seed pair has 23/25 overlap, whereas cross-speed pairs can have 13/25; these are descriptive comparisons, not evidence of a causal wind-speed effect, because seed and speed are confounded in three of the four case identities. All 496 spatial cells within each case share the same 600-s time history, so no 496-independent-sample confidence intervals are claimed. Fixed local azimuth is not a global wind direction; this is gross elastic nominal-stress DEL4, not concrete/rebar/PT local fatigue, Miner life, or DLC1.2 validation. Independent calculation was executed in the connector JavaScript runtime; standalone CLI, original CSV byte SHA256 and external physical replication were **not run**. SOURCE=T077 CSV; RUN=complete 1,984-row pairwise rank/top-25 analysis; TAB=6 rows; FIG=none; REF/STANDARD/OFFICIAL=no new primary page; physical acceptance=HOLD.
