@@ -241,3 +241,7 @@ READ-BEFORE-WRITE：PR#42 Open/Draft，基线HEAD 8580b11c14c75031f4e3a8c3adf0ea
 
 ## 2026-11-18 18时｜S11真实ETM空间排序迁移与top25反例
 READ-BEFORE-WRITE：PR#42 Open/Draft，研究AGENTS、COMMAND_ROOM、白皮书v0.32.47、正式STATUS、12阶段、T079/T080及既有S11程序已读；MASTER旧路径404，不宣称已读。SOURCE=T077 1984行4ETM×31段×16方位CSV blob b5effa2a493cec0a9af8a10a3b93df0ff997d2d0，历史字节SHA256未重算。RUN=连接器JS读取1984行，六对496匹配单元Spearman ρ=0.981579–0.992981，top25交集13–23/25，最大DEL单元在CSEG03–05间迁移；高全域相关不保证少量控制点可迁移。科研正文/六行表 commit 43eff3b0237e0ab3c0a6f76c53c94e4bcc8a5e95。TEST=源级实算；独立CLI NOT_RUN；同风速双seed 23/25，跨风速混杂不可推因果，496空间点非独立seed。REF/STANDARD/OFFICIAL无新增；FIG0 TAB6；正式DLC1.2 0/126，12阶段晋级0/12，材料局部Miner与同态独立W侧气动力/惯性HOLD。无Abaqus/CAE、冻结母本、main、昂贵RUN或PR合并。
+
+
+## 2026-11-19 02时｜S11真实NTM跨风速seed标签迁移拒绝测试
+READ-BEFORE-WRITE基线HEAD=5fe86619632e026aceaf66d4eabaad4f4c3e827d，PR#42 Open/Draft；根/研究AGENTS、指挥室、白皮书v0.32.55、正式STATUS、12阶段、T079/T080、期刊稿已读；MASTER旧路径404（不冒称已读）。SOURCE=T062 72行真实DEL4 CSV Git blob 1b334e9afdbd792a2f4b1a41cdb150dc3698352d，NTM 18工况×2通道。RUN=连接器V8六组整风速留出，训练两风速按seed索引DEL4四次矩选top，测试第三风速峰值捕获；Mx三组均100%，My 9.343881m/s仅96.0892%，对应训练S04与测试S01不一致；六组Spearman -0.142857至1。程序commit d352608d640e1ad5daf48763ee978b3d03a350d6；期刊六行表及论证commit 7a978315e95da9acfcab5f6f9060030574eeb060。TEST=V8源级PASS；原生Node CLI与原CSV字节SHA256 NOT_RUN。seed标签跨风速不必对应同一湍流随机过程，六折重叠且非独立，不得声称物理泛化/代理PASS。REF/STANDARD/OFFICIAL无新增原页；TAB6 FIG0。12阶段晋级0/12、DLC1.2=0/126；最大非Abaqus HOLD=真实同态独立W侧气动力时程与惯性归属。下一唯一动作=S11将真实风速和可获得的湍流物理描述符作为代理输入并执行跨风速组拒绝测试；若缺必要描述符转S12期刊科学贡献边界整合。禁止Abaqus/CAE、冻结母本、main、昂贵RUN与PR合并。
