@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="510" viewBox="0 0 1080 510" role="img" aria-label="ERA5 21 operating wind bins with historical NTM source coverage">
+<rect width="1080" height="510" fill="#fff"/>
+<text x="78" y="39" font-family="Arial,sans-serif" font-size="23" font-weight="700" fill="#173341">Operating wind exposure versus archived NTM screening support</text>
+<text x="78" y="64" font-family="Arial,sans-serif" font-size="15" fill="#526571">ERA5 2005–2025 | 1 m/s bins, [4,25) m/s | 106,900 operating-range hours</text>
+<g font-family="Arial,sans-serif"><line x1="68" y1="390" x2="994" y2="390" stroke="#d8e0e4"/><text x="67" y="395" font-size="13" text-anchor="end" fill="#3e5360">0k</text>
+<line x1="68" y1="295" x2="994" y2="295" stroke="#d8e0e4"/><text x="67" y="300" font-size="13" text-anchor="end" fill="#3e5360">10k</text>
+<line x1="68" y1="200" x2="994" y2="200" stroke="#d8e0e4"/><text x="67" y="205" font-size="13" text-anchor="end" fill="#3e5360">20k</text>
+<line x1="68" y1="105" x2="994" y2="105" stroke="#d8e0e4"/><text x="67" y="110" font-size="13" text-anchor="end" fill="#3e5360">30k</text><rect x="78" y="134.19" width="31" height="255.81" rx="2" fill="#bd6c44"/><text x="93.5" y="412" font-size="12" text-anchor="middle" fill="#263c48">4</text>
+<rect x="121" y="154.69" width="31" height="235.31" rx="2" fill="#bd6c44"/><text x="136.5" y="412" font-size="12" text-anchor="middle" fill="#263c48">5</text>
+<rect x="164" y="200.06" width="31" height="189.94" rx="2" fill="#bd6c44"/><text x="179.5" y="412" font-size="12" text-anchor="middle" fill="#263c48">6</text>
+<rect x="207" y="252.56" width="31" height="137.44" rx="2" fill="#bd6c44"/><text x="222.5" y="412" font-size="12" text-anchor="middle" fill="#263c48">7</text>
+<rect x="250" y="302.17" width="31" height="87.83" rx="2" fill="#bd6c44"/><text x="265.5" y="412" font-size="12" text-anchor="middle" fill="#263c48">8</text>
+<rect x="293" y="335.51" width="31" height="54.49" rx="2" fill="#237d89"/><text x="308.5" y="412" font-size="12" text-anchor="middle" fill="#263c48">9</text>
+<rect x="336" y="360.08" width="31" height="29.92" rx="2" fill="#bd6c44"/><text x="351.5" y="412" font-size="12" text-anchor="middle" fill="#263c48">10</text>
+<rect x="379" y="376.45" width="31" height="13.55" rx="2" fill="#237d89"/><text x="394.5" y="412" font-size="12" text-anchor="middle" fill="#263c48">11</text>
+<rect x="422" y="383.60" width="31" height="6.40" rx="2" fill="#bd6c44"/><text x="437.5" y="412" font-size="12" text-anchor="middle" fill="#263c48">12</text>
+<rect x="465" y="387.31" width="31" height="2.69" rx="2" fill="#bd6c44"/><text x="480.5" y="412" font-size="12" text-anchor="middle" fill="#263c48">13</text>
+<rect x="508" y="388.80" width="31" height="1.20" rx="2" fill="#bd6c44"/><text x="523.5" y="412" font-size="12" text-anchor="middle" fill="#263c48">14</text>
+<rect x="551" y="389.42" width="31" height="0.58" rx="2" fill="#bd6c44"/><text x="566.5" y="412" font-size="12" text-anchor="middle" fill="#263c48">15</text>
+<rect x="594" y="389.75" width="31" height="0.25" rx="2" fill="#bd6c44"/><text x="609.5" y="412" font-size="12" text-anchor="middle" fill="#263c48">16</text>
+<rect x="637" y="389.87" width="31" height="0.13" rx="2" fill="#bd6c44"/><text x="652.5" y="412" font-size="12" text-anchor="middle" fill="#263c48">17</text>
+<rect x="680" y="389.99" width="31" height="0.01" rx="2" fill="#bd6c44"/><text x="695.5" y="412" font-size="12" text-anchor="middle" fill="#263c48">18</text>
+<rect x="723" y="389.98" width="31" height="0.02" rx="2" fill="#237d89"/><text x="738.5" y="412" font-size="12" text-anchor="middle" fill="#263c48">19</text>
+<rect x="766" y="390.00" width="31" height="0.00" rx="2" fill="#bd6c44"/><text x="781.5" y="412" font-size="12" text-anchor="middle" fill="#263c48">20</text>
+<rect x="809" y="390.00" width="31" height="0.00" rx="2" fill="#bd6c44"/><text x="824.5" y="412" font-size="12" text-anchor="middle" fill="#263c48">21</text>
+<rect x="852" y="390.00" width="31" height="0.00" rx="2" fill="#bd6c44"/><text x="867.5" y="412" font-size="12" text-anchor="middle" fill="#263c48">22</text>
+<rect x="895" y="390.00" width="31" height="0.00" rx="2" fill="#bd6c44"/><text x="910.5" y="412" font-size="12" text-anchor="middle" fill="#263c48">23</text>
+<rect x="938" y="390.00" width="31" height="0.00" rx="2" fill="#bd6c44"/><text x="953.5" y="412" font-size="12" text-anchor="middle" fill="#263c48">24</text>
+<text x="540" y="448" font-size="14" text-anchor="middle" fill="#304550">Wind-speed bin lower edge (m/s)</text>
+<text transform="translate(21,267) rotate(-90)" font-size="14" text-anchor="middle" fill="#304550">ERA5 hourly count</text>
+<rect x="690" y="82" width="14" height="14" fill="#237d89"/><text x="712" y="94" font-size="13" fill="#344956">Archived NTM screening only</text>
+<rect x="690" y="102" width="14" height="14" fill="#bd6c44"/><text x="712" y="114" font-size="13" fill="#344956">No archived NTM source</text>
+<rect x="80" y="463" width="918" height="32" rx="4" fill="#eef3f4"/>
+<text x="94" y="484" font-size="14" fill="#173341">4–9 m/s: 95,402 h (89.24%)   |   Archived 3 bins: 7,164 h (6.70%)   |   DLC1.2 validated: 0/126</text>
+</g>
+<!-- SOURCE research/wind-tower/experiments/T062/S10_ERA5_21BIN_6SEED_NTM_SOURCE_COVERAGE_20261031.csv; Git blob 1e6b774443606200156f40d57352ce097a88ee35; each wind bin deduplicated across six seed slots; no fatigue-damage inference. -->
+</svg>
