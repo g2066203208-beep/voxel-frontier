@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.52**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.53**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -572,3 +572,6 @@
 
 ### 2026-11-18｜v0.32.52 PATCH — S05真实ESM双方向联合尺度盲留出拒绝测试
 - SOURCE=T079真实ESM 33周期处理谱CSV Git blob `6839e497da8ebc11b15fd901118471ce2b865d2c`；RUN=18训练/15长周期留出，RotD50/100联合minimax k=0.7035259818，30/30长周期指标点<0.8，最大绝对对数误差1.325289；训练36点中5点低于0.8。实物=[Node可运行程序](../experiments/T079/s05_rotd_joint_scale_holdout.cjs) commit [86c033b](https://github.com/g2066203208-beep/voxel-frontier/commit/86c033b7cdb283ca829cc71f1d27396e3215df35)，[T079方法及5行表](../experiments/T079/METHOD_PLAN.md) commit [61872b4](https://github.com/g2066203208-beep/voxel-frontier/commit/61872b45b9f6ee26b559a0424ec1b9759af5171d)，T080过程commit [adb749f](https://github.com/g2066203208-beep/voxel-frontier/commit/adb749fe8a091c5bd91126de7c7bdb18cbb69a0f)。TEST=连接器V8源级算术PASS，原生Node CLI与字节SHA256复算NOT_RUN；TAB5 FIG0，REF/STANDARD/OFFICIAL无新原页；仅真实处理记录与示意谱的数学诊断，非工址设计谱/结构地震物理验收。12阶段0/12、DLC1.2 0/126；最大非Abaqus HOLD=同态W侧气动力时程/惯性归属；未触碰禁止范围、冻结母本、main或PR合并。
+
+### 2026-11-18｜v0.32.53 PATCH — S05真实ESM全66点双方向幅值尺度不可行性定理
+- SOURCE=IT-2012-0008/IT.NVL 33周期×RotD50/100处理谱，Git blob `6839e497da8ebc11b15fd901118471ce2b865d2c`；RUN=连接器V8读取33行真实CSV，严格求解公共正尺度可行区间：0.8/qmin=2.118047355229 > 1.2/qmax=0.516493846047，故任何k均不能让全66个离散谱比进入人为0.8–1.2诊断带；全信息对称最优因子ρ*=2.480167。科学[源级程序](../experiments/T079/s05_rotd_joint_scale_holdout.cjs) commit [9376db5](https://github.com/g2066203208-beep/voxel-frontier/commit/9376db59be98cc9b7fb2a9f81134aa34a79c1066)，Git blob `6b411ad624892febb56fbe8f91beb24dfe333aa8`；[T079定理/五行真实数表](../experiments/T079/METHOD_PLAN.md) commit [61e5c17](https://github.com/g2066203208-beep/voxel-frontier/commit/61e5c171600327c6c20269732c74ec5ee39a86c2)，blob `da1ebadac5363157a49301ff84b772686bf8d94d`；[T080过程](../experiments/T080/PROCESS_LOG.md) commit [b36aefa](https://github.com/g2066203208-beep/voxel-frontier/commit/b36aefaa67597df17e98a4b9f6122f476dc80959)。TEST=V8真实源级数值PASS，新增程序原生Node CLI/原CSV字节SHA256 NOT_RUN；TAB5 FIG0，REF/STANDARD/OFFICIAL无新原页。仅单事件、离散周期、示意谱；非工址谱、非结构响应、非IEC/GB容差。12阶段晋级0/12、DLC1.2 0/126；最大非Abaqus HOLD=同态独立W侧时程/惯性归属。未触碰Abaqus/CAE、冻结母本、main、昂贵RUN或PR合并。
