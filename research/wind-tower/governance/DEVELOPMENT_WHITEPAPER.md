@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.58**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.59**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -593,3 +593,6 @@
 
 ### 2026-11-19｜v0.32.58 PATCH — S12正式第五章代理通道差异与约束准入
 - SOURCE=T062真实NTM 72行CSV Git blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`；继承六行整风速组盲留出数据，RUN=历史V8源级数值PASS，本轮没有新物理计算；[Ch5§5.4.7正式正文](../manuscript/final-thesis/chapters/05_疲劳控制参数敏感性与结构优化.md) commit [ad0ceb1a](https://github.com/g2066203208-beep/voxel-frontier/commit/ad0ceb1abc00b81a47fb75a4dc560368583e1ccf)，新增通道差异的优化单侧上界准入与UNKNOWN/REJECT规则；TAB6 FIG0；原生CLI/原CSV SHA256 NOT_RUN；12阶段0/12、DLC1.2 0/126，材料Miner及同态W/WE HOLD；禁止范围未触碰。
+
+### 2026-11-19 05时｜v0.32.59 PATCH — S10真实双通道最大DEL4 seed索引不共现反例
+- SOURCE=T062真实72行DEL4，Git blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`。RUN=V8源级六组配对计算，三组Mx/My最大DEL4来自不同seed；9.343881m/s ETM的Mx最大S04对应My仅为该组My最大值的82.3630%。[可运行程序](https://github.com/g2066203208-beep/voxel-frontier/commit/21bc650c57703b6a85616392c852458fc3680fc4)、[期刊正文及6行表](https://github.com/g2066203208-beep/voxel-frontier/commit/731e190fe6bcb569290086bcb6b48e756f72a72f)、[T080过程](https://github.com/g2066203208-beep/voxel-frontier/commit/8ce5daad697b3e5c9b0979d26c3809f5f320e93f)。TEST=V8真实数值PASS，Node CLI/CSV字节SHA256 NOT_RUN；TAB6 FIG0；REF/标准官方原页无新增。seed极值不共现只反驳通道共用最不利seed的强假设，不能由DEL推断时域同时峰值或材料Miner。12阶段晋级0/12，DLC1.2 0/126；同步真实W侧时程/惯性HOLD，未触碰禁区。
