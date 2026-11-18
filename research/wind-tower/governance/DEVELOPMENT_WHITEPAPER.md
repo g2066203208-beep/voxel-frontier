@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.55**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.56**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -582,3 +582,7 @@
 
 ### 2026-11-19｜v0.32.55 PATCH — S10真实NTM六seed四次矩聚合顺序偏差
 - SOURCE=T062 `experiments/T062/recomputed-load-fatigue/05_LOAD_DEL_M4_ALL36_RECOMPUTED.csv` blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`；RUN=36条NTM通道真实数据分6组比较先均值后四次幂与先四次幂后均值，后者的四次矩比前者高2.0233%–8.7990%，最大19.202140m/s/Mxt；严格Jensen反例6/6。科研路径 `manuscript/journal-wind-fatigue-results.md` commit `ddb1571ccc9065cadee58b3d781ad963fb858b24` blob `7c6393a40fda1536613464b20c7c20c0cf488fb4`；T080过程commit `33215b0bc3f709a8ac7920d99e9dcece3e3cfe87`。TEST=连接器V8数值PASS，独立CLI/原CSV SHA256 NOT_RUN；TAB6 FIG0，REF/STANDARD/OFFICIAL无新原页；非材料Miner、非未来seed/正式DLC1.2或物理验收；12阶段晋级0/12、DLC1.2 0/126。
+
+
+### 2026-11-19 02时｜v0.32.56 PATCH — S11真实NTM跨风速seed标签迁移拒绝
+- SOURCE=T062真实72行DEL4 CSV blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`；RUN=18NTM×2通道三风速整组留出，训练两个风速选最高四次矩seed索引，My/9.343881m/s训练S04、测试S01，峰值捕获96.0892%，Spearman=-0.142857，拒绝标签通用性强命题。程序 `experiments/T080/s11_ntm_seed_label_cross_speed_rejection.cjs` [commit d352608](https://github.com/g2066203208-beep/voxel-frontier/commit/d352608d640e1ad5daf48763ee978b3d03a350d6)，期刊六行数表 `manuscript/journal-wind-fatigue-results.md` [commit 7a97831](https://github.com/g2066203208-beep/voxel-frontier/commit/7a978315e95da9acfcab5f6f9060030574eeb060)，过程日志 [commit e293034](https://github.com/g2066203208-beep/voxel-frontier/commit/e29303498b44640742576de6d08189ccda2d43f9)。TEST=V8实算PASS，独立Node CLI/原CSV SHA256 NOT_RUN；TAB6 FIG0，REF/STANDARD/OFFICIAL无新增原页；跨风速seed编号未必物理同态、六折重叠，不代表独立泛化或材料Miner。12阶段晋级0/12、正式DLC1.2 0/126，W侧时程/惯性归属HOLD。
