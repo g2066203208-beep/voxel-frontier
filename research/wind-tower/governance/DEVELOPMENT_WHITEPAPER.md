@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.56**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.57**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -586,3 +586,7 @@
 
 ### 2026-11-19 02时｜v0.32.56 PATCH — S11真实NTM跨风速seed标签迁移拒绝
 - SOURCE=T062真实72行DEL4 CSV blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`；RUN=18NTM×2通道三风速整组留出，训练两个风速选最高四次矩seed索引，My/9.343881m/s训练S04、测试S01，峰值捕获96.0892%，Spearman=-0.142857，拒绝标签通用性强命题。程序 `experiments/T080/s11_ntm_seed_label_cross_speed_rejection.cjs` [commit d352608](https://github.com/g2066203208-beep/voxel-frontier/commit/d352608d640e1ad5daf48763ee978b3d03a350d6)，期刊六行数表 `manuscript/journal-wind-fatigue-results.md` [commit 7a97831](https://github.com/g2066203208-beep/voxel-frontier/commit/7a978315e95da9acfcab5f6f9060030574eeb060)，过程日志 [commit e293034](https://github.com/g2066203208-beep/voxel-frontier/commit/e29303498b44640742576de6d08189ccda2d43f9)。TEST=V8实算PASS，独立Node CLI/原CSV SHA256 NOT_RUN；TAB6 FIG0，REF/STANDARD/OFFICIAL无新增原页；跨风速seed编号未必物理同态、六折重叠，不代表独立泛化或材料Miner。12阶段晋级0/12、正式DLC1.2 0/126，W侧时程/惯性归属HOLD。
+
+
+### 2026-11-19 03时｜v0.32.57 PATCH — S11真实NTM速度-only双通道代理拒绝
+- SOURCE=T062 72行历史CSV blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`；RUN=18NTM×Mx/My六seed四次矩聚合，三风速整组留出，比较线性/对数线性/均值基线：My高风速外推+73.3024%/+146.0329%，My中风速插值−16.3591%/−17.1197%，Mx对数线性三折误差−0.9457%至+4.6611%，拒绝跨通道通用代理。源级程序 [commit a13c1f9](https://github.com/g2066203208-beep/voxel-frontier/commit/a13c1f948ae401e5c4289fd72534a5e6e56138cd) `experiments/T080/s11_ntm_windspeed_group_holdout_surrogate.cjs`；[期刊6行表与正文 commit 793b956](https://github.com/g2066203208-beep/voxel-frontier/commit/793b9563d7ba60a539f14e514376d6c022510f66)，blob `4f90e5e2baaec354bddb271bb560613042417454`；[T080过程](../experiments/T080/PROCESS_LOG.md) commit `be2277773cced4a26c311e78b78a22e13cdc7f0f`。TEST=连接器V8真实CSV计算PASS，Node CLI/源字节SHA256 NOT_RUN；TAB6 FIG0；REF/STANDARD/OFFICIAL无新增。三风速、无独立湍流描述符，非物理代理验证、材料Miner或正式DLC1.2；12阶段晋级0/12、正式DLC1.2 0/126；W侧同步独立气动力时程及惯性归属HOLD。禁止范围/冻结母本/main/昂贵RUN/PR合并未触碰。
