@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.44**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.45**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -550,3 +550,5 @@
 - SOURCE=历史48,070雨流循环Git blob d34adf0caaaecb319fc262d3ba425e77b1f0f086，历史SHA256 067c60cea61b35398edd186ff509fe759d1c4420395f082d06c666d92d897ecb（未重算）；[期刊4行定量表及公式](../manuscript/journal-wind-fatigue-results.md) commit 00ac3dd8e104e6055d060bd2d37255d84b635fed，blob 464489f94c566903fe49c11993e442567bd23e8b。固定Neq，删失贡献C时DEL比值=(1-C)^(1/m)；My ETM/NTM m4相对损失27.676%/30.076%，m10为34.430%/35.765%，单个极端工况m10 top1%删失67.630%。这是历史真实贡献的条件代数反事实，非新物理RUN或材料Miner；12阶段晋级0/12、DLC1.2 0/126，独立W侧外载/惯性HOLD。
 
 - **v0.32.44 PATCH｜2026-11-18 11时 S05**：纠正白皮书页眉滞后v0.32.42（既有末尾已有v0.32.43实质记录），本轮真实新增OFFICIAL来源核对和长周期目标谱不可识别性构造性证明；科研正文 research/wind-tower/experiments/T079/METHOD_PLAN.md Git blob 72ebde6d86db6c7a110e69bcd8df52f23d93474d，commit da72bd53b4544bb6d1afcb533a8b7a4e05891931；过程 research/wind-tower/experiments/T079/PROCESS_LOG.md commit d1bb9d1e8a6666092fd92ad6a7b8ad09b89e69b1。官方SAMR标准登记、湖南省地震局摘要和新疆地震局2026-02-27查询答复已核；标准授权全文/场址输出/地勘未得。数学反例PASS，非两条合规设计谱或新地震物理RUN；FIG0 TAB0，12阶段0/12、DLC1.2 0/126，同态W侧HOLD。
+
+- **v0.32.45 PATCH｜2026-11-18 12时 S12**：SOURCE=T062真实72行DEL4 CSV blob 1b334e9afdbd792a2f4b1a41cdb150dc3698352d，历史SHA256 b362bcd7c37ccc56e21035de39448b5e761ec03f371b6b2f3eb30f41b013630d（本轮未重哈希）；科研Ch3 §3.7.29六行ETM/NTM同风速/seed编号载荷DEL4比值表 commit 723856a451c91e9cd75725828dd74f6722277b52，blob 06eef8791779fcaab41e3d31138dddd905913737；36/36历史标签对ETM>NTM，范围1.192757–2.140207；V8源级计算PASS、独立CLI NOT_RUN，FIG0 TAB6；同seed编号不等于物理同态，正式DLC1.2与材料Miner/独立W侧HOLD，12阶段0/12。T080过程commit 37682603362001ab248999a777b7491a2b29ffc2。禁止Abaqus/CAE、冻结母本、main、昂贵RUN及PR合并。
