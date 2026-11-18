@@ -544,3 +544,7 @@
 
 ### 2026-11-18｜v0.32.42 PATCH — S10真实48,070循环尾部贡献及有效循环数
 - SOURCE=36历史筛查风况×2底弯矩、48,070行雨流range/mean/count，Git blob `d34adf0caaaecb319fc262d3ba425e77b1f0f086`，历史SHA256 `067c60cea61b35398edd186ff509fe759d1c4420395f082d06c666d92d897ecb`（未重哈希）；RUN=连接器V8逐行72组计算m4/m10 top ceil(1%)的四次/十次矩贡献与有效循环数。My m4 ETM/NTM中位72.639%/76.094%，m10中位98.531%/98.804%，最极端m10 NTM My单循环61.7006%。程序 `experiments/T080/s10_rainflow_tail_concentration.cjs` commit [6bad04b](https://github.com/g2066203208-beep/voxel-frontier/commit/6bad04bed83919076db02470b17a1fab24d5bba5)；期刊稿8行数表与完整限定方法 commit [7982092](https://github.com/g2066203208-beep/voxel-frontier/commit/79820925c4fa0d7d15ebbae61e6d0cb75d4371ad)，blob `2ea4db1858558ced3f83385ce88e64b1bdeddb6c`；T080日志commit `5a7a04e56b1e1222a00170802de6ac0a57bbf6dc`。源级算术PASS、独立Node CLI NOT_RUN；FIG0 TAB8，REF/STANDARD/OFFICIAL无新原页；m10为筛查指数而非材料斜率，有效循环数非独立试验数，局部应力/Miner与同态WE HOLD；12阶段0/12，DLC1.2 0/126。无Abaqus/CAE、冻结母本、main、PR合并、昂贵RUN。
+
+
+### 2026-11-18｜v0.32.43 PATCH — S10雨流极端循环删失的DEL定量反例
+- SOURCE=历史48,070雨流循环Git blob d34adf0caaaecb319fc262d3ba425e77b1f0f086，历史SHA256 067c60cea61b35398edd186ff509fe759d1c4420395f082d06c666d92d897ecb（未重算）；[期刊4行定量表及公式](../manuscript/journal-wind-fatigue-results.md) commit 00ac3dd8e104e6055d060bd2d37255d84b635fed，blob 464489f94c566903fe49c11993e442567bd23e8b。固定Neq，删失贡献C时DEL比值=(1-C)^(1/m)；My ETM/NTM m4相对损失27.676%/30.076%，m10为34.430%/35.765%，单个极端工况m10 top1%删失67.630%。这是历史真实贡献的条件代数反事实，非新物理RUN或材料Miner；12阶段晋级0/12、DLC1.2 0/126，独立W侧外载/惯性HOLD。
