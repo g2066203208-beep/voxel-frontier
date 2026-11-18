@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.48**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.49**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -560,3 +560,6 @@
 
 ### 2026-11-18｜v0.32.48 PATCH — S11四ETM真实空间排序迁移与少量控制单元反例
 - SOURCE=T077 1984行真实毛截面DEL4 CSV Git blob `b5effa2a493cec0a9af8a10a3b93df0ff997d2d0`（字节SHA256未重算）；RUN=连接器JS全表四工况六对496空间单元Spearman 0.981579–0.992981，但top25交集仅13–23，最大值单元CSEG03–05迁移。科学实物=[期刊正文六行数表](../manuscript/journal-wind-fatigue-results.md) commit [43eff3b](https://github.com/g2066203208-beep/voxel-frontier/commit/43eff3b0237e0ab3c0a6f76c53c94e4bcc8a5e95)，[T080过程](../experiments/T080/PROCESS_LOG.md) commit [c6de57d](https://github.com/g2066203208-beep/voxel-frontier/commit/c6de57da678f3b4afdc017707d4536b737b36bfb)。TEST=真实源级实算PASS、独立CLI NOT_RUN；TAB6 FIG0，REF/STANDARD/OFFICIAL无新原页；四个历史ETM非独立泛化样本，不能证明因果/材料寿命/正式DLC1.2；12阶段晋级0/12，正式DLC1.2 0/126，同态独立W侧气动力及惯性归属仍最大非Abaqus HOLD。
+
+### 2026-11-18｜v0.32.49 PATCH — S11整风速组盲留出控制点捕获拒绝试验
+- SOURCE=T077真实1984行四ETM×31段×16方位名义毛截面DEL4 CSV，Git blob `b5effa2a493cec0a9af8a10a3b93df0ff997d2d0`，历史SHA256 `16c9864ef7a344e5b97338c31ce26de6adb86c0f0f64942ef894fe9983926b2b`（本轮未重哈希）。RUN=连接器JS按三个风速整组留出，训练集最大值排序选k=1/3/5控制点，测试组真实峰值保留比例：k1 99.9055%/99.5353%/99.8795%；k3 99.9055%/100%/100%；k5三组均100%。单点严格完整覆盖假说三组FAIL；历史五点100%不构成独立未来保证。可运行程序 `research/wind-tower/experiments/T080/s11_speed_group_blind_topk_capture.cjs` commit [4f68ad1](https://github.com/g2066203208-beep/voxel-frontier/commit/4f68ad1df70a91b6a32db2456d97fcda92be61db)；期刊科研正文/三行表 `research/wind-tower/manuscript/journal-wind-fatigue-results.md` commit [293fba2](https://github.com/g2066203208-beep/voxel-frontier/commit/293fba27a6f408827499949df9c34b7422ec8e5c) blob `9ca3b72bac904deab10320e84f16b99814e523fb`；T080过程commit [a39ddcd](https://github.com/g2066203208-beep/voxel-frontier/commit/a39ddcdccdecd0b6ef4099641f9739a081328242)。TEST=V8真实源级PASS、原生Node CLI NOT_RUN；TAB3 FIG0，REF/STANDARD/OFFICIAL无新增；3风速4工况非独立未来样本，正式DLC1.2 0/126、12阶段晋级0/12，材料Miner/同态W侧HOLD；禁止Abaqus/CAE、冻结母本、main、昂贵RUN或PR合并。
