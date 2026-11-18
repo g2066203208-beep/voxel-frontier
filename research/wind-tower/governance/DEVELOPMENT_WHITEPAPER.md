@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.41**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.42**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -540,3 +540,7 @@
 - 实质成果：[现行第三章§3.8.Y](../manuscript/final-thesis/chapters/03_场址风环境与整机随机风控制载荷.md)，科研commit [9ccba8c](https://github.com/g2066203208-beep/voxel-frontier/commit/9ccba8ceef7b1321c84f99e0b0e6fd94753baf16)，Git blob 1e51b7b105b9ca907ae26168de6c994f047b6e85；SOURCE=既有36风/四ETM×31段截面源与158m几何，程序blob 9f7db2f641a4a8a02fb6be0ab12e1cb0e92997bc；RUN=继承历史Node11项解析测试，新增正式论文连续论证/三行证据判别表/参考点误差公式，非新物理RUN；REF/STANDARD/OFFICIAL无新原页，FIG0 TAB3。真实风侧独立气动力/惯性分离/同态WE/材料Miner仍HOLD；12阶段0/12、DLC1.2 0/126；未触碰Abaqus/CAE、冻结母本、main、昂贵RUN或PR合并。
 
 - **v0.32.41 PATCH｜2026-11-18 09时｜S10真实18NTM周向DEL固定方位代表性：T062 2880行，blob 499ce24865ccd42f73471aab4696990da94b79ac；18工况×10测点×16方位，m4/m10各180配对，0°对逐组周向最大比值min=0.9997383832/0.9992246875，mean=0.9999864135/0.9999551824，控制方位0°/180°为170/10和160/20。最差低估0.026162%/0.077531%；源级V8逐行计算PASS、CLI NOT_RUN、原CSV SHA256未重算。科学边界：仅固定局部坐标和现有NTM历史、非独立180试验、非材料Miner或未来风向泛化。正式Ch4实质正文/2行数表 commit aee53be58481bcf07dddd18fe5a00712cec15f9e，blob 5a05b3a0ce8365452d6cc7329bb14de639c79e75；REF/STANDARD/OFFICIAL无新原页；FIG0 TAB2；12阶段晋级0/12，DLC1.2 0/126；同态W侧外气动力/惯性HOLD。禁止范围、冻结母本、main、PR合并、昂贵RUN均未触碰。
+
+
+### 2026-11-18｜v0.32.42 PATCH — S10真实48,070循环尾部贡献及有效循环数
+- SOURCE=36历史筛查风况×2底弯矩、48,070行雨流range/mean/count，Git blob `d34adf0caaaecb319fc262d3ba425e77b1f0f086`，历史SHA256 `067c60cea61b35398edd186ff509fe759d1c4420395f082d06c666d92d897ecb`（未重哈希）；RUN=连接器V8逐行72组计算m4/m10 top ceil(1%)的四次/十次矩贡献与有效循环数。My m4 ETM/NTM中位72.639%/76.094%，m10中位98.531%/98.804%，最极端m10 NTM My单循环61.7006%。程序 `experiments/T080/s10_rainflow_tail_concentration.cjs` commit [6bad04b](https://github.com/g2066203208-beep/voxel-frontier/commit/6bad04bed83919076db02470b17a1fab24d5bba5)；期刊稿8行数表与完整限定方法 commit [7982092](https://github.com/g2066203208-beep/voxel-frontier/commit/79820925c4fa0d7d15ebbae61e6d0cb75d4371ad)，blob `2ea4db1858558ced3f83385ce88e64b1bdeddb6c`；T080日志commit `5a7a04e56b1e1222a00170802de6ac0a57bbf6dc`。源级算术PASS、独立Node CLI NOT_RUN；FIG0 TAB8，REF/STANDARD/OFFICIAL无新原页；m10为筛查指数而非材料斜率，有效循环数非独立试验数，局部应力/Miner与同态WE HOLD；12阶段0/12，DLC1.2 0/126。无Abaqus/CAE、冻结母本、main、PR合并、昂贵RUN。
