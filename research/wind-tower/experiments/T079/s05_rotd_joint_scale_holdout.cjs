@@ -15,15 +15,33 @@ function parse(csv){
 function fit(rows,keys){const q=rows.flatMap(r=>keys.map(k=>r[k]));return 1/Math.sqrt(Math.min(...q)*Math.max(...q));}
 function evaluate(rows,k,keys){const v=rows.flatMap(r=>keys.map(key=>k*r[key]));return {minimum:Math.min(...v),maximum:Math.max(...v),max_abs_log_error:Math.max(...v.map(x=>Math.abs(Math.log(x)))),below_0p8:v.filter(x=>x<0.8).length,n:v.length};}
 function run(rows){const train=rows.filter(r=>r.T<=3),hold=rows.filter(r=>r.T>3);if(train.length!==18||hold.length!==15)throw Error('training/holdout count drift');const k50=fit(train,['q50']),k100=fit(train,['q100']),kcommon=fit(train,['q50','q100']);return {train_count:train.length,hold_count:hold.length,k50,k100,kcommon,train_joint:evaluate(train,kcommon,['q50','q100']),hold_joint:evaluate(hold,kcommon,['q50','q100']),hold50:evaluate(hold,k50,['q50']),hold100:evaluate(hold,k100,['q100']),transfer50to100:evaluate(hold,k50,['q100']),transfer100to50:evaluate(hold,k100,['q50'])};}
+// Necessary and sufficient feasibility of a common positive scale k for L <= k*q_i <= U.
+// This is a finite sampled-period statement, NOT a continuous-period or design-spectrum acceptance.
+function oracleFeasibility(rows,keys,L=0.8,U=1.2){
+ if(!(Number.isFinite(L)&&Number.isFinite(U)&&L>0&&U>=L))throw Error('invalid diagnostic band');
+ const points=rows.flatMap(r=>keys.map(key=>({T:r.T,key,q:r[key]})));
+ if(!points.length||points.some(p=>!(Number.isFinite(p.q)&&p.q>0)))throw Error('invalid spectrum ratios');
+ const low=points.reduce((a,b)=>a.q<b.q?a:b), high=points.reduce((a,b)=>a.q>b.q?a:b);
+ const lowerScale=L/low.q,upperScale=U/high.q;
+ return {n:points.length,minimum:low,maximum:high,scale_interval:[lowerScale,upperScale],feasible:lowerScale<=upperScale,
+  ratio_span:high.q/low.q,minimum_symmetric_factor:Math.sqrt(high.q/low.q),oracle_log_minimax_scale:1/Math.sqrt(low.q*high.q)};
+}
 function tests(){
  assert.throws(()=>parse('period_s,RotD50_raw_ratio,RotD100_raw_ratio\n1,0,1'),/nonpositive/);
  assert.throws(()=>parse('period_s,RotD50_raw_ratio,RotD100_raw_ratio\n1,1,NaN'),/nonpositive/);
  assert.equal(fit([{q50:1,q100:4}],['q50','q100']),0.5);
+ assert.equal(oracleFeasibility([{T:1,q50:1,q100:4}],['q50','q100']).feasible,false);
+ assert.equal(oracleFeasibility([{T:1,q50:1,q100:1.2}],['q50','q100']).feasible,true);
+ assert.throws(()=>oracleFeasibility([{T:1,q50:1}],['q50'],1.3,0.8),/invalid diagnostic band/);
  assert.deepEqual(evaluate([{q50:1,q100:4}],0.5,['q50','q100']).n,2);
 }
 tests();
-const result=run(parse(fs.readFileSync(source,'utf8')));
+const rows=parse(fs.readFileSync(source,'utf8'));
+const result=run(rows);
+const oracle={train:oracleFeasibility(rows.filter(r=>r.T<=3),['q50','q100']),hold:oracleFeasibility(rows.filter(r=>r.T>3),['q50','q100']),all:oracleFeasibility(rows,['q50','q100'])};
+assert.ok(Math.abs(oracle.all.ratio_span-6.151227274359897)<1e-9,'full-range oracle regression');
+assert.equal(oracle.all.feasible,false);
 assert.ok(Math.abs(result.kcommon-0.7035259817832802)<1e-10,'archived-source regression');
 assert.equal(result.hold_joint.below_0p8,30);
-console.log(JSON.stringify({source,result,tests:'PASS (4 unit checks + 2 archived-source regression checks)'},null,2));
-module.exports={parse,fit,evaluate,run};
+console.log(JSON.stringify({source,result,oracle,tests:'PASS (7 unit checks + 4 archived-source regression checks)'},null,2));
+module.exports={parse,fit,evaluate,run,oracleFeasibility};
