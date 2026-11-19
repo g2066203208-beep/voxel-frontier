@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.69**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.70**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -627,3 +627,6 @@
 
 ### 2026-11-19 16时｜v0.32.69 PATCH — S08源锁定20倍抽样零空间拒绝试验
 - SOURCE=真实S08全采样收据 `experiments/T079/real-records/S08_158M_BEAM_PROXY_FULL_RATE_RECEIPT_20261106.json` Git blob `307328336eff2d7c9e392266c15fe5040ca53c1f`；32,040点/方向、0.005s，历史20倍抽样与旧文件完全一致。RUN=数学反例 `z_j=A sin(pi j/20)`，旧网格全零而全采样峰值可任意大；真实源锁定数值为Nyquist 100Hz→5Hz、首末160.195s、分辨率0.006242197Hz。科研程序 `experiments/T080/s08_decimation_nullspace_rejection.cjs` [commit 44956ae](https://github.com/g2066203208-beep/voxel-frontier/commit/44956aece3c03270ca2a72279d4b504621cd00d6)，blob `600f15705856d4f9008aa2a02f723a95598f9390`；[期刊正文及4行表commit b274668](https://github.com/g2066203208-beep/voxel-frontier/commit/b274668274ea3bb3475fa7367503a5eb1b8950fe)，blob `b9cf7b587ebb6a543e3f73170ef2b69685d180a8`；[T080过程commit b626017](https://github.com/g2066203208-beep/voxel-frontier/commit/b626017eecf620d9759cda90d745305b061e2367)。TEST=源级元数据算术独立Python复算，Node CLI NOT_RUN；数学零空间反例非真实物理高频，原64,080行未重新取字节，REF/STANDARD/OFFICIAL无新授权原页，FIG0 TAB4；12阶段晋级0/12，正式DLC1.2 0/126；同态W侧、实际抽样误差与材料Miner HOLD。未碰Abaqus/CAE、冻结母本、main、昂贵RUN、PR合并。
+
+### 2026-11-19｜v0.32.70 PATCH — S05真实ESM长周期log-period加权缺口
+- SOURCE=33周期ESM处理谱blob 6839e497da8ebc11b15fd901118471ce2b865d2c；RUN=冻结训练k后的log-period梯形求积，留出D独立RotD50/100=0.597648/0.660495、联合=0.753018/0.626862；[期刊正文及4行表commit 43e7f9b](https://github.com/g2066203208-beep/voxel-frontier/commit/43e7f9b9b195884d178161775ca0410677bfbcdf)，blob 81079faa8dfe22e079332860d3d3b80ea9852fa6。源级JS数值PASS，原件SHA256/CLI NOT_RUN；TAB4 FIG0，示意谱不等于工址设计谱，物理HOLD；12阶段0/12、DLC1.2 0/126。
