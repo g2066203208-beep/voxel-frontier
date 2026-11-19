@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.73**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.74**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -640,3 +640,7 @@
 
 ### 2026-11-19 20时｜v0.32.73 PATCH — S12正式Ch4双轴DEL4非支配控制工况研究整合
 - SOURCE=T062历史72行DEL4 CSV Git blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`；RUN=继承19时真实36组Pareto源级计算，4组非支配、最优单工况历史双轴最大相对漏失9.2505%；新增正式论文`manuscript/final-thesis/chapters/04_10MW混合塔架风致疲劳性能分析.md` §4.8.15，commit [e6802ac](https://github.com/g2066203208-beep/voxel-frontier/commit/e6802ace183aab4c5cba35c9cae0494b57eb1d21)，Git blob `a6042c09435ed55591ecc6de78d788ce1b16d8b3`；新增相位/相关性反例论证说明双轴标量DEL的Pareto支配不能替代局部材料应力雨流。TEST=远端正文回读，原生CLI/原CSV SHA256 NOT_RUN；TAB4 FIG0；REF/STANDARD/OFFICIAL无新原页，真实同步风时程、材料Miner、正式DLC1.2与物理验收HOLD；12阶段晋级0/12。T080过程commit [60522e6](https://github.com/g2066203208-beep/voxel-frontier/commit/60522e69ea721c5eab2ba2f063d1113750631dda)。
+
+
+### 2026-11-19 22时｜v0.32.74 PATCH — S10真实四组候选的控制seed排序扰动阈值
+- SOURCE=T062历史72行DEL4 CSV Git blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`，本轮仅继承其中既已验证的四组Pareto候选，不冒充全CSV重读或新物理RUN。RUN=Python双精度独立算术，解析区间排序阈值 \(\epsilon=(a-b)/(a+b)\)，Mx S02/S01=0.085274%，My 11.4 S04/19.20 S04=4.849555%；0.1%扰动可反转前一对排序。科研实物 [S10既有研究文件](https://github.com/g2066203208-beep/voxel-frontier/commit/2628834857ac2c96856a02328c13edd0d4ebc700)，Git blob `cb666c5a1ceb76c88e8384729521443e972b5752`；[T080过程](https://github.com/g2066203208-beep/voxel-frontier/commit/a3a35173c032b8099a08cef11c22be24246bf0e1)。TEST=解析算术PASS，36组全表区间重排/真实误差分布/原生CLI NOT_RUN；TAB2 FIG0；REF/STANDARD/OFFICIAL无新增原页。假设epsilon不是实测CI，不能推断全36组前沿稳健或局部材料寿命。12阶段晋级0/12，DLC1.2=0/126；最大非Abaqus HOLD=同态真实W侧外气动力与惯性归属。
