@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.67**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.68**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -621,3 +621,6 @@
 ### 2026-11-19｜v0.32.67 PATCH — S11区间支配与约束准入拒绝算法
 
 - SOURCE=既有158m混塔优化研究问题；新增测试仅为明确标记的无量纲合成oracle，不是结构响应。RUN=连接器V8实际运行7个数学正例/拒绝断言PASS；原生Node CLI NOT_RUN，独立验证的误差区间/物理优化HOLD。新增程序 `experiments/T080/s11_interval_pareto_admission.cjs` Git blob `2d689d3cf46ed5158e364b3050ea73d0c79a092b`，[commit 8baedc5](https://github.com/g2066203208-beep/voxel-frontier/commit/8baedc56477ef2d3a30abad96e849546ad279b94)；期刊方法正文 `manuscript/journal-wind-fatigue-results.md` blob `19456f7780e84b2b6687780de9457e399718ff4b`，[commit 8ddb0e5](https://github.com/g2066203208-beep/voxel-frontier/commit/8ddb0e53cc2cd919f6f3c38189a93a16680004c2)。T080过程日志已更新。REF/STANDARD/OFFICIAL无新增原页；TAB0 FIG0；12阶段晋级0/12，正式DLC1.2 0/126；W侧同态时程与材料局部应力HOLD。没有Abaqus/CAE、冻结母本、main、昂贵RUN或PR合并。
+
+### 2026-11-19 15时｜v0.32.68 PATCH — S08真实E-only方向峰值的同步二维响应不可识别性
+- SOURCE=T079 S08全采样收据 `experiments/T079/real-records/S08_158M_BEAM_PROXY_FULL_RATE_RECEIPT_20261106.json` Git blob `307328336eff2d7c9e392266c15fe5040ca53c1f`（八个已归档标量峰，原波形本轮未重新取字节）；RUN=Python独立四组 `hypot` 算术，证明若仅有同步二维分量峰值A/B，则合成峰值只可处于sharp区间[max(A,B),hypot(A,B)]，真实HNE/HNN是不同方向E-only代理RUN，不能视为同态同步物理分量。TAB4 FIG0；[源级程序commit 9f614e4](https://github.com/g2066203208-beep/voxel-frontier/commit/9f614e434748d58030d0809cd96abb832efe9297) `experiments/T080/s08_peak_only_identifiability.cjs`；[期刊正文commit 3c18c59](https://github.com/g2066203208-beep/voxel-frontier/commit/3c18c597f772549c2f9f15d5cda9ebc77bc0c2d0) `manuscript/journal-wind-fatigue-results.md`；T080日志commit dda6f68bc2436f83b840d4478fb889e366b5908f。TEST=Python算术PASS，原生Node CLI及全波形同步检验NOT_RUN；REF/STANDARD/OFFICIAL无新原页；12阶段晋级0/12、DLC1.2 0/126，真实二维合成/同态W/WE及物理验证HOLD；无Abaqus/CAE、冻结母本、main、昂贵RUN或PR合并。
