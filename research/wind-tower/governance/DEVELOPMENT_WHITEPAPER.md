@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.75**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.76**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -648,3 +648,6 @@
 
 ### 2026-11-19 23时｜v0.32.75 PATCH — S10真实36工况区间Pareto内外包络
 - SOURCE=T062 72行真实DEL4 CSV Git blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`；RUN=V8真实36工况×2通道完整区间支配计算，假设ε=0/0.1/1/5%时可能前沿4/4/6/10，保证前沿4/3/2/0；1%新增`U11p4_ETM_S06`和`U19p202140_ETM_S06`。科研文件 `experiments/T080/S10_TWO_AXIS_DEL4_PARETO_SCREEN_20261119.md` [commit 0f7023e](https://github.com/g2066203208-beep/voxel-frontier/commit/0f7023e89e56caf260b087d1f0f8ec82f2b51196)，blob `dc148a22c659f44c9040b05fea2bb6333fd0875d`；过程日志见T080。TEST=源级算术PASS、原生CLI/CSV字节SHA256 NOT_RUN；TAB8 FIG0，REF/STANDARD/OFFICIAL无新增原页；ε非统计CI，DLC1.2 0/126、12阶段晋级0/12、材料寿命/同态W HOLD。下一唯一动作=真实NTM六seed分箱抽样不确定性而非重复任意ε网格。
+
+### 2026-11-20 00时｜v0.32.76 PATCH — S10真实NTM六seed双通道配对bootstrap
+- SOURCE=T062真实72行DEL4 CSV Git blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`；RUN=V8直接源级解析18NTM、三箱各6seed、双通道同seed索引配对bootstrap 20,000次（xorshift32 seed 20261120），按5736/1426/2条件小时四次矩加权；Mx点估计2097.749940、百分位范围1990.059005–2194.118066，My点估计13402.034259、范围12463.102637–14217.559590 kN·m。程序 [commit 501d82a](https://github.com/g2066203208-beep/voxel-frontier/commit/501d82af3f8cebffe5a79ba731b562a7599724a7) 路径 `research/wind-tower/experiments/T080/s10_ntm_paired_bootstrap_20261120.cjs`；期刊科研正文 [commit 86d7229](https://github.com/g2066203208-beep/voxel-frontier/commit/86d7229bf3c05f876d51e485d9cb6383a6f5eb98) 路径 `research/wind-tower/manuscript/journal-wind-fatigue-results.md`，Git blob `3f68dbc259929dceea313373c88fba1a1f849c24`。TEST=V8源级数值PASS、原生Node CLI/原字节SHA256 NOT_RUN；TAB2 FIG0，REF/STANDARD/OFFICIAL无新授权原页；NTM条件估计量百分位不具备ETM逐seed误差传递资格，非CI覆盖保证、DLC1.2、Miner或同态WE PASS。12阶段晋级0/12，正式DLC1.2 0/126；禁区未触碰。
