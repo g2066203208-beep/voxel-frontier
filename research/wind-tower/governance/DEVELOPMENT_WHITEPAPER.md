@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.64**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.65**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -611,3 +611,6 @@
 
 ### 2026-11-19 10时｜v0.32.64 PATCH — S10真实72行峰峰值替代DEL排序的拒绝证据
 - SOURCE=T062 72行真实DEL4 CSV blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`；RUN=V8直接读取11,496字符72行，证明DEL4≤(Mmax−Mmin)(N/100000)^(1/4)并实测72/72满足；36工况每通道630对中Mx 21对、My 83对峰峰值与DEL4排序逆转，最不利工况身份也不同。[科研程序commit b08666e](https://github.com/g2066203208-beep/voxel-frontier/commit/b08666ed169a6882b98bcc03732f2fa522d4b527)，[期刊正文+2行表commit 1bfb62d](https://github.com/g2066203208-beep/voxel-frontier/commit/1bfb62dd1fa72bf54c0e02d58afb8ea26fea7c3b)，[T080过程commit c38835b](https://github.com/g2066203208-beep/voxel-frontier/commit/c38835b8b02f58082e37487f8ab40dc77c68c417)。TEST=V8实算PASS；原生Node CLI/原字节SHA256 NOT_RUN；TAB2 FIG0，REF/STANDARD/OFFICIAL无新原页；不是材料Miner、正式DLC1.2或物理验证。12阶段晋级0/12，正式DLC1.2 0/126；同态W侧同步气动力/惯性身份HOLD。未触碰禁止范围、冻结母本、main、昂贵RUN或PR合并。
+
+### 2026-11-19｜v0.32.65 PATCH — S12两篇2026年160m混塔先行研究来源限定的投稿差异对照
+- 期刊稿 research/wind-tower/manuscript/journal-wind-fatigue-results.md [commit d4af2f3](https://github.com/g2066203208-beep/voxel-frontier/commit/d4af2f357390725fe31b67bdce09b3f27103cc49), blob 5965fa648150c4267ef2df9f21c8ef3cf14ae394；出版商DOI 10.1080/13632469.2026.2671807（摘要）及10.1016/j.rcns.2026.03.002（摘要/引言/§6/结论），新增三方方法与可证伪创新边界表。REF源页可访问，JEE全文及图表/补充文件未核，RUN无新物理计算，TAB1，FIG0，S12 PARTIAL，12阶段晋级0/12；不可声称首创风震/PT。
