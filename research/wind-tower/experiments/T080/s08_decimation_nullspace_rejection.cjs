@@ -35,6 +35,6 @@ const exactHidden = j => j%20===0 ? 0 : amplitude*Math.sin(Math.PI*(j%20)/20);
 assert.equal(exactHidden(20),0);
 assert.equal(exactHidden(0),0);
 assert.equal(exactHidden(10),amplitude);
-assert.equal(exactHidden(30),amplitude);
+assert.equal(exactHidden(30),-amplitude);
 assert.throws(()=>{ if(!(n>0)) throw Error('bad'); throw new RangeError('no joint response without time histories');},RangeError);
 console.log(JSON.stringify({classification:'SAMPLING_IDENTIFIABILITY_MATH_ONLY',n_full_per_direction:n,dt_full_s:dt,n_total:h.n_rows,stride,dt_legacy_s:legacyDt,duration_s:duration,nyquist_full_Hz:nyquistFull,nyquist_legacy_Hz:nyquistLegacy,frequency_resolution_full_Hz:1/(n*dt),nullspace_amplitude_arbitrary:amplitude,tests:'PASS',physical_peak_error_bound:'UNIDENTIFIABLE_WITHOUT_FULL_RATE_WAVEFORM_AND_BANDLIMIT'}));
