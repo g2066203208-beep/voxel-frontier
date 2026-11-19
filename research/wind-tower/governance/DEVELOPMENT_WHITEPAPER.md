@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.81**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.82**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -667,3 +667,6 @@
 
 ### 2026-11-20 05时｜v0.32.81 PATCH — S12原始36组风工况双轴DEL4全散点图
 - SOURCE=T062原72行真实DEL4 CSV Git blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`；RUN=源级解析72行、36个唯一case、双通道一一配对，非支配4/36断言PASS；FIG=全36点可编辑SVG `manuscript/final-thesis/figures/FIG_S10_ALL36_BIAXIAL_DEL4_SCATTER_20261120.svg` [commit 8bd4166](https://github.com/g2066203208-beep/voxel-frontier/commit/8bd4166c9ab1f33baeb14cc505c9695dc4a647d7)，正式Ch4§4.8.18 [commit 5430bcb](https://github.com/g2066203208-beep/voxel-frontier/commit/5430bcb59aa5b8bda42a6791e29321ce2002fb59)，Git blob `43aeaf10263a7f0e23288bf960d77307e9138572`；T080过程本轮提交。TEST=源级字段/配对/前沿PASS，独立浏览器或Word渲染及原CSV字节SHA256 NOT_RUN；TAB0 FIG1；REF/STANDARD/OFFICIAL无新原页。全散点补足此前仅四点图的样本可见性，非新物理计算；DLC1.2=0/126、12阶段晋级0/12、Miner与同态W HOLD；禁止范围未触碰。
+
+### 2026-11-20 06时｜v0.32.82 PATCH — S12真实双轴DEL4精确两工况极值覆盖
+- SOURCE=T062真实72行CSV blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`；RUN=36个双轴配对case、36单组及630二元组源级穷举。Mx峰9468.855048、My峰26802.478502 kN·m分属不同工况；最优单组最大相对漏失9.250501%，唯一零漏失双组U11p4_ETM_S04+U19p202140_ETM_S02，次优0.170402%。正式Ch4§4.8.19三行数表与数学证明 [commit 79c1a554](https://github.com/g2066203208-beep/voxel-frontier/commit/79c1a554e71d630a439dc7186bb6a9e638c367ce)，blob `f54645992f5f5f1c2f28cf123735fbbf15542f52`；T080 [commit 41a55a3](https://github.com/g2066203208-beep/voxel-frontier/commit/41a55a3d987bd7c530e788bbd4a4c8682bccc4d8)。TEST=源级穷举PASS，原CSV字节SHA256/独立CLI NOT_RUN，TAB3 FIG0；仅历史双轴标量screening，不是材料Miner或同态风震；12阶段0/12、正式DLC1.2 0/126，最大非Abaqus HOLD=真实同态W侧独立气动力与惯性归属。未触碰禁止范围。
