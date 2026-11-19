@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.66**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.67**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -617,3 +617,7 @@
 
 ### 2026-11-19 12时｜v0.32.66 PATCH — S12混塔非线性疲劳直接先行研究对照
 - REF=Wang et al., *MSSP* (2025), DOI 10.1016/j.ymssp.2025.113243，公开索引摘要；JEE DOI 10.1080/13632469.2026.2671807出版商数据声明，Zenodo 10.5281/zenodo.19346369本轮不可访问。新增[期刊四行对照表与识别边界](https://github.com/g2066203208-beep/voxel-frontier/commit/aa1b02add70fc0d19b0a505aaeafb36b92ec6249)（路径 manuscript/journal-wind-fatigue-results.md，Git blob bcd9ac9dee08dd2e4234d26e06884c8fe3c2d15c）；[T080记录](https://github.com/g2066203208-beep/voxel-frontier/commit/3dd403edf96e76f610e8015f292305f13b26e33b)。先行文献已有混塔非线性疲劳、联合风速/风向KDE、雨流与S–N寿命，本文限定历史风载筛选与缺箱可识别性；不能声称首次疲劳。TEST=来源限定论证PASS，原文/Zenodo字节/独立数据验证HOLD；RUN无新增物理数值，TAB4 FIG0；12阶段晋级0/12、正式DLC1.2 0/126。未触碰禁止范围。
+
+### 2026-11-19｜v0.32.67 PATCH — S11区间支配与约束准入拒绝算法
+
+- SOURCE=既有158m混塔优化研究问题；新增测试仅为明确标记的无量纲合成oracle，不是结构响应。RUN=连接器V8实际运行7个数学正例/拒绝断言PASS；原生Node CLI NOT_RUN，独立验证的误差区间/物理优化HOLD。新增程序 `experiments/T080/s11_interval_pareto_admission.cjs` Git blob `2d689d3cf46ed5158e364b3050ea73d0c79a092b`，[commit 8baedc5](https://github.com/g2066203208-beep/voxel-frontier/commit/8baedc56477ef2d3a30abad96e849546ad279b94)；期刊方法正文 `manuscript/journal-wind-fatigue-results.md` blob `19456f7780e84b2b6687780de9457e399718ff4b`，[commit 8ddb0e5](https://github.com/g2066203208-beep/voxel-frontier/commit/8ddb0e53cc2cd919f6f3c38189a93a16680004c2)。T080过程日志已更新。REF/STANDARD/OFFICIAL无新增原页；TAB0 FIG0；12阶段晋级0/12，正式DLC1.2 0/126；W侧同态时程与材料局部应力HOLD。没有Abaqus/CAE、冻结母本、main、昂贵RUN或PR合并。
