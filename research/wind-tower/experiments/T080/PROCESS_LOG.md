@@ -1,3 +1,6 @@
+## 2026-11-19 22时｜S10四个真实非支配候选的单轴排序误差门槛（v0.32.74）
+READ-BEFORE-WRITE：PR#42实时Open/Draft，开工HEAD 5b5438a00287abf4bdd8f0777d60ae7c83cea104；已读根/研究AGENTS、指挥室、白皮书v0.32.73、正式STATUS、12阶段、T079/T080、S10四行真实候选及前次导师Word插入稿背景；旧MASTER路径404。SOURCE=T062 72行真实DEL4历史表Git blob 1b334e9afdbd792a2f4b1a41cdb150dc3698352d，继承四组候选，未重新读取全部CSV字节。RUN=解析区间排序反转阈值 epsilon=(a-b)/(a+b)；Mx S02/S01=0.085274%，My 11.4 S04/19.20 S04=4.849555%；epsilon=0.1%可反转Mx两seed，1%不能反转该My候选对。程序/算术=Python独立双精度算术执行；原生CLI及完整36组区间前沿重排NOT_RUN。科研增量已写入既有S10研究正文，commit 2628834857ac2c96856a02328c13edd0d4ebc700；仅四组已列候选条件比较，不声称全36组稳健性，epsilon是假设误差非统计CI；TAB2 FIG0，REF/STANDARD/OFFICIAL无新增。阶段晋级0/12、DLC1.2 0/126，最大非Abaqus HOLD=同模型同步独立W侧气动力/惯性归属；下一唯一动作=从已有真实72行原始CSV实施36组完整区间Pareto敏感性和seed重采样拒绝测试，而非重复四行。禁Abaqus/CAE、冻结母本、main、昂贵RUN和PR合并。
+
 
 
 ## 2026-11-19 20时｜S12正式Ch4双轴DEL4 Pareto科学正文整合（v0.32.73）
