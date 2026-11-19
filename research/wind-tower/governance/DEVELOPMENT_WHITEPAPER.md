@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.71**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.72**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -634,3 +634,6 @@
 
 ### 2026-11-19 18时｜v0.32.71 PATCH — S12正式Ch6真实ESM长周期留出诊断整合
 - SOURCE=33周期ESM处理谱Git blob 6839e497da8ebc11b15fd901118471ce2b865d2c；RUN=继承17时真实源级积分，不重复仿真；新增正式论文 chapters/06_结论与展望.md §6.1.7，commit e5160a722a23c4fb26a88d2dddd27d723106c15e，blob 024e0ea4a070f784d8c4b84a3a9913381a7cd6ed；明确冻结训练留出与全信息可行性不同、方向差值+0.155370/-0.033633及示意谱适用域。TAB沿用4行、FIG0；独立CLI/原始SHA256 NOT_RUN；12阶段0/12、DLC1.2 0/126；物理W/E/WE和场址谱HOLD。
+
+### 2026-11-19 19时｜v0.32.72 PATCH — S10真实36组双轴DEL4 Pareto覆盖拒绝试验
+- SOURCE=T062真实72行双通道DEL4 CSV Git blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`；RUN=连接器JS直接读取原文，36个配对工况中4个非支配，单工况最优折中 `U19p202140_ETM_S04` 最大相对漏失9.2505013%，精确保留双轴历史峰值需至少两工况。科研实物 `research/wind-tower/experiments/T080/S10_TWO_AXIS_DEL4_PARETO_SCREEN_20261119.md` [commit 1328782](https://github.com/g2066203208-beep/voxel-frontier/commit/1328782626880c291176cb2f308ab19c1d172d5c)；T080日志commit [6396324](https://github.com/g2066203208-beep/voxel-frontier/commit/6396324a7050bfa603242cd5d69af90acfa1a094)。TEST=真实源级数值PASS、原生CLI/原字节SHA256 NOT_RUN；TAB4 FIG0，REF/STANDARD/OFFICIAL无新增授权原页；不构成材料寿命/同态W/WE/正式DLC1.2/安全PASS。12阶段晋级0/12，DLC1.2 0/126；未碰禁止范围、冻结母本、main、昂贵RUN或PR合并。
