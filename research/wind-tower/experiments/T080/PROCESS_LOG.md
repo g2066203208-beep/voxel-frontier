@@ -1,3 +1,6 @@
+## 2026-11-19 12时｜S12先行疲劳研究直接竞争性与识别边界
+READ-BEFORE-WRITE：PR#42 Open/Draft，基线HEAD b893f0726dde8b85a738b04c4efebd83c1bd8652；读根/研究AGENTS、COMMAND_ROOM、白皮书v0.32.65、正式STATUS、12阶段、T079/T080、现有期刊稿。旧MASTER路径404，不冒称已读。REF=2025 MSSP Wang et al. DOI 10.1016/j.ymssp.2025.113243（公开索引摘要，未核全文）；JEE 2026 DOI 10.1080/13632469.2026.2671807（出版商摘要/数据声明），Zenodo 10.5281/zenodo.19346369记录/字节无法取得。新增期刊四行对照表及实质识别论证，commit aa1b02add70fc0d19b0a505aaeafb36b92ec6249，blob bcd9ac9dee08dd2e4234d26e06884c8fe3c2d15c。确认非线性混塔疲劳、雨流、S–N、风速风向联合KDE已有先行成果；本文只可限定历史风载筛选可靠性与缺箱不可识别性，不得声称首次材料疲劳。SOURCE=已归档ERA5与T062历史统计（本轮未复算）；RUN=无新增物理/独立数值；TAB4 FIG0；STANDARD/OFFICIAL无新授权原页；全文/Zenodo与独立验证HOLD。12阶段晋级0/12，正式DLC1.2 0/126；最大非Abaqus HOLD=同态独立W侧同步气动力/惯性归属。下一唯一动作=若Zenodo原件可取则校验文件清单、SHA与模型可比性；否则转S05其他可核官方原件，不重复文献摘要。未触碰Abaqus/CAE、冻结母本、main、昂贵RUN或PR合并。
+
 ## 2026-11-19 11时｜S12两篇2026年160m混塔竞争论文的来源限定对照
 SOURCE/REF：JEE DOI 10.1080/13632469.2026.2671807，出版商摘要、作者/发布日期及Zenodo数据声明；RCS DOI 10.1016/j.rcns.2026.03.002，出版商开放全文摘要/引言/§6/结论，5(2):47–64。已读范围不包含JEE完整方法、两文全部图表及补充文件。科研正文commit d4af2f357390725fe31b67bdce09b3f27103cc49，blob 5965fa648150c4267ef2df9f21c8ef3cf14ae394；新增三方方法/适用域对照表，明确JEE已有风震同步研究、RCS已有PT提高21.9%消除报告的0.40MPa拉应力，不能宣称风震/PT首创。本文贡献限于历史OpenFAST风载筛选可识别性与统计稳定性；需独立风seed、完整DLC和材料局部应力才可推广。REF=出版商页面，STANDARD/OFFICIAL无新增，RUN=无新物理运算，FIG0 TAB1；全文对照与Zenodo字节核查HOLD。12阶段晋级0/12，DLC1.2 0/126；不涉及Abaqus/CAE任务。
 
