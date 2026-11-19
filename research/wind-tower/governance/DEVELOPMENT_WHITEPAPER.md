@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.76**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.77**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -651,3 +651,7 @@
 
 ### 2026-11-20 00时｜v0.32.76 PATCH — S10真实NTM六seed双通道配对bootstrap
 - SOURCE=T062真实72行DEL4 CSV Git blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`；RUN=V8直接源级解析18NTM、三箱各6seed、双通道同seed索引配对bootstrap 20,000次（xorshift32 seed 20261120），按5736/1426/2条件小时四次矩加权；Mx点估计2097.749940、百分位范围1990.059005–2194.118066，My点估计13402.034259、范围12463.102637–14217.559590 kN·m。程序 [commit 501d82a](https://github.com/g2066203208-beep/voxel-frontier/commit/501d82af3f8cebffe5a79ba731b562a7599724a7) 路径 `research/wind-tower/experiments/T080/s10_ntm_paired_bootstrap_20261120.cjs`；期刊科研正文 [commit 86d7229](https://github.com/g2066203208-beep/voxel-frontier/commit/86d7229bf3c05f876d51e485d9cb6383a6f5eb98) 路径 `research/wind-tower/manuscript/journal-wind-fatigue-results.md`，Git blob `3f68dbc259929dceea313373c88fba1a1f849c24`。TEST=V8源级数值PASS、原生Node CLI/原字节SHA256 NOT_RUN；TAB2 FIG0，REF/STANDARD/OFFICIAL无新授权原页；NTM条件估计量百分位不具备ETM逐seed误差传递资格，非CI覆盖保证、DLC1.2、Miner或同态WE PASS。12阶段晋级0/12，正式DLC1.2 0/126；禁区未触碰。
+
+
+### 2026-11-20｜v0.32.77 PATCH — 正式第四章NTM六seed条件bootstrap方法与统计拒绝边界
+- 科研正文路径 manuscript/final-thesis/chapters/04_10MW混合塔架风致疲劳性能分析.md；[commit 4a1c580](https://github.com/g2066203208-beep/voxel-frontier/commit/4a1c580a01f762534a416e126886afeb8591f5e3)，Git blob 7165243cdf14001eddaed2c4a24501411e59db95。SOURCE=T062真实72行CSV blob 1b334e9afdbd792a2f4b1a41cdb150dc3698352d，历史SHA256 b362bcd7c37ccc56e21035de39448b5e761ec03f371b6b2f3eb30f41b013630d（未重算）；RUN=继承00时真实20,000次NTM配对bootstrap而非新物理计算，正式正文两行数表、公式、条件权重与ETM不可迁移的拒绝结论；TEST=历史V8源级PASS，本轮独立CLI/字节散列NOT_RUN；TAB2 FIG0，REF/STANDARD/OFFICIAL无新增原页。12阶段0/12、DLC1.2 0/126；材料寿命与同态风震HOLD。
