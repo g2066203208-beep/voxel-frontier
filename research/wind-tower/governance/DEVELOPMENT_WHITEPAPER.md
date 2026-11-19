@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.79**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.80**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -661,3 +661,6 @@
 
 ### 2026-11-20 03时｜v0.32.79 PATCH — S12真实ERA5小时覆盖与四次幂代理冲突反例
 - SOURCE=T062 31行真实ERA5小时CSV Git blob 1bae743b385d4f24c8b5af3e0b445aae30d40c6f；RUN=V8按真实小时计算条件四次幂风速代理Q总和311960831.25 h(m/s)^4；五新增箱小时最优4–8m/s对应95.9457%小时/75.4523%代理，代理最优5/6/7/8/10m/s对应73.7025%小时/84.1824%代理，构成等预算目标冲突。正式Ch3§3.9.3 [commit 731ca4a](https://github.com/g2066203208-beep/voxel-frontier/commit/731ca4ac338845a742d634164ad7bb4e7ce9fb57)，Git blob bd642a303d87f73b67ea765181e16f61009d5a3a；T080日志 [commit db63314](https://github.com/g2066203208-beep/voxel-frontier/commit/db63314bc05be42586d9617770e14f9b8b34ed41)。TEST=条件数学PASS，原生CLI/CSV字节SHA256 NOT_RUN；TAB2 FIG0；REF/STANDARD/OFFICIAL无新原页。代理不是实际DEL或Miner，真实载荷、同态W、正式DLC1.2仍HOLD；阶段晋级0/12。
+
+### 2026-11-20｜v0.32.80 PATCH — 正式Ch4真实双轴DEL4 Pareto数据图
+- SOURCE=T062 72行历史双轴DEL4 Git blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`；FIG=`manuscript/final-thesis/figures/FIG_S10_36WIND_BIAXIAL_DEL4_PARETO_20261120.svg` [commit ee900b1](https://github.com/g2066203208-beep/voxel-frontier/commit/ee900b1c9dadb84cedaa80a69a6f2a82f848c703)；正式Ch4§4.8.17 [commit 0f3d9b2](https://github.com/g2066203208-beep/voxel-frontier/commit/0f3d9b2e2b198630ed8e552ee8103a6f5707e5c3)；T080过程commit `3e8d69977feb4fa0115e0496e1d832adbc0b57c8`。RUN=历史真实四点数据可视化；TAB0 FIG1，CSV字节SHA256/独立渲染NOT_RUN；REF/STANDARD/OFFICIAL无新增；源级图示完成、物理与材料Miner HOLD，12阶段0/12、DLC1.2 0/126。未触碰禁止范围。
