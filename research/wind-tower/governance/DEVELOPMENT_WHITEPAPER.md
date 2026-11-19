@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.72**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.73**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -637,3 +637,6 @@
 
 ### 2026-11-19 19时｜v0.32.72 PATCH — S10真实36组双轴DEL4 Pareto覆盖拒绝试验
 - SOURCE=T062真实72行双通道DEL4 CSV Git blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`；RUN=连接器JS直接读取原文，36个配对工况中4个非支配，单工况最优折中 `U19p202140_ETM_S04` 最大相对漏失9.2505013%，精确保留双轴历史峰值需至少两工况。科研实物 `research/wind-tower/experiments/T080/S10_TWO_AXIS_DEL4_PARETO_SCREEN_20261119.md` [commit 1328782](https://github.com/g2066203208-beep/voxel-frontier/commit/1328782626880c291176cb2f308ab19c1d172d5c)；T080日志commit [6396324](https://github.com/g2066203208-beep/voxel-frontier/commit/6396324a7050bfa603242cd5d69af90acfa1a094)。TEST=真实源级数值PASS、原生CLI/原字节SHA256 NOT_RUN；TAB4 FIG0，REF/STANDARD/OFFICIAL无新增授权原页；不构成材料寿命/同态W/WE/正式DLC1.2/安全PASS。12阶段晋级0/12，DLC1.2 0/126；未碰禁止范围、冻结母本、main、昂贵RUN或PR合并。
+
+### 2026-11-19 20时｜v0.32.73 PATCH — S12正式Ch4双轴DEL4非支配控制工况研究整合
+- SOURCE=T062历史72行DEL4 CSV Git blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`；RUN=继承19时真实36组Pareto源级计算，4组非支配、最优单工况历史双轴最大相对漏失9.2505%；新增正式论文`manuscript/final-thesis/chapters/04_10MW混合塔架风致疲劳性能分析.md` §4.8.15，commit [e6802ac](https://github.com/g2066203208-beep/voxel-frontier/commit/e6802ace183aab4c5cba35c9cae0494b57eb1d21)，Git blob `a6042c09435ed55591ecc6de78d788ce1b16d8b3`；新增相位/相关性反例论证说明双轴标量DEL的Pareto支配不能替代局部材料应力雨流。TEST=远端正文回读，原生CLI/原CSV SHA256 NOT_RUN；TAB4 FIG0；REF/STANDARD/OFFICIAL无新原页，真实同步风时程、材料Miner、正式DLC1.2与物理验收HOLD；12阶段晋级0/12。T080过程commit [60522e6](https://github.com/g2066203208-beep/voxel-frontier/commit/60522e69ea721c5eab2ba2f063d1113750631dda)。
