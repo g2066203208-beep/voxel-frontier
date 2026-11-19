@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.78**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.79**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -658,3 +658,6 @@
 
 ### 2026-11-20 02时｜v0.32.78 PATCH — S12 ERA5真实小时权重的等成本最小补箱精确解
 - SOURCE=31箱ERA5整数小时Git blob 1bae743b385d4f24c8b5af3e0b445aae30d40c6f（历史SHA256 e4058620a36b23bb218103875d4dc5b0711fc45d418b23a2208c2fc9c16c9102，本轮未重哈希）；RUN=V8源级真实整数小时排序与交换最优性证明。新增正式Ch3§3.9.2五行阈值表：目标50/80/90/95/99%分别需2/4/5/5/7个额外箱，对应55.0608/87.2975/95.9457/95.9457/99.5220%条件小时覆盖。[正文commit 58cb327](https://github.com/g2066203208-beep/voxel-frontier/commit/58cb327f447b084f2622b2f69c4216a39cde0413)，blob 408579336920a0e71ca8eda5c8e3c24f5c585486；T080过程commit 8e896f171ca54c932fedaa2931010e27feb0153b。TEST=等成本整箱条件数学PASS，原生CLI NOT_RUN，TAB5 FIG0；REF/STANDARD无新授权原页。低风速实际运行及BTS/OUTB未验，30槽仅计划非正式DLC1.2，12阶段晋级0/12、DLC1.2 0/126；禁区未触碰。
+
+### 2026-11-20 03时｜v0.32.79 PATCH — S12真实ERA5小时覆盖与四次幂代理冲突反例
+- SOURCE=T062 31行真实ERA5小时CSV Git blob 1bae743b385d4f24c8b5af3e0b445aae30d40c6f；RUN=V8按真实小时计算条件四次幂风速代理Q总和311960831.25 h(m/s)^4；五新增箱小时最优4–8m/s对应95.9457%小时/75.4523%代理，代理最优5/6/7/8/10m/s对应73.7025%小时/84.1824%代理，构成等预算目标冲突。正式Ch3§3.9.3 [commit 731ca4a](https://github.com/g2066203208-beep/voxel-frontier/commit/731ca4ac338845a742d634164ad7bb4e7ce9fb57)，Git blob bd642a303d87f73b67ea765181e16f61009d5a3a；T080日志 [commit db63314](https://github.com/g2066203208-beep/voxel-frontier/commit/db63314bc05be42586d9617770e14f9b8b34ed41)。TEST=条件数学PASS，原生CLI/CSV字节SHA256 NOT_RUN；TAB2 FIG0；REF/STANDARD/OFFICIAL无新原页。代理不是实际DEL或Miner，真实载荷、同态W、正式DLC1.2仍HOLD；阶段晋级0/12。
