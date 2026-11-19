@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.82**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.83**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -670,3 +670,6 @@
 
 ### 2026-11-20 06时｜v0.32.82 PATCH — S12真实双轴DEL4精确两工况极值覆盖
 - SOURCE=T062真实72行CSV blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`；RUN=36个双轴配对case、36单组及630二元组源级穷举。Mx峰9468.855048、My峰26802.478502 kN·m分属不同工况；最优单组最大相对漏失9.250501%，唯一零漏失双组U11p4_ETM_S04+U19p202140_ETM_S02，次优0.170402%。正式Ch4§4.8.19三行数表与数学证明 [commit 79c1a554](https://github.com/g2066203208-beep/voxel-frontier/commit/79c1a554e71d630a439dc7186bb6a9e638c367ce)，blob `f54645992f5f5f1c2f28cf123735fbbf15542f52`；T080 [commit 41a55a3](https://github.com/g2066203208-beep/voxel-frontier/commit/41a55a3d987bd7c530e788bbd4a4c8682bccc4d8)。TEST=源级穷举PASS，原CSV字节SHA256/独立CLI NOT_RUN，TAB3 FIG0；仅历史双轴标量screening，不是材料Miner或同态风震；12阶段0/12、正式DLC1.2 0/126，最大非Abaqus HOLD=真实同态W侧独立气动力与惯性归属。未触碰禁止范围。
+
+### 2026-11-20 07时｜v0.32.83 PATCH — S11真实1984行整风速盲留出峰值捕获FAIL
+- SOURCE=T077四ETM×31段×16方位1984行，Git blob `b5effa2a493cec0a9af8a10a3b93df0ff997d2d0`（历史SHA256 `16c9864ef7a344e5b97338c31ce26de6adb86c0f0f64942ef894fe9983926b2b`，未重算）。RUN=V8源级整风速留出，预测冠军真实峰值捕获率9.343881/11.4/19.202140m/s为99.905518/100/95.920144%，高风≥99%假说FAIL；[程序commit e8a7a99](https://github.com/g2066203208-beep/voxel-frontier/commit/e8a7a99376a2ccfe8bfc55e0889c46fbf551fbaf)、[期刊三行表commit 075ff49](https://github.com/g2066203208-beep/voxel-frontier/commit/075ff4920be55253285354a8d2770db69572417a)、[T080过程commit eed27cc](https://github.com/g2066203208-beep/voxel-frontier/commit/eed27ccc88223192d8bc8fac3176cb2baaca5c8d)。TEST=源级PASS，原生CLI/CSV字节SHA256 NOT_RUN；TAB3 FIG0，REF/STANDARD/OFFICIAL无新增；外推两组先验拒绝，插值仅候选，非材料Miner/物理/正式DLC1.2。12阶段晋级0/12，正式DLC1.2 0/126；同态W侧独立气动力/惯性归属HOLD。禁止范围未触碰。
