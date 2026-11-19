@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.63**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.64**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -608,3 +608,6 @@
 
 ### 2026-11-19｜v0.32.63 PATCH — S12真实半循环四次矩结论正式Ch4装配
 - SOURCE=T062 48070行真实雨流账本blob d34adf0caaaecb319fc262d3ba425e77b1f0f086；继承08时V8源级72/72 DEL4复算PASS，新增正式Ch4§4.8.14三行表、半循环90.2253%贡献反例与端点因果不可识别性边界。[正文commit 5ef875e](https://github.com/g2066203208-beep/voxel-frontier/commit/5ef875e3bf37810ececc0b6ee78fc74e40aa9348)，blob 368cd510587ac28aba63c2cbd759794df726b5c3。RUN=科学正文整合，非新物理RUN；CLI及原CSV字节SHA256 NOT_RUN；TAB3 FIG0，REF/STANDARD/OFFICIAL无新原页；12阶段晋级0/12、DLC1.2 0/126，材料Miner/同态W HOLD。
+
+### 2026-11-19 10时｜v0.32.64 PATCH — S10真实72行峰峰值替代DEL排序的拒绝证据
+- SOURCE=T062 72行真实DEL4 CSV blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`；RUN=V8直接读取11,496字符72行，证明DEL4≤(Mmax−Mmin)(N/100000)^(1/4)并实测72/72满足；36工况每通道630对中Mx 21对、My 83对峰峰值与DEL4排序逆转，最不利工况身份也不同。[科研程序commit b08666e](https://github.com/g2066203208-beep/voxel-frontier/commit/b08666ed169a6882b98bcc03732f2fa522d4b527)，[期刊正文+2行表commit 1bfb62d](https://github.com/g2066203208-beep/voxel-frontier/commit/1bfb62dd1fa72bf54c0e02d58afb8ea26fea7c3b)，[T080过程commit c38835b](https://github.com/g2066203208-beep/voxel-frontier/commit/c38835b8b02f58082e37487f8ab40dc77c68c417)。TEST=V8实算PASS；原生Node CLI/原字节SHA256 NOT_RUN；TAB2 FIG0，REF/STANDARD/OFFICIAL无新原页；不是材料Miner、正式DLC1.2或物理验证。12阶段晋级0/12，正式DLC1.2 0/126；同态W侧同步气动力/惯性身份HOLD。未触碰禁止范围、冻结母本、main、昂贵RUN或PR合并。
