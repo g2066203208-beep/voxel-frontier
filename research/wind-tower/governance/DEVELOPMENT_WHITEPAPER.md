@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.70**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.71**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -630,3 +630,7 @@
 
 ### 2026-11-19｜v0.32.70 PATCH — S05真实ESM长周期log-period加权缺口
 - SOURCE=33周期ESM处理谱blob 6839e497da8ebc11b15fd901118471ce2b865d2c；RUN=冻结训练k后的log-period梯形求积，留出D独立RotD50/100=0.597648/0.660495、联合=0.753018/0.626862；[期刊正文及4行表commit 43e7f9b](https://github.com/g2066203208-beep/voxel-frontier/commit/43e7f9b9b195884d178161775ca0410677bfbcdf)，blob 81079faa8dfe22e079332860d3d3b80ea9852fa6。源级JS数值PASS，原件SHA256/CLI NOT_RUN；TAB4 FIG0，示意谱不等于工址设计谱，物理HOLD；12阶段0/12、DLC1.2 0/126。
+
+
+### 2026-11-19 18时｜v0.32.71 PATCH — S12正式Ch6真实ESM长周期留出诊断整合
+- SOURCE=33周期ESM处理谱Git blob 6839e497da8ebc11b15fd901118471ce2b865d2c；RUN=继承17时真实源级积分，不重复仿真；新增正式论文 chapters/06_结论与展望.md §6.1.7，commit e5160a722a23c4fb26a88d2dddd27d723106c15e，blob 024e0ea4a070f784d8c4b84a3a9913381a7cd6ed；明确冻结训练留出与全信息可行性不同、方向差值+0.155370/-0.033633及示意谱适用域。TAB沿用4行、FIG0；独立CLI/原始SHA256 NOT_RUN；12阶段0/12、DLC1.2 0/126；物理W/E/WE和场址谱HOLD。
