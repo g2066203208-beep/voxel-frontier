@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.62**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.63**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -605,3 +605,6 @@
 
 ### 2026-11-19 08时｜v0.32.62 PATCH — S10真实48070循环半计数四次矩影响
 - SOURCE=T062 ledger `experiments/T062/recomputed-load-fatigue/03_RAINFLOW_CYCLE_LEDGER_RECOMPUTED.csv` Git blob `d34adf0caaaecb319fc262d3ba425e77b1f0f086`，历史SHA256 `067c60cea61b35398edd186ff509fe759d1c4420395f082d06c666d92d897ecb`（本轮未字节复算）；DEL4表blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`。RUN=V8源级48,070行→72/72组DEL4和cycle count独立重构完全一致；823半计数行仅占1.7121%却在19/72组贡献>50%的m4矩，最高My/9.343881 ETM S06为90.2253%。[程序commit 708b369](https://github.com/g2066203208-beep/voxel-frontier/commit/708b369de5d07e11359762dff7c9b12316358e66)，[期刊三行数表及方法commit e8d4bea](https://github.com/g2066203208-beep/voxel-frontier/commit/e8d4beac6a81f06bec059dcd5e96a4637a9d9cd0)，[过程commit 13ab195](https://github.com/g2066203208-beep/voxel-frontier/commit/13ab1954cfd1b101c814a90d264155bb3c62d406)。TEST=V8实算PASS，原生Node CLI NOT_RUN；TAB3 FIG0；REF/STANDARD/OFFICIAL无新原页。半计数是合法雨流表达，不能判定端点错误或删除；需原时程独立截断试验。材料Miner/正式DLC1.2/同态W侧仍HOLD；12阶段0/12、正式DLC1.2 0/126；禁Abaqus/CAE、冻结母本、main、昂贵RUN、PR合并。
+
+### 2026-11-19｜v0.32.63 PATCH — S12真实半循环四次矩结论正式Ch4装配
+- SOURCE=T062 48070行真实雨流账本blob d34adf0caaaecb319fc262d3ba425e77b1f0f086；继承08时V8源级72/72 DEL4复算PASS，新增正式Ch4§4.8.14三行表、半循环90.2253%贡献反例与端点因果不可识别性边界。[正文commit 5ef875e](https://github.com/g2066203208-beep/voxel-frontier/commit/5ef875e3bf37810ececc0b6ee78fc74e40aa9348)，blob 368cd510587ac28aba63c2cbd759794df726b5c3。RUN=科学正文整合，非新物理RUN；CLI及原CSV字节SHA256 NOT_RUN；TAB3 FIG0，REF/STANDARD/OFFICIAL无新原页；12阶段晋级0/12、DLC1.2 0/126，材料Miner/同态W HOLD。
