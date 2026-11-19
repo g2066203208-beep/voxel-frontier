@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.68**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.69**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -624,3 +624,6 @@
 
 ### 2026-11-19 15时｜v0.32.68 PATCH — S08真实E-only方向峰值的同步二维响应不可识别性
 - SOURCE=T079 S08全采样收据 `experiments/T079/real-records/S08_158M_BEAM_PROXY_FULL_RATE_RECEIPT_20261106.json` Git blob `307328336eff2d7c9e392266c15fe5040ca53c1f`（八个已归档标量峰，原波形本轮未重新取字节）；RUN=Python独立四组 `hypot` 算术，证明若仅有同步二维分量峰值A/B，则合成峰值只可处于sharp区间[max(A,B),hypot(A,B)]，真实HNE/HNN是不同方向E-only代理RUN，不能视为同态同步物理分量。TAB4 FIG0；[源级程序commit 9f614e4](https://github.com/g2066203208-beep/voxel-frontier/commit/9f614e434748d58030d0809cd96abb832efe9297) `experiments/T080/s08_peak_only_identifiability.cjs`；[期刊正文commit 3c18c59](https://github.com/g2066203208-beep/voxel-frontier/commit/3c18c597f772549c2f9f15d5cda9ebc77bc0c2d0) `manuscript/journal-wind-fatigue-results.md`；T080日志commit dda6f68bc2436f83b840d4478fb889e366b5908f。TEST=Python算术PASS，原生Node CLI及全波形同步检验NOT_RUN；REF/STANDARD/OFFICIAL无新原页；12阶段晋级0/12、DLC1.2 0/126，真实二维合成/同态W/WE及物理验证HOLD；无Abaqus/CAE、冻结母本、main、昂贵RUN或PR合并。
+
+### 2026-11-19 16时｜v0.32.69 PATCH — S08源锁定20倍抽样零空间拒绝试验
+- SOURCE=真实S08全采样收据 `experiments/T079/real-records/S08_158M_BEAM_PROXY_FULL_RATE_RECEIPT_20261106.json` Git blob `307328336eff2d7c9e392266c15fe5040ca53c1f`；32,040点/方向、0.005s，历史20倍抽样与旧文件完全一致。RUN=数学反例 `z_j=A sin(pi j/20)`，旧网格全零而全采样峰值可任意大；真实源锁定数值为Nyquist 100Hz→5Hz、首末160.195s、分辨率0.006242197Hz。科研程序 `experiments/T080/s08_decimation_nullspace_rejection.cjs` [commit 44956ae](https://github.com/g2066203208-beep/voxel-frontier/commit/44956aece3c03270ca2a72279d4b504621cd00d6)，blob `600f15705856d4f9008aa2a02f723a95598f9390`；[期刊正文及4行表commit b274668](https://github.com/g2066203208-beep/voxel-frontier/commit/b274668274ea3bb3475fa7367503a5eb1b8950fe)，blob `b9cf7b587ebb6a543e3f73170ef2b69685d180a8`；[T080过程commit b626017](https://github.com/g2066203208-beep/voxel-frontier/commit/b626017eecf620d9759cda90d745305b061e2367)。TEST=源级元数据算术独立Python复算，Node CLI NOT_RUN；数学零空间反例非真实物理高频，原64,080行未重新取字节，REF/STANDARD/OFFICIAL无新授权原页，FIG0 TAB4；12阶段晋级0/12，正式DLC1.2 0/126；同态W侧、实际抽样误差与材料Miner HOLD。未碰Abaqus/CAE、冻结母本、main、昂贵RUN、PR合并。
