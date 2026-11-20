@@ -1484,9 +1484,9 @@ Both transfers miss the exact winning segment but lose only 0.007709 and 0.00773
 
 ### Source-level test: asynchronous horizontal peak envelopes versus coincident-vector peaks in 18 NTM records (20 November 2026)
 
-**Question and observable.** For each of the 18 archived 600-s NTM records (three wind-speed groups, six labeled seeds per group), the source-admission table records (r=\max_t\sqrt{M_x(t)^2+M_y(t)^2}/\sqrt{(\max_t|M_x(t)|)^2+(\max_t|M_y(t)|)^2}\), a same-time horizontal-moment vector peak divided by the conventional asynchronous component-maxima vector. By construction (0\le r\le1). This observable is a *moment-envelope simultaneity diagnostic*, not a reconstructed synchronized six-component wind-only force, nor a fatigue damage statistic. Its interpretation presupposes that the two moment channels and their sample times were aligned in the original source pipeline.
+**Question and observable.** For each of the 18 archived 600-s NTM records (three wind-speed groups, six labeled seeds per group), the source-admission table records the ratio `r = max_t sqrt(Mx(t)^2 + My(t)^2) / sqrt(max_t |Mx(t)|^2 + max_t |My(t)|^2)`, where each maximum in the denominator is taken separately over time. This is a same-time horizontal-moment vector peak divided by the conventional asynchronous component-maxima vector. By construction `0 <= r <= 1`. This observable is a *moment-envelope simultaneity diagnostic*, not a reconstructed synchronized six-component wind-only force, nor a fatigue damage statistic. Its interpretation presupposes that the two moment channels and their sample times were aligned in the original source pipeline.
 
-| Archived NTM wind speed (m/s) | Cases | Mean (r) | Sample SD of (r) | Observed range of (r) | (100(1/\bar r-1)\), % |
+| Archived NTM wind speed (m/s) | Cases | Mean r | Sample SD of r | Observed range of r | 100 × (1 / mean(r) − 1), % |
 |---|---:|---:|---:|---:|---:|
 | 9.343881 | 6 | 0.998585741 | 0.000531816 | 0.998047385–0.999420216 | 0.141626 |
 | 11.400000 | 6 | 0.996512249 | 0.000813923 | 0.995580683–0.997951322 | 0.349996 |
