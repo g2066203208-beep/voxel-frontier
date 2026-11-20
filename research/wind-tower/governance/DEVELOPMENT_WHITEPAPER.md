@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.83**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.84**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -673,3 +673,6 @@
 
 ### 2026-11-20 07时｜v0.32.83 PATCH — S11真实1984行整风速盲留出峰值捕获FAIL
 - SOURCE=T077四ETM×31段×16方位1984行，Git blob `b5effa2a493cec0a9af8a10a3b93df0ff997d2d0`（历史SHA256 `16c9864ef7a344e5b97338c31ce26de6adb86c0f0f64942ef894fe9983926b2b`，未重算）。RUN=V8源级整风速留出，预测冠军真实峰值捕获率9.343881/11.4/19.202140m/s为99.905518/100/95.920144%，高风≥99%假说FAIL；[程序commit e8a7a99](https://github.com/g2066203208-beep/voxel-frontier/commit/e8a7a99376a2ccfe8bfc55e0889c46fbf551fbaf)、[期刊三行表commit 075ff49](https://github.com/g2066203208-beep/voxel-frontier/commit/075ff4920be55253285354a8d2770db69572417a)、[T080过程commit eed27cc](https://github.com/g2066203208-beep/voxel-frontier/commit/eed27ccc88223192d8bc8fac3176cb2baaca5c8d)。TEST=源级PASS，原生CLI/CSV字节SHA256 NOT_RUN；TAB3 FIG0，REF/STANDARD/OFFICIAL无新增；外推两组先验拒绝，插值仅候选，非材料Miner/物理/正式DLC1.2。12阶段晋级0/12，正式DLC1.2 0/126；同态W侧独立气动力/惯性归属HOLD。禁止范围未触碰。
+
+### 2026-11-20｜v0.32.84 PATCH — 正式Ch5真实ETM跨风速峰值捕获拒绝整合
+- SOURCE=T077 1984行历史名义毛截面DEL4，Git blob `b5effa2a493cec0a9af8a10a3b93df0ff997d2d0`，历史字节SHA256 `16c9864ef7a344e5b97338c31ce26de6adb86c0f0f64942ef894fe9983926b2b`（本轮未重哈希）；RUN=继承T080真实三风速整组盲留出程序及结果，新增正式Ch5§5.4.99三行数表与预测前拒绝域、冠军峰值捕获定义及可证伪失败讨论，[科研正文commit e535d17](https://github.com/g2066203208-beep/voxel-frontier/commit/e535d1762a18fce57e39af60901f26066f7fbf8a)，Git blob `080cca8a109a1e790fabbe1a5c4e1d826184b478`；[T080过程commit cf34a61](https://github.com/g2066203208-beep/voxel-frontier/commit/cf34a619f6120c18d383996a2b56ccfa873da175)。TEST=继承源级数值PASS，普遍≥99%峰值捕获假说FAIL（高风95.920144%），本轮无独立CLI/新物理RUN/Word视觉；FIG0 TAB3；REF仅继承两篇2026竞争研究背景，STANDARD/OFFICIAL无新增授权原页；12阶段晋级0/12，DLC1.2 0/126，W侧同态气动力/惯性、材料Miner与跨设计优化HOLD。下一唯一动作=实际导师Word装配及页级视觉验收，若源不可用切S05独立来源。
