@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.91**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.92**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -28,6 +28,10 @@
 - 下一独立非Abaqus动作：核对/恢复可证明同模型、运行状态、时间网格和起点的W侧真实时程；没有可追溯来源时记录HOLD并转向S05/S10可独立研究，不造数据。
 
 ## 4. 版本变更记录（只记录真实持久化事务）
+
+### 2026-11-20｜v0.32.92 PATCH — S06真实18NTM全交叉区间分离拒绝配对依赖
+- SOURCE=T062真实18行CSV blob `8ee0a7df7d0ee8173695237ce7d34c361ec39a41`；RUN=连接器JS对三风速两两36组×3=108跨组对比，全部严格有序，低/中与中/高最小差0.000096062368/0.007051539475；六种同索引删点均值差区间0.001941417403–0.002404833998及0.018107266958–0.021824207400。新增[期刊科研论证与三行表](https://github.com/g2066203208-beep/voxel-frontier/commit/25f522a6949f3cfd4910d673ccb5b1e105339945)，blob `1aa5d975eb7d3ec2287ae524a6f9eecaaf8f32d7`；[T080过程](https://github.com/g2066203208-beep/voxel-frontier/commit/aba7cccdd21dfb02378bdf590403f1c081b64e4c)。TEST=原表源级PASS，原.outb/CLI/CSV字节SHA256 NOT_RUN；108个相关组合不可视为独立样本，未证明总体随机占优、统计显著、材料Miner或DLC1.2。TAB3 FIG0，12阶段晋级0/12，DLC1.2 0/126；同态W侧独立外气动力及惯性归属HOLD。
+
 
 ### 2026-11-20｜v0.32.91 PATCH — S12导师Word真实Ch5证据装配与目标页视觉复验
 - SOURCE=11月13日原导师Word Actions artifact #13983839125（到期2026-12-12），原DOCX SHA256 `f2e8a68166cb129aee7611d914f9ce2d3695fe8b1c2ad2f58aa1c35f80505769`；T077 1984行真实名义应力DEL4源CSV blob `b5effa2a493cec0a9af8a10a3b93df0ff997d2d0`。RUN=实际本地python-docx向原193页导师版Ch5插入§5.4.99/100及5行历史真实数表，新增本地DOCX SHA256 `d0f8d6ac35a2a56b83f03cf03f6e14f67f7d315ad0da8c497fbd8998dd68bafe`；LibreOffice实渲194页，目标p176两表与正文视觉PASS，首次跨页问题修复；[可复现装配程序commit](https://github.com/g2066203208-beep/voxel-frontier/commit/9fb6f4b235259ebac97da5297d80cd4c80264027)、[T080收据](https://github.com/g2066203208-beep/voxel-frontier/commit/41ee99b7346531a4bbc532f7d4ce52366ebefefc)。TEST=本地Word装配+目标页视觉PASS；新提交程序独立CLI/194页全查/MS Word/物理验证NOT_RUN；大DOCX未上传GitHub，临时会话文件不得称远端持久化。TAB5 FIG0；12阶段0/12，DLC1.2 0/126，W侧同态HOLD。
