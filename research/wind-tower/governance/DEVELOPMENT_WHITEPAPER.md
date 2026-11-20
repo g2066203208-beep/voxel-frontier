@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.100**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.101**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -28,6 +28,10 @@
 - 下一独立非Abaqus动作：核对/恢复可证明同模型、运行状态、时间网格和起点的W侧真实时程；没有可追溯来源时记录HOLD并转向S05/S10可独立研究，不造数据。
 
 ## 4. 版本变更记录（只记录真实持久化事务）
+
+### 2026-11-21｜v0.32.101 PATCH — S12第四章真实历史结果的可识别边界装配
+- SOURCE=T062 72行DEL4 Git blob 1b334e9afdbd792a2f4b1a41cdb150dc3698352d；RUN=将历史三箱Mx 2.729214%、My 0.074990%条件份额与遗漏U≥0的嵌套扩展边界及U/K=0/1/9反事实3行表正式装入[第四章§4.8.21](https://github.com/g2066203208-beep/voxel-frontier/commit/515c3d8656ae5ee9f1b5f429e2e1cb4e76bc0b4d)，路径manuscript/final-thesis/chapters/04_10MW混合塔架风致疲劳性能分析.md，Git blob 34a61fa218653a8c1197d855a6dc87af8c1249ba；TEST=解析代数PASS，原ERA5逐小时/OUTB/材料局部应力NOT_RUN；FIG0 TAB3；12阶段晋级0/12、DLC1.2 0/126。
+
 
 ### 2026-11-21｜v0.32.100 PATCH — S10三箱条件四次矩的部分气候可识别上界
 - SOURCE=T062 72行DEL4 CSV Git blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`；RUN=严格证明嵌套且同定义非负遗漏四次矩时，高风箱扩大总体份额不超过历史条件Mx 2.729214%、My 0.074990%，下界可趋0；7164小时占106900诊断小时6.701590%、184080全小时3.891786%；U=K及9K反例。[期刊科学正文commit 74b6a0a](https://github.com/g2066203208-beep/voxel-frontier/commit/74b6a0a28fed3e50791c9dd071d06e713e30e1b4)，路径`research/wind-tower/manuscript/journal-wind-fatigue-results.md`，blob `f342a4a2cf70d1b9dce9ab099e4e838d8d9ac015`；TEST=代数PASS，原ERA5逐小时/OUTB/原CSV字节SHA未重核；FIG0 TAB0；不构成全气候疲劳、材料Miner或DLC1.2 PASS；12阶段晋级0/12。
