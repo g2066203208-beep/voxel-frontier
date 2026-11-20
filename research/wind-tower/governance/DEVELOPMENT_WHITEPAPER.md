@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.97**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.98**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -28,6 +28,11 @@
 - 下一独立非Abaqus动作：核对/恢复可证明同模型、运行状态、时间网格和起点的W侧真实时程；没有可追溯来源时记录HOLD并转向S05/S10可独立研究，不造数据。
 
 ## 4. 版本变更记录（只记录真实持久化事务）
+
+### 2026-11-21｜v0.32.98 PATCH — S10真实NTM四次矩贡献高风seed影响及正式Ch4装配
+- SOURCE=T062真实72行CSV blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`；RUN=18NTM、3风箱条件小时5736/1426/2，Mx高风箱六seed四次矩贡献2.729214%，六种单删点2.409660%–3.105475%；My全样本0.074990%，删点0.068831%–0.080307%；单seed极端替代Mx0.803208%–4.296102%，不是置信区间。[正式Ch4§4.8.20及2行表](https://github.com/g2066203208-beep/voxel-frontier/commit/50082123a8f3e96d85a07adbabb4f711fdf6596d)，blob `a49a4ebb1e105526cf5eecc7a7c851325774eb04`；TEST=真实CSV源级计算PASS，原OUTB、ERA5分箱边界及字节SHA256未独立复核；FIG0 TAB2；材料Miner/正式DLC1.2/同态W仍HOLD；12阶段晋级0/12。
+
+
 
 ### 2026-11-20｜v0.32.97 PATCH — S10真实NTM风箱条件四次矩贡献的双轴差异
 - SOURCE=T062 72行真实CSV blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`；RUN=18NTM三箱条件小时5736/1426/2，Mx四次矩贡献56.477350/40.793436/2.729214%，My为59.138157/40.786853/0.074990%，2小时高风箱仅0.027917%小时份额但Mx贡献约97.76倍小时份额；[期刊科研正文/三行数表](https://github.com/g2066203208-beep/voxel-frontier/commit/56c1abc51ae9f2a8571a67839b7ecb4ca1f77ac9)，路径`research/wind-tower/manuscript/journal-wind-fatigue-results.md` blob `bced628f980769ffda2387f8332d79ccdc505680`；[T080过程](https://github.com/g2066203208-beep/voxel-frontier/commit/cd931c985031c8258c434a52b712cb744f41add8)。TEST=V8真实源级算术PASS，原OUTB/字节SHA256 NOT_RUN；TAB3 FIG0；非材料Miner、非全气候或DLC1.2；12阶段晋级0/12，正式DLC1.2 0/126，同态W侧HOLD。
