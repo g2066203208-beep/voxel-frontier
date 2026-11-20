@@ -1585,3 +1585,27 @@ This ratio cancels the common `N_eq=100000` normalization; it is **not** a Miner
 **Result and falsification.** Within the observed three-bin conditional subset, the high-speed bin has only 2/7164 matched hours yet supplies 2.729% of the Mx fourth-moment index, approximately **97.76 times its hour fraction**, while supplying only 0.075% of My. The two bending axes therefore have materially different exposure-to-load amplification even with identical wind-hour weights. This directly falsifies the shortcut `moment share = hour share` for this historical archive. The bin's tiny hour count also makes the estimate highly sensitive to climate discretization, wind-speed uncertainty and the particular six simulated seeds; the amplification ratio is descriptive, not a confidence bound. The 7164 matched hours represent only 6.701590% of the 106900-hour diagnostic operating interval, so the shares cannot be extrapolated to full-life fatigue, used to infer damage in concrete/rebar/tendons/steel, or promoted to DLC1.2.
 
 **Evidence and independent checks.** SOURCE: T062 `05_LOAD_DEL_M4_ALL36_RECOMPUTED.csv`, 72 rows, Git blob above; RUN: direct source-level per-bin fourth-power recomputation, exactly six NTM seeds per speed and channel, shares sum to unity separately for Mx/My. TAB: three newly calculated rows; FIG: none. REF/STANDARD/OFFICIAL: no new authorized source-page or standard-clause verification. Independent raw OUTB rainflow reconstruction, original CSV byte SHA256, formal bin-definition uncertainty and material-local stresses remain HOLD. No new turbine/structural production run was performed.
+
+
+### S10 — Exposure-threshold identification for the rare high-wind bin (21 November 2026)
+
+**Scientific question.** A high-speed bin observed for only two matched ERA5 hours supplies 2.729214% of the conditional Mx fourth-moment index but only 0.074990% of My. Is this contrast structurally stable to a small change in the climate exposure assigned to that bin, or is the high-speed bin's importance a discretization-sensitive property of the *wind-hour weights* rather than the load archive? We isolate that question by holding the other two bin exposures and all six observed NTM seed responses per bin fixed. This is a **counterfactual reweighting of actual archived loads**, not an alternative observed climate or a forecast.
+
+Let \(A_{bc}=6^{-1}\sum_{s=1}^6 DEL_{bsc}^4\) and let the first two matched-hour counts remain \(h_1=5736\), \(h_2=1426\). If the third bin is assigned \(x\) hours, its conditional fourth-moment share is
+\[
+q_{3c}(x)=\frac{xA_{3c}}{h_1A_{1c}+h_2A_{2c}+xA_{3c}}.
+\]
+The threshold for a prespecified share \(p\in(0,1)\) is identified exactly by
+\[
+x_c(p)=\frac{p(h_1A_{1c}+h_2A_{2c})}{(1-p)A_{3c}}.
+\]
+This inversion is valid only while all three empirical conditional moments and the two other exposure weights are held fixed. It makes no assertion about an unknown continuous wind climate or about the probability of the counterfactual weight.
+
+| Archived NTM channel | Observed high-bin share at 2 h | Continuous high-bin hours for 5% share | Minimum integer hours reaching 5% | Hours for 50% share | Hours when high-bin contribution equals middle-bin contribution |
+|---|---:|---:|---:|---:|---:|
+| TwrBsMxt (Mx) | 2.729214% | 3.751640 | **4** | 71.281162 | 29.893904 |
+| TwrBsMyt (My) | 0.074990% | 140.264640 | **141** | 2665.028153 | 1087.796858 |
+
+**Result and failure case.** The high-wind Mx contribution exceeds 5% after reassigning only two additional hours (2→4 h), whereas My requires at least 141 high-bin hours. Thus the two directions exhibit very different sensitivity to rare-bin exposure even with identical underlying six-seed loads. The 4-hour value is **not** an estimate that the original ERA5 series contains four such hours: it is an exact conditional threshold under the stated reweighting. Figure [S10 exposure sensitivity](final-thesis/figures/FIG_S10_HIGH_BIN_HOUR_THRESHOLD_20261121.svg) plots the full counterfactual response on a log-hour axis. The result rejects the stronger inference that a 2.729% Mx contribution is insensitive to small high-bin exposure reclassification. It does not reject the previously reported descriptive contribution calculated from the recorded 2-hour weight.
+
+**Source and test boundary.** SOURCE: original T062 72-row DEL4 CSV, Git blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`; 18 NTM realizations, six seeds per speed, m=4, Neq=100000, 600 s screening window. RUN: direct source-level fourth-power aggregation and closed-form inversion; the independently executable [threshold script](../experiments/T080/s10_ntm_wind_hour_threshold.cjs) rejects missing columns, incorrect row count, nonfinite/negative DEL, incorrect m/Neq, and non-six-seed groups; algebraic p=5% and p=50% round-trip identities are asserted. TAB: two rows; FIG: one source-derived SVG. REF/STANDARD/OFFICIAL: no new authorized original-page or normative clause reviewed. The underlying ERA5 **hourly wind speeds and exact bin boundaries were not re-read in this run**, so this analysis cannot establish whether any hours were actually misclassified. In addition, the high-bin response mean is estimated from only six seeds, and unrepresented wind bins account for most of the diagnostic climate interval; neither full-climate fatigue damage, material-local Miner damage, IEC DLC1.2 compliance nor a coupled W/E/WE response follows. These remain HOLD.
