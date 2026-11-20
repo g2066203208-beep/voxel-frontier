@@ -1,6 +1,9 @@
+### 2026-11-20｜v0.32.89 PATCH — S05真实ESM周期网格删点敏感性
+- SOURCE=ESM处理谱Git blob `5b7bdda285877f485f3b48cae62f42d5d2ff5a62`；RUN=33点完整面积比1.164324742211、31次内部单点删除最大相对变化0.495732%（T=2.652972674518s）、17点抽稀面积比1.165858207552；[T079真实数表与方法](https://github.com/g2066203208-beep/voxel-frontier/commit/0b375dfcd34226ffb16048fda9ff7ba62eee3841)。TEST=连接器JS源级PASS，独立CLI/原字节SHA256 NOT_RUN；TAB5 FIG0；不是连续谱误差界或物理验收。12阶段0/12，DLC1.2 0/126，W侧同态气动力/惯性HOLD。
+
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.88**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.89**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
