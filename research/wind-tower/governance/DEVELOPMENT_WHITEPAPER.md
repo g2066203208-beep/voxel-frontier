@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.86**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.87**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -682,3 +682,7 @@
 
 ### 2026-11-20 10时｜v0.32.86 PATCH — S10双轴边际DEL相位非识别性
 - SOURCE=闭合解析周期，不冒称真实OpenFAST时程；RUN=边际range^4=16/16，同相组合256、反相0，数学拒绝仅凭两DEL恢复组合材料应力雨流。[程序commit](https://github.com/g2066203208-beep/voxel-frontier/commit/58a1bcb056d5fe49d7bad7979fb6ac69fa1ab54d)；[期刊正文commit](https://github.com/g2066203208-beep/voxel-frontier/commit/d53e19d267732bdd1802ef1e19178f8531d2b3cf)；[T080日志commit](https://github.com/g2066203208-beep/voxel-frontier/commit/8076a2aa2a5478557afedacd9e3e6e2db558c106)。TEST=V8整数oracle PASS，Node CLI NOT_RUN；FIG0 TAB三值；无新增授权标准原页；同态风侧与材料Miner HOLD，12阶段晋级0/12。
+
+## 2026-11-20 11时｜v0.32.87 PATCH — S12正式Ch5同风速双seed位置迁移论文实证整合
+- 实物=正式第五章§5.4.100 [commit 96747561](https://github.com/g2066203208-beep/voxel-frontier/commit/96747561a212c1be12dfab179e6eff7c1abfa880)，源程序路径纠正 [commit f597719](https://github.com/g2066203208-beep/voxel-frontier/commit/f5977195d4d8e2853846c0c4533189ba5354dd52)；SOURCE=T077真实1984行CSV blob b5effa2a493cec0a9af8a10a3b93df0ff997d2d0；RUN=继承历史同风速19.202140m/s S04↔S06峰值捕获99.876763%/99.879547%，两方向控制段互换，新增正式论文2行数表与严格统计边界。TEST=历史V8源级PASS，本轮原生CLI、CSV字节SHA256与Word视觉NOT_RUN；FIG0 TAB2，无新物理RUN；12阶段晋级0/12、正式DLC1.2 0/126，局部材料Miner与同态W侧HOLD。无Abaqus/CAE、冻结母本、main、昂贵RUN或PR合并。
+
