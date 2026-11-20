@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.96**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.97**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -28,6 +28,9 @@
 - 下一独立非Abaqus动作：核对/恢复可证明同模型、运行状态、时间网格和起点的W侧真实时程；没有可追溯来源时记录HOLD并转向S05/S10可独立研究，不造数据。
 
 ## 4. 版本变更记录（只记录真实持久化事务）
+
+### 2026-11-20｜v0.32.97 PATCH — S10真实NTM风箱条件四次矩贡献的双轴差异
+- SOURCE=T062 72行真实CSV blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`；RUN=18NTM三箱条件小时5736/1426/2，Mx四次矩贡献56.477350/40.793436/2.729214%，My为59.138157/40.786853/0.074990%，2小时高风箱仅0.027917%小时份额但Mx贡献约97.76倍小时份额；[期刊科研正文/三行数表](https://github.com/g2066203208-beep/voxel-frontier/commit/56c1abc51ae9f2a8571a67839b7ecb4ca1f77ac9)，路径`research/wind-tower/manuscript/journal-wind-fatigue-results.md` blob `bced628f980769ffda2387f8332d79ccdc505680`；[T080过程](https://github.com/g2066203208-beep/voxel-frontier/commit/cd931c985031c8258c434a52b712cb744f41add8)。TEST=V8真实源级算术PASS，原OUTB/字节SHA256 NOT_RUN；TAB3 FIG0；非材料Miner、非全气候或DLC1.2；12阶段晋级0/12，正式DLC1.2 0/126，同态W侧HOLD。
 
 ### 2026-11-20｜v0.32.96 PATCH — S06真实18NTM结果量与独立W气动力不可识别性
 - SOURCE=T062 18行原CSV Git blob `8ee0a7df7d0ee8173695237ce7d34c361ec39a41`；RUN=18个原始结果量均值 -25594.197611 kN、样本SD 33.968102 kN，18/18独立W与同态WE均HOLD；解析构造 R=100=20+80=55+45 证明未分离惯性时外气动力不可唯一反演。[可运行程序](https://github.com/g2066203208-beep/voxel-frontier/commit/fdb2e9821c770ca1e9b47e419c6a1fc9f871d4a8) `experiments/T080/s06_w_inverse_nonidentifiability.cjs`；[期刊科学正文](https://github.com/g2066203208-beep/voxel-frontier/commit/5e46504c9fbe9276371d9869a6e64ed5d54099ec) `manuscript/journal-wind-fatigue-results.md`；T080日志见同目录。TEST=真实源表连接器JS算术PASS，原生Node CLI、outb重算与W来源物理验收NOT_RUN；FIG0，TAB真实统计及准入计数；12阶段0/12、DLC1.2 0/126，非Abaqus W同态HOLD。
