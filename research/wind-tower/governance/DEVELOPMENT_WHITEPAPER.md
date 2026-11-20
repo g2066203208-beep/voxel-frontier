@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.94**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.95**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -28,6 +28,10 @@
 - 下一独立非Abaqus动作：核对/恢复可证明同模型、运行状态、时间网格和起点的W侧真实时程；没有可追溯来源时记录HOLD并转向S05/S10可独立研究，不造数据。
 
 ## 4. 版本变更记录（只记录真实持久化事务）
+
+### 2026-11-20｜v0.32.95 PATCH — S06三风速箱同时95/95非参数容许覆盖的多重性
+- SOURCE=T062 18组NTM真实历史归档 Git blob `8ee0a7df7d0ee8173695237ce7d34c361ec39a41`；RUN=单箱59 seed仅支持单箱95/95，而三箱同时覆盖p=95%的独立箱精确置信(1-p^n)^3及Bonferroni保守下界max(0,1-3p^n)均需每箱至少80个独立seed达到95%置信。历史6/箱的三箱同时置信仅1.859027%（额外假设箱间独立）；不能冒称总体或正式DLC1.2合规。[程序及79/80拒绝测试](https://github.com/g2066203208-beep/voxel-frontier/commit/11963e7f684cf65f4cee9b8332bc4f17026377c7) Git blob `31c6c83d6162fbbebe25221622f637e233ebcdbe`；[期刊正文与4行表](https://github.com/g2066203208-beep/voxel-frontier/commit/c0cb82fa322a9260df24d43f194ed7fa1ab900f1) Git blob `9ebd9889432b0cf455b68a58289fbe21c615fc22`；[T080日志](https://github.com/g2066203208-beep/voxel-frontier/commit/0ea181f50ae5263bef531ad5e48a9e7486e967c6)。V8独立数值复核PASS；Node原生CLI/原始OUTB/seed独立性/结构物理NOT_RUN。TAB4 FIG0，12阶段0/12，DLC1.2 0/126；同态独立W侧HOLD。此为统计方法增量而非240个RUN的授权。
+
 
 ### 2026-11-20｜v0.32.94 PATCH — S06六seed样本最大值的非参数95/95拒绝测试
 - SOURCE=T062真实18行CSV Git blob `8ee0a7df7d0ee8173695237ce7d34c361ec39a41`；RUN=在独立同分布连续假设下，样本极值覆盖率公式1-p^n，六seed覆盖95%总体的置信度仅26.490811%，95%置信的覆盖率仅60.696223%，单风速bin达到95/95需至少59个独立seed；18个跨风速样本不可直接合并。程序 `experiments/T080/ntm_order_stat_tolerance.js` SHA256 `7ded513e3afbb416093a44b3b70d190b710b39313a8dc8007d706775f2b6920d`，原生Node22 self-test PASS，[程序commit](https://github.com/g2066203208-beep/voxel-frontier/commit/65055766dd75c25c5b47bf48ddd4b4165544fb21)，[期刊正文commit](https://github.com/g2066203208-beep/voxel-frontier/commit/594ced0ddd4358c3bbb187cb5c7f3ac83de4a1a6)，[T080日志commit](https://github.com/g2066203208-beep/voxel-frontier/commit/8deff0d32beaf114c8a45f337a046f26ec38dcb1)。TAB3 FIG0；真实OUTB独立重算、seed独立性、正式DLC1.2和物理安全HOLD；12阶段晋级0/12。
