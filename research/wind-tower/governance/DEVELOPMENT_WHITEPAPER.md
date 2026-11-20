@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.84**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.85**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -676,3 +676,6 @@
 
 ### 2026-11-20｜v0.32.84 PATCH — 正式Ch5真实ETM跨风速峰值捕获拒绝整合
 - SOURCE=T077 1984行历史名义毛截面DEL4，Git blob `b5effa2a493cec0a9af8a10a3b93df0ff997d2d0`，历史字节SHA256 `16c9864ef7a344e5b97338c31ce26de6adb86c0f0f64942ef894fe9983926b2b`（本轮未重哈希）；RUN=继承T080真实三风速整组盲留出程序及结果，新增正式Ch5§5.4.99三行数表与预测前拒绝域、冠军峰值捕获定义及可证伪失败讨论，[科研正文commit e535d17](https://github.com/g2066203208-beep/voxel-frontier/commit/e535d1762a18fce57e39af60901f26066f7fbf8a)，Git blob `080cca8a109a1e790fabbe1a5c4e1d826184b478`；[T080过程commit cf34a61](https://github.com/g2066203208-beep/voxel-frontier/commit/cf34a619f6120c18d383996a2b56ccfa873da175)。TEST=继承源级数值PASS，普遍≥99%峰值捕获假说FAIL（高风95.920144%），本轮无独立CLI/新物理RUN/Word视觉；FIG0 TAB3；REF仅继承两篇2026竞争研究背景，STANDARD/OFFICIAL无新增授权原页；12阶段晋级0/12，DLC1.2 0/126，W侧同态气动力/惯性、材料Miner与跨设计优化HOLD。下一唯一动作=实际导师Word装配及页级视觉验收，若源不可用切S05独立来源。
+
+### 2026-11-20 09时｜v0.32.85 PATCH — S11真实高风同风速双seed峰值位置迁移反例
+- SOURCE=T077原1984行CSV Git blob `b5effa2a493cec0a9af8a10a3b93df0ff997d2d0`，历史SHA256 `16c9864ef7a344e5b97338c31ce26de6adb86c0f0f64942ef894fe9983926b2b`（本轮未重新哈希）；RUN=19.202140m/s ETM S04/S06互相盲留出各496格，预测冠军实际峰值捕获99.876763%/99.879547%，真实冠军位置相差一段，绝对漏峰0.007708515/0.007737605MPa；与跨风速外推95.920144%不是相同验证目标。[程序commit 0744541](https://github.com/g2066203208-beep/voxel-frontier/commit/0744541ffc6799b5d599153b8d8a0e915c655da4)，[期刊方法与两行表commit 5a03421](https://github.com/g2066203208-beep/voxel-frontier/commit/5a03421343b9c966710a857162c6ad990f427309)，[T080过程commit 72f32d7](https://github.com/g2066203208-beep/voxel-frontier/commit/72f32d71ef16bccb55039505911f3c9fd81aeaf7)。TEST=V8真实CSV源级计算PASS，原生Node CLI/字节SHA256 NOT_RUN；TAB2 FIG0；仅2seed且高度相关，不是材料Miner、DLC1.2、跨设计或物理验收。12阶段晋级0/12，正式DLC1.2 0/126，最大非Abaqus HOLD=同态独立W侧气动力及惯性归属；禁止范围未触碰。
