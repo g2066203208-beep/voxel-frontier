@@ -1538,6 +1538,6 @@ Let `X` denote the positive overstatement percentage in one specified bin and `M
 |---|---:|---:|---:|
 | Each NTM wind-speed bin | 6 | 26.490811% | 60.696223% |
 | All bins pooled (not justified as iid) | 18 | 60.278568% | 84.668245% |
-| Single-bin sample-size requirement | 59 | 95.150506% | 95.008778% |
+| Single-bin sample-size requirement | 59 | 95.150547% | 95.049239% |
 
 **Interpretation and limits.** These are exact order-statistic calculations, not confidence intervals for mean DEL, damage, or tower reliability. The proof assumes a fixed distribution, independent seed draws, continuity (ties require a modified conservative treatment), and an unchanged controller/model/record window. The actual T062 bins have different wind speeds and therefore are not exchangeable by default; shared turbulence generation or seed conventions could also violate independence. The numerical calculation does not recover raw OUTB, does not establish formal DLC1.2 coverage, and does not turn load screening into local stress fatigue. The historical maximum of 3.098166% is an observed sample statistic, **not a 95/95 population tolerance bound**. A concrete rejection test is to demand a within-bin `n>=59` independent sample maximum before making this particular 95/95 nonparametric claim; even then source-identity and stationarity conditions must be checked. SOURCE=T062 historical 18-row CSV; RUN=exact order-statistic theorem and Node.js 22 native CLI self-test; CODE=`experiments/T080/ntm_order_stat_tolerance.js`; FIG=0, TAB=3; physical verification=HOLD.
