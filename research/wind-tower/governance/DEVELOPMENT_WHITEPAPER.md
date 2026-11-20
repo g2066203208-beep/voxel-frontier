@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.95**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.96**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -28,6 +28,10 @@
 - 下一独立非Abaqus动作：核对/恢复可证明同模型、运行状态、时间网格和起点的W侧真实时程；没有可追溯来源时记录HOLD并转向S05/S10可独立研究，不造数据。
 
 ## 4. 版本变更记录（只记录真实持久化事务）
+
+### 2026-11-20｜v0.32.96 PATCH — S06真实18NTM结果量与独立W气动力不可识别性
+- SOURCE=T062 18行原CSV Git blob `8ee0a7df7d0ee8173695237ce7d34c361ec39a41`；RUN=18个原始结果量均值 -25594.197611 kN、样本SD 33.968102 kN，18/18独立W与同态WE均HOLD；解析构造 R=100=20+80=55+45 证明未分离惯性时外气动力不可唯一反演。[可运行程序](https://github.com/g2066203208-beep/voxel-frontier/commit/fdb2e9821c770ca1e9b47e419c6a1fc9f871d4a8) `experiments/T080/s06_w_inverse_nonidentifiability.cjs`；[期刊科学正文](https://github.com/g2066203208-beep/voxel-frontier/commit/5e46504c9fbe9276371d9869a6e64ed5d54099ec) `manuscript/journal-wind-fatigue-results.md`；T080日志见同目录。TEST=真实源表连接器JS算术PASS，原生Node CLI、outb重算与W来源物理验收NOT_RUN；FIG0，TAB真实统计及准入计数；12阶段0/12、DLC1.2 0/126，非Abaqus W同态HOLD。
+
 
 ### 2026-11-20｜v0.32.95 PATCH — S06三风速箱同时95/95非参数容许覆盖的多重性
 - SOURCE=T062 18组NTM真实历史归档 Git blob `8ee0a7df7d0ee8173695237ce7d34c361ec39a41`；RUN=单箱59 seed仅支持单箱95/95，而三箱同时覆盖p=95%的独立箱精确置信(1-p^n)^3及Bonferroni保守下界max(0,1-3p^n)均需每箱至少80个独立seed达到95%置信。历史6/箱的三箱同时置信仅1.859027%（额外假设箱间独立）；不能冒称总体或正式DLC1.2合规。[程序及79/80拒绝测试](https://github.com/g2066203208-beep/voxel-frontier/commit/11963e7f684cf65f4cee9b8332bc4f17026377c7) Git blob `31c6c83d6162fbbebe25221622f637e233ebcdbe`；[期刊正文与4行表](https://github.com/g2066203208-beep/voxel-frontier/commit/c0cb82fa322a9260df24d43f194ed7fa1ab900f1) Git blob `9ebd9889432b0cf455b68a58289fbe21c615fc22`；[T080日志](https://github.com/g2066203208-beep/voxel-frontier/commit/0ea181f50ae5263bef531ad5e48a9e7486e967c6)。V8独立数值复核PASS；Node原生CLI/原始OUTB/seed独立性/结构物理NOT_RUN。TAB4 FIG0，12阶段0/12，DLC1.2 0/126；同态独立W侧HOLD。此为统计方法增量而非240个RUN的授权。
