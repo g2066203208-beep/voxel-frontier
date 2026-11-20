@@ -1548,12 +1548,12 @@ The single-bin order-statistic result cannot be promoted to a simultaneous three
 
 | Equal independent seeds per wind bin | All-three confidence, independent bins | Conservative confidence lower bound without cross-bin independence |
 |---:|---:|---:|
-| 6 | 1.8588% | 0% |
+| 6 | 1.8590% | 0% |
 | 59 | 86.1458% | 85.4516% |
 | 79 | 94.8748% | 94.7846% |
 | 80 | **95.1268%** | **95.0454%** |
 
-Consequently, under the specified iid-continuous-within-bin assumption, at least **80 independent seeds per bin** (240 in three bins) are required for simultaneous 95%-population/95%-confidence upper tolerance by either the independent-bin exact calculation or the conservative union-bound design. This is a **statistical design calculation**, not a recommendation to run 240 expensive simulations, nor a claim that 240 simulations would complete IEC DLC1.2. With the archived six seeds per bin, the simultaneous independent-bin confidence is approximately **1.86%**, despite the previously calculated 26.49% single-bin confidence. This distinction is material when making a claim about all operating bins at once.
+Consequently, under the specified iid-continuous-within-bin assumption, at least **80 independent seeds per bin** (240 in three bins) are required for simultaneous 95%-population/95%-confidence upper tolerance by either the independent-bin exact calculation or the conservative union-bound design. This is a **statistical design calculation**, not a recommendation to run 240 expensive simulations, nor a claim that 240 simulations would complete IEC DLC1.2. With the archived six seeds per bin, the simultaneous independent-bin confidence is approximately **1.8590%**, despite the previously calculated 26.49% single-bin confidence. This distinction is material when making a claim about all operating bins at once.
 
 A falsifier is straightforward: if the independent-bin calculation with 79 seeds reaches 95%, or the union-bound calculation with 80 seeds fails to reach 95%, the implementation is wrong. The revised `experiments/T080/ntm_order_stat_tolerance.js` includes those assertions and rejects invalid bin counts. Temporal correlation, reused inflow realizations, nonstationary operation, ties, model discrepancy and selection of the three bins after inspecting outcomes invalidate or narrow the iid interpretation. The actual 18 historical simulations do **not** establish those assumptions. This extension changes no observed OpenFAST load, fatigue life or physical acceptance status.
 
