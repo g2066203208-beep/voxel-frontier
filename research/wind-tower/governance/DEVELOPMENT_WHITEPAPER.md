@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.90**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.91**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -28,6 +28,12 @@
 - 下一独立非Abaqus动作：核对/恢复可证明同模型、运行状态、时间网格和起点的W侧真实时程；没有可追溯来源时记录HOLD并转向S05/S10可独立研究，不造数据。
 
 ## 4. 版本变更记录（只记录真实持久化事务）
+
+### 2026-11-20｜v0.32.91 PATCH — S12导师Word真实Ch5证据装配与目标页视觉复验
+- SOURCE=11月13日原导师Word Actions artifact #13983839125（到期2026-12-12），原DOCX SHA256 `f2e8a68166cb129aee7611d914f9ce2d3695fe8b1c2ad2f58aa1c35f80505769`；T077 1984行真实名义应力DEL4源CSV blob `b5effa2a493cec0a9af8a10a3b93df0ff997d2d0`。RUN=实际本地python-docx向原193页导师版Ch5插入§5.4.99/100及5行历史真实数表，新增本地DOCX SHA256 `d0f8d6ac35a2a56b83f03cf03f6e14f67f7d315ad0da8c497fbd8998dd68bafe`；LibreOffice实渲194页，目标p176两表与正文视觉PASS，首次跨页问题修复；[可复现装配程序commit](https://github.com/g2066203208-beep/voxel-frontier/commit/9fb6f4b235259ebac97da5297d80cd4c80264027)、[T080收据](https://github.com/g2066203208-beep/voxel-frontier/commit/41ee99b7346531a4bbc532f7d4ce52366ebefefc)。TEST=本地Word装配+目标页视觉PASS；新提交程序独立CLI/194页全查/MS Word/物理验证NOT_RUN；大DOCX未上传GitHub，临时会话文件不得称远端持久化。TAB5 FIG0；12阶段0/12，DLC1.2 0/126，W侧同态HOLD。
+
+
+
 
 ### 2026-11-20｜v0.32.90 PATCH — S06真实18NTM同刻/异刻峰值比跨风速描述性检验
 - SOURCE=T062 `S06_W_CROSSSOURCE_ADMISSION_18CASE_20261114.csv` Git blob `8ee0a7df7d0ee8173695237ce7d34c361ec39a41`，18个原始outb SHA256在源表；RUN=三风速×六seed历史比值均值0.998585741/0.996512249/0.977003634，低-高均值差0.021582107；[期刊科研正文与3行表](https://github.com/g2066203208-beep/voxel-frontier/commit/c48ac6e6cd08b34d54e2c44de68df3206514a63b)，[T080过程](https://github.com/g2066203208-beep/voxel-frontier/commit/25d50ccdde108443e0e0af2f5695d0f3a88bfab6)。TEST=连接器JS原表算术PASS，独立原始outb同步时程重算/原生CLI NOT_RUN；跨风速同seed标签不等于可推断配对，p=0.03125仅条件性参考，不能称显著性或物理PASS。TAB3 FIG0，12阶段0/12，DLC1.2 0/126，W侧外气动力/惯性同态HOLD。
