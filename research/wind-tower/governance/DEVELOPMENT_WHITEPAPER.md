@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.89**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.90**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -28,6 +28,10 @@
 - 下一独立非Abaqus动作：核对/恢复可证明同模型、运行状态、时间网格和起点的W侧真实时程；没有可追溯来源时记录HOLD并转向S05/S10可独立研究，不造数据。
 
 ## 4. 版本变更记录（只记录真实持久化事务）
+
+### 2026-11-20｜v0.32.90 PATCH — S06真实18NTM同刻/异刻峰值比跨风速描述性检验
+- SOURCE=T062 `S06_W_CROSSSOURCE_ADMISSION_18CASE_20261114.csv` Git blob `8ee0a7df7d0ee8173695237ce7d34c361ec39a41`，18个原始outb SHA256在源表；RUN=三风速×六seed历史比值均值0.998585741/0.996512249/0.977003634，低-高均值差0.021582107；[期刊科研正文与3行表](https://github.com/g2066203208-beep/voxel-frontier/commit/c48ac6e6cd08b34d54e2c44de68df3206514a63b)，[T080过程](https://github.com/g2066203208-beep/voxel-frontier/commit/25d50ccdde108443e0e0af2f5695d0f3a88bfab6)。TEST=连接器JS原表算术PASS，独立原始outb同步时程重算/原生CLI NOT_RUN；跨风速同seed标签不等于可推断配对，p=0.03125仅条件性参考，不能称显著性或物理PASS。TAB3 FIG0，12阶段0/12，DLC1.2 0/126，W侧外气动力/惯性同态HOLD。
+
 
 ### 2026-11-20｜v0.32.89 PATCH — S05真实ESM周期网格删点敏感性
 - SOURCE=ESM处理谱Git blob `5b7bdda285877f485f3b48cae62f42d5d2ff5a62`；RUN=33点完整面积比1.164324742211、31次内部单点删除最大相对变化0.495732%（T=2.652972674518s）、17点抽稀面积比1.165858207552；[T079真实数表与方法](https://github.com/g2066203208-beep/voxel-frontier/commit/0b375dfcd34226ffb16048fda9ff7ba62eee3841)。TEST=连接器JS源级PASS，独立CLI/原字节SHA256 NOT_RUN；TAB5 FIG0；不是连续谱误差界或物理验收。12阶段0/12，DLC1.2 0/126，W侧同态气动力/惯性HOLD。
