@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.92**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.93**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -28,6 +28,10 @@
 - 下一独立非Abaqus动作：核对/恢复可证明同模型、运行状态、时间网格和起点的W侧真实时程；没有可追溯来源时记录HOLD并转向S05/S10可独立研究，不造数据。
 
 ## 4. 版本变更记录（只记录真实持久化事务）
+
+### 2026-11-20｜v0.32.93 PATCH — S06二维同刻峰值的可达几何界与导师Word目标页
+- SOURCE=T062历史18行归档CSV Git blob `8ee0a7df7d0ee8173695237ce7d34c361ec39a41`，旧导师Word SHA256 `0c89cc527397f9d25adddc105f8d6c849b9a540fb88bcaed2a72cdcb8658fd57`；RUN=同态二维峰值比严格界1/√2≤r≤1、异刻包络高估≤41.421356%，同刻/正交异刻两个构造证明sharp，零响应拒绝；历史18样本最大3.098166%不构成未来总体界。[期刊新增实质论证](https://github.com/g2066203208-beep/voxel-frontier/commit/d62aa18063fd26628299776cb00d918026a28710)、[T080记录](https://github.com/g2066203208-beep/voxel-frontier/commit/75f617959441168928c06028f216db4dab11d15a)。S12本地Word新增3段、SHA256 `8bf9f8b68993c0ab791a3ccabc0894f93705a7ce9cf5840b2fe272ff63db7b58`，LibreOffice 195页目标p95实际视觉PASS；Word二进制**未上传GitHub/Actions**，不冒称远端持久化。TEST=解析证明与目标页PASS；OUTB、全页QA、物理RUN NOT_RUN；FIG0 TAB0，12阶段0/12，正式DLC1.2 0/126，独立W侧气动力/惯性归属HOLD。
+
 
 ### 2026-11-20｜v0.32.92 PATCH — S06真实18NTM全交叉区间分离拒绝配对依赖
 - SOURCE=T062真实18行CSV blob `8ee0a7df7d0ee8173695237ce7d34c361ec39a41`；RUN=连接器JS对三风速两两36组×3=108跨组对比，全部严格有序，低/中与中/高最小差0.000096062368/0.007051539475；六种同索引删点均值差区间0.001941417403–0.002404833998及0.018107266958–0.021824207400。新增[期刊科研论证与三行表](https://github.com/g2066203208-beep/voxel-frontier/commit/25f522a6949f3cfd4910d673ccb5b1e105339945)，blob `1aa5d975eb7d3ec2287ae524a6f9eecaaf8f32d7`；[T080过程](https://github.com/g2066203208-beep/voxel-frontier/commit/aba7cccdd21dfb02378bdf590403f1c081b64e4c)。TEST=原表源级PASS，原.outb/CLI/CSV字节SHA256 NOT_RUN；108个相关组合不可视为独立样本，未证明总体随机占优、统计显著、材料Miner或DLC1.2。TAB3 FIG0，12阶段晋级0/12，DLC1.2 0/126；同态W侧独立外气动力及惯性归属HOLD。
