@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.101**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.102**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -28,6 +28,9 @@
 - 下一独立非Abaqus动作：核对/恢复可证明同模型、运行状态、时间网格和起点的W侧真实时程；没有可追溯来源时记录HOLD并转向S05/S10可独立研究，不造数据。
 
 ## 4. 版本变更记录（只记录真实持久化事务）
+
+### 2026-11-21｜v0.32.102 PATCH — S11高风箱整箱留出误差与同箱留例差异
+- SOURCE=7行S11原始CSV Git blob `a86ad24434e2e7adf17e0ced44a0e043ad379216`；RUN=19.202140m/s整箱留出(LOBO)与同箱单例留出(LOCO)31+31截面加权MSE对比，nearest/linear RMSE分别扩大6.7603/6.8839倍；[程序commit f00bfe5](https://github.com/g2066203208-beep/voxel-frontier/commit/f00bfe55f3ddafd1c1b46b7c3ee6e6d4c31f3344)、[期刊正文commit f885c12](https://github.com/g2066203208-beep/voxel-frontier/commit/f885c128250e68fbe7add3c2b2f0bae64a17f50c)，稿件blob `e316ca68b3b7a3f35e9664a1d6153ab2f94d74d5`；TEST=独立Python原表算术PASS，Node原生CLI/重训/物理验证NOT_RUN；FIG0 TAB0；12阶段晋级0/12、DLC1.2 0/126。
 
 ### 2026-11-21｜v0.32.101 PATCH — S12第四章真实历史结果的可识别边界装配
 - SOURCE=T062 72行DEL4 Git blob 1b334e9afdbd792a2f4b1a41cdb150dc3698352d；RUN=将历史三箱Mx 2.729214%、My 0.074990%条件份额与遗漏U≥0的嵌套扩展边界及U/K=0/1/9反事实3行表正式装入[第四章§4.8.21](https://github.com/g2066203208-beep/voxel-frontier/commit/515c3d8656ae5ee9f1b5f429e2e1cb4e76bc0b4d)，路径manuscript/final-thesis/chapters/04_10MW混合塔架风致疲劳性能分析.md，Git blob 34a61fa218653a8c1197d855a6dc87af8c1249ba；TEST=解析代数PASS，原ERA5逐小时/OUTB/材料局部应力NOT_RUN；FIG0 TAB3；12阶段晋级0/12、DLC1.2 0/126。
