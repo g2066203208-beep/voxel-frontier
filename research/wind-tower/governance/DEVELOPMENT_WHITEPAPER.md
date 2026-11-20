@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.98**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.99**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -28,6 +28,10 @@
 - 下一独立非Abaqus动作：核对/恢复可证明同模型、运行状态、时间网格和起点的W侧真实时程；没有可追溯来源时记录HOLD并转向S05/S10可独立研究，不造数据。
 
 ## 4. 版本变更记录（只记录真实持久化事务）
+
+### 2026-11-21｜v0.32.99 PATCH — S10真实NTM高风箱暴露小时阈值与科研图
+- SOURCE=T062原72行DEL4 CSV Git blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`；RUN=源级四次矩精确反事实重加权，Mx高风箱达到5%需≥4小时、My需≥141小时（其他箱小时及六seed响应固定）；[程序commit 7612a9d](https://github.com/g2066203208-beep/voxel-frontier/commit/7612a9df9095b2a9d5d3f5b49969e28ba06099fb)、[FIG科研SVG commit bede3cc](https://github.com/g2066203208-beep/voxel-frontier/commit/bede3ccedc7bd4a6153ec795e9c46078a3f9f548)、[期刊正文+2行表 commit 0bfc055](https://github.com/g2066203208-beep/voxel-frontier/commit/0bfc0555d055c3ae9d783254ac70da6d07b72736)；TEST=原blob连接器V8直接源级计算及公式反代PASS，Node CLI/原CSV字节SHA256 NOT_RUN；FIG1 TAB2；真实ERA5逐小时分箱未独立复核，反事实不是实际气候变动，非Miner/DLC1.2/同态W物理PASS；12阶段晋级0/12。
+
 
 ### 2026-11-21｜v0.32.98 PATCH — S10真实NTM四次矩贡献高风seed影响及正式Ch4装配
 - SOURCE=T062真实72行CSV blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`；RUN=18NTM、3风箱条件小时5736/1426/2，Mx高风箱六seed四次矩贡献2.729214%，六种单删点2.409660%–3.105475%；My全样本0.074990%，删点0.068831%–0.080307%；单seed极端替代Mx0.803208%–4.296102%，不是置信区间。[正式Ch4§4.8.20及2行表](https://github.com/g2066203208-beep/voxel-frontier/commit/50082123a8f3e96d85a07adbabb4f711fdf6596d)，blob `a49a4ebb1e105526cf5eecc7a7c851325774eb04`；TEST=真实CSV源级计算PASS，原OUTB、ERA5分箱边界及字节SHA256未独立复核；FIG0 TAB2；材料Miner/正式DLC1.2/同态W仍HOLD；12阶段晋级0/12。
