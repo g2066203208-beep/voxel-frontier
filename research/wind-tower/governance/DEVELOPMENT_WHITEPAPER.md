@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.87**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.88**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -28,6 +28,11 @@
 - 下一独立非Abaqus动作：核对/恢复可证明同模型、运行状态、时间网格和起点的W侧真实时程；没有可追溯来源时记录HOLD并转向S05/S10可独立研究，不造数据。
 
 ## 4. 版本变更记录（只记录真实持久化事务）
+
+### 2026-11-20｜v0.32.88 PATCH — S05真实ESM方向性谱面积数值反例
+
+- SOURCE=ESM 46行处理谱 Git blob `5b7bdda285877f485f3b48cae62f42d5d2ff5a62`，历史SHA256 `ea642b37ca39bde6c1e5b48168e50650adadb00311ca9f24a11102fea82d407c`（本轮未重算）；RUN=33点/32区间对数周期梯形积分，RotD50=0.137643151119、RotD100=0.160261326444 m/s²，面积比1.164324742211，而最大逐点比1.364434631，否证以点比替代面积增幅。[T079科研数表与论证](https://github.com/g2066203208-beep/voxel-frontier/commit/0161bd2ec8ba85cf7fc0d2db9413f7900c3659fa)，文件Git blob `2b9c00bf164ff02e8d4e9b614c90b2a365fb53da`；[T080过程](https://github.com/g2066203208-beep/voxel-frontier/commit/fe23121a408e117045cee4f3bd8171baf4949728)。TEST=连接器JS源级真实CSV算术PASS，独立CLI/原CSV字节SHA256 NOT_RUN，TAB6 FIG0；不是能量或设计谱/物理PASS。12阶段0/12、正式DLC1.2 0/126，最大非Abaqus HOLD=同态W侧独立同步气动力及惯性归属；未触碰禁止工作。
+
 ### 2026-11-16｜v0.32.9 — T093真实Chromium视觉截图/学术PDF全文与手机适配终验PASS
 
 - 用户要求“确定全部正确显示且专业审美，并亲自测试截图”。从前一轮 `43840135928` CANCELLED及artifact `14214070190` 6张真实浏览器截图开始逐页目视审查；确认ERA5、ESM、期刊原页及论文正文布局，识别PDF.js目录缺失、Promise.finally多余调用、数学公式未排版、旧政府文件图层残留及切换何泽瑜论文时空节点错误。**没有用Pages构建SUCCESS冒充视觉测试PASS。**
