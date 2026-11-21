@@ -29,14 +29,14 @@ const delay = n => new Promise(resolve => setTimeout(resolve, n));
     assert.equal(await page.locator('#chapter-list button').count(),8);
     checks.front_and_seven_chapters = true;
     let sourceMeta=await page.locator('#source-status').innerText();
-    for(let n=0;n<20 && !sourceMeta.includes('bebfd6cc433f5629');n++){
+    for(let n=0;n<20 && !sourceMeta.includes('e6520c3d6ca09d38');n++){
       await delay(10000);
       await page.reload({waitUntil:'domcontentloaded'});
       await page.locator('#source-status').waitFor({timeout:20000});
       sourceMeta=await page.locator('#source-status').innerText();
     }
-    assert.ok(sourceMeta.includes('bebfd6cc433f5629'),'Editor did not load chapter-two academic V5 source: '+sourceMeta);
-    checks.correct_chapter_two_v5_source = true;
+    assert.ok(sourceMeta.includes('e6520c3d6ca09d38'),'Editor did not load chapter-two four-image V6 source: '+sourceMeta);
+    checks.correct_chapter_two_v6_source = true;
     await page.locator('#chapter-list button[data-chapter="02"]').click();
     await page.getByText('表2-2  混凝土塔段几何及纵筋分布参数', {exact:false}).waitFor({timeout:10000});
     const ch2Text=await page.locator('#document-body').innerText();
@@ -45,21 +45,22 @@ const delay = n => new Promise(resolve => setTimeout(resolve, n));
     }
     checks.chapter2_geometry_and_real_source_tables = true;
     for(const term of ['2.3.1 普通钢筋建模','2.3.2 预应力筋及塔段连接','2.6.4 与参考模型的静力分析比较','555.694','0.901126']){
-      assert.ok(ch2Text.includes(term),'V5 academic edit absent: '+term);
+      assert.ok(ch2Text.includes(term),'V6 academic text absent: '+term);
     }
-    checks.chapter_two_v5_rewritten_scientific_results = true;
+    checks.chapter_two_v6_scientific_results_retained = true;
     const restoredFigures=page.locator('#document-body .thesis-inline-figure img');
     assert.equal(await restoredFigures.count(),4,'Expected exactly 4 restored figures in editable chapter 2');
     for(const fig of ['图2-1','图2-2','图2-3','图2-4']){
       const im=page.locator('img[data-figure="'+fig+'"]');
       assert.equal(await im.count(),1,'Missing correct caption image '+fig);
       const imageUrl=await im.getAttribute('src');
+      assert.ok(imageUrl.includes('manuscript-figures-v6'),'Editor figure must be V6: '+imageUrl);
       const response=await page.request.get(new URL(imageUrl,SITE).toString());
       assert.equal(response.status(),200,'Illustration cannot be fetched: '+fig);
     }
     checks.all_four_original_figures_visible_and_fetchable = true;
     await page.locator('#chapter-list button[data-chapter="front"]').click();
-    const pdfResponse=await page.request.get(new URL('./downloads/10MW-thesis-ch2-academic-v5-20261121.pdf',SITE).toString());
+    const pdfResponse=await page.request.get(new URL('./downloads/10MW-thesis-ch2-graphics-v6-20261122.pdf',SITE).toString());
     assert.equal(pdfResponse.status(),200,'PDF preview URL is broken');
     checks.pdf_source_downloadable = true;
     const paragraph=page.locator('#document-body .editable').first();
