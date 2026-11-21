@@ -6,7 +6,8 @@
 (()=>{
 const $=id=>document.getElementById(id);
 const SOURCE='./editor-data/latest-manuscript.json';
-const PDF='./downloads/10MW-hybrid-tower-thesis-ch3-revised-20261121.pdf';
+const PDF='./downloads/10MW-hybrid-tower-academic-revision-20261121.pdf';
+const WORD_PARTS=Array.from({length:15},(_,i)=>'./downloads/10MW-thesis-academic-revision-20261121.part'+String(i+1).padStart(2,'0')+'.bin');
 const DRIVE_WORD='https://docs.google.com/document/d/1KbJ-KUWdEdQsmjow1yFd4Vb40icm7bWL/edit';
 const REMOTE='https://api.github.com/repos/g2066203208-beep/voxel-frontier/contents/public/thesis-studio/editor-data/owner-published-draft.json';
 const REMOTE_PUBLIC='./editor-data/owner-published-draft.json';
@@ -68,7 +69,7 @@ function exportHTML(){const css='<style>body{max-width:800px;margin:auto;padding
  saveBlob('10MW混塔论文_全文章节编辑稿.html',new Blob(['<!doctype html><html lang="zh-CN"><meta charset="utf-8">'+css+'<body>'+contents+'</body></html>'],{type:'text/html;charset=utf-8'}));toast('已导出可供浏览器与Word打开的HTML');}
 async function snapshot(){await persist();const versions=await readStore('versions')||[];versions.unshift({id:Date.now(),saved_at:new Date().toISOString(),patches:JSON.parse(JSON.stringify(state.patches)),count:dirtyCount()});state.versions=versions.slice(0,15);await writeStore('versions',state.versions);toast('版本快照已保存，可从历史记录恢复');}
 function viewHistory(){const body=modal('本地修订历史');paragraph(body,'修改自动保存；手动快照保存独立历史版本，最多保留15个。全部历史只在当前浏览器中。');if(!state.versions.length)paragraph(body,'暂无历史快照。');state.versions.forEach((v,i)=>{const d=E('div','version-item');d.append(E('b','',fmt(v.id)+' · '+v.count+'处修改'));button(d,'恢复此版本',async()=>{if(!confirm('恢复将替换当前编辑草稿。建议先导出JSON备份。确定继续？'))return;state.patches=JSON.parse(JSON.stringify(v.patches));closeModal();navigate(state.chapter);await persist();toast('已恢复历史版本');});body.append(d);});button(body,'立即保存当前快照',async()=>{await snapshot();viewHistory();},'primary');}
-function viewExport(){const body=modal('导出与下载');paragraph(body,'编辑修改实时保存在浏览器。完整原版PDF可以公开下载；Word保留格式导出需选择你本机的原版DOCX，修改会应用到其正文XML。');link(body,'公开下载原版排版PDF · 136页',PDF,true);button(body,'导出修改后的 Word（选取原DOCX作为母本）',()=>{$('word-file').click();closeModal();},'primary');link(body,'原版 Word · 私人Google Drive（需所有者访问权限）',DRIVE_WORD);button(body,'导出全部七章 Markdown',()=>exportMarkdown(true));button(body,'导出当前章节 Markdown',()=>exportMarkdown(false));button(body,'导出全文 HTML（可在 Word 中打开）',exportHTML);button(body,'导出修改备份 JSON（可恢复）',exportJSON);}
+function viewExport(){const body=modal('导出与下载');paragraph(body,'全文修改保存在当前浏览器；一键导出修订Word将从本站下载原稿的15个分片，校验完整原稿SHA-256后只替换修改文字，图件、复杂公式和排版仍以原版Word为准。');link(body,'公开下载原版排版PDF · 136页',PDF,true);button(body,'一键导出修改后的 Word（自动读取母本）',()=>{closeModal();exportHostedDOCX();},'primary');button(body,'使用本地原版Word导出（备用）',()=>{$('word-file').click();closeModal();});link(body,'原版 Word · 私人Google Drive（需所有者访问权限）',DRIVE_WORD);button(body,'导出全部七章 Markdown',()=>exportMarkdown(true));button(body,'导出当前章节 Markdown',()=>exportMarkdown(false));button(body,'导出全文 HTML（可在 Word 中打开）',exportHTML);button(body,'导出修改备份 JSON（可恢复）',exportJSON);}
 function viewSource(){const b=modal('原始论文与版本信息'),s=state.source.source;paragraph(b,'本编辑器从2026年11月21日第三章学术精修版Word提取完整文本结构；包括前置内容和七章正文、35个表格。PDF和Word保留原版布局、图片及复杂公式。');paragraph(b,'Word原件 SHA256：');b.append(E('code','',s.sha256));paragraph(b,'编辑区是论文文本层，不等价于Word原位分页；复杂公式与插图在原文中未被重建为浏览器可编辑对象。');link(b,'查看完整PDF原页',PDF,true);}
 async function publishDialog(){const body=modal('GitHub 授权发布与读取');paragraph(body,'普通编辑只保存在本机。此功能可将当前修改同步至网站公开GitHub仓库，跨设备读取，但内容对所有人可见。需要你自己的细粒度GitHub访问令牌（仅授予该仓库 Contents 写权限）。');paragraph(body,'令牌不写入浏览器本地存储，也不会上传到论文文件中。网页为静态页面，没有自动登录或后台协作服务。','fineprint');const label=E('label','','GitHub访问令牌（仅本次操作）');body.append(label);const field=E('input');field.type='password';field.placeholder='github_pat_…';field.autocomplete='off';body.append(field);const notice=E('p','fineprint','公开发布会把当前论文修改内容作为JSON提交到公共仓库的main分支；提交后任何人都可以阅读。');body.append(notice);const confirmWrap=E('label');confirmWrap.style.display='flex';confirmWrap.style.gap='8px';confirmWrap.style.alignItems='center';const check=E('input');check.type='checkbox';check.style.width='auto';check.style.margin='0';confirmWrap.append(check,E('span','','我同意将当前草稿修改公开发布至GitHub'));body.append(confirmWrap);button(body,'发布当前草稿到GitHub（公开）',async()=>{const token=field.value.trim();if(!token||!check.checked){toast('请提供GitHub令牌并明确确认公开发布');return;}await persist();const backup={schema:1,base_sha256:state.baseSha,patches:state.patches,exported_at:new Date().toISOString(),warning:'PUBLIC DRAFT: latest manuscript edits; not independently verified scientific results'};const btn=body.querySelector('.primary');btn.disabled=true;btn.textContent='正在核验远端版本并提交…';try{const headers={'Authorization':'Bearer '+token,'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'};
  let sha=state.remoteSha;
@@ -79,7 +80,7 @@ async function publishDialog(){const body=modal('GitHub 授权发布与读取');
  catch(e){toast(e.message);btn.disabled=false;btn.textContent='重试发布（先核对权限与冲突）';}
  },'primary');button(body,'读取网站现有公开草稿',async()=>{try{const r=await fetch(REMOTE_PUBLIC+'?v='+Date.now(),{cache:'no-store'});if(!r.ok)throw Error('当前网站尚无已发布草稿');const data=await r.json();if(data.base_sha256!==state.baseSha)throw Error('公开稿与本编辑器Word母本版本不同，已拒绝覆盖');if(!confirm('读取公开稿会覆盖本机当前未发布的编辑，请先导出备份。继续？'))return;state.patches=data.patches||{};await persist();closeModal();navigate(state.chapter);toast('已读取网站已发布版本');}catch(e){toast(e.message);}});}
 function base64Unicode(s){const bytes=new TextEncoder().encode(s);let result='';const step=4096;for(let i=0;i<bytes.length;i+=step){result+=String.fromCharCode(...bytes.subarray(i,i+step));}return btoa(result);}
-async function loadZip(){if(window.JSZip)return window.JSZip;await new Promise((resolve,reject)=>{const scr=E('script');scr.src='https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js';scr.onload=resolve;scr.onerror=()=>reject(Error('Word导出组件无法加载，请使用JSON备份导出'));document.head.append(scr);});return window.JSZip;}
+async function loadZip(){if(window.JSZip)return window.JSZip;await new Promise((resolve,reject)=>{const scr=E('script');scr.src='./vendor/jszip.min.js';scr.onload=resolve;scr.onerror=()=>reject(Error('Word导出组件无法加载，请使用JSON备份导出'));document.head.append(scr);});return window.JSZip;}
 const W_NS='http://schemas.openxmlformats.org/wordprocessingml/2006/main';
 function replaceXmlText(parent,newText,doc){let nodes=Array.from(parent.getElementsByTagNameNS(W_NS,'t'));
  if(!nodes.length){let target=parent;if(parent.localName==='tc'){target=Array.from(parent.children).find(n=>n.localName==='p');if(!target){target=doc.createElementNS(W_NS,'w:p');parent.append(target);}}
@@ -102,6 +103,29 @@ function patchDocxXml(xml){const parser=new DOMParser(),doc=parser.parseFromStri
  const rows=Array.from(el.children).filter(x=>x.localName==='tr');change.value.forEach((row,ri)=>{if(!rows[ri])return;const cells=Array.from(rows[ri].children).filter(x=>x.localName==='tc');row.forEach((text,ci)=>{if(!cells[ci])return;const old=(orig.rows?.[ri]||[])[ci];if(text!==old)replaceXmlText(cells[ci],text,doc);});});applied++;
  }else{if(el.localName!=='p'){warnings.push('段落顺序不匹配 '+id);continue;}if(orig.has_math||orig.has_media){warnings.push('含复杂图件或公式的段落需人工核查 '+id);}replaceXmlText(el,change.value,doc);applied++;}}
  return {xml:new XMLSerializer().serializeToString(doc),applied,warnings};}
+async function exportHostedDOCX(){
+  status('正在下载工作室原版Word（约40 MB）…',true);
+  try{
+    const chunks=new Array(WORD_PARTS.length);
+    let completed=0;
+    await Promise.all(Array.from({length:4},(_,worker)=>(async()=>{
+      for(let i=worker;i<WORD_PARTS.length;i+=4){
+        const response=await fetch(WORD_PARTS[i],{cache:'force-cache'});
+        if(!response.ok)throw Error('下载原版Word分片'+String(i+1)+'失败，HTTP '+response.status);
+        chunks[i]=await response.arrayBuffer();
+        completed++;
+        status('正在读取Word原稿 '+completed+'/'+WORD_PARTS.length+'…',true);
+      }
+    })()));
+    const blob=new Blob(chunks,{type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
+    if(blob.size!==state.source.source.bytes)throw Error('下载文件不完整：预期'+state.source.source.bytes+'字节，实际'+blob.size+'字节');
+    const original=new File([blob],'原版完整论文.docx',{type:blob.type});
+    await exportDOCX(original);
+  }catch(error){
+    status('原版Word下载失败 · 草稿未丢失',true);
+    toast(error.message+'；可使用本地原版Word导出');
+  }
+}
 async function exportDOCX(file){if(!file)return;const name=file.name.toLowerCase();if(!name.endsWith('.docx'))return toast('请选择.docx原格式文件');status('正在生成修订版Word…',true);try{const JSZip=await loadZip();const buffer=await file.arrayBuffer();const digest=await crypto.subtle.digest('SHA-256',buffer);const sha=Array.from(new Uint8Array(digest),x=>x.toString(16).padStart(2,'0')).join('');if(sha!==state.baseSha)throw Error('选取的Word不是本编辑器的原始母本，已拒绝写入以防段落错位。请使用2026-11-21精修版Word。');const zip=await JSZip.loadAsync(buffer);const source=zip.file('word/document.xml');if(!source)throw Error('所选文件不是有效Word DOCX');const xml=await source.async('string');const result=patchDocxXml(xml);zip.file('word/document.xml',result.xml);const output=await zip.generateAsync({type:'blob',compression:'DEFLATE',compressionOptions:{level:5}});saveBlob('10MW混塔论文_在线修改版_'+new Date().toISOString().slice(0,10)+'.docx',output);status('Word已生成 · 请复核排版');toast(`Word已导出，已写入${result.applied}处修改${result.warnings.length?'；部分复杂对象请核验':''}`);}catch(e){status('Word导出失败 · 草稿仍在本机');toast(e.message);}finally{$('word-file').value='';}}
 async function init(){try{const response=await fetch(SOURCE,{cache:'no-store'});if(!response.ok)throw Error('论文Word文本数据不可读取，HTTP '+response.status);state.source=await response.json();if(!state.source.chapters||state.source.chapters.length!==8)throw Error('论文章节源不完整，应为前置内容+七章');state.baseSha=state.source.source.sha256;prepare();state.db=await openDB();const saved=await readStore('draft');if(saved&&saved.base_sha256===state.baseSha){state.patches=saved.patches||{};state.chapter=saved.chapter||'03';state.lastSaved=saved.saved_at||0;}state.versions=await readStore('versions')||[];const m=location.hash.match(/^#chapter-(\d\d)$/);if(m&&getChapter(m[1]))state.chapter=m[1];if(location.hash==='#front')state.chapter='front';renderNav();navigate(state.chapter);$('source-status').textContent='Word来源SHA256 '+state.baseSha.slice(0,16)+'… · '+state.source.chapters.length+'部分';status('已载入 · 草稿自动保存');$('autosave-time').textContent=state.lastSaved?'上次保存 '+fmt(state.lastSaved):'尚未修改';updateCounter();}
  catch(e){$('chapter-heading').textContent='加载失败';$('chapter-subtitle').textContent=e.message;status('文稿导入失败',true);console.error(e);}}
