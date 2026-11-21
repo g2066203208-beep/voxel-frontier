@@ -29,8 +29,8 @@ const delay = n => new Promise(resolve => setTimeout(resolve, n));
     assert.equal(await page.locator('#chapter-list button').count(),8);
     checks.front_and_seven_chapters = true;
     const sourceMeta=await page.locator('#source-status').innerText();
-    assert.ok(sourceMeta.includes('9e5940d0631680f4'),'Editor did not load illustrated Word V3 source: '+sourceMeta);
-    checks.correct_illustrated_v3_source = true;
+    assert.ok(sourceMeta.includes('07654baa5bf8970f'),'Editor did not load revised chapter-two V4 source: '+sourceMeta);
+    checks.correct_chapter_two_v4_source = true;
     await page.locator('#chapter-list button[data-chapter="02"]').click();
     await page.getByText('表2-2  参考混凝土塔段分节几何与纵筋数量', {exact:false}).waitFor({timeout:10000});
     const ch2Text=await page.locator('#document-body').innerText();
@@ -38,6 +38,10 @@ const delay = n => new Promise(resolve => setTimeout(resolve, n));
       assert.ok(ch2Text.includes(term),'Missing source or revision evidence '+term);
     }
     checks.chapter2_revised_geometry_tables_and_scientific_limits = true;
+    for(const term of ['2.3.1 普通钢筋与材料身份','2.3.2 预应力配置及连接方式','2.6.4 与文献验证体系的比较及适用范围','跨模型与应力场','0.901126']){
+      assert.ok(ch2Text.includes(term),'V4 scientific edit absent: '+term);
+    }
+    checks.chapter_two_v4_subheadings_independent_evidence_and_convergence_limits = true;
     const restoredFigures=page.locator('#document-body .thesis-inline-figure img');
     assert.equal(await restoredFigures.count(),4,'Expected exactly 4 restored figures in editable chapter 2');
     for(const fig of ['图2-1','图2-2','图2-3','图2-4']){
@@ -49,7 +53,7 @@ const delay = n => new Promise(resolve => setTimeout(resolve, n));
     }
     checks.all_four_original_figures_visible_and_fetchable = true;
     await page.locator('#chapter-list button[data-chapter="front"]').click();
-    const pdfResponse=await page.request.get(new URL('./downloads/10MW-thesis-illustrated-v3-20261121.pdf',SITE).toString());
+    const pdfResponse=await page.request.get(new URL('./downloads/10MW-thesis-ch2-verified-v4-20261121.pdf',SITE).toString());
     assert.equal(pdfResponse.status(),200,'PDF preview URL is broken');
     checks.pdf_source_downloadable = true;
     const paragraph=page.locator('#document-body .editable').first();
