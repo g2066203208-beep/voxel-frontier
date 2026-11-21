@@ -110,12 +110,12 @@
     const canvases=[...document.querySelectorAll("#all-he canvas[data-pdf-page]")];
     if("IntersectionObserver" in window){
       state.observer=new IntersectionObserver(entries=>{
-        for(const entry of entries){if(!entry.isIntersecting)continue;const canvas=entry.target;state.observer.unobserve(canvas);
+        for(const entry of entries){if(!entry.isIntersecting)continue;const card=entry.target;const canvas=card.querySelector("canvas[data-pdf-page]");state.observer.unobserve(card);
           const n=Number(canvas.dataset.pdfPage);const status=canvas.parentElement.querySelector(".all-page-photo-status");if(status)status.textContent="正在加载原始PDF第"+n+"页…";
           renderPdf(canvas,n,false).then(()=>{if(!canvas.hidden&&status)status.textContent="原始PDF第"+n+"页";});
         }
       },{rootMargin:"650px 0px"});
-      for(const canvas of canvases)state.observer.observe(canvas);
+      for(const canvas of canvases)state.observer.observe(canvas.parentElement);
     }else{for(const canvas of canvases)renderPdf(canvas,Number(canvas.dataset.pdfPage),false);}
   }
   function switchMode(mode){
