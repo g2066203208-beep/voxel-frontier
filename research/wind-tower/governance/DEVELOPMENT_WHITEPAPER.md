@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.104**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.105**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -28,6 +28,10 @@
 - 下一独立非Abaqus动作：核对/恢复可证明同模型、运行状态、时间网格和起点的W侧真实时程；没有可追溯来源时记录HOLD并转向S05/S10可独立研究，不造数据。
 
 ## 4. 版本变更记录（只记录真实持久化事务）
+
+### 2026-11-21｜v0.32.105 PATCH — S06原始AeroDyn塔身气动关闭与158m几何复用证据
+- [Ch3§3.7.28新增科学正文commit 92252cc](https://github.com/g2066203208-beep/voxel-frontier/commit/92252cc2eff3b47909fb068895e670b83aac49f4)，路径`research/wind-tower/manuscript/final-thesis/chapters/03_场址风环境与整机随机风控制载荷.md`，blob `43a795dc0d3d2398229d4edf6059d31ebc94c3cc`；SOURCE=T035原始AeroDyn blob `366ae27d65d1feca6da0ba9eb186348913158fcb`及T062映射证据；RUN=源级字段核验塔身气动关闭，11节点表最高115.630m相对158m同基准差42.370m（26.8165%）；TEST=输入字段/算术PASS，OUTB重算、同高程基准、源字节SHA256 NOT_RUN；TAB0 FIG0；仅未来新配置的几何复用限制，不是历史已关闭分支的物理误差或风震/疲劳PASS；12阶段晋级0/12。
+
 
 ### 2026-11-21｜v0.32.104 PATCH — S12正式第五章代理模型形状先验与跨箱拒绝证据整合
 - [正式Ch5§5.4.101 commit 5024fe8](https://github.com/g2066203208-beep/voxel-frontier/commit/5024fe887130d057733d9dfeca6ee891900747b3)，路径`research/wind-tower/manuscript/final-thesis/chapters/05_疲劳控制参数敏感性与结构优化.md`，blob `583fb99743f910c6012e6fb20c99e5b9eafeb6c2`；SOURCE=T077真实1984行CSV blob `b5effa2a493cec0a9af8a10a3b93df0ff997d2d0`，继承S11高风31/31段单调性反例及LOBO/LOCO 6.7603/6.8839倍误差；RUN=历史源级复核结果装配为正式3行表与非因果、跨箱、跨设计适用域论证；TEST=历史源级PASS，本轮原生CLI/OUTB/字节SHA256 NOT_RUN；TAB3 FIG0；非材料Miner、正式DLC1.2或结构优化PASS，12阶段晋级0/12。过程记录见T080；禁止范围未触碰。
