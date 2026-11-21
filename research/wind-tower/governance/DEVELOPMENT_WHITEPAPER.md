@@ -1,9 +1,12 @@
+### 2026-11-22 02时｜v0.32.114 PATCH — S05真实ESM固定双原轴对RotD100方向包络漏捕
+- [科研程序commit 026f0e8](https://github.com/g2066203208-beep/voxel-frontier/commit/026f0e837503619ae46b169d440e9cbf17ac1331)，路径`research/wind-tower/experiments/T079/s05_rotd_original_axis_envelope_gate.cjs`；[T079科学正文/5行表commit a9fa576](https://github.com/g2066203208-beep/voxel-frontier/commit/a9fa57695724a5b42a7d33c66964645d34a9262c)，路径`research/wind-tower/experiments/T079/METHOD_PLAN.md`，blob `cb92144b6670ed6be5cf4f8f1b8d32484bb404da`。SOURCE=ESM处理波16周期CSV blob `da83ab108ccc848a2356410339e66f6cb7e8401b`；RUN=真实CSV源级复算固定HNE/HNN包络相对RotD100最大漏捕17.360424%@0.5s、16点等权均值5.604572%、3/16点超过10%，数学拒绝90%包络假设。TEST=连接器JS源级实算PASS；新Node CLI/源字节SHA256/原波重积分NOT_RUN；REF=既有ESM v3 DOI，STANDARD/OFFICIAL无新增授权规范/目标谱；FIG0 TAB5，12阶段0/12，DLC1.2 0/126，场址/结构方向及同态W侧HOLD。
+
 ### 2026-11-22 00时｜v0.32.113 PATCH — S05/S12两篇2026先行研究的出版商来源对比与期刊创新域纠偏
 - [期刊§1.1科研正文commit 2d91f1ac](https://github.com/g2066203208-beep/voxel-frontier/commit/2d91f1ac24d4159ace3c8f620aadabb364d82d4b)，路径`research/wind-tower/manuscript/journal-wind-fatigue-condensed-submission-candidate.md`，Git blob `7dcd4eb80d258f3a05db5f2b93cc8a29dd5e98c7`；REF=2026两篇出版商DOI原页（第一篇摘要，第二篇摘要/项目概况/选读方法）；RUN=原文对比明确163.24m/42节/16束与本研究158m/31后处理站的不可移植性，排除“风震同施/PT抗震首创”错误主张；TEST=出版商源可读，原始图页、完整方法及独立复算HOLD；SOURCE无新本文物理输入，STANDARD/OFFICIAL无新授权标准，FIG0 TAB0；12阶段晋级0/12，正式DLC1.2 0/126，同态W侧/材料Miner仍HOLD。
 
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.113**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.114**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
