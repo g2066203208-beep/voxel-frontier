@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.106**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.107**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -759,3 +759,6 @@
 
 
 - **v0.32.106（2026-11-21 16时，PATCH）**：S10四ETM×31段m4/m10控制工况迁移，真实CSV blob `b5effa2a493cec0a9af8a10a3b93df0ff997d2d0`；新程序`experiments/T080/s10_etm_exponent_section_case_switch.cjs`、正式Ch4§4.8.22、T080过程记录与指挥室；13/31段控制工况切换，V8源级PASS，原生Node/OUTB/字节SHA256 NOT_RUN，材料Miner与正式DLC1.2 HOLD，12阶段0/12。
+
+### 2026-11-21｜v0.32.107 PATCH — S10 m4控制工况筛选对m10真实包络的漏捕量
+- SOURCE=T077真实1984行四ETM×31段×16方位名义应力DEL4/DEL10，Git blob `b5effa2a493cec0a9af8a10a3b93df0ff997d2d0`；RUN=每节段m4选单工况后计算相对m10真实最大DEL的regret，13/31段漏捕10.603287%–15.359204%，最大CSEG_05漏2.629982MPa（15.359204%），18段零漏捕；[期刊正文commit 7cc1539](https://github.com/g2066203208-beep/voxel-frontier/commit/7cc15395b2f00466356525abfe0be2ecc5d7ea99)，路径`research/wind-tower/manuscript/journal-wind-fatigue-results.md`，Git blob `a7e69e634541daf7685aacb9650f75fb7b525b6e`；[T080过程](../experiments/T080/PROCESS_LOG.md)；TEST=V8真实源级聚合PASS，原生CLI/OUTB/源字节SHA256 NOT_RUN；TAB4 FIG0，非材料Miner/正式DLC1.2，12阶段晋级0/12，禁止范围未触碰。
