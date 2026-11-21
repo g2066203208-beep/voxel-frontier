@@ -91,6 +91,7 @@ jobs:
             _generated-thesis-workbench/qa/
             _generated-thesis-workbench/revision_report.json
             _generated-thesis-workbench/audit.json
+            _generated-thesis-workbench/10MW混塔论文_第二章原型参数与学术表述修订V2_20261121.docx
           retention-days: 30
       - name: Publish revised Word chunks, PDF and editable body data
         run: |
