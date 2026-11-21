@@ -1,3 +1,6 @@
+### 2026-11-22 03时｜v0.32.115 PATCH — S10真实18NTM精确经验重抽样
+- [程序commit 8d80228](https://github.com/g2066203208-beep/voxel-frontier/commit/8d80228e0f8c40eb86cf52551a9d0ae63d9d42e8) 路径`research/wind-tower/experiments/T080/s10_ntm_highbin_exact_empirical_bootstrap.cjs`；[论文commit 6c8a44a](https://github.com/g2066203208-beep/voxel-frontier/commit/6c8a44a9a1bf68b64922742b4115de09f543dede) 路径`research/wind-tower/manuscript/journal-wind-fatigue-condensed-submission-candidate.md` blob `0b74f8b0ff0658e51dd766ab57fcad064dd7cdc8`。SOURCE=T062 72行CSV blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`；RUN=高风六seed 46656等权有放回经验重抽样，Mx经验2.5/97.5%=1.797546/3.603719%，My=0.061800/0.089623%，两通道>5%均0/46656，固定低中箱及小时；TEST=连接器V8真实源级PASS，Node CLI/字节SHA256/OUTB NOT_RUN；非独立样本/非总体置信/非Miner或正式DLC1.2；TAB2 FIG0，12阶段晋级0/12，最大W侧同步独立气动力HOLD。
+
 ### 2026-11-22 02时｜v0.32.114 PATCH — S05真实ESM固定双原轴对RotD100方向包络漏捕
 - [科研程序commit 026f0e8](https://github.com/g2066203208-beep/voxel-frontier/commit/026f0e837503619ae46b169d440e9cbf17ac1331)，路径`research/wind-tower/experiments/T079/s05_rotd_original_axis_envelope_gate.cjs`；[T079科学正文/5行表commit a9fa576](https://github.com/g2066203208-beep/voxel-frontier/commit/a9fa57695724a5b42a7d33c66964645d34a9262c)，路径`research/wind-tower/experiments/T079/METHOD_PLAN.md`，blob `cb92144b6670ed6be5cf4f8f1b8d32484bb404da`。SOURCE=ESM处理波16周期CSV blob `da83ab108ccc848a2356410339e66f6cb7e8401b`；RUN=真实CSV源级复算固定HNE/HNN包络相对RotD100最大漏捕17.360424%@0.5s、16点等权均值5.604572%、3/16点超过10%，数学拒绝90%包络假设。TEST=连接器JS源级实算PASS；新Node CLI/源字节SHA256/原波重积分NOT_RUN；REF=既有ESM v3 DOI，STANDARD/OFFICIAL无新增授权规范/目标谱；FIG0 TAB5，12阶段0/12，DLC1.2 0/126，场址/结构方向及同态W侧HOLD。
 
@@ -6,7 +9,7 @@
 
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.114**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.115**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
