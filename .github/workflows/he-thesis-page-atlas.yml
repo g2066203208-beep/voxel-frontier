@@ -1,0 +1,49 @@
+name: He thesis vs current manuscript - every PDF page
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/he-thesis/compare_every_page.py'
+      - '.github/workflows/he-thesis-page-atlas.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: he-thesis-page-atlas
+  cancel-in-progress: false
+
+jobs:
+  compare:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install real PDF renderer
+        run: python -m pip install 'pymupdf>=1.24,<1.28' 'pillow>=10,<13'
+      - name: Render all original PDF pages and current manuscript matches
+        run: python scripts/he-thesis/compare_every_page.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: he-thesis-comparison-all-pages
+          path: public/thesis-studio/he-thesis-comparison/
+          retention-days: 30
+      - name: Commit visual atlas to research studio
+        run: |
+          git config user.name 'research-atlas[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/thesis-studio/he-thesis-comparison/
+          git diff --cached --quiet && exit 0
+          git commit -m 'research: publish complete visual page atlas comparing He 2024 with current 10 MW thesis'
+          for i in 1 2 3; do
+            git pull --rebase origin main && git push origin HEAD:main && exit 0
+            sleep 5
+          done
+          exit 1
