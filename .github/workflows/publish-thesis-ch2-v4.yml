@@ -1,0 +1,90 @@
+name: Publish Chapter Two Evidence-Revised Manuscript V4
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/thesis-edit/build_ch2_verified_v4.py'
+      - '.github/workflows/publish-thesis-ch2-v4.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+concurrency:
+  group: publish-thesis-ch2-v4
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          sparse-checkout: |
+            scripts/thesis-edit
+            public/thesis-studio/downloads
+            public/thesis-studio/editor-data
+            .github/workflows/publish-thesis-ch2-v4.yml
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Word and PDF validator
+        run: |
+          python -m pip install --quiet python-docx pymupdf
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends libreoffice-writer fonts-noto-cjk
+      - name: Create V4 Word with chapter two changes only
+        run: python scripts/thesis-edit/build_ch2_verified_v4.py
+      - name: Render complete Word to PDF for visual and content QA
+        run: |
+          mkdir -p /tmp/ch2-lo
+          libreoffice -env:UserInstallation=file:///tmp/ch2-lo --headless --convert-to pdf --outdir public/thesis-studio/downloads _generated-ch2v4/*_20261121.docx
+          mv public/thesis-studio/downloads/10MW混塔论文_第二章模型验证与图文规范修订V4_20261121.pdf public/thesis-studio/downloads/10MW-thesis-ch2-verified-v4-20261121.pdf
+      - name: Validate page evidence and editable body consistency
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from docx import Document
+          import fitz,json,hashlib
+          j=json.loads(Path('public/thesis-studio/editor-data/ch2-verified-manuscript-v4.json').read_text())
+          p=Path('_generated-ch2v4/10MW混塔论文_第二章模型验证与图文规范修订V4_20261121.docx')
+          assert j['source']['sha256']==hashlib.sha256(p.read_bytes()).hexdigest()
+          d=Document(p);assert len(d.inline_shapes)==4 and len(d.tables)==37
+          assert any('跨模型与应力场' in c.text for table in d.tables for row in table.rows for c in row.cells)
+          for x in ('2.6.1 C65/C70材料单轴数值检验','2.6.2 整塔位移控制推覆分析','2.6.3 推覆数值复核及失稳区间','2.6.4 与文献验证体系的比较及适用范围'):
+              q=[z for z in d.paragraphs if z.text==x]
+              assert len(q)==1 and q[0].style.name=='论文二级标题',x
+          assert not any(z.text.startswith('图2-7  BF1') for z in d.paragraphs)
+          pdf=fitz.open('public/thesis-studio/downloads/10MW-thesis-ch2-verified-v4-20261121.pdf')
+          assert 125<=len(pdf)<=155,len(pdf)
+          text='\n'.join(pg.get_text() for pg in pdf)
+          for s in ('4 m','0.901126','0.928000','0.13718','表2-6','图2-1','图2-2','图2-3','图2-4'):
+              assert s in text,s
+          print('THESIS_CH2_V4_PASS',len(pdf),'pages',len(d.tables),'tables',len(d.inline_shapes),'figures',j['source']['sha256'])
+          for idx,page in enumerate(pdf):
+              s=page.get_text()
+              if '表2-6  历史复现模型' in s or '图2-1  基准推覆' in s:
+                  page.get_pixmap(matrix=fitz.Matrix(1.5,1.5)).save(str(Path('_generated-ch2v4')/f'qa-page-{idx+1}.png'))
+          PY
+      - name: QA artifacts and complete Word
+        uses: actions/upload-artifact@v4
+        with:
+          name: thesis-ch2-v4-evidence-verified
+          path: |
+            _generated-ch2v4/10MW混塔论文_第二章模型验证与图文规范修订V4_20261121.docx
+            _generated-ch2v4/qa-page-*.png
+            _generated-ch2v4/ch2-v4-audit.json
+          retention-days: 30
+      - name: Publish revised editable body PDF and Word chunks
+        run: |
+          git config user.name 'thesis-editorial[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/thesis-studio/editor-data/ch2-verified-manuscript-v4.json public/thesis-studio/downloads/10MW-thesis-ch2-verified-v4-20261121.pdf public/thesis-studio/downloads/10MW-thesis-ch2-verified-v4-20261121.part*.bin
+          git diff --cached --quiet && exit 0
+          git commit -m 'docs(thesis): verified chapter-two evidence-led revision V4'
+          for n in 1 2 3; do
+            git pull --rebase origin main && git push origin HEAD:main && exit 0
+            sleep 7
+          done
+          exit 1
