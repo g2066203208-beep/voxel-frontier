@@ -1,0 +1,91 @@
+name: Publish Chapter Two Academic Rewrite V5
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/thesis-edit/build_ch2_academic_v5.py'
+      - '.github/workflows/publish-thesis-ch2-academic-v5.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: thesis-ch2-academic-v5
+  cancel-in-progress: false
+jobs:
+  author-and-check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          sparse-checkout: |
+            scripts/thesis-edit
+            public/thesis-studio/editor-data
+            public/thesis-studio/downloads
+            .github/workflows/publish-thesis-ch2-academic-v5.yml
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Word editing and PDF rendering tools
+        run: |
+          python -m pip install --quiet python-docx pymupdf
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends libreoffice-writer fonts-noto-cjk
+      - name: Rewrite chapter two from exact online V4 source
+        run: python scripts/thesis-edit/build_ch2_academic_v5.py
+      - name: Export readable Word PDF
+        run: |
+          mkdir -p /tmp/lo-thesis-ch2-v5
+          libreoffice -env:UserInstallation=file:///tmp/lo-thesis-ch2-v5 --headless --convert-to pdf --outdir public/thesis-studio/downloads _generated_ch2_v5/*_20261121.docx
+          mv public/thesis-studio/downloads/10MW混塔论文_第二章学术化重写V5_20261121.pdf public/thesis-studio/downloads/10MW-thesis-ch2-academic-v5-20261121.pdf
+      - name: Verify all revised chapter-two evidence in final Word and PDF
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from docx import Document
+          from zipfile import ZipFile
+          import fitz,json,hashlib
+          p=Path('_generated_ch2_v5/10MW混塔论文_第二章学术化重写V5_20261121.docx')
+          d=Document(p);ptext='\n'.join(x.text for x in d.paragraphs)
+          assert len(d.tables)==37 and len(d.inline_shapes)==4
+          a=next(i for i,x in enumerate(d.paragraphs) if x.style.name=='论文章标题' and x.text.startswith('第二章'))
+          b=next(i for i,x in enumerate(d.paragraphs) if i>a and x.style.name=='论文章标题')
+          c='\n'.join(x.text for x in d.paragraphs[a:b])
+          assert '0.901126' in c and '555.694' in c and '0.13718' in c
+          assert '2.6.4 与参考模型的静力分析比较' in c
+          assert c.count('历史')==0 and c.count('不等于')==0 and c.count('不代表')==0
+          with ZipFile(p) as z:assert z.read('word/document.xml').count(b'<m:oMath')>=100
+          j=json.loads(Path('public/thesis-studio/editor-data/ch2-academic-manuscript-v5.json').read_text())
+          assert j['source']['sha256']==hashlib.sha256(p.read_bytes()).hexdigest()
+          ch=j['chapters'][2]['blocks']
+          assert any('0.901126' in x.get('text','') for x in ch)
+          assert any('2.7.2 分区材料的等效模态阻尼' in x.get('text','') for x in ch)
+          assert len([x for x in ch if x.get('figure_asset')])==4
+          pdf=fitz.open('public/thesis-studio/downloads/10MW-thesis-ch2-academic-v5-20261121.pdf')
+          assert 115<=len(pdf)<=150,len(pdf)
+          for fig in ('图2-1','图2-2','图2-3','图2-4'):
+              matching=[pg for pg in pdf if fig in pg.get_text() and pg.get_image_info()]
+              assert matching,'Figure missing '+fig
+          print('CH2_V5_ACADEMIC_VERIFIED',len(pdf),len(ch),j['source']['sha256'])
+          PY
+      - name: Preserve actual finished Word for review
+        uses: actions/upload-artifact@v4
+        with:
+          name: academic-chapter-two-v5-word-and-audit
+          path: |
+            _generated_ch2_v5/10MW混塔论文_第二章学术化重写V5_20261121.docx
+            _generated_ch2_v5/V5_revision_ledger.json
+          retention-days: 30
+      - name: Publish Word chunks PDF and editor data
+        run: |
+          git config user.name 'thesis-academic-edit[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/thesis-studio/editor-data/ch2-academic-manuscript-v5.json public/thesis-studio/downloads/10MW-thesis-ch2-academic-v5-20261121.pdf public/thesis-studio/downloads/10MW-thesis-ch2-academic-v5-20261121.part*.bin
+          git diff --cached --quiet && exit 0
+          git commit -m 'docs(thesis): publish academic rewrite V5 of chapter two'
+          for n in 1 2 3; do
+             git pull --rebase origin main && git push origin HEAD:main && exit 0
+             sleep 7
+          done
+          exit 1
