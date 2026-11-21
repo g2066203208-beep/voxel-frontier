@@ -157,13 +157,15 @@ def normalize_doc(source,old_json):
     anchor=next(p for p in doc.paragraphs if p.text.startswith("2.2 混凝土塔段有限元建模") and p.style.name=="论文一级标题")
     added=[]
     added.append(add_before(anchor,"文献[1]表3-2、表3-3分别列出混凝土段与钢塔段的分节尺寸。为便于几何模型独立重建，表2-2和表2-3保留原文数值与表头；具体模型材料、配筋及预应力假设另述。"))
-    added.append(add_before(anchor,"表2-2  参考混凝土塔段分节几何与纵筋数量（据文献[1]表3-2）","表题"))
+    caption=add_before(anchor,"表2-2  参考混凝土塔段分节几何与纵筋数量（据文献[1]表3-2）","表题")
+    caption.paragraph_format.page_break_before=True
+    added.append(caption)
     data=[("C%02d"%i,"%.2f"%h,"%.2f"%d,"%.2f"%w,str(inner),str(outer)) for i,h,d,w,inner,outer in CONCRETE]
-    added.append(put_table(anchor,["段号","段顶标高/m","外径/m","壁厚/mm","内排纵筋/根","外排纵筋/根"],data,[1.4,2.8,2.1,2.0,3.2,3.2]))
+    added.append(put_table(anchor,["段号","段顶标高/m","外径/m","壁厚/mm","内排纵筋/根","外排纵筋/根"],data,[2.1,2.8,1.9,2.3,2.8,2.8]))
     added.append(add_before(anchor,"注：标高为分段顶面高度；内、外排纵筋数量为文献直接披露值。纵筋直径及其他构造参数未由该表给出。",small=True))
     added.append(add_before(anchor,"表2-3  参考钢塔段分节尺寸（据文献[1]表3-3）","表题"))
     added.append(put_table(anchor,["段号","段顶标高/m","原文列名“半径”/m","壁厚/mm"],
-                        [("S%02d"%i,"%.2f"%h,"%.2f"%r,"%.2f"%w) for i,h,r,w in STEEL],[1.7,3.8,5.9,3.3]))
+                        [("S%02d"%i,"%.2f"%h,"%.2f"%r,"%.2f"%w) for i,h,r,w in STEEL],[2.1,3.7,5.7,3.2]))
     added.append(add_before(anchor,"注：第二列沿用原文“半径”表头。本文依据相邻塔段几何连续性暂按外径重建，相关解释见2.2节。",small=True))
     post=list(doc.element.body.iterchildren())
     by_element={id(e):i for i,e in enumerate(post)}
