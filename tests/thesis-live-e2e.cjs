@@ -28,7 +28,18 @@ const delay = n => new Promise(resolve => setTimeout(resolve, n));
     checks.public_site_load = true;
     assert.equal(await page.locator('#chapter-list button').count(),8);
     checks.front_and_seven_chapters = true;
-    const pdfResponse=await page.request.get(new URL('./downloads/10MW-hybrid-tower-academic-revision-20261121.pdf',SITE).toString());
+    const sourceMeta=await page.locator('#source-status').innerText();
+    assert.ok(sourceMeta.includes('9c40475d5599571f'),'Editor did not load revised Word V2 source: '+sourceMeta);
+    checks.correct_revision_v2_source = true;
+    await page.locator('#chapter-list button[data-chapter="02"]').click();
+    await page.getByText('表2-2  参考混凝土塔段分节几何与纵筋数量', {exact:false}).waitFor({timeout:10000});
+    const ch2Text=await page.locator('#document-body').innerText();
+    for(const term of ['表2-2','表2-3','C01','C31','S04','BF1历史模型以36根']){
+      assert.ok(ch2Text.includes(term),'Missing source or revision evidence '+term);
+    }
+    checks.chapter2_revised_geometry_tables_and_scientific_limits = true;
+    await page.locator('#chapter-list button[data-chapter="front"]').click();
+    const pdfResponse=await page.request.get(new URL('./downloads/10MW-thesis-editorial-v2-20261121.pdf',SITE).toString());
     assert.equal(pdfResponse.status(),200,'PDF preview URL is broken');
     checks.pdf_source_downloadable = true;
     const paragraph=page.locator('#document-body .editable').first();
