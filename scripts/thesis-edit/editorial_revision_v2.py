@@ -87,6 +87,17 @@ def put_table(anchor,headers,data,widths):
     d=anchor.part.document
     tab=d.add_table(rows=1,cols=len(headers))
     tab.style="Table Grid";tab.alignment=WD_TABLE_ALIGNMENT.CENTER;tab.autofit=False
+    # Three-rule academic table: strong outer lines and subtle horizontal row
+    # separators, with no vertical rules.
+    borders=OxmlElement("w:tblBorders")
+    for edge in ("top","bottom","insideH","insideV","left","right"):
+        item=OxmlElement("w:"+edge)
+        item.set(qn("w:val"),"single" if edge in ("top","bottom","insideH") else "nil")
+        if edge in ("top","bottom","insideH"):
+            item.set(qn("w:sz"),"10" if edge in ("top","bottom") else "4")
+            item.set(qn("w:color"),"333333" if edge in ("top","bottom") else "A6B0B8")
+        borders.append(item)
+    tab._tbl.tblPr.append(borders)
     for col,w in zip(tab.columns,widths):col.width=Cm(w)
     for i,v in enumerate(headers):tab.rows[0].cells[i].text=v
     for item in data:
@@ -132,6 +143,9 @@ def normalize_doc(source,old_json):
         if "表2-" in p.text:
             new=re.sub(r"表\s*2-(\d{1,2})(?!\d)",lambda m:"表2-"+str(int(m.group(1))+2) if int(m.group(1))>=2 else m.group(0),p.text)
             if new!=p.text:put_text(p,new)
+    # The references newly authored in 2.1 describe the inserted tables;
+    # they must not inherit the renumbering applied to pre-existing captions.
+    put_text(doc.paragraphs[185],REWRITES[185])
     for p in doc.paragraphs:
         if p.text.startswith("表2-5  基准推覆"):p.style="表题"
         if p.text.startswith("图2-2  基准推覆"):p.style="图题"
