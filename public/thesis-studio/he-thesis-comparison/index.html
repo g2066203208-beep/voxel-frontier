@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>何泽瑜论文90页逐页实图对照｜CAE论文工作室</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f2f5f8;color:#203746;font:15px/1.7 "Microsoft YaHei","Noto Sans SC",sans-serif}
+header{background:#102e3d;color:white;padding:19px 25px}h1{font-size:23px;margin:0 0 7px}header p{margin:0;color:#bfdae1;font-size:13px}a{color:#08776c}header a{color:#b0fbde}
+.layout{display:grid;grid-template-columns:255px minmax(0,1fr);max-width:1920px;gap:16px;margin:auto;padding:16px}
+nav,section{background:white;border:1px solid #d7e4eb;border-radius:12px;padding:15px}
+nav{position:sticky;top:12px;height:calc(100vh - 24px);overflow-y:auto}#search{border:1px solid #b7cbd7;padding:10px;width:100%;border-radius:7px;margin-bottom:10px}
+#nav{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}#nav button{background:#fff;border:1px solid #dce6eb;padding:9px 4px;cursor:pointer;border-radius:6px}#nav button.active{background:#0e7169;color:white}
+main{min-width:0;display:grid;gap:14px;align-content:start}h2{font-size:19px;margin:0 0 10px}.description{font-size:13px;color:#546b7d}
+.controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.controls button{border:0;background:#0c7068;color:white;border-radius:7px;padding:10px 17px;cursor:pointer}
+#spread{width:100%;height:auto;display:block;border:1px solid #ccd8e2;border-radius:5px}#spread-link{display:block}
+.audit{display:grid;grid-template-columns:1fr 1fr;gap:15px}.audit>div{background:white;border:1px solid #d7e4eb;padding:16px;border-radius:12px}.audit h3{margin:0 0 6px;font-size:15px}.audit p{margin:0;white-space:pre-wrap;line-height:1.8}
+#badge{display:inline-block;color:#8b5c15;background:#fff1d6;border-radius:4px;padding:2px 9px;font-size:13px;font-weight:bold}
+.warning{background:#fff8e8;border-left:4px solid #c38b23;padding:12px 15px;margin-top:10px;font-size:13px}
+footer{text-align:center;font-size:12px;color:#647c8e;padding:30px 15px}
+@media(max-width:930px){.layout{display:block}nav{position:static;height:auto;margin-bottom:12px}#nav{max-height:145px;overflow:auto;grid-template-columns:repeat(8,1fr)}.audit{grid-template-columns:1fr}}
+</style></head><body>
+<header><h1>何泽瑜2024论文 × 我们10 MW混塔论文：90页逐页实图对照</h1>
+<p>左侧何的真实PDF页面，右侧我们的真实PDF对应页面，逐页审阅是否覆盖、是否有可复核结果以及接下来要补什么。</p>
+<div style="margin-top:8px"><a href="../">返回工作室</a>　·　<a href="../manuscript-workbench.html">继续编辑我们的论文</a>　·　<a href="./何泽瑜2024与10MW混塔论文_90页逐页实图评审拼图.pdf" download>下载90页完整对照PDF</a></div></header>
+<div class="layout"><nav><b>90页原论文索引</b><input id="search" type="search" placeholder="查页码、主题、缺口"><div id="nav"></div></nav>
+<main><section><h2 id="title">正在加载90页真实截图…</h2><span id="badge"></span>
+<div class="controls" style="margin-top:10px"><button id="prev">上一页</button><button id="next">下一页</button>
+<a id="he-link" rel="noopener" target="_blank">查看何论文原页</a><a id="our-link" rel="noopener" target="_blank">查看我们论文原页</a></div>
+<div class="warning">“基本覆盖”不代表整章研究已完成；高保真Simpack–Abaqus的真实结构响应、接缝应力、敏感性实算和优化真值核验，必须用原始求解与验证资料证明。何论文的地震、软件开发和可靠度章节不是我们抗风优化论文必须照搬的研究目标。</div></section>
+<section><a id="spread-link" target="_blank" rel="noopener"><img id="spread" alt="真实PDF原页截图左右拼图"></a><p class="description">点击图片放大，亦可下载全套90页PDF。两侧均为真实PDF页面截图，底部给出逐页判断。</p></section>
+<div class="audit"><div><h3>何泽瑜这一页具体写了什么</h3><p id="his"></p></div><div><h3>我们是否完成？具体怎么补</h3><p id="mine"></p></div></div></main></div>
+<footer>CAE论文工作室 · 何泽瑜论文90 PDF物理页 · 本人论文2026-11-21精修基准136页 · 对照用于证据审查，不代替可复算科研结果。</footer>
+<script>
+const $=s=>document.querySelector(s);let index=null,notes=null,current=1;
+function go(n){if(!index||!notes)return;current=Math.min(index.pages.length,Math.max(1,n));
+const r=index.pages[current-1],v=notes[String(current)];
+$("#title").textContent="何PDF第 "+current+" / "+index.pages.length+" 页  →  本人PDF第 "+v.our_page+" 页";
+$("#badge").textContent=v.status;$("#spread").src=r.spread_image;$("#spread-link").href=r.spread_image;
+$("#his").textContent=v.summary;$("#mine").textContent=v.next;
+$("#he-link").href=index.reference.file+"#page="+current;
+$("#our-link").href=index.ours.file+"#page="+v.our_page;
+$("#prev").disabled=current===1;$("#next").disabled=current===index.pages.length;
+document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("active",Number(b.dataset.page)===current));location.hash="p="+current}
+$("#prev").onclick=()=>go(current-1);$("#next").onclick=()=>go(current+1);
+document.addEventListener("keydown",e=>{if(e.target.tagName==="INPUT")return;if(e.key==="ArrowLeft")go(current-1);if(e.key==="ArrowRight")go(current+1)});
+Promise.all([fetch("./page_index.json").then(r=>r.json()),fetch("./review_notes.json").then(r=>r.json())])
+.then(([a,b])=>{index=a;notes=b;
+$("#nav").innerHTML=index.pages.map(r=>'<button data-page="'+r.reference_pdf_page+'">'+r.reference_pdf_page+'</button>').join("");
+document.querySelectorAll("#nav button").forEach(el=>el.onclick=()=>go(Number(el.dataset.page)));
+$("#search").oninput=()=>{const q=$("#search").value.trim();document.querySelectorAll("#nav button").forEach(el=>{const n=Number(el.dataset.page),x=notes[String(n)];el.hidden=!!q&&![String(n),x.status,x.summary,x.next].join(" ").includes(q)})};
+const match=location.hash.match(/p=(\d+)/);go(match?Number(match[1]):1)})
+.catch(e=>{$("#title").textContent="数据暂不可用："+e.message});
+</script></body></html>
