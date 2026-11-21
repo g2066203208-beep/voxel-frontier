@@ -13,7 +13,7 @@
 
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.116**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.117**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -794,3 +794,6 @@
 
 ### 2026-11-21 23时｜v0.32.112 PATCH — S12缺箱下气候筛选排序的构造性不可识别证书
 - SOURCE=历史99736未匹配诊断小时；RUN=非负缺箱四次矩两方案反转构造，外生统一上限Q下严格排序充要条件a+H_UQ<b；归一化数学例临界Q=1/99736。程序`experiments/T080/s12_missing_bin_ranking_identification.cjs` [commit 1447c82](https://github.com/g2066203208-beep/voxel-frontier/commit/1447c82bb0be60a55935d9e470d6598d2062566a)，紧凑期刊§3.1 [commit 8bfd90b](https://github.com/g2066203208-beep/voxel-frontier/commit/8bfd90b739ce54ef1a1eaa4c6c72be7ffb859afc)。TEST=本地Node同逻辑断言PASS；GitHub源字节独立CLI NOT_RUN；合成值非OpenFAST物理结果。FIG0 TAB0，12阶段0/12、DLC1.2 0/126，材料Miner/同态W HOLD。
+
+### 2026-11-22｜v0.32.117 PATCH — S06真实36风工况ETM/NTM DEL4类别对比
+- SOURCE=T062真实72行CSV Git blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`；[程序commit 0d08e09](https://github.com/g2066203208-beep/voxel-frontier/commit/0d08e09e803e693b0708f4267bea8d39e3bf5330)，路径`research/wind-tower/experiments/T080/s06_etm_ntm_archived_del4_contrast.cjs`；[期刊§3.4及6行表commit 4adbbd4](https://github.com/g2066203208-beep/voxel-frontier/commit/4adbbd41d823da3aeab898178115677d2889dc26)，正文blob `6f537491447e18372af4df9f3aa909446da8f069`；RUN=3风箱×2弯矩×6索引共36个真实DEL4比值，36/36 ETM>NTM，6组几何均值1.322727–1.639988；TEST=连接器源级解析PASS，原生Node CLI/原CSV字节SHA256/OUTB及同随机流配对NOT_RUN；同索引不等于同态配对，非材料Miner/正式DLC1.2或总体概率；FIG0 TAB6，12阶段0/12，DLC1.2 0/126，最大同态独立W侧气动力与惯性归属HOLD。
