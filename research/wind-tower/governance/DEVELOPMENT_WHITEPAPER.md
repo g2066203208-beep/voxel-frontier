@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.111**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.112**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -778,3 +778,6 @@
 
 ### 2026-11-21｜v0.32.108 PATCH — S11真实1984行四ETM三风箱全源重拟合与预测前凸包拒绝
 - SOURCE=T077 CSV Git blob `b5effa2a493cec0a9af8a10a3b93df0ff997d2d0`；[程序commit bb245e5](https://github.com/g2066203208-beep/voxel-frontier/commit/bb245e580e2a5e2cd83fe5e9469cede5a51e0624) 路径`research/wind-tower/experiments/T080/s11_etm_three_bin_refit_gate.cjs`；[期刊三折数表与方法commit c7742a9](https://github.com/g2066203208-beep/voxel-frontier/commit/c7742a914b2d1abf663d08eeaccfa121124136c3) 路径`research/wind-tower/manuscript/journal-wind-fatigue-results.md` blob `c5ce015ba6d58cc676067c1d28e0d83db4ac70e9`；RUN=按31段×4工况16方位聚合124目标，三箱留出最近箱RMSE 0.198851/0.198851/0.796867MPa、仿射RMSE 0.213951/0.169327/0.813993MPa；低/高箱预测前凸包拒绝31/31段，中箱仅插值诊断。TEST=连接器V8真实原始CSV重拟合算术PASS，Node原生CLI/负向测试、CSV字节SHA256、OUTB重解码NOT_RUN；FIG0 TAB3，非跨设计/正式DLC1.2/材料Miner或结构物理PASS；12阶段晋级0/12。详见T080日志；禁区未触碰。
+
+### 2026-11-21 23时｜v0.32.112 PATCH — S12缺箱下气候筛选排序的构造性不可识别证书
+- SOURCE=历史99736未匹配诊断小时；RUN=非负缺箱四次矩两方案反转构造，外生统一上限Q下严格排序充要条件a+H_UQ<b；归一化数学例临界Q=1/99736。程序`experiments/T080/s12_missing_bin_ranking_identification.cjs` [commit 1447c82](https://github.com/g2066203208-beep/voxel-frontier/commit/1447c82bb0be60a55935d9e470d6598d2062566a)，紧凑期刊§3.1 [commit 8bfd90b](https://github.com/g2066203208-beep/voxel-frontier/commit/8bfd90b739ce54ef1a1eaa4c6c72be7ffb859afc)。TEST=本地Node同逻辑断言PASS；GitHub源字节独立CLI NOT_RUN；合成值非OpenFAST物理结果。FIG0 TAB0，12阶段0/12、DLC1.2 0/126，材料Miner/同态W HOLD。
