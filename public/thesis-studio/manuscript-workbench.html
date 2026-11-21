@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#102d34"><meta name="description" content="湖北嘉鱼风机论文工作室 · 七章论文在线编辑、自动保存、版本历史、原版PDF对照和Word导出">
+<title>论文在线编辑工作台｜湖北嘉鱼风机论文工作室</title>
+<link rel="stylesheet" href="./manuscript-workbench.css">
+<script defer src="./manuscript-workbench.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <a class="home" href="./index.html#thesis"><span class="home-icon" aria-hidden="true">←</span><span>湖北嘉鱼 · 论文工作室</span></a>
+  <span class="crumb">/</span><strong class="site-title">论文在线编辑</strong>
+  <span class="top-space"></span>
+  <span class="save-state" id="save-state" role="status"><span class="save-dot"></span>正在读取…</span>
+  <button class="tiny" id="history-button" type="button">历史版本</button>
+  <button class="tiny" id="cloud-button" type="button">GitHub 同步</button>
+  <button class="top-primary" id="export-menu" type="button">导出与下载 <span aria-hidden="true">⌄</span></button>
+</header>
+<div class="app">
+<aside class="left" aria-label="论文章节与检索">
+ <div class="left-top"><span class="eyebrow">MANUSCRIPT · 2026 / LATEST WORD</span><h1>论文目录</h1><p>最新精修Word导入，包含前置内容与全部七章。</p></div>
+ <div class="search-wrap"><label class="sr-only" for="search">检索论文全文</label><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="检索章节、正文、表格…" autocomplete="off"><span class="shortcut">/</span></div>
+ <div class="nav-caption">章节导航 <span id="nav-count"></span></div>
+ <nav id="chapter-list" class="chapter-list" aria-label="章节列表"></nav>
+ <section id="results-wrap" class="results-wrap" hidden><div class="nav-caption">全文检索 <span id="search-count"></span></div><div id="search-results"></div></section>
+ <div class="left-foot"><span class="foot-title">文稿来源</span><p>原版Word的章节、正文与表格按原始顺序导入。复杂公式、图件和页式以PDF/Word原件为准。</p><button id="source-button" type="button">查看原稿信息</button></div>
+</aside>
+<main class="main" id="main-content">
+ <div class="editor-toolbar">
+  <div class="trail"><span>学位论文</span><span aria-hidden="true">/</span><strong id="current-chapter">加载中</strong></div>
+  <div class="tool-spacer"></div>
+  <span class="edit-counter" id="edit-counter">0处修改</span>
+  <button class="tool-button" id="snapshot-button" type="button" title="保存可恢复的本地版本">保存快照</button>
+  <button class="tool-button" id="focus-button" type="button">专注模式</button>
+  <button class="tool-button" id="pdf-toggle" type="button" aria-pressed="true">原稿PDF</button>
+ </div>
+ <div class="editing-scroll" id="editing-scroll">
+  <section class="document-header"><div class="paper-eyebrow">MASTER OF ENGINEERING · THESIS MANUSCRIPT</div><h2 id="chapter-heading">正在导入论文…</h2><p id="chapter-subtitle">正文可直接点击修改；修改会自动保存在当前浏览器。</p></section>
+  <div id="document-body" class="document-body" aria-live="off"></div>
+  <div class="document-footer"><span>章末</span><span id="chapter-foot">第 — 章</span></div>
+ </div>
+ <div class="edit-status-line"><span id="source-status">文稿导入中</span><span id="autosave-time">本地草稿</span></div>
+</main>
+<aside class="preview" id="preview" aria-label="原版论文PDF对照">
+ <div class="preview-bar"><span><strong>原版排版对照</strong><small>136页 · 公式与图件</small></span><a id="preview-open" target="_blank" rel="noopener" href="./downloads/10MW-hybrid-tower-thesis-ch3-revised-20261121.pdf">新标签页打开</a></div>
+ <iframe id="pdf-frame" title="论文原版PDF排版参照" loading="lazy" src="./downloads/10MW-hybrid-tower-thesis-ch3-revised-20261121.pdf#view=FitH"></iframe>
+ <div class="preview-note">左侧编辑正文和表格；右侧是原格式参照，不会随草稿自动重排。导出 Word 后请检查公式、图表与分页。</div>
+</aside>
+</div>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<div id="modal" class="modal-cover" hidden><section class="dialog" role="dialog" aria-modal="true" aria-labelledby="modal-title"><header><h2 id="modal-title">操作</h2><button id="modal-close" type="button" aria-label="关闭">×</button></header><div id="modal-body" class="dialog-body"></div></section></div>
+<input type="file" id="word-file" accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" hidden>
+</body>
+</html>
