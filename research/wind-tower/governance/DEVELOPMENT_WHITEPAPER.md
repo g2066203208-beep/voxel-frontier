@@ -1,3 +1,7 @@
+### 2026-11-22 04时｜v0.32.116 PATCH — S10真实高风暴露时间鲁棒性门槛
+- 2026-11-22 04时｜S10真实18NTM高风箱暴露时间5%门槛敏感性：SOURCE=T062 72行CSV blob 1b334e9afdbd792a2f4b1a41cdb150dc3698352d；基线PR#42 Open/Draft HEAD=67c03b00071dcc6d1232ccbd94ab4807a1ead590，main=bbc5c9130f2d9fc41f776506d86118a9b8db0e65；已读根/研究AGENTS、指挥室、白皮书v0.32.115、正式STATUS、12阶段、T079/T080、源CSV、Node程序和紧凑期刊稿；旧MASTER路径未找到。RUN=独立连接器JS直接解析72行、18NTM双通道六seed四次矩，固定低中风箱5736/1426h，高风暴露h变量，严格5%阈值hcrit=F/(19*x)，全支持严格低于5%的h上限Mx=2.344938150681498h、My=99.41183550191052h；全支持严格高于5%的h下界Mx=13.000077724735807h、My=217.39159932156593h；历史h=2h，Mx阈值仅+17.2469%，说明固定小时数下0/46656超限并非暴露稳健性。新增已有Node程序阈值输出及自检、紧凑期刊§3.3与两行数表；TEST=独立源级算术PASS，更新后仓库原生Node CLI/原CSV字节SHA256/OUTB NOT_RUN；误差=CSV DEL有限精度，6seed经验支持集不外推，阈值相等时不算严格越界；REF/STANDARD/OFFICIAL无新增；FIG0 TAB2，12阶段晋级0/12，DLC1.2=0/126，材料局部Miner和同态独立W侧HOLD。下一唯一动作=转S10源时程可用时做名义应力/局部应力证据，不重复六seed统计；不触碰Abaqus/CAE、冻结母本、main、昂贵RUN或PR合并。
+- 科研程序commit ac7b1a021d596a970e346d93bce7d9722458bb2b；期刊正文commit 6b8ec55918db4c4212263fed20a99624d44ff963；脚本Git blob 6709992c8362cd5ebb0c689c773dc1f737d26bd2；正文Git blob f6b6c0705ffb86628020b623a74e6248e51fa689。
+
 ### 2026-11-22 03时｜v0.32.115 PATCH — S10真实18NTM精确经验重抽样
 - [程序commit 8d80228](https://github.com/g2066203208-beep/voxel-frontier/commit/8d80228e0f8c40eb86cf52551a9d0ae63d9d42e8) 路径`research/wind-tower/experiments/T080/s10_ntm_highbin_exact_empirical_bootstrap.cjs`；[论文commit 6c8a44a](https://github.com/g2066203208-beep/voxel-frontier/commit/6c8a44a9a1bf68b64922742b4115de09f543dede) 路径`research/wind-tower/manuscript/journal-wind-fatigue-condensed-submission-candidate.md` blob `0b74f8b0ff0658e51dd766ab57fcad064dd7cdc8`。SOURCE=T062 72行CSV blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`；RUN=高风六seed 46656等权有放回经验重抽样，Mx经验2.5/97.5%=1.797546/3.603719%，My=0.061800/0.089623%，两通道>5%均0/46656，固定低中箱及小时；TEST=连接器V8真实源级PASS，Node CLI/字节SHA256/OUTB NOT_RUN；非独立样本/非总体置信/非Miner或正式DLC1.2；TAB2 FIG0，12阶段晋级0/12，最大W侧同步独立气动力HOLD。
 
@@ -9,7 +13,7 @@
 
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.115**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.116**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
