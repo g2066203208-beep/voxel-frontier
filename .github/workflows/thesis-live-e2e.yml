@@ -1,0 +1,33 @@
+name: Verify live thesis editor
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'public/thesis-studio/manuscript-workbench.html'
+      - 'public/thesis-studio/manuscript-workbench.js'
+      - 'public/thesis-studio/manuscript-workbench.css'
+      - 'public/thesis-studio/editor-data/latest-manuscript.json'
+      - 'tests/thesis-live-e2e.cjs'
+      - '.github/workflows/thesis-live-e2e.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-live-editor:
+    name: Edit, save, reload, download on production Pages
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install browser automation
+        run: npm install --no-save --ignore-scripts playwright@1.56.1
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Test actual GitHub Pages website
+        run: node tests/thesis-live-e2e.cjs
