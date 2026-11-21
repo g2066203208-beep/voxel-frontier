@@ -15,6 +15,9 @@ OUT.mkdir(parents=True,exist_ok=True)
 IMG.mkdir(exist_ok=True)
 
 A=fitz.open(HE); B=fitz.open(OWN)
+REVIEWS=json.loads((OUT/"review_notes.json").read_text(encoding="utf8"))
+assert len(REVIEWS)==len(A), "Need a reviewed note for every reference PDF page"
+
 def normalize(t):
     t=t.replace("\u200b","").replace("\ufeff","")
     return re.sub(r"\s+"," ",t).strip()
@@ -67,10 +70,14 @@ def top_matches(i):
 
 INDEX=[]
 ATLAS=fitz.open()
-PAGE_SIZE=(1170,852)  # landscape spread with full PDF vector pages
+PAGE_SIZE=(1170,1025)  # 2 original vector PDF pages, followed by Chinese completion audit
+FONT_PATH="/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc"
+
 for i,txt in enumerate(textsA):
     top=top_matches(i)
-    target=top[0][0]-1
+    note=REVIEWS[str(i+1)]
+    target=int(note["our_page"])-1
+    assert 0<=target<len(B)
     entry={
         "reference_pdf_page":i+1,
         "reference_printed_page":None,
@@ -82,7 +89,9 @@ for i,txt in enumerate(textsA):
         "our_match_page":target+1,
         "our_excerpt":textsB[target][:950],
         "our_notable":notable(B[target].get_text(sort=True)),
-        "comparison_status":"待逐项证据复核",
+        "comparison_status":note["status"],
+        "expert_review":note,
+        "matching_method":"人工按章节、物理量和证据选择对应页；仅把自动相似度作为辅助定位",
         "evidence_rule":"文本相似仅用于定位候选页，不足以证明工程已完成",
         "spread_image":"./spreads/compare-%03d.webp"%(i+1),
     }
@@ -93,29 +102,45 @@ for i,txt in enumerate(textsA):
     right=snapshot(B,target,scale=1.5)
     thumb_w=820
     thumb_h=round(max(left.height*thumb_w/left.width,right.height*thumb_w/right.width))
-    header=76; gap=24; pad=25; footer=55
+    header=76; gap=24; pad=25; footer=170
     canv=Image.new("RGB",(thumb_w*2+gap+pad*2,thumb_h+header+footer+pad),"#f4f6f9")
     draw=ImageDraw.Draw(canv)
     try: font=ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",23)
     except: font=ImageFont.load_default()
+    try: cfont=ImageFont.truetype(FONT_PATH,23,index=2)
+    except: cfont=font
     draw.text((pad,19),"HE 2024  |  PDF page %03d"%(i+1),font=font,fill="#263850")
-    draw.text((pad+thumb_w+gap,19),"OUR THESIS  |  PDF page %03d  |  match %.2f"%(target+1,top[0][1]),font=font,fill="#136f68")
+    draw.text((pad+thumb_w+gap,19),"OUR THESIS  |  PDF page %03d  |  REVIEWED"%(target+1),font=font,fill="#136f68")
     for pic,x in [(left,pad),(right,pad+thumb_w+gap)]:
         new_h=round(pic.height*thumb_w/pic.width)
         pic=pic.resize((thumb_w,new_h),Image.Resampling.LANCZOS)
         canv.paste(pic,(x,header))
         draw.rectangle((x,header,x+thumb_w,header+new_h),outline="#b9c6d0",width=2)
-    draw.text((pad,thumb_h+header+16),"NOTE: Page pair is an automated content match, not a completion verdict.",font=font,fill="#566579")
+    def lines(t,width):
+        pieces=[];buf=""
+        for char in t:
+            if buf and draw.textbbox((0,0),buf+char,font=cfont)[2]>width:
+                pieces.append(buf);buf=char
+            else:buf+=char
+        if buf:pieces.append(buf)
+        return pieces
+    yy=thumb_h+header+13
+    for line in lines("判定："+note["status"]+"｜何的本页："+note["summary"],thumb_w*2+gap)[:2]:
+        draw.text((pad,yy),line,font=cfont,fill="#264352");yy+=31
+    for line in lines("我们的工作："+note["next"],thumb_w*2+gap)[:3]:
+        draw.text((pad,yy),line,font=cfont,fill="#365867");yy+=30
     canv.save(IMG/("compare-%03d.webp"%(i+1)),quality=79,method=5)
 
     # True PDF spread, with selectable original vector text on both sides.
     page=ATLAS.new_page(width=PAGE_SIZE[0],height=PAGE_SIZE[1])
     page.draw_rect(page.rect,fill=(.97,.98,.99),overlay=False)
     page.insert_text((25,27),"REFERENCE: HE 2024  /  PDF PAGE %d"%(i+1),fontsize=12,color=(.13,.21,.33))
-    page.insert_text((600,27),"CURRENT DRAFT  /  PDF PAGE %d  /  similarity %.3f"%(target+1,top[0][1]),fontsize=12,color=(.07,.42,.38))
+    page.insert_text((600,27),"CURRENT DRAFT  /  PDF PAGE %d  /  REVIEWED"%(target+1),fontsize=12,color=(.07,.42,.38))
     rect1=fitz.Rect(15,40,575,825);rect2=fitz.Rect(595,40,1155,825)
     page.show_pdf_page(rect1,A,i,keep_proportion=True)
     page.show_pdf_page(rect2,B,target,keep_proportion=True)
+    page.insert_textbox(fitz.Rect(20,852,1150,904),"判定："+note["status"]+"。何的本页："+note["summary"],fontname="china-s",fontsize=13,lineheight=1.3,color=(.15,.29,.36))
+    page.insert_textbox(fitz.Rect(20,915,1150,1020),"我们的工作："+note["next"],fontname="china-s",fontsize=13,lineheight=1.3,color=(.13,.35,.33))
     if (i+1)%15==0:print("Processed",i+1,"of",len(A),flush=True)
 
 with open(OUT/"page_index.json","w",encoding="utf-8") as f:
@@ -124,13 +149,13 @@ with open(OUT/"page_index.json","w",encoding="utf-8") as f:
                    "file":"../documents/He_Zeyu_2024_hybrid_tower_thesis.pdf","pages":len(A)},
       "ours":{"title":"10MW混合塔论文：第三章精修版（2026-11-21）",
                    "file":"../downloads/10MW-hybrid-tower-academic-revision-20261121.pdf","pages":len(B)},
-      "matching_method":"Chinese character 3-gram TF-IDF; use candidate results only as a navigation aid, not a completed-work decision",
+      "matching_method":"每页由人工按研究内容与实际证据匹配，自动文本相似度只作为初始定位，不用于完成度判断",
       "pages":INDEX
     },f,ensure_ascii=False,indent=2)
 with open(OUT/"page_index.jsonl","w",encoding="utf-8") as f:
     for x in INDEX:f.write(json.dumps(x,ensure_ascii=False)+"\n")
 with open(OUT/"toc.json","w",encoding="utf-8") as f:
     json.dump({"he":A.get_toc(),"ours":B.get_toc()},f,ensure_ascii=False,indent=2)
-ATLAS.set_metadata({"title":"He 2024 vs Current 10 MW Thesis - Every PDF Page Visual Pair","author":"Thesis Research Studio","subject":"Non-verbatim comparative review"})
-ATLAS.save(OUT/"He2024_vs_Current20261121_逐页双页拼图.pdf",garbage=4,deflate=True,compression_effort=4)
+ATLAS.set_metadata({"title":"He 2024 vs Current 10 MW Thesis - Reviewed Page-by-Page Visual Atlas","author":"Thesis Research Studio","subject":"Non-verbatim comparative review"})
+ATLAS.save(OUT/"何泽瑜2024与10MW混塔论文_90页逐页实图评审拼图.pdf",garbage=4,deflate=True,compression_effort=4)
 print("DONE:",len(A),"He pages;",len(B),"ours pages; atlas MB",round((OUT/"He2024_vs_Current20261121_逐页双页拼图.pdf").stat().st_size/1e6,2),flush=True)
