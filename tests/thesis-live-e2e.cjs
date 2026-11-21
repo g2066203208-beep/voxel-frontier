@@ -61,7 +61,7 @@ const delay = n => new Promise(resolve => setTimeout(resolve, n));
     const docxPromise=page.waitForEvent('download',{timeout:180000});
     await page.getByRole('button',{name:'一键导出修改后的 Word（自动读取母本）'}).click();
     const wordDownload=await docxPromise;
-    assert.ok(wordDownload.suggestedFilename.toLowerCase().endsWith('.docx'),'Word export filename invalid');
+    assert.ok(wordDownload.suggestedFilename().toLowerCase().endsWith('.docx'),'Word export filename invalid');
     const wordPath='/tmp/thesis-live-tested.docx';
     await wordDownload.saveAs(wordPath);
     assert.ok(fs.statSync(wordPath).size>1000000,'Downloaded Word appears incomplete');
