@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.102**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.103**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -28,6 +28,9 @@
 - 下一独立非Abaqus动作：核对/恢复可证明同模型、运行状态、时间网格和起点的W侧真实时程；没有可追溯来源时记录HOLD并转向S05/S10可独立研究，不造数据。
 
 ## 4. 版本变更记录（只记录真实持久化事务）
+
+### 2026-11-21｜v0.32.103 PATCH — S11真实四ETM×31段风速单调性否证
+- SOURCE=1984行T077 CSV Git blob `b5effa2a493cec0a9af8a10a3b93df0ff997d2d0`；RUN=124 case×section方位最大DEL4、五组31段比较；11.4→19.202140m/s两高风seed均31/31段降低（差−1.019809至−0.346811MPa、−0.939075至−0.231904MPa）。[程序](../experiments/T080/s11_etm_speed_monotonicity_rejection.cjs)、[期刊正文](../manuscript/journal-wind-fatigue-results.md)、[过程日志](../experiments/T080/PROCESS_LOG.md)。TEST=独立连接器V8源级聚合PASS，Node CLI/OUTB/SHA256字节复验NOT_RUN；FIG0 TAB0，风速与seed混杂、非因果、非DLC1.2或材料Miner，12阶段0/12，最大W侧同步气动力HOLD；禁止范围不触碰。
 
 ### 2026-11-21｜v0.32.102 PATCH — S11高风箱整箱留出误差与同箱留例差异
 - SOURCE=7行S11原始CSV Git blob `a86ad24434e2e7adf17e0ced44a0e043ad379216`；RUN=19.202140m/s整箱留出(LOBO)与同箱单例留出(LOCO)31+31截面加权MSE对比，nearest/linear RMSE分别扩大6.7603/6.8839倍；[程序commit f00bfe5](https://github.com/g2066203208-beep/voxel-frontier/commit/f00bfe55f3ddafd1c1b46b7c3ee6e6d4c31f3344)、[期刊正文commit f885c12](https://github.com/g2066203208-beep/voxel-frontier/commit/f885c128250e68fbe7add3c2b2f0bae64a17f50c)，稿件blob `e316ca68b3b7a3f35e9664a1d6153ab2f94d74d5`；TEST=独立Python原表算术PASS，Node原生CLI/重训/物理验证NOT_RUN；FIG0 TAB0；12阶段晋级0/12、DLC1.2 0/126。
