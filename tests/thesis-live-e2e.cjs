@@ -44,7 +44,7 @@ const delay = n => new Promise(resolve => setTimeout(resolve, n));
       const im=page.locator('img[data-figure="'+fig+'"]');
       assert.equal(await im.count(),1,'Missing correct caption image '+fig);
       const imageUrl=await im.getAttribute('src');
-      const response=await page.request.get(new URL(imageUrl,SITE));
+      const response=await page.request.get(new URL(imageUrl,SITE).toString());
       assert.equal(response.status(),200,'Illustration cannot be fetched: '+fig);
     }
     checks.all_four_original_figures_visible_and_fetchable = true;
