@@ -1,0 +1,97 @@
+name: Build reviewed thesis editorial Word and web source V2
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/thesis-edit/editorial_revision_v2.py'
+      - '.github/workflows/build-thesis-editorial-v2.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: thesis-editorial-v2-build
+  cancel-in-progress: false
+
+jobs:
+  build-verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install document and PDF validation tools
+        run: |
+          python -m pip install python-docx pymupdf pillow
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends libreoffice-writer fonts-noto-cjk
+      - name: Revise Word and generate the matching editable text-layer
+        run: python scripts/thesis-edit/editorial_revision_v2.py
+      - name: Render revised DOCX as a real PDF for style QA
+        run: |
+          mkdir -p /tmp/thesis-lo-home
+          libreoffice -env:UserInstallation=file:///tmp/thesis-lo-home --headless --convert-to pdf --outdir public/thesis-studio/downloads _generated-thesis-workbench/*.docx
+          mv public/thesis-studio/downloads/10MW混塔论文_第二章原型参数与学术表述修订V2_20261121.pdf public/thesis-studio/downloads/10MW-thesis-editorial-v2-20261121.pdf
+      - name: Validate source identity, tables and PDF pagination
+        run: |
+          python - <<'PY'
+          import hashlib,json,fitz
+          from pathlib import Path
+          from docx import Document
+          j=json.loads(Path('public/thesis-studio/editor-data/editorial-manuscript-v2.json').read_text(encoding='utf8'))
+          p=Path('_generated-thesis-workbench/10MW混塔论文_第二章原型参数与学术表述修订V2_20261121.docx')
+          d=Document(p)
+          assert hashlib.sha256(p.read_bytes()).hexdigest()==j['source']['sha256']
+          tables=[[c.text for c in row.cells] for tab in d.tables for row in tab.rows]
+          assert sum(1 for row in tables if row and row[0]=='C01')==1
+          assert sum(1 for row in tables if row and row[0]=='C31')==1
+          assert sum(1 for row in tables if row and row[0]=='S04')==1
+          assert len(d.tables)==37
+          assert all('验证验证' not in p.text and '分析步步' not in p.text for p in d.paragraphs)
+          assert len(j['chapters'])==8
+          blocks=[b for c in j['chapters'] for b in c['blocks']]
+          assert len(blocks)>880
+          assert any(b.get('text','').startswith('表2-2  参考混凝土') for b in blocks)
+          assert any(b.get('text','').startswith('表2-3  参考钢塔') for b in blocks)
+          assert any(b.get('text','').startswith('BF1历史模型以36根') for b in blocks)
+          pdf=fitz.open('public/thesis-studio/downloads/10MW-thesis-editorial-v2-20261121.pdf')
+          assert 130<=len(pdf)<=160, len(pdf)
+          pdftexts=[x.get_text() for x in pdf]
+          for term in ('C01','C31','S04','参考混凝土塔段'):
+            assert any(term in x for x in pdftexts),term
+          print('VALIDATED',len(pdf),'PDF pages',len(d.tables),'Word tables',len(blocks),'editable blocks')
+          from pathlib import Path
+          qa=Path('_generated-thesis-workbench/qa');qa.mkdir(parents=True,exist_ok=True)
+          found=[i for i,t in enumerate(pdftexts) if 'C01' in t or 'C31' in t or 'S04' in t]
+          for i in sorted(set([0]+found)):
+            page=pdf[i];pix=page.get_pixmap(matrix=fitz.Matrix(1.6,1.6),alpha=False)
+            pix.save(str(qa/('word-page-%03d.png'%(i+1))))
+          Path('_generated-thesis-workbench/revision_report.json').write_text(json.dumps({'pdf_pages':len(pdf),'word_tables':len(d.tables),'edited_blocks':len(blocks),'geometry_pdf_pages':[i+1 for i in found]},ensure_ascii=False,indent=2))
+          PY
+      - name: Save preview and QA manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: thesis-editorial-v2-word-qa
+          path: |
+            _generated-thesis-workbench/qa/
+            _generated-thesis-workbench/revision_report.json
+            _generated-thesis-workbench/audit.json
+          retention-days: 30
+      - name: Publish revised Word chunks, PDF and editable body data
+        run: |
+          git config user.name 'thesis-editorial[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/thesis-studio/editor-data/editorial-manuscript-v2.json public/thesis-studio/downloads/10MW-thesis-editorial-v2-20261121.part*.bin public/thesis-studio/downloads/10MW-thesis-editorial-v2-20261121.pdf
+          git diff --cached --quiet && exit 0
+          git commit -m 'docs(thesis): publish revised editable manuscript Word, verified tables and PDF'
+          for i in 1 2 3; do
+            git pull --rebase origin main && git push origin HEAD:main && exit 0
+            sleep 8
+          done
+          exit 1
