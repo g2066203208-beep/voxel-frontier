@@ -7,6 +7,7 @@ web workbench baseline with documented source-versus-model distinctions.
 """
 import argparse, copy, hashlib, json, re
 from pathlib import Path
+from zipfile import ZipFile, ZipInfo, ZIP_DEFLATED
 from docx import Document
 from docx.shared import Cm, Pt
 from docx.enum.text import WD_ALIGN_PARAGRAPH
@@ -213,6 +214,20 @@ def normalize_doc(source,old_json):
         ch["blocks"]=revised
     return doc,amended,new_blocks
 
+def deterministic_docx(path):
+    # python-docx uses current ZIP entry timestamps by default. Fix them so that
+    # identical Word XML produces the same source SHA and does not invalidate
+    # browser edit histories on successive CI rebuilds.
+    temp=path.with_suffix(".repack.docx")
+    with ZipFile(path,"r") as src, ZipFile(temp,"w") as dest:
+        for item in src.infolist():
+            meta=ZipInfo(item.filename,(1980,1,1,0,0,0))
+            meta.compress_type=ZIP_DEFLATED
+            meta.external_attr=item.external_attr
+            meta.create_system=item.create_system
+            dest.writestr(meta,src.read(item.filename),compress_type=ZIP_DEFLATED,compresslevel=6)
+    temp.replace(path)
+
 def build(args):
     WORK.mkdir(parents=True,exist_ok=True)
     if args.source:
@@ -231,6 +246,7 @@ def build(args):
     doc,updated,added=normalize_doc(source,old)
     dest=WORK/"10MW混塔论文_第二章原型参数与学术表述修订V2_20261121.docx"
     doc.save(dest)
+    deterministic_docx(dest)
     newbytes=dest.read_bytes()
     updated["source"].update({"name":dest.name,"sha256":hashlib.sha256(newbytes).hexdigest(),
         "bytes":len(newbytes),
