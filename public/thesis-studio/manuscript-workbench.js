@@ -43,7 +43,7 @@ function blockNode(b){const value=valueFor(b),changed=!!state.patches[b.id];if(b
   const wrap=E('div','table-wrap'+(changed?' edited':''));wrap.dataset.block=b.id;const table=E('table');(value||[]).forEach((row,ri)=>{const tr=E('tr');row.forEach((v,ci)=>{const cell=E('td','',v);cell.contentEditable='true';cell.setAttribute('role','textbox');cell.setAttribute('aria-label',`第${ri+1}行第${ci+1}列表格单元格`);cell.addEventListener('paste',pasteText);cell.addEventListener('input',()=>{const source=valueFor(b);const edited=source.map(a=>a.slice());edited[ri][ci]=cell.innerText;changeBlock(b.id,edited);wrap.classList.toggle('edited',!!state.patches[b.id]);});tr.append(cell);});table.append(tr);});wrap.append(table);return wrap;
  }
  const wrap=E('div','paper-block kind-'+b.kind+(changed?' edited':''));wrap.dataset.block=b.id;
- if(b.figure_asset){const fig=E('figure','thesis-inline-figure');const img=E('img');img.src=b.figure_asset;img.alt=b.figure_caption_match||String(value);img.loading='lazy';img.dataset.figure=(String(value).match(/^图\\d+-\\d+/)||[b.id])[0];fig.append(img);wrap.append(fig);}
+ if(b.figure_asset){const fig=E('figure','thesis-inline-figure');const img=E('img');img.src=b.figure_asset;img.alt=b.figure_caption_match||String(value);img.loading='lazy';img.dataset.figure=(String(value).match(/^图\d+-\d+/)||[b.id])[0];fig.append(img);wrap.append(fig);}
  const edit=makeEditable(b,value,'editable',next=>{changeBlock(b.id,next);wrap.classList.toggle('edited',!!state.patches[b.id]);});wrap.append(edit);
  if(b.has_math||b.has_media)wrap.append(E('div','media-note','本段含特殊对象，请对照右侧原稿核对。'));
  return wrap;
