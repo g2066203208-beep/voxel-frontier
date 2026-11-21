@@ -1,0 +1,97 @@
+name: Publish thesis chapter two four figures V6
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/thesis-edit/publish_ch2_v6_graphics.py'
+      - '.github/workflows/publish-thesis-ch2-v6-graphics.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: thesis-ch2-v6-graphics-publish
+  cancel-in-progress: false
+jobs:
+  author-and-publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          sparse-checkout: |
+            scripts/thesis-edit
+            public/thesis-studio/downloads
+            public/thesis-studio/editor-data
+            .github/workflows/publish-thesis-ch2-v6-graphics.yml
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install research graphics renderer and Word support
+        run: |
+          python -m pip install --quiet python-docx matplotlib scipy pillow pymupdf
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends libreoffice-writer fonts-noto-cjk
+      - name: Redraw all four figures from V5 mother Word and publish V6 structured Word sources
+        run: python scripts/thesis-edit/publish_ch2_v6_graphics.py
+      - name: Render full V6 Word and audit actual figure pages
+        run: |
+          mkdir -p /tmp/lo-thesis-v6
+          libreoffice -env:UserInstallation=file:///tmp/lo-thesis-v6 --headless --convert-to pdf --outdir public/thesis-studio/downloads _generated_ch2_v6/10MW混塔论文_第二章四图规范重绘V6_20261122.docx
+          mv public/thesis-studio/downloads/10MW混塔论文_第二章四图规范重绘V6_20261122.pdf public/thesis-studio/downloads/10MW-thesis-ch2-graphics-v6-20261122.pdf
+      - name: Verify no body text or equation changes and all figures present
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          from docx import Document
+          import json,hashlib,fitz
+          root=Path('_generated_ch2_v6')
+          before=Document(root/'source-v5.docx')
+          after=Document(root/'10MW混塔论文_第二章四图规范重绘V6_20261122.docx')
+          assert len(before.paragraphs)==len(after.paragraphs)==901
+          assert len(before.tables)==len(after.tables)==37
+          assert len(before.inline_shapes)==len(after.inline_shapes)==4
+          assert [p.text for p in before.paragraphs]==[p.text for p in after.paragraphs]
+          assert len(before.element.xpath('.//m:oMath'))==len(after.element.xpath('.//m:oMath'))
+          with ZipFile(root/'source-v5.docx') as a,ZipFile(root/'10MW混塔论文_第二章四图规范重绘V6_20261122.docx') as b:
+              for path in [n for n in a.namelist() if n.startswith('word/media/') and n.endswith('.png')]:
+                  if path not in [f'word/media/image{x}.png' for x in (23,30,31,32)]:
+                      assert a.read(path)==b.read(path),path
+              for x in (23,30,31,32):
+                  p=f'word/media/image{x}.png'
+                  assert a.read(p)!=b.read(p),p
+          j=json.loads(Path('public/thesis-studio/editor-data/ch2-graphics-manuscript-v6.json').read_text(encoding='utf8'))
+          assert j['source']['sha256']==hashlib.sha256((root/'10MW混塔论文_第二章四图规范重绘V6_20261122.docx').read_bytes()).hexdigest()
+          assert sum('manuscript-figures-v6' in b.get('figure_asset','') for c in j['chapters'] for b in c['blocks'])==4
+          pdf=fitz.open('public/thesis-studio/downloads/10MW-thesis-ch2-graphics-v6-20261122.pdf')
+          assert 125<=len(pdf)<=145,len(pdf)
+          for fig in range(1,5):
+              caption=f'图2-{fig}'
+              hits=[i+1 for i,p in enumerate(pdf) if caption in p.get_text() and 19<=i+1<=37]
+              assert hits,caption
+              pix=pdf[hits[0]-1].get_pixmap(matrix=fitz.Matrix(1.35,1.35),alpha=False)
+              pix.save(str(root/f'figure-{fig}-real-word-page.png'))
+          print('V6_ALL_GRAPHICS_WORD_AND_PDF_PASS',len(pdf),j['source']['sha256'])
+          PY
+      - name: Save finished Word and rendered pages
+        uses: actions/upload-artifact@v4
+        with:
+          name: chapter-two-v6-four-figures-real-word
+          path: |
+            _generated_ch2_v6/10MW混塔论文_第二章四图规范重绘V6_20261122.docx
+            _generated_ch2_v6/figure-*-real-word-page.png
+            _generated_ch2_v6/v6_figure_provenance.json
+          retention-days: 30
+      - name: Commit V6 public figures source, PDF and download chunks
+        run: |
+          git config user.name 'thesis-figure-editor[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/thesis-studio/editor-data/ch2-graphics-manuscript-v6.json public/thesis-studio/editor-data/manuscript-figures-v6 public/thesis-studio/downloads/10MW-thesis-ch2-graphics-v6-20261122.pdf public/thesis-studio/downloads/10MW-thesis-ch2-graphics-v6-20261122.part*.bin
+          git diff --cached --quiet && exit 0
+          git commit -m 'docs(thesis): publish four replotted Chapter 2 graphics in V6 source'
+          for i in 1 2 3; do
+            git pull --rebase origin main && git push origin HEAD:main && exit 0
+            sleep 5
+          done
+          exit 1
