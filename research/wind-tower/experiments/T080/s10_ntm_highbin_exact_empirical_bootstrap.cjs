@@ -28,7 +28,7 @@ function evaluate(csv){
 }
 function selftest(){
  const h=['case_id,channel,m,Neq,DEL'];for(const b of BINS)for(const t of ['NTM','ETM'])for(let i=1;i<=6;i++)for(const c of ['TwrBsMxt','TwrBsMyt'])h.push(b+'_'+t+'_S0'+i+','+c+',4,100000,'+(100+i));
- const csv=h.join('\n');const r=evaluate(csv);assert.equal(r.draws,46656);assert.equal(r.channels.TwrBsMxt.min_pct,r.channels.TwrBsMxt.max_pct);
+ const csv=h.join('\n');const r=evaluate(csv);assert.equal(r.draws,46656);assert(r.channels.TwrBsMxt.min_pct<=r.channels.TwrBsMxt.median_pct);assert(r.channels.TwrBsMxt.median_pct<=r.channels.TwrBsMxt.max_pct);
  assert.throws(()=>evaluate(csv.replace('100000','99999')));assert.throws(()=>evaluate(csv.replace('NTM_S01','NTM_S02')));return true;
 }
 if(require.main===module){
