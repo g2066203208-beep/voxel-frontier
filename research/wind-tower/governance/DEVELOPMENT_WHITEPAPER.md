@@ -1,6 +1,6 @@
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.107**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.108**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -762,3 +762,6 @@
 
 ### 2026-11-21｜v0.32.107 PATCH — S10 m4控制工况筛选对m10真实包络的漏捕量
 - SOURCE=T077真实1984行四ETM×31段×16方位名义应力DEL4/DEL10，Git blob `b5effa2a493cec0a9af8a10a3b93df0ff997d2d0`；RUN=每节段m4选单工况后计算相对m10真实最大DEL的regret，13/31段漏捕10.603287%–15.359204%，最大CSEG_05漏2.629982MPa（15.359204%），18段零漏捕；[期刊正文commit 7cc1539](https://github.com/g2066203208-beep/voxel-frontier/commit/7cc15395b2f00466356525abfe0be2ecc5d7ea99)，路径`research/wind-tower/manuscript/journal-wind-fatigue-results.md`，Git blob `a7e69e634541daf7685aacb9650f75fb7b525b6e`；[T080过程](../experiments/T080/PROCESS_LOG.md)；TEST=V8真实源级聚合PASS，原生CLI/OUTB/源字节SHA256 NOT_RUN；TAB4 FIG0，非材料Miner/正式DLC1.2，12阶段晋级0/12，禁止范围未触碰。
+
+### 2026-11-21｜v0.32.108 PATCH — S11真实1984行四ETM三风箱全源重拟合与预测前凸包拒绝
+- SOURCE=T077 CSV Git blob `b5effa2a493cec0a9af8a10a3b93df0ff997d2d0`；[程序commit bb245e5](https://github.com/g2066203208-beep/voxel-frontier/commit/bb245e580e2a5e2cd83fe5e9469cede5a51e0624) 路径`research/wind-tower/experiments/T080/s11_etm_three_bin_refit_gate.cjs`；[期刊三折数表与方法commit c7742a9](https://github.com/g2066203208-beep/voxel-frontier/commit/c7742a914b2d1abf663d08eeaccfa121124136c3) 路径`research/wind-tower/manuscript/journal-wind-fatigue-results.md` blob `c5ce015ba6d58cc676067c1d28e0d83db4ac70e9`；RUN=按31段×4工况16方位聚合124目标，三箱留出最近箱RMSE 0.198851/0.198851/0.796867MPa、仿射RMSE 0.213951/0.169327/0.813993MPa；低/高箱预测前凸包拒绝31/31段，中箱仅插值诊断。TEST=连接器V8真实原始CSV重拟合算术PASS，Node原生CLI/负向测试、CSV字节SHA256、OUTB重解码NOT_RUN；FIG0 TAB3，非跨设计/正式DLC1.2/材料Miner或结构物理PASS；12阶段晋级0/12。详见T080日志；禁区未触碰。
