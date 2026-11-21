@@ -250,7 +250,7 @@ def build(args):
     newbytes=dest.read_bytes()
     updated["source"].update({"name":dest.name,"sha256":hashlib.sha256(newbytes).hexdigest(),
         "bytes":len(newbytes),
-        "docx":"./downloads/10MW-thesis-editorial-v2-20261121.docx",
+        "docx":None,"docx_parts_pattern":"./downloads/10MW-thesis-editorial-v2-20261121.partNN.bin","docx_parts":15,
         "pdf":"./downloads/10MW-thesis-editorial-v2-20261121.pdf",
         "extraction":"Original Word drawings, equations and body order preserved; chapter 2 original tables and editorial revisions integrated; independent scientific validation still required."})
     DEST_JSON.write_text(json.dumps(updated,ensure_ascii=False,separators=(",",":")),encoding="utf8")
