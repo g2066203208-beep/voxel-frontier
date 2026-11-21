@@ -46,8 +46,8 @@ function blockNode(b){const value=valueFor(b),changed=!!state.patches[b.id];if(b
  if(b.has_math||b.has_media)wrap.append(E('div','media-note','本段含特殊对象，请对照右侧原稿核对。'));
  return wrap;
 }
-function navigate(id,focus=null){const c=getChapter(id);if(!c)return;state.chapter=id;$('current-chapter').textContent=c.title;$('chapter-heading').textContent=c.title;$('chapter-foot').textContent=id==='front'?'前置内容':'第'+id+'章';$('chapter-subtitle').textContent=`本部分共${c.blocks.length}个可核对文本/表格区块。点击任何段落即可在线修改；修改实时保存在本浏览器。`;
- const host=$('document-body'),frag=document.createDocumentFragment();for(const b of c.blocks)frag.append(blockNode(b));host.replaceChildren(frag);renderNav();$('editing-scroll').scrollTop=0;
+function navigate(id,focus=null){const c=getChapter(id);if(!c)return;state.chapter=id;$('current-chapter').textContent=c.title;const headBlock=c.blocks.find(b=>b.kind==='h1');const visibleHead=headBlock?valueFor(headBlock):c.title;const chapterHeading=$('chapter-heading');chapterHeading.textContent=visibleHead;chapterHeading.contentEditable=headBlock?'true':'false';chapterHeading.setAttribute('spellcheck','false');chapterHeading.onpaste=headBlock?pasteText:null;chapterHeading.oninput=headBlock?()=>changeBlock(headBlock.id,chapterHeading.innerText):null;$('chapter-foot').textContent=id==='front'?'前置内容':'第'+id+'章';$('chapter-subtitle').textContent=`本部分共${c.blocks.length}个可核对文本/表格区块。点击任何段落即可在线修改；修改实时保存在本浏览器。`;
+ const host=$('document-body'),frag=document.createDocumentFragment();for(const b of c.blocks){if(headBlock&&b.id===headBlock.id)continue;frag.append(blockNode(b));}host.replaceChildren(frag);renderNav();$('editing-scroll').scrollTop=0;
  history.replaceState(null,'',location.pathname+(id==='front'?'#front':'#chapter-'+id));
  if(focus){requestAnimationFrame(()=>{const target=Array.from(host.querySelectorAll('[data-block]')).find(el=>el.dataset.block===focus);if(target){target.scrollIntoView({behavior:'smooth',block:'center'});target.classList.add('selected-search');setTimeout(()=>target.classList.remove('selected-search'),2400);}});}
  scheduleChapterOnly();}
