@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="650" viewBox="0 0 1120 650" role="img" aria-label="Three distinct screening limitations with denominators and observed data">
+<rect width="1120" height="650" fill="#fff"/>
+<style>text{font-family:Arial,Helvetica,sans-serif;fill:#192b3b}.head{font-size:27px;font-weight:700}.sub{font-size:16px;fill:#526474}.label{font-size:20px;font-weight:700}.value{font-size:29px;font-weight:700}.small{font-size:15px;fill:#455565}.note{font-size:13px;fill:#526474}</style>
+<text x="56" y="53" class="head">Finite wind screening: three different limits to inference</text>
+<text x="56" y="81" class="sub">158 m DTU 10 MW hybrid-tower archive · distinct denominators, not interchangeable failure probabilities</text>
+<line x1="56" y1="106" x2="1064" y2="106" stroke="#ccd6de"/>
+<text x="56" y="146" class="label">A · Climate-support coverage (diagnostic 4–25 m/s hours)</text>
+<text x="56" y="179" class="value">6.70% matched</text><text x="320" y="179" class="small">7,164 / 106,900 h</text>
+<rect x="56" y="194" width="1008" height="38" fill="#e8edf1"/><rect x="56" y="194" width="67.551" height="38" fill="#277da1"/>
+<text x="66" y="219" font-size="14" font-weight="700" fill="#fff">6.7%</text><text x="140" y="219" font-size="16" fill="#455565">93.30% unmatched (99,736 h): fourth moment not upper-bounded without assumptions</text>
+<line x1="56" y1="259" x2="1064" y2="259" stroke="#ccd6de"/>
+<text x="56" y="299" class="label">B · Conditional controlling-bin changes (observed seed subsets)</text>
+<text x="56" y="332" class="value">9.50% switch</text><text x="320" y="332" class="small">760 / 8,000 finite combinations</text>
+<rect x="56" y="347" width="1008" height="38" fill="#e8edf1"/><rect x="56" y="347" width="95.76" height="38" fill="#d97757"/>
+<text x="65" y="372" font-size="14" font-weight="700" fill="#fff">9.5%</text><text x="168" y="372" font-size="16" fill="#455565">Not 8,000 independent turbulence experiments; no future-event probability</text>
+<line x1="56" y1="412" x2="1064" y2="412" stroke="#ccd6de"/>
+<text x="56" y="452" class="label">C · Exponent-transfer screening failure (fixed-design ETM sections)</text>
+<text x="56" y="485" class="value">13 / 31 sections</text><text x="320" y="485" class="small">41.94% of correlated tower sections</text>
+<rect x="56" y="500" width="1008" height="38" fill="#e8edf1"/><rect x="56" y="500" width="422.71" height="38" fill="#8a5a99"/>
+<text x="68" y="525" font-size="16" font-weight="700" fill="#fff">m=4-selected case misses 10.60–15.36% of m=10 envelope</text>
+<text x="56" y="579" class="note">Sources: archived T062 18 NTM runs / ERA5 exposure, 8,000 subset enumeration, and T077 four-ETM × 31-section nominal-stress table.</text>
+<text x="56" y="600" class="note">Inference boundary: load screening only; no material-local Miner damage, full DLC1.2, independent-seed reliability, or coupled W/E/WE.</text>
+<text x="56" y="622" class="note">Figure S12-1 · Evidence visualization, not a new physical simulation or statistical confidence interval.</text>
+</svg>
