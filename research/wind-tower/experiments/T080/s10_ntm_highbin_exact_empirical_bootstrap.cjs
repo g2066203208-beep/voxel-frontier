@@ -22,13 +22,13 @@ function evaluate(csv){
   for(let j=0;j<6**6;j++){let n=j,s=0;for(let k=0;k<6;k++){s+=hi[n%6];n=Math.floor(n/6)}samples.push(share(s/6))}
   samples.sort((a,b)=>a-b);
   const q=p=>samples[Math.ceil(p*samples.length)-1]; // empirical inverse CDF
-  result.channels[ch]={original_pct:share(mean(hi)),min_pct:samples[0],q025_pct:q(.025),median_pct:q(.5),q975_pct:q(.975),max_pct:samples.at(-1),count_gt5:samples.filter(x=>x>5).length};
+  result.channels[ch]={original_pct:share(mean(hi)),min_pct:samples[0],q025_pct:q(.025),median_pct:q(.5),q975_pct:q(.975),max_pct:samples.at(-1),count_gt5:samples.filter(x=>x>5).length,critical_high_hours_all_below5:fixed/(19*Math.max(...hi)),critical_high_hours_all_above5:fixed/(19*Math.min(...hi))};
  }
  return result;
 }
 function selftest(){
  const h=['case_id,channel,m,Neq,DEL'];for(const b of BINS)for(const t of ['NTM','ETM'])for(let i=1;i<=6;i++)for(const c of ['TwrBsMxt','TwrBsMyt'])h.push(b+'_'+t+'_S0'+i+','+c+',4,100000,'+(100+i));
- const csv=h.join('\n');const r=evaluate(csv);assert.equal(r.draws,46656);assert(r.channels.TwrBsMxt.min_pct<=r.channels.TwrBsMxt.median_pct);assert(r.channels.TwrBsMxt.median_pct<=r.channels.TwrBsMxt.max_pct);
+ const csv=h.join('\n');const r=evaluate(csv);assert.equal(r.draws,46656);assert(r.channels.TwrBsMxt.min_pct<=r.channels.TwrBsMxt.median_pct);assert(r.channels.TwrBsMxt.median_pct<=r.channels.TwrBsMxt.max_pct);assert(r.channels.TwrBsMxt.critical_high_hours_all_below5>0);assert(r.channels.TwrBsMxt.critical_high_hours_all_above5>=r.channels.TwrBsMxt.critical_high_hours_all_below5);
  assert.throws(()=>evaluate(csv.replace('100000','99999')));assert.throws(()=>evaluate(csv.replace('NTM_S01','NTM_S02')));return true;
 }
 if(require.main===module){
