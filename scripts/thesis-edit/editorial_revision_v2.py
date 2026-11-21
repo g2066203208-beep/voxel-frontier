@@ -17,8 +17,8 @@ from docx.oxml.ns import qn
 BASE=Path(__file__).resolve().parents[2]
 PART_PREFIX="10MW-thesis-academic-revision-20261121.part"
 PUBLISH_PREFIX="10MW-thesis-editorial-v2-20261121.part"
-SRC_JSON=BASE/"public/thesis-studio/editor-data/latest-manuscript-original-20261121.json"
-DEST_JSON=BASE/"public/thesis-studio/editor-data/latest-manuscript.json"
+SRC_JSON=BASE/"public/thesis-studio/editor-data/latest-manuscript.json"
+DEST_JSON=BASE/"public/thesis-studio/editor-data/editorial-manuscript-v2.json"
 OUT=BASE/"public/thesis-studio/downloads"
 WORK=BASE/"_generated-thesis-workbench"
 CONCRETE=[
