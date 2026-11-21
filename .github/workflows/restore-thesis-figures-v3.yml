@@ -1,0 +1,88 @@
+name: Restore four verified thesis figures V3
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/thesis-edit/restore_archived_figures_v3.py'
+      - '.github/workflows/restore-thesis-figures-v3.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: thesis-figures-v3-build
+  cancel-in-progress: false
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          sparse-checkout: |
+            scripts/thesis-edit
+            public/thesis-studio/downloads
+            public/thesis-studio/editor-data
+            .github/workflows/restore-thesis-figures-v3.yml
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Word restoration and PDF QA tools
+        run: |
+          python -m pip install python-docx pillow pymupdf
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends libreoffice-writer fonts-noto-cjk
+      - name: Restore source-identified figures from original Word media
+        run: python scripts/thesis-edit/restore_archived_figures_v3.py
+      - name: Render full revised Word
+        run: |
+          mkdir -p /tmp/lo-thesis-v3
+          libreoffice -env:UserInstallation=file:///tmp/lo-thesis-v3 --headless --convert-to pdf --outdir public/thesis-studio/downloads _thesis_figure_restore/*_20261121.docx
+          mv public/thesis-studio/downloads/10MW混塔论文_第二章四张实图恢复V3_20261121.pdf public/thesis-studio/downloads/10MW-thesis-illustrated-v3-20261121.pdf
+      - name: Validate real PDF rendered images and figure captions
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import fitz,json
+          doc=fitz.open('public/thesis-studio/downloads/10MW-thesis-illustrated-v3-20261121.pdf')
+          assert 125 <= len(doc) <= 160,len(doc)
+          restored={}
+          for figure in ('图2-1','图2-2','图2-3','图2-4'):
+              pages=[i for i,p in enumerate(doc) if figure in p.get_text()]
+              assert pages,(figure,'no caption')
+              matched=[i for i in pages if doc[i].get_image_info()]
+              assert matched,(figure,'image not visible')
+              restored[figure]=matched[0]+1
+          assert len(set(restored.values()))>=3,restored
+          print('V3_PDF_FIGURE_PASS',restored,'pages',len(doc))
+          p=Path('_thesis_figure_restore')
+          for figure,i in restored.items():
+              doc[i-1].get_pixmap(matrix=fitz.Matrix(1.5,1.5)).save(str(p/(figure+'-page.png')))
+          (p/'PDF_QA.json').write_text(json.dumps({'pages':len(doc),'verified_figure_pages':restored},ensure_ascii=False,indent=2),encoding='utf8')
+          PY
+      - name: Preserve fully assembled Word and figure-page screenshots
+        uses: actions/upload-artifact@v4
+        with:
+          name: thesis-illustrated-v3-verified
+          path: |
+            _thesis_figure_restore/10MW混塔论文_第二章四张实图恢复V3_20261121.docx
+            _thesis_figure_restore/*-page.png
+            _thesis_figure_restore/QA_manifest.json
+            _thesis_figure_restore/PDF_QA.json
+          retention-days: 30
+      - name: Publish illustrated source to workstudio without replacing V2 archive
+        run: |
+          git config user.name 'thesis-figure-recovery[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/thesis-studio/editor-data/illustrated-manuscript-v3.json public/thesis-studio/editor-data/manuscript-figures public/thesis-studio/downloads/10MW-thesis-illustrated-v3-20261121.part*.bin public/thesis-studio/downloads/10MW-thesis-illustrated-v3-20261121.pdf
+          git diff --cached --quiet && exit 0
+          git commit -m 'docs(thesis): publish V3 full-Word four recovered research figures'
+          for i in 1 2 3; do
+            git pull --rebase origin main && git push origin HEAD:main && exit 0
+            sleep 6
+          done
+          exit 1
