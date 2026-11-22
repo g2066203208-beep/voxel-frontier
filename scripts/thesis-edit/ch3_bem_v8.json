@@ -1,5 +1,5 @@
 {
-  "version": "V8-R3",
+  "version": "V8-R4",
   "parent_sha256": "bfe32138625e66ec596faafb932fd9bec1046c3be17612404cba5ddf6f1e9c98",
   "anchor": "b0359",
   "source_input_blob": "366ae27d65d1feca6da0ba9eb186348913158fcb",
@@ -9,6 +9,10 @@
     "[130] BUHL M L Jr. A new empirical relationship between thrust coefficient and induction factor for the turbulent windmill state[R]. NREL/TP-500-36834, 2005."
   ],
   "blocks": [
+    [
+      "p",
+      "本节首先说明AeroDyn叶素动量计算所依据的气动载荷理论，再依据归档模型输入列示气动参数，最后从虚功原理给出分布气动力向结构广义力与塔顶六分量接口的转换。相关公式用于规定荷载及坐标的物理含义；尚未完成的风载映射不在此视为已验证结果。"
+    ],
     [
       "h",
       "3.3.1 叶素动量理论与叶片气动力计算"
@@ -372,5 +376,5 @@
       "本文历史AeroDyn归档设置中TwrAero=False，未生成精细塔筒所需的塔身分布气动力。故本节的虚功积分与六分量换点公式用于确定物理量的定义和接口校核方法，不构成正式风载映射已完成的证据。后续必须对同一风场、同一结构状态逐时核验六分量的方向、单位、坐标系、力矩参考点和RNA质量/重力归属；在完成合力合矩闭合前，Abaqus高保真塔架的正式气动载荷输入保持待验证状态。"
     ]
   ],
-  "editorial_note": "He Zeyu PDF pp24-26 checked; add general virtual-work aerodynamic force projection and rotor-to-tower wrench identity, without claiming seismic or aerodynamic mapping solved."
+  "editorial_note": "He pagewise virtual-work derivation retained with 32 native equations; reposition 3.3 overview and remove five redundant original weather paragraphs already covered by 3.1/3.2/3.5."
 }
