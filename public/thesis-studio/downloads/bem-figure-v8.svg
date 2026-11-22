@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="460" viewBox="0 0 1080 460">
+<defs>
+  <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L8 4 L0 8 Z" fill="#202020"/></marker>
+  <marker id="blue" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L8 4 L0 8 Z" fill="#285a81"/></marker>
+  <marker id="red" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L8 4 L0 8 Z" fill="#943b34"/></marker>
+  <style>text{fill:#202020;font-family:"Noto Serif CJK SC","Songti SC","SimSun",serif;font-size:17px} .m{font-family:"Times New Roman","Liberation Serif",serif;font-style:italic;font-size:19px}.s{font-size:15px} .line{stroke:#202020;stroke-width:1.6;fill:none}.dim{stroke:#777;stroke-width:1.2;fill:none;stroke-dasharray:5 5}.vel{stroke:#285a81;stroke-width:2;fill:none;marker-end:url(#blue)}.force{stroke:#943b34;stroke-width:2;fill:none;marker-end:url(#red)}</style>
+</defs><rect width="1080" height="460" fill="white"/>
+<g transform="translate(15 10)">
+<text x="154" y="28" text-anchor="middle">(a) 环形流管</text>
+<path d="M20 132 C90 132 100 110 155 95 C220 78 266 62 320 62" class="line"/>
+<path d="M20 264 C90 264 100 286 155 301 C220 318 266 334 320 334" class="line"/>
+<path d="M20 198 H325" class="dim"/>
+<ellipse cx="155" cy="198" rx="16" ry="103" fill="#e1e9ef" stroke="#202020" stroke-width="1.4"/>
+<ellipse cx="155" cy="198" rx="10" ry="69" fill="white" stroke="#666" stroke-width="1.1"/>
+<path d="M20 167 H96 M172 167 H238 M254 167 H316" class="vel"/>
+<text x="53" y="150" class="m" text-anchor="middle">U∞</text>
+<text x="202" y="150" class="m" text-anchor="middle">U<tspan baseline-shift="sub" font-size="13">d</tspan></text>
+<text x="283" y="150" class="m" text-anchor="middle">U<tspan baseline-shift="sub" font-size="13">w</tspan></text>
+<path d="M155 303 V357" class="dim"/><text x="155" y="377" text-anchor="middle">风轮平面</text>
+<text x="155" y="414" text-anchor="middle" class="s">轴向来流与远尾流速度</text>
+</g>
+<g transform="translate(358 10)">
+<text x="170" y="28" text-anchor="middle">(b) 叶片展向离散</text>
+<circle cx="170" cy="199" r="139" class="dim"/>
+<circle cx="170" cy="199" r="94" fill="none" stroke="#b0c7d7" stroke-width="15" opacity=".72"/>
+<g fill="#e2e5e8" stroke="#202020" stroke-width="1.3"><path d="M161 187 L155 138 Q157 90 168 60 L176 60 Q188 123 178 190 Z"/>
+<path d="M161 187 L155 138 Q157 90 168 60 L176 60 Q188 123 178 190 Z" transform="rotate(120 170 199)"/>
+<path d="M161 187 L155 138 Q157 90 168 60 L176 60 Q188 123 178 190 Z" transform="rotate(240 170 199)"/></g>
+<circle cx="170" cy="199" r="15" fill="#b0b7bd" stroke="#202020" stroke-width="1.4"/>
+<g stroke="#555" stroke-width=".9"><path d="M157 161 H181 M157 146 H183 M158 131 H182 M161 116 H181 M163 101 H179 M165 86 H177"/></g>
+<rect x="156" y="97" width="26" height="15" fill="#6389aa" fill-opacity=".85" stroke="#202020"/>
+<path d="M185 104 H243 L258 81" class="line"/><text x="261" y="76" class="s">叶素</text>
+<path d="M170 199 L247 129" class="line" marker-end="url(#arr)"/><text x="220" y="176" class="m">r</text>
+<path d="M265 167 A100 100 0 0 1 252 257" class="line" marker-end="url(#arr)"/><text x="287" y="218" class="m">Ω</text>
+<path d="M75 314 L50 348 H20" class="line"/><text x="15" y="370" class="s">环形流管截面</text>
+<text x="170" y="414" class="s" text-anchor="middle">三叶片风轮（示意，非比例）</text>
+</g>
+<g transform="translate(720 10)">
+<text x="169" y="28" text-anchor="middle">(c) 叶素速度与受力</text>
+<path d="M43 273 H320 M80 318 V72" class="dim"/>
+<path d="M80 273 H291" class="vel"/><path d="M291 273 V150" class="vel"/>
+<path d="M80 273 L291 150" class="vel"/>
+<path d="M80 273 V150 H291" class="dim"/>
+<text x="193" y="302" class="m" text-anchor="middle">V<tspan baseline-shift="sub" font-size="13">t</tspan>(1+a′)</text>
+<text x="300" y="213" class="m" transform="rotate(-90 300 213)" text-anchor="middle">V<tspan baseline-shift="sub" font-size="13">n</tspan>(1−a)</text>
+<text x="225" y="178" class="m">W</text>
+<path d="M80 273 Q136 251 211 230 Q154 231 119 245 Z" fill="#e0e8ed" stroke="#202020" stroke-width="1.2"/>
+<path d="M80 273 L250 217" class="dim"/>
+<path d="M145 273 A65 65 0 0 0 136 240" class="line"/>
+<text x="153" y="255" class="m">φ</text>
+<path d="M186 238 A115 115 0 0 0 179 215" class="line"/>
+<text x="198" y="216" class="m">α</text>
+<path d="M145 248 L213 208" class="force"/><text x="215" y="205" class="m">q<tspan baseline-shift="sub" font-size="13">D</tspan></text>
+<path d="M145 248 L97 166" class="force"/><text x="94" y="157" class="m">q<tspan baseline-shift="sub" font-size="13">L</tspan></text>
+<path d="M145 248 V119" class="force"/><text x="150" y="112" class="m">q<tspan baseline-shift="sub" font-size="13">n</tspan></text>
+<path d="M145 248 H38" class="force"/><text x="27" y="239" class="m">q<tspan baseline-shift="sub" font-size="13">τ</tspan></text>
+<path d="M43 345 H310" class="line"/><text x="176" y="369" class="s" text-anchor="middle">局部旋转平面</text>
+<text x="169" y="414" class="s" text-anchor="middle">相对速度、攻角与单位展长载荷</text>
+</g></svg>
