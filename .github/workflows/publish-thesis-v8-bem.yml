@@ -1,4 +1,4 @@
-name: Publish V8-R3 generalized aerodynamic loads and original-page comparison
+name: Publish V8-R4 generalized aerodynamic loads and original-page comparison
 on:
   push:
     branches: [main]
@@ -50,28 +50,28 @@ jobs:
           import json
           from pathlib import Path
           p=Path("public/thesis-studio/he-thesis-comparison")
-          m=json.loads((p/"v8r3-page-map.json").read_text())
-          assert m["version"]=="V8-R3" and len(m["equation_pages"])==32
+          m=json.loads((p/"v8r4-page-map.json").read_text())
+          assert m["version"]=="V8-R4" and len(m["equation_pages"])==32
           for k in range(20,27):assert m["pages"][str(k)]
           for ls in m["pages"].values():
               for item in ls:assert (p/item["image"]).stat().st_size>10000
           PY
       - uses: actions/upload-artifact@v4
         with:
-          name: V8R3-BEM-actual-Word-and-pages
+          name: V8R4-BEM-actual-Word-and-pages
           path: |
-            _generated_thesis_v8/10MW-thesis-v8r3-bem-20261122.docx
-            _generated_thesis_v8/10MW-thesis-v8r3-bem-20261122.pdf
+            _generated_thesis_v8/10MW-thesis-v8r4-bem-20261122.docx
+            _generated_thesis_v8/10MW-thesis-v8r4-bem-20261122.pdf
             _generated_thesis_v8/v8-audit.json
             _generated_thesis_v8/bem-pages
-            public/thesis-studio/he-thesis-comparison/v8r3-spreads
+            public/thesis-studio/he-thesis-comparison/v8r4-spreads
           retention-days: 30
       - name: Publish V8 candidate assets and existing online editor
         run: |
           git config user.name 'thesis-editor[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add public/thesis-studio/downloads/10MW-thesis-v8r3-bem-20261122.* public/thesis-studio/editor-data/manuscript-v8-bem.json public/thesis-studio/he-thesis-comparison/v8r3-page-map.json public/thesis-studio/he-thesis-comparison/v8r3-spreads public/thesis-studio/he-thesis-comparison/index.html public/thesis-studio/manuscript-workbench.js public/thesis-studio/manuscript-workbench.html
-          git commit -m 'docs(thesis): publish V8-R3 two source-vector BEM figures in original Word and real comparison'
+          git add public/thesis-studio/downloads/10MW-thesis-v8r4-bem-20261122.* public/thesis-studio/editor-data/manuscript-v8-bem.json public/thesis-studio/he-thesis-comparison/v8r4-page-map.json public/thesis-studio/he-thesis-comparison/v8r4-spreads public/thesis-studio/he-thesis-comparison/index.html public/thesis-studio/manuscript-workbench.js public/thesis-studio/manuscript-workbench.html
+          git commit -m 'docs(thesis): publish V8-R4 two source-vector BEM figures in original Word and real comparison'
           git pull --rebase -X theirs origin main
           git push origin HEAD:main
       - name: Trigger existing Pages deployment
