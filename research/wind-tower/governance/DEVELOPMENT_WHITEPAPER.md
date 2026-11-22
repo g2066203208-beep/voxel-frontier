@@ -1,3 +1,6 @@
+### 2026-11-22｜V8-R2 原理图规范重绘
+- 重新分拆原BEM三联图，独立生成两张黑白矢量学术图（环形流管/叶片离散、速度三角形/攻角/力分解），源SVG进入原Github工作室；论文实际Word/PDF插图按5.4英寸正文宽度输出。第三章两图真实原页在139页V8-R2版第46–47页；27条OMML公式与原第二章图件全部保留。GitHub Actions #45014805722为成功，正式版本main 1254877dea3cd7ea6401eaac71b677769958b74f。科研物理参数和研究门禁未更改，在线Pages单独验收；图号和所有引用仍有待全篇一体化审阅。
+
 ### 2026-11-22｜V8精修稿排版再验收（V8-R1）
 - 原GitHub Ubuntu发布端缺LibreOffice Math，致3.2和BEM方程有编号无实体；新增图在精确行距中被裁切；新9行AeroDyn参数表跨页且无续表。通过安装Math、公式非空QA、图片段落扩展行距及面积QA、参数表同页QA修复。总页数138，BEM27条OMML、1张原理图、1张AeroDyn参数表真实PDF审查通过。原工作室地址和V7历史成果保留，未新增物理RUN。
 - 已归档原图：public/thesis-studio/he-thesis-comparison/v8-spreads/he21-v8-46.png，he22-v8-47.png，he23-v8-48.png，he24-v8-50.png。GitHub提交db9654bd500986a9b8e65909c48dc19a79d5c376，Actions #45005029992 success。Pages正式部署另查，气动验证及W侧塔身载荷映射仍HOLD。
