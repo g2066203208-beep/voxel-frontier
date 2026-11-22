@@ -19,7 +19,7 @@ downloads=root/"downloads"
 editor=root/"editor-data"
 compare=root/"he-thesis-comparison"
 out=Path("_generated_thesis_v8");out.mkdir(exist_ok=True)
-prefix="10MW-thesis-v8-bem-20261122"
+prefix="10MW-thesis-v8r2-bem-20261122"
 old="10MW-thesis-v7-wind-theory-20261122"
 sha=lambda x:hashlib.sha256(x).hexdigest()
 def save_json(path,x):
@@ -73,12 +73,15 @@ subprocess.run(["pandoc","-f","markdown","-t","docx","-o",str(out/"math.docx"),s
 mathdoc=Document(out/"math.docx")
 omml=mathdoc.element.xpath(".//m:oMath")
 assert len(omml)==27, len(omml)
-# Original schematic, not a solver result.
-fig=downloads/"bem-figure-v8.svg"
-# Lay out the three panels in two rows for legible Word-page labels.
-svg=fig.read_text(encoding="utf8")
-# Keep the original landscape three-panel diagram; no tall white padded crop.
-cairosvg.svg2png(bytestring=svg.encode(),write_to=str(out/"bem-figure.png"),output_width=1620,output_height=690)
+# Two independent monochrome publication-grade source SVG diagrams.
+figsources={
+    "图3.3-1":("bem-streamtube-rotor-v9.svg","bem-streamtube-rotor-v9.png",540),
+    "图3.3-2":("bem-airfoil-velocity-force-v9.svg","bem-airfoil-velocity-force-v9.png",560)
+}
+for caption,(src,png,h) in figsources.items():
+    svg=(downloads/src).read_text(encoding="utf8")
+    assert "viewBox" in svg and "Noto Serif CJK" in svg
+    cairosvg.svg2png(bytestring=svg.encode("utf8"),write_to=str(out/png),output_width=1620,output_height=round(1620*h/1120))
 # All new body nodes use the pre-existing thesis template.
 n=0
 for i,(kind,val) in enumerate(revision["blocks"]):
@@ -102,19 +105,19 @@ for i,(kind,val) in enumerate(revision["blocks"]):
         labels[0].text=labels[0].text.replace("3.2-14",label)
         insert(el,i,kind="text",style=Paragraph(el,doc).style.name,text="\t\t（"+label+"）",has_media=False,has_math=True,equation_label=label,equation_latex=val)
     elif kind=="g":
+        label=val.split()[0]
+        assert label in figsources,("unknown figure label",val)
+        src,png,_=figsources[label]
         par=doc.add_paragraph()
         par.alignment=WD_ALIGN_PARAGRAPH.CENTER
         par.paragraph_format.first_line_indent=Pt(0)
         par.paragraph_format.space_before=Pt(8);par.paragraph_format.space_after=Pt(8)
-        # Thesis Normal style has exact line spacing. Without this explicit override,
-        # LibreOffice clips a 5.4-inch inline figure to a single text line.
         par.paragraph_format.line_spacing_rule=WD_LINE_SPACING.SINGLE
         par.paragraph_format.keep_with_next=True
-        par.add_run().add_picture(str(out/"bem-figure.png"),width=Inches(5.4))
+        par.add_run().add_picture(str(out/png),width=Inches(5.4))
         anchor.addprevious(par._p)
         el=clone_text(figure_caption,val)
-        # Caption source XML must not retain images or numbering fields.
-        insert(el,i,kind="figure",style=Paragraph(el,doc).style.name,text=val,has_media=False,has_math=False,figure_asset="./downloads/bem-figure-v8.svg",figure_caption_match=val)
+        insert(el,i,kind="figure",style=Paragraph(el,doc).style.name,text=val,has_media=False,has_math=False,figure_asset="./downloads/"+src,figure_caption_match=val)
     elif kind=="t":
         cap="表3.3-1  AeroDyn主要气动参数"
         el=clone_text(table_caption,cap)
@@ -158,7 +161,7 @@ for i,ref in enumerate(revision["references"]):
     el=clone_text(lastref,ref);ref_anchor.addnext(el);ref_anchor=el
     new[el]=("07",{"id":f"v8-ref-{128+i}","kind":"text","style":Paragraph(el,doc).style.name,"text":ref,"has_media":False,"has_math":False,"word_body_index":-1})
 assert all(etree.tostring(el)==xml for el,xml in original_xml.items()),"original nodes changed unexpectedly"
-assert len(doc.tables)==38 and len(doc.inline_shapes)==5
+assert len(doc.tables)==38 and len(doc.inline_shapes)==6
 assert len(doc.element.xpath(".//m:oMath"))==math0+27
 tmp=out/"native-v8.docx";doc.save(tmp)
 final=out/f"{prefix}.docx"
@@ -171,7 +174,7 @@ with ZipFile(parent) as a,ZipFile(tmp) as b,ZipFile(final,"w",ZIP_DEFLATED,compr
         z.writestr(name,b.read(name))
 with ZipFile(parent) as a,ZipFile(final) as b:
     assert all(a.read(n)==b.read(n) for n in a.namelist() if n not in allowed)
-check=Document(final);assert len(check.tables)==38 and len(check.inline_shapes)==5
+check=Document(final);assert len(check.tables)==38 and len(check.inline_shapes)==6
 assert len(check.element.xpath(".//m:oMath"))==math0+27
 chapters={c["id"]:dict(c,blocks=[]) for c in source["chapters"]}
 for idx,el in enumerate(body):
@@ -183,8 +186,9 @@ allblocks=[b for c in source["chapters"] for b in c["blocks"]]
 assert len({b["id"] for b in allblocks})==len(allblocks)
 assert sum(b.get("equation_label","").startswith("3.3-") for b in allblocks)==27
 assert sum("manuscript-figures-v6" in b.get("figure_asset","") for b in allblocks)==4
+assert {b["text"].split()[0] for b in allblocks if b.get("figure_asset","").endswith("-v9.svg")}=={"图3.3-1","图3.3-2"}
 binary=final.read_bytes()
-source["source"].update(name="10MW混塔论文_V8_叶素动量理论精修版.docx",sha256=sha(binary),bytes=len(binary),pdf=f"./downloads/{prefix}.pdf",docx_parts_pattern=f"./downloads/{prefix}.partNN.bin",docx_parts=15,editorial_scope="V8 retains V7 source and adds reviewed BEM equations, original schematic, AeroDyn parameter table and three original references. No new physical simulation.")
+source["source"].update(name="10MW混塔论文_V8R2_叶素动量理论图件规范化版.docx",sha256=sha(binary),bytes=len(binary),pdf=f"./downloads/{prefix}.pdf",docx_parts_pattern=f"./downloads/{prefix}.partNN.bin",docx_parts=15,editorial_scope="V8-R2 preserves V7 equations and Chapter 2 graphics; splits the BEM diagrams into two source-vector, monochrome figures; no new physical runs.")
 subprocess.run(["libreoffice","-env:UserInstallation=file:///tmp/lo-thesis-v8","--headless","--convert-to","pdf","--outdir",str(out),str(final)],check=True)
 pdfpath=out/f"{prefix}.pdf";pdf=fitz.open(pdfpath)
 assert 131<=len(pdf)<=155
@@ -222,13 +226,13 @@ for pi in range(start-1,end):
         rect=fitz.Rect(info["bbox"])
         if rect.width>250 and rect.height>95 and info["width"]>=1000:
             figures.append((pi+1,rect.width,rect.height))
-assert figures,("BEM_FIGURE_CLIPPED: figure must render at full height",start,end)
+assert len(figures)>=2,("TWO_BEM_FIGURES_NOT_RENDERED",figures)
 # Require all aerodynamic setup rows on one physical PDF page.
 table_pages=[i+1 for i,t in enumerate(texts) if "WakeMod" in t and "AeroDyn" in t]
 assert any(all(z in texts[p-1] for z in ("WakeMod","SkewMod","AirDens","MaxIter","TwrAero")) for p in table_pages),("BEM_TABLE_SPLIT_OR_TRUNCATED",table_pages)
 print("BEM_FORMULAS_FIGURE_AND_TABLE_VISIBLE",ink_ok,figures,table_pages)
 he=fitz.open(root/"documents/He_Zeyu_2024_hybrid_tower_thesis.pdf");assert len(he)==90
-spread=compare/"v8-spreads";spread.mkdir(exist_ok=True)
+spread=compare/"v8r2-spreads";spread.mkdir(exist_ok=True)
 groups={}
 v7=json.loads((compare/"v7-page-map.json").read_text())
 for hp,items in v7["pages"].items():
@@ -247,8 +251,8 @@ for hp,items in groups.items():
     for op in items:
         a,b=raster(he,int(hp)),raster(pdf,op)
         im=Image.new("RGB",(a.width+b.width+18,max(a.height,b.height)),"#e5e9ed");im.paste(a,(0,0));im.paste(b,(a.width+18,0))
-        name=f"he{hp}-v8-{op}.png";im.save(spread/name,optimize=True)
-        result.append({"he_pdf_page":int(hp),"our_pdf_page":op,"image":"./v8-spreads/"+name})
+        name=f"he{hp}-v8r2-{op}.png";im.save(spread/name,optimize=True)
+        result.append({"he_pdf_page":int(hp),"our_pdf_page":op,"image":"./v8r2-spreads/"+name})
     map_pages[hp]=result
 # All actual amended pages are individually rendered, independent of historical comparisons.
 read_pages=out/"bem-pages";read_pages.mkdir(exist_ok=True)
@@ -258,18 +262,18 @@ for i in range(15):(downloads/f"{prefix}.part{i+1:02}.bin").write_bytes(binary[i
 assert sha(b"".join((downloads/f"{prefix}.part{i:02}.bin").read_bytes() for i in range(1,16)))==source["source"]["sha256"]
 (downloads/f"{prefix}.pdf").write_bytes(pdfpath.read_bytes())
 save_json(editor/"manuscript-v8-bem.json",source)
-save_json(compare/"v8-page-map.json",{"version":"V8","pdf":f"../downloads/{prefix}.pdf","pdf_pages":len(pdf),"pages":map_pages,"equation_pages":pages,"source_sha256":sha(binary),"scope":"V8 real Word PDF, BEM theory and archival aerodynamic configuration; no new numerical validation."})
-save_json(out/"v8-audit.json",{"parent_sha256":sha(raw),"word_sha256":sha(binary),"pdf_pages":len(pdf),"inserted_omml":27,"tables":38,"figures":5,"bem_pdf_pages":list(range(start,end+1)),"equations":pages,"physics_runs":0,"review_status":"candidate; human page review pending"})
+save_json(compare/"v8r2-page-map.json",{"version":"V8-R2","pdf":f"../downloads/{prefix}.pdf","pdf_pages":len(pdf),"pages":map_pages,"equation_pages":pages,"source_sha256":sha(binary),"scope":"V8 real Word PDF, BEM theory and archival aerodynamic configuration; no new numerical validation."})
+save_json(out/"v8-audit.json",{"parent_sha256":sha(raw),"word_sha256":sha(binary),"pdf_pages":len(pdf),"inserted_omml":27,"tables":38,"figures":6,"bem_pdf_pages":list(range(start,end+1)),"equations":pages,"physics_runs":0,"review_status":"two source-SVG figures; actual Word/PDF page inspection required"})
 js=root/"manuscript-workbench.js"
 s=js.read_text(encoding="utf8")
 assert ("manuscript-v7-wind-theory.json" in s or "manuscript-v8-bem.json" in s), "unknown editor mother version"
-s=s.replace("manuscript-v7-wind-theory.json","manuscript-v8-bem.json").replace(old,prefix).replace("下载V7合并版PDF · 131页",f"下载V8审阅版PDF · {len(pdf)}页").replace("V7继承V6第二章四图，修订第三章风场理论及18条编号公式；其余原文、表格和图件保留。","V8继承V7，增补叶素动量理论27条原生公式、原理图和实际AeroDyn设置，保留原有研究结果。")
+s=s.replace("manuscript-v7-wind-theory.json","manuscript-v8-bem.json").replace("10MW-thesis-v8-bem-20261122",prefix).replace(old,prefix).replace("下载V7合并版PDF · 131页",f"下载V8审阅版PDF · {len(pdf)}页").replace("V7继承V6第二章四图，修订第三章风场理论及18条编号公式；其余原文、表格和图件保留。","V8继承V7，增补叶素动量理论27条原生公式、原理图和实际AeroDyn设置，保留原有研究结果。")
 js.write_text(s,encoding="utf8")
 html=root/"manuscript-workbench.html"
-s=html.read_text(encoding="utf8").replace(old,prefix).replace("V7 / WIND THEORY","V8 / BEM THEORY").replace("保留第二章四图；第三章新增规范风场理论与公式。","保留第二章四图及风场理论；新增叶素动量理论。<br><a href='./chapter3-bem-v8.html'>查看3.3节完整精修正文</a>").replace("V7合并版131页",f"V8审阅版{len(pdf)}页")
+s=html.read_text(encoding="utf8").replace("10MW-thesis-v8-bem-20261122",prefix).replace(old,prefix).replace("V7 / WIND THEORY","V8 / BEM THEORY").replace("保留第二章四图；第三章新增规范风场理论与公式。","保留第二章四图及风场理论；新增叶素动量理论。<br><a href='./chapter3-bem-v8.html'>查看3.3节完整精修正文</a>").replace("V7合并版131页",f"V8审阅版{len(pdf)}页")
 html.write_text(s,encoding="utf8")
 idx=compare/"index.html"
-s=idx.read_text(encoding="utf8").replace("v7-page-map.json","v8-page-map.json").replace("V7修改后真实论文原页","V8修改后真实论文原页").replace("右：V7 PDF第","右：V8 PDF第").replace("第18–19页附V7修订后真实原页","第18–19、20–24页附V8修订后真实原页")
+s=idx.read_text(encoding="utf8").replace("v7-page-map.json","v8r2-page-map.json").replace("v8-page-map.json","v8r2-page-map.json").replace("V7修改后真实论文原页","V8-R2修改后真实论文原页").replace("右：V7 PDF第","右：V8 PDF第").replace("第18–19页附V7修订后真实原页","第18–19、20–24页附V8修订后真实原页")
 if '<a href="../chapter3-bem-v8.html">3.3节叶素动量理论完整修订正文</a>' not in s:
     s=s.replace('<section id="v7-review" hidden>','<section id="v7-review" hidden><a href="../chapter3-bem-v8.html">3.3节叶素动量理论完整修订正文</a>')
 idx.write_text(s,encoding="utf8")
