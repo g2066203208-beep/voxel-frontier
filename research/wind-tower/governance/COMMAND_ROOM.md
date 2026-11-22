@@ -1,3 +1,6 @@
+## 2026-11-23 01时｜S05真实ESM长周期谱失配科学增量（v0.32.122）
+- PR#42 Open/Draft，开工HEAD=b32556f549a7a9dbf0c9f0c90f46014d4fceeb82；研究AGENTS/指挥室/白皮书/正式MASTER STATUS/12阶段/T079 T080/33行真实ESM CSV已读。T079新增实质数表及可复核精确积分公式 [ad5e293](https://github.com/g2066203208-beep/voxel-frontier/commit/ad5e2939a3061fde97695851f58e1792d4b78fba)：3–6s残差份额RotD50=57.030065%、RotD100=56.005303%；缩放谱相对示意目标交点2.998156/2.903720s。非真实工址设计谱、非结构响应，原始波重算HOLD；源级算术PASS，物理V&V HOLD，12阶段0/12。白皮书v0.32.122；最大非Abaqus HOLD=同态同步独立W侧气动力及惯性归属；下一唯一动作=S12直接修订现有V8-R4真实Word发布链，不再刷谱小统计。未触及禁止范围。
+
 ## 2026-11-22 23时｜S12第六章高风条件风向结论完成（v0.32.121）
 - 开工PR#42 Open/Draft HEAD=2ec14678；读取AGENTS、指挥室、白皮书、正确MASTER/STATUS、12阶段、T079/T080与Ch6。科研正文Ch6§6.1.8 [41787c75](https://github.com/g2066203208-beep/voxel-frontier/commit/41787c75a780e53824b2bff1ce30f61bfd44d321)：真实R5恢复ERA5方向统计四方向全年39.78% vs 高风87.39%，明确P(d|H)与P(H|d)不同、不能当荷载或疲劳倍率；沿用Ch3§3.9.4来源与7行表，不伪造新RUN。T080记录8d62fd2；白皮书v0.32.121。Word/PDF实际装配与逐小时原始联合计数HOLD；12阶段0/12，最大非Abaqus HOLD=真实同步同态独立W侧气动力与惯性归属。下一唯一动作=装配并页级核验V8-R4真实Word/PDF中的Ch6新增结论。未动Abaqus/CAE、冻结母本、main、生产RUN或PR合并。
 
