@@ -1,3 +1,7 @@
+### 2026-11-22｜V8精修稿排版再验收（V8-R1）
+- 原GitHub Ubuntu发布端缺LibreOffice Math，致3.2和BEM方程有编号无实体；新增图在精确行距中被裁切；新9行AeroDyn参数表跨页且无续表。通过安装Math、公式非空QA、图片段落扩展行距及面积QA、参数表同页QA修复。总页数138，BEM27条OMML、1张原理图、1张AeroDyn参数表真实PDF审查通过。原工作室地址和V7历史成果保留，未新增物理RUN。
+- 已归档原图：public/thesis-studio/he-thesis-comparison/v8-spreads/he21-v8-46.png，he22-v8-47.png，he23-v8-48.png，he24-v8-50.png。GitHub提交db9654bd500986a9b8e65909c48dc19a79d5c376，Actions #45005029992 success。Pages正式部署另查，气动验证及W侧塔身载荷映射仍HOLD。
+
 ### 2026-11-22｜学位论文编辑版本 V8 · 叶素动量理论
 - 基于原始理论文献和归档AeroDyn输入补写3.3.1–3.3.2；27条编号公式、原理示意图、气动设置表、新增[128]–[130]三项理论文献；无新物理计算。正文268c3e39，阅读页6253648，Word生成dfb1764，发布8a78316。
 - [V8发布构建](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/45001157954)目前in_progress；正式Word及实际原页渲染验收尚未完成。保留V7所有原图和原始成果，不更改研究物理门禁。
