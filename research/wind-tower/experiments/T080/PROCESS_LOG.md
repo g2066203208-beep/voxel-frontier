@@ -463,3 +463,9 @@ READ-BEFORE-WRITE：PR#42 Open/Draft，基线HEAD 5f3bdee41cef16fe57af7a06ab3c0e
 
 ## 2026-11-21 23时｜S12缺箱气候下两方案排序不可识别的构造性反例
 READ-BEFORE-WRITE：继承22时交接，读取根/研究AGENTS、指挥室、白皮书v0.32.111、紧凑期刊稿与Figure1；旧MASTER/STATUS根路径404，未冒称已读。SOURCE=历史诊断缺箱99736/106900小时（T062/ERA5既有证据）；RUN=新增两方案非负四次矩解析构造与独立Node单元测试，假设覆盖箱归一化贡献a=1,b=2仅数学反例而非物理数据；有独立上限Q时严格A优于B充要条件a+99736Q<b，临界1/99736=1.002646988e-5，等号拒绝严格判定。科研程序commit 1447c82bb0be60a55935d9e470d6598d2062566a；期刊新增§3.1 commit 8bfd90b739ce54ef1a1eaa4c6c72be7ffb859afc。TEST=本地Node等式/非法输入/反转证人PASS（同逻辑独立本地脚本SHA256 0df3c7cdd184690663cbc49284b7014499e271cd0477dcaac3a06fba1d9ab142；仓库脚本字节不同，不能混用SHA）；GitHub原生Node未运行、独立物理验证HOLD。FIG0 TAB0，REF/STANDARD/OFFICIAL无新增；12阶段晋级0/12，DLC1.2 0/126。最大非Abaqus HOLD=同态真实W侧独立气动力与惯性归属。下一唯一动作=S05核对官方地震原件及期刊引用深度，不再重复缺箱解析例子。禁Abaqus/CAE、冻结母本、main、昂贵RUN、PR合并。
+
+
+### 2026-11-23 06时｜S12真实141页候选PDF全页文字层与几何门禁
+- 科学/出版问题：上轮只对第124页做中文视觉检查，不能由单页推断全篇141页的文字层和页面边界均无缺失。本轮直接使用真实候选PDF（会话文件，非Git大件）SHA256 `9573ecc0c283c18a0952ba46801fc011c50dceebfc3ba36643651b66448a45be`，PyMuPDF逐页解析文字层及所有word bounding boxes。
+- RUN：141/141页有非空文字层；文字层0页空白；全部页面595.30×841.89pt；边界外word=0（容差0.5pt）；文字数最少87（封面），中位983；第124页同时可检索39.78%与87.39%。可复现程序 `manuscript/final-thesis/assemble/pdf_page_geometry_gate.py`，源码commit [5254c3b](https://github.com/g2066203208-beep/voxel-frontier/commit/5254c3bb7e8b7c483ff5bb3a79acd912c8b8ebe1)。
+- TEST：本地同算法对真实PDF源级运行PASS；提交后远端脚本独立CLI NOT_RUN。PASS只覆盖文字层存在性、文字框是否越界和第124页数值检索；**不能**据此声称141页逐页视觉检查、字体无缺字、图片完整、参考文献正确或论文物理结论通过。源PDF仅保留会话工件，未入Git。SOURCE=上轮真实V8-R4原Word派生PDF；RUN=本轮源级PDF分析；FIG0 TAB1（141行JSON本地）；REF/STANDARD/OFFICIAL无新增。S12出版QA PARTIAL，12阶段新增晋级0/12，最大非Abaqus HOLD=同态同步独立W侧气动力与惯性归属。
