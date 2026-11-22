@@ -167,7 +167,8 @@ ref_anchor=lastref
 for i,ref in enumerate(revision["references"]):
     el=clone_text(lastref,ref);ref_anchor.addnext(el);ref_anchor=el
     new[el]=("07",{"id":f"v8-ref-{128+i}","kind":"text","style":Paragraph(el,doc).style.name,"text":ref,"has_media":False,"has_math":False,"word_body_index":-1})
-assert all(etree.tostring(el)==xml for el,xml in original_xml.items()),"original nodes changed unexpectedly"
+assert all(etree.tostring(el)==xml for el,xml in original_xml.items() if el.getparent() is body),"retained original nodes changed unexpectedly"
+assert all(Paragraph(old_by_id[rid][2],doc).text==old_by_id[rid][1]["text"] for rid in redundant_ids),"removed paragraph text differs from frozen original"
 assert len(doc.tables)==38 and len(doc.inline_shapes)==6
 assert Paragraph(old_by_id["b0364"][2],doc).text.startswith("3.4 ") and old_by_id["b0364"][2].getprevious() is not old_by_id["b0363"][2]
 assert len(doc.element.xpath(".//m:oMath"))==math0+32
