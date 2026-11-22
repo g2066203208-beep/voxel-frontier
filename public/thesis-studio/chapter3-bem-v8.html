@@ -9,7 +9,7 @@
 <div class="eq"><span class="math" data-tex="\mathrm dT=4\pi\rho U_\infty^2a(1-a)r\,\mathrm dr">\mathrm dT=4\pi\rho U_\infty^2a(1-a)r\,\mathrm dr</span><span>（3.3-3）</span></div>
 <div class="eq"><span class="math" data-tex="\mathrm dQ=4\pi\rho U_\infty\Omega a'(1-a)r^3\,\mathrm dr">\mathrm dQ=4\pi\rho U_\infty\Omega a'(1-a)r^3\,\mathrm dr</span><span>（3.3-4）</span></div>
 <p>上述动量方程以无限叶片圆盘的理想流动假设为基础；有限叶片数导致的根部、尖部损失及高诱导区的非理想尾流效应将在后文修正。</p>
-<figure><img src="./downloads/bem-figure-v8.svg" alt="环形流管、叶片离散和叶素相对速度及受力示意"><figcaption>图3.3-1  环形流管、叶片离散及叶素截面速度与气动力示意</figcaption></figure>
+<figure><img src="./downloads/bem-streamtube-rotor-v9.svg" alt="环形流管与三叶片风轮的展向离散学术示意图"><figcaption>图3.3-1　环形流管与叶片展向离散示意图</figcaption></figure>
 <h3>（2）叶素相对来流及气动力</h3>
 <p>叶片沿展向离散为若干气动计算截面，各截面的弦长、扭角及翼型系数由DTU 10 MW参考风轮的气动几何与翼型数据确定。取第b片叶片的局部法向及反旋转方向单位矢量分别为en和et，来流速度和气动截面运动速度分别为vw与vs。未计诱导的相对速度分量为</p>
 <div class="eq"><span class="math" data-tex="V_{n,b}=\mathbf e_n^{\mathsf T}(\mathbf v_w-\mathbf v_s),\quad V_{t,b}=\mathbf e_t^{\mathsf T}(\mathbf v_w-\mathbf v_s)">V_{n,b}=\mathbf e_n^{\mathsf T}(\mathbf v_w-\mathbf v_s),\quad V_{t,b}=\mathbf e_t^{\mathsf T}(\mathbf v_w-\mathbf v_s)</span><span>（3.3-5）</span></div>
@@ -19,6 +19,7 @@
 <p>式中，φ为相对来流方向与局部旋转平面之间的夹角。为说明变桨及结构扭转对攻角的影响，在不随截面扭转的局部参考平面内，攻角可表示为</p>
 <div class="eq"><span class="math" data-tex="\alpha_b(r,t)=\phi_b(r,t)-\theta(r)-\beta_b(t)-\theta_{\mathrm{el},b}(r,t)">\alpha_b(r,t)=\phi_b(r,t)-\theta(r)-\beta_b(t)-\theta_{\mathrm{el},b}(r,t)</span><span>（3.3-8）</span></div>
 <p>式中，θ为初始几何扭角，β为变桨角，θel为弹性扭转角；实际截面姿态由气动与结构模块的坐标变换确定，已计入姿态的弹性扭转不再重复扣除。与固定桨距假设不同，本文的变桨角随控制器输出而变化。</p>
+<figure><img src="./downloads/bem-airfoil-velocity-force-v9.svg" alt="叶素相对速度三角形、攻角及法向切向气动力分解矢量示意图"><figcaption>图3.3-2　叶素相对速度、攻角及气动力分解示意图</figcaption></figure>
 <p>根据二维翼型理论，叶素单位展长升力qL、阻力qD为</p>
 <div class="eq"><span class="math" data-tex="q_L=\frac{1}{2}\rho W^2cC_L,\quad q_D=\frac{1}{2}\rho W^2cC_D">q_L=\frac{1}{2}\rho W^2cC_L,\quad q_D=\frac{1}{2}\rho W^2cC_D</span><span>（3.3-9）</span></div>
 <p>式中，c为叶素弦长；CL、CD分别为升力系数和阻力系数，由局部攻角及翼型气动特性确定。将升阻力投影至风轮局部法向和旋转方向，分别定义法向气动力系数Cn和切向气动力系数Cτ：</p>
