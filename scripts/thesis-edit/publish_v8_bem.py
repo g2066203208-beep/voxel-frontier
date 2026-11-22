@@ -242,7 +242,7 @@ save_json(compare/"v8-page-map.json",{"version":"V8","pdf":f"../downloads/{prefi
 save_json(out/"v8-audit.json",{"parent_sha256":sha(raw),"word_sha256":sha(binary),"pdf_pages":len(pdf),"inserted_omml":27,"tables":38,"figures":5,"bem_pdf_pages":list(range(start,end+1)),"equations":pages,"physics_runs":0,"review_status":"candidate; human page review pending"})
 js=root/"manuscript-workbench.js"
 s=js.read_text(encoding="utf8")
-assert "manuscript-v7-wind-theory.json" in s
+assert ("manuscript-v7-wind-theory.json" in s or "manuscript-v8-bem.json" in s), "unknown editor mother version"
 s=s.replace("manuscript-v7-wind-theory.json","manuscript-v8-bem.json").replace(old,prefix).replace("下载V7合并版PDF · 131页",f"下载V8审阅版PDF · {len(pdf)}页").replace("V7继承V6第二章四图，修订第三章风场理论及18条编号公式；其余原文、表格和图件保留。","V8继承V7，增补叶素动量理论27条原生公式、原理图和实际AeroDyn设置，保留原有研究结果。")
 js.write_text(s,encoding="utf8")
 html=root/"manuscript-workbench.html"
@@ -250,6 +250,7 @@ s=html.read_text(encoding="utf8").replace(old,prefix).replace("V7 / WIND THEORY"
 html.write_text(s,encoding="utf8")
 idx=compare/"index.html"
 s=idx.read_text(encoding="utf8").replace("v7-page-map.json","v8-page-map.json").replace("V7修改后真实论文原页","V8修改后真实论文原页").replace("右：V7 PDF第","右：V8 PDF第").replace("第18–19页附V7修订后真实原页","第18–19、20–24页附V8修订后真实原页")
-s=s.replace('<section id="v7-review" hidden>','<section id="v7-review" hidden><a href="../chapter3-bem-v8.html">3.3节叶素动量理论完整修订正文</a>')
+if '<a href="../chapter3-bem-v8.html">3.3节叶素动量理论完整修订正文</a>' not in s:
+    s=s.replace('<section id="v7-review" hidden>','<section id="v7-review" hidden><a href="../chapter3-bem-v8.html">3.3节叶素动量理论完整修订正文</a>')
 idx.write_text(s,encoding="utf8")
 print("V8_WORD_RENDER_PASS",sha(binary),len(pdf),"BEM",start,end)
