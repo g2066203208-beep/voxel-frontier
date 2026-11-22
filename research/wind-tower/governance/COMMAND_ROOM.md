@@ -1,3 +1,9 @@
+## 2026-11-22｜S12 何论文第24—41页逐页核对与第三章3.3.3广义气动力修订
+- START_HEAD=9e396f219d393683715622ad17c1140efc5b2501；承接原工作室V8-R2两张黑白BEM源SVG和V7冻结Word母本；不动Abaqus/CAE、原物理边界、研究PR#42，不新增风/地震RUN。
+- 完成逐页文献对照：何PDF24—32（正文13—21页）对应广义虚功、地震惯性输入、8-DOF矩阵，形成[审查1](../audit/S12_HE_P24_P32_WIND_SEISMIC_DYNAMICS_COMPARE_20261122.md)；何PDF33—41（正文22—30页）对应真实塔架材料、节段、模态V&V、MBS-FEM宏时间步，形成[审查2](../audit/S12_HE_P33_P41_MODEL_VV_AND_MBSFEM_COMPARE_20261122.md)。
+- GitHub main先行版V8-R3 Actions #45024831987 SUCCESS（141页，32条原生OMML，3.3-28～32为气动力虚功、运动学雅可比、广义气动力、塔顶六分量虚功及轮毂/塔顶换点）；实际截图he25-v8r3-51.png / he25-v8r3-52.png已回看数学内容及排版。随后审稿发现历史5段风场工况说明被错放3.3.3后（与3.1、3.2、3.5重复）；V8-R4源码 ccbe1368 / 930eedc6 修复章节引言与去重，72b8c90f对纯文本伪公式措辞精修。新生成[Actions #45025201470](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/45025201470)截至本记录未返回成功，不以R3代替R4上线。正式模型风载映射和地震求解仍HOLD。
+- 科学边界：何2.3地震用相对坐标等效惯性力；当前精细混塔若施加已知基础顶加速度，Abaqus基底运动和相对坐标-MΓag须择一自洽，绝对不能双重施加。OpenFAST TwrBs*是塔底结构响应；历史AeroDyn TwrAero=False不产生独立塔身气动力。残差和同态接口未闭合。
+
 ## 2026-11-22 20时｜S12正式第三章方向富集科学增量（白皮书v0.32.119）
 READ-BEFORE-WRITE：研究AGENTS、指挥室、白皮书、第三章、T080日志及R5原Word恢复16行CSV已读；MASTER/STATUS、12阶段与T079本轮未全量核验，不冒称。源blob 8e2b873b697ce1682becce712a51917156443d22；正式Ch3§3.9.4新增Bayes方向富集、7行表、舍入界和逆条件概率拒绝条件，[科研commit 97cae5a](https://github.com/g2066203208-beep/voxel-frontier/commit/97cae5aea43de5761297fded74da060ec3e998ea)。SSW 2.6410、NNE 2.4036，四方向高风87.39%/全年39.78%；并非风载倍率、材料Miner或DLC1.2。RUN=源级JS16行PASS，原小时和Word/PDF装配HOLD；阶段晋级0/12。最大非Abaqus HOLD=同步同态独立W侧气动力/惯性归属；下一唯一动作=真实V8-R2 Word/PDF图号引用页级验收。未动Abaqus/CAE、冻结母本、main、生产RUN、PR合并。
 
