@@ -54,7 +54,7 @@
 
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.124**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.125**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -844,3 +844,7 @@
 
 ### 2026-11-23｜v0.32.124 PATCH — S12真实V8-R4七章结论装配纠偏
 - [程序commit 7d881d8](https://github.com/g2066203208-beep/voxel-frontier/commit/7d881d8d4dca09a75bc900d868cef6cd398a3676)，路径`research/wind-tower/manuscript/final-thesis/assemble/integrate_ch6_highwind.py`，Git blob `cfce7a4fe5992ec244470dc5908d25dd206ee793`；SOURCE=Actions #45025491032真实V8-R4 Word SHA256 `ab7a5bf5d075e07aaca77bfecb62e9a870d1905b13dbe86f73b86c9075a7f0ce`、上轮141页候选稿及R5方向表；RUN=改六章6.2错误锚点为真实七章7.1/7.2，保留原四项结论并增加两段；TEST=本地同逻辑重建DOCX往返PASS、重复插入拒绝PASS，远端CLI/原V8-R4二进制重新装配及整篇PDF页级验收NOT_RUN；REF/STANDARD/OFFICIAL无新增，FIG0 TAB0，非物理结果，12阶段0/12；最大非Abaqus HOLD=同态独立W侧气动力与惯性归属。
+
+
+### 2026-11-23｜v0.32.125 PATCH — S12真实141页PDF文字层与页面几何门禁
+- [源程序commit 5254c3b](https://github.com/g2066203208-beep/voxel-frontier/commit/5254c3bb7e8b7c483ff5bb3a79acd912c8b8ebe1)，路径`research/wind-tower/manuscript/final-thesis/assemble/pdf_page_geometry_gate.py`；[T080过程commit 9ff2cfa](https://github.com/g2066203208-beep/voxel-frontier/commit/9ff2cfa5212fdd0bf7153cafa6c8b75f19d65dfd)。SOURCE=真实候选141页PDF SHA256 `9573ecc0c283c18a0952ba46801fc011c50dceebfc3ba36643651b66448a45be`；RUN=141/141非空文字层、0边界外word、595.30×841.89pt统一页面、第124页两百分比检索PASS；TEST=本地同算法源级PASS，提交版CLI NOT_RUN；FIG0 TAB1（本地141行JSON），REF/STANDARD/OFFICIAL无新增。全篇视觉/图像/引文/物理HOLD，12阶段新增0/12。**本轮开工实际白皮书头为v0.32.124，前轮声称v0.32.125未在该文件持久化，故本轮按真实版本递增，不把历史口头版本当已保存。**
