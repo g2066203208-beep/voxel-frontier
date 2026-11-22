@@ -38,7 +38,7 @@ jobs:
         run: |
           python -m pip install --quiet python-docx pymupdf pillow cairosvg
           sudo apt-get update -qq
-          sudo apt-get install -y --no-install-recommends libreoffice-writer fonts-noto-cjk pandoc
+          sudo apt-get install -y --no-install-recommends libreoffice-writer libreoffice-math fonts-opensymbol fonts-freefont-otf fonts-noto-cjk pandoc
       - name: Build V8 from exact V7 parent and render actual pages
         run: python scripts/thesis-edit/publish_v8_bem.py
       - name: Verify generated references and page images
