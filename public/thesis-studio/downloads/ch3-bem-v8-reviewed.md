@@ -193,6 +193,48 @@ $$
 
 上述气动模型用于已有36组随机风工况的整体响应筛选。气动模块未启用动态入流和非定常翼型气动，亦未计算塔身外部气动力。因此，整机输出的推力、转矩、转速及塔底弯矩用于比较所设模型的运行响应；完整混塔外风载仍需独立确定塔身气动力及统一接口载荷。
 
+
+### 3.3.3 分布气动力的广义力投影与塔顶接口力系
+
+叶素动量理论首先给出叶片沿展向分布的气动力，而混合塔架结构计算需要与其自由度和接口位置相一致的外力。何泽瑜[1]基于简化整机自由度和虚功原理，将叶片法向、切向载荷投影为广义气动力；本文不引入该文的八自由度简化坐标，而采用适用于柔性叶片多体系统及精细塔架的一般虚功表达。
+
+设第b片叶片在展向坐标s处、统一全局坐标系下的单位展长气动力与力矩分别为f_b^G(s,t)和m_b^G(s,t)，相应的虚位移与虚转角为δu_b、δϑ_b，则气动力在叶片上的虚功为
+
+$$
+\delta W_{\mathrm a}(t)=\sum_{b=1}^{B}\int_{s_h}^{s_R}\left[\left(\mathbf f_b^{G}\right)^{\mathsf T}\delta\mathbf u_b+\left(\mathbf m_b^{G}\right)^{\mathsf T}\delta\boldsymbol\vartheta_b\right]\,\mathrm ds\tag{3.3-28}
+$$
+
+式中，s_h、s_R分别表示气动加载区域的起止展向坐标；m_b^G包含翼型俯仰力矩，不应将其与作用点偏置产生的力矩重复计入。设q为参与结构运动的广义坐标向量，叶片截面的平动、转动虚运动由相应运动学雅可比矩阵J_u,b和J_ϑ,b表征：
+
+$$
+\delta\mathbf u_b=\mathbf J_{u,b}\,\delta\mathbf q,\qquad\delta\boldsymbol\vartheta_b=\mathbf J_{\vartheta,b}\,\delta\mathbf q\tag{3.3-29}
+$$
+
+将上式代入虚功关系，并利用δW_a=Q_a^Tδq，可得与广义坐标功共轭的气动广义力：
+
+$$
+\mathbf Q_{\mathrm a}(t)=\sum_{b=1}^{B}\int_{s_h}^{s_R}\left[\mathbf J_{u,b}^{\mathsf T}\mathbf f_b^{G}+\mathbf J_{\vartheta,b}^{\mathsf T}\mathbf m_b^{G}\right]\,\mathrm ds\tag{3.3-30}
+$$
+
+该表达包含叶片刚体旋转、弯扭变形和塔顶运动对叶素位移场的影响，与何泽瑜[1]在指定八个广义坐标及一阶假定振型下得到的式（2.23）—（2.25）属于相同虚功原理的不同自由度表示。本文不将何的八项载荷公式直接作为OpenFAST、Simpack或Abaqus输入，也不把理论积分式误记为已完成的联合求解。
+
+将塔顶接口参考点记为T，定义该点的平动虚位移δu_T和小转角虚转动δϑ_T。以力、力矩同向的右手坐标系表示塔顶六分量力系w_T=[F_T^T,M_T^T]^T时，其虚功满足
+
+$$
+\delta W_T=\mathbf F_T^{\mathsf T}\delta\mathbf u_T+\mathbf M_T^{\mathsf T}\delta\boldsymbol\vartheta_T=\mathbf w_T^{\mathsf T}\delta\mathbf x_T\tag{3.3-31}
+$$
+
+对于第3.3.1节在轮毂参考点O积分得到的纯气动合力F_O与合矩M_O，将其等效至塔顶参考点T而不改变作用效果时，应采用同一时刻、同一全局坐标系中的力矩换点关系：
+
+$$
+\mathbf F_T^{\mathrm a}=\mathbf F_O,\qquad\mathbf M_T^{\mathrm a}=\mathbf M_O+(\mathbf x_O-\mathbf x_T)\times\mathbf F_O\tag{3.3-32}
+$$
+
+式中，上标a仅指风轮叶片的气动力合量。实际RNA对塔架的连接界面载荷还包含重力、转动部件与机舱的惯性反力、传动系统作用以及结构运动反馈，不能仅以F_T^a、M_T^a代替。尤其不能把OpenFAST的TwrBsFxt/Fyt/Fzt或TwrBsMxt/Myt/Mzt结构底部响应再次施加成独立塔身外风载；塔身表面气动力须独立建模。
+
+本文历史AeroDyn归档设置中TwrAero=False，未生成精细塔筒所需的塔身分布气动力。故本节的虚功积分与六分量换点公式用于确定物理量的定义和接口校核方法，不构成正式风载映射已完成的证据。后续必须对同一风场、同一结构状态逐时核验六分量的方向、单位、坐标系、力矩参考点和RNA质量/重力归属；在完成合力合矩闭合前，Abaqus高保真塔架的正式气动载荷输入保持待验证状态。
+
+
 [128] NING S A. A simple solution method for the blade element momentum equations with guaranteed convergence[J]. Wind Energy, 2014, 17(9): 1327-1345. DOI: 10.1002/we.1636.
 
 [129] NING S A, HAYMAN G, DAMIANI R, JONKMAN J. Development and validation of a new blade element momentum skewed-wake model within AeroDyn[R]. NREL/CP-5000-63217, 2014.
