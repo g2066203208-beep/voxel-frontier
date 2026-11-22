@@ -117,7 +117,12 @@ for i,(kind,val) in enumerate(revision["blocks"]):
         insert(el,i,kind="figure",style=Paragraph(el,doc).style.name,text=val,has_media=False,has_math=False,figure_asset="./downloads/bem-figure-v8.svg",figure_caption_match=val)
     elif kind=="t":
         cap="表3.3-1  AeroDyn主要气动参数"
-        el=clone_text(table_caption,cap);Paragraph(el,doc).paragraph_format.keep_with_next=True
+        el=clone_text(table_caption,cap)
+        cappar=Paragraph(el,doc)
+        cappar.paragraph_format.keep_with_next=True
+        # The 9-row BEM setup table is short; start it on a fresh page rather
+        # than splitting two rows off without a "continued table" caption.
+        cappar.paragraph_format.page_break_before=True
         insert(el,f"{i}-cap" if False else i+100,kind="caption",style=Paragraph(el,doc).style.name,text=cap,**bbase)
         table=doc.add_table(rows=len(val),cols=len(val[0]))
         table.alignment=WD_TABLE_ALIGNMENT.CENTER
@@ -218,7 +223,10 @@ for pi in range(start-1,end):
         if rect.width>250 and rect.height>95 and info["width"]>=1000:
             figures.append((pi+1,rect.width,rect.height))
 assert figures,("BEM_FIGURE_CLIPPED: figure must render at full height",start,end)
-print("BEM_FORMULAS_AND_FIGURE_VISIBLE",ink_ok,figures)
+# Require all aerodynamic setup rows on one physical PDF page.
+table_pages=[i+1 for i,t in enumerate(texts) if "WakeMod" in t and "AeroDyn" in t]
+assert any(all(z in texts[p-1] for z in ("WakeMod","SkewMod","AirDens","MaxIter","TwrAero")) for p in table_pages),("BEM_TABLE_SPLIT_OR_TRUNCATED",table_pages)
+print("BEM_FORMULAS_FIGURE_AND_TABLE_VISIBLE",ink_ok,figures,table_pages)
 he=fitz.open(root/"documents/He_Zeyu_2024_hybrid_tower_thesis.pdf");assert len(he)==90
 spread=compare/"v8-spreads";spread.mkdir(exist_ok=True)
 groups={}
