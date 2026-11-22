@@ -6,8 +6,8 @@
 (()=>{
 const $=id=>document.getElementById(id);
 const SOURCE='./editor-data/manuscript-v8-bem.json';
-const PDF='./downloads/10MW-thesis-v8r3-bem-20261122.pdf';
-const WORD_PARTS=Array.from({length:15},(_,i)=>'./downloads/10MW-thesis-v8r3-bem-20261122.part'+String(i+1).padStart(2,'0')+'.bin');
+const PDF='./downloads/10MW-thesis-v8r4-bem-20261122.pdf';
+const WORD_PARTS=Array.from({length:15},(_,i)=>'./downloads/10MW-thesis-v8r4-bem-20261122.part'+String(i+1).padStart(2,'0')+'.bin');
 const DRIVE_WORD='https://docs.google.com/document/d/1KbJ-KUWdEdQsmjow1yFd4Vb40icm7bWL/edit';
 const REMOTE='https://api.github.com/repos/g2066203208-beep/voxel-frontier/contents/public/thesis-studio/editor-data/owner-published-draft.json';
 const REMOTE_PUBLIC='./editor-data/owner-published-draft.json';
