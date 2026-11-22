@@ -25,7 +25,7 @@ def integrate(src,md,dst):
     doc=Document(src)
     paragraphs=list(doc.paragraphs)
     assert not any(p.text.strip()==TITLE for p in paragraphs), 'duplicate heading'
-    anchors=[p for p in paragraphs if re.match(r'^6\\.2(?:\\s|$)',p.text.strip())]
+    anchors=[p for p in paragraphs if re.match(r'^6\.2(?:\s|$)',p.text.strip())]
     assert len(anchors)==1, 'missing or ambiguous 6.2 anchor'
     anchor=anchors[0]
     el=OxmlElement('w:p');anchor._p.addprevious(el)
