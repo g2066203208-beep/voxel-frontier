@@ -1,3 +1,11 @@
+### 2026-11-23 02时｜S12正式Word发布链断点与条件装配程序
+
+**科学交付问题：** 已完成的Ch6§6.1.8是否实际进入已发布V8-R4 Word？直接读取main的`.github/workflows/publish-thesis-v8-bem.yml`（Git blob c5062c65329e9bc889dad41e9a6178fc8afb0b1e）及`scripts/thesis-edit/publish_v8_bem.py`（Git blob 995f2e6e9389d6495304ce756a58c29b72f8eb23）。确认构建脚本从V7 Word二进制母本恢复，并仅通过BEM revision插入第三章，不读取研究分支`06_结论与展望.md`。因此研究分支的§6.1.8虽然持久化，但**现有V8-R4不能因此被宣称包含该段**。
+
+**新增可运行源码：** `manuscript/final-thesis/assemble/integrate_ch6_highwind.py`，以已审查Ch6§6.1.8两段正文为唯一来源，在真实DOCX存在唯一6.2锚点且目标标题未出现时插入，拒绝重复插入、缺失锚点、源段落数变化与未转换LaTeX。提交`9d4c8e2713395425539dae9782cccd3862ca8bd5`，源码Git blob `7cc22879fdf75b7ca055644d08cd1db6b7a9a349`。本地同逻辑Python合成DOCX往返和两项拒绝测试PASS；**远端最终源码CLI、真实V8-R4二进制Word获取、实际PDF重渲染、页码和排版均NOT_RUN**。本轮不冒称完成Word或物理结果；不启动生产求解。
+
+SOURCE=Ch6§6.1.8 Git blob aef717c7255a8c2e6ee16c87c1bc2cc52f84d03b；REF/STANDARD=无新增；OFFICIAL=GitHub原工作流及脚本；RUN=本地程序逻辑合成测试，非结构计算；FIG0 TAB0；12阶段0/12。最大非Abaqus HOLD=同步同态独立W侧气动力与惯性归属。**唯一下一动作：** 获取已发布V8-R4真实Word工件并用新装配程序生成候选DOCX、PDF，逐页检查新增Ch6段落与公式符号；若不可取得则轮换S06/07原始载荷，不再刷治理审计。
+
 ## 2026-11-23 01时｜S05真实ESM残差频段主导性（v0.32.122）
 PR#42 Open/Draft、起始HEAD b32556f549a7a9dbf0c9f0c90f46014d4fceeb82；根/研究AGENTS、指挥室、白皮书、正式MASTER/STATUS、12阶段、T079/T080及33周期源CSV已读。SOURCE=ESM处理谱33行 Git blob f7f58ab68d069829c275c1a2e4def6181c7da527；RUN=对数周期分段线性精确平方积分：3–6s残差份额RotD50 57.030065%、RotD100 56.005303%，r=0交点2.998156/2.903720s。科研正文与表见T079 commit ad5e2939a3061fde97695851f58e1792d4b78fba。TEST=连接器JS源级实算PASS，原生CLI/原始波重算/物理设计谱验收NOT_RUN；REF=既有2026先行研究，STANDARD/OFFICIAL无新授权来源；FIG0 TAB1；仅示意目标谱，S05 PARTIAL，12阶段0/12。W侧同态气动力/惯性仍最大非Abaqus HOLD；下轮转S12实际Word/PDF发布链，不重复谱小统计。禁Abaqus/CAE、冻结母本、main、昂贵RUN及PR合并。
 
