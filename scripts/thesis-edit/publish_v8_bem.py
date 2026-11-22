@@ -10,7 +10,7 @@ from docx.text.paragraph import Paragraph
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.shared import Inches, Pt
-from docx.enum.text import WD_ALIGN_PARAGRAPH
+from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_LINE_SPACING
 from docx.enum.table import WD_TABLE_ALIGNMENT, WD_CELL_VERTICAL_ALIGNMENT
 from lxml import etree
 
@@ -105,7 +105,10 @@ for i,(kind,val) in enumerate(revision["blocks"]):
         par=doc.add_paragraph()
         par.alignment=WD_ALIGN_PARAGRAPH.CENTER
         par.paragraph_format.first_line_indent=Pt(0)
-        par.paragraph_format.space_before=Pt(4);par.paragraph_format.space_after=Pt(0)
+        par.paragraph_format.space_before=Pt(8);par.paragraph_format.space_after=Pt(8)
+        # Thesis Normal style has exact line spacing. Without this explicit override,
+        # LibreOffice clips a 5.4-inch inline figure to a single text line.
+        par.paragraph_format.line_spacing_rule=WD_LINE_SPACING.SINGLE
         par.paragraph_format.keep_with_next=True
         par.add_run().add_picture(str(out/"bem-figure.png"),width=Inches(5.4))
         anchor.addprevious(par._p)
@@ -207,6 +210,15 @@ start=locate("3.3.1 叶素动量理论与叶片气动力计算")
 end=locate("3.4 Abaqus—OpenFAST结构动力一致性验证")
 assert start<=pages["3.3-1"]<=pages["3.3-27"]<=end
 assert len(set(pages.values()))>=3
+# The original figure must occupy a readable area, not a clipped line.
+figures=[]
+for pi in range(start-1,end):
+    for info in pdf[pi].get_image_info():
+        rect=fitz.Rect(info["bbox"])
+        if rect.width>250 and rect.height>95 and info["width"]>=1000:
+            figures.append((pi+1,rect.width,rect.height))
+assert figures,("BEM_FIGURE_CLIPPED: figure must render at full height",start,end)
+print("BEM_FORMULAS_AND_FIGURE_VISIBLE",ink_ok,figures)
 he=fitz.open(root/"documents/He_Zeyu_2024_hybrid_tower_thesis.pdf");assert len(he)==90
 spread=compare/"v8-spreads";spread.mkdir(exist_ok=True)
 groups={}
