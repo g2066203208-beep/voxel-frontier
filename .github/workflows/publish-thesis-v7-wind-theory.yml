@@ -1,0 +1,79 @@
+name: Publish V7 thesis wind theory and real comparison
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/thesis-edit/publish_v7_wind_theory.py'
+      - 'scripts/thesis-edit/ch3_wind_theory_reviewed_20261122.b64'
+      - '.github/workflows/publish-thesis-v7-wind-theory.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: thesis-v7-wind-theory
+  cancel-in-progress: false
+jobs:
+  merge-render:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          sparse-checkout: |
+            scripts/thesis-edit
+            public/thesis-studio/downloads
+            public/thesis-studio/editor-data
+            public/thesis-studio/documents
+            public/thesis-studio/he-thesis-comparison
+            public/thesis-studio/manuscript-workbench.js
+            public/thesis-studio/manuscript-workbench.html
+            .github/workflows
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Word and PDF tools
+        run: |
+          python -m pip install --quiet python-docx pymupdf pillow
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends libreoffice-writer fonts-noto-cjk
+      - name: Apply exact reviewed Word patch and generate real PDF pages
+        run: python scripts/thesis-edit/publish_v7_wind_theory.py
+      - name: Verify JavaScript and generated files
+        run: |
+          node --check public/thesis-studio/manuscript-workbench.js
+          python - <<'PY'
+          import json,re
+          from pathlib import Path
+          p=Path("public/thesis-studio/he-thesis-comparison")
+          m=json.loads((p/"v7-page-map.json").read_text())
+          for k,items in m["pages"].items():
+              assert items
+              for item in items:
+                  assert (p/item["image"]).stat().st_size>10000
+          code=re.findall(r"<script>(.*?)</script>",(p/"index.html").read_text(),re.S)[0]
+          Path("/tmp/v7-compare.js").write_text(code)
+          PY
+          node --check /tmp/v7-compare.js
+      - uses: actions/upload-artifact@v4
+        with:
+          name: V7-merged-thesis-actual-word-and-comparisons
+          path: |
+            _generated_thesis_v7/10MW-thesis-v7-wind-theory-20261122.docx
+            _generated_thesis_v7/10MW-thesis-v7-wind-theory-20261122.pdf
+            _generated_thesis_v7/v7-audit.json
+            public/thesis-studio/he-thesis-comparison/v7-spreads
+          retention-days: 30
+      - name: Publish versioned assets and existing online editor
+        run: |
+          git config user.name 'thesis-editor[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/thesis-studio/downloads/10MW-thesis-v7-wind-theory-20261122.* public/thesis-studio/editor-data/manuscript-v7-wind-theory.json public/thesis-studio/he-thesis-comparison/v7-page-map.json public/thesis-studio/he-thesis-comparison/v7-spreads public/thesis-studio/he-thesis-comparison/index.html public/thesis-studio/manuscript-workbench.js public/thesis-studio/manuscript-workbench.html
+          git commit -m 'docs(thesis): publish V7 merged Word, PDF, 18 formulas and real page comparisons'
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Trigger existing Pages deployment
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run pages.yml --ref main
