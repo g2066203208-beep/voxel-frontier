@@ -1,0 +1,63 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>3.3 叶素动量理论｜论文工作室 V8</title><link rel="stylesheet" href="./vendor/katex/katex.min.css"><script defer src="./vendor/katex/katex.min.js"></script><style>body{margin:0;background:#eceef0;color:#141414;font:16px/1.9 "Noto Serif CJK SC","Songti SC","SimSun",serif}header{background:#183443;color:white;padding:12px max(18px,calc((100vw - 860px)/2));display:flex;gap:20px;align-items:baseline;flex-wrap:wrap;font:14px/1.6 system-ui}header a{color:white}main{box-sizing:border-box;max-width:860px;margin:26px auto;padding:48px 58px;background:white;border:1px solid #d0d4d6}h1{font-size:22px;text-align:center;margin:0 0 28px}h2{font-size:18px;margin:26px 0 14px}h3{font-size:16px;margin:18px 0 6px}p{text-indent:2em;margin:9px 0}.eq{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px;margin:8px 0;min-height:36px;font-family:"Times New Roman",serif}.math{min-width:0;overflow:auto;text-align:center}.katex-display{margin:.35em 0}figure{margin:20px 0;text-align:center}figure img{width:100%}figcaption,caption{font-size:14px;margin:8px 0}table{border-collapse:collapse;width:100%;font-size:13px;margin:15px 0;border-top:2px solid #333;border-bottom:2px solid #333;line-height:1.6}th,td{padding:7px 9px;text-align:left}th{border-bottom:1px solid #333}td{border-bottom:1px solid #e1e1e1;overflow-wrap:anywhere}.refs p{text-indent:0;font-size:13px;line-height:1.6}footer{max-width:860px;margin:12px auto 30px;color:#666;font:12px/1.6 system-ui;text-align:center}@media(max-width:600px){main{padding:22px 18px;margin:0;border:0}header{padding:12px 16px}.eq{gap:2px;font-size:12px}.katex{font-size:1em}table{font-size:11px}th,td{padding:5px 4px}}</style></head><body><header><a href="./manuscript-workbench.html#chapter-03">← 论文编辑器</a><strong>第三章 · V8审阅稿</strong><a href="./he-thesis-comparison/#p=20">何论文第9页起对照</a><a href="./downloads/ch3-bem-v8-reviewed.md">源正文</a></header><main><h1>3.3 OpenFAST—ROSCO整机气动弹性模型</h1><h2>3.3.1 叶素动量理论与叶片气动力计算</h2>
+<p>风轮气动力是混合塔架风致振动的主要激励之一。本文采用OpenFAST中的AeroDyn模块，基于叶素动量理论（Blade Element Momentum Theory，BEM）计算叶片分布气动力。BEM将环形流管的动量守恒与叶素截面的二维翼型气动力相结合，通过诱导因子建立来流速度与叶片荷载之间的关系[128-130]。</p>
+<h3>（1）环形流管动量理论</h3>
+<p>将风轮扫掠面沿径向划分为若干环形流管，取距旋转轴半径为r、径向宽度为dr的微元。在理想稳态、不可压缩、轴对称轴向来流条件下，忽略环形流管之间的径向交换。设无穷远上游风速为U∞，定义轴向诱导因子a，则叶轮平面风速Ud及远尾流风速Uw分别为</p>
+<div class="eq"><span class="math" data-tex="U_d=U_\infty(1-a),\quad U_w=U_\infty(1-2a)">U_d=U_\infty(1-a),\quad U_w=U_\infty(1-2a)</span><span>（3.3-1）</span></div>
+<p>由质量守恒，环形流管的质量流率为</p>
+<div class="eq"><span class="math" data-tex="\mathrm d\dot m=2\pi\rho rU_\infty(1-a)\,\mathrm dr">\mathrm d\dot m=2\pi\rho rU_\infty(1-a)\,\mathrm dr</span><span>（3.3-2）</span></div>
+<p>式中，ρ为空气密度。设Ω为风轮角速度，a′为切向诱导因子，经典旋转尾流模型的远尾流切向诱导速度幅值为2a′Ωr。由轴向动量与角动量守恒，环形流管的推力和转矩为</p>
+<div class="eq"><span class="math" data-tex="\mathrm dT=4\pi\rho U_\infty^2a(1-a)r\,\mathrm dr">\mathrm dT=4\pi\rho U_\infty^2a(1-a)r\,\mathrm dr</span><span>（3.3-3）</span></div>
+<div class="eq"><span class="math" data-tex="\mathrm dQ=4\pi\rho U_\infty\Omega a'(1-a)r^3\,\mathrm dr">\mathrm dQ=4\pi\rho U_\infty\Omega a'(1-a)r^3\,\mathrm dr</span><span>（3.3-4）</span></div>
+<p>上述动量方程以无限叶片圆盘的理想流动假设为基础；有限叶片数导致的根部、尖部损失及高诱导区的非理想尾流效应将在后文修正。</p>
+<figure><img src="./downloads/bem-figure-v8.svg" alt="环形流管、叶片离散和叶素相对速度及受力示意"><figcaption>图3.3-1  环形流管、叶片离散及叶素截面速度与气动力示意</figcaption></figure>
+<h3>（2）叶素相对来流及气动力</h3>
+<p>叶片沿展向离散为若干气动计算截面，各截面的弦长、扭角及翼型系数由DTU 10 MW参考风轮的气动几何与翼型数据确定。取第b片叶片的局部法向及反旋转方向单位矢量分别为en和et，来流速度和气动截面运动速度分别为vw与vs。未计诱导的相对速度分量为</p>
+<div class="eq"><span class="math" data-tex="V_{n,b}=\mathbf e_n^{\mathsf T}(\mathbf v_w-\mathbf v_s),\quad V_{t,b}=\mathbf e_t^{\mathsf T}(\mathbf v_w-\mathbf v_s)">V_{n,b}=\mathbf e_n^{\mathsf T}(\mathbf v_w-\mathbf v_s),\quad V_{t,b}=\mathbf e_t^{\mathsf T}(\mathbf v_w-\mathbf v_s)</span><span>（3.3-5）</span></div>
+<p>截面运动速度包含风轮旋转、机舱与塔顶运动以及叶片弹性变形引起的速度。在轴向均匀来流、刚性风轮且无整机平动的情形下，Vn=U∞、Vt=Ωr。考虑轴向、切向诱导作用后，局部相对速度分量及其合速度为</p>
+<div class="eq"><span class="math" data-tex="W_n=V_n(1-a),\quad W_t=V_t(1+a')">W_n=V_n(1-a),\quad W_t=V_t(1+a')</span><span>（3.3-6）</span></div>
+<div class="eq"><span class="math" data-tex="W=\sqrt{W_n^2+W_t^2},\quad \phi=\operatorname{atan2}(W_n,W_t)">W=\sqrt{W_n^2+W_t^2},\quad \phi=\operatorname{atan2}(W_n,W_t)</span><span>（3.3-7）</span></div>
+<p>式中，φ为相对来流方向与局部旋转平面之间的夹角。为说明变桨及结构扭转对攻角的影响，在不随截面扭转的局部参考平面内，攻角可表示为</p>
+<div class="eq"><span class="math" data-tex="\alpha_b(r,t)=\phi_b(r,t)-\theta(r)-\beta_b(t)-\theta_{\mathrm{el},b}(r,t)">\alpha_b(r,t)=\phi_b(r,t)-\theta(r)-\beta_b(t)-\theta_{\mathrm{el},b}(r,t)</span><span>（3.3-8）</span></div>
+<p>式中，θ为初始几何扭角，β为变桨角，θel为弹性扭转角；实际截面姿态由气动与结构模块的坐标变换确定，已计入姿态的弹性扭转不再重复扣除。与固定桨距假设不同，本文的变桨角随控制器输出而变化。</p>
+<p>根据二维翼型理论，叶素单位展长升力qL、阻力qD为</p>
+<div class="eq"><span class="math" data-tex="q_L=\frac{1}{2}\rho W^2cC_L,\quad q_D=\frac{1}{2}\rho W^2cC_D">q_L=\frac{1}{2}\rho W^2cC_L,\quad q_D=\frac{1}{2}\rho W^2cC_D</span><span>（3.3-9）</span></div>
+<p>式中，c为叶素弦长；CL、CD分别为升力系数和阻力系数，由局部攻角及翼型气动特性确定。将升阻力投影至风轮局部法向和旋转方向，分别定义法向气动力系数Cn和切向气动力系数Cτ：</p>
+<div class="eq"><span class="math" data-tex="C_n=C_L\cos\phi+C_D\sin\phi,\quad C_\tau=C_L\sin\phi-C_D\cos\phi">C_n=C_L\cos\phi+C_D\sin\phi,\quad C_\tau=C_L\sin\phi-C_D\cos\phi</span><span>（3.3-10）</span></div>
+<p>叶素单位展长法向力qn、切向力qτ及翼型俯仰力矩ma为</p>
+<div class="eq"><span class="math" data-tex="q_n=\frac{1}{2}\rho W^2cC_n,\quad q_\tau=\frac{1}{2}\rho W^2cC_\tau">q_n=\frac{1}{2}\rho W^2cC_n,\quad q_\tau=\frac{1}{2}\rho W^2cC_\tau</span><span>（3.3-11）</span></div>
+<div class="eq"><span class="math" data-tex="m_a=\frac{1}{2}\rho W^2c^2C_m">m_a=\frac{1}{2}\rho W^2c^2C_m</span><span>（3.3-12）</span></div>
+<p>其中，qn、qτ的单位为N/m；ma的单位为N·m/m；Cm为翼型俯仰力矩系数。对于具有B片相同叶片的稳态轴对称风轮，环形微元的气动力与转矩为</p>
+<div class="eq"><span class="math" data-tex="\mathrm dT=Bq_n\,\mathrm dr,\quad \mathrm dQ=Brq_\tau\,\mathrm dr">\mathrm dT=Bq_n\,\mathrm dr,\quad \mathrm dQ=Brq_\tau\,\mathrm dr</span><span>（3.3-13）</span></div>
+<h3>（3）诱导因子与有限叶片数修正</h3>
+<p>定义局部实度σr为叶片弦长总和与相应圆周长度之比：</p>
+<div class="eq"><span class="math" data-tex="\sigma_r=\frac{Bc}{2\pi r}">\sigma_r=\frac{Bc}{2\pi r}</span><span>（3.3-14）</span></div>
+<p>有限叶片数使叶尖与叶根附近的环量及诱导速度分布不同于无限叶片圆盘。AeroDyn采用Prandtl叶尖、叶根损失修正[129]，对应损失因子为</p>
+<div class="eq"><span class="math" data-tex="F_{\mathrm{tip}}=\frac{2}{\pi}\arccos\!\left[\exp\!\left(-\frac{B(R-r)}{2r|\sin\phi|}\right)\right]">F_{\mathrm{tip}}=\frac{2}{\pi}\arccos\!\left[\exp\!\left(-\frac{B(R-r)}{2r|\sin\phi|}\right)\right]</span><span>（3.3-15）</span></div>
+<div class="eq"><span class="math" data-tex="F_{\mathrm{hub}}=\frac{2}{\pi}\arccos\!\left[\exp\!\left(-\frac{B(r-R_h)}{2R_h|\sin\phi|}\right)\right]">F_{\mathrm{hub}}=\frac{2}{\pi}\arccos\!\left[\exp\!\left(-\frac{B(r-R_h)}{2R_h|\sin\phi|}\right)\right]</span><span>（3.3-16）</span></div>
+<div class="eq"><span class="math" data-tex="F=F_{\mathrm{tip}}F_{\mathrm{hub}}">F=F_{\mathrm{tip}}F_{\mathrm{hub}}</span><span>（3.3-17）</span></div>
+<p>式中，R为风轮半径，Rh为轮毂半径；Ftip和Fhub分别为叶尖与叶根损失因子。将动量方程（3.3-3）、（3.3-4）乘以F，并与叶素方程（3.3-13）联立，在正常发电、低诱导及分母非零的条件下可得</p>
+<div class="eq"><span class="math" data-tex="a=\frac{\sigma_r C_n}{4F\sin^2\phi+\sigma_r C_n}">a=\frac{\sigma_r C_n}{4F\sin^2\phi+\sigma_r C_n}</span><span>（3.3-18）</span></div>
+<div class="eq"><span class="math" data-tex="a'=\frac{\sigma_r C_\tau}{4F\sin\phi\cos\phi-\sigma_r C_\tau}">a'=\frac{\sigma_r C_\tau}{4F\sin\phi\cos\phi-\sigma_r C_\tau}</span><span>（3.3-19）</span></div>
+<p>当轴向诱导因子增大时，风轮后方尾流混合增强，经典轴向动量关系不再适用于高诱导区。定义环形推力系数CT,r为环形推力与参考动压乘环形面积之比，在正常轴向来流下有</p>
+<div class="eq"><span class="math" data-tex="C_{T,r}=\frac{\mathrm dT}{\frac12\rho U_\infty^2(2\pi r\,\mathrm dr)}=\frac{\sigma_r C_n(1-a)^2}{\sin^2\phi}">C_{T,r}=\frac{\mathrm dT}{\frac12\rho U_\infty^2(2\pi r\,\mathrm dr)}=\frac{\sigma_r C_n(1-a)^2}{\sin^2\phi}</span><span>（3.3-20）</span></div>
+<p>对于高诱导工况，采用含有限叶片数修正的Glauert–Buhl推力关系[128-130]：</p>
+<div class="eq"><span class="math" data-tex="C_{T,r}=\begin{cases}4Fa(1-a),&amp;0\le a\le0.4\\(\frac{50}{9}-4F)a^2-(\frac{40}{9}-4F)a+\frac89,&amp;0.4&lt;a&lt;1\end{cases}">C_{T,r}=\begin{cases}4Fa(1-a),&amp;0\le a\le0.4\\(\frac{50}{9}-4F)a^2-(\frac{40}{9}-4F)a+\frac89,&amp;0.4&lt;a&lt;1\end{cases}</span><span>（3.3-21）</span></div>
+<p>联立上述推力关系与叶素侧推力系数求得高诱导区的轴向诱导因子。该修正使两段推力曲线在a=0.4处连续且一阶导数相等，避免直接外推低诱导公式。偏航及倾斜来流引起的非轴对称尾流影响由AeroDyn的Pitt/Peters偏斜尾流修正处理[121,129]。制动、反向流动及端部奇异状态按软件相应分支计算，不将上述正常发电公式直接用于所有状态。</p>
+<h3>（4）叶素动量方程的求解</h3>
+<p>由于诱导因子影响入流角，而入流角又决定攻角与气动力系数，叶素动量方程构成非线性耦合方程。AeroDyn采用Ning提出的入流角单变量求根方法[128,129]。在正常发电且速度分量非零的条件下，令λr=Vt/Vn，可将局部速度三角形的几何约束写为</p>
+<div class="eq"><span class="math" data-tex="\mathcal R(\phi)=\frac{\sin\phi}{1-a(\phi)}-\frac{\cos\phi}{\lambda_r[1+a'(\phi)]}=0">\mathcal R(\phi)=\frac{\sin\phi}{1-a(\phi)}-\frac{\cos\phi}{\lambda_r[1+a'(\phi)]}=0</span><span>（3.3-22）</span></div>
+<p>对每一时刻的叶片气动截面，由局部来流、截面速度及姿态确定未诱导速度分量；在给定入流角下计算攻角、翼型气动力系数与根尖损失因子，并根据诱导区间更新a及a′。在适当的入流角区间内对残差方程求根，收敛后计算相对速度及分布气动力。相较于直接对两个诱导因子进行固定点迭代，该方法通过单变量残差及分区间搜索改善收敛鲁棒性。</p>
+<h3>（5）风轮气动载荷积分</h3>
+<p>空间非均匀湍流条件下，各叶片瞬时气动载荷不同。对平直叶片及统一风轮轴向的简化情形，第b片叶片的法向、切向单位展长载荷分别为qn,b、qτ,b，则风轮推力和转矩为</p>
+<div class="eq"><span class="math" data-tex="T(t)=\sum_{b=1}^{B}\int_{R_h}^{R}q_{n,b}(r,t)\,\mathrm dr">T(t)=\sum_{b=1}^{B}\int_{R_h}^{R}q_{n,b}(r,t)\,\mathrm dr</span><span>（3.3-23）</span></div>
+<div class="eq"><span class="math" data-tex="Q(t)=\sum_{b=1}^{B}\int_{R_h}^{R}r q_{\tau,b}(r,t)\,\mathrm dr">Q(t)=\sum_{b=1}^{B}\int_{R_h}^{R}r q_{\tau,b}(r,t)\,\mathrm dr</span><span>（3.3-24）</span></div>
+<p>风轮气动功率定义为</p>
+<div class="eq"><span class="math" data-tex="P_{\mathrm a}(t)=\Omega(t)Q(t)">P_{\mathrm a}(t)=\Omega(t)Q(t)</span><span>（3.3-25）</span></div>
+<p>对于预弯、倾斜和发生弹性变形的叶片，必须考虑气动截面坐标与全局坐标之间的转换。设Φb为截面局部至统一坐标系的旋转矩阵，fb和mb为截面单位展长气动力及力矩，xb为气动作用点坐标，xO为轮毂参考点，则气动力与力矩合量为</p>
+<div class="eq"><span class="math" data-tex="\mathbf F_O=\sum_{b=1}^{B}\int\mathbf\Phi_b\mathbf f_b\,\mathrm ds">\mathbf F_O=\sum_{b=1}^{B}\int\mathbf\Phi_b\mathbf f_b\,\mathrm ds</span><span>（3.3-26）</span></div>
+<div class="eq"><span class="math" data-tex="\mathbf M_O=\sum_{b=1}^{B}\int[(\mathbf x_b-\mathbf x_O)\times(\mathbf\Phi_b\mathbf f_b)+\mathbf\Phi_b\mathbf m_b]\,\mathrm ds">\mathbf M_O=\sum_{b=1}^{B}\int[(\mathbf x_b-\mathbf x_O)\times(\mathbf\Phi_b\mathbf f_b)+\mathbf\Phi_b\mathbf m_b]\,\mathrm ds</span><span>（3.3-27）</span></div>
+<p>式中，s为叶片展向积分坐标。将风轮气动力矩换算到塔顶参考点时，相应的力臂项必须保留；塔顶结构接口的总力和总力矩还包含风轮、传动链及机舱的重力与惯性效应，不能与上述风轮气动合量直接等同。</p>
+<h2>3.3.2 气动模型设置与整机计算工况</h2>
+<p>本文DTU 10 MW整机筛选模型采用三片叶片。根据归档AeroDyn输入文件，空气密度取1.225 kg/m³，气动特性由六组翼型数据文件及攻角相关系数确定；采用准稳态BEM和稳态翼型气动模型，启用Prandtl叶尖与叶根损失、切向诱导、轴向及切向诱导中的阻力项、翼型俯仰力矩以及Pitt/Peters偏斜尾流修正。主要设置见下表。</p>
+<table><caption>表3.3-1　AeroDyn主要气动参数</caption><thead><tr><th>参数</th><th>设置</th><th>物理含义</th></tr></thead><tbody><tr><td>WakeMod / AFAeroMod</td><td>1 / 1</td><td>准稳态BEM／稳态翼型气动</td></tr><tr><td>SkewMod</td><td>2</td><td>Pitt/Peters偏斜尾流</td></tr><tr><td>TipLoss / HubLoss</td><td>True / True</td><td>叶尖／叶根损失</td></tr><tr><td>TanInd / AIDrag / TIDrag</td><td>True / True / True</td><td>切向诱导及诱导求解阻力项</td></tr><tr><td>UseBlCm / AFTabMod</td><td>True / 1</td><td>翼型俯仰力矩／攻角表</td></tr><tr><td>AirDens</td><td>1.225 kg/m³</td><td>计算空气密度</td></tr><tr><td>IndToler / MaxIter</td><td>Default / 500</td><td>残差容限／迭代上限</td></tr><tr><td>TwrPotent / TwrShadow / TwrAero</td><td>0 / 0 / False</td><td>不计塔架局部流动及塔身气动力</td></tr></tbody></table>
+<p>上述气动模型用于已有36组随机风工况的整体响应筛选。气动模块未启用动态入流和非定常翼型气动，亦未计算塔身外部气动力。因此，整机输出的推力、转矩、转速及塔底弯矩用于比较所设模型的运行响应；完整混塔外风载仍需独立确定塔身气动力及统一接口载荷。</p><section class="refs"><h2>新增参考文献</h2><p>[128] NING S A. A simple solution method for the blade element momentum equations with guaranteed convergence[J]. Wind Energy, 2014, 17(9): 1327-1345. DOI: 10.1002/we.1636.</p><p>[129] NING S A, HAYMAN G, DAMIANI R, JONKMAN J. Development and validation of a new blade element momentum skewed-wake model within AeroDyn[R]. NREL/CP-5000-63217, 2014.</p><p>[130] BUHL M L Jr. A new empirical relationship between thrust coefficient and induction factor for the turbulent windmill state[R]. NREL/TP-500-36834, 2005.</p></section></main><footer>V8 叶素动量理论审阅稿 · 基于V7 · 未新增物理计算</footer><script>window.addEventListener("DOMContentLoaded",()=>{if(window.katex)for(const el of document.querySelectorAll(".math"))katex.render(el.dataset.tex,el,{displayMode:true,throwOnError:false});});</script></body></html>
