@@ -1,3 +1,8 @@
+## 2026-11-22｜V8-R2 叶素动量插图出版级重绘
+- 用户审阅原V8三联图认为不规范；已经改为两幅黑白SVG矢量学术图：图3.3-1环形流管及叶片离散、图3.3-2叶素速度三角形和气动力投影。采用5.4英寸正文宽度插入真正Word，保持前文BEM27条OMML数学公式、第二章四图及全部原始结果，不动Abaqus/地震/风载映射物理门禁。
+- GitHub源码: public/thesis-studio/downloads/bem-streamtube-rotor-v9.svg与bem-airfoil-velocity-force-v9.svg；Word发布程序main 6abbe5e0；成功生成Actions #45014805722，产物main 1254877dea3cd7ea6401eaac71b677769958b74f，共139页。已回读真实原图he21-v8r2-46.png及he22-v8r2-47.png，公式/两图显示完整，未出现裁切。图为依据理论独立绘制的学术示意，不是NREL官方图，不是实际计算云图。
+- Pages部署需另查状态；全文章节图号风格和引用仍需后续一致性核验。科研物理状态保持不变。
+
 ## 2026-11-22｜S12 学位论文V8公式/图件/参数表修复完成，真实原页验收
 - 本轮读取活动研究分支HEAD=273ab4ca96978edf7f968743231f7acba4f60a56，以已归档V7 Word真实母本为源，不触及Abaqus、冻结研究模型或PR#42。前次V8旧PDF图3.3-1被准确行距裁剪、27条BEM公式缺失；均以真实PDF截图发现并确认FAIL。
 - 修复main提交：06610112a (公式可见性检查)、4712f7c (LibreOffice Math及数学字体)、a21e3f9 (V8已发布编辑器的幂等重构)、b71aba5c (图示段落强制单倍行距及图幅QA)、b17a3a0 (9行AeroDyn表单页与PDF QA)。发布产物main db9654bd500986a9b8e65909c48dc19a79d5c376；[构建#45005029992](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/45005029992) PASS，138页完整PDF、27条叶素动量OMML数学公式非空、图3.3-1完整显示、表3.3-1于第50页同页显示；何PDF20–24与V8 PDF45–50左右原图已在线更新并实际回读。此为排版/出版QA，不构成气动/风场物理新增验证。前次仅CI绿灯的错误已纠正。
