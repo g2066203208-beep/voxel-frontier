@@ -1,3 +1,8 @@
+## 2026-11-22｜S12 何泽瑜原论文90页对比补齐，V8-R4真实Word/PDF校验完成
+- 研究说明：He原PDF1—23原有风谱与BEM审稿已由V7/V8-R2修订覆盖；本次PDF24—90逐页读原文索引及归档原图，分成六个科研审稿矩阵，详细路径见`../audit/S12_HE_P24_P32_WIND_SEISMIC_DYNAMICS_COMPARE_20261122.md`、`S12_HE_P33_P41_MODEL_VV_AND_MBSFEM_COMPARE_20261122.md`、`S12_HE_P42_P50_MBS_FEM_NONLINEAR_COMPARE_20261122.md`、`S12_HE_P51_P61_WIND_EARTHQUAKE_CASES_COMPARE_20261122.md`、`S12_HE_P62_P76_SEISMIC_SOFTWARE_COMPARE_20261122.md`、`S12_HE_P77_P90_RELIABILITY_CONCLUSIONS_REFERENCES_COMPARE_20261122.md`。重点：不把He通榆风速、7条地震波响应、8DOF矩阵、OpenSEES软件、100可靠度样本与我方嘉鱼数值混用。
+- 正文：V8-R4在原工作室母稿新增3.3.3一般虚功和广义气动力推导5式，3.3本节共32条Word原生OMML公式；去掉历史重复的五段风况文本，新增简短本节目的引言。Github Action [45025491032](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/45025491032) completed/success，完整Word+PDF 140页，实际Word SHA256 ab7a5bf5d075e07aaca77bfecb62e9a870d1905b13dbe86f73b86c9075a7f0ce。对照图he25-v8r4-51.png与he25-v8r4-52.png已回读，论文公式有效，不跨越章节或插入重复段落。对照页面map通过index修复指向v8r4-page-map.json，提交8edab31d。Pages新站部署#45025769389在本条记录时仍pending，未获最终结论。
+- 实证状态：风侧塔身独立气动力、Simpack/Abaqus六分量实时闭合、接触版基底地震动力分析、正式W/E/WE比较和优化真值依然HOLD。何论文所做的4天然+3人工波、5.90m极端风变形、8DOF/非线性差异不是本课题结果。不得以论文文字/网站构建PASS替代物理计算PASS；Abaqus由Codex负责，未触动。
+
 ## 2026-11-22｜S12 何论文第24—41页逐页核对与第三章3.3.3广义气动力修订
 - START_HEAD=9e396f219d393683715622ad17c1140efc5b2501；承接原工作室V8-R2两张黑白BEM源SVG和V7冻结Word母本；不动Abaqus/CAE、原物理边界、研究PR#42，不新增风/地震RUN。
 - 完成逐页文献对照：何PDF24—32（正文13—21页）对应广义虚功、地震惯性输入、8-DOF矩阵，形成[审查1](../audit/S12_HE_P24_P32_WIND_SEISMIC_DYNAMICS_COMPARE_20261122.md)；何PDF33—41（正文22—30页）对应真实塔架材料、节段、模态V&V、MBS-FEM宏时间步，形成[审查2](../audit/S12_HE_P33_P41_MODEL_VV_AND_MBSFEM_COMPARE_20261122.md)。
