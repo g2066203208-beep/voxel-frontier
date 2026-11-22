@@ -1,3 +1,6 @@
+### 2026-11-23｜v0.32.123 PATCH — S12真实Word第六章结论装配的拒绝式程序
+- [源码commit 9d4c8e2](https://github.com/g2066203208-beep/voxel-frontier/commit/9d4c8e2713395425539dae9782cccd3862ca8bd5)，路径`research/wind-tower/manuscript/final-thesis/assemble/integrate_ch6_highwind.py`；SOURCE=现行Ch6§6.1.8 Git blob aef717c7255a8c2e6ee16c87c1bc2cc52f84d03b；OFFICIAL=main发布链`.github/workflows/publish-thesis-v8-bem.yml`及`scripts/thesis-edit/publish_v8_bem.py`原文；RUN=本地同逻辑python-docx合成Word往返、重复插入与截断源拒绝PASS，远端源码CLI与真实V8-R4 Word/PDF渲染NOT_RUN。已确认main V8-R4生成脚本以V7 Word为母本且不读取研究分支Ch6 Markdown，故此前Ch6正文Git提交不等于Word入稿。REF/STANDARD无新增，FIG0 TAB0，12阶段0/12，正式论文装配HOLD；不触及Abaqus/CAE、main或生产RUN。
+
 ### 2026-11-23｜v0.32.122 PATCH — S05真实ESM长周期残差分配与符号反转
 - [T079科研正文与五列数表commit ad5e293](https://github.com/g2066203208-beep/voxel-frontier/commit/ad5e2939a3061fde97695851f58e1792d4b78fba)，路径`research/wind-tower/experiments/T079/METHOD_PLAN.md`；SOURCE=33周期真实ESM处理谱Git blob `f7f58ab68d069829c275c1a2e4def6181c7da527`；RUN=对数周期分段线性残差平方精确积分，RotD50/100在3–6s分别贡献57.030065%/56.005303%，符号交点2.998156/2.903720s；TEST=源级独立公式计算PASS，原始加速度/Node CLI/物理验收NOT_RUN；REF既有2026研究对比，STANDARD/OFFICIAL无新授权原文，FIG0 TAB1；仅示意建筑目标谱诊断，S05 PARTIAL，12阶段0/12，W侧同态独立气动力/惯性HOLD。
 
@@ -48,7 +51,7 @@
 
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.122**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.123**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
