@@ -26,18 +26,18 @@ footer{text-align:center;font-size:12px;color:#647c8e;padding:30px 15px}
 <a id="he-link" rel="noopener" target="_blank">查看何论文原页</a><a id="our-link" rel="noopener" target="_blank">查看我们论文原页</a></div>
 <div class="warning">“基本覆盖”不代表整章研究已完成；高保真Simpack–Abaqus的真实结构响应、接缝应力、敏感性实算和优化真值核验，必须用原始求解与验证资料证明。本文保留风与地震研究要求；软件开发及可靠度分析不机械照搬。</div></section>
 <section><a id="spread-link" target="_blank" rel="noopener"><img id="spread" alt="真实PDF原页截图左右拼图"></a><p class="description">点击图片放大，亦可下载全套90页PDF。两侧均为真实PDF页面截图，底部给出逐页判断。</p></section>
-<section id="v7-review" hidden><h2>V7修改后真实论文原页</h2><div id="v7-pairs"></div></section><div class="audit"><div><h3>何泽瑜这一页具体写了什么</h3><p id="his"></p></div><div><h3>我们是否完成？具体怎么补</h3><p id="mine"></p></div></div></main></div>
-<footer>CAE论文工作室 · 何泽瑜论文90 PDF物理页 · 历史对照：2026-11-21基准136页；第18–19页附V7修订后真实原页 · 对照用于证据审查，不代替可复算科研结果。</footer>
+<section id="v7-review" hidden><a href="../chapter3-bem-v8.html">3.3节叶素动量理论完整修订正文</a><h2>V8修改后真实论文原页</h2><div id="v7-pairs"></div></section><div class="audit"><div><h3>何泽瑜这一页具体写了什么</h3><p id="his"></p></div><div><h3>我们是否完成？具体怎么补</h3><p id="mine"></p></div></div></main></div>
+<footer>CAE论文工作室 · 何泽瑜论文90 PDF物理页 · 历史对照：2026-11-21基准136页；第18–19、20–24页附V8修订后真实原页 · 对照用于证据审查，不代替可复算科研结果。</footer>
 <script>
 const $=s=>document.querySelector(s);let index=null,notes=null,current=1;
-let v7Map=null;fetch("./v7-page-map.json").then(r=>r.json()).then(v=>{v7Map=v;if(index&&notes)go(current)}).catch(()=>{});
+let v7Map=null;fetch("./v8-page-map.json").then(r=>r.json()).then(v=>{v7Map=v;if(index&&notes)go(current)}).catch(()=>{});
 function go(n){if(!index||!notes)return;current=Math.min(index.pages.length,Math.max(1,n));
 const r=index.pages[current-1],v=notes[String(current)];
 $("#title").textContent="何PDF第 "+current+" / "+index.pages.length+" 页  →  本人PDF第 "+v.our_page+" 页";
 $("#badge").textContent=v.status;$("#spread").src=r.spread_image;$("#spread-link").href=r.spread_image;
 $("#his").textContent=v.summary;$("#mine").textContent=v.next;
 const review=$("#v7-review"), pairs=$("#v7-pairs");pairs.replaceChildren();const latest=v7Map?.pages[String(current)];review.hidden=!latest;
-if(latest){for(const pair of latest){const cap=document.createElement("p");cap.textContent="左：何 PDF第"+pair.he_pdf_page+"页｜右：V7 PDF第"+pair.our_pdf_page+"页";const a=document.createElement("a");a.href=pair.image;a.target="_blank";a.rel="noopener";const img=document.createElement("img");img.src=pair.image;img.alt=cap.textContent;img.style.cssText="width:100%;height:auto;display:block";a.append(img);pairs.append(cap,a)}}
+if(latest){for(const pair of latest){const cap=document.createElement("p");cap.textContent="左：何 PDF第"+pair.he_pdf_page+"页｜右：V8 PDF第"+pair.our_pdf_page+"页";const a=document.createElement("a");a.href=pair.image;a.target="_blank";a.rel="noopener";const img=document.createElement("img");img.src=pair.image;img.alt=cap.textContent;img.style.cssText="width:100%;height:auto;display:block";a.append(img);pairs.append(cap,a)}}
 
 $("#he-link").href=index.reference.file+"#page="+current;
 $("#our-link").href=index.ours.file+"#page="+v.our_page;
