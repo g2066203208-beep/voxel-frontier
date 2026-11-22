@@ -5,9 +5,9 @@
  */
 (()=>{
 const $=id=>document.getElementById(id);
-const SOURCE='./editor-data/ch2-graphics-manuscript-v6.json';
-const PDF='./downloads/10MW-thesis-ch2-graphics-v6-20261122.pdf';
-const WORD_PARTS=Array.from({length:15},(_,i)=>'./downloads/10MW-thesis-ch2-graphics-v6-20261122.part'+String(i+1).padStart(2,'0')+'.bin');
+const SOURCE='./editor-data/manuscript-v7-wind-theory.json';
+const PDF='./downloads/10MW-thesis-v7-wind-theory-20261122.pdf';
+const WORD_PARTS=Array.from({length:15},(_,i)=>'./downloads/10MW-thesis-v7-wind-theory-20261122.part'+String(i+1).padStart(2,'0')+'.bin');
 const DRIVE_WORD='https://docs.google.com/document/d/1KbJ-KUWdEdQsmjow1yFd4Vb40icm7bWL/edit';
 const REMOTE='https://api.github.com/repos/g2066203208-beep/voxel-frontier/contents/public/thesis-studio/editor-data/owner-published-draft.json';
 const REMOTE_PUBLIC='./editor-data/owner-published-draft.json';
@@ -43,6 +43,15 @@ function blockNode(b){const value=valueFor(b),changed=!!state.patches[b.id];if(b
   const wrap=E('div','table-wrap'+(changed?' edited':''));wrap.dataset.block=b.id;const table=E('table');(value||[]).forEach((row,ri)=>{const tr=E('tr');row.forEach((v,ci)=>{const cell=E('td','',v);cell.contentEditable='true';cell.setAttribute('role','textbox');cell.setAttribute('aria-label',`第${ri+1}行第${ci+1}列表格单元格`);cell.addEventListener('paste',pasteText);cell.addEventListener('input',()=>{const source=valueFor(b);const edited=source.map(a=>a.slice());edited[ri][ci]=cell.innerText;changeBlock(b.id,edited);wrap.classList.toggle('edited',!!state.patches[b.id]);});tr.append(cell);});table.append(tr);});wrap.append(table);return wrap;
  }
  const wrap=E('div','paper-block kind-'+b.kind+(changed?' edited':''));wrap.dataset.block=b.id;
+ if(b.equation_latex){
+  const line=E('div','v7-equation');
+  const formula=E('span','v7-formula');
+  if(window.katex)window.katex.render(b.equation_latex,formula,{throwOnError:false,displayMode:true});
+  else formula.textContent=b.equation_latex;
+  line.append(formula,E('span','v7-equation-number','（'+b.equation_label+'）'));
+  wrap.append(line);return wrap;
+ }
+
  if(b.figure_asset){const fig=E('figure','thesis-inline-figure');const img=E('img');img.src=b.figure_asset;img.alt=b.figure_caption_match||String(value);img.loading='lazy';img.dataset.figure=(String(value).match(/^图\d+-\d+/)||[b.id])[0];fig.append(img);wrap.append(fig);}
  const edit=makeEditable(b,value,'editable',next=>{changeBlock(b.id,next);wrap.classList.toggle('edited',!!state.patches[b.id]);});wrap.append(edit);
  if(b.has_math||b.has_media)wrap.append(E('div','media-note','本段含特殊对象，请对照右侧原稿核对。'));
@@ -70,8 +79,8 @@ function exportHTML(){const css='<style>body{max-width:800px;margin:auto;padding
  saveBlob('10MW混塔论文_全文章节编辑稿.html',new Blob(['<!doctype html><html lang="zh-CN"><meta charset="utf-8">'+css+'<body>'+contents+'</body></html>'],{type:'text/html;charset=utf-8'}));toast('已导出可供浏览器与Word打开的HTML');}
 async function snapshot(){await persist();const versions=await readStore('versions:'+state.baseSha)||[];versions.unshift({id:Date.now(),saved_at:new Date().toISOString(),patches:JSON.parse(JSON.stringify(state.patches)),count:dirtyCount()});state.versions=versions.slice(0,15);await writeStore('versions:'+state.baseSha,state.versions);toast('版本快照已保存，可从历史记录恢复');}
 function viewHistory(){const body=modal('本地修订历史');paragraph(body,'修改自动保存；手动快照保存独立历史版本，最多保留15个。全部历史只在当前浏览器中。');if(!state.versions.length)paragraph(body,'暂无历史快照。');state.versions.forEach((v,i)=>{const d=E('div','version-item');d.append(E('b','',fmt(v.id)+' · '+v.count+'处修改'));button(d,'恢复此版本',async()=>{if(!confirm('恢复将替换当前编辑草稿。建议先导出JSON备份。确定继续？'))return;state.patches=JSON.parse(JSON.stringify(v.patches));closeModal();navigate(state.chapter);await persist();toast('已恢复历史版本');});body.append(d);});button(body,'立即保存当前快照',async()=>{await snapshot();viewHistory();},'primary');readStore('legacy-draft').then(old=>{if(old&&old.base_sha256!==state.baseSha){paragraph(body,'检测到旧版论文母本的草稿，已与新版隔离保留，不会被自动覆盖。');button(body,'下载旧版草稿备份JSON',()=>{const data={...old,legacy_backup:true,exported_at:new Date().toISOString()};saveBlob('10MW混塔论文_旧版草稿_升级前备份.json',new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));});}});}
-function viewExport(){const body=modal('导出与下载');paragraph(body,'全文修改保存在当前浏览器；一键导出修订Word将从本站下载原稿的15个分片，校验完整原稿SHA-256后只替换修改文字，图件、复杂公式和排版仍以原版Word为准。');link(body,'下载第二章四图重绘版PDF · 132页',PDF,true);button(body,'一键导出修改后的 Word（自动读取母本）',()=>{closeModal();exportHostedDOCX();},'primary');button(body,'使用本地原版Word导出（备用）',()=>{$('word-file').click();closeModal();});link(body,'2026-11-21历史Word备份（Google Drive；需访问权限）',DRIVE_WORD);button(body,'导出全部七章 Markdown',()=>exportMarkdown(true));button(body,'导出当前章节 Markdown',()=>exportMarkdown(false));button(body,'导出全文 HTML（可在 Word 中打开）',exportHTML);button(body,'导出修改备份 JSON（可恢复）',exportJSON);}
-function viewSource(){const b=modal('原始论文与版本信息'),s=state.source.source;paragraph(b,'当前编辑母本：'+s.name+'。V6在V5正文基础上重绘并替换图2-1至图2-4；原有完整Word正文、公式和表格保留。连续推覆和人工能曲线根据存档计算图数字化重绘，不代表新增ODB求解。');paragraph(b,'Word原件 SHA256：');b.append(E('code','',s.sha256));paragraph(b,'编辑区是论文文本层，不等价于Word原位分页；复杂公式与插图在原文中未被重建为浏览器可编辑对象。');link(b,'查看完整PDF原页',PDF,true);}
+function viewExport(){const body=modal('导出与下载');paragraph(body,'全文修改保存在当前浏览器；一键导出修订Word将从本站下载原稿的15个分片，校验完整原稿SHA-256后只替换修改文字，图件、复杂公式和排版仍以原版Word为准。');link(body,'下载V7合并版PDF · 131页',PDF,true);button(body,'一键导出修改后的 Word（自动读取母本）',()=>{closeModal();exportHostedDOCX();},'primary');button(body,'使用本地原版Word导出（备用）',()=>{$('word-file').click();closeModal();});link(body,'2026-11-21历史Word备份（Google Drive；需访问权限）',DRIVE_WORD);button(body,'导出全部七章 Markdown',()=>exportMarkdown(true));button(body,'导出当前章节 Markdown',()=>exportMarkdown(false));button(body,'导出全文 HTML（可在 Word 中打开）',exportHTML);button(body,'导出修改备份 JSON（可恢复）',exportJSON);}
+function viewSource(){const b=modal('原始论文与版本信息'),s=state.source.source;paragraph(b,'当前编辑母本：'+s.name+'。V7继承V6第二章四图，修订第三章风场理论及18条编号公式；其余原文、表格和图件保留。连续推覆和人工能曲线根据存档计算图数字化重绘，不代表新增ODB求解。');paragraph(b,'Word原件 SHA256：');b.append(E('code','',s.sha256));paragraph(b,'编辑区是论文文本层，不等价于Word原位分页；复杂公式与插图在原文中未被重建为浏览器可编辑对象。');link(b,'查看完整PDF原页',PDF,true);}
 async function publishDialog(){const body=modal('GitHub 授权发布与读取');paragraph(body,'普通编辑只保存在本机。此功能可将当前修改同步至网站公开GitHub仓库，跨设备读取，但内容对所有人可见。需要你自己的细粒度GitHub访问令牌（仅授予该仓库 Contents 写权限）。');paragraph(body,'令牌不写入浏览器本地存储，也不会上传到论文文件中。网页为静态页面，没有自动登录或后台协作服务。','fineprint');const label=E('label','','GitHub访问令牌（仅本次操作）');body.append(label);const field=E('input');field.type='password';field.placeholder='github_pat_…';field.autocomplete='off';body.append(field);const notice=E('p','fineprint','公开发布会把当前论文修改内容作为JSON提交到公共仓库的main分支；提交后任何人都可以阅读。');body.append(notice);const confirmWrap=E('label');confirmWrap.style.display='flex';confirmWrap.style.gap='8px';confirmWrap.style.alignItems='center';const check=E('input');check.type='checkbox';check.style.width='auto';check.style.margin='0';confirmWrap.append(check,E('span','','我同意将当前草稿修改公开发布至GitHub'));body.append(confirmWrap);button(body,'发布当前草稿到GitHub（公开）',async()=>{const token=field.value.trim();if(!token||!check.checked){toast('请提供GitHub令牌并明确确认公开发布');return;}await persist();const backup={schema:1,base_sha256:state.baseSha,patches:state.patches,exported_at:new Date().toISOString(),warning:'PUBLIC DRAFT: latest manuscript edits; not independently verified scientific results'};const btn=body.querySelector('.primary');btn.disabled=true;btn.textContent='正在核验远端版本并提交…';try{const headers={'Authorization':'Bearer '+token,'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'};
  let sha=state.remoteSha;
  if(sha===null){const rr=await fetch(REMOTE+'?ref=main',{headers,cache:'no-store'});if(rr.status===200){const existing=await rr.json();sha=existing.sha;}else if(rr.status!==404)throw Error('读取远端失败 HTTP '+rr.status);}
