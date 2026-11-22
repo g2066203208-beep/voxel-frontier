@@ -50,10 +50,10 @@
 <text x="153" y="255" class="m">φ</text>
 <path d="M186 238 A115 115 0 0 0 179 215" class="line"/>
 <text x="198" y="216" class="m">α</text>
-<path d="M145 248 L213 208" class="force"/><text x="215" y="205" class="m">q<tspan baseline-shift="sub" font-size="13">D</tspan></text>
-<path d="M145 248 L97 166" class="force"/><text x="94" y="157" class="m">q<tspan baseline-shift="sub" font-size="13">L</tspan></text>
-<path d="M145 248 V119" class="force"/><text x="150" y="112" class="m">q<tspan baseline-shift="sub" font-size="13">n</tspan></text>
-<path d="M145 248 H38" class="force"/><text x="27" y="239" class="m">q<tspan baseline-shift="sub" font-size="13">τ</tspan></text>
+<path d="M145 248 L173 232" class="force"/><text x="177" y="231" class="m">q<tspan baseline-shift="sub" font-size="13">D</tspan></text>
+<path d="M145 248 L73 124" class="force"/><text x="57" y="114" class="m">q<tspan baseline-shift="sub" font-size="13">L</tspan></text>
+<path d="M145 248 V108" class="force"/><text x="153" y="101" class="m">q<tspan baseline-shift="sub" font-size="13">n</tspan></text>
+<path d="M145 248 H101" class="force"/><text x="99" y="232" class="m">q<tspan baseline-shift="sub" font-size="13">τ</tspan></text>
 <path d="M43 345 H310" class="line"/><text x="176" y="369" class="s" text-anchor="middle">局部旋转平面</text>
-<text x="169" y="414" class="s" text-anchor="middle">相对速度、攻角与单位展长载荷</text>
+<text x="169" y="414" class="s" text-anchor="middle">相对速度及载荷方向（非比例）</text>
 </g></svg>
