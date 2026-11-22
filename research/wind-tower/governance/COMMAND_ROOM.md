@@ -1,3 +1,6 @@
+## 2026-11-22｜S12 V8 BEM原文核对完成，候选正文仍HOLD
+- 新[逐页文献对照](../audit/S12_BEM_THESIS_SOURCE_COMPARISON_20261122.md)，commit 2b21e75e；已核何PDF20–24、Kenna博士论文§4.8.1–2、Long等§2.2.2、Ning 2014、AeroDyn原始63217等。V8初稿尚须补结构运动反馈、Buhl修正、原理图及实际选项，保留V7母本。无新物理RUN，不合并PR#42，不发布未复核V8。
+
 ## 2026-11-22｜S12 V8 叶素动量理论逐页精修 START
 - read_base_sha=ecd4aeef55220a7766db7c0210c558796c319118；main基线df3e96581b16dec5798dbb916ebb9c2a18e498be；已读根/研究AGENTS、最新指挥室及白皮书、V7真实Word结构化源和构建记录（#45000329879 success）、何论文PDF21–24页评审索引、T035 AeroDyn原始blob 366ae27d65d1feca6da0ba9eb186348913158fcb、Ning 2014 DOI 10.1002/we.1636及AeroDyn文档。继承V7风场与第二章图件，按用户授权补写3.3 BEM、真实配置、气动力积分与载荷传递边界；增加原页对照，不改物理门禁、不执行Abaqus、不合并PR#42。拟改main版本化正文/生成脚本/原工作室发布流程。V7产物已生成131页；线上部署另验。
 
