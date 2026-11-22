@@ -77,8 +77,8 @@ assert len(omml)==27, len(omml)
 fig=downloads/"bem-figure-v8.svg"
 # Lay out the three panels in two rows for legible Word-page labels.
 svg=fig.read_text(encoding="utf8")
-svg=svg.replace('width="1080" height="460" viewBox="0 0 1080 460"','width="740" height="850" viewBox="0 0 740 850"').replace('<rect width="1080" height="460"','<rect width="740" height="850"').replace('translate(720 10)','translate(190 430)')
-cairosvg.svg2png(bytestring=svg.encode(),write_to=str(out/"bem-figure.png"),output_width=1480,output_height=1700)
+# Keep the original landscape three-panel diagram; no tall white padded crop.
+cairosvg.svg2png(bytestring=svg.encode(),write_to=str(out/"bem-figure.png"),output_width=1620,output_height=690)
 # All new body nodes use the pre-existing thesis template.
 n=0
 for i,(kind,val) in enumerate(revision["blocks"]):
@@ -187,6 +187,22 @@ def locate(s):
     assert matches,("missing actual PDF anchor",s)
     return matches[0]
 pages={f"3.3-{i}":locate(f"（3.3-{i}）") for i in range(1,28)}
+# Font/Math import smoke gate: an equation number alone is NOT a rendered equation.
+# Check raster ink on the equation baseline to reject blank LibreOffice math objects.
+ink_ok=0
+for i in range(1,28):
+    pg=pdf[pages[f"3.3-{i}"]-1]
+    hits=pg.search_for(f"3.3-{i}")
+    rendered=False
+    for hit in hits:
+        baseline=fitz.Rect(130,max(0,hit.y0-2),pg.rect.width-160,min(pg.rect.height,hit.y1+2))
+        if baseline.is_empty:continue
+        pix=pg.get_pixmap(matrix=fitz.Matrix(1.3,1.3),clip=baseline,alpha=False)
+        samples=pix.samples
+        dark=sum(1 for t in range(0,len(samples)-2,3) if min(samples[t],samples[t+1],samples[t+2])<180)
+        if dark>=35: rendered=True;break
+    if rendered:ink_ok+=1
+assert ink_ok>=24,("EQUATIONS_NOT_RENDERED: reject blank numbered formulas",ink_ok)
 start=locate("3.3.1 叶素动量理论与叶片气动力计算")
 end=locate("3.4 Abaqus—OpenFAST结构动力一致性验证")
 assert start<=pages["3.3-1"]<=pages["3.3-27"]<=end
