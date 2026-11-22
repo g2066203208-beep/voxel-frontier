@@ -1,3 +1,6 @@
+### 2026-11-22 23时｜v0.32.121 PATCH — S12第六章高风条件风向结论入稿
+- 科研正文：`manuscript/final-thesis/chapters/06_结论与展望.md`新增§6.1.8，commit [41787c75](https://github.com/g2066203208-beep/voxel-frontier/commit/41787c75a780e53824b2bff1ce30f61bfd44d321)，Git blob `aef717c7255a8c2e6ee16c87c1bc2cc52f84d03b`。SOURCE=原R5恢复16方位ERA5印刷表及已核Ch3§3.9.4；RUN=既有16行源级频率计算，本轮不冒充新物理RUN；TAB=继承Ch3既有7行表，FIG=0。四方位全年39.78%与高风组87.39%，富集比2.0458/2.4036/2.6410/1.2323；新结论指出高风条件风向不能由全年分布代替，贝叶斯逆条件需要P(H)。REF/STANDARD/OFFICIAL无新增；原始逐小时联合计数、真实W侧时程、正式DLC1.2及材料Miner HOLD。第六章Markdown源级装配待Word/PDF验证；12阶段晋级0/12，未执行Abaqus/CAE或昂贵生产RUN。
+
 ### 2026-11-22 22时｜v0.32.120 PATCH — S11区间鲁棒Pareto门槛正文
 - [Ch5§5.4.102 commit 6468279](https://github.com/g2066203208-beep/voxel-frontier/commit/6468279cf6bffbe1d962f42d6bdbf695e98324b9)；SOURCE=既有Ch5跨风箱/跨设计可识别性边界；RUN=保证/可能可行的区间判据、质量—损伤鲁棒支配充分条件及不可排名反例；本地Python程序SHA256 46c21aa303d71b7c07b2ae5bfea6b1387848c4c203dbc888bf59af94ac6333e6，单元测试PASS但未提交仓库。REF/STANDARD/OFFICIAL无新增，FIG0 TAB0，合成例不冒充真实结构；材料局部损伤、跨设计误差界、正式Pareto优化仍HOLD，12阶段晋级0/12。
 
