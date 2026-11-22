@@ -1,3 +1,8 @@
+## 2026-11-22｜S12 学位论文V8公式/图件/参数表修复完成，真实原页验收
+- 本轮读取活动研究分支HEAD=273ab4ca96978edf7f968743231f7acba4f60a56，以已归档V7 Word真实母本为源，不触及Abaqus、冻结研究模型或PR#42。前次V8旧PDF图3.3-1被准确行距裁剪、27条BEM公式缺失；均以真实PDF截图发现并确认FAIL。
+- 修复main提交：06610112a (公式可见性检查)、4712f7c (LibreOffice Math及数学字体)、a21e3f9 (V8已发布编辑器的幂等重构)、b71aba5c (图示段落强制单倍行距及图幅QA)、b17a3a0 (9行AeroDyn表单页与PDF QA)。发布产物main db9654bd500986a9b8e65909c48dc19a79d5c376；[构建#45005029992](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/45005029992) PASS，138页完整PDF、27条叶素动量OMML数学公式非空、图3.3-1完整显示、表3.3-1于第50页同页显示；何PDF20–24与V8 PDF45–50左右原图已在线更新并实际回读。此为排版/出版QA，不构成气动/风场物理新增验证。前次仅CI绿灯的错误已纠正。
+- 真实原图位置：public/thesis-studio/he-thesis-comparison/v8-spreads/he21-v8-46.png（完整图与公式）、he22-v8-47.png（气动系数）、he23-v8-48.png（Buhl修正）、he24-v8-50.png（完整参数表）。最终Pages部署以单独workflow回读为准，若未完成不标PASS。下一阶段继续章节编号与引用统一，不归零已验证成果。
+
 ## 2026-11-22｜V8真实原页视觉验收拒绝（纠正此前构建成功=稿件完成的误判）
 - read_base_sha=7c9d63599abce1add14b72cadfb017f7cc87447f。核对main已发布的V8 136页PDF对应何论文原页（何PDF20–24 vs V8 PDF43–48）；由真实左右截图确认V8多页只有公式编号而缺公式实体，图3.3-1亦显示不完整，V8形式/图件验收FAIL。GitHub Actions旧任务#45001157954成功仅表示程序构建成功，不能视为符合学位论文公式质量。
 - main已提交06610112a（Word渲染公式非空QA、恢复原理图横向比例）与4712f7c（安装libreoffice-math与OpenSymbol/FreeFont数学字体）。对应新构建[45004191752](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/45004191752)在本回读为pending；不能宣称修复已成功。科研物理状态不变，不执行Abaqus。必须以更新后的真实PDF逐页截图和公式笔画检查通过才升级验收。
