@@ -51,7 +51,7 @@
 
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.123**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.124**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
@@ -838,3 +838,6 @@
 
 ### 2026-11-22｜v0.32.118 PATCH — S10真实ERA5风箱U⁴代理尾部份额紧界
 - SOURCE=T062真实31行风箱CSV Git blob `1bae743b385d4f24c8b5af3e0b445aae30d40c6f`；程序 `experiments/T080/s10_era5_u4_tail_interval_gate.cjs` [commit ef72f0e](https://github.com/g2066203208-beep/voxel-frontier/commit/ef72f0ecaf016289f4555b4e1ea636d6b8d1ef32)；期刊正文6行表 [commit c73ef14](https://github.com/g2066203208-beep/voxel-frontier/commit/c73ef146d8f96ee333b06511382bb0788adb7513)，数学排版修正 [e4b14b1](https://github.com/g2066203208-beep/voxel-frontier/commit/e4b14b1f163d314b7498b23c16ea731bd4beadb5)；T080过程 [25d4bac](https://github.com/g2066203208-beep/voxel-frontier/commit/25d4bac8ed3619894302010c1bbbb02acfd8f3cb)。RUN=106900诊断小时中≥11m/s为2613h(2.444341%)，U⁴份额严格下界14.450248%、上确界28.072354%；6个阈值均以箱端点得可证尖锐区间。TEST=连接器直接源级JS算术PASS，提交程序原生Node CLI/源字节SHA256 NOT_RUN；这是非线性风速暴露数学代理，非DEL/Miner/材料寿命/正式DLC1.2或结构物理验收。FIG0 TAB6，12阶段晋级0/12，最大同态独立W侧同步气动力与惯性归属HOLD；未触碰禁止范围。
+
+### 2026-11-23｜v0.32.124 PATCH — S12真实V8-R4七章结论装配纠偏
+- [程序commit 7d881d8](https://github.com/g2066203208-beep/voxel-frontier/commit/7d881d8d4dca09a75bc900d868cef6cd398a3676)，路径`research/wind-tower/manuscript/final-thesis/assemble/integrate_ch6_highwind.py`，Git blob `cfce7a4fe5992ec244470dc5908d25dd206ee793`；SOURCE=Actions #45025491032真实V8-R4 Word SHA256 `ab7a5bf5d075e07aaca77bfecb62e9a870d1905b13dbe86f73b86c9075a7f0ce`、上轮141页候选稿及R5方向表；RUN=改六章6.2错误锚点为真实七章7.1/7.2，保留原四项结论并增加两段；TEST=本地同逻辑重建DOCX往返PASS、重复插入拒绝PASS，远端CLI/原V8-R4二进制重新装配及整篇PDF页级验收NOT_RUN；REF/STANDARD/OFFICIAL无新增，FIG0 TAB0，非物理结果，12阶段0/12；最大非Abaqus HOLD=同态独立W侧气动力与惯性归属。
