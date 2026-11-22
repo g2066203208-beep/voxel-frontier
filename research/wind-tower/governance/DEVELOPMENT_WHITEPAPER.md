@@ -1,3 +1,7 @@
+### 2026-11-22｜学位论文编辑版本 V7（独立编辑分支记录）
+- 继承现有V6图2-1至2-4；第三章规范ERA5与随机风场理论，4条重排及14条编号公式补写，源XML补丁已提交；未新增物理计算。
+- GitHub main源与发布流程：3394bb9、dcd0a01、948484b；[构建记录](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/45000329879)。状态BUILD IN_PROGRESS，未独立验收线上PDF/页面；风场时程、自谱、相干性真实验证HOLD。论文编辑版本与研究白皮书/物理门禁分开。
+
 ### 2026-11-22 04时｜v0.32.116 PATCH — S10真实高风暴露时间鲁棒性门槛
 - 2026-11-22 04时｜S10真实18NTM高风箱暴露时间5%门槛敏感性：SOURCE=T062 72行CSV blob 1b334e9afdbd792a2f4b1a41cdb150dc3698352d；基线PR#42 Open/Draft HEAD=67c03b00071dcc6d1232ccbd94ab4807a1ead590，main=bbc5c9130f2d9fc41f776506d86118a9b8db0e65；已读根/研究AGENTS、指挥室、白皮书v0.32.115、正式STATUS、12阶段、T079/T080、源CSV、Node程序和紧凑期刊稿；旧MASTER路径未找到。RUN=独立连接器JS直接解析72行、18NTM双通道六seed四次矩，固定低中风箱5736/1426h，高风暴露h变量，严格5%阈值hcrit=F/(19*x)，全支持严格低于5%的h上限Mx=2.344938150681498h、My=99.41183550191052h；全支持严格高于5%的h下界Mx=13.000077724735807h、My=217.39159932156593h；历史h=2h，Mx阈值仅+17.2469%，说明固定小时数下0/46656超限并非暴露稳健性。新增已有Node程序阈值输出及自检、紧凑期刊§3.3与两行数表；TEST=独立源级算术PASS，更新后仓库原生Node CLI/原CSV字节SHA256/OUTB NOT_RUN；误差=CSV DEL有限精度，6seed经验支持集不外推，阈值相等时不算严格越界；REF/STANDARD/OFFICIAL无新增；FIG0 TAB2，12阶段晋级0/12，DLC1.2=0/126，材料局部Miner和同态独立W侧HOLD。下一唯一动作=转S10源时程可用时做名义应力/局部应力证据，不重复六seed统计；不触碰Abaqus/CAE、冻结母本、main、昂贵RUN或PR合并。
 - 科研程序commit ac7b1a021d596a970e346d93bce7d9722458bb2b；期刊正文commit 6b8ec55918db4c4212263fed20a99624d44ff963；脚本Git blob 6709992c8362cd5ebb0c689c773dc1f737d26bd2；正文Git blob f6b6c0705ffb86628020b623a74e6248e51fa689。
