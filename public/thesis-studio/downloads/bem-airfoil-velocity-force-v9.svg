@@ -21,14 +21,14 @@ text {font-family:"Noto Serif CJK SC","Songti SC","SimSun",serif;fill:#161616;fo
 <path d="M340 414 A98 98 0 0 1 366 347" class="thin"/><path d="M360 414 A78 78 0 0 1 363 394" class="thin"/>
 <path d="M293 375 A150 150 0 0 0 328 312" class="thin"/>
 <text x="349" y="362" class="math">φ</text><text x="309" y="443" class="math">θ+β</text><text x="286" y="343" class="math">α</text>
-<text x="251" y="252" class="math">W</text><text x="252" y="445" class="math">Wt</text><text x="117" y="275" class="math">Wn</text>
+<text x="251" y="252" class="math">W</text><text x="252" y="445" class="math">W<tspan baseline-shift="sub" font-size="18">t</tspan></text><text x="117" y="275" class="math">W<tspan baseline-shift="sub" font-size="18">n</tspan></text>
 <text x="452" y="435" class="small">叶素</text>
 <text x="23" y="516" class="small">虚线：旋转平面；细线：截面弦线</text>
 <path d="M805 391H1058 M805 391V84" class="guide"/>
 <path d="M805 391L645 241" class="vel"/><path d="M805 391L725 316" class="force"/>
 <path d="M805 391L955 231" class="force"/><path d="M805 391L805 173" class="force"/><path d="M805 391L1024 391" class="force"/>
-<text x="632" y="229" class="math">W</text><text x="708" y="305" class="math">qD</text><text x="954" y="218" class="math">qL</text>
-<text x="821" y="165" class="math">qn</text><text x="1011" y="377" class="math">qτ</text>
+<text x="632" y="229" class="math">W</text><text x="708" y="305" class="math">q<tspan baseline-shift="sub" font-size="18">D</tspan></text><text x="954" y="218" class="math">q<tspan baseline-shift="sub" font-size="18">L</tspan></text>
+<text x="821" y="165" class="math">q<tspan baseline-shift="sub" font-size="18">n</tspan></text><text x="1011" y="377" class="math">q<tspan baseline-shift="sub" font-size="18">τ</tspan></text>
 <text x="811" y="461" class="small">切向正方向</text><text x="772" y="100" class="small" text-anchor="end">法向正方向</text>
 <text x="610" y="519" class="small">注：载荷方向对应正文 Cn、Cτ 的投影定义。</text>
 </svg>
