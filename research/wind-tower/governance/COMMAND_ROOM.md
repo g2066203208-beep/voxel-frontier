@@ -1,3 +1,6 @@
+## 2026-11-23 02时｜S12 Word实际装配链断点及条件插入程序（v0.32.123）
+- PR#42 Open/Draft；本轮开工HEAD=12c75e086ce70850b44dc8f09cd6fa5a998a67c1，main=bbc5c9130f2d9fc41f776506d86118a9b8db0e65。读取根/研究AGENTS、指挥室、白皮书、正式MASTER/STATUS、12阶段、T079/T080、Ch6及main V8-R4构建脚本/工作流。发现V8-R4从V7 Word装配且未读取研究分支Ch6§6.1.8，故此前Markdown入稿不等于Word入稿。新增拒绝式装配程序 [9d4c8e2](https://github.com/g2066203208-beep/voxel-frontier/commit/9d4c8e2713395425539dae9782cccd3862ca8bd5)，本地同逻辑合成DOCX往返与重复/截断拒绝PASS；真实V8-R4 Word/PDF、远端CLI及页级视觉NOT_RUN，不能宣称Word已更新。T080 [9bf5c2d](https://github.com/g2066203208-beep/voxel-frontier/commit/9bf5c2d54b09002d5b5ef3ef567ca594fc38f022)，白皮书v0.32.123，12阶段0/12。最大非Abaqus HOLD=同态同步独立W侧气动力/惯性归属；下一唯一动作=取得真实V8-R4 Word并做实际装配和页级验收。未触碰Abaqus/CAE、冻结母本、main、昂贵RUN及PR合并。
+
 ## 2026-11-23 01时｜S05真实ESM长周期谱失配科学增量（v0.32.122）
 - PR#42 Open/Draft，开工HEAD=b32556f549a7a9dbf0c9f0c90f46014d4fceeb82；研究AGENTS/指挥室/白皮书/正式MASTER STATUS/12阶段/T079 T080/33行真实ESM CSV已读。T079新增实质数表及可复核精确积分公式 [ad5e293](https://github.com/g2066203208-beep/voxel-frontier/commit/ad5e2939a3061fde97695851f58e1792d4b78fba)：3–6s残差份额RotD50=57.030065%、RotD100=56.005303%；缩放谱相对示意目标交点2.998156/2.903720s。非真实工址设计谱、非结构响应，原始波重算HOLD；源级算术PASS，物理V&V HOLD，12阶段0/12。白皮书v0.32.122；最大非Abaqus HOLD=同态同步独立W侧气动力及惯性归属；下一唯一动作=S12直接修订现有V8-R4真实Word发布链，不再刷谱小统计。未触及禁止范围。
 
