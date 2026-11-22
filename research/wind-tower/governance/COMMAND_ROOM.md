@@ -1,3 +1,7 @@
+## 2026-11-22｜V8真实原页视觉验收拒绝（纠正此前构建成功=稿件完成的误判）
+- read_base_sha=7c9d63599abce1add14b72cadfb017f7cc87447f。核对main已发布的V8 136页PDF对应何论文原页（何PDF20–24 vs V8 PDF43–48）；由真实左右截图确认V8多页只有公式编号而缺公式实体，图3.3-1亦显示不完整，V8形式/图件验收FAIL。GitHub Actions旧任务#45001157954成功仅表示程序构建成功，不能视为符合学位论文公式质量。
+- main已提交06610112a（Word渲染公式非空QA、恢复原理图横向比例）与4712f7c（安装libreoffice-math与OpenSymbol/FreeFont数学字体）。对应新构建[45004191752](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/45004191752)在本回读为pending；不能宣称修复已成功。科研物理状态不变，不执行Abaqus。必须以更新后的真实PDF逐页截图和公式笔画检查通过才升级验收。
+
 ## 2026-11-22｜S12 V8 叶素动量理论正文完成 · GitHub存稿
 - 依据何2024正文9–13页、Kenna、Long、Ning论文及AeroDyn原始理论报告，补写3.3.1–3.3.2；27条编号公式、结构速度反馈及变桨、Prandtl根尖损失、Buhl修正、Ning残差、三叶片积分和力矩移轴、实际气动设置表、三条原始理论文献。历史输入 blob 366ae27d65d1feca6da0ba9eb186348913158fcb；无新增物理RUN。
 - 正文源提交268c3e39，完整阅读页6253648，原理图修正6b337df，Word装配dfb1764，发布工作流8a78316。原工作室V8审阅阅读页：https://g2066203208-beep.github.io/voxel-frontier/thesis-studio/chapter3-bem-v8.html 。完整Word/实际PDF原页对比以生成任务通过为准，未验收不冒称上线。保留V7四图和风场公式，不变研究门禁，不执行Abaqus，不合并PR#42。
