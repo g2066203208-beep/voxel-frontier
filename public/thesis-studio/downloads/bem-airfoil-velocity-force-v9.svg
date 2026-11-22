@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="560" viewBox="0 0 1120 560">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="6.8" refY="4" orient="auto" markerUnits="strokeWidth"><path d="M0 0L8 4L0 8z" fill="#1b1b1b"/></marker><marker id="smallarrow" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0 0L6 3L0 6z" fill="#202020"/></marker></defs><style>
+text {font-family:"Noto Serif CJK SC","Songti SC","SimSun",serif;fill:#161616;font-size:22px}
+.math{font-family:"Liberation Serif","Times New Roman",serif;font-size:27px;font-style:italic}
+.small{font-size:19px}.part{font-family:"Noto Serif CJK SC",serif;font-size:23px;font-weight:600}
+.line{fill:none;stroke:#191919;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.thin{fill:none;stroke:#555;stroke-width:1.45;stroke-linecap:round;stroke-linejoin:round}
+.guide{fill:none;stroke:#777;stroke-width:1.3;stroke-dasharray:8 7}
+.arrow{fill:none;stroke:#171717;stroke-width:2.3;marker-end:url(#arrow)}
+.vel{fill:none;stroke:#3d3d3d;stroke-width:2.5;marker-end:url(#arrow)}
+.force{fill:none;stroke:#171717;stroke-width:2.6;marker-end:url(#arrow)}
+.pale{fill:#efefef;stroke:#202020;stroke-width:1.9}
+.dim{fill:none;stroke:#252525;stroke-width:1.35;marker-start:url(#smallarrow);marker-end:url(#smallarrow)}
+</style><rect width="1120" height="560" fill="white"/>
+<text x="22" y="34" class="part">(a) 相对速度三角形与攻角</text><text x="612" y="34" class="part">(b) 升阻力与法、切向分量</text>
+<path d="M560 56V535" class="guide"/>
+<path d="M438 414H78 M438 414V91" class="guide"/>
+<path d="M438 414L166 414" class="vel"/><path d="M166 414L166 159" class="vel"/><path d="M438 414L166 159" class="vel"/>
+<path d="M438 414 Q355 376 247 348 Q189 331 157 339 Q250 343 438 414Z" class="pale" opacity=".92"/>
+<path d="M438 414L157 339" class="thin" stroke-dasharray="7 5"/>
+<path d="M340 414 A98 98 0 0 1 366 347" class="thin"/><path d="M360 414 A78 78 0 0 1 363 394" class="thin"/>
+<path d="M293 375 A150 150 0 0 0 328 312" class="thin"/>
+<text x="349" y="362" class="math">φ</text><text x="309" y="443" class="math">θ+β</text><text x="286" y="343" class="math">α</text>
+<text x="251" y="252" class="math">W</text><text x="252" y="445" class="math">Wt</text><text x="117" y="275" class="math">Wn</text>
+<text x="452" y="435" class="small">叶素</text>
+<text x="23" y="516" class="small">虚线：旋转平面；细线：截面弦线</text>
+<path d="M805 391H1058 M805 391V84" class="guide"/>
+<path d="M805 391L645 241" class="vel"/><path d="M805 391L725 316" class="force"/>
+<path d="M805 391L955 231" class="force"/><path d="M805 391L805 173" class="force"/><path d="M805 391L1024 391" class="force"/>
+<text x="632" y="229" class="math">W</text><text x="708" y="305" class="math">qD</text><text x="954" y="218" class="math">qL</text>
+<text x="821" y="165" class="math">qn</text><text x="1011" y="377" class="math">qτ</text>
+<text x="811" y="461" class="small">切向正方向</text><text x="772" y="100" class="small" text-anchor="end">法向正方向</text>
+<text x="610" y="519" class="small">注：载荷方向对应正文 Cn、Cτ 的投影定义。</text>
+</svg>
