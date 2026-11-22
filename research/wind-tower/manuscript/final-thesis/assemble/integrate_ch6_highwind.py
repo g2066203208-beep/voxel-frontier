@@ -7,10 +7,12 @@ from pathlib import Path
 from docx import Document
 from docx.oxml import OxmlElement
 from docx.text.paragraph import Paragraph
+from docx.oxml.ns import qn
+from docx.shared import Pt
 import argparse, hashlib
 
 PARAS = [
-'（5）基于原R5学位论文恢复的嘉鱼ERA5十六方位印刷统计，N、NNE、SSW及SW四个方位的全年频率合计为39.78%，在原表定义的高风组中合计为87.39%；四个方向的条件富集系数P(d|H)/P(d)依次为2.0458、2.4036、2.6410和1.2323。由此可见，全年风向频率不能直接替代高风条件下的风向抽样权重。该结论仅对恢复表的条件分组成立，不代表风载或材料疲劳放大。',
+'（5）依据原R5学位论文恢复的嘉鱼ERA5十六方位风向频率表，N、NNE、SSW及SW四个方位的全年频率合计为39.78%，在原表定义的高风组中合计为87.39%；四个方向的条件富集系数P(d|H)/P(d)依次为2.0458、2.4036、2.6410和1.2323。由此可见，全年风向频率不能直接替代高风条件下的风向抽样权重。该结论仅对恢复表的条件分组成立，不代表风载或材料疲劳放大。',
 '方向富集系数并非P(H|d)。计算某风向下高风事件的绝对发生概率仍须知道高风总体概率P(H)，并采用P(H|d)=P(d|H)P(H)/P(d)；缺少原始逐小时风速—风向联合计数时，不能确定高风小时数及方向条件疲劳损伤。印刷百分比舍入、ERA5代表性及实际风场误差须分别评估。本项结论可用于提出联合风速—风向分层抽样要求，不能替代正式DLC1.2覆盖、同步风载时程或材料寿命验证。'
 ]
 def sha(path):
@@ -41,7 +43,10 @@ def integrate(src, dst, expected_sha=None):
         anchor._p.addprevious(el)
         p = Paragraph(el, anchor._parent)
         p.style = 'Normal'
-        p.add_run(s)
+        r = p.add_run(s)
+        r.font.name = 'Noto Serif CJK SC'
+        r.font.size = Pt(12)
+        r._element.get_or_add_rPr().rFonts.set(qn('w:eastAsia'), 'Noto Serif CJK SC')
     dst.parent.mkdir(parents=True,exist_ok=True)
     doc.save(dst)
     t = [p.text.strip() for p in Document(dst).paragraphs]
