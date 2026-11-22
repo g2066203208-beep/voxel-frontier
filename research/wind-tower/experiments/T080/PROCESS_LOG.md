@@ -1,3 +1,6 @@
+## 2026-11-23 01时｜S05真实ESM残差频段主导性（v0.32.122）
+PR#42 Open/Draft、起始HEAD b32556f549a7a9dbf0c9f0c90f46014d4fceeb82；根/研究AGENTS、指挥室、白皮书、正式MASTER/STATUS、12阶段、T079/T080及33周期源CSV已读。SOURCE=ESM处理谱33行 Git blob f7f58ab68d069829c275c1a2e4def6181c7da527；RUN=对数周期分段线性精确平方积分：3–6s残差份额RotD50 57.030065%、RotD100 56.005303%，r=0交点2.998156/2.903720s。科研正文与表见T079 commit ad5e2939a3061fde97695851f58e1792d4b78fba。TEST=连接器JS源级实算PASS，原生CLI/原始波重算/物理设计谱验收NOT_RUN；REF=既有2026先行研究，STANDARD/OFFICIAL无新授权来源；FIG0 TAB1；仅示意目标谱，S05 PARTIAL，12阶段0/12。W侧同态气动力/惯性仍最大非Abaqus HOLD；下轮转S12实际Word/PDF发布链，不重复谱小统计。禁Abaqus/CAE、冻结母本、main、昂贵RUN及PR合并。
+
 ## 2026-11-22 23时｜S12正式第六章高风条件风向科学结论（v0.32.121）
 READ-BEFORE-WRITE：main=bbc5c913，PR#42 Open/Draft，开工HEAD=2ec14678；研究AGENTS、指挥室、白皮书、现行MASTER/STATUS、12阶段、T079/T080、Ch6已读。SOURCE=Ch3§3.9.4原R5恢复16方位ERA5印刷统计；RUN=既有16行富集计算，本轮实质新增Ch6§6.1.8科学结论与逆条件概率的识别限制，commit 41787c75，源blob aef717c；四方向全年39.78%/高风87.39%，方向富集N/NNE/SSW/SW=2.0458/2.4036/2.6410/1.2323。TEST=公式逻辑与来源交叉核对，Word/PDF装配及原始逐小时联合计数NOT_RUN；REF/STANDARD/OFFICIAL无新增，FIG0，TAB沿用Ch3既有表。正式DLC1.2、W同态时程、材料Miner与优化真值HOLD；12阶段0/12。本轮禁止Abaqus/CAE、冻结母本、main、生产RUN及PR合并。下一唯一动作：将Ch6新节装配到现有V8-R4发布链并核验真实Word/PDF页。
 
