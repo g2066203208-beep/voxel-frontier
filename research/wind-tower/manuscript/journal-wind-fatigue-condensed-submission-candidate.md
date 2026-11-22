@@ -127,3 +127,19 @@ A distinct screening question is whether the archived extreme-turbulence (ETM) c
 All **36/36** archived index-aligned ETM/NTM ratios exceed unity. This is a finite-archive statement, not an estimated probability that ETM will dominate under a future seed or a causal effect of turbulence intensity: wind histories, controller state and paired randomness have not been independently matched. Moreover, the apparent reduction of the ETM/NTM ratio with nominal wind speed cannot be interpreted as a general monotonic physical law from only three bins. The largest observed ratio (2.140207, My at 9.343881 m/s) illustrates why an ETM load-screening envelope must not be substituted for a DLC1.2 NTM fatigue distribution; the former is a separate extreme-turbulence comparison, while the latter needs its own prescribed operational wind climate and complete seed coverage. Neither these DEL ratios nor their fourth powers identify local concrete, reinforcing-steel, prestressing-tendon or upper-steel fatigue damage.
 
 **Traceability and falsification:** SOURCE = T062 `experiments/T062/recomputed-load-fatigue/05_LOAD_DEL_M4_ALL36_RECOMPUTED.csv` (72 rows; Git blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`); RUN = direct source-row arithmetic, six 6-seed channel-by-speed groups, geometric means in log space; reproducible program = `experiments/T080/s06_etm_ntm_archived_del4_contrast.cjs` with invalid-input and reversed-order rejection tests. TEST = connector-source arithmetic PASS; committed Node CLI, independent source-byte SHA256, underlying OUTB regeneration and physical pairing NOT_RUN. REF = 2026 hybrid-tower studies only as prior-art context; STANDARD/OFFICIAL = no new authorized IEC clause checked; FIG 0, TAB 6. The six rows are correlated within the same archived model and cannot be treated as six independent population estimates.
+
+
+### ERA5离散风箱的四次风速暴露代理及严格区间界（S10，2026-11-22）
+
+为检验仅按风速箱出现小时数选择随机风工况是否可能遗漏高风速尾部的重要性，定义纯运动学暴露代理 \(Q_4=\sum_t U_{\mathrm{hub}}(t)^4\)。这里的四次方仅用于说明非线性权重与频率排序之间的区别，**不代表风机载荷四次矩、雨流循环、Miner损伤或材料寿命**。原始输入为2005—2025年ERA5轮毂高度逐小时风速的1 m/s分箱计数（T062原CSV Git blob `1bae743b385d4f24c8b5af3e0b445aae30d40c6f`），限定诊断运行窗口\(4\le U<25\) m/s的106900小时。对箱\([j,j+1)\)内的任一未知风速，有\(n_jj^4\le\sum U^4<n_j(j+1)^4\)。设阈值以上风箱的四次代理区间为\([A_L,A_H)\)，以下为\([B_L,B_H)\)，则阈值以上代理份额的**尖锐下界与上确界**分别为\(A_L/(A_L+B_H)\)和\(A_H/(A_H+B_L)\)。上下界不要求箱内均匀分布；上确界可能因右开区间不能取到。
+
+| 阈值 \(U\ge\) (m/s) | 历史小时 | 小时占比 (%) | 四次代理份额下界 (%) | 四次代理份额上确界 (%) |
+|---:|---:|---:|---:|---:|
+| 9 | 11498 | 10.755847 | 36.235370 | 59.502928 |
+| 11 | 2613 | 2.444341 | 14.450248 | 28.072354 |
+| 12 | 1187 | 1.110384 | 8.672781 | 17.453300 |
+| 15 | 104 | 0.097287 | 1.611104 | 3.289917 |
+| 18 | 3 | 0.002806 | 0.092705 | 0.184405 |
+| 19 | 2 | 0.001871 | 0.066083 | 0.131053 |
+
+这组结果给出**仅凭分箱小时数即可证伪“小时数比例可代表所有非线性暴露权重”**的实例：例如\(U\ge 11\) m/s仅占诊断运行小时的2.444341%，却至少贡献四次风速代理的14.450248%。但\(U^4\)并非塔底弯矩四次矩，更不能代替分材料S–N曲线与局部应力雨流；真实风机存在额定以上变桨控制，故上述比例**不得**用于选定或删除DLC1.2工况。输入仅保留整数分箱，区间宽度就是箱内不可辨识误差预算；ERA5再分析系统误差、小时平均到10分钟风场转换、控制状态、结构动力和材料疲劳误差均不包含其中。源码：`experiments/T080/s10_era5_u4_tail_interval_gate.cjs`；独立源级JS计算通过，仓库Node CLI与原始字节SHA256复核待执行（HOLD）。
