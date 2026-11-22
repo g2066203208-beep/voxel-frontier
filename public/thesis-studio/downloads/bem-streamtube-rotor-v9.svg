@@ -25,7 +25,7 @@ text {font-family:"Noto Serif CJK SC","Songti SC","SimSun",serif;fill:#161616;fo
 <path d="M297 164H324" class="thin"/><path d="M297 182H324" class="thin"/>
 <path d="M334 164V182" class="dim"/><text x="341" y="182" class="math">dr</text><text x="284" y="220" class="math">r</text>
 <path d="M70 225H145 M195 225H280 M354 225H428 M470 225H530" class="arrow"/>
-<text x="90" y="210" class="math">U∞</text><text x="368" y="210" class="math">Ud</text><text x="483" y="210" class="math">Uw</text>
+<text x="90" y="210" class="math">U<tspan baseline-shift="sub" font-size="18">∞</tspan></text><text x="368" y="210" class="math">U<tspan baseline-shift="sub" font-size="18">d</tspan></text><text x="483" y="210" class="math">U<tspan baseline-shift="sub" font-size="18">w</tspan></text>
 <path d="M310 395V452" class="thin"/><text x="310" y="480" text-anchor="middle" class="small">风轮平面</text>
 <text x="80" y="480" class="small">上游</text><text x="518" y="480" class="small">下游</text>
 <circle cx="855" cy="253" r="159" class="line"/>
