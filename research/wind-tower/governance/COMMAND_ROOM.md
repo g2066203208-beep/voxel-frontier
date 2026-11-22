@@ -1,3 +1,7 @@
+## 2026-11-22｜S12 V8 叶素动量理论正文完成 · GitHub存稿
+- 依据何2024正文9–13页、Kenna、Long、Ning论文及AeroDyn原始理论报告，补写3.3.1–3.3.2；27条编号公式、结构速度反馈及变桨、Prandtl根尖损失、Buhl修正、Ning残差、三叶片积分和力矩移轴、实际气动设置表、三条原始理论文献。历史输入 blob 366ae27d65d1feca6da0ba9eb186348913158fcb；无新增物理RUN。
+- 正文源提交268c3e39，完整阅读页6253648，原理图修正6b337df，Word装配dfb1764，发布工作流8a78316。原工作室V8审阅阅读页：https://g2066203208-beep.github.io/voxel-frontier/thesis-studio/chapter3-bem-v8.html 。完整Word/实际PDF原页对比以生成任务通过为准，未验收不冒称上线。保留V7四图和风场公式，不变研究门禁，不执行Abaqus，不合并PR#42。
+
 ## 2026-11-22｜S12 V8 BEM原文核对完成，候选正文仍HOLD
 - 新[逐页文献对照](../audit/S12_BEM_THESIS_SOURCE_COMPARISON_20261122.md)，commit 2b21e75e；已核何PDF20–24、Kenna博士论文§4.8.1–2、Long等§2.2.2、Ning 2014、AeroDyn原始63217等。V8初稿尚须补结构运动反馈、Buhl修正、原理图及实际选项，保留V7母本。无新物理RUN，不合并PR#42，不发布未复核V8。
 
