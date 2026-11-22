@@ -153,7 +153,7 @@ for i,(kind,val) in enumerate(revision["blocks"]):
         table._tbl.tblPr.append(borders)
         insert(table._tbl,i,kind="table",rows=val)
     else:raise ValueError(kind)
-assert n==27
+assert n==32
 # Remove duplicate summaries only from unmodified old 3.3? Keep every old paragraph
 # for traceable continuity, including its existing operating-case definitions.
 ref_anchor=lastref
