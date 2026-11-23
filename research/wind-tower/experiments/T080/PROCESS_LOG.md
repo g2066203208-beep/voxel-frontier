@@ -1,3 +1,6 @@
+### 2026-11-23 11时｜S06真实18NTM输入身份与时程可用性判别
+SOURCE=T062身份清单Git blob f2522a980b1f5388a2aa70f350247aa91b0d9c43；RUN=直接解析18行、字段唯一值统计：四类基础输入哈希各1、入流18、OUTB18；每行12001样本/9gage。实质论文正文与四行表commit 096153b57e5b4e8e23c9d950e37564babf456459。此结果限定独立样本定义及不能用9gage冒充31站六分量；尚未恢复原始时程，不推断采样间隔、坐标或惯性。TEST=连接器JS源级计算PASS，原始ZIP/OUTB字节核对及同步W时程HOLD；REF/STANDARD/OFFICIAL无新增；FIG0 TAB1；12阶段新增0/12。下一轮切S10材料应力链，避免连续刷身份清单。
+
 ### 2026-11-23 05时｜S12原始V8-R4 Word真实装配及中文缺字修复
 SOURCE=GitHub Actions #45025491032 artifact 14754763691（未过期，截止2026-12-22），原始V8-R4 Word SHA256 ab7a5bf5d075e07aaca77bfecb62e9a870d1905b13dbe86f73b86c9075a7f0ce；从ZIP直接提取并重新计算字节哈希MATCH。RUN=直接运行已提交的七章装配程序对原始Word插入第（5）项及贝叶斯边界两段，DOCX往返PASS、重复插入拒绝PASS；初次PDF第124页发现新段落继承Normal字体时“统计”等中文字形缺失（视觉FAIL），更换显式Noto Serif CJK SC东亚字体及12pt后重新运行、渲染与原页视觉检查PASS，141页。修订后的Word SHA256 6c6f8d34b9a1a511d978825c3541febda32ae16569097d116191dd3986471e54；PDF SHA256 9573ecc0c283c18a0952ba46801fc011c50dceebfc3ba36643651b66448a45be；本地最终程序SHA256 dfda862210b98e58f5042344bea3df46da1e11896db7eeed7422e0b3dab7f015；Git源码修复commit 4d41645466c2866a6131a676f99a8395c5ef756c。注意Git源码来自远端原脚本加相同字体与句式补丁；大二进制仅在本轮会话工件，不在Git。原Word 140页，候选PDF 141页，新增段落落在PDF第124页、7.2之前。SOURCE=既有R5十六方位印刷表；REF/STANDARD/OFFICIAL无新增；FIG0 TAB0，新增实物为正式原Word的真实装配候选与版式缺字修复，非新物理计算。全141页逐页排版、正式发布、逐小时联合计数、DLC1.2、同态独立W侧及材料寿命HOLD；12阶段新增晋级0/12。不触碰Abaqus/CAE、冻结母本、main、昂贵RUN或PR合并。
 
