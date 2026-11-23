@@ -235,8 +235,57 @@ $$
 本文历史AeroDyn归档设置中TwrAero=False，未生成精细塔筒所需的塔身分布气动力。故本节的虚功积分与六分量换点公式用于确定物理量的定义和接口校核方法，不构成正式风载映射已完成的证据。后续必须对同一风场、同一结构状态逐时核验六分量的方向、单位、坐标系、力矩参考点和RNA质量/重力归属；在完成合力合矩闭合前，Abaqus高保真塔架的正式气动载荷输入保持待验证状态。
 
 
+
+### 3.3.4 塔身分布气动力、接口动力平衡与功共轭校核
+
+在前述BEM积分与广义力投影之外，158 m预应力混凝土—钢混合塔架还承受沿高程分布的塔身气动力。OpenFAST AeroDyn输入参数TwrAero用于控制塔身气动阻力是否计算[129,131]。本文已归档历史工况的TwrAero=False，因此历史输出不包含独立求解的塔身分布气动力。下列公式给出可核查的外力定义及接口条件，属于后续模型建立的理论约束，不应被解释为该载荷时程已经生成。
+
+在忽略塔身周围三维绕流及相邻部件遮蔽影响的横向阻力近似下，取塔身轴线高度坐标z、外径D(z)、局部阻力系数C_{D,t}(z)，空气相对于运动塔身的横向速度为v_{rel,⊥}(z,t)，则作用于塔身的单位高度气动力矢量为
+
+$
+\mathbf p_{\mathrm t}(z,t)=\frac12\rho C_{D,\mathrm t}(z)D(z)\left\|\mathbf v_{\mathrm{rel},\perp}(z,t)\right\|\mathbf v_{\mathrm{rel},\perp}(z,t)\tag{3.3-33}
+$
+
+式中，p_t的单位为N/m，v_{rel,⊥}为风速减去塔身局部结构速度后在塔身轴线法平面上的投影；式（3.3-33）仅为圆柱横向阻力近似，C_{D,t}需根据断面形状、雷诺数和适用规范确定。对于锥形塔身、钢混连接段及相邻构件影响显著的部位，应独立判断该近似的适用性。不得将TwrAero=False解释为真实塔身风阻为零。
+
+定义塔顶连接界面参考点T的全局坐标为x_T，塔身轴线相应受力点为x(z)，则塔身分布外力在T点的等效合力及合矩满足
+
+$
+\mathbf F_{T}^{\mathrm t}(t)=\int_{z_0}^{z_H}\mathbf p_{\mathrm t}(z,t)\,\mathrm dz,\qquad \mathbf M_{T}^{\mathrm t}(t)=\int_{z_0}^{z_H}[\mathbf x(z)-\mathbf x_T]\times\mathbf p_{\mathrm t}(z,t)\,\mathrm dz\tag{3.3-34}
+$
+
+对本研究组合塔架，z_0与z_H应由158 m塔架实际轴线的统一高程基准确定；不得将历史AeroDyn关闭塔身气动力时保留的11个塔节点直接作为158 m完整分布外载网格。式（3.3-34）是分布力的参考点等效关系，不是精细结构离散加载的替代：若需计算沿高程的局部受力，仍应保持与各结构节点相对应的分布载荷。
+
+在统一惯性坐标系下取RNA为独立自由体，规定w_T^{RNA→tower}为RNA作用于塔架T点的六分量载荷（塔架受力为正），w_T^a、w_T^g和w_T^{other}分别为该自由体所受纯气动力、重力及其他已明确归属的外力在T点的等效力系；定义w_T^{in}为同一自由体按Newton–Euler动量定理构成、并已包含运动参考点输运项的惯性力系，则作用—反作用关系给出
+
+$
+\mathbf w_{T}^{\mathrm{RNA}\to\mathrm{tower}}=\mathbf w_{T}^{\mathrm a}+\mathbf w_{T}^{\mathrm g}+\mathbf w_{T}^{\mathrm{other}}-\mathbf w_{T}^{\mathrm{in}}\tag{3.3-35}
+$
+
+式（3.3-35）适用于同一RNA自由体、同一时刻、同一惯性坐标系及同一参考点的力系，且w=[F^T,M^T]^T；不同软件输出的力是施加于RNA还是施加于塔架，必须先统一作用方向。若精细塔架显式保留RNA质量与转动惯量，其惯性、重力项已由结构求解承担，不可再通过接口反力重复施加；若RNA从塔架动力质量中移除，则必须说明接口如何传递相应作用。
+
+以同一T点各项独立源记录建立六分量残差，记式（3.3-35）右端合成力、矩分别为F_T^{bal}和M_T^{bal}，接口实测或独立计算值为F_T^{int}、M_T^{int}，则分别定义
+
+$
+\mathbf r_F(t)=\mathbf F_T^{\mathrm{int}}(t)-\mathbf F_T^{\mathrm{bal}}(t),\qquad \mathbf r_M(t)=\mathbf M_T^{\mathrm{int}}(t)-\mathbf M_T^{\mathrm{bal}}(t)\tag{3.3-36}
+$
+
+r_F以N计，r_M以N·m计，必须分别根据作用力幅值、离散误差和时间采样精度给出事先定义的相对及绝对容差，不能把单位不同的六个分量直接求欧氏范数作为统一误差。还须检查由式（3.3-32）造成的力臂项、坐标轴方向及输出单位，并在相同风场、相同运行状态及相同时间戳上复核。
+
+对于塔顶平动速度v_T和角速度ω_T，采用前述载荷作用于塔架的正向约定，接口瞬时功率及其广义坐标形式为
+
+$
+\mathcal P_T(t)=\mathbf F_T^{\mathsf T}\mathbf v_T+\mathbf M_T^{\mathsf T}\boldsymbol\omega_T=\mathbf Q_T^{\mathsf T}\dot{\mathbf q},\qquad \mathbf Q_T=\mathbf J_T^{\mathsf T}\mathbf w_T\tag{3.3-37}
+$
+
+式中J_T为塔顶六自由度速度对结构广义速度的雅可比矩阵。等式为功共轭的必要一致性条件；对离散传递还应考虑时间积分、滞后、坐标变换及力矩移轴所引起的功率误差。载荷平衡残差或功率偏差若未通过独立核查，不能将整机塔底反力时程、六个分量的非同步峰值或式（3.3-34）的理论积分视为已经验证的精细塔架外风载。
+
+本节只建立风轮气动力、塔身外气动力和RNA接口载荷的力学区分。地震作用另以与结构初始平衡态相容的基底运动或相对坐标等效惯性力表达；两种地震施加方法不能重复计入。同状态风/地震/风震耦合响应、局部材料疲劳寿命及优化结果，均应依据其独立求解和验证证据在后续章节报告，不在本节预先给出结论。
+
 [128] NING S A. A simple solution method for the blade element momentum equations with guaranteed convergence[J]. Wind Energy, 2014, 17(9): 1327-1345. DOI: 10.1002/we.1636.
 
 [129] NING S A, HAYMAN G, DAMIANI R, JONKMAN J. Development and validation of a new blade element momentum skewed-wake model within AeroDyn[R]. NREL/CP-5000-63217, 2014.
 
 [130] BUHL M L Jr. A new empirical relationship between thrust coefficient and induction factor for the turbulent windmill state[R]. NREL/TP-500-36834, 2005.
+
+[131] OPENFAST. AeroDyn input file documentation (TwrAero option)[EB/OL]. https://openfast.readthedocs.io/en/v3.5.3/source/user/aerodyn/input.html.
