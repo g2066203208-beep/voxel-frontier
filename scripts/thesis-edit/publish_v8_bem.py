@@ -9,7 +9,7 @@ from docx import Document
 from docx.text.paragraph import Paragraph
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
-from docx.shared import Inches, Pt
+from docx.shared import Inches, Pt, RGBColor
 from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_LINE_SPACING
 from docx.enum.table import WD_TABLE_ALIGNMENT, WD_CELL_VERTICAL_ALIGNMENT
 from lxml import etree
@@ -190,6 +190,13 @@ for sid,revised in revision.get("claim_corrections",{}).items():
     assert original.getparent() is body
     assert Paragraph(original,doc).text==block["text"],("source changed",sid)
     el=clone_text(original,revised)
+    # Exact He p27 corrective paragraphs must not inherit blue link-like text styles.
+    if sid in ("b0367","b0368","b0369","b0370","b0371"):
+        para=Paragraph(el,doc)
+        for run in para.runs:
+            run.font.color.rgb=RGBColor(0,0,0)
+            run.underline=False
+            run.bold=False
     original.addprevious(el);body.remove(original)
     new[el]=(cid,dict(block,text=revised,word_body_index=-1))
 assert len(revision.get("claim_corrections",{}))>=25
@@ -291,7 +298,9 @@ groups["25"]=list(range(pages["3.3-28"],pages["3.3-32"]+1))
 # He PDF26 is a chapter summary; pair with our actual section 3.10 summary.
 groups["26"]=[locate("3.10 本章小结")]
 # 何2024 PDF27: compare his 8-DOF model hypotheses with OUR revised subsection, not an old thematic lookalike.
-groups["27"]=[locate("3.4.1")]  # Locate the physical Word heading; the five new paragraphs are independently asserted above.
+he27_start=locate("3.4.1")
+assert he27_start+1<=len(pdf)
+groups["27"]=[he27_start,he27_start+1]  # Five paragraphs occupy both original Word pages.
 def raster(d,p):
     x=d[p-1].get_pixmap(matrix=fitz.Matrix(1.5,1.5),alpha=False)
     return Image.frombytes("RGB",(x.width,x.height),x.samples)

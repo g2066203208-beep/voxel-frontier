@@ -52,7 +52,7 @@ jobs:
           p=Path("public/thesis-studio/he-thesis-comparison")
           m=json.loads((p/"v8r7-page-map.json").read_text())
           assert m["version"]=="V8-R7" and len(m["equation_pages"])==37
-          assert len(m["pages"]["27"])==1, "HE27_SHOWS_OLD_MATCH"
+          assert len(m["pages"]["27"])==2, "HE27_MUST_INCLUDE_TWO_PHYSICAL_PAGES"
           assert (p/m["pages"]["27"][0]["image"]).stat().st_size>100000
           for k in range(20,28):assert m["pages"][str(k)]
           for ls in m["pages"].values():
