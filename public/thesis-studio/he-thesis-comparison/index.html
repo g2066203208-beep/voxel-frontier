@@ -30,7 +30,7 @@ footer{text-align:center;font-size:12px;color:#647c8e;padding:30px 15px}
 <footer>CAE论文工作室 · 何泽瑜论文90 PDF物理页 · 历史对照：2026-11-21基准136页；第18–19、20–24页附V8修订后真实原页 · 对照用于证据审查，不代替可复算科研结果。</footer>
 <script>
 const $=s=>document.querySelector(s);let index=null,notes=null,current=1;
-let v7Map=null;fetch("./v8r5-page-map.json").then(r=>r.json()).then(v=>{v7Map=v;if(index&&notes)go(current)}).catch(()=>{});
+let v7Map=null;fetch("./v8r6-page-map.json").then(r=>r.json()).then(v=>{v7Map=v;if(index&&notes)go(current)}).catch(()=>{});
 function go(n){if(!index||!notes)return;current=Math.min(index.pages.length,Math.max(1,n));
 const r=index.pages[current-1],v=notes[String(current)];
 $("#title").textContent="何PDF第 "+current+" / "+index.pages.length+" 页  →  本人PDF第 "+v.our_page+" 页";
