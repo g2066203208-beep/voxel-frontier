@@ -1,3 +1,8 @@
+## 2026-11-23 18时｜S10 36组双轴DEL4非支配集删除稳定性 · END
+- READ-BEFORE-WRITE：PR#42 Open/Draft，开工HEAD `7d125fe259b33d1e837f8a72ee83f67fa3d7cc3e`；已读根/研究AGENTS、指挥室、白皮书v0.32.136、T080过程、正式Ch4及T062 72行源CSV；旧MASTER/STATUS路径404，12阶段原件未定位；main未写入。
+- 科研实做：原始CSV Git blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`，36组双轴配对；原始4点非支配集，36次逐组删除后34次前沿4点、2次3点；仅删除U11p4_ETM_S04和U19p202140_ETM_S04时分别出现新的替补点。正式Ch4 §4.8.23 [commit f4a48c1](https://github.com/g2066203208-beep/voxel-frontier/commit/f4a48c1d86bb97e4011b7f776512365327b9d84a)，新blob `a6467890febcfca35a59d1100bb61f608d002e9e`；T080过程 [5948277](https://github.com/g2066203208-beep/voxel-frontier/commit/59482779dcf2a26c39ccc87969bb8e2cbfa6f5b5)，白皮书v0.32.137 [5802e8a](https://github.com/g2066203208-beep/voxel-frontier/commit/5802e8afbc282be3dab0f28cc18e989ac227a783)。
+- TEST：真实CSV连接器源级重算PASS，原生CLI/OUTB/字节SHA256 NOT_RUN；TAB5 FIG0，12阶段新增0/12；非材料Miner或正式DLC1.2。最大非Abaqus HOLD=同态同步独立W侧气动力与惯性归属。下一唯一动作=S12集中写可发表的风载筛查证据与缺失数据边界的最终结论，不再重复同一Pareto微分析。禁Abaqus/CAE、冻结母本、main、昂贵RUN、PR合并均未触碰。
+
 ## 2026-11-23｜线上论文编辑器第二章§2.6.4学术措辞同步 · END
 - MAIN：公开校订稿owner-published-draft.json提交8116a07232709a0eeecb9c2707c518f60929f9cb；在线编辑器自动读取/合并提交14dfe9ca2faea28b65593e3d1ca46719b2096ff7，主站正文位置#chapter-02，段落b0229/b0230。远端回读两文件blob SHA a90af821a10a2571573fd5ee9bfc4b2e0708d88a / b1cda0086e78c458834c05a0893a8f6779bc029b，母本SHA4313b5eca4157f53015377082e7edcfb41b6c68ed8bd459b0efc49589171639f匹配，已有浏览器本地草稿优先，未清除个人修改。
 - 正文：参考文献[1]4m推覆、OpenSees/Abaqus应力极值与我方BF1两组0.901126/0.928000m、555.694/558.319kN区分；不引入新仿真结果，不将文献应力当作我方计算。线上文字正式学术表达；旧V6离线DOCX未覆盖V8-R9 Word/PDF母本。
