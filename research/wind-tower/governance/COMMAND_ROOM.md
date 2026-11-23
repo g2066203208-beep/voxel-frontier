@@ -1,3 +1,9 @@
+## 2026-11-23｜线上论文编辑器第二章§2.6.4学术措辞同步 · START
+- 执行者：网页版ChatGPT；范围仅在线论文工作室正文显示与公开校订草稿，禁止修改Abaqus/CAE、冻结研究父本、科学结论、研究PR#42。
+- READ-BEFORE-WRITE：已读根AGENTS、研究AGENTS、最新指挥室；main基线dedc299f867204d79b0893e1b9287020c01c1d19；研究指挥室当前blob 4d53a28ad78969100df07d69701d175940e4eec1。核对public/thesis-studio/manuscript-workbench.js、V8-R9 editor-data/manuscript-v8-bem.json第二章b0229/b0230，并读取独立Word校订稿相应段落。
+- 继承：线上编辑母本V8-R9、37条公式与既有第二章模型图表不动；此前V6离线文件不覆盖更新的在线母本。拟修改main的public/thesis-studio/editor-data/owner-published-draft.json与manuscript-workbench.js，使已核对正文默认在同一在线工作室展示，且保留浏览器本机修改优先、原Word母本校验；原生DOCX/PDF版本不据此冒称同步。
+- SOURCE：工作室V8-R9文本层及2026-11-23学术规范校订Word；RUN：仅网页数据与脚本修改；新增物理RUN=0。
+
 ## 2026-11-23｜S12 何PDF28真实原页对比及V8-R9双公式正式修订 · END
 - 实做：何PDF28的图3-1/3-2以及(3.1)/(3.2)完整原页人工核对；对我方§3.4.1补三叶片变转速方位角(3.4-1)与Kane-compatible广义运动方程(3.4-2)，不沿用何的8DOF Euler–Lagrange作为已执行模型。两式经Pandoc→Word OMML后发布至V8-R9，源科研分支Ch3同步，3.4.5独立接口原5式顺序延至3.4-3…7，不重号。
 - MAIN HEAD=GitHub Actions #45137631036 SUCCESS；原论文136页，保留原37条BEM公式并新增2条3.4公式，48处前轮文字修改保留；原图`public/thesis-studio/he-thesis-comparison/v8r9-spreads/he28-v8r9-54.png`由真实何PDF28与我方新版PDF54相邻排版，已人工查看；独立页面`public/thesis-studio/he-thesis-comparison/ch3-v8r6/he28-academic-revision.html`已发布仓库，详情依据OpenFAST官方ElastoDyn/AeroDyn文档。WORD_SHA256=4313b5eca4157f53015377082e7edcfb41b6c68ed8bd459b0efc49589171639f；main生成后commit dedc299f867204d79b0893e1b9287020c01c1d19。
