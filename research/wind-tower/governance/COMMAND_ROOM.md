@@ -1,3 +1,7 @@
+## 2026-11-23｜S12 V8-R8论文正文语言统一重修 · START
+- READ-BEFORE-WRITE main=d8d8512f5b5ff42e83461a7c806a10c6064b9f16 research=3b88551a5a760298d2dd810aa6485548cb9a8b8c。已读根/研究AGENTS、指挥室最新交接、V8-R7原生Word构建源码/配置、main编辑器3.3/3.4/3.10真实段落、活动研究Ch3§3.4.1和气动力接口5式。用户明确要求全文此前本助手引入的AI式解释/审查口吻改为硕士论文正式文字。保留物理事实和现有公式图表，简化否定式元叙述，不抄参考论文，不写未完成的研究结果为已完成。科学审计/HOLD回归工作室日志或附加审核清单，不无凭删除事实。
+- 修改范围：main的scripts/thesis-edit/ch3_bem_v8.json 3.3新增学术正文+3.10本章小结+原V7中31项claim_corrections，合并审查重复句；研究分支Ch3 §3.4.1、§3.4.5及3.10同步为正式学术文字；原生Word/PDF另起V8-R8新版本，保留V8-R7且经Actions和原页截图验证。禁止新Abaqus/CAE工作、改物理父本或PR#42合并；新增物理RUN 0。
+
 ## 2026-11-23｜S12 何论文PDF第27页逐段正文纠错 · END
 - 逐段对照参考原件五段（背景、对象/DTU来源、简化假设、塔架坐标/前后与侧向、三叶片各两向自由度），不拷贝他人整页文字；主论文§3.4.1依据我方SOURCE重写b0367—b0371五段，交代158m 31+4段/36PT、3类历史模型、Y_A与h/T位置、RNA 6×6不等于8DOF、非线性和地震/风载证据边界。研究Ch3 commit 29f39df6d30568be3853cb0b0c158cdeea4af221。
 - GitHub Actions Word/PDF编译及独立原页QA https://github.com/g2066203208-beep/voxel-frontier/actions/runs/45132846376 SUCCESS：V8-R7原生140页、37条OMML、He p27→我们第55/56两页（v8r7-spreads/he27-v8r7-{55,56}.png），实际两图已回读确认黑色正文、完整两页；Source Word SHA256=0d510f7fe80baa20e54d1687ebce9b6ffcb33d310f8acbc8725171a3c98852ac。修订全过程和5段真实原创正文在同一主工作室ch3-v8r6/he27-academic-revision.html；main发布成功，不代表全部90页比对科学PASS。
