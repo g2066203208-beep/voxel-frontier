@@ -860,3 +860,7 @@
 
 ### 2026-11-23｜v0.32.125 PATCH — S12真实141页PDF文字层与页面几何门禁
 - [源程序commit 5254c3b](https://github.com/g2066203208-beep/voxel-frontier/commit/5254c3bb7e8b7c483ff5bb3a79acd912c8b8ebe1)，路径`research/wind-tower/manuscript/final-thesis/assemble/pdf_page_geometry_gate.py`；[T080过程commit 9ff2cfa](https://github.com/g2066203208-beep/voxel-frontier/commit/9ff2cfa5212fdd0bf7153cafa6c8b75f19d65dfd)。SOURCE=真实候选141页PDF SHA256 `9573ecc0c283c18a0952ba46801fc011c50dceebfc3ba36643651b66448a45be`；RUN=141/141非空文字层、0边界外word、595.30×841.89pt统一页面、第124页两百分比检索PASS；TEST=本地同算法源级PASS，提交版CLI NOT_RUN；FIG0 TAB1（本地141行JSON），REF/STANDARD/OFFICIAL无新增。全篇视觉/图像/引文/物理HOLD，12阶段新增0/12。**本轮开工实际白皮书头为v0.32.124，前轮声称v0.32.125未在该文件持久化，故本轮按真实版本递增，不把历史口头版本当已保存。**
+
+
+### 2026-11-23｜v0.32.130 PATCH — S10真实18NTM雨流DEL指数敏感性
+- SOURCE=T062原始9测站雨流CSV Git blob `4f77ec9a2027c593ea22cac5abae98de32d407f5`；RUN=1080行中筛出18NTM×TwrBsMxt/Myt共36行，同一Nref600下m10/m4 DEL比值全范围1.683831—2.460550；[期刊六行表与可证伪边界](https://github.com/g2066203208-beep/voxel-frontier/commit/81a21d861998d3e4d29eaf381fa1a788135c5542)，路径`research/wind-tower/manuscript/journal-wind-fatigue-results.md`，blob `3942bb34254791d75426cd41f18a9f09731daa2b`。TEST=连接器原CSV源级计算PASS；原OUTB重算/材料局部应力/Miner寿命HOLD。REF/STANDARD/OFFICIAL无新增；FIG0 TAB1，12阶段新增0/12，不宣称材料寿命或物理验收。
