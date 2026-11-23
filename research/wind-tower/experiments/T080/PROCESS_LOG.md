@@ -1,3 +1,6 @@
+### 2026-11-23 13时｜S10真实18NTM跨雨流指数seed次序反转
+SOURCE=T062 1080行原始九测站CSV blob 4f77ec9a2027c593ea22cac5abae98de32d407f5；RUN=18NTM两塔底弯矩通道、3风速×2通道×六seed，组内每组15对、共90对：m4→m10严格反转11对（分组1/2/3/3/1/1），零精确平局；此为18实际样本内的排序反例，90对相关，不能当独立概率或材料Miner。源级连接器直接解析PASS，独立Node CLI/OUTB/舍入区间拒绝HOLD；可执行源码commit 477a97f，期刊正文commit 796d138。REF/STANDARD/OFFICIAL无新增，TAB1 FIG0，12阶段0/12，DLC1.2仍HOLD。最大非Abaqus HOLD=同步同态独立W侧气动力与惯性归属。下一唯一动作=切S05官方地震原件/目标谱适用域，停止连续S10小统计。禁Abaqus/CAE、冻结母本、main、昂贵RUN、PR合并。
+
 ### 2026-11-23 11时｜S06真实18NTM输入身份与时程可用性判别
 SOURCE=T062身份清单Git blob f2522a980b1f5388a2aa70f350247aa91b0d9c43；RUN=直接解析18行、字段唯一值统计：四类基础输入哈希各1、入流18、OUTB18；每行12001样本/9gage。实质论文正文与四行表commit 096153b57e5b4e8e23c9d950e37564babf456459。此结果限定独立样本定义及不能用9gage冒充31站六分量；尚未恢复原始时程，不推断采样间隔、坐标或惯性。TEST=连接器JS源级计算PASS，原始ZIP/OUTB字节核对及同步W时程HOLD；REF/STANDARD/OFFICIAL无新增；FIG0 TAB1；12阶段新增0/12。下一轮切S10材料应力链，避免连续刷身份清单。
 
