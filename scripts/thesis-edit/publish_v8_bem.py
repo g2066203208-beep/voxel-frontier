@@ -277,8 +277,8 @@ for hp,items in groups.items():
     for op in items:
         a,b=raster(he,int(hp)),raster(pdf,op)
         im=Image.new("RGB",(a.width+b.width+18,max(a.height,b.height)),"#e5e9ed");im.paste(a,(0,0));im.paste(b,(a.width+18,0))
-        name=f"he{hp}-v8r4-{op}.png";im.save(spread/name,optimize=True)
-        result.append({"he_pdf_page":int(hp),"our_pdf_page":op,"image":"./v8r4-spreads/"+name})
+        name=f"he{hp}-v8r5-{op}.png";im.save(spread/name,optimize=True)
+        result.append({"he_pdf_page":int(hp),"our_pdf_page":op,"image":"./v8r5-spreads/"+name})
     map_pages[hp]=result
 # All actual amended pages are individually rendered, independent of historical comparisons.
 read_pages=out/"bem-pages";read_pages.mkdir(exist_ok=True)
