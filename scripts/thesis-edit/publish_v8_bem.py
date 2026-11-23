@@ -177,7 +177,7 @@ for sid in ("b0643","b0644","b0645","b0646"):
 assert len(revision["chapter3_summary"])==6
 # Academic style gate for all 31 revised source paragraphs, 3.3.4 prose and chapter summary.
 assert revision.get("version")=="V8-R8"
-assert len(revision["claim_corrections"])==31
+assert len(revision["claim_corrections"])==48
 assert len(revision["blocks"])==98 and sum(k=="e" for k,v in revision["blocks"])==37
 for text_part in list(revision["claim_corrections"].values())+[v for k,v in revision["blocks"] if k=="p"]+list(revision["chapter3_summary"]):
     for bad in ("不能冒称","不在此宣称","不能据此宣称","本版不将","待验证状态","RUN=0","HOLD","AI写作"):
