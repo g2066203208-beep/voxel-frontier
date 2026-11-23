@@ -1679,3 +1679,21 @@ For each held-out *entire speed bin*, we refit independently at every section us
 The high-bin RMSE reproduces the previously reported leave-one-bin-out oracle (0.796867/0.813993 MPa); the low and middle bins complete the previously absent folds using the original 1,984-row source. The middle-bin interpolation yields a lower affine RMSE than nearest-bin prediction (0.169327 versus 0.198851 MPa), but this is only one held-out turbulent realization. For both edge bins the affine model necessarily extrapolates; their numerical errors are **reported as falsification diagnostics, not admissible forecast accuracy**. All 31 sections share the same realization in each case and must not be interpreted as independent validation seeds. Wind speed is confounded with seed and operating-state variation; the exercise cannot establish causal wind-speed response, calibrated reliability, cross-design optimization accuracy, material Miner damage or formal DLC1.2 coverage.
 
 **Reproducibility and rejection:** source Git blob `b5effa2a493cec0a9af8a10a3b93df0ff997d2d0`; executable source `experiments/T080/s11_etm_three_bin_refit_gate.cjs`. Direct independent V8 aggregation and refit of the full original CSV returned the three folds above; native Node CLI, source byte SHA256 and OUTB re-decoding were not performed in this pass. The executable includes identity, row count, 16-azimuth uniqueness, nonfinite-value and invalid-segment rejection tests; these embedded tests are not claimed to have passed in a native CLI run. This is a **source-level screening-method result**, not a physical validation.
+
+
+## S11：等体积壁厚再分配的侧向柔度代价（2026-11-23）
+
+**科学问题。** 既有T071的31段等混凝土体积壁厚再分配以降低截面名义应力最大值为目标；但在相同外径与材料模量下，底部减薄、顶部增厚是否会增加塔架的侧向柔度？直接读取已归档的31段外径/高度/混凝土等级表（`experiments/T071/T071_31SEG_GEOMETRY_REBAR_BASELINE.csv`，Git blob `dff6e86d822dd5cc7dac971bb093aa6d9b8352dd`）和已完成的等体积极小极大候选表（`experiments/T071/S11_T071_31SEG_VOLUME_NEUTRAL_MINIMAX_20261112.csv`，blob `7577328e42e228e6914a9d68182699659c22318a`）。两者均为历史几何/解析候选，不是新高保真优化结果。
+
+**限定方法。** 对每段取固定外径 `D_i`、厚度 `t_i`，环形截面惯性矩 `I_i=π[D_i⁴−(D_i−2t_i)⁴]/64`，体积 `V_i=πL_i[D_i²−(D_i−2t_i)²]/4`。在混凝土段顶部112 m施加单位水平力，假定Euler–Bernoulli弯曲、各段截面沿段长不变、各段弹性模量相同且无接缝转动时，位移柔度的比例由 `C=Σ L_i(112−z_mid,i)²/I_i` 给出。该离散中点求积**不是**158 m整塔（含46 m钢段、RNA、PT和连接）的实际柔度，也没有考虑剪切、变截面连续积分或动力效应。
+
+| 源级几何量 | 原方案 | 等体积候选 | 差异 |
+|---|---:|---:|---:|
+| 31段混凝土环形体积（m³） | 675.0909539073 | 675.0909539073 | 小于1.2×10⁻¹³ m³ |
+| 单位顶端横力的几何柔度指标（原方案归一） | 1.000000 | 1.003194108 | **+0.319411%** |
+| CSEG_01截面惯性矩（候选/原） | 1.000000 | 0.988417494 | −1.158251% |
+| CSEG_27截面惯性矩（候选/原） | 1.000000 | 1.042746497 | +4.274650% |
+
+仅7/31段改变：CSEG_01–05均减薄1.2892%，CSEG_27–28增厚约5%。底部前五段在基准柔度求和中的权重合计约29.66%，上部第27–28段合计约0.646%；故等体积并不意味着等刚度，且本候选对这一静力代理的改善方向与名义应力极小极大目标相反。该数值为**可证伪的几何代理预测**：在一致的实际材料模量、变截面与边界条件下若重新计算的混凝土段静力柔度不增加，则说明该简化代理对本问题不足；不能把+0.3194%作为整塔位移增幅或设计约束超限。
+
+**误差与验收。** 数值采用归档CSV全精度双精度计算，几何体积闭合残差约1.14×10⁻¹³ m³；未量化的主要模型误差是中点分段近似、C70/C65弹性模量差、塔顶力作用点、剪切柔度和连接状态。源码 `experiments/T080/s11_volume_neutral_compliance_proxy.cjs` 包含31段身份、等体积、原方案恒等、错误段号及非法厚度拒绝测试；连接器独立JS源级复算PASS，仓库提交版Node CLI与结构物理验收NOT_RUN。SOURCE为上述两份Git归档；RUN为本轮几何柔度求和；REF/STANDARD/OFFICIAL无新增，TAB1、FIG0。该结果只能用于S11设计变量筛选，不能代替局部应力、Miner寿命、正式NSGA-II或高保真复核；12阶段新增晋级0/12。
