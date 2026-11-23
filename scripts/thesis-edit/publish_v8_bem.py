@@ -201,7 +201,7 @@ for sid,revised in revision.get("claim_corrections",{}).items():
         # Legacy editor strings can differ from Word paragraph text only in Unicode
         # normalization or field/soft-break spacing. Reject substantive changes.
         from difflib import SequenceMatcher
-        normalize_source=lambda v:re.sub(r"\\s+","",unicodedata.normalize("NFKC",v)).replace("\\u00ad","")
+        normalize_source=lambda v:re.sub(r"\s+","",unicodedata.normalize("NFKC",v)).replace(chr(173),"")
         actual_norm,expected_norm=normalize_source(native_text),normalize_source(expected_text)
         similarity=SequenceMatcher(None,actual_norm,expected_norm,autojunk=False).ratio()
         assert similarity>=0.995 and actual_norm[:60]==expected_norm[:60],(
