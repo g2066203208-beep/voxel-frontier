@@ -1,3 +1,6 @@
+### 2026-11-23｜v0.32.131 PATCH — S05第二事件NVL真实双水平长周期方向比与截止频率辨识
+- SOURCE=ESM IT-2012-0009/NVL MP五周期CSV Git blob `6f6ac18eda164d55ba225cecbd461ead27027c82`，官方头收据blob `81219cfba9c5d7d23f100aad5dd5be4939ee8411`，原HNE/HNN SHA256 `3703b42d757f8b745eb3ed1cc01cd2873ec55d873ecc314f7b0297d9de1e7cb3` / `1f6461a08375cd97af1091169fb67681ae8daba2b03d7943282794d5cc1df9bd`。RUN=5点真实处理谱HNN/HNE=2.755019/1.824043/1.711445/2.232958/3.434301，10s频率仅为两分量0.08Hz高通截止的1.25倍；拒绝将MDN站HNN的0.10Hz错归NVL。新增实质方法正文与5行表：[T079 METHOD_PLAN修订](https://github.com/g2066203208-beep/voxel-frontier/commit/fcd96202ec781b6470147627ff5f60bb24a3419c)。源CSV算术PASS，原始未处理波/处理传递函数/物理方向性与场址设计谱HOLD；非地震结构RUN，FIG0 TAB1；REF/OFFICIAL=ESM v3 DOI 10.13127/esm.3，STANDARD=无新增授权条款；12阶段0/12，W侧同态气动力/惯性仍最大非Abaqus HOLD。
+
 ### 2026-11-23｜v0.32.130 PATCH — S10真实NTM同风速跨指数排序反例
 - SOURCE=T062九测站雨流CSV Git blob `4f77ec9a2027c593ea22cac5abae98de32d407f5`；RUN=18NTM、双塔底弯矩、6组×15组内配对，m4/m10严格逆序11/90，分组1/2/3/3/1/1，零精确平局。新增[源级可执行程序](https://github.com/g2066203208-beep/voxel-frontier/commit/477a97f2d8313e9edcc88c9b2e62bec53add2056)及[期刊§3.5与六行数表](https://github.com/g2066203208-beep/voxel-frontier/commit/796d138c8d821aed68f082b3b85d70a2db925b21)。连接器源级PASS，Node CLI/OUTB/打印舍入区间HOLD；90对相关，不是独立试验或材料寿命。REF/STANDARD/OFFICIAL无新增，FIG0 TAB1，12阶段0/12，W侧同态/材料Miner/DLC1.2仍HOLD。注：上轮报告v0.32.130但远端白皮书实际仍v0.32.129，按真实版本仅递增至v0.32.130。
 
