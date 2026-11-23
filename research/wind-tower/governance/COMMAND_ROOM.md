@@ -1,3 +1,7 @@
+## 2026-11-23｜S12 何泽瑜第三章PDF27—38逐页原图V8-R6对照 · START
+- READ-BEFORE-WRITE：research_head=`aa0bea0c9d5c189807d854f861193430394d1481`，main_head=`dd04f6807071aadd4f985fc14808da70b8812cf0`；已读根AGENTS、研究AGENTS、指挥室最新交接、何2024原PDF 90页的既有逐页来源索引与审阅笔记、V8-R6页码映射、V8-R6公开论文目录与科研证据门禁。何第二章PDF18—26已有新版主题配对，但不宣称严格内容验收全PASS；第三章PDF27—38共12页，按原PDF真实页与我们新版139页PDF主题配对，标注不同自由度模型和归档验证等级，绝不把Simpack探索写为已通过生产耦合。
+- 本轮范围：GitHub Actions只运行PDF文本定位与PymuPDF原页渲染/拼图/出版审查，不做Abaqus/CAE、不改冻结母本、不合并PR#42；新图保存在同一个thesis-studio/he-thesis-comparison/ch3-v8r6/，原90页历史索引保留可追溯。验收以真实原页文件、配对依据、人工抽查和CI结果为准；自动相似度不做学术PASS判定。
+
 ### 2026-11-23 15时｜S12第二事件方向聚合谱的第二章正式正文
 READ-BEFORE-WRITE：PR#42 Open/Draft；开工研究HEAD 8cbd17d4cd21d2a4b03ac16627c2647e644dc049、main 52b512b96e3ce8b9d351cba79d37dab58942d7a2；读根/研究AGENTS、指挥室最新交接、白皮书v0.32.132、T079最新NVL五周期原始CSV及方法、T080过程、第二章现有原稿；MASTER/STATUS旧路径404未冒称已读。SOURCE=ESM v3 IT-2012-0009/NVL MP五点Git blob 6f6ac18eda164d55ba225cecbd461ead27027c82。RUN=原处理谱强方向/几何均值5点1.659825/1.350571/1.308222/1.494309/1.853187，谱定义差异23.560%—46.039%，并入第二章§2.1.6，commit d2493cb44e8a5c8733e66fecb259d7f16b254499，正文blob f814ceb238aff8d39d9b7e7cae9d8c4e9dc8b955。TEST=原CSV算术及远端正文回读PASS；未处理波、场址谱与物理响应HOLD。REF/OFFICIAL=ESM DOI10.13127/esm.3；STANDARD无新增；FIG0 TAB1；12阶段0/12。最大非Abaqus HOLD=同态独立W侧同步气动力与惯性归属。下一唯一动作=S12在已发布V8-R5原生Word链核对新§2.1.6是否真正装配，若尚未装配则接入版本化Word而非再写相同数表。未执行Abaqus/CAE、冻结母本、main、昂贵RUN及PR合并。
 
