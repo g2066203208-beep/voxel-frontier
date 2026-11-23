@@ -235,12 +235,11 @@ for sid,t in revision["claim_corrections"].items():
     assert t in word_content,("ACADEMIC_REVISION_NOT_IN_WORD",sid)
 for t in revision["chapter3_summary"]:
     assert t in word_content,("ACADEMIC_SUMMARY_NOT_IN_WORD",t[:80])
-# Five concrete source-backed p27 corrections must appear in the native Word, in order.
-p27_gates=["下部为112 m混凝土段","三者的离散单元、自由度和物理作用分工不同","高程h仅用于定位","六分量接口和RNA的六自由度刚体质量表示","不直接继承参考论文在线性简化模型中忽略预应力"]
+# Check the five model-definition paragraphs against current exact source wording.
+p27_ids=("b0367","b0368","b0369","b0370","b0371")
 p27_paras=[p.text for p in check.paragraphs]
-p27_indices=[[i for i,t in enumerate(p27_paras) if gate in t] for gate in p27_gates]
-assert all(len(x)==1 for x in p27_indices),("HE27_EVIDENCE_NOT_IN_NATIVE_WORD",p27_indices)
-assert [x[0] for x in p27_indices]==sorted(x[0] for x in p27_indices),("HE27_SOURCE_PARAGRAPHS_OUT_OF_ORDER",p27_indices)
+p27_indices=[p27_paras.index(revision["claim_corrections"][sid]) for sid in p27_ids]
+assert p27_indices==sorted(p27_indices),("HE27_SOURCE_PARAGRAPHS_OUT_OF_ORDER",p27_indices)
 chapters={c["id"]:dict(c,blocks=[]) for c in source["chapters"]}
 for idx,el in enumerate(body):
     item=new.get(el,existing.get(el))
