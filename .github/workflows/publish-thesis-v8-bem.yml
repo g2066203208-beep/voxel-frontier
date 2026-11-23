@@ -54,6 +54,7 @@ jobs:
           assert m["version"]=="V8-R9" and len(m["equation_pages"])==37
           assert 1<=len(m["pages"]["28"])<=3, "HE28_ORIGINAL_PAGE_NOT_PAIRED"
           assert all((p/x["image"]).stat().st_size>100000 for x in m["pages"]["28"])
+          assert (p/"ch3-v8r6/he28-academic-revision.html").stat().st_size>2500
           assert 1<=len(m["pages"]["27"])<=3, "HE27_PHYSICAL_PAGE_RANGE_INVALID"
           assert (p/m["pages"]["27"][0]["image"]).stat().st_size>100000
           for k in range(20,28):assert m["pages"][str(k)]
