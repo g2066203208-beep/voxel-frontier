@@ -11,7 +11,7 @@ permissions:
   actions: write
 concurrency:
   group: he-ch3-v8r6-compare
-  cancel-in-progress: false
+  cancel-in-progress: true
 jobs:
   compare-source-pages:
     runs-on: ubuntu-24.04
@@ -21,10 +21,11 @@ jobs:
         with:
           persist-credentials: true
           sparse-checkout: |
-            scripts/he-thesis
-            public/thesis-studio/documents
+            scripts/he-thesis/build_he_ch3_v8r6.py
+            public/thesis-studio/documents/He_Zeyu_2024_hybrid_tower_thesis.pdf
             public/thesis-studio/downloads/10MW-thesis-v8r6-evidence-20261123.pdf
-            public/thesis-studio/he-thesis-comparison
+            public/thesis-studio/he-thesis-comparison/review_notes.json
+            public/thesis-studio/he-thesis-comparison/ch3-v8r6
             .github/workflows
       - uses: actions/setup-python@v5
         with:
