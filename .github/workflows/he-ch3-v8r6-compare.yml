@@ -1,0 +1,75 @@
+name: Publish He Chapter 3 vs V8-R6 original PDF page comparisons
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/he-thesis/build_he_ch3_v8r6.py'
+      - '.github/workflows/he-ch3-v8r6-compare.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: he-ch3-v8r6-compare
+  cancel-in-progress: false
+jobs:
+  compare-source-pages:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          sparse-checkout: |
+            scripts/he-thesis
+            public/thesis-studio/documents
+            public/thesis-studio/downloads/10MW-thesis-v8r6-evidence-20261123.pdf
+            public/thesis-studio/he-thesis-comparison
+            .github/workflows
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install original page renderer
+        run: |
+          python -m pip install pymupdf pillow
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends fonts-noto-cjk
+      - name: Make actual He PDF 27-38 and our V8-R6 thematic pairs
+        run: python scripts/he-thesis/build_he_ch3_v8r6.py
+      - name: Verify original page pairing without claiming physics validation
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('public/thesis-studio/he-thesis-comparison/ch3-v8r6')
+          j=json.loads((p/'page_index.json').read_text())
+          assert j['reference']['pages']==90 and j['ours']['pages']==139
+          rows=j['pages'];assert len(rows)==12
+          assert [x['reference_pdf_page'] for x in rows]==list(range(27,39))
+          for a in rows:
+              assert not a['physics_verified']
+              assert a['match_anchor'] and len(a['expert_review']['next'])>25
+              assert (p/a['spread_image']).stat().st_size>100000
+          assert (p/'He_chapter3_p27-38_vs_10MW_V8R6.pdf').stat().st_size>500000
+          assert (p/'index.html').stat().st_size>3000
+          print('ORIGINAL_PAGE_QA_PASS: 12/12 images, correct He page numbers, not physics PASS')
+          PY
+      - name: Save immutable check artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: He-chapter3-V8R6-12-real-source-pages
+          path: public/thesis-studio/he-thesis-comparison/ch3-v8r6
+          retention-days: 30
+      - name: Publish in the ONE existing thesis studio
+        run: |
+          git config user.name 'thesis-editor[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/thesis-studio/he-thesis-comparison/ch3-v8r6
+          git diff --cached --quiet && exit 0
+          git commit -m 'docs(thesis): publish 12 original-source He chapter-3 vs V8-R6 page pairs'
+          git pull --rebase -X theirs origin main
+          git push origin HEAD:main
+      - name: Deploy updated academic studio
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run pages.yml --ref main
