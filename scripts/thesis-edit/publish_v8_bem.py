@@ -291,7 +291,7 @@ groups["25"]=list(range(pages["3.3-28"],pages["3.3-32"]+1))
 # He PDF26 is a chapter summary; pair with our actual section 3.10 summary.
 groups["26"]=[locate("3.10 本章小结")]
 # 何2024 PDF27: compare his 8-DOF model hypotheses with OUR revised subsection, not an old thematic lookalike.
-groups["27"]=[locate("本文研究对象为DTU 10 MW参考风轮")]
+groups["27"]=[locate("3.4.1")]  # Locate the physical Word heading; the five new paragraphs are independently asserted above.
 def raster(d,p):
     x=d[p-1].get_pixmap(matrix=fitz.Matrix(1.5,1.5),alpha=False)
     return Image.frombytes("RGB",(x.width,x.height),x.samples)
