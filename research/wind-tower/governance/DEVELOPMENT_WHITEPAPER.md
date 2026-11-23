@@ -1,3 +1,7 @@
+### 2026-11-23｜v0.32.137 PATCH — S10真实双轴DEL4非支配集逐工况删除稳定性
+- SOURCE=T062真实72行CSV Git blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`；RUN=36组两轴配对、4点非支配集及36次单工况删除穷举；34次前沿规模4、2次规模3；删除两组特定前沿点引入两个不同的替补工况，另两组前沿点删除无新成员。新增正式Ch4 §4.8.23 [commit f4a48c1](https://github.com/g2066203208-beep/voxel-frontier/commit/f4a48c1d86bb97e4011b7f776512365327b9d84a)，路径 `research/wind-tower/manuscript/final-thesis/chapters/04_10MW混合塔架风致疲劳性能分析.md`，Git blob `a6467890febcfca35a59d1100bb61f608d002e9e`；过程日志[commit 5948277](https://github.com/g2066203208-beep/voxel-frontier/commit/59482779dcf2a26c39ccc87969bb8e2cbfa6f5b5)。
+- TEST=连接器直接原CSV源级36次重算PASS，原OUTB/独立CLI/字节SHA256 NOT_RUN；TAB5 FIG0；REF/STANDARD/OFFICIAL无新增。34/36不是抽样置信度，单工况删除不是新增风seed；仅历史双轴载荷筛查敏感性，非正式DLC1.2、局部材料应力、Miner或物理验收。12阶段新增0/12。最大非Abaqus HOLD=同步同态独立W侧气动力与惯性归属；未执行禁止工作或昂贵RUN，PR#42保持Draft。
+
 ### 2026-11-23｜v0.32.136 PATCH — 何论文PDF28两公式与V8-R9原生Word逐页拼图
 - REF=何泽瑜2024硕士论文PDF第28页（正文第17页）：图3-1整机正/侧视、图3-2叶片局部位移、式(3.1)匀速三叶片方位角及式(3.2)简化8DOF Euler–Lagrange方程。OFFICIAL=OpenFAST v3.5.3 ElastoDyn Users Guide and Theory Manual（Kane动力学，多体自由度输入）及AeroDyn Coordinate Systems（hub azimuth、单叶片固定方位偏置）。对照我方158m/DTU10MW实际OpenFAST—ROSCO及RNA模型；不把八自由度示例当作我方计算自由度。
 - MAIN=V8-R9由V8-R8原生Word母本派生，§3.4.1新增两个原生OMML式（3.4-1）`ψ_j(t)=ψ0+∫Ω(τ)dτ+2π(j-1)/3`和（3.4-2）`M(q)q¨+h(q,q˙,t)=Q_a+Q_g+Q_other`，将恒转速作为变转速特例，明确ElastoDyn采用Kane而非何的八自由度Euler–Lagrange。新增四段学术解释；原第三章BEM37式、48处正式文字修订、真实模型身份和图表未改。
