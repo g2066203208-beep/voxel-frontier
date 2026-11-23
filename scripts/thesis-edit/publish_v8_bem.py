@@ -186,7 +186,7 @@ for j,paragraph in enumerate(revision["chapter3_summary"],1):
 for sid,revised in revision.get("claim_corrections",{}).items():
     assert sid in old_by_id,("unknown claim",sid)
     cid,block,original=old_by_id[sid]
-    assert block["kind"] in ("text","figure"),("unsafe claim type",sid,block["kind"])
+    assert block["kind"] in ("text","figure","h2","h3"),("unsafe claim type",sid,block["kind"])
     assert original.getparent() is body
     assert Paragraph(original,doc).text==block["text"],("source changed",sid)
     el=clone_text(original,revised)
