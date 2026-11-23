@@ -1,3 +1,8 @@
+## 2026-11-23｜S12 何PDF28真实原页对比及V8-R9双公式正式修订 · END
+- 实做：何PDF28的图3-1/3-2以及(3.1)/(3.2)完整原页人工核对；对我方§3.4.1补三叶片变转速方位角(3.4-1)与Kane-compatible广义运动方程(3.4-2)，不沿用何的8DOF Euler–Lagrange作为已执行模型。两式经Pandoc→Word OMML后发布至V8-R9，源科研分支Ch3同步，3.4.5独立接口原5式顺序延至3.4-3…7，不重号。
+- MAIN HEAD=GitHub Actions #45137631036 SUCCESS；原论文136页，保留原37条BEM公式并新增2条3.4公式，48处前轮文字修改保留；原图`public/thesis-studio/he-thesis-comparison/v8r9-spreads/he28-v8r9-54.png`由真实何PDF28与我方新版PDF54相邻排版，已人工查看；独立页面`public/thesis-studio/he-thesis-comparison/ch3-v8r6/he28-academic-revision.html`已发布仓库，详情依据OpenFAST官方ElastoDyn/AeroDyn文档。WORD_SHA256=4313b5eca4157f53015377082e7edcfb41b6c68ed8bd459b0efc49589171639f；main生成后commit dedc299f867204d79b0893e1b9287020c01c1d19。
+- RESEARCH=新增正式学术正文commit 7824325dff3d6647dbbb8f5fb97161d9a37e80de；白皮书v0.32.136 commit 88f1103ebdb7dbd9029ba0f7ad407cb844a9d471。仅科研文字、理论和原件拼图，不做Abaqus/CAE，新增物理结果0/12阶段，原有独立W外风载与WE/Fatigue HOLD不变。下一页何原PDF29开始按同样的来源/原图/正文一页一页核查，不抄参考论文动力学假设。
+
 ## 2026-11-23｜S12 何原论文PDF28与我方V8-R8逐页原图、方位角和动力学方法比对 · START
 - HEAD main=`7526bcec65681d8431d734f99b3c5bb527baa2eb`，research=`dbd4f78e3e05a8c1e05df36555d71d0297721642`。已读根/研究AGENTS、指挥室最新研究交接、何2024 PDF28原始拼图与原页文字、公开V8-R8原生PDF/Word源码和科研分支Ch3§3.4.1。何第28页原文：图3-1整机正/侧视，图3-2叶片局部正/侧视，匀速三叶片方位角式（3.1）及8DOF Euler–Lagrange式（3.2）；现存我方RNA 6×6等效质量叙述不包含转子运行方位角/运动方程。OpenFAST官方v3.5.3 AeroDyn坐标资料定义hub/各叶片方位偏置，ElastoDyn采用Kane动力学而非何的8DOF Euler–Lagrange。可补本研究非匀速旋转角运动学和一般整机广义方程，但不能把他人的8DOF当作我方已实现模型，也不能伪造局部力场。下一增量限于V8-R9原生Word科研理论公式/解释、两论文真实PDF28与对应正文逐页拼图以及必要源证；BEM37式保持。禁止Abaqus/CAE、改物理原件及Draft PR合并。
 
