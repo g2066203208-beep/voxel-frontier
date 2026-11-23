@@ -1,3 +1,9 @@
+## 2026-11-23｜S12 何PDF第26页对照与第三章精修 · END
+- 科研正文Ch3新增§3.4.5五式(3.4-1)—(3.4-5)：塔身分布气动力、RNA自由体六分力矩、接口残差及功共轭；六段§3.10章节小结重写。实物提交 https://github.com/g2066203208-beep/voxel-frontier/commit/0d1e1a5dd676577dbb5bb93d54d9d3216c8991a0 。
+- 工作室main原生Word/PDF流水线修改：保留32条BEM/广义气动力公式、两幅学术SVG，新增5条塔身力学公式，37条均拟为Word原生OMML；原140页V8-R4保留、V8-R5独立版本化。源码及配置 https://github.com/g2066203208-beep/voxel-frontier/commit/768f42213a567a6a58e92609ef9b80abc0b08aa3 。
+- 第一轮远端Actions https://github.com/g2066203208-beep/voxel-frontier/actions/runs/45125019798 ：真实Word/PDF 142页、37/37数学笔画核验、两幅图通过；Word SHA256 bc4e25f2828802b1597c9e8d25c1d005a264678a1c76239841c70054c7960182；新旧拼图目录路径混用造成独立发布门禁FAIL，未正式发布。路径修复 https://github.com/g2066203208-beep/voxel-frontier/commit/3586e8489504fda8371586a08d41f85ccb793efc ，新发布Actions https://github.com/g2066203208-beep/voxel-frontier/actions/runs/45125286544 结果待回读，不预先冒称上线。
+- SOURCE：T035原始AeroDyn TwrAero=False、历史36case及T062源数据。REF：何2024/Ning2014/OpenFAST AeroDyn输入说明。RUN：仅Word/PDF编辑与渲染，新增物理RUN=0。FIG：原两张BEM学术SVG；TAB：原AeroDyn表。正式同态独立风外载、风震WE、材料Miner、结构优化物理验收仍HOLD，12阶段新增PASS=0。未触及Abaqus/CAE、冻结母本、PR#42合并。
+
 ## 2026-11-23｜S12 何论文第26页专题对照后第三章正文精修 · START
 - 开工读取回执：read_base_sha=`6f9789485c9ebf151d18d03dd6796b0ed44facb8`；main=8edab31d0969d146ba5f717f25fed8edad5037c4。已读根/研究AGENTS、指挥室最新交接、正式Ch3、六章README、MASTER/STATUS、S12关键路径、V8-R4 3.3.1—3.3.3真实公式来源与何PDF第26页原图。继承32条BEM/虚功OMML、两幅矢量图、历史36工况和审计门禁；不改变原始物理结论。
 - 本次责任范围：仅为论文写作精修，在main已发布工作室的3.3阅读源/编辑器补充3.3.4塔身气动力定义、六分量平衡与功率检验，并在公开编辑器及活动研究分支修订3.10本章小结。真实Word/PDF重装配未通过前标NOT_BUILT；不操作Abaqus/CAE、不合并PR#42、不覆盖T057/T070。
