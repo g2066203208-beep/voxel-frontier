@@ -1,3 +1,8 @@
+## 2026-11-23｜S12 V8-R5正式Word/PDF原页审查完成 · PASS出版，非物理PASS
+- V8-R5第三次Actions https://github.com/g2066203208-beep/voxel-frontier/actions/runs/45125652285 为success，旧错误v8r4-spreads路径修复、37/37原生OMML笔画校验、两幅BEM矢量图及表格过自动视觉门禁。正式PDF 142页，Word SHA256 e77cbb927266b2632618229411ac2054126111f37277031c24a9271be8d9e2cc。
+- 原图逐页人工回读：何PDF26正文15页第2.4小结，右侧是真实V8-R5 PDF第105页3.10本章小结；之前第104页表格与小结混页已通过独立起页修复。最新版拼图 public/thesis-studio/he-thesis-comparison/v8r5-spreads/he26-v8r5-105.png（Git blob bca052162af2689c17242067a40d3bbfd7253cd5）；页映射v8r5-page-map.json已实读，何26→我105。
+- 正式Word/PDF已入main并经Actions原生构建/检查成功；Pages部署属于单独CI，须以最新Pages成功记录确认网页可见。出版PASS不是历史风载TwrAero=False改为True，也不是动力求解、风震WE、材料Miner或结构优化PASS。12阶段新增科研PASS=0。
+
 ## 2026-11-23｜S12 何PDF第26页对照与第三章精修 · END
 - 科研正文Ch3新增§3.4.5五式(3.4-1)—(3.4-5)：塔身分布气动力、RNA自由体六分力矩、接口残差及功共轭；六段§3.10章节小结重写。实物提交 https://github.com/g2066203208-beep/voxel-frontier/commit/0d1e1a5dd676577dbb5bb93d54d9d3216c8991a0 。
 - 工作室main原生Word/PDF流水线修改：保留32条BEM/广义气动力公式、两幅学术SVG，新增5条塔身力学公式，37条均拟为Word原生OMML；原140页V8-R4保留、V8-R5独立版本化。源码及配置 https://github.com/g2066203208-beep/voxel-frontier/commit/768f42213a567a6a58e92609ef9b80abc0b08aa3 。
