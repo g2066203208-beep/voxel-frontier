@@ -1,3 +1,8 @@
+## 2026-11-23 22时｜S06全速率归档工件独立重算 · END
+- READ-BEFORE-WRITE：PR#42 Open/Draft；开工HEAD `4c4448cf189725bf0b87d845623136e101bb811f`，研究/根AGENTS、指挥室、白皮书v0.32.140、T062全速率收据与18行原生响应、T080已读；旧MASTER/STATUS未确认，未假称已读。
+- 科研交付：真正下载Actions #42842305092 artifact #13775054290并核ZIP SHA256 `8891c5fc...`、gzip SHA256 `45cc3086...`；独立Python对216018行全速率六分量CSV进行18×12001逐行时间轴与模长重算，六指标逐组对原归档oracle 18/18 PASS；双轴弯矩/三向反力峰值时间差中位144.45s、最大545.40s，11/18超过60s。源码 [73919a8](https://github.com/g2066203208-beep/voxel-frontier/commit/73919a848211655498ea6fcfff9644398f5fe370)，期刊正文 [a22c177](https://github.com/g2066203208-beep/voxel-frontier/commit/a22c177ad997cea505be1fdf5f67553b79076a0b)，T080过程 [13bf215](https://github.com/g2066203208-beep/voxel-frontier/commit/13bf21590538643fd1ff909e622892c85eb91808)，白皮书v0.32.141 [338f104](https://github.com/g2066203208-beep/voxel-frontier/commit/338f1041b63f14f05e4f9def8347e00e87830d44)。
+- TEST：gzip原件字节与独立CSV重算PASS；原OUTB重新解码NOT_RUN，外部气动力/惯性归属、正式W/E/WE及材料Miner HOLD；新增物理RUN0，12阶段晋级0/12。下一唯一动作：S12将已验同步响应与AeroDyn TwrAero=False适用域纳入学位论文风载章节的明确限定，避免反复统计同一18组。禁Abaqus/CAE、冻结母本、main、昂贵RUN及PR合并均未触碰。
+
 ## 2026-11-23 21时｜S06原生反力同步峰值量化误差拒绝测试 · END
 - READ-BEFORE-WRITE：PR#42 Open/Draft；开工HEAD `2cb82c444c86c6409338ff3ab9598b10ab6f91d9`；读研究AGENTS、指挥室、白皮书v0.32.139、T080、期刊稿及T062 18行源CSV和全速率收据；旧MASTER/STATUS路径404未冒称读取。
 - 科研交付：原生弯矩和三轴反力各18组中，异步分量极值包络相对同步峰值的严格正差超出2倍量化误差上界；最小量化裕度分别51.674377和253.981436，不能以int16解码量化解释差异。正式期刊方法与两行表 [commit 7e5e2e0](https://github.com/g2066203208-beep/voxel-frontier/commit/7e5e2e0fe9cc8f8cab75801dbc7a6fb2fc31edc6)，白皮书v0.32.140；原OUTB重新解码及独立CLI NOT_RUN。12阶段新增0/12；最大非Abaqus HOLD=独立同态W侧外气动力及惯性归属。
