@@ -1,3 +1,7 @@
+## 2026-11-23｜S12 何PDF第27页逐段模型定义纠偏 · START
+- 开工HEAD：main=057525fadca049d95dfab1802ba6239005420406；research=198f2519bd13f0e167693dcab3cb5267886a096c。已读根/研究AGENTS、指挥室现行研究边界、何原PDF第27页原文与真实左右拼图、V8-R6公开Editor ch02/ch03 §3.4.1与§3.4.6、V8-R6原生Word发布脚本和31项原V7纠偏配置、活动研究Ch3 §3.4.1。任务限于何27页的原文事实解释及我方模型来源、坐标/自由度/假设的正规正文增补，不复制何原稿长段，不照搬8DOF，不运行或审核Abaqus/CAE，不修改冻结源、不合并PR#42。
+- 写入计划：更新main scripts/thesis-edit/ch3_bem_v8.json的精确原V7段落ID b0367—b0371（必要时b0366标题）；审查并与研究分支Ch3 §3.4.1及同一工作室的正文源保持一致；新版本原生Word/PDF仅在真实GitHub Actions构建与原页审查后宣称出版通过。SOURCE为V8-R6 §2.1、§3.4.6 RNA/T顶高程源级结果、T035 TwrAero=False、历史模型族；REF为何PDF27、DTU10MW及OpenFAST输入说明；新的耦合物理结果=0。
+
 ## 2026-11-23｜S12 何泽瑜第三章PDF27—38逐页原图V8-R6对照 · START
 - READ-BEFORE-WRITE：research_head=`aa0bea0c9d5c189807d854f861193430394d1481`，main_head=`dd04f6807071aadd4f985fc14808da70b8812cf0`；已读根AGENTS、研究AGENTS、指挥室最新交接、何2024原PDF 90页的既有逐页来源索引与审阅笔记、V8-R6页码映射、V8-R6公开论文目录与科研证据门禁。何第二章PDF18—26已有新版主题配对，但不宣称严格内容验收全PASS；第三章PDF27—38共12页，按原PDF真实页与我们新版139页PDF主题配对，标注不同自由度模型和归档验证等级，绝不把Simpack探索写为已通过生产耦合。
 - 本轮范围：GitHub Actions只运行PDF文本定位与PymuPDF原页渲染/拼图/出版审查，不做Abaqus/CAE、不改冻结母本、不合并PR#42；新图保存在同一个thesis-studio/he-thesis-comparison/ch3-v8r6/，原90页历史索引保留可追溯。验收以真实原页文件、配对依据、人工抽查和CI结果为准；自动相似度不做学术PASS判定。
