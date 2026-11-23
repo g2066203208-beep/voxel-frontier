@@ -1,3 +1,8 @@
+## 2026-11-23｜线上论文编辑器第二章§2.6.4学术措辞同步 · END
+- MAIN：公开校订稿owner-published-draft.json提交8116a07232709a0eeecb9c2707c518f60929f9cb；在线编辑器自动读取/合并提交14dfe9ca2faea28b65593e3d1ca46719b2096ff7，主站正文位置#chapter-02，段落b0229/b0230。远端回读两文件blob SHA a90af821a10a2571573fd5ee9bfc4b2e0708d88a / b1cda0086e78c458834c05a0893a8f6779bc029b，母本SHA4313b5eca4157f53015377082e7edcfb41b6c68ed8bd459b0efc49589171639f匹配，已有浏览器本地草稿优先，未清除个人修改。
+- 正文：参考文献[1]4m推覆、OpenSees/Abaqus应力极值与我方BF1两组0.901126/0.928000m、555.694/558.319kN区分；不引入新仿真结果，不将文献应力当作我方计算。线上文字正式学术表达；旧V6离线DOCX未覆盖V8-R9 Word/PDF母本。
+- TEST：GitHub远端文件回读PASS；Pages run 45144658008、在线编辑器验证run 45144658237、CI run 45144658092在本次回读时为in_progress，尚未确认Pages发布/浏览器实测PASS。科学验证与新增物理结果均无变化（0），Abaqus/CAE未触碰；后续以workflow success与网页核实为上线验收，Word/PDF原生再编排需另行核对。
+
 ## 2026-11-23｜线上论文编辑器第二章§2.6.4学术措辞同步 · START
 - 执行者：网页版ChatGPT；范围仅在线论文工作室正文显示与公开校订草稿，禁止修改Abaqus/CAE、冻结研究父本、科学结论、研究PR#42。
 - READ-BEFORE-WRITE：已读根AGENTS、研究AGENTS、最新指挥室；main基线dedc299f867204d79b0893e1b9287020c01c1d19；研究指挥室当前blob 4d53a28ad78969100df07d69701d175940e4eec1。核对public/thesis-studio/manuscript-workbench.js、V8-R9 editor-data/manuscript-v8-bem.json第二章b0229/b0230，并读取独立Word校订稿相应段落。
