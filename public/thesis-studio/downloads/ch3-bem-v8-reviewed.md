@@ -242,41 +242,41 @@ $$
 
 在忽略塔身周围三维绕流及相邻部件遮蔽影响的横向阻力近似下，取塔身轴线高度坐标z、外径D(z)、局部阻力系数C_{D,t}(z)，空气相对于运动塔身的横向速度为v_{rel,⊥}(z,t)，则作用于塔身的单位高度气动力矢量为
 
-$
+$$
 \mathbf p_{\mathrm t}(z,t)=\frac12\rho C_{D,\mathrm t}(z)D(z)\left\|\mathbf v_{\mathrm{rel},\perp}(z,t)\right\|\mathbf v_{\mathrm{rel},\perp}(z,t)\tag{3.3-33}
-$
+$$
 
 式中，p_t的单位为N/m，v_{rel,⊥}为风速减去塔身局部结构速度后在塔身轴线法平面上的投影；式（3.3-33）仅为圆柱横向阻力近似，C_{D,t}需根据断面形状、雷诺数和适用规范确定。对于锥形塔身、钢混连接段及相邻构件影响显著的部位，应独立判断该近似的适用性。不得将TwrAero=False解释为真实塔身风阻为零。
 
 定义塔顶连接界面参考点T的全局坐标为x_T，塔身轴线相应受力点为x(z)，则塔身分布外力在T点的等效合力及合矩满足
 
-$
+$$
 \mathbf F_{T}^{\mathrm t}(t)=\int_{z_0}^{z_H}\mathbf p_{\mathrm t}(z,t)\,\mathrm dz,\qquad \mathbf M_{T}^{\mathrm t}(t)=\int_{z_0}^{z_H}[\mathbf x(z)-\mathbf x_T]\times\mathbf p_{\mathrm t}(z,t)\,\mathrm dz\tag{3.3-34}
-$
+$$
 
 对本研究组合塔架，z_0与z_H应由158 m塔架实际轴线的统一高程基准确定；不得将历史AeroDyn关闭塔身气动力时保留的11个塔节点直接作为158 m完整分布外载网格。式（3.3-34）是分布力的参考点等效关系，不是精细结构离散加载的替代：若需计算沿高程的局部受力，仍应保持与各结构节点相对应的分布载荷。
 
 在统一惯性坐标系下取RNA为独立自由体，规定w_T^{RNA→tower}为RNA作用于塔架T点的六分量载荷（塔架受力为正），w_T^a、w_T^g和w_T^{other}分别为该自由体所受纯气动力、重力及其他已明确归属的外力在T点的等效力系；定义w_T^{in}为同一自由体按Newton–Euler动量定理构成、并已包含运动参考点输运项的惯性力系，则作用—反作用关系给出
 
-$
+$$
 \mathbf w_{T}^{\mathrm{RNA}\to\mathrm{tower}}=\mathbf w_{T}^{\mathrm a}+\mathbf w_{T}^{\mathrm g}+\mathbf w_{T}^{\mathrm{other}}-\mathbf w_{T}^{\mathrm{in}}\tag{3.3-35}
-$
+$$
 
 式（3.3-35）适用于同一RNA自由体、同一时刻、同一惯性坐标系及同一参考点的力系，且w=[F^T,M^T]^T；不同软件输出的力是施加于RNA还是施加于塔架，必须先统一作用方向。若精细塔架显式保留RNA质量与转动惯量，其惯性、重力项已由结构求解承担，不可再通过接口反力重复施加；若RNA从塔架动力质量中移除，则必须说明接口如何传递相应作用。
 
 以同一T点各项独立源记录建立六分量残差，记式（3.3-35）右端合成力、矩分别为F_T^{bal}和M_T^{bal}，接口实测或独立计算值为F_T^{int}、M_T^{int}，则分别定义
 
-$
+$$
 \mathbf r_F(t)=\mathbf F_T^{\mathrm{int}}(t)-\mathbf F_T^{\mathrm{bal}}(t),\qquad \mathbf r_M(t)=\mathbf M_T^{\mathrm{int}}(t)-\mathbf M_T^{\mathrm{bal}}(t)\tag{3.3-36}
-$
+$$
 
 r_F以N计，r_M以N·m计，必须分别根据作用力幅值、离散误差和时间采样精度给出事先定义的相对及绝对容差，不能把单位不同的六个分量直接求欧氏范数作为统一误差。还须检查由式（3.3-32）造成的力臂项、坐标轴方向及输出单位，并在相同风场、相同运行状态及相同时间戳上复核。
 
 对于塔顶平动速度v_T和角速度ω_T，采用前述载荷作用于塔架的正向约定，接口瞬时功率及其广义坐标形式为
 
-$
+$$
 \mathcal P_T(t)=\mathbf F_T^{\mathsf T}\mathbf v_T+\mathbf M_T^{\mathsf T}\boldsymbol\omega_T=\mathbf Q_T^{\mathsf T}\dot{\mathbf q},\qquad \mathbf Q_T=\mathbf J_T^{\mathsf T}\mathbf w_T\tag{3.3-37}
-$
+$$
 
 式中J_T为塔顶六自由度速度对结构广义速度的雅可比矩阵。等式为功共轭的必要一致性条件；对离散传递还应考虑时间积分、滞后、坐标变换及力矩移轴所引起的功率误差。载荷平衡残差或功率偏差若未通过独立核查，不能将整机塔底反力时程、六个分量的非同步峰值或式（3.3-34）的理论积分视为已经验证的精细塔架外风载。
 
