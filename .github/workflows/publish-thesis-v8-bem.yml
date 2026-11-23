@@ -1,4 +1,4 @@
-name: Publish V8-R6 revised aerodynamic interface and thesis summary
+name: Publish V8-R7 revised aerodynamic interface and thesis summary
 on:
   push:
     branches: [main]
@@ -14,7 +14,7 @@ permissions:
   actions: write
 concurrency:
   group: thesis-v8-bem
-  cancel-in-progress: false
+  cancel-in-progress: true
 jobs:
   merge-render:
     runs-on: ubuntu-24.04
@@ -50,28 +50,30 @@ jobs:
           import json
           from pathlib import Path
           p=Path("public/thesis-studio/he-thesis-comparison")
-          m=json.loads((p/"v8r6-page-map.json").read_text())
-          assert m["version"]=="V8-R6" and len(m["equation_pages"])==37
-          for k in range(20,27):assert m["pages"][str(k)]
+          m=json.loads((p/"v8r7-page-map.json").read_text())
+          assert m["version"]=="V8-R7" and len(m["equation_pages"])==37
+          assert len(m["pages"]["27"])==1, "HE27_SHOWS_OLD_MATCH"
+          assert (p/m["pages"]["27"][0]["image"]).stat().st_size>100000
+          for k in range(20,28):assert m["pages"][str(k)]
           for ls in m["pages"].values():
               for item in ls:assert (p/item["image"]).stat().st_size>10000
           PY
       - uses: actions/upload-artifact@v4
         with:
-          name: V8R6-BEM-actual-Word-and-pages
+          name: V8R7-BEM-actual-Word-and-pages
           path: |
-            _generated_thesis_v8/10MW-thesis-v8r6-evidence-20261123.docx
-            _generated_thesis_v8/10MW-thesis-v8r6-evidence-20261123.pdf
+            _generated_thesis_v8/10MW-thesis-v8r7-he27-20261123.docx
+            _generated_thesis_v8/10MW-thesis-v8r7-he27-20261123.pdf
             _generated_thesis_v8/v8-audit.json
             _generated_thesis_v8/bem-pages
-            public/thesis-studio/he-thesis-comparison/v8r6-spreads
+            public/thesis-studio/he-thesis-comparison/v8r7-spreads
           retention-days: 30
       - name: Publish V8 candidate assets and existing online editor
         run: |
           git config user.name 'thesis-editor[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add public/thesis-studio/downloads/10MW-thesis-v8r6-evidence-20261123.* public/thesis-studio/editor-data/manuscript-v8-bem.json public/thesis-studio/he-thesis-comparison/v8r6-page-map.json public/thesis-studio/he-thesis-comparison/v8r6-spreads public/thesis-studio/he-thesis-comparison/index.html public/thesis-studio/manuscript-workbench.js public/thesis-studio/manuscript-workbench.html
-          git commit -m 'docs(thesis): publish V8-R6 claim-audited Word/PDF with historic Simpack route corrected'
+          git add public/thesis-studio/downloads/10MW-thesis-v8r7-he27-20261123.* public/thesis-studio/editor-data/manuscript-v8-bem.json public/thesis-studio/he-thesis-comparison/v8r7-page-map.json public/thesis-studio/he-thesis-comparison/v8r7-spreads public/thesis-studio/he-thesis-comparison/index.html public/thesis-studio/manuscript-workbench.js public/thesis-studio/manuscript-workbench.html
+          git commit -m 'docs(thesis): publish V8-R7 claim-audited Word/PDF with historic Simpack route corrected'
           git pull --rebase -X theirs origin main
           git push origin HEAD:main
       - name: Trigger existing Pages deployment
