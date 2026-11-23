@@ -19,7 +19,7 @@ downloads=root/"downloads"
 editor=root/"editor-data"
 compare=root/"he-thesis-comparison"
 out=Path("_generated_thesis_v8");out.mkdir(exist_ok=True)
-prefix="10MW-thesis-v8r8-academic-20261123"
+prefix="10MW-thesis-v8r9-he28-20261123"
 old="10MW-thesis-v7-wind-theory-20261122"
 sha=lambda x:hashlib.sha256(x).hexdigest()
 def save_json(path,x):
@@ -65,15 +65,20 @@ def insert(el,idx,cid="03",**fields):
 tex=[v for k,v in revision["blocks"] if k=="e"]
 expected_eq=revision.get("expected_native_equations",32)
 assert len(tex)==expected_eq
+he28=revision["he28_model_mechanics"]
+assert he28["insert_before_id"]=="b0371" and [k for k,v in he28["blocks"]]==["p","e","p","p","e","p"]
+he28_eq=[v for k,v in he28["blocks"] if k=="e"]
+assert len(he28_eq)==2 and he28["equation_labels"]==["3.4-1","3.4-2"]
 # Use display line breaks for the longest expressions, preserving their algebra.
 tex_doc=list(tex)
 tex_doc[4]=r"\begin{aligned}V_{n,b}&=\mathbf e_n^{\mathsf T}(\mathbf v_w-\mathbf v_s)\\ V_{t,b}&=\mathbf e_t^{\mathsf T}(\mathbf v_w-\mathbf v_s)\end{aligned}"
 tex_doc[26]=r"\begin{aligned}\mathbf M_O={}&\sum_{b=1}^{B}\int [(\mathbf x_b-\mathbf x_O)\times(\mathbf\Phi_b\mathbf f_b)\\&\quad+\mathbf\Phi_b\mathbf m_b]\,\mathrm ds\end{aligned}"
+tex_doc.extend(he28_eq)
 (out/"math.md").write_text("\n\n".join("$$\n"+t+"\n$$" for t in tex_doc),encoding="utf8")
 subprocess.run(["pandoc","-f","markdown","-t","docx","-o",str(out/"math.docx"),str(out/"math.md")],check=True)
 mathdoc=Document(out/"math.docx")
 omml=mathdoc.element.xpath(".//m:oMath")
-assert len(omml)==expected_eq, len(omml)
+assert len(omml)==expected_eq+len(he28_eq), len(omml)
 # Two independent monochrome publication-grade source SVG diagrams.
 figsources={
     "图3.3-1":("bem-streamtube-rotor-v9.svg","bem-streamtube-rotor-v9.png",540),
@@ -155,6 +160,37 @@ for i,(kind,val) in enumerate(revision["blocks"]):
         insert(table._tbl,i,kind="table",rows=val)
     else:raise ValueError(kind)
 assert n==expected_eq
+he28_anchor=old_by_id[he28["insert_before_id"]][2]
+assert he28_anchor.getparent() is body
+added28=[]
+n28=0
+for i,(kind,val) in enumerate(he28["blocks"]):
+    if kind=="p":
+        el=clone_text(template,val)
+        para=Paragraph(el,doc)
+        for run in para.runs:
+            run.font.color.rgb=RGBColor(0,0,0)
+            run.underline=False
+        if i+1<len(he28["blocks"]) and he28["blocks"][i+1][0]=="e":
+            para.paragraph_format.keep_with_next=True
+        info=dict(id=f"v8r9-he28-{i:02d}",kind="text",style=para.style.name,
+                  text=val,has_media=False,has_math=False,word_body_index=-1)
+    else:
+        label=he28["equation_labels"][n28]
+        el=deepcopy(equation)
+        origmath=el.xpath(".//m:oMath");assert len(origmath)==1
+        origmath[0].getparent().replace(origmath[0],deepcopy(omml[expected_eq+n28]))
+        labels=[t for t in el.xpath(".//w:t") if "3.2-14" in (t.text or "")]
+        assert len(labels)==1
+        labels[0].text=labels[0].text.replace("3.2-14",label)
+        info=dict(id=f"v8r9-he28-{i:02d}",kind="text",style=Paragraph(el,doc).style.name,
+                  text="\\t\\t（"+label+"）",has_media=False,has_math=True,
+                  equation_label=label,equation_latex=val,word_body_index=-1)
+        n28+=1
+    he28_anchor.addprevious(el)
+    new[el]=("03",info)
+    added28.append(el)
+assert len(added28)==6 and n28==2
 # These five V5-era wind-case paragraphs were left after the newly inserted 3.3.3
 # in previous builds, breaking the academic section order and repeating 3.1/3.2/3.5.
 # Remove only these exact, auditable source IDs; preserve them in the frozen V7 parent.
@@ -176,7 +212,7 @@ for sid in ("b0643","b0644","b0645","b0646"):
     body.remove(element)
 assert len(revision["chapter3_summary"])==6
 # Academic style gate for all 31 revised source paragraphs, 3.3.4 prose and chapter summary.
-assert revision.get("version")=="V8-R8"
+assert revision.get("version")=="V8-R9"
 assert len(revision["claim_corrections"])==48
 assert len(revision["blocks"])==98 and sum(k=="e" for k,v in revision["blocks"])==37
 for text_part in list(revision["claim_corrections"].values())+[v for k,v in revision["blocks"] if k=="p"]+list(revision["chapter3_summary"]):
@@ -226,7 +262,7 @@ assert all(etree.tostring(el)==xml for el,xml in original_xml.items() if el.getp
 assert all(Paragraph(old_by_id[rid][2],doc).text==old_by_id[rid][1]["text"] for rid in redundant_ids),"removed paragraph text differs from frozen original"
 assert len(doc.tables)==38 and len(doc.inline_shapes)==6
 assert Paragraph(old_by_id["b0364"][2],doc).text.startswith("3.4 ") and old_by_id["b0364"][2].getprevious() is not old_by_id["b0363"][2]
-assert len(doc.element.xpath(".//m:oMath"))==math0+expected_eq
+assert len(doc.element.xpath(".//m:oMath"))==math0+expected_eq+len(he28_eq)
 tmp=out/"native-v8.docx";doc.save(tmp)
 final=out/f"{prefix}.docx"
 # Preserve every unaffected package component byte for byte.
@@ -239,7 +275,12 @@ with ZipFile(parent) as a,ZipFile(tmp) as b,ZipFile(final,"w",ZIP_DEFLATED,compr
 with ZipFile(parent) as a,ZipFile(final) as b:
     assert all(a.read(n)==b.read(n) for n in a.namelist() if n not in allowed)
 check=Document(final);assert len(check.tables)==38 and len(check.inline_shapes)==6
-assert len(check.element.xpath(".//m:oMath"))==math0+expected_eq
+assert len(check.element.xpath(".//m:oMath"))==math0+expected_eq+len(he28_eq)
+doc_text=[p.text for p in check.paragraphs]
+for k,v in he28["blocks"]:
+    if k=="p":assert v in doc_text,("HE28_FORMAL_PARAGRAPH_MISSING",v[:70])
+for label in he28["equation_labels"]:
+    assert any(label in p for p in doc_text),("HE28_FORMULA_MISSING",label)
 # Actual Word-body source claim texts must match all revised academic paragraphs.
 word_content=[q.text for q in check.paragraphs]
 for sid,t in revision["claim_corrections"].items():
@@ -260,13 +301,14 @@ source["chapters"]=list(chapters.values())
 allblocks=[b for c in source["chapters"] for b in c["blocks"]]
 assert len({b["id"] for b in allblocks})==len(allblocks)
 assert sum(b.get("equation_label","").startswith("3.3-") for b in allblocks)==expected_eq
+assert {b.get("equation_label") for b in allblocks if b.get("equation_label","").startswith("3.4-")}==set(he28["equation_labels"])
 assert sum("manuscript-figures-v6" in b.get("figure_asset","") for b in allblocks)==4
 assert {b["text"].split()[0] for b in allblocks if b.get("figure_asset","").endswith("-v9.svg")}=={"图3.3-1","图3.3-2"}
 binary=final.read_bytes()
-source["source"].update(name="10MW混塔论文_V8R8_逐项证据纠偏审阅版.docx",sha256=sha(binary),bytes=len(binary),pdf=f"./downloads/{prefix}.pdf",docx_parts_pattern=f"./downloads/{prefix}.partNN.bin",docx_parts=15,editorial_scope="V8-R8: 37 native BEM/aero formulas preserved, 31 original V7 evidence-boundary corrections retained; five §3.4.1 paragraphs corrected against He PDF27 on verified geometry, frame, six-component tower interface, and prestress/connection assumptions. Physical wind mapping, W/E/WE, Miner and optimization remain unverified.")
+source["source"].update(name="10MW混塔论文_V8R9_整机运动学与动力学正式修订版.docx",sha256=sha(binary),bytes=len(binary),pdf=f"./downloads/{prefix}.pdf",docx_parts_pattern=f"./downloads/{prefix}.partNN.bin",docx_parts=15,editorial_scope="V8-R9: 37 native BEM/aero formulas preserved, 31 original V7 evidence-boundary corrections retained; five §3.4.1 paragraphs corrected against He PDF27 on verified geometry, frame, six-component tower interface, and prestress/connection assumptions. Physical wind mapping, W/E/WE, Miner and optimization remain unverified.")
 subprocess.run(["libreoffice","-env:UserInstallation=file:///tmp/lo-thesis-v8","--headless","--convert-to","pdf","--outdir",str(out),str(final)],check=True)
 pdfpath=out/f"{prefix}.pdf";pdf=fitz.open(pdfpath)
-assert 131<=len(pdf)<=155
+assert 131<=len(pdf)<=158
 norm=lambda x:re.sub(r"\s+","",unicodedata.normalize("NFKC",x)).replace("−","-").replace("‐","-")
 texts=[norm(p.get_text()) for p in pdf]
 def locate(s):
@@ -307,7 +349,7 @@ table_pages=[i+1 for i,t in enumerate(texts) if "WakeMod" in t and "AeroDyn" in 
 assert any(all(z in texts[p-1] for z in ("WakeMod","SkewMod","AirDens","MaxIter","TwrAero")) for p in table_pages),("BEM_TABLE_SPLIT_OR_TRUNCATED",table_pages)
 print("BEM_FORMULAS_FIGURE_AND_TABLE_VISIBLE",ink_ok,figures,table_pages)
 he=fitz.open(root/"documents/He_Zeyu_2024_hybrid_tower_thesis.pdf");assert len(he)==90
-spread=compare/"v8r8-spreads";spread.mkdir(exist_ok=True)
+spread=compare/"v8r9-spreads";spread.mkdir(exist_ok=True)
 groups={}
 v7=json.loads((compare/"v7-page-map.json").read_text())
 for hp,items in v7["pages"].items():
@@ -326,6 +368,10 @@ he27_end=locate("塔身独立分布气动力应分别处理")
 assert he27_start<=he27_end and he27_end-he27_start<=2
 # Pair He p27 with every native page actually containing the revised subsection.
 groups["27"]=list(range(he27_start,he27_end+1))
+he28_start=locate("为描述三叶片风轮的瞬时空间方位")
+he28_end=locate("（3.4-2）")
+assert he28_start<=he28_end and he28_end-he28_start<=2
+groups["28"]=list(range(he28_start,he28_end+1))
 def raster(d,p):
     x=d[p-1].get_pixmap(matrix=fitz.Matrix(1.5,1.5),alpha=False)
     return Image.frombytes("RGB",(x.width,x.height),x.samples)
@@ -335,8 +381,8 @@ for hp,items in groups.items():
     for op in items:
         a,b=raster(he,int(hp)),raster(pdf,op)
         im=Image.new("RGB",(a.width+b.width+18,max(a.height,b.height)),"#e5e9ed");im.paste(a,(0,0));im.paste(b,(a.width+18,0))
-        name=f"he{hp}-v8r8-{op}.png";im.save(spread/name,optimize=True)
-        result.append({"he_pdf_page":int(hp),"our_pdf_page":op,"image":"./v8r8-spreads/"+name})
+        name=f"he{hp}-v8r9-{op}.png";im.save(spread/name,optimize=True)
+        result.append({"he_pdf_page":int(hp),"our_pdf_page":op,"image":"./v8r9-spreads/"+name})
     map_pages[hp]=result
 # All actual amended pages are individually rendered, independent of historical comparisons.
 read_pages=out/"bem-pages";read_pages.mkdir(exist_ok=True)
@@ -346,18 +392,19 @@ for i in range(15):(downloads/f"{prefix}.part{i+1:02}.bin").write_bytes(binary[i
 assert sha(b"".join((downloads/f"{prefix}.part{i:02}.bin").read_bytes() for i in range(1,16)))==source["source"]["sha256"]
 (downloads/f"{prefix}.pdf").write_bytes(pdfpath.read_bytes())
 save_json(editor/"manuscript-v8-bem.json",source)
-save_json(compare/"v8r8-page-map.json",{"version":"V8-R8","pdf":f"../downloads/{prefix}.pdf","pdf_pages":len(pdf),"pages":map_pages,"equation_pages":pages,"source_sha256":sha(binary),"scope":"V8-R8 original Word/PDF with 37 native aero formulas, and source-bounded §3.4.1 model/coordinate/DOF correction based on He PDF27; no new physical validation."})
-save_json(out/"v8-audit.json",{"parent_sha256":sha(raw),"word_sha256":sha(binary),"pdf_pages":len(pdf),"inserted_omml":expected_eq,"tables":38,"figures":6,"bem_pdf_pages":list(range(start,end+1)),"equations":pages,"physics_runs":0,"review_status":"two source-SVG figures; actual Word/PDF page inspection required"})
+assert len(map_pages["28"])>=1 and all(x["he_pdf_page"]==28 for x in map_pages["28"])
+save_json(compare/"v8r9-page-map.json",{"version":"V8-R9","pdf":f"../downloads/{prefix}.pdf","pdf_pages":len(pdf),"pages":map_pages,"equation_pages":pages,"source_sha256":sha(binary),"scope":"V8-R9 original Word/PDF with 37 native aero formulas, and source-bounded §3.4.1 model/coordinate/DOF correction based on He PDF27; no new physical validation."})
+save_json(out/"v8-audit.json",{"parent_sha256":sha(raw),"word_sha256":sha(binary),"pdf_pages":len(pdf),"inserted_omml":expected_eq+len(he28_eq),"he28_equations":he28["equation_labels"],"tables":38,"figures":6,"bem_pdf_pages":list(range(start,end+1)),"equations":pages,"physics_runs":0,"review_status":"two source-SVG figures; actual Word/PDF page inspection required"})
 js=root/"manuscript-workbench.js"
 s=js.read_text(encoding="utf8")
 assert ("manuscript-v7-wind-theory.json" in s or "manuscript-v8-bem.json" in s), "unknown editor mother version"
-s=s.replace("manuscript-v7-wind-theory.json","manuscript-v8-bem.json").replace("10MW-thesis-v8r7-he27-20261123",prefix).replace("10MW-thesis-v8r6-evidence-20261123",prefix).replace("10MW-thesis-v8r5-theory-20261123",prefix).replace("10MW-thesis-v8r4-bem-20261122",prefix).replace("10MW-thesis-v8r3-bem-20261122",prefix).replace("10MW-thesis-v8r2-bem-20261122",prefix).replace("10MW-thesis-v8-bem-20261122",prefix).replace(old,prefix).replace("下载V7合并版PDF · 131页",f"下载V8审阅版PDF · {len(pdf)}页").replace("V7继承V6第二章四图，修订第三章风场理论及18条编号公式；其余原文、表格和图件保留。","V8继承V7，增补叶素动量理论27条原生公式、原理图和实际AeroDyn设置，保留原有研究结果。")
+s=s.replace("manuscript-v7-wind-theory.json","manuscript-v8-bem.json").replace("10MW-thesis-v8r8-academic-20261123",prefix).replace("10MW-thesis-v8r7-he27-20261123",prefix).replace("10MW-thesis-v8r6-evidence-20261123",prefix).replace("10MW-thesis-v8r5-theory-20261123",prefix).replace("10MW-thesis-v8r4-bem-20261122",prefix).replace("10MW-thesis-v8r3-bem-20261122",prefix).replace("10MW-thesis-v8r2-bem-20261122",prefix).replace("10MW-thesis-v8-bem-20261122",prefix).replace(old,prefix).replace("下载V7合并版PDF · 131页",f"下载V8审阅版PDF · {len(pdf)}页").replace("V7继承V6第二章四图，修订第三章风场理论及18条编号公式；其余原文、表格和图件保留。","V8继承V7，增补叶素动量理论27条原生公式、原理图和实际AeroDyn设置，保留原有研究结果。")
 js.write_text(s,encoding="utf8")
 html=root/"manuscript-workbench.html"
-s=html.read_text(encoding="utf8").replace("10MW-thesis-v8r5-theory-20261123",prefix).replace("10MW-thesis-v8r4-bem-20261122",prefix).replace("10MW-thesis-v8r3-bem-20261122",prefix).replace("10MW-thesis-v8r2-bem-20261122",prefix).replace("10MW-thesis-v8-bem-20261122",prefix).replace(old,prefix).replace("V7 / WIND THEORY","V8 / BEM THEORY").replace("保留第二章四图；第三章新增规范风场理论与公式。","保留第二章四图及风场理论；新增叶素动量理论。<br><a href='./chapter3-bem-v8.html'>查看3.3节完整精修正文</a>").replace("V7合并版131页",f"V8审阅版{len(pdf)}页")
+s=html.read_text(encoding="utf8").replace("10MW-thesis-v8r8-academic-20261123",prefix).replace("10MW-thesis-v8r5-theory-20261123",prefix).replace("10MW-thesis-v8r4-bem-20261122",prefix).replace("10MW-thesis-v8r3-bem-20261122",prefix).replace("10MW-thesis-v8r2-bem-20261122",prefix).replace("10MW-thesis-v8-bem-20261122",prefix).replace(old,prefix).replace("V7 / WIND THEORY","V8 / BEM THEORY").replace("保留第二章四图；第三章新增规范风场理论与公式。","保留第二章四图及风场理论；新增叶素动量理论。<br><a href='./chapter3-bem-v8.html'>查看3.3节完整精修正文</a>").replace("V7合并版131页",f"V8审阅版{len(pdf)}页")
 html.write_text(s,encoding="utf8")
 idx=compare/"index.html"
-s=idx.read_text(encoding="utf8").replace("v8r7-page-map.json","v8r8-page-map.json").replace("v8r6-page-map.json","v8r8-page-map.json").replace("v8r5-page-map.json","v8r8-page-map.json").replace("v8r4-page-map.json","v8r8-page-map.json").replace("v7-page-map.json","v8r5-page-map.json").replace("v8-page-map.json","v8r5-page-map.json").replace("V7修改后真实论文原页","V8-R4修改后真实论文原页").replace("右：V7 PDF第","右：V8 PDF第").replace("第18–19页附V7修订后真实原页","第18–19、20–24页附V8修订后真实原页")
+s=idx.read_text(encoding="utf8").replace("v8r8-page-map.json","v8r9-page-map.json").replace("v8r7-page-map.json","v8r9-page-map.json").replace("v8r6-page-map.json","v8r9-page-map.json").replace("v8r5-page-map.json","v8r9-page-map.json").replace("v8r4-page-map.json","v8r9-page-map.json").replace("v7-page-map.json","v8r5-page-map.json").replace("v8-page-map.json","v8r5-page-map.json").replace("V7修改后真实论文原页","V8-R4修改后真实论文原页").replace("右：V7 PDF第","右：V8 PDF第").replace("第18–19页附V7修订后真实原页","第18–19、20–24页附V8修订后真实原页")
 if '<a href="../chapter3-bem-v8.html">3.3节叶素动量理论完整修订正文</a>' not in s:
     s=s.replace('<section id="v7-review" hidden>','<section id="v7-review" hidden><a href="../chapter3-bem-v8.html">3.3节叶素动量理论完整修订正文</a>')
 idx.write_text(s,encoding="utf8")
