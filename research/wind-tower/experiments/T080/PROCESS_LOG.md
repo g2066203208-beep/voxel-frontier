@@ -1,3 +1,6 @@
+### 2026-11-23 14时｜S05第二事件NVL长周期方向比与通带辨识
+READ-BEFORE-WRITE：PR#42 Open/Draft；开工HEAD 0c87366683ea25683c41e4463d6b0d67ead5f6f3；已读研究AGENTS、指挥室、白皮书、MASTER/STATUS、12阶段、T079/T080、ESM两事件官方元数据及第二事件5周期CSV。SOURCE=IT-2012-0009/NVL真实MP处理双水平5周期CSV blob 6f6ac18eda164d55ba225cecbd461ead27027c82，官方收据blob 81219cfba9c5d7d23f100aad5dd5be4939ee8411，HNE/HNN原ASC SHA256 3703b42d757f8b745eb3ed1cc01cd2873ec55d873ecc314f7b0297d9de1e7cb3 / 1f6461a08375cd97af1091169fb67681ae8daba2b03d7943282794d5cc1df9bd。RUN=五周期HNN/HNE 2.755019/1.824043/1.711445/2.232958/3.434301；NVL两分量高通同为0.08Hz，10s频率/截止=1.25；MDN的0.10Hz不得移植NVL。初次写入发现站点误归属，已在最终稿明确修正并回读；非原始波重算。成果=T079 METHOD_PLAN新增5行实测谱表及可证伪处理带宽论证；原始未处理波/长周期物理方向性/场址目标谱HOLD。REF/OFFICIAL=ESM v3 DOI 10.13127/esm.3；STANDARD=授权条款未读；FIG0 TAB1，12阶段0/12，最大非Abaqus HOLD=同步同态独立W侧气动力/惯性归属；下一唯一动作=S12将已完成的实证方法段并入真实学位论文章节，避免再刷S05五点审计。禁Abaqus/CAE、冻结母本、main、昂贵RUN、PR合并。
+
 ### 2026-11-23 13时｜S10真实18NTM跨雨流指数seed次序反转
 SOURCE=T062 1080行原始九测站CSV blob 4f77ec9a2027c593ea22cac5abae98de32d407f5；RUN=18NTM两塔底弯矩通道、3风速×2通道×六seed，组内每组15对、共90对：m4→m10严格反转11对（分组1/2/3/3/1/1），零精确平局；此为18实际样本内的排序反例，90对相关，不能当独立概率或材料Miner。源级连接器直接解析PASS，独立Node CLI/OUTB/舍入区间拒绝HOLD；可执行源码commit 477a97f，期刊正文commit 796d138。REF/STANDARD/OFFICIAL无新增，TAB1 FIG0，12阶段0/12，DLC1.2仍HOLD。最大非Abaqus HOLD=同步同态独立W侧气动力与惯性归属。下一唯一动作=切S05官方地震原件/目标谱适用域，停止连续S10小统计。禁Abaqus/CAE、冻结母本、main、昂贵RUN、PR合并。
 
