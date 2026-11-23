@@ -1,3 +1,7 @@
+### 2026-11-23｜v0.32.140 PATCH — S06原生反力异步极值的量化误差拒绝证书
+- SOURCE=T062 18行同时时刻包络CSV blob `2078b1662402c31b857d8cd3d1744e288b7c221c`，原始全速率收据blob `078db8738c18a23ff4f05198d2928e1ac82b5d23`；RUN=18组原生反力同步峰值P与分量独立峰值包络U的差异，对每个峰值保守量化误差ε，采用严格判据U−P>2ε。双轴弯矩最小差154.281315 kN m、最小误差裕度51.674377；三轴反力最小差5.877432 kN、最小裕度253.981436；两类均18/18 PASS。正式期刊新增方法及两行结果表 [commit 7e5e2e0](https://github.com/g2066203208-beep/voxel-frontier/commit/7e5e2e0fe9cc8f8cab75801dbc7a6fb2fc31edc6)，路径 `research/wind-tower/manuscript/journal-wind-fatigue-results.md`，blob `2b5e4677c7a4d8d1e19e39c77ec594d6638922f5`。
+- TEST=GitHub源CSV直接计算PASS；原OUTB重新解包、独立CLI NOT_RUN；此为原生响应向量数据处理的量化误差证书，不证明外气动力/惯性归属、同态W/E/WE、材料Miner或物理验收。TAB2 FIG0，12阶段新增0/12；最大非Abaqus HOLD仍为同步独立W侧气动力及惯性归属。PR#42 Draft，不动main/冻结母本、不启动昂贵RUN、不碰Abaqus/CAE。
+
 ### 2026-11-23｜v0.32.139 PATCH — S12双轴Pareto删一统计的必然性校正
 - SOURCE=T062 36工况两轴DEL4原归档Git blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`；RUN=非支配偏序证明：原前沿4点，32个已被支配点的删除不改变前沿，故此前34/36前沿规模4的计数中32项是结构性必然，仅剩4次前沿点删除有信息，其中2次出现替补、2次不出现。原数值34/36不变，但拒绝把它作为鲁棒性实验证据。正式期刊§5修正路径 `research/wind-tower/manuscript/journal-wind-fatigue-results.md`，commit [df6d5d6](https://github.com/g2066203208-beep/voxel-frontier/commit/df6d5d64232e873bc0c2a89c63a2d9d9af87142d)，Git blob `4cb7b98e9d145c98e69f8a36d3c42c636656898a`。
 - TEST=有限集合偏序证明PASS（无完全重合/tie），原CSV独立重算、OUTB、CLI、字节SHA256 NOT_RUN；FIG0 TAB0，REF/STANDARD/OFFICIAL无新增；12阶段晋级0/12，最大非Abaqus HOLD=同步同态独立W侧气动力及惯性归属。PR#42 Open/Draft，不改main/冻结母本，不启动昂贵RUN或触碰Abaqus/CAE。
