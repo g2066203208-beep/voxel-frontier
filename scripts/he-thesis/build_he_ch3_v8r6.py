@@ -88,7 +88,12 @@ for i in range(26,38):
     txt=textsA[i]
     top=top_matches(i)
     note=REVIEWS[str(i+1)].copy()
-    note["our_page"]=locate_ours(OUR_ANCHORS[str(i+1)])
+    anchor_page=locate_ours(OUR_ANCHORS[str(i+1)])
+    # The subsection heading can fall at the foot of a page; use the first full continuation page.
+    continuation_offsets={27:1,34:1,36:1,37:1}
+    note["anchor_page"]=anchor_page
+    note["our_page"]=anchor_page+continuation_offsets.get(i+1,0)
+    assert note["our_page"]<=len(B)
     note["status"]=STATUS[str(i+1)]
     note["next"]=NOTES[str(i+1)]
     target=int(note["our_page"])-1
@@ -108,6 +113,7 @@ for i in range(26,38):
         "expert_review":note,
         "matching_method":"按V8-R6原生PDF的章节/术语锚点定位；主题相近不作为物理验证通过",
         "match_anchor":OUR_ANCHORS[str(i+1)],
+        "anchor_pdf_page":note["anchor_page"],
         "physics_verified":False,
         "evidence_rule":"文本相似仅用于定位候选页，不足以证明工程已完成",
         "spread_image":"./spreads/compare-%03d.webp"%(i+1),
@@ -185,7 +191,7 @@ for row in INDEX:
         f'<article><div class="entry-title"><h2>{html.escape(header)}</h2><span>{html.escape(note["status"])}</span></div>'
         f'<p class="desc">何本页：{html.escape(note["summary"])}</p>'
         f'<a href="{html.escape(pic)}" target="_blank" rel="noopener"><img loading="lazy" src="{html.escape(pic)}" alt="{html.escape(header)}的原页拼图"></a>'
-        f'<p class="detail"><b>真实配对页锚点：</b>{html.escape(row["match_anchor"])}</p>'
+        f'<p class="detail"><b>对应小节：</b>{html.escape(row["match_anchor"])}（原PDF第{row["anchor_pdf_page"]}页起）</p>'
         f'<p class="detail"><b>差异与验收边界：</b>{html.escape(note["next"])}</p></article>'
     )
 markup='''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
