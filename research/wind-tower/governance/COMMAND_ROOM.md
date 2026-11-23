@@ -1,3 +1,8 @@
+## 2026-11-23｜S12 何论文PDF第27页逐段正文纠错 · END
+- 逐段对照参考原件五段（背景、对象/DTU来源、简化假设、塔架坐标/前后与侧向、三叶片各两向自由度），不拷贝他人整页文字；主论文§3.4.1依据我方SOURCE重写b0367—b0371五段，交代158m 31+4段/36PT、3类历史模型、Y_A与h/T位置、RNA 6×6不等于8DOF、非线性和地震/风载证据边界。研究Ch3 commit 29f39df6d30568be3853cb0b0c158cdeea4af221。
+- GitHub Actions Word/PDF编译及独立原页QA https://github.com/g2066203208-beep/voxel-frontier/actions/runs/45132846376 SUCCESS：V8-R7原生140页、37条OMML、He p27→我们第55/56两页（v8r7-spreads/he27-v8r7-{55,56}.png），实际两图已回读确认黑色正文、完整两页；Source Word SHA256=0d510f7fe80baa20e54d1687ebce9b6ffcb33d310f8acbc8725171a3c98852ac。修订全过程和5段真实原创正文在同一主工作室ch3-v8r6/he27-academic-revision.html；main发布成功，不代表全部90页比对科学PASS。
+- 白皮书v0.32.134 commit 3f0cedb9e1cd8c48d43a2d185bc54b7b07f7554e。RUN=纯编辑出版/原页检查，无新增Abaqus/CAE原生仿真；官方软件定义引用OpenFAST AeroDyn TwrAero=False，未生成外塔身风载。模型一致性、W/E/WE、局部材料Miner、优化物理验收继续HOLD，12阶段新增PASS 0。下一页按何PDF28的双图、转角与Euler–Lagrange式实页逐项核对现有论文，再做必要的依据修改；不抄其8DOF模型到我方。
+
 ## 2026-11-23｜S12 何PDF第27页逐段模型定义纠偏 · START
 - 开工HEAD：main=057525fadca049d95dfab1802ba6239005420406；research=198f2519bd13f0e167693dcab3cb5267886a096c。已读根/研究AGENTS、指挥室现行研究边界、何原PDF第27页原文与真实左右拼图、V8-R6公开Editor ch02/ch03 §3.4.1与§3.4.6、V8-R6原生Word发布脚本和31项原V7纠偏配置、活动研究Ch3 §3.4.1。任务限于何27页的原文事实解释及我方模型来源、坐标/自由度/假设的正规正文增补，不复制何原稿长段，不照搬8DOF，不运行或审核Abaqus/CAE，不修改冻结源、不合并PR#42。
 - 写入计划：更新main scripts/thesis-edit/ch3_bem_v8.json的精确原V7段落ID b0367—b0371（必要时b0366标题）；审查并与研究分支Ch3 §3.4.1及同一工作室的正文源保持一致；新版本原生Word/PDF仅在真实GitHub Actions构建与原页审查后宣称出版通过。SOURCE为V8-R6 §2.1、§3.4.6 RNA/T顶高程源级结果、T035 TwrAero=False、历史模型族；REF为何PDF27、DTU10MW及OpenFAST输入说明；新的耦合物理结果=0。
