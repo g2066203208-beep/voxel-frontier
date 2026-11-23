@@ -486,3 +486,7 @@ READ-BEFORE-WRITE：继承22时交接，读取根/研究AGENTS、指挥室、白
 ### 2026-11-23 10时｜S11真实31段精确积分与载荷高度敏感性（非整塔结构验收）
 READ-BEFORE-WRITE：PR#42 Open/Draft；开工HEAD=69cf0c6a4ba988226d500242a51b3c0f4ae95258，main PR base=bbc5c9130f2d9fc41f776506d86118a9b8db0e65；读根/研究AGENTS、指挥室最新交接、白皮书v0.32.127、T079/T080及现有S11程序/期刊正文。MASTER/STATUS四种候选路径均404，未冒称已读；未读完整12阶段原件。继承T071 31段几何Git blob dff6e86d822dd5cc7dac971bb093aa6d9b8352dd及候选blob 7577328e42e228e6914a9d68182699659c22318a，未重跑任何生产模型。
 科学问题=此前H=112m中点柔度比1.00319410804对积分法和作用高度是否敏感。RUN=31段常I精确解析积分，H=112m比1.003191780709（+0.319178%），H=158m比1.000746710983（+0.074671%，只积分混凝土段），中点相对比值误差0.000232%/0.000046%；同一候选的作用高度效应约4.27倍，不能把112m代理变化等同158m整塔位移。TEST=连接器JS直接读取两份真实CSV源级计算PASS；提交Node CLI、拒绝测试原生执行、物理验证NOT_RUN。源码commit 88e0169cb7e16a783a06874de5e006e4a68f52f2；期刊正文commit 63abf669ffe46faee4ef01efa83bc8c87beba376。误差=精确消除常I分段中点积分截断，但真实沿段变截面、分段E、钢段、风载分布、剪切/连接未知；SOURCE=两Git blob，RUN=上述，REF/STANDARD/OFFICIAL无新增，TAB1 FIG0，12阶段新增0/12；最大非Abaqus HOLD=同步同态独立W侧气动力时程及惯性归属。下一唯一动作=S06/S07寻找真实158m原始风时程及六分量/时间轴证据；缺源直接S10，不再延伸几何柔度小分析。未动禁止Abaqus/CAE、冻结父本、main、昂贵RUN、PR合并。
+
+
+### 2026-11-23 12时｜S10真实18NTM塔底DEL指数敏感性
+SOURCE=T062 1080行原始9测站雨流CSV Git blob 4f77ec9a2027c593ea22cac5abae98de32d407f5。RUN=18NTM×2塔底弯矩通道36行，R=DEL_m10_Nref600/DEL_m4_Nref600，6组seed中位数1.915061/2.385969/1.929955/2.060308/1.744663/1.829833，观测全范围1.683831—2.460550；完整六行表及边界见期刊稿commit 81a21d861998d3e4d29eaf381fa1a788135c5542。TEST=连接器原CSV直接源级计算PASS，原OUTB雨流重算NOT_RUN；仅载荷指数敏感性，不是材料寿命、Miner或局部应力。TAB1 FIG0，12阶段0/12。未触碰Abaqus/CAE、main、冻结母本、昂贵RUN及PR合并。
