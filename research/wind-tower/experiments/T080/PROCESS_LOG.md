@@ -469,3 +469,7 @@ READ-BEFORE-WRITE：继承22时交接，读取根/研究AGENTS、指挥室、白
 - 科学/出版问题：上轮只对第124页做中文视觉检查，不能由单页推断全篇141页的文字层和页面边界均无缺失。本轮直接使用真实候选PDF（会话文件，非Git大件）SHA256 `9573ecc0c283c18a0952ba46801fc011c50dceebfc3ba36643651b66448a45be`，PyMuPDF逐页解析文字层及所有word bounding boxes。
 - RUN：141/141页有非空文字层；文字层0页空白；全部页面595.30×841.89pt；边界外word=0（容差0.5pt）；文字数最少87（封面），中位983；第124页同时可检索39.78%与87.39%。可复现程序 `manuscript/final-thesis/assemble/pdf_page_geometry_gate.py`，源码commit [5254c3b](https://github.com/g2066203208-beep/voxel-frontier/commit/5254c3bb7e8b7c483ff5bb3a79acd912c8b8ebe1)。
 - TEST：本地同算法对真实PDF源级运行PASS；提交后远端脚本独立CLI NOT_RUN。PASS只覆盖文字层存在性、文字框是否越界和第124页数值检索；**不能**据此声称141页逐页视觉检查、字体无缺字、图片完整、参考文献正确或论文物理结论通过。源PDF仅保留会话工件，未入Git。SOURCE=上轮真实V8-R4原Word派生PDF；RUN=本轮源级PDF分析；FIG0 TAB1（141行JSON本地）；REF/STANDARD/OFFICIAL无新增。S12出版QA PARTIAL，12阶段新增晋级0/12，最大非Abaqus HOLD=同态同步独立W侧气动力与惯性归属。
+
+
+### 2026-11-23 08时｜S06真实36观测ETM/NTM载荷DEL4矢量图
+- SOURCE=T062 72行CSV Git blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`；RUN=直接逐行解析36对同风速、同通道、同seed索引ETM/NTM DEL4比值，按6组绘制36观测点、观测min–max和几何均值。图 `manuscript/final-thesis/figures/FIG_S06_ETM_NTM_DEL4_36_ARCHIVED_20261123.svg` commit `2c1054a5849a7d504e64cb5e95dd19fb20c2437c`；期刊图注 commit `9547dfd86d37f573f2db7b6bdce9b8a9033a0a96`。6组几何均值=1.592485/1.639988/1.561678/1.483781/1.322727/1.325748，与既有6行表吻合；36/36>1。TEST=连接器源CSV计算及SVG数据构造PASS，独立SVG视觉渲染、源文件字节SHA256与Node CLI NOT_RUN；统计独立性/同风场配对/物理因果HOLD。REF/STANDARD/OFFICIAL无新增；FIG1 TAB0；12阶段新增0/12。禁止Abaqus/CAE、昂贵生产RUN、main、冻结母本、PR合并。
