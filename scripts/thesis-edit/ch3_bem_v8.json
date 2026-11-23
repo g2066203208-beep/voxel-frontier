@@ -1,5 +1,5 @@
 {
-  "version": "V8-R8",
+  "version": "V8-R9",
   "parent_sha256": "bfe32138625e66ec596faafb932fd9bec1046c3be17612404cba5ddf6f1e9c98",
   "anchor": "b0359",
   "source_input_blob": "366ae27d65d1feca6da0ba9eb186348913158fcb",
@@ -7,7 +7,9 @@
     "[128] NING S A. A simple solution method for the blade element momentum equations with guaranteed convergence[J]. Wind Energy, 2014, 17(9): 1327-1345. DOI: 10.1002/we.1636.",
     "[129] NING S A, HAYMAN G, DAMIANI R, JONKMAN J. Development and validation of a new blade element momentum skewed-wake model within AeroDyn[R]. NREL/CP-5000-63217, 2014.",
     "[130] BUHL M L Jr. A new empirical relationship between thrust coefficient and induction factor for the turbulent windmill state[R]. NREL/TP-500-36834, 2005.",
-    "[131] OPENFAST. AeroDyn input file documentation (TwrAero option)[EB/OL]. https://openfast.readthedocs.io/en/v3.5.3/source/user/aerodyn/input.html."
+    "[131] OPENFAST. AeroDyn input file documentation (TwrAero option)[EB/OL]. https://openfast.readthedocs.io/en/v3.5.3/source/user/aerodyn/input.html.",
+    "[132] OPENFAST. ElastoDyn Users Guide and Theory Manual (v3.5.3): Kane's dynamics, kinematics and structural degrees of freedom[EB/OL]. https://openfast.readthedocs.io/en/v3.5.3/source/user/elastodyn/.",
+    "[133] OPENFAST. AeroDyn v3.5.3 Coordinate Systems: inertial, hub and blade azimuthal offsets[EB/OL]. https://openfast.readthedocs.io/en/v3.5.3/source/user/aerodyn/coordsys.html."
   ],
   "blocks": [
     [
@@ -449,7 +451,7 @@
       "上述关系为风轮气动力、塔身分布力与RNA连接作用建立统一的力学表示。本文历史风工况的塔身独立气动力输入尚未形成覆盖全塔高程的同步时程，因此该部分采用解析阻力与接口平衡关系描述，后续结构响应评价以独立载荷时程和动力条件为依据。"
     ]
   ],
-  "editorial_note": "V8-R8 formalized 3.3/3.10 academic prose and 48 source-bound thesis paragraphs; preserved 37 native equations and original source data, no new physical solve.",
+  "editorial_note": "V8-R9 He original PDF p28: add two native Word academic equations in Ch3 §3.4.1 for real three-blade variable-speed azimuth and general Kane-compatible multibody balance; preserve 37 original BEM equations and 48 existing source corrections; no Abaqus work.",
   "expected_native_equations": 37,
   "chapter3_summary": [
     "本章结合研究区域长期风环境资料与DTU 10 MW参考风机，建立了随机风场、整机运行响应及气动载荷的分析方法，并对归档的风工况数据进行了统计分析。",
@@ -509,5 +511,41 @@
     "b0797": "本文围绕空间RNA惯性表征与混合塔架局部传力机制建立研究方法。其一，在DTU 10 MW参考机组和158 m混合塔架的统一参考点下，综合质量、质心和完整转动惯量建立6×6空间广义质量矩阵，并结合源组件数据与跨模型比较辨析RNA表示误差。其二，基于塔架六分量截面内力及不同材料、连接构件的实际传力通道，构建局部受力评价和结构设计变量分析框架。两项工作分别对应整机—结构动力输入和局部结构响应的力学问题，适用范围由相关数值结果及模型假设确定。",
     "b0799": "本研究的适用范围主要涉及以下方面。（1）塔架水平接缝的等效SPRING2连接表示整体连接刚度，其局部接触压力、摩擦滑移及裂缝几何与实测或显式接触模型所描述的机制不同[86,88,89,98,99]；混凝土损伤后峰值响应还受到网格及本构参数影响。（2）ERA5资料用于研究区域长期风况统计，轮毂高度风速采用幂律外推，尚未以现场测风数据独立标定；塔底固定边界亦未显式计入地基柔度。（3）结构阻尼、模态截断和时间离散采用具体计算版本的参数，OpenFAST与精细结构模型的同状态固有频率仍有约9%～15%的差异，反映模型形式和惯性表示的影响。（4）历史36组工况对应特定TurbSim网格、阻尼及运行参数，其中200 m竖向风场在HubHt=161.368806 m时的下边界约为61.37 m，未覆盖塔底附近的全塔外风载需求；塔身分布气动力和RNA作用需分别确定。（5）历史截面载荷DEL属于载荷统计量，材料疲劳寿命尚取决于局部应力历程、材料疲劳关系与长期风速权重。结构非线性与风震组合的适用条件由各自分析模型和输入资料限定。"
   },
-  "claim_corrections_scope": "V8-R8 scholarly prose and model-scope correction of 48 parent Word passages across Chapters 1, 3, 4, 5, 6 and 7; original results and citations retained in appropriate scientific context."
+  "claim_corrections_scope": "V8-R8 scholarly prose and model-scope correction of 48 parent Word passages across Chapters 1, 3, 4, 5, 6 and 7; original results and citations retained in appropriate scientific context.",
+  "he28_model_mechanics": {
+    "section": "3.4.1",
+    "insert_before_id": "b0371",
+    "purpose": "Physical-page-28 scientific counterpart: actual three-blade variable-speed kinematics and general Kane-based multibody dynamics, no 8DOF claim",
+    "blocks": [
+      [
+        "p",
+        "为描述三叶片风轮的瞬时空间方位，以转子轴为旋转轴，设第1片叶片在初始时刻的方位角为ψ₀，转子角速度为Ω(t)。三片叶片在轮毂上按120°均匀布置，则第j片叶片的方位角可表示为"
+      ],
+      [
+        "e",
+        "\\psi_j(t)=\\psi_0+\\int_{0}^{t}\\Omega(\\tau)\\,\\mathrm d\\tau+\\frac{2\\pi}{3}(j-1),\\qquad j=1,2,3"
+      ],
+      [
+        "p",
+        "式中，ψ_j(t)为第j片叶片相对于统一轮毂方位基准的转角，Ω(t)为转子瞬时角速度，ψ₀为第1片叶片的初始方位角。对恒定转速Ω，式（3.4-1）的积分项可简化为Ωt；对变速变桨运行，应采用与实际输出相一致的瞬时转速。转子方位角描述叶片绕主轴的公转位置，桨距角则描述叶片绕自身变桨轴的转动，二者分别参与叶片位置和气动截面姿态变换。轮毂及叶片局部坐标关系采用OpenFAST的相应右手坐标定义[132,133]。"
+      ],
+      [
+        "p",
+        "参考文献[1]依据八个指定广义坐标构建Euler–Lagrange动力学方程。本文整机气动弹性模型采用OpenFAST的ElastoDyn结构动力学模块，其多体运动学和动力平衡按Kane方法组织[132]。对于具有广义坐标q的受约束多体动力系统，消去约束反力后，其运动方程可用以下一般形式表示："
+      ],
+      [
+        "e",
+        "\\mathbf M(\\mathbf q)\\ddot{\\mathbf q}+\\mathbf h(\\mathbf q,\\dot{\\mathbf q},t)=\\mathbf Q_{\\mathrm a}+\\mathbf Q_{\\mathrm g}+\\mathbf Q_{\\mathrm{other}}"
+      ],
+      [
+        "p",
+        "式中，M(q)为广义质量矩阵，h包含与速度相关的惯性耦合、结构内力及耗能项；Q_a、Q_g和Q_other分别为气动力、重力及其他外部作用对应的广义力。广义气动力与叶片截面载荷之间的虚功关系见式（3.3-28）—（3.3-30）。式（3.4-2）用于说明整机动力平衡的变量组织方式，其自由度数量由所采用的结构模块及实际输入确定；塔架精细有限元模型则按自身离散自由度建立动力方程，两者通过明确的塔顶参考点与接口运动、载荷变量相联系。"
+      ]
+    ],
+    "equation_labels": [
+      "3.4-1",
+      "3.4-2"
+    ],
+    "scientific_scope": "General model kinematics and formal force balance only. Does not claim a verified 8-DOF implementation, new OpenFAST runs or validated tower wind-force mapping."
+  }
 }
