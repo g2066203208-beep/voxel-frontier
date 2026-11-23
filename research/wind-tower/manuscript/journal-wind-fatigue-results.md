@@ -1788,3 +1788,19 @@ C(H)=\sum_{i=1}^{31}\frac{(H-z_{i,b})^3-(H-z_{i,t})^3}{3I_i},\quad I_i=\frac{\pi
 **关键约束与反例。** CSEG_28的归档名义应力恰为候选控制值50.987302 MPa。上述从CSEG_28抽取体积的方向虽然可改善几何柔度，却可能立即提高该控制截面的名义应力，因而**不能被称为应力约束可行的Pareto改进**。这一局部方向导数反映的是几何目标的灵敏度，而非应力约束、施工厚度上下限、局部稳定、预应力与材料疲劳全部满足时的设计梯度。正式多目标优化必须同时施加控制截面应力约束，并对实际受力模型重算。
 
 **复现与误差。** 源级计算读取全部31段的D、L、z、候选厚度和名义应力；程序 `experiments/T080/s11_volume_transfer_marginal_compliance.cjs` 使用截面体积二次方程的解析反解构造严格等体积扰动，内置有限差分方向导数、体积守恒、负体积及同段转移拒绝测试。连接器独立解析两份CSV得到上述数值；仓库提交版Node CLI尚未原生执行，有限差分自动断言状态须以实际CLI输出为准。数值舍入不是主要误差；主导不确定性仍为真实分段变截面、C70/C65的E差异、实际分布载荷、钢段及连接柔度、名义应力映射与局部材料疲劳。SOURCE=T071，RUN=解析几何灵敏度，TAB1 FIG0；REF/STANDARD/OFFICIAL无新增；12阶段新增物理晋级0/12。
+
+
+### Quantization-robust rejection of asynchronous component maxima (23 November 2026)
+
+The archived native OpenFAST 18-NTM synchronous base-reaction receipt permits a narrowly defined measurement-resolution test that does **not** require an external-force interpretation. For each realization, let (P=\max_t\|\mathbf{r}(t)\|_2) denote the peak norm of simultaneously sampled components and (U=\sqrt{\sum_j(\max_t|r_j(t)|)^2}) the independent-component-maxima envelope. The triangle/maximum inequality gives (P\le U). Equality requires that the individual absolute component maxima be attained together (up to zero components); therefore a positive (U-P) is evidence that assembling separate extrema creates a noncoincident load vector, not a physically sampled simultaneous peak.
+
+The native int16 decoding receipt supplies a conservative norm perturbation bound (\epsilon) per vector sample from the Euclidean norm of channel half-steps. Because both the synchronous maximum and independent-maxima envelope are 1-Lipschitz with respect to a uniform componentwise quantization bound in the Euclidean norm, their **difference** is uncertain by at most (2\epsilon). A strict noncoincidence certificate therefore requires (U-P>2\epsilon), rather than relying on the sign of a small rounded difference. Direct calculation from the 18-row archived table yields:
+
+| Native response vector | Minimum observed (U-P) | Minimum ((U-P)/(2\epsilon)) | Limiting case | Certified cases |
+|---|---:|---:|---|---:|
+| Base bending pair (M_x,M_y) | 154.281315 kN m | 51.674377 | U09p343881_NTM_S03 | 18/18 |
+| Base reaction force triplet (F_x,F_y,F_z) | 5.877432 kN | 253.981436 | U09p343881_NTM_S04 | 18/18 |
+
+The minima in the two numeric columns are attained by the same case within each vector group, as checked from all 18 rows. The reported safety factors are *deterministic quantization-resolution margins*, **not** probabilistic confidence intervals or structural safety factors. The test rules out the explanation that the positive asynchronous-envelope gaps in these archived, decoded native-response channels arise solely from the stated int16 quantization. It does not rule out coordinate-system errors, structural/inertial contributions, source-archive mistakes, or differences between native base reactions and independently prescribed aerodynamic loads. In particular, neither vector can be substituted as a verified W-side external force for matched B/W/E/WE runs.
+
+**Evidence and rejection boundary.** SOURCE = T062 `S06_18NTM_W_BASE6_COINCIDENT_ENVELOPES_18ROW_20261110.csv` (Git blob `2078b1662402c31b857d8cd3d1744e288b7c221c`) and full-rate source receipt (Git blob `078db8738c18a23ff4f05198d2928e1ac82b5d23`); original 18 OUTB SHA256 identifiers and full-rate gzip SHA256 `45cc308625ead8411d1565adc66c99e7ee8d0a979e5c3c6c18f23e744ba74dd1` are in that receipt. RUN = direct source-CSV arithmetic, no new solver. TEST = 18/18 margins strictly exceed 1 for both vectors (PASS at source-table level); native OUTB redecoding, full-rate independent recomputation and artifact download NOT_RUN. FIG = 0; TAB = 2; STANDARD/OFFICIAL = no newly verified clause. This is a data-processing rejection test, not new physical verification.
