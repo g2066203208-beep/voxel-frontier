@@ -311,8 +311,10 @@ groups["25"]=list(range(pages["3.3-28"],pages["3.3-32"]+1))
 groups["26"]=[locate("3.10 本章小结")]
 # 何2024 PDF27: compare his 8-DOF model hypotheses with OUR revised subsection, not an old thematic lookalike.
 he27_start=locate("3.4.1")
-assert he27_start+1<=len(pdf)
-groups["27"]=[he27_start,he27_start+1]  # Five paragraphs occupy both original Word pages.
+he27_end=locate("塔身独立分布气动力应分别处理")
+assert he27_start<=he27_end and he27_end-he27_start<=2
+# Pair He p27 with every native page actually containing the revised subsection.
+groups["27"]=list(range(he27_start,he27_end+1))
 def raster(d,p):
     x=d[p-1].get_pixmap(matrix=fitz.Matrix(1.5,1.5),alpha=False)
     return Image.frombytes("RGB",(x.width,x.height),x.samples)
