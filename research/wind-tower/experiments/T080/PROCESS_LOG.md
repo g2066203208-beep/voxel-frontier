@@ -473,3 +473,8 @@ READ-BEFORE-WRITE：继承22时交接，读取根/研究AGENTS、指挥室、白
 
 ### 2026-11-23 08时｜S06真实36观测ETM/NTM载荷DEL4矢量图
 - SOURCE=T062 72行CSV Git blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`；RUN=直接逐行解析36对同风速、同通道、同seed索引ETM/NTM DEL4比值，按6组绘制36观测点、观测min–max和几何均值。图 `manuscript/final-thesis/figures/FIG_S06_ETM_NTM_DEL4_36_ARCHIVED_20261123.svg` commit `2c1054a5849a7d504e64cb5e95dd19fb20c2437c`；期刊图注 commit `9547dfd86d37f573f2db7b6bdce9b8a9033a0a96`。6组几何均值=1.592485/1.639988/1.561678/1.483781/1.322727/1.325748，与既有6行表吻合；36/36>1。TEST=连接器源CSV计算及SVG数据构造PASS，独立SVG视觉渲染、源文件字节SHA256与Node CLI NOT_RUN；统计独立性/同风场配对/物理因果HOLD。REF/STANDARD/OFFICIAL无新增；FIG1 TAB0；12阶段新增0/12。禁止Abaqus/CAE、昂贵生产RUN、main、冻结母本、PR合并。
+
+### 2026-11-23 09时｜S11等体积壁厚再分配的静力柔度代理反例
+- 开工PR#42 Open/Draft；继承当前活动研究分支及T071既有31段等体积极小极大候选；已读根/研究AGENTS、指挥室最新交接、白皮书、MASTER/STATUS、T079/T080、T071两份源CSV。未修改任何Abaqus/CAE模型、冻结父本或昂贵生产RUN。
+- 科学问题：既有名义应力极小极大候选保持混凝土体积不变，是否同时保持混凝土段静力侧向柔度？SOURCE= T071几何CSV Git blob dff6e86d822dd5cc7dac971bb093aa6d9b8352dd、候选CSV Git blob 7577328e42e228e6914a9d68182699659c22318a；RUN=31段固定外径圆环I及112m顶端单位横力的Euler–Bernoulli中点柔度几何代理；体积675.0909539073m³不变（残差1.14e-13m³），柔度比1.00319410804（+0.319411%）；底部CSEG01 I比0.988417494，顶部CSEG27 I比1.042746497。该结果与应力极小极大目标存在明确静力代理权衡，非整塔响应。
+- 可复现源程序commit 443556c070c24ab76c22b11cead32d17a21f6601；期刊正文及表commit 2c43064d3e38c5613bdefc3aa1759e757b4ad481；连接器JS对两真实CSV直接解析计算PASS；提交版Node CLI、材料E分层、真实整塔弯曲/剪切/连接、局部材料疲劳、NSGA-II均HOLD。源级算术误差远小于模型误差，双精度体积残差不能当物理误差预算；负向测试已写入程序但未独立执行。REF/STANDARD/OFFICIAL无新增，FIG0 TAB1，12阶段新增晋级0/12，正式DLC1.2 0/126。下一唯一最优动作：S06/S07真实158m同态同步六分量风时程身份与惯性归属恢复；若不可用，转S10材料局部应力证据，不再刷等体积代理。
