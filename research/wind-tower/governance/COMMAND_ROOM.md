@@ -1,3 +1,8 @@
+## 2026-11-23 21时｜S06原生反力同步峰值量化误差拒绝测试 · END
+- READ-BEFORE-WRITE：PR#42 Open/Draft；开工HEAD `2cb82c444c86c6409338ff3ab9598b10ab6f91d9`；读研究AGENTS、指挥室、白皮书v0.32.139、T080、期刊稿及T062 18行源CSV和全速率收据；旧MASTER/STATUS路径404未冒称读取。
+- 科研交付：原生弯矩和三轴反力各18组中，异步分量极值包络相对同步峰值的严格正差超出2倍量化误差上界；最小量化裕度分别51.674377和253.981436，不能以int16解码量化解释差异。正式期刊方法与两行表 [commit 7e5e2e0](https://github.com/g2066203208-beep/voxel-frontier/commit/7e5e2e0fe9cc8f8cab75801dbc7a6fb2fc31edc6)，白皮书v0.32.140；原OUTB重新解码及独立CLI NOT_RUN。12阶段新增0/12；最大非Abaqus HOLD=独立同态W侧外气动力及惯性归属。
+- 下一唯一动作：核对现存全速率原件的可下载性并从真实时程做独立解码交叉验证；如原件不可用立即切换S12章节整合，不再重复包络统计。禁Abaqus/CAE、冻结母本、main、昂贵RUN及PR合并。
+
 ## 2026-11-23 20时｜S12期刊Pareto删一解释校正 · END
 - READ-BEFORE-WRITE：PR#42 Open/Draft，基线HEAD `1d646afc08e30b1f7d2c5d2b23f5bdcc4d50fc9c`；已读根/研究AGENTS、指挥室、白皮书v0.32.138、T079/T080与期刊§5；旧MASTER/STATUS未定位，未假称读取。
 - 科研交付：证明36个两轴DEL4工况中原4个非支配点以外的32个被支配点删去不可能改变Pareto前沿；因此原34/36次保留四点前沿中32次是数学必然，只有4次删除原前沿点可检验替补（2次有替补，2次无替补）。期刊§5方法学纠偏 [commit df6d5d6](https://github.com/g2066203208-beep/voxel-frontier/commit/df6d5d64232e873bc0c2a89c63a2d9d9af87142d) blob `4cb7b98e9d145c98e69f8a36d3c42c636656898a`；不改既有数值，只纠正证据解释。白皮书v0.32.139。
