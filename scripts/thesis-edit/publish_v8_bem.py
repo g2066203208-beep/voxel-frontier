@@ -197,8 +197,8 @@ for sid,revised in revision.get("claim_corrections",{}).items():
     assert original.getparent() is body
     assert Paragraph(original,doc).text==block["text"],("source changed",sid)
     el=clone_text(original,revised)
-    # Exact He p27 corrective paragraphs must not inherit blue link-like text styles.
-    if sid in ("b0367","b0368","b0369","b0370","b0371"):
+    # All revised body paragraphs use academic black text; preserve heading/caption styles.
+    if block["kind"]=="text":
         para=Paragraph(el,doc)
         for run in para.runs:
             run.font.color.rgb=RGBColor(0,0,0)
