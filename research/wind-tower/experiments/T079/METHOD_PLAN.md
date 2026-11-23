@@ -695,7 +695,7 @@ GitHub论文工作室为正式过程与状态入口，D盘保存工程工作副�
 
 **科学问题。** 在ESM IT-2012-0009/IT.NVL真实MP处理记录中，随周期增长的水平分量谱差是否足以直接证明长周期地震方向性？以两水平分量同站、同事件、同5%阻尼、同周期的伪谱加速度作比较，首先分离“数值可观测比值”与“处理带宽内可信的物理方向性”。本节不是前述IT-2012-0008谱拟合的重复，数据来自另一事件及另一套独立原始文件。
 
-**原始来源。** SOURCE=\`real-records/S05_ESM_IT2012_0009_NVL_5PERIOD_REAL_SOURCE_QC.csv\`（Git blob \`6f6ac18eda164d55ba225cecbd461ead27027c82\`）；OFFICIAL/原始头收据=\`real-records/S05_ESM_IT2012_0009_OFFICIAL_SOURCE_RECEIPT.json\`（Git blob \`81219cfba9c5d7d23f100aad5dd5be4939ee8411\`），ESM v3 DOI 10.13127/esm.3。HNE/HNN源ASC SHA256分别为 \`3703b42d757f8b745eb3ed1cc01cd2873ec55d873ecc314f7b0297d9de1e7cb3\` 与 \`131aa45ac719176f8a8fd9458cc9b61c535a1a96653b189988857f9bf2dfcb0e\`，采样间隔0.005s、各15970样本，时长79.85s；HNE和HNN高通**均为0.08Hz**，二阶Butterworth，处理状态MP。注意同一收据中的MDN站HNN高通0.10Hz，不能误移植到NVL站。两水平分量在报告截止频率上相同，但这不等于低频谱已经得到独立验证。
+**原始来源。** SOURCE=`real-records/S05_ESM_IT2012_0009_NVL_5PERIOD_REAL_SOURCE_QC.csv`（Git blob `6f6ac18eda164d55ba225cecbd461ead27027c82`）；OFFICIAL/原始头收据=`real-records/S05_ESM_IT2012_0009_OFFICIAL_SOURCE_RECEIPT.json`（Git blob `81219cfba9c5d7d23f100aad5dd5be4939ee8411`），ESM v3 DOI 10.13127/esm.3。HNE/HNN源ASC SHA256分别为 `3703b42d757f8b745eb3ed1cc01cd2873ec55d873ecc314f7b0297d9de1e7cb3` 与 `1f6461a08375cd97af1091169fb67681ae8daba2b03d7943282794d5cc1df9bd`，采样间隔0.005s、各15970样本，时长79.85s；HNE和HNN高通**均为0.08Hz**，二阶Butterworth，处理状态MP。注意同一收据中的MDN站HNN高通0.10Hz，不能误移植到NVL站。两水平分量在报告截止频率上相同，但这不等于低频谱已经得到独立验证。
 
 | 周期T (s) | HNE PSA (m/s²) | HNN PSA (m/s²) | HNN/HNE | f=1/T相对HNE/HNN高通截止频率的倍数 |
 |---:|---:|---:|---:|---|
