@@ -1,3 +1,6 @@
+### 2026-11-23｜v0.32.130 PATCH — S10真实NTM同风速跨指数排序反例
+- SOURCE=T062九测站雨流CSV Git blob `4f77ec9a2027c593ea22cac5abae98de32d407f5`；RUN=18NTM、双塔底弯矩、6组×15组内配对，m4/m10严格逆序11/90，分组1/2/3/3/1/1，零精确平局。新增[源级可执行程序](https://github.com/g2066203208-beep/voxel-frontier/commit/477a97f2d8313e9edcc88c9b2e62bec53add2056)及[期刊§3.5与六行数表](https://github.com/g2066203208-beep/voxel-frontier/commit/796d138c8d821aed68f082b3b85d70a2db925b21)。连接器源级PASS，Node CLI/OUTB/打印舍入区间HOLD；90对相关，不是独立试验或材料寿命。REF/STANDARD/OFFICIAL无新增，FIG0 TAB1，12阶段0/12，W侧同态/材料Miner/DLC1.2仍HOLD。注：上轮报告v0.32.130但远端白皮书实际仍v0.32.129，按真实版本仅递增至v0.32.130。
+
 ### 2026-11-23｜v0.32.129 PATCH — S06真实18NTM风输入身份与可识别性约束
 - SOURCE=`experiments/T062/S06_18NTM_INPUT_SOURCE_IDENTITY_20261031.csv` Git blob `f2522a980b1f5388a2aa70f350247aa91b0d9c43`；RUN=18行原始清单直接分组：FST/ElastoDyn/Tower/ServoDyn各1种哈希，InflowWind与OUTB各18种哈希，所有记录12001样本、9gage。新增[期刊方法及证据表](https://github.com/g2066203208-beep/voxel-frontier/commit/096153b57e5b4e8e23c9d950e37564babf456459)，路径`manuscript/journal-wind-fatigue-results.md`。源级解析PASS，OUTB解包、实际时间列/六分量/惯性归属HOLD；9gage不得冒充31站，18风场身份不等于18独立结构验证。REF/STANDARD/OFFICIAL无新增，FIG0 TAB1，12阶段0/12，禁止范围不变。
 
