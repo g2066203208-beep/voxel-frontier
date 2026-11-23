@@ -1,3 +1,6 @@
+### 2026-11-23｜v0.32.127 PATCH — S11真实31段等体积再分配的静力柔度代价
+- SOURCE=T071 31段几何Git blob `dff6e86d822dd5cc7dac971bb093aa6d9b8352dd`、既有等体积候选blob `7577328e42e228e6914a9d68182699659c22318a`；[可运行程序commit 443556c](https://github.com/g2066203208-beep/voxel-frontier/commit/443556c070c24ab76c22b11cead32d17a21f6601) 路径`research/wind-tower/experiments/T080/s11_volume_neutral_compliance_proxy.cjs`；[期刊正文commit 2c43064](https://github.com/g2066203208-beep/voxel-frontier/commit/2c43064d3e38c5613bdefc3aa1759e757b4ad481) 路径`research/wind-tower/manuscript/journal-wind-fatigue-results.md`；RUN=31段体积675.0909539073m³不变、单位横力混凝土段几何柔度比1.00319410804（+0.319411%），揭示既有名义应力优化与侧向刚度目标不必一致。TEST=连接器JS原CSV独立算术PASS，提交版Node CLI/负向测试NOT_RUN；只是假定统一E的中点梁代理，非158m整塔静力/动力、非局部疲劳或优化物理PASS。REF/STANDARD/OFFICIAL无新增，FIG0 TAB1，12阶段0/12，最大同态W侧独立气动力/惯性归属HOLD。
+
 ### 2026-11-23｜v0.32.126 PATCH — S06真实36点ETM/NTM DEL4原始归档图
 - 新增原始T062 72行CSV直接解析的36点矢量图 `research/wind-tower/manuscript/final-thesis/figures/FIG_S06_ETM_NTM_DEL4_36_ARCHIVED_20261123.svg`，commit [2c1054a](https://github.com/g2066203208-beep/voxel-frontier/commit/2c1054a5849a7d504e64cb5e95dd19fb20c2437c)，SOURCE blob `1b334e9afdbd792a2f4b1a41cdb150dc3698352d`；期刊图注 [9547dfd](https://github.com/g2066203208-beep/voxel-frontier/commit/9547dfd86d37f573f2db7b6bdce9b8a9033a0a96)。RUN=36/36比值>1，6组几何均值复现既有表，点/范围/均值完整可视；TEST=源级计算PASS，独立渲染与原始OUTB NOT_RUN；FIG1 TAB0。只是现有真实档案的首次全样本科研图，不是新物理RUN或因果验证；正式DLC1.2、同态W侧独立气动力及材料局部Miner仍HOLD；12阶段新增0/12。
 
@@ -57,7 +60,7 @@
 
 # CAE论文实验室｜研发记录白皮书（Development Whitepaper）
 
-> **文档版本：v0.32.125**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
+> **文档版本：v0.32.127**｜创建：2026-11-07（Asia/Shanghai）｜状态：ACTIVE / GOVERNANCE ONLY  
 > 仓库：`g2066203208-beep/voxel-frontier`；研究活动分支：`research/t080-seismic-integration-gates-20261022`；[Draft PR #42](https://github.com/g2066203208-beep/voxel-frontier/pull/42)。  
 > 本白皮书是**开发版本和研究增量索引**，不是物理验证报告，不替代[实时指挥室](COMMAND_ROOM.md)、[论文状态](../manuscript/final-thesis/00_STATUS.md)或[T079/T080过程日志](../experiments/T080/PROCESS_LOG.md)；不以新文档或CI成功宣称科学PASS。
 
