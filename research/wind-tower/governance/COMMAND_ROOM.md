@@ -1,3 +1,8 @@
+## 2026-11-23｜S12 学术正文逐句来源审计与Simpack历史方案纠偏 · START
+- 开工HEAD=`2d46210dfc26aa5caa77167587b12867ccf314d0`；复核根AGENTS、研究AGENTS、指挥室最新交接、V8-R5公开原生Word编辑数据、现有Ch3新3.4.5及3.10，T035两版AeroDyn原件/差异、T035 36份OpenFAST3.5.3与ROSCO2.6原生日志、T062 18NTM实际输入源与BTS缺档、T062原36CASE load-DEL来源和ERA5原分箱表；官方OpenFAST v3.5.3 AeroDyn TwrAero说明。用户要求“每一句对应我们真实情况”，本轮重点核查V8-R5新3.3.4/3.10与旧稿错误Simpack生产声称，不将原132/142页历史全部臆断为已全篇逐句通过。
+- 科研证据原则：T035两版AeroDyn均TwrAero=False，实际OpenFAST 36组源级运行身份，18NTM原BTS缺逐件SHA且正式DLC1.2=0/126；历史Simpack单片结构模态可以归档保留，但研究AGENTS现行“Simpack不重回生产路线”，所以现有Word中将Simpack—Abaqus作为第四—六章**已采用生产路线**的语句需要纠正。不启动或审核Abaqus/CAE；不合并PR#42、不覆盖冻结实验父本。
+- 本轮产物目标：逐句证据清单，精确替换Word原始文本中越过证据门槛的有限ID、保留历史数据与理论参考，使用新版本原生Word/PDF出版链验证，不能以排版成功冒充物理通过。
+
 ## 2026-11-23｜S12 V8-R5正式Word/PDF原页审查完成 · PASS出版，非物理PASS
 - V8-R5第三次Actions https://github.com/g2066203208-beep/voxel-frontier/actions/runs/45125652285 为success，旧错误v8r4-spreads路径修复、37/37原生OMML笔画校验、两幅BEM矢量图及表格过自动视觉门禁。正式PDF 142页，Word SHA256 e77cbb927266b2632618229411ac2054126111f37277031c24a9271be8d9e2cc。
 - 原图逐页人工回读：何PDF26正文15页第2.4小结，右侧是真实V8-R5 PDF第105页3.10本章小结；之前第104页表格与小结混页已通过独立起页修复。最新版拼图 public/thesis-studio/he-thesis-comparison/v8r5-spreads/he26-v8r5-105.png（Git blob bca052162af2689c17242067a40d3bbfd7253cd5）；页映射v8r5-page-map.json已实读，何26→我105。
