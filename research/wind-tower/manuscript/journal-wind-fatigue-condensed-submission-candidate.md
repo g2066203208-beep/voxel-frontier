@@ -147,3 +147,24 @@ All **36/36** archived index-aligned ETM/NTM ratios exceed unity. This is a fini
 | 19 | 2 | 0.001871 | 0.066083 | 0.131053 |
 
 这组结果给出**仅凭分箱小时数即可证伪“小时数比例可代表所有非线性暴露权重”**的实例：例如\(U\ge 11\) m/s仅占诊断运行小时的2.444341%，却至少贡献四次风速代理的14.450248%。但\(U^4\)并非塔底弯矩四次矩，更不能代替分材料S–N曲线与局部应力雨流；真实风机存在额定以上变桨控制，故上述比例**不得**用于选定或删除DLC1.2工况。输入仅保留整数分箱，区间宽度就是箱内不可辨识误差预算；ERA5再分析系统误差、小时平均到10分钟风场转换、控制状态、结构动力和材料疲劳误差均不包含其中。源码：`experiments/T080/s10_era5_u4_tail_interval_gate.cjs`；独立源级JS计算通过，仓库Node CLI与原始字节SHA256复核待执行（HOLD）。
+
+
+## 3.5 Within-bin seed ranking reversals under a changed rainflow exponent (23 November 2026)
+
+**Question and evidence.** Even with wind speed, load channel, rainflow source and reference count fixed, does selecting one of six archived NTM seeds by the largest fourth-order load DEL select the same seed under a tenth-order diagnostic? Unlike the ETM 31-section comparison in §3, this test uses only the **18 actual NTM records** and compares *within each wind-speed bin and channel*. SOURCE is the archived 1,080-row nine-gage CSV `experiments/T062/S06_18NTM_ORIGINAL_9GAGE_LOAD_DEL_20261031.csv` (Git blob `4f77ec9a2027c593ea22cac5abae98de32d407f5`), filtered to the two tower-base bending-moment channels. Both DEL columns use the same `Nref=600`, the same recorded 100–700 s output window and the same physical unit kN·m.
+
+For each group of six seeds, every unordered pair `(i,j)` is declared a **strict reversal** precisely when `(DEL4_i-DEL4_j)(DEL10_i-DEL10_j)<0`. A tie at either exponent is excluded and reported separately. This pairwise statistic requires no arbitrary rank tie-breaking and does not compare seeds across different wind speeds.
+
+| Nominal wind speed (m/s) | Tower-base channel | Strict reversals / 15 within-bin pairs |
+|---|---|---:|
+| 9.343881 | TwrBsMxt | 1 / 15 |
+| 9.343881 | TwrBsMyt | 2 / 15 |
+| 11.4 | TwrBsMxt | 3 / 15 |
+| 11.4 | TwrBsMyt | 3 / 15 |
+| 19.202140 | TwrBsMxt | 1 / 15 |
+| 19.202140 | TwrBsMyt | 1 / 15 |
+| **All six groups** | **Within-bin pairs only** | **11 / 90 (12.2222%)** |
+
+There were **zero exact ties** in the archived printed DEL values. A directly identifiable counterexample is `U09p343881_NTM_S02` versus `U09p343881_NTM_S05` for `TwrBsMxt`: their order changes when the exponent changes. Hence the claim that the six-seed *load-screening ordering* is invariant under a fourth-to-tenth exponent change is falsified within this archive, even before cross-wind-bin weighting or material-specific stress conversion. The 11/90 proportion describes **correlated pairwise comparisons drawn from 18 archived realizations**, not 90 independent trials or a population confidence interval. It must not be interpreted as an estimated probability that a new seed will reverse its order.
+
+**Reproduction and refusal tests.** The source-level program `experiments/T080/s10_ntm_cross_exponent_seed_rank_reversal.cjs` enforces six unique seeds per speed/channel, finite positive DEL, exactly six groups, zero ties and the observed 11 reversals. It also rejects missing required columns and malformed rows. Connector-side direct parsing of the source CSV and independent pair enumeration returned 11/90 with group counts (1,2,3,3,1,1) (**PASS**). The committed Node CLI has **not** yet been run in an independent runtime, and the underlying OUTB histories have not been reprocessed (**HOLD**). Printed DEL rounding may in principle affect nearly tied comparisons; a strict rounding-interval audit has not been completed. SOURCE and RUN are archival load statistics; REF/IEC/GB/OFFICIAL and material-local stress/S–N sources have not been newly verified. This result does **not** produce Miner damage, fatigue life, full DLC1.2 coverage, or a structural safety claim.
