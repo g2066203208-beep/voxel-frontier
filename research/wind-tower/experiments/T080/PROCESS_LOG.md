@@ -1,3 +1,8 @@
+### 2026-11-24 05时｜S06 18NTM同步向量峰值的异步包络膨胀图
+- READ：PR#42 Open/Draft，开工HEAD 02c987e9af5d550ca90c2655c6b506a48902d26c；根/研究AGENTS、COMMAND_ROOM、白皮书v0.32.142、T080与T062原18行收据已读；旧MASTER/STATUS路径404。
+- SOURCE=T062真实18行原生结构响应CSV Git blob 2078b1662402c31b857d8cd3d1744e288b7c221c；RUN=逐seed计算100(U-P)/U，弯矩双分量6-seed均值依风速9.343881/11.4/19.202140 m/s分别0.141425890/0.348775130/2.299636634%，反力三分量分别0.088554757/0.093939160/0.134290909%。FIG=18组全样本原始矢量图 manuscript/final-thesis/figures/FIG_S06_NATIVE_SYNCHRONOUS_ENVELOPE_INFLATION_18NTM_20261124.svg；正文=manuscript/journal-wind-fatigue-results.md。此图首次直接展示逐seed风速分组与两种响应向量的膨胀差异，不是新气动力或新物理RUN。
+- TEST=18行正差、有限值与6-seed直接算术PASS；图形浏览器视觉与原OUTB重新解码NOT_RUN；REF/STANDARD/OFFICIAL无新增，12阶段晋级0/12，独立W外气动力及惯性归属HOLD。未触碰Abaqus/CAE、冻结母本、main、昂贵RUN或PR合并。
+
 ### 2026-11-24 00时｜S11名义应力候选比例载荷储备的条件性反例
 - READ：PR#42 Open/Draft，基线HEAD 0c3c990c5dd29d35f25ac5eb4b59cda580970980；根/研究AGENTS、COMMAND_ROOM、白皮书v0.32.141、T079/T080、T071真实31段CSV与既有S11代理源码已读；旧MASTER/STATUS路径404，未冒称读取。
 - SOURCE=T071候选CSV blob 7577328e42e228e6914a9d68182699659c22318a。RUN=以候选最大名义应力50.987301538555 MPa为自定义参考cap，冻结31段应力分布，比例载荷lambda_max=cap/max(sigma)。基准max=53.140995684551 MPa、lambda=0.959472077663；候选CSEG_27/28共同达到cap，lambda=1.0；1%/5%比例增加超出自定义cap 0.509873015386/2.549365076928 MPa。严格不是规范承载力或真实安全裕度。
