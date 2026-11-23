@@ -408,4 +408,62 @@ s=idx.read_text(encoding="utf8").replace("v8r8-page-map.json","v8r9-page-map.jso
 if '<a href="../chapter3-bem-v8.html">3.3节叶素动量理论完整修订正文</a>' not in s:
     s=s.replace('<section id="v7-review" hidden>','<section id="v7-review" hidden><a href="../chapter3-bem-v8.html">3.3节叶素动量理论完整修订正文</a>')
 idx.write_text(s,encoding="utf8")
+
+# Side-by-side original page illustrations and source-based prose outside the thesis body.
+from html import escape as html_escape
+he28_pngs=[]
+for entry in map_pages["28"]:
+    pp=int(entry["our_pdf_page"])
+    uri="../"+entry["image"].removeprefix("./")
+    he28_pngs.append(
+        '<figure><a href="'+html_escape(uri)+'" target="_blank" rel="noopener">'
+        '<img loading="lazy" alt="何泽瑜PDF第28页与我们论文PDF第'+str(pp)+'页的原始对照图" src="'+html_escape(uri)+'"></a>'
+        '<figcaption>左：何泽瑜论文原PDF第28页　右：我们V8-R9论文原PDF第'+str(pp)+'页</figcaption></figure>'
+    )
+he28_pair_info=[
+ ("图3-1：混塔整机正视与侧视、塔顶自由度","我方已有158 m混塔、RNA及OpenFAST不同模型层级；研究对象与八自由度简化模型不同。"),
+ ("图3-2：叶片局部模型、法向与侧向弯曲","我方3.3节已有叶片气动坐标与气动力的虚功表示；各模型的柔性自由度由实际结构输入决定。"),
+ ("式（3.1）：三个叶片的旋转方位角","补写式（3.4-1），采用变转速积分与120°相位差，恒定转速为其特例。"),
+ ("式（3.2）：8自由度Euler–Lagrange方程","补写一般动力平衡式（3.4-2）；实际整机采用Kane方法的ElastoDyn，而非参考论文的八自由度运动方程。")
+]
+he28_audit="<table><tbody>"+ "".join(
+    "<tr><th>"+html_escape(label)+"</th><td>"+html_escape(note)+"</td></tr>"
+    for label,note in he28_pair_info)+"</tbody></table>"
+he28_formal="".join(
+    ("<p>"+html_escape(content)+"</p>") if kind=="p"
+    else ("<div class='eq' data-tex='"+html_escape(content,quote=True)+"'>"+html_escape(content)+"</div>")
+    for kind,content in he28["blocks"]
+)
+he28_html=(
+'<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
+'<title>何论文PDF28：逐项核对及学术正文原图</title><link rel="stylesheet" href="../../vendor/katex/katex.min.css">'
+'<script defer src="../../vendor/katex/katex.min.js"></script>'
+'<style>*{box-sizing:border-box}body{margin:0;background:#f0f4f6;color:#1b3440;font:15px/1.85 "Noto Serif CJK SC","SimSun",serif}'
+'header{padding:24px max(15px,calc((100vw - 1140px)/2));background:#173644;color:white;font:14px/1.7 "Microsoft YaHei",sans-serif}'
+'header h1{font-size:23px;margin:0 0 5px}header a{color:#d5eeee}'
+'main{max-width:1160px;margin:auto;padding:18px 12px 40px}.paper{background:white;border:1px solid #d2dfe6;border-radius:8px;padding:20px;margin:16px 0}'
+'h2{font-size:19px;margin:0 0 14px}h3{font-size:17px}figure{margin:16px 0 30px}figure img{display:block;width:100%;height:auto;border:1px solid #cbdae1}'
+'figcaption{font-size:13px;color:#5c6c77;margin:7px 0}table{border-collapse:collapse;width:100%}th,td{border-bottom:1px solid #dbe5ea;padding:9px;text-align:left;vertical-align:top}'
+'th{width:36%}.eq{margin:17px 0;text-align:center;overflow:auto}p{text-indent:2em;text-align:justify}'
+'@media(max-width:700px){.paper{padding:12px}header h1{font-size:19px}}</style></head>'
+'<body><header><h1>何泽瑜第三章第28页 · 原始论文逐项比对与我方正式修订</h1>'
+'<a href="./">返回第三章原页对照</a>　·　<a href="../../downloads/10MW-thesis-v8r9-he28-20261123.pdf">最新版完整论文PDF</a></header>'
+'<main><section class="paper"><h2>原文与修订后的真实PDF页面</h2>'+ "".join(he28_pngs)+'</section>'
+'<section class="paper"><h2>本页逐项对比</h2>'+he28_audit+'</section>'
+'<section class="paper"><h2>正式论文3.4.1节新增学术正文</h2>'+he28_formal+
+'<p>理论来源：[132] OpenFAST ElastoDyn官方手册；[133] OpenFAST AeroDyn坐标系文档。</p></section></main>'
+'<script>window.addEventListener("DOMContentLoaded",()=>{if(window.katex)for(const el of document.querySelectorAll(".eq"))katex.render(el.dataset.tex,el,{displayMode:true,throwOnError:false});});</script>'
+'</body></html>'
+)
+he28_page=compare/"ch3-v8r6/he28-academic-revision.html"
+he28_page.write_text(he28_html,encoding="utf8")
+gallery_page=compare/"ch3-v8r6/index.html"
+gallery=gallery_page.read_text(encoding="utf8")
+if 'href="./he28-academic-revision.html"' not in gallery:
+    gallery_anchor='<a href="./he27-academic-revision.html">'
+    assert gallery_anchor in gallery
+    gallery=gallery.replace(gallery_anchor,
+       '<a href="./he28-academic-revision.html">第28页方位角与动力学公式原页修订</a>'+gallery_anchor)
+    gallery_page.write_text(gallery,encoding="utf8")
+
 print("V8_WORD_RENDER_PASS",sha(binary),len(pdf),"BEM",start,end)
