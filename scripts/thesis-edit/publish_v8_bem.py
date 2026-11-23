@@ -167,6 +167,9 @@ assert all(old_by_id[rid][2].getparent() is None for rid in redundant_ids)
 # Replace the archived four-paragraph 3.10 summary in the real original Word.
 summary_anchor=old_by_id["b0642"][2]
 assert Paragraph(summary_anchor,doc).text=="3.10 本章小结"
+summary_par=Paragraph(summary_anchor,doc)
+summary_par.paragraph_format.page_break_before=True
+summary_par.paragraph_format.keep_with_next=True
 for sid in ("b0643","b0644","b0645","b0646"):
     element=old_by_id[sid][2]
     assert element.getparent() is body
@@ -181,7 +184,7 @@ ref_anchor=lastref
 for i,ref in enumerate(revision["references"]):
     el=clone_text(lastref,ref);ref_anchor.addnext(el);ref_anchor=el
     new[el]=("07",{"id":f"v8-ref-{128+i}","kind":"text","style":Paragraph(el,doc).style.name,"text":ref,"has_media":False,"has_math":False,"word_body_index":-1})
-assert all(etree.tostring(el)==xml for el,xml in original_xml.items() if el.getparent() is body),"retained original nodes changed unexpectedly"
+assert all(etree.tostring(el)==xml for el,xml in original_xml.items() if el.getparent() is body and el is not summary_anchor),"retained original nodes changed unexpectedly"
 assert all(Paragraph(old_by_id[rid][2],doc).text==old_by_id[rid][1]["text"] for rid in redundant_ids),"removed paragraph text differs from frozen original"
 assert len(doc.tables)==38 and len(doc.inline_shapes)==6
 assert Paragraph(old_by_id["b0364"][2],doc).text.startswith("3.4 ") and old_by_id["b0364"][2].getprevious() is not old_by_id["b0363"][2]
