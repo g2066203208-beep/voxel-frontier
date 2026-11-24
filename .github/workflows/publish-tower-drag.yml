@@ -1,0 +1,71 @@
+name: Calculate and publish independent tower drag
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/publish-tower-drag.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: tower-drag-native
+  cancel-in-progress: false
+jobs:
+  calculate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            public/thesis-studio/wind-figures
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install numpy==1.26.4 matplotlib==3.9.2 pillow
+      - name: Download exact archived structural parent
+        run: |
+          mkdir -p incoming
+          curl -fLsS --retry 3 "https://raw.githubusercontent.com/$GITHUB_REPOSITORY/main/public/thesis-studio/inp-archive/REV21_MODE_PILOT/REV21_MODE_PILOT.zip" -o incoming/REV21.zip
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: 45422889134
+          pattern: native-full-*-bts
+          path: incoming/bts
+      - name: Compute 6 cases with source SHA and integration checks
+        run: python public/thesis-studio/wind-figures/tower-drag/calculate_tower_drag.py
+      - name: Verify and write archive page
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          import json
+          p=Path('public/thesis-studio/wind-figures/tower-drag')
+          m=json.loads((p/'receipt.json').read_text())
+          assert len(m['cases'])==6
+          figs=['01_heightwise_drag','02_resultant_histories','03_cd_sensitivity']
+          for s in figs:
+              with Image.open(p/(s+'.png')) as im:im.verify()
+              assert (p/(s+'.svg')).read_text().rstrip().endswith('</svg>')
+              assert (p/(s+'.pdf')).read_bytes().startswith(b'%PDF-')
+          titles=['塔身沿高风阻线荷载统计','额定风速塔身风阻合力及基底一阶矩时程','阻力系数敏感性及峰值荷载']
+          body=''.join(f'<figure><a href="{s}.svg"><img src="{s}.png" alt="{t}"></a><figcaption>{t} · <a href="{s}.svg">SVG</a> · <a href="{s}.pdf">PDF</a></figcaption></figure>' for s,t in zip(figs,titles))
+          rows=''.join(f'<tr><td>{r["speed"]:.3f}</td><td>{r["type"]}</td><td>{r["mean_Fu_N"]/1000:.3f}</td><td>{r["peak_abs_Fu_N"]/1000:.3f}</td><td>{r["peak_abs_Mu_Nm"]/1e6:.3f}</td><td><a href="timeseries/{r["key"]}_resultant.csv">合力CSV</a> · <a href="timeseries/{r["key"]}_endpoint_loads.npz">端点等效荷载NPZ</a></td></tr>' for r in m['cases'])
+          (p/'index.html').write_text('<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>塔身分布风阻｜论文工作室</title><style>body{margin:0;background:#f5f7f8;color:#23343d;font:16px/1.65 system-ui}header{background:#153643;color:white;padding:18px 24px}header a{color:#d5f0ec}main{max-width:1100px;margin:auto;padding:20px}figure{margin:20px 0;padding:18px;background:white;border:1px solid #dce3e7}img{display:block;width:100%;height:auto}figcaption{text-align:center}a{color:#116b76}table{border-collapse:collapse;width:100%;background:white}td,th{padding:8px;border-bottom:1px solid #dce3e7;text-align:left}</style><header><a href="../">风荷载图集</a> · <a href="../../manuscript-workbench.html#chapter-03">在线论文</a></header><main><h1>158 m混合塔架独立准定常风阻</h1><p>真实网格外轮廓、六组原生BTS SHA-256核验。31混凝土段、4钢段、1过渡法兰。静止竖直塔架，基线Cd=0.5、对照0.7；非规范最终系数、非气动弹性求解、非Abaqus外载准入。</p><p><a href="receipt.json">审核记录</a> · <a href="geometry.csv">几何源数据</a> · <a href="statistics.csv">统计表</a> · <a href="calculate_tower_drag.py">复现程序</a></p>'+body+'<table><thead><tr><th>风速(m/s)</th><th>风况</th><th>平均纵向力(kN)</th><th>峰值(kN)</th><th>峰值一阶矩(MN·m)</th><th>数据</th></tr></thead><tbody>'+rows+'</tbody></table></main></html>',encoding='utf8')
+          PY
+      - name: Persist results and equivalent endpoint time series
+        run: |
+          git config user.name thesis-wind-archive
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/thesis-studio/wind-figures/tower-drag
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Archive six independently decoded native wind fields and 36-section quasi-steady tower drag'
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: six-tower-drag-cases
+          path: public/thesis-studio/wind-figures/tower-drag
+          retention-days: 30
