@@ -33,3 +33,16 @@
 4. OpenFAST v3.5.3 coordinates: https://openfast.readthedocs.io/en/v3.5.3/source/user/aerodyn/coordsys.html — 叶片局部坐标、轮毂坐标与惯性坐标；传递力矩需统一参考点。
 5. Ali et al. (2021): https://doi.org/10.1016/j.soildyn.2020.106483 — RNA柔性/惯量对地震响应的影响。
 上述为文献入口及任务关联，不代表已提取原文图件或完成逐篇精读。Brown、Abbas等原文已在main的references/open-access中。后续塔身气动耦合、坐标与荷载所有权、REV22动力一致性仍为HOLD。
+
+
+## V3 and advanced OpenFAST roadmap
+V2 run 45451060260: four UA cases stopped at pre-solve assertion because FFA_W3_600 already uses InclUAdata=False; do not remove a nonexistent block or alter that file. V3 commit 40eccba71d02b071a836baafd2b13da250c70038 preserves byte-identical already-false inputs after checking no active UA rows, handles true flags separately, reruns four UA pilots only; no duplicate DBEMT long cases. V2 DBEMT long cases were still running at this audit. V3 status pending native verification.
+Advanced priorities:
+1. Uniform wind operational envelope, trim, rotor speed/power/pitch benchmark; DTU original and ROSCO validation; no measured-site validation claim.
+2. Separate linearization branch, CalcSteady and azimuth sampling/MBC3; v3.5.3 constraints on UA and DLL/control representation; Campbell, modal damping, mode tracking/MAC. Do not linearize arbitrary turbulent snapshots and call it periodic equilibrium.
+3. Match REV22 mass/EI/modes and RNA mass properties; compare parked and rotating; determine explicit external vs full interface reaction ownership; never add both.
+4. Native VTK mesh and motion, full output channel inventory including azimuth, pitch, tower top/base and blade roots; independent coordinate and virtual-work / resultant verification.
+5. BeamDyn only with traceable full sectional 6x6 M/K, reference axis and damping; OLAF only representative converged cases; do not promote a more costly model without quantified differences.
+6. Tower potential/shadow/drag with low-elevation inflow coverage; timestep, mesh, seed, DLC operating/parked cases; PSD/DEL and uncertainty.
+7. Preserve separate time-domain versus linearization physics; software manual and source pinned to v3.5.3, no silent version upgrade.
+Official refs: https://openfast.readthedocs.io/en/v3.5.3/source/user/ ; https://openfast.readthedocs.io/en/v3.5.3/source/user/beamdyn/introduction.html ; https://openfast.readthedocs.io/en/v3.5.3/source/user/aerodyn-olaf/Introduction.html ; https://wes.copernicus.org/articles/9/1791/2024/ . Roadmap only, not completed computations.
