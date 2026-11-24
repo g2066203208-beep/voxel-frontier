@@ -1,0 +1,72 @@
+{
+  "source_run": 45351782526,
+  "artifact_id": 14900571562,
+  "native": "NOT_RUN",
+  "zip": {
+    "file": "REV20_RNA_FULL_PACKAGE.zip",
+    "bytes": 12606328,
+    "sha256": "58f8afead62781ea80f3d01fc81055e97fb6ab5e85b04ce53d3ae9c65951e83f"
+  },
+  "files": {
+    "HE_REV20_FLAT_REFERENCE_PRECHECK.inp": {
+      "sha256": "d752f07d3165c34dc1e48c23ff18e0b9a48a7bd68d53dd9955c0d7a2a9c6c8ff",
+      "bytes": 17899730
+    },
+    "HE_REV20_ROM10_EQ_LEAN010.inp": {
+      "sha256": "87fc6e78ce7e0eb7a0eb8defbc001276ada110d030cd294f89acffd23b64cf15",
+      "bytes": 18448725
+    },
+    "HE_REV20_ROM10_PRECHECK.inp": {
+      "sha256": "f012a830830471858dd9feb4175cf2634318f4e54c3907593a295fa278c61554",
+      "bytes": 18444019
+    },
+    "REV20_SERIALIZED_AUDIT.json": {
+      "sha256": "49d29a4f8b9aeadc4277571d8a823ab687dcf782cb340ad65aa43ee5fe39de47",
+      "bytes": 539
+    },
+    "REV20_TOWER_FLAT_AUDIT.json": {
+      "sha256": "794f6be0b10f0603c737d94dc5da39c773d7c0331e2bc85b40e24dbc511385ce",
+      "bytes": 87422
+    },
+    "RNA_REV20_10HZ_AUDIT.json": {
+      "sha256": "ff8a4cac8b0457ae988896e703d2485052c499ad059edfe8b142ed664d5383c3",
+      "bytes": 2569
+    },
+    "RNA_REV20_10HZ_EXPECTED.npz": {
+      "sha256": "b578867a83014c87d133392d9526f0dcc157247ebaf7ab8c2ddf467e32c823de",
+      "bytes": 35405
+    },
+    "RNA_REV20_10HZ_GENERATE.inp": {
+      "sha256": "785e777aa47e1775882941fc27c74f5fe67d422d2abdff143bb9a5eecd0514b4",
+      "bytes": 1791082
+    },
+    "RNA_REV20_10HZ_GRAVITY_TEST.inp": {
+      "sha256": "7384eaa07a25c69318a1bd57ba3b53e5092b83e57c972ae1f8466ad35ffe5afd",
+      "bytes": 823
+    },
+    "RNA_REV20_FULL_GRAVITY_TEST.inp": {
+      "sha256": "2e57dbf8ad90aeb6b9eaa1ad7f194509a05cdde33ace4b487ccbfe59e18efb6a",
+      "bytes": 148120
+    },
+    "RNA_REV20_FULL_PRELOAD_MODAL.inp": {
+      "sha256": "a88ad20e053c304094308fd82341972dbe85f1177186937ded71aaf2734ce662",
+      "bytes": 148038
+    },
+    "build_native_rna.py": {
+      "sha256": "cd41f2dfc17d476d7735cb12305a4a3f85e74f77ebf4f678cb09dfd4e05ba2ce",
+      "bytes": 13217
+    },
+    "flatten_tower.py": {
+      "sha256": "f6219a41677da93a909cbd1e7bee56a5a776f5d3441d6a2b64c6ade1bd5b2cf9",
+      "bytes": 12044
+    },
+    "package_rev20.py": {
+      "sha256": "f3a23fb4807c5d0db115b9c7445aaa8f6c0f2538892b301b5087d5724ff9baa0",
+      "bytes": 5291
+    },
+    "README.md": {
+      "bytes": 4035,
+      "sha256": "523000f1f2cf52bb881a84c05d1cd51df85f0a545f46d73067d469d5ac599673"
+    }
+  }
+}
