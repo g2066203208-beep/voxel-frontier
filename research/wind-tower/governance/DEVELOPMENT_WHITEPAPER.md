@@ -1,3 +1,28 @@
+### 2026-11-24｜v0.32.166 PATCH — 竞争研究全文追踪与接缝极限状态导向验证方案
+
+继承v0.32.165。检索范围新增RNA抗震超单元全文、混塔接缝组合受力与极限承载、最新IEC勘误、Abaqus子结构生成/使用。非数据库穷尽式查新；不宣称全球首创。
+
+#### 1. 最接近的竞争研究及增量证据
+
+- de Rojas Cordero, Navalkar, Kuleli Elibol, van den Bosch, Saeedi, TORQUE 2026, JPCS 3224:072022 [DOI](https://doi.org/10.1088/1742-6596/3224/7/072022)，[作者公开全文](https://www.researchgate.net/publication/405412827_Comparative_study_for_seismic_load_evaluation_of_wind_turbines_considering_RNA_models_of_varying_fidelity)，CC BY 4.0。相对于v0.32.165仅摘要，本轮已定位§2式(1)–(4)、第2–3页线性和初始方位角假设、60个内部模态。网页编码部分损坏，数值表可读：第17阶(3 SS)柔性/超单元9.213/9.214 Hz，集中质量6.854 Hz，偏差−25.60%；第19阶(3 FA)9.516/9.518/7.635 Hz，集中质量偏差−19.77%。这些是该对象的结果，不迁移为本文计算结果。由此否决以RNA超单元抗震、多级比较、模态精度本身为原创的说法。
+- Wang, Ji, Ma, Diao, Zhang, Resilient Cities and Structures 2026,5(2):47–64 [出版页](https://journal.hep.com.cn/rcs/EN/10.1016/j.rcns.2026.03.002)，160m级混塔，8度区、三条PEER波，罕遇地震混凝土拉应力0.40MPa，增加预张力21.9%后消除拉应力（该原型计算结论）。风和地震分别分析。摘要以预压消失推断潜在接缝张开，不等于实测开口。本文不把预应力提高或接缝张开研究本身称为首次。PDF下载失败。
+- [Computational Study of Steel–Concrete Hybrid Wind Turbine Tower Seismic Performance](https://doi.org/10.1080/13632469.2022.2121789)，2023，混塔高阶影响、接缝开闭悬臂梁及FE校准已有先例。
+- [Evaluation of load-carrying capacity of horizontal joints in concrete wind turbine towers](https://doi.org/10.1016/j.engstruct.2026.123195)，2026 Engineering Structures，摘要讨论开缝后截面弯扭性质/应力变化及组合荷载；[组合压弯扭接缝试验](https://www.sciencedirect.com/science/article/pii/S0263823125006639)、[干接缝组合荷载试验与分析](https://doi.org/10.1002/suco.202300873)，可作为局部验证源，需取得试验几何、预压、力位移曲线后再复算，不迁移异对象承载力。
+- IEC [61400-1:2019/AMD1:2025/COR1:2026](https://webstore.iec.ch/en/publication/116398)官方登记已核，新勘误与2025合订版并读；IEC 61400-6:2020+AMD1:2025附录O为塔及基础地震荷载估算（资料性）。修订全文未核，不宣称具体条文内容完全不变。NB/T10907—2021为现行混塔混凝土段及连接专项设计标准。规范并未指定本研究降阶保阶数和误差限值。
+- Abaqus 2026 [Generating Substructures](https://docs.software.vt.edu/abaqusv2026/English/SIMACAEANLRefMap/simaanl-c-superelementdef.htm)、[Using Substructures](https://docs.software.vt.edu/abaqusv2026/English/SIMACAEANLRefMap/simaanl-c-superelements.htm)：三维几何非线性刚体运动处理要求适当保留自由度；单节点保留全部平移/转动满足该几何条件，但不意味着内部材料和接触非线性可由线性子结构恢复。生成阶段荷载工况/重力向量必须明确，重力随局部系旋转风险须核查；实际2025求解版本需再验。接缝、CDP、钢塑性全部留在塔架非线性域。
+
+#### 2. 收窄研究问题与可证伪设计
+
+拟题：考虑柔性RNA动力传递误差与接缝极限状态的预应力节段混塔抗震模型适用性。假设：在整塔低阶频率近似相同条件下，RNA惯性/柔性简化仍可能改变关键环缝开闭、滑移或预应力增量；基于塔顶六分量传递与接缝响应的保阶准则可以识别这种误判。零假设：差异小于数值/参数不确定性；若成立，应报告刚体适用范围，不人为制造创新。
+
+M1纯质量、M2完整空间刚体、M3修订T048柔性梁、M4固定界面模态综合。四者统一经验证的原型质量/质心/惯量、同一塔架、同一接缝/预应力、同一地震波、相同平衡和耗能口径。M3为数值参考非试验真值，M4非必选生产模型；先对比实际耗时，150梁本身可能不是整塔瓶颈。先停机固定转子，选择少量方位/风向对照，不将其声称运行气弹模型。
+
+Craig–Bampton基 T=[I,0;−K_ii^−1 K_ib,Φ_i]；M_r=TᵀMT,K_r=TᵀKT,C_r=TᵀCT,f_r=Tᵀf。预应力/重力平衡态线性化、载荷向量与塔顶坐标一致；基底惯性−TᵀM r a_g，不与全界面反力双计。先用单RNA固定接口模态、六自由度单位激励频响及动态力矩对照；内部模态候选6/12/24/48，按频段/参与度增补而非预先固定。再在非线性整塔中对比接缝风险：峰值开口、滑移、开口面积比例、首次张开PGA、关键缝位置、PT峰值增量、塔底弯矩、摩擦耗能；CDP损伤面积须网格客观性核验。
+
+研究目标（非规范容许值）：主要塔架频率误差≤2%、配对MAC≥0.95、六分量频响/时程峰值误差≤5%（量纲分量各自归一化）、关键接缝响应≤10%，且张开/滑移状态分类及最危险接缝不误判。对参考响应接近零的量采用预先定义的绝对容差或独立参考尺度，不以微小分母制造误差。门槛需根据网格/时间步误差及参数敏感性校验，不能把这些试验目标当规范条款。训练波定阶，独立验证波检验；强度从接缝闭合至开始开缝分级，不将未缩放REV13/14单条记录当作场址设计波。效率比较固定硬件、求解设置、实际墙钟时间及峰值内存，记录收敛回退；不以元素减少推断速度。若M4无可观实测收益，则采用经验证M3，创新聚焦适用性与接缝机制。
+
+证据状态：石等2023期刊PDF正文可读取，网页截图缓存失败；Cordero CC BY公开全文文本部分乱码，未取得原PDF字节；Wang2026出版摘要可读取，PDF访问失败；不冒称新原图已归档。现有何原图继续保留。无INP修改、原生NOT_RUN，不合并PR#42。
+
 ### 2026-11-24｜v0.32.165 PATCH — RNA降阶竞争文献扩展检索与接缝响应保阶方案
 
 本轮以“rotor nacelle assembly seismic models / superelement idling earthquake / hybrid wind turbine tower joint opening / adaptive component mode synthesis friction / blade fidelity / IEC tower seismic”等词组合检索公开出版页；不是Web of Science/Scopus完整系统综述，不声称全球查新结论。继承v0.32.163–164及T048，不改INP。
