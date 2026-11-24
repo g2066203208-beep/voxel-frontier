@@ -1,3 +1,10 @@
+### 2026-11-24｜v0.32.197 — 普通地震动候选池复核及新源获取
+
+- 研究对象仅第二套；第一套V7冻结。特殊E02/E03不计普通组。历史76组=ESM 56+GeoNet 20，ESM源筛通过13、持时8组/5事件。排除V7已用台站后重新实际读取26组，校验官方源文件SHA256、ESM逐分量header/单位/采样/PGA、GeoNet校正记录header/方位/峰值。首次RUN45405852665有4条E/N格式解析未过；修复f695427e7e79ee83288c542c82f53745cf6fd898，RUN45406128427全部26组成功，artifact14924694404。实际下载并核验19项SHA256；SEDS与RCS2别名由源header证实。MAME震源深度156 km，排除浅源类比。
+- 研究筛查（非规范强制）：低频裕度15s、尾速比≤5%、尾段加速度均值比≤1%、额外0.08Hz高通4–12s灵敏度≤20%、两分量10%PGA持时≥5T1；仅SBT/VLN同事件、CADA、CSA共4组/3事件通过。严格不足4个独立事件。放宽持时的诊断候选13组/8事件，优化7个不同事件（同一台站可记录不同事件），0.5–2共同倍率，1° RotD50复算：TERO、MNTP、T1214、OXZ(3631380)、OXZ(3468635)、SEDS、SBT；重点1.47874–10s最大偏差32.4793%，T1偏差-15.9239%，加权RMS 0.145415；6条不满足研究持时门槛，不批准。±20%仅研究目标；历史记录的脉冲分类仍需独立确认。非场址正式谱，非工程计算输入。
+- 按ESM v3官方Flatfile接口文档 https://esm-db.eu/esmws/flatfile/1/query-options.html ，新增四时段非脉冲、深度≤35km、M≥5.5、距20–250km、MP、BEST/GOOD、非迟触发筛选，RUN45406264315实际返回166+22+92+0=280条元数据。旧事件/台站去重、fc≤1/30及其他条件后1条新候选SMTH，event EMSC-20140524_0000026，官方波形HTTP200、443606 bytes、SHA256 80107d1c3d39ebbfb141a454cbec5c9500d74138ac0c1ca529168ca045ee0df8；三个分量许可均为unknown，不公开归档，新增准入0。2021–2026返回204无记录，CSV分隔符报错仅空响应解析，不是波形损坏。官方来源包artifact14926411002（只有元数据及收据）。
+- [完整研发审核](../experiments/T079/seismic-evidence-20261124/record-pool/literature_exact_20261124/ordinary_rescreen_v0.32.197.json) commit 12dbf59e26bde47d2a316c69ad823e90ba91489c；修正后2图及数值包artifact14924694404。未修改INP、正式设计准入0/7、场址谱及最新版模态HOLD。后续扩GeoNet官方全量目录和其他许可明确的地震动库，不重复穷举V7。
+
 ### 2026-11-24｜v0.32.196 — 第二套选波质量核验、长周期谱及脉冲证据
 
 - RUN45401920882成功，工作流2d000d5f42d20e635422f3f71e61e142981b02dc，6组原源哈希、采样数及时间轴通过；新增5张组合图（PNG/SVG）、六组谱CSV、研究目标拟合CSV、qualification.json及manifest。artifact14923672822，3566879 bytes，SHA256 491b372baffabce441ab16193f365939f7f6a0469d9fadbf698a93be3ee3fa04；实际下载并逐一核验18项manifest哈希。主分支图件commit 5d10a06fbbe18d98aaf5c408de50c2cbfe6e3853，展示页commit e4fbb6beb600069625563a3cfc81f896b76c5511。
