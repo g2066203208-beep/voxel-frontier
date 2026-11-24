@@ -24,15 +24,21 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install --quiet numpy scipy matplotlib
+      - uses: actions/download-artifact@v4
+        with:
+          name: T079-nine-real-source-candidates
+          run-id: 45356602621
+          github-token: ${{ github.token }}
+          path: /tmp/nine-source
       - name: Recover immutable source archive and audited code
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           ROOT=research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool
-          gh api -H 'Accept: application/vnd.github.raw+json' "repos/${GITHUB_REPOSITORY}/contents/$ROOT/T079_NINE_REAL_SOURCE_CANDIDATES.zip?ref=d302057f249372e19cea2d3bfda84a481c395581" > /tmp/nine.zip
+          cp /tmp/nine-source/T079_NINE_REAL_SOURCE_CANDIDATES.zip /tmp/nine.zip
           echo '89d25e81769f22481baef110ec0a41995902d3bc76725ec5442ba042496e8ca4  /tmp/nine.zip' | sha256sum -c
-          gh api -H 'Accept: application/vnd.github.raw+json' "repos/${GITHUB_REPOSITORY}/contents/$ROOT/audit_nine.py?ref=0d5133e8d6c941f424d3d72260da76e9922d5046" > /tmp/audit_nine.py
+          gh api "repos/${GITHUB_REPOSITORY}/contents/$ROOT/audit_nine.py?ref=0d5133e8d6c941f424d3d72260da76e9922d5046" --jq .content | base64 -d > /tmp/audit_nine.py
           test "$(git hash-object /tmp/audit_nine.py)" = 1091475e27c4ceeaf256b380ea91effdeeb78cbf
       - name: Reproduce diagnostic screens and generate individual download packages
         env:
