@@ -4321,21 +4321,10 @@
           "id": "wind-r11-001",
           "kind": "text",
           "style": "Normal",
-          "text": "以额定风速11.4 m/s和A类参考湍流强度0.16为例，按式（3.2-3）计算纵向脉动风速标准差为2.264 m/s，横向及竖向分别为1.8112和1.132 m/s。由式（3.2-5）计算三分量目标谱，如图3.2-1所示。低频谱值与积分尺度及方差有关，高频段随频率增大而衰减。该图为理论目标谱，不能代替实际生成风场的自谱核验。",
+          "text": "以额定风速11.4 m/s和A类参考湍流强度0.16为例，按式（3.2-3）计算NTM纵向脉动风速目标标准差为2.264 m/s，横向及竖向分别为1.8112和1.132 m/s。式（3.2-5）所示三分量目标谱用于随机风速的谱特性检验。",
           "has_media": false,
           "has_math": false,
           "online_only": true
-        },
-        {
-          "id": "wind-r11-002",
-          "kind": "caption",
-          "style": "Caption",
-          "text": "图3.2-1  额定风速NTM三分量Kaimal目标功率谱",
-          "has_media": false,
-          "has_math": false,
-          "online_only": true,
-          "figure_asset": "./wind-figures/02_kaimal_target.svg",
-          "figure_caption_match": "图3.2-1  额定风速NTM三分量Kaimal目标功率谱"
         },
         {
           "id": "v7-0352-21",
@@ -4401,21 +4390,10 @@
           "id": "wind-r11-003",
           "kind": "text",
           "style": "Normal",
-          "text": "以11.4 m/s为参考平均风速，分别计算间距4、20和80 m的纵向风速相干函数，如图3.2-2所示。空间间距增大时，同频率下的目标相干程度降低；同一间距下，高频脉动的空间相干程度低于低频脉动。图中曲线由式（3.2-11）直接计算，不是模拟风场的估计相干函数。",
+          "text": "由式（3.2-11）可知，空间间距增大时，同频率下的纵向风速目标相干程度降低；同一间距下，高频脉动的空间相干程度低于低频脉动。",
           "has_media": false,
           "has_math": false,
           "online_only": true
-        },
-        {
-          "id": "wind-r11-004",
-          "kind": "caption",
-          "style": "Caption",
-          "text": "图3.2-2  不同网格点间距的纵向风速目标相干函数",
-          "has_media": false,
-          "has_math": false,
-          "online_only": true,
-          "figure_asset": "./wind-figures/03_coherence_target.svg",
-          "figure_caption_match": "图3.2-2  不同网格点间距的纵向风速目标相干函数"
         },
         {
           "id": "v7-0352-27",
@@ -4479,7 +4457,7 @@
           "id": "wind-r11-005",
           "kind": "text",
           "style": "Normal",
-          "text": "根据轮毂高度161.368806 m、叶轮直径178.3 m及200 m×200 m风场尺寸绘制扫掠面网格，如图3.2-3所示。51×51网格覆盖转子扫掠区域，但网格下边界高程为61.368806 m，未覆盖塔底至该高程的塔段。计算塔身分布气动力时，须另行构建并核验覆盖完整塔高的入流。图3.2-3仅表示几何离散与覆盖关系。",
+          "text": "根据轮毂高度161.368806 m、叶轮直径178.3 m及200 m×200 m风场尺寸，构建51×51的转子扫掠面网格。为补充转子网格下方的入流，新生成风场启用TurbSim塔身补充风速节点，输出16个塔身节点，最低节点高程为1.369 m。风场离散及其空间覆盖如图3.2-1所示。塔架和叶片轮廓为几何示意，塔身风速节点的设置不等同于已完成塔身气动力计算。",
           "has_media": false,
           "has_math": false,
           "online_only": true
@@ -4488,12 +4466,52 @@
           "id": "wind-r11-006",
           "kind": "caption",
           "style": "Caption",
-          "text": "图3.2-3  随机风场网格、转子扫掠面与塔架高度覆盖关系",
+          "text": "图3.2-1  随机风场离散示意图",
           "has_media": false,
           "has_math": false,
           "online_only": true,
-          "figure_asset": "./wind-figures/01_grid.svg",
-          "figure_caption_match": "图3.2-3  随机风场网格、转子扫掠面与塔架高度覆盖关系"
+          "figure_asset": "./wind-figures/core/01_wind_grid.svg",
+          "figure_caption_match": "图3.2-1  随机风场离散示意图"
+        },
+        {
+          "id": "wind-r12-001",
+          "kind": "text",
+          "style": "Normal",
+          "text": "为检验随机风场输入，采用OpenFAST v3.5.3 TurbSim生成额定风速11.4 m/s下的NTM和1ETM独立研究工况。两工况采用同一随机种子20261124、0.05 s时间步长及700 s计算时长，截取100～700 s的12000个采样点，按有效时段起点重新计时。图3.2-2给出轮毂中心纵向风速分量时程，虚线为参考平均风速。NTM与ETM的样本均值分别为11.495和11.547 m/s，样本标准差分别为2.176和3.377 m/s；ETM的波动幅度高于NTM。新生成的风场与历史36组整机计算的原始入流分别归档。",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true
+        },
+        {
+          "id": "wind-r11-002",
+          "kind": "caption",
+          "style": "Caption",
+          "text": "图3.2-2  轮毂中心纵向风速时程",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true,
+          "figure_asset": "./wind-figures/core/02_hub_wind_history.svg",
+          "figure_caption_match": "图3.2-2  轮毂中心纵向风速时程"
+        },
+        {
+          "id": "wind-r12-002",
+          "kind": "text",
+          "style": "Normal",
+          "text": "采用Welch法估计轮毂中心纵向脉动风速自谱，选用2048点Hann窗、50%重叠和分段去均值，频率分辨率为0.009765625 Hz。由图3.2-3可见，两组模拟自谱总体呈现与Kaimal目标谱相近的衰减趋势。NTM和ETM纵向标准差的目标值分别为2.264和3.513 m/s，样本标准差相对偏差分别为−3.88%和−3.87%。上述结果为同一随机种子两类风况的数值检查，尚不能代替多种子统计、实测风场验证或正式设计载荷工况验收。",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true
+        },
+        {
+          "id": "wind-r11-004",
+          "kind": "caption",
+          "style": "Caption",
+          "text": "图3.2-3  轮毂中心风速自谱与Kaimal目标谱对比",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true,
+          "figure_asset": "./wind-figures/core/03_hub_autospectrum.svg",
+          "figure_caption_match": "图3.2-3  轮毂中心风速自谱与Kaimal目标谱对比"
         },
         {
           "id": "b0358",
@@ -12074,11 +12092,11 @@
     }
   ],
   "online_revision": {
-    "version": "V8-R11-WIND",
+    "version": "V8-R12-WIND-CORE",
     "date": "2026-11-24",
-    "scope": "V8-R10 plus four wind figures and eight associated editable blocks; raw BTS unavailable; theoretical plots and archived response statistics distinguished; Word/PDF unchanged.",
+    "scope": "Three core wind figures use two new full-grid native TurbSim cases; theoretical-only plots retained in archive, not in body; original Word/PDF unchanged.",
     "source_gate": "74fb3aee9dfef058b972a3f0e03aa571319c2fe2",
     "source_inp": "cdb719b95b8ce4301011489b4ab8ffc9e73c18bf",
-    "wind_manifest": "./wind-figures/manifest.json"
+    "wind_manifest": "./wind-figures/core/manifest.json"
   }
 }

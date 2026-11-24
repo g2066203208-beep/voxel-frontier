@@ -1,0 +1,59 @@
+{
+  "scope": "new native full-grid 11.4 m/s pair; one same seed per turbulence type; no formal IEC or experimental validation",
+  "source_run": 45422889134,
+  "source_artifacts": [
+    14934504439,
+    14939410377
+  ],
+  "grid": [
+    51,
+    51
+  ],
+  "dt": 0.05,
+  "duration_s": 700,
+  "window_s": [
+    100,
+    700
+  ],
+  "welch": {
+    "nperseg": 2048,
+    "noverlap": 1024,
+    "df_Hz": 0.009765625,
+    "window": "Hann",
+    "detrend": "constant"
+  },
+  "reference": "He Zeyu (2024), thesis printed p9, Fig.2-1–2-3",
+  "figures": [
+    "01_wind_grid",
+    "02_hub_wind_history",
+    "03_hub_autospectrum"
+  ],
+  "cases": [
+    {
+      "case": "NTM",
+      "BTS_sha256_from_native_audit": "548695c6f8f4241643291624eef4ced091b1b4186d43faad4ea9cb98df3121e1",
+      "csv_sha256": "3372e7a5ef3cc7258ac317792efb52c6a3930e81114f90c7e66c6dc518d648bd",
+      "mean_u": 11.494993647436301,
+      "sd_u": 2.1762459469081974,
+      "target_sd_u": 2.2640000000000002,
+      "relative_sd_error_pct": -3.8760624157156753,
+      "mean_error_pct": 0.8332776090903549,
+      "max_absolute_PSD_recompute_difference": 4.480808328821695e-06,
+      "BTS_independent_decode": "not performed for full raw BTS",
+      "sample_count": 12000
+    },
+    {
+      "case": "ETM",
+      "BTS_sha256_from_native_audit": "235d1224cc3f0d0b282e9fb94647ca5b507c8c37b6256bf056f02dbabfb3b04e",
+      "csv_sha256": "f6f2bc8d4531f564c81b107af471a95700d3fe224e3cfc28a1578ac1293de5d1",
+      "mean_u": 11.547394955260058,
+      "sd_u": 3.377246130455947,
+      "target_sd_u": 3.513344,
+      "relative_sd_error_pct": -3.873741641696715,
+      "mean_error_pct": 1.2929382040355986,
+      "max_absolute_PSD_recompute_difference": 1.0596980018817703e-05,
+      "BTS_independent_decode": "not performed for full raw BTS",
+      "sample_count": 12000
+    }
+  ]
+}
