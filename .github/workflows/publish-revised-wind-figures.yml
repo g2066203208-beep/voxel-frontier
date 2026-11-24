@@ -1,0 +1,43 @@
+name: Publish revised paired wind figures
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/publish-revised-wind-figures.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: revised-wind-figures
+  cancel-in-progress: false
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          sparse-checkout: |
+            public/thesis-studio/wind-figures
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install numpy==1.26.4 scipy==1.13.1 matplotlib==3.9.2
+      - name: Generate verified paired pilot publication figures
+        run: |
+          cd public/thesis-studio/wind-figures
+          python revised/plot_wind.py native/native-pilot-11m4-NTM native/native-pilot-11m4-1ETM revised/pilot
+      - name: Persist figures
+        run: |
+          git config user.name thesis-wind-archive
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/thesis-studio/wind-figures/revised/pilot
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Publish seven revised paired wind figures from verified BTS pilot'
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - uses: actions/upload-artifact@v4
+        with:
+          name: revised-paired-pilot-figures
+          path: public/thesis-studio/wind-figures/revised/pilot
+          retention-days: 30
