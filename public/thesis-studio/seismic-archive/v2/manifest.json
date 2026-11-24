@@ -1,0 +1,62 @@
+{
+  "EMSC-20161030_0000029_SBT.zip": {
+    "bytes": 647894,
+    "sha256": "6fe98311eb30774ed06d6c81403ef3d9a1c2493888c4ce8155e27b41e0a638a9"
+  },
+  "IT-2012-0008_MODE.zip": {
+    "bytes": 1002562,
+    "sha256": "cb831a91354c959b5008e8017edc25c170f1b2d3b88f91bdb87b3b8ce891fa7f"
+  },
+  "EMSC-20161030_0000029_VLN.zip": {
+    "bytes": 893491,
+    "sha256": "5ef0e12ea54b4fe7bf8ccc3ed6f6d02cf069264d32ba6babfe2f35d0d3939320"
+  },
+  "EMSC-20161026_0000095_MNTP.zip": {
+    "bytes": 923618,
+    "sha256": "c0ef6f8b1ff69168ffe09caf58f37684d5397ef80441916873ded1e0ec3bdb83"
+  },
+  "EMSC-20160824_0000006_TERO.zip": {
+    "bytes": 397993,
+    "sha256": "1d11e928737e0dc1558190c98f3b268bee7165a23f738126715e6fac83f88e37"
+  },
+  "EMSC-20160824_0000006_RM33.zip": {
+    "bytes": 388053,
+    "sha256": "db50b5f9fb5ca5d1d9818b1cbdf38798f781f95d3a1bd0e1b55dc3cfd74d0736"
+  },
+  "EMSC-20170118_0000034_FEMA.zip": {
+    "bytes": 408053,
+    "sha256": "5008322e57901571384fc419f58e9fa22f27bf70c05c2bd778e93f8fad833f25"
+  },
+  "EMSC-20170118_0000119_T1214.zip": {
+    "bytes": 420251,
+    "sha256": "4961a33da0b52fd9f2fdaf342b239033852fea26f37f810230bfd57d42b41cb2"
+  },
+  "SP01_T1201.zip": {
+    "bytes": 335173,
+    "sha256": "27b436b2548dd9953c80c5f27a86e5572a0cc6bb5125e4e35669a44d091c6b74"
+  },
+  "SP02_DSLC.zip": {
+    "bytes": 436443,
+    "sha256": "56ac53bb5618f6e700b3f3ce8f246ac7621cacd4a0251962b6e4f9d73f761ea1"
+  },
+  "REVISED_CANDIDATES_V2.json": {
+    "bytes": 10257,
+    "sha256": "ee4c6137ab80fb2dc1ff84a767918c53a2780e0daedc2fae3852c0554eabac56"
+  },
+  "REPLACEMENT_PROTOCOL_20261124.md": {
+    "bytes": 4796,
+    "sha256": "d01ab2ded15bdcc64640f47a8b7e3aa77f215f676f973839a3257881f21fa039"
+  },
+  "all_51_screen.json": {
+    "bytes": 55339,
+    "sha256": "c273fed01cf009b4a4810e51bef71e8a40522ae97e2e8cd9bca079c80569fafa"
+  },
+  "official_flatfile_receipt.json": {
+    "bytes": 140165,
+    "sha256": "80d1151a4c496bd1696cdaa7794c54dd92a12322747a8b098b93ee091e743b40"
+  },
+  "T079_REVISED_CANDIDATES_V2.zip": {
+    "bytes": 5887635,
+    "sha256": "5e51250a1d0b6abd93ba56d50824e79b81e42eb02911dd523b9b5afaf1521a60"
+  }
+}
