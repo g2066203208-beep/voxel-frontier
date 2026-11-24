@@ -1,0 +1,61 @@
+name: Test REV20 production Studio downloads
+on:
+  push:
+    branches:
+      - research/t080-seismic-integration-gates-20261022
+    paths:
+      - '.github/workflows/rev20-studio-live-download-test.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  production:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Verify deployed HTML and frozen ZIP from public Pages
+        run: |
+          set -euo pipefail
+          URL=https://g2066203208-beep.github.io/voxel-frontier/thesis-studio/inp-archive/
+          curl -fLsS --retry 2 --max-time 40 "${URL}?v=81bea664" -o /tmp/rev20.html
+          grep -o '<section id="rev20">' /tmp/rev20.html
+          grep -o '下载 REV20 完整计算包' /tmp/rev20.html
+          curl -fLsS --retry 2 --max-time 60 "${URL}REV20_NATIVE_RNA/REV20_RNA_FULL_PACKAGE.zip?v=81bea664" -o /tmp/rev20.zip
+          echo '58f8afead62781ea80f3d01fc81055e97fb6ab5e85b04ce53d3ae9c65951e83f  /tmp/rev20.zip' | sha256sum -c
+          unzip -tq /tmp/rev20.zip
+      - name: Install browser automation
+        run: npm install --no-save --ignore-scripts playwright-core@1.56.1
+      - name: Test live browser download buttons and bytes
+        run: |
+          cat > live-test.cjs <<'JS'
+          const {chromium}=require('playwright-core');
+          const fs=require('fs'),crypto=require('crypto');
+          (async()=>{
+            const browser=await chromium.launch({executablePath:'/usr/bin/google-chrome',headless:true,args:['--no-sandbox']});
+            try{
+              const page=await browser.newPage({acceptDownloads:true});
+              await page.goto('https://g2066203208-beep.github.io/voxel-frontier/thesis-studio/inp-archive/?v=81bea664#rev20',{waitUntil:'domcontentloaded',timeout:30000});
+              await page.locator('#rev20').waitFor({state:'visible'});
+              console.log('LIVE_TITLE',await page.locator('#rev20 h2').textContent());
+              const items=[
+                ['#rev20 a.download-link','REV20_RNA_FULL_PACKAGE.zip','58f8afead62781ea80f3d01fc81055e97fb6ab5e85b04ce53d3ae9c65951e83f'],
+                ['[data-rev20="RNA_REV20_10HZ_GENERATE.inp"]','RNA_REV20_10HZ_GENERATE.inp','785e777aa47e1775882941fc27c74f5fe67d422d2abdff143bb9a5eecd0514b4'],
+                ['[data-rev20="HE_REV20_ROM10_PRECHECK.inp"]','HE_REV20_ROM10_PRECHECK.inp','f012a830830471858dd9feb4175cf2634318f4e54c3907593a295fa278c61554'],
+                ['[data-rev20="HE_REV20_ROM10_EQ_LEAN010.inp"]','HE_REV20_ROM10_EQ_LEAN010.inp','87fc6e78ce7e0eb7a0eb8defbc001276ada110d030cd294f89acffd23b64cf15'],
+                ['[data-rev20="HE_REV20_FLAT_REFERENCE_PRECHECK.inp"]','HE_REV20_FLAT_REFERENCE_PRECHECK.inp','d752f07d3165c34dc1e48c23ff18e0b9a48a7bd68d53dd9955c0d7a2a9c6c8ff']
+              ];
+              for(const [selector,name,expected] of items){
+                const [dl]=await Promise.all([page.waitForEvent('download',{timeout:45000}),page.locator(selector).click()]);
+                const bytes=fs.readFileSync(await dl.path()),hash=crypto.createHash('sha256').update(bytes).digest('hex');
+                if(dl.suggestedFilename()!==name||hash!==expected)throw Error('Download mismatch '+name+' '+hash);
+                console.log('LIVE_DOWNLOAD_PASS',name,bytes.length,hash);
+              }
+              await page.screenshot({path:'rev20-live.png'});
+            }finally{await browser.close()}
+          })().catch(e=>{console.error(e);process.exit(1)});
+          JS
+          node live-test.cjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rev20-live-studio-screenshot
+          path: rev20-live.png
