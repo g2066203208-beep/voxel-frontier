@@ -1,0 +1,65 @@
+name: Audit and optimize REV17 full INP
+on:
+  push:
+    paths:
+      - '.github/workflows/audit-optimize-rev17.yml'
+      - 'public/thesis-studio/inp-archive/REV17_EFFICIENCY/**'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reconstruct verified REV16
+        run: python public/thesis-studio/inp-archive/REV16_EQ_FLEX_RNA/build_rev16.py --archive public/thesis-studio/inp-archive --output output/HE_REV16_EQ_FLEX_RNA.inp
+      - name: Inspect actual hoop part and assembly references
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          s=Path('output/HE_REV16_EQ_FLEX_RNA.inp').read_text()
+          parts=re.findall(r'^\*Part, name=(RHOOP[^\n]*)\n(.*?)^\*End Part\s*$',s,re.M|re.S|re.I)
+          print('HOOP PARTS',len(parts))
+          if parts:
+              name,p=parts[0]
+              print('SAMPLE',name)
+              blocks=re.split(r'(?m)(?=^\*(?!\*))',p)
+              for b in blocks:
+                  lines=b.splitlines()
+                  if lines: print('BLOCK',len(lines),repr(lines[0]),repr(lines[1:3]),repr(lines[-2:]))
+          ass=re.search(r'^\*Assembly[^\n]*\n(.*?)^\*End Assembly',s,re.M|re.S|re.I)
+          if ass:
+              for b in re.split(r'(?m)(?=^\*(?!\*))',ass.group(1)):
+                  if re.search(r'RHOOP_01(?:-1)?\b',b,re.I):
+                      a=b.splitlines();print('ASSY_REF',len(a),repr(a[0]),repr(a[1:4]),repr(a[-2:]))
+          print('STEP_HEADERS',re.findall(r'^\*Step[^\n]*',s,re.M|re.I))
+          PY
+      - name: Audit and build lean variants
+        run: |
+          node <<'JS'
+          const fs=require('fs'), crypto=require('crypto');
+          require('./public/thesis-studio/inp-archive/REV17_EFFICIENCY/online-optimize.js');
+          const src=fs.readFileSync('output/HE_REV16_EQ_FLEX_RNA.inp','utf8');
+          const sha=s=>crypto.createHash('sha256').update(s).digest('hex');
+          if(sha(src)!=='f87528658941289b1bf5a86f2b295123ff569cfd62be6057f6737c8d1e84f1e1')throw Error('Wrong parent');
+          const audit=Rev17.inspect(src);
+          console.log('SOURCE_AUDIT',JSON.stringify(audit));
+          const files=[];
+          for(const mode of Object.keys(Rev17.modes)){
+            const r=Rev17.apply(src,mode);
+            fs.writeFileSync('output/'+r.file,r.text);
+            files.push({mode,file:r.file,bytes:Buffer.byteLength(r.text),sha256:sha(r.text),period:r.period,maximumIncrement:r.maximumIncrement});
+          }
+          console.log('REV17_TARGETS',JSON.stringify(files));
+          fs.writeFileSync('output/REV17_AUDIT.json',JSON.stringify({parent:sha(src),audit,files,abaqus_native:'NOT_RUN'},null,2));
+          JS
+      - uses: actions/upload-artifact@v4
+        with:
+          name: HE_REV17_EFFICIENCY
+          path: |
+            output/HE_REV17_*.inp
+            output/REV17_AUDIT.json
+          if-no-files-found: error
