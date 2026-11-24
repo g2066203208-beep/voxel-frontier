@@ -1,3 +1,10 @@
+### 2026-11-24｜v0.32.200 — REV21 MODE同波整塔对照输入
+
+- 已实际生成REV21_MODE_PILOT，RUN45411602849成功，artifact14928366764，ZIP 9230994 bytes、SHA256 f389e927a4b42f0c26bf22f1f9ef24202255b8dd03a8d0e7585edfae83a6af91。已下载解压及成员哈希复核。REV21不是新RNA降阶算法，而是REV18完整装配与REV20原生ROM的同波计算输入。
+- V7 EQ01 MODE已调幅双分量CSV SHA256 640096c940f3c6d54cbe697fd2da9def7ab2428a3850316f228d451b791d1b67，40000点、dt=.005s、末时199.995s，E/N峰值.3062418524/.4754302384 m/s²；已有倍率1.135383557607063，外加倍率1；不改变V7原件。X=E、Y竖直、Z=-N，沿用固定底部相对坐标等效惯性荷载，不同时施加基底加速度。Abaqus官方DLOAD/GRAV及子结构重力矢量依据 https://docs.software.vt.edu/abaqusv2026/English/SIMACAEPRCRefMap/simaprc-c-loading.htm 及 https://docs.software.vt.edu/abaqusv2026/English/SIMACAEPRCRefMap/simaprc-c-loaddistributed.htm 。
+- FULL_ASSEMBLY 15693507 bytes，SHA256 7538ccb15a0af82364f0482f4a30e65a59d157a3b33efb94c4beb295a646721c，保留REV18完整柔性RNA及100部件/实例，无外部FILE/INPUT；ROM10_NATIVE 18225638 bytes，SHA256 94b6d047f038aa501269e970050f83e32919e6b3ba4b6cd8ae8e99c93187b9c4，保留REV20原生子结构，须先生成RNA_ROM10.sim，非普通CAE导入。两个振幅逐点数值回读完全一致；除振幅、动力步总时长和说明文字外原件字节等价，5步保留。最大增量.01s为试算，应与.005s对照。原生求解及CAE导入NOT_RUN，历史暂定阻尼不宣称最终，场址设计未核验；未替换剩余6波，不修改第二套。先原生生成/重力及模态对照，再同波计算。
+- 工作流 .github/workflows/build-rev21-mode-pilot-20261124.yml commit bcd89276845dd3512f4ff6584a25c0232d0eec1e。研究版本和工程验收状态分开。
+
 ### 2026-11-24｜v0.32.199 — REV20无法直接导入CAE故障复核
 
 - 用户报告此前INP打不开，未提供具体文件或报错；先针对最新REV20排查。实下载artifact14900571562（12606328 bytes，SHA256 58f8afead62781ea80f3d01fc81055e97fb6ab5e85b04ce53d3ae9c65951e83f），ZIP CRC及14项manifest哈希通过，7个INP最大行长均≤256，无截断证据。
