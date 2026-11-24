@@ -1,0 +1,347 @@
+{
+  "version": "0.32.197",
+  "date": "2026-11-24",
+  "scope": "second suite ordinary candidate expansion; V7 untouched, E02/E03 special separately",
+  "archived_pool": 76,
+  "old_ESM_source_screen": 13,
+  "old_ESM_duration_pass": 8,
+  "first_rescreen": {
+    "run": 45405852665,
+    "artifact": 14926695303,
+    "result": {
+      "jobs": 26,
+      "verified_records": 22,
+      "failed_sources": [
+        {
+          "job": "20110221_235142_LBZ",
+          "error": "AssertionError([('E', 'Longitudinal Accelerometer Axis'), ('N', 'Transverse Accelerometer Axis'), ('UP', 'Vertical Accelerometer Axis')])"
+        },
+        {
+          "job": "20110613_022049_LTZ",
+          "error": "AssertionError([('E', 'Longitudinal Accelerometer Axis'), ('N', 'Transverse Accelerometer Axis'), ('UP', 'Vertical Accelerometer Axis')])"
+        },
+        {
+          "job": "20111223_021803_OXZ",
+          "error": "AssertionError([('E', 'Longitudinal Accelerometer Axis'), ('N', 'Transverse Accelerometer Axis'), ('UP', 'Vertical Accelerometer Axis')])"
+        },
+        {
+          "job": "20110222_015029_OXZ",
+          "error": "AssertionError([('E', 'Longitudinal Accelerometer Axis'), ('N', 'Transverse Accelerometer Axis'), ('UP', 'Vertical Accelerometer Axis')])"
+        }
+      ],
+      "strict": {
+        "status": "INSUFFICIENT_DISTINCT_EVENTS",
+        "records": 4,
+        "events": 3,
+        "needed": 4,
+        "station_candidates": [
+          "SBT",
+          "CADA",
+          "CSA",
+          "VLN"
+        ]
+      },
+      "duration_relaxed_diagnostic": {
+        "status": "RESEARCH_FIT_ONLY",
+        "records": 11,
+        "events": 7,
+        "selected": [
+          {
+            "station": "T1214",
+            "event": "EMSC-20170118_0000119",
+            "scale": 0.5000000000033371,
+            "flags": [
+              "DURATION_5T1_RESEARCH"
+            ]
+          },
+          {
+            "station": "FEMA",
+            "event": "EMSC-20170118_0000034",
+            "scale": 0.5000000000000151,
+            "flags": [
+              "DURATION_5T1_RESEARCH"
+            ]
+          },
+          {
+            "station": "MNTP",
+            "event": "EMSC-20161026_0000095",
+            "scale": 0.5285041033799686,
+            "flags": [
+              "DURATION_5T1_RESEARCH"
+            ]
+          },
+          {
+            "station": "SEDS",
+            "event": "2013p614135",
+            "scale": 0.6079969330979906,
+            "flags": [
+              "DURATION_5T1_RESEARCH"
+            ]
+          },
+          {
+            "station": "STKS",
+            "event": "3631380",
+            "scale": 0.9773331291723318,
+            "flags": [
+              "DURATION_5T1_RESEARCH"
+            ]
+          },
+          {
+            "station": "SBT",
+            "event": "EMSC-20161030_0000029",
+            "scale": 1.7430164526705032,
+            "flags": []
+          },
+          {
+            "station": "TERO",
+            "event": "EMSC-20160824_0000006",
+            "scale": 0.5000000000003976,
+            "flags": [
+              "DURATION_5T1_RESEARCH"
+            ]
+          }
+        ],
+        "weighted_rms": 0.15408393830632552,
+        "focus_max_error": 0.3269790169366317,
+        "all_max_error": 0.35438171438828725,
+        "T1_error": -0.16852845224079027,
+        "focus_20pct_met": false,
+        "rotation_resolution_difference_max": 0.012845552791551307
+      },
+      "formal_design_admitted": 0
+    }
+  },
+  "corrected_rescreen": {
+    "run": 45406128427,
+    "artifact": 14924694404,
+    "workflow_commit": "f695427e7e79ee83288c542c82f53745cf6fd898",
+    "result": {
+      "jobs": 26,
+      "verified_records": 26,
+      "failed_sources": [],
+      "strict": {
+        "status": "INSUFFICIENT_DISTINCT_EVENTS",
+        "records": 4,
+        "events": 3,
+        "needed": 4,
+        "station_candidates": [
+          "SBT",
+          "CADA",
+          "CSA",
+          "VLN"
+        ]
+      },
+      "duration_relaxed_diagnostic": {
+        "status": "RESEARCH_FIT_ONLY",
+        "records": 13,
+        "events": 8,
+        "selected": [
+          {
+            "station": "TERO",
+            "event": "EMSC-20160824_0000006",
+            "scale": 0.5000000040153515,
+            "flags": [
+              "DURATION_5T1_RESEARCH"
+            ]
+          },
+          {
+            "station": "MNTP",
+            "event": "EMSC-20161026_0000095",
+            "scale": 0.5249477860175435,
+            "flags": [
+              "DURATION_5T1_RESEARCH"
+            ]
+          },
+          {
+            "station": "T1214",
+            "event": "EMSC-20170118_0000119",
+            "scale": 0.5000001199491293,
+            "flags": [
+              "DURATION_5T1_RESEARCH"
+            ]
+          },
+          {
+            "station": "OXZ",
+            "event": "3631380",
+            "scale": 1.9999999999999747,
+            "flags": [
+              "DURATION_5T1_RESEARCH"
+            ]
+          },
+          {
+            "station": "OXZ",
+            "event": "3468635",
+            "scale": 0.5000000000005678,
+            "flags": [
+              "DURATION_5T1_RESEARCH"
+            ]
+          },
+          {
+            "station": "SEDS",
+            "event": "2013p614135",
+            "scale": 0.7472749131831168,
+            "flags": [
+              "DURATION_5T1_RESEARCH"
+            ]
+          },
+          {
+            "station": "SBT",
+            "event": "EMSC-20161030_0000029",
+            "scale": 1.80893342256754,
+            "flags": []
+          }
+        ],
+        "weighted_rms": 0.14541514144549403,
+        "focus_max_error": 0.324793168486354,
+        "all_max_error": 0.324793168486354,
+        "T1_error": -0.15923871315407923,
+        "focus_20pct_met": false,
+        "rotation_resolution_difference_max": 0.012845552791551307
+      },
+      "formal_design_admitted": 0
+    },
+    "correction": "accept explicit E/N axis labels as orthogonal; parse HypDepth_km",
+    "SEDS_identity": "official V2A header identifies Site SEDS and instrument file RCS2; aliases reconciled"
+  },
+  "new_ESM": {
+    "run": 45406264315,
+    "artifact": 14926411002,
+    "workflow_commit": "c4355993af63de7e710dbd949bed449991896cb0",
+    "result": {
+      "version": "0.32.197",
+      "scope": "new ESM source acquisition; nonpulse query filter; official MP pairs and source checks, not formal design",
+      "queries": [
+        {
+          "label": "1990_2007",
+          "params": {
+            "starttime": "1990-01-01",
+            "endtime": "2007-12-31",
+            "min-magnitude": 5.5,
+            "max-event-depth": 35,
+            "min-epicentral-distance": 20,
+            "max-epicentral-distance": 250,
+            "min-pga": 5,
+            "max-pga": 200,
+            "channel": "HN,HG,HL",
+            "instrument-type": "D",
+            "processing-type": "MP",
+            "quality-class": "BEST,GOOD",
+            "late-triggered": "N",
+            "include-pulse-like": "0",
+            "include-fields": "esm_event_id,event_time,ev_nation_code,mw,fm_type_code,network_code,station_code,location_code,channel_code,sensor_depth_m,proximity,preferred_vs30_m_s,preferred_ec8_code,epi_dist,jb_dist,rup_dist,instrument_type_code,quality_class,processing_type,u_hp,v_hp,u_pga,v_pga,rotD50_pga,rotD50_pgv,u_T90,v_T90,rotD50_T90,u_t4_000,v_t4_000,u_t7_000,v_t7_000,u_t10_000,v_t10_000",
+            "spectra": "SA"
+          },
+          "url": "https://esm-db.eu/esmws/flatfile/1/query?starttime=1990-01-01&endtime=2007-12-31&min-magnitude=5.5&max-event-depth=35&min-epicentral-distance=20&max-epicentral-distance=250&min-pga=5&max-pga=200&channel=HN%2CHG%2CHL&instrument-type=D&processing-type=MP&quality-class=BEST%2CGOOD&late-triggered=N&include-pulse-like=0&include-fields=esm_event_id%2Cevent_time%2Cev_nation_code%2Cmw%2Cfm_type_code%2Cnetwork_code%2Cstation_code%2Clocation_code%2Cchannel_code%2Csensor_depth_m%2Cproximity%2Cpreferred_vs30_m_s%2Cpreferred_ec8_code%2Cepi_dist%2Cjb_dist%2Crup_dist%2Cinstrument_type_code%2Cquality_class%2Cprocessing_type%2Cu_hp%2Cv_hp%2Cu_pga%2Cv_pga%2CrotD50_pga%2CrotD50_pgv%2Cu_T90%2Cv_T90%2CrotD50_T90%2Cu_t4_000%2Cv_t4_000%2Cu_t7_000%2Cv_t7_000%2Cu_t10_000%2Cv_t10_000&spectra=SA",
+          "http": 200,
+          "bytes": 57737,
+          "sha256": "8694e319494b497e369dccf1dd8b8ec58837a7b6748f94f88d12de05748ad058",
+          "rows": 166
+        },
+        {
+          "label": "2008_2015",
+          "params": {
+            "starttime": "2008-01-01",
+            "endtime": "2015-12-31",
+            "min-magnitude": 5.5,
+            "max-event-depth": 35,
+            "min-epicentral-distance": 20,
+            "max-epicentral-distance": 250,
+            "min-pga": 5,
+            "max-pga": 200,
+            "channel": "HN,HG,HL",
+            "instrument-type": "D",
+            "processing-type": "MP",
+            "quality-class": "BEST,GOOD",
+            "late-triggered": "N",
+            "include-pulse-like": "0",
+            "include-fields": "esm_event_id,event_time,ev_nation_code,mw,fm_type_code,network_code,station_code,location_code,channel_code,sensor_depth_m,proximity,preferred_vs30_m_s,preferred_ec8_code,epi_dist,jb_dist,rup_dist,instrument_type_code,quality_class,processing_type,u_hp,v_hp,u_pga,v_pga,rotD50_pga,rotD50_pgv,u_T90,v_T90,rotD50_T90,u_t4_000,v_t4_000,u_t7_000,v_t7_000,u_t10_000,v_t10_000",
+            "spectra": "SA"
+          },
+          "url": "https://esm-db.eu/esmws/flatfile/1/query?starttime=2008-01-01&endtime=2015-12-31&min-magnitude=5.5&max-event-depth=35&min-epicentral-distance=20&max-epicentral-distance=250&min-pga=5&max-pga=200&channel=HN%2CHG%2CHL&instrument-type=D&processing-type=MP&quality-class=BEST%2CGOOD&late-triggered=N&include-pulse-like=0&include-fields=esm_event_id%2Cevent_time%2Cev_nation_code%2Cmw%2Cfm_type_code%2Cnetwork_code%2Cstation_code%2Clocation_code%2Cchannel_code%2Csensor_depth_m%2Cproximity%2Cpreferred_vs30_m_s%2Cpreferred_ec8_code%2Cepi_dist%2Cjb_dist%2Crup_dist%2Cinstrument_type_code%2Cquality_class%2Cprocessing_type%2Cu_hp%2Cv_hp%2Cu_pga%2Cv_pga%2CrotD50_pga%2CrotD50_pgv%2Cu_T90%2Cv_T90%2CrotD50_T90%2Cu_t4_000%2Cv_t4_000%2Cu_t7_000%2Cv_t7_000%2Cu_t10_000%2Cv_t10_000&spectra=SA",
+          "http": 200,
+          "bytes": 7977,
+          "sha256": "ea9e745f5814faa439b5b158427f1f8be684ea0f0a54de7444c36d862d1209d1",
+          "rows": 22
+        },
+        {
+          "label": "2016_2020",
+          "params": {
+            "starttime": "2016-01-01",
+            "endtime": "2020-12-31",
+            "min-magnitude": 5.5,
+            "max-event-depth": 35,
+            "min-epicentral-distance": 20,
+            "max-epicentral-distance": 250,
+            "min-pga": 5,
+            "max-pga": 200,
+            "channel": "HN,HG,HL",
+            "instrument-type": "D",
+            "processing-type": "MP",
+            "quality-class": "BEST,GOOD",
+            "late-triggered": "N",
+            "include-pulse-like": "0",
+            "include-fields": "esm_event_id,event_time,ev_nation_code,mw,fm_type_code,network_code,station_code,location_code,channel_code,sensor_depth_m,proximity,preferred_vs30_m_s,preferred_ec8_code,epi_dist,jb_dist,rup_dist,instrument_type_code,quality_class,processing_type,u_hp,v_hp,u_pga,v_pga,rotD50_pga,rotD50_pgv,u_T90,v_T90,rotD50_T90,u_t4_000,v_t4_000,u_t7_000,v_t7_000,u_t10_000,v_t10_000",
+            "spectra": "SA"
+          },
+          "url": "https://esm-db.eu/esmws/flatfile/1/query?starttime=2016-01-01&endtime=2020-12-31&min-magnitude=5.5&max-event-depth=35&min-epicentral-distance=20&max-epicentral-distance=250&min-pga=5&max-pga=200&channel=HN%2CHG%2CHL&instrument-type=D&processing-type=MP&quality-class=BEST%2CGOOD&late-triggered=N&include-pulse-like=0&include-fields=esm_event_id%2Cevent_time%2Cev_nation_code%2Cmw%2Cfm_type_code%2Cnetwork_code%2Cstation_code%2Clocation_code%2Cchannel_code%2Csensor_depth_m%2Cproximity%2Cpreferred_vs30_m_s%2Cpreferred_ec8_code%2Cepi_dist%2Cjb_dist%2Crup_dist%2Cinstrument_type_code%2Cquality_class%2Cprocessing_type%2Cu_hp%2Cv_hp%2Cu_pga%2Cv_pga%2CrotD50_pga%2CrotD50_pgv%2Cu_T90%2Cv_T90%2CrotD50_T90%2Cu_t4_000%2Cv_t4_000%2Cu_t7_000%2Cv_t7_000%2Cu_t10_000%2Cv_t10_000&spectra=SA",
+          "http": 200,
+          "bytes": 32346,
+          "sha256": "c9e7254551f9c8cb1a8138bec82b623a46c1dd54350fb1508a7fdb4ed3af1897",
+          "rows": 92
+        },
+        {
+          "label": "2021_2026",
+          "params": {
+            "starttime": "2021-01-01",
+            "endtime": "2026-11-24",
+            "min-magnitude": 5.5,
+            "max-event-depth": 35,
+            "min-epicentral-distance": 20,
+            "max-epicentral-distance": 250,
+            "min-pga": 5,
+            "max-pga": 200,
+            "channel": "HN,HG,HL",
+            "instrument-type": "D",
+            "processing-type": "MP",
+            "quality-class": "BEST,GOOD",
+            "late-triggered": "N",
+            "include-pulse-like": "0",
+            "include-fields": "esm_event_id,event_time,ev_nation_code,mw,fm_type_code,network_code,station_code,location_code,channel_code,sensor_depth_m,proximity,preferred_vs30_m_s,preferred_ec8_code,epi_dist,jb_dist,rup_dist,instrument_type_code,quality_class,processing_type,u_hp,v_hp,u_pga,v_pga,rotD50_pga,rotD50_pgv,u_T90,v_T90,rotD50_T90,u_t4_000,v_t4_000,u_t7_000,v_t7_000,u_t10_000,v_t10_000",
+            "spectra": "SA"
+          },
+          "url": "https://esm-db.eu/esmws/flatfile/1/query?starttime=2021-01-01&endtime=2026-11-24&min-magnitude=5.5&max-event-depth=35&min-epicentral-distance=20&max-epicentral-distance=250&min-pga=5&max-pga=200&channel=HN%2CHG%2CHL&instrument-type=D&processing-type=MP&quality-class=BEST%2CGOOD&late-triggered=N&include-pulse-like=0&include-fields=esm_event_id%2Cevent_time%2Cev_nation_code%2Cmw%2Cfm_type_code%2Cnetwork_code%2Cstation_code%2Clocation_code%2Cchannel_code%2Csensor_depth_m%2Cproximity%2Cpreferred_vs30_m_s%2Cpreferred_ec8_code%2Cepi_dist%2Cjb_dist%2Crup_dist%2Cinstrument_type_code%2Cquality_class%2Cprocessing_type%2Cu_hp%2Cv_hp%2Cu_pga%2Cv_pga%2CrotD50_pga%2CrotD50_pgv%2Cu_T90%2Cv_T90%2CrotD50_T90%2Cu_t4_000%2Cv_t4_000%2Cu_t7_000%2Cv_t7_000%2Cu_t10_000%2Cv_t10_000&spectra=SA",
+          "http": 204,
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "error": "Error('Could not determine delimiter')"
+        }
+      ],
+      "metadata_records": 1,
+      "metadata_events": 1,
+      "requests": 1,
+      "acquired": 0,
+      "qualified": [],
+      "strict_distinct_events": 0,
+      "formal_design": 0
+    },
+    "received_unarchived_pair": {
+      "label": "SECOND_NEW",
+      "event": "EMSC-20140524_0000026",
+      "station": "SMTH",
+      "network_requested": "HL",
+      "status": "HOLD",
+      "url": "https://esm-db.eu/esmws/eventdata/1/query?eventid=EMSC-20140524_0000026&station=SMTH&format=ascii&processing-type=MP&data-type=ACC&quality-class=BEST%2CGOOD&network=HL&location=00&channel=HN%2A",
+      "http": 200,
+      "source_sha256": "80107d1c3d39ebbfb141a454cbec5c9500d74138ac0c1ca529168ca045ee0df8",
+      "bytes": 443606,
+      "licenses": [
+        "U (unknown license)",
+        "U (unknown license)",
+        "U (unknown license)"
+      ],
+      "error": "redistribution license not verified"
+    },
+    "notes": "280 rows, one new metadata candidate, 443606 bytes returned; unknown licensing prevents archiving/redistribution. HTTP204 means no returned rows; CSV sniffer error is not a waveform failure."
+  },
+  "decision": "strict 3 distinct events, 4 more needed; duration relaxed fit is diagnostic only, fails 20%; no approved Jiayu spectrum or final RNA modal data; no engineering design eligibility. Do not infer ordinary classification for all historical records merely because special E02/E03 excluded. Additional high-pass test is sensitivity, not true source uncertainty or mandatory code criterion."
+}
