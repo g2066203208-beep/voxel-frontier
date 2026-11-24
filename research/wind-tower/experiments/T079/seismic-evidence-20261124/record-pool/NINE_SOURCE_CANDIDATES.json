@@ -1,0 +1,382 @@
+{
+  "status": "NINE_SOURCE_CANDIDATES_ACQUIRED_NOT_FINAL_DESIGN",
+  "official_esm_source_pairs": 18,
+  "esm_cutoff_screen_pairs": 11,
+  "formal_design_count": 0,
+  "rows": [
+    {
+      "id": "EQ01",
+      "role": "initial candidate, not design",
+      "event": "IT-2009-0009",
+      "date": "20090406",
+      "station": "CLN",
+      "network": "IT",
+      "mw": 6.1,
+      "epicentral_distance_km": 30.8,
+      "site_class_EC8": "B (inferred from geology)",
+      "vs30": null,
+      "dt": 0.005,
+      "npts": 18000,
+      "duration": 89.995,
+      "pga": [
+        0.79785282,
+        0.88467989
+      ],
+      "fc": [
+        0.05,
+        0.05
+      ],
+      "sa": 0.03572953414189918,
+      "directory": "acquired_v2/IT-2009-0009__IT_CLN_blank_HN",
+      "original_sha256": "ac2a42a24945979c5fa1972b7f3a4c1a12f4fb0d31d89231851735e8dea35e3f",
+      "files": {
+        "acceleration_SI.csv": {
+          "sha256": "31fce81d2abda5484d8c62a59ad6c196d72596d18b6f8cee2e8ba6251829d863",
+          "bytes": 705595
+        },
+        "spectra_5pct.csv": {
+          "sha256": "1befcc4b17d386e478538ca70c7f6d3ba35e7dfa074d3be12c2c27a8b9f0ed89",
+          "bytes": 6792
+        },
+        "original_MP_ACC.zip": {
+          "sha256": "ac2a42a24945979c5fa1972b7f3a4c1a12f4fb0d31d89231851735e8dea35e3f",
+          "bytes": 202679
+        }
+      },
+      "license": "CC-BY3_0-IT (http://creativecommons.org/licenses/by/3.0/deed.en)",
+      "status": "SOURCE_ACQUIRED; LONG_PERIOD_AND_TARGET_HOLD"
+    },
+    {
+      "id": "EQ02",
+      "role": "initial candidate, not design",
+      "event": "IT-2012-0008",
+      "date": "20120520",
+      "station": "MODE",
+      "network": "IV",
+      "mw": 6.1,
+      "epicentral_distance_km": 38.6,
+      "site_class_EC8": "C",
+      "vs30": 204,
+      "dt": 0.005,
+      "npts": 40000,
+      "duration": 199.995,
+      "pga": [
+        0.26972546000000003,
+        0.41873976
+      ],
+      "fc": [
+        0.03,
+        0.02
+      ],
+      "sa": 0.04511893888859421,
+      "directory": "acquired_v2/IT-2012-0008__IV_MODE_blank_HN",
+      "original_sha256": "788095e883cc6990d450b72b7a3d41c9f2a6b96336657b1b2a01817aedd8bd8d",
+      "files": {
+        "acceleration_SI.csv": {
+          "sha256": "2b7f59d2393e6a5766eb20a25ba0afa4ae9d8d49c259ef102784f13e5f27cc80",
+          "bytes": 1604115
+        },
+        "spectra_5pct.csv": {
+          "sha256": "a72c09633549e9e78725f2b023eca2ea0f0a1f1d1046a2b65210bd27df933f18",
+          "bytes": 6869
+        },
+        "original_MP_ACC.zip": {
+          "sha256": "788095e883cc6990d450b72b7a3d41c9f2a6b96336657b1b2a01817aedd8bd8d",
+          "bytes": 446991
+        }
+      },
+      "license": "CC-BY4_0 (http://creativecommons.org/licenses/by/4.0/)",
+      "status": "SOURCE_ACQUIRED; LONG_PERIOD_AND_TARGET_HOLD"
+    },
+    {
+      "id": "EQ03",
+      "role": "initial candidate, not design",
+      "event": "EMSC-20160824_0000006",
+      "date": "20160824",
+      "station": "COR1",
+      "network": "IV",
+      "mw": 6,
+      "epicentral_distance_km": 105.4,
+      "site_class_EC8": "D (inferred from geology)",
+      "vs30": null,
+      "dt": 0.005,
+      "npts": 39193,
+      "duration": 195.96,
+      "pga": [
+        0.21682339,
+        0.16288778
+      ],
+      "fc": [
+        0.05,
+        0.05
+      ],
+      "sa": 0.01691278241150134,
+      "directory": "acquired_v2/EMSC-20160824_0000006__IV_COR1_blank_HN",
+      "original_sha256": "5135af4dfcafe77b332df97f45a2769b1166c2b7d8faa784fd55d2890a4336a0",
+      "files": {
+        "acceleration_SI.csv": {
+          "sha256": "f8cb81af4d9266c909e5a06c513243fe1f2e4717b292efcd8b4e363642e92ba0",
+          "bytes": 1572089
+        },
+        "spectra_5pct.csv": {
+          "sha256": "17b6183aa9eec75a6d014d28eb62a06cabed07471551877261ce1f922411e894",
+          "bytes": 6935
+        },
+        "original_MP_ACC.zip": {
+          "sha256": "5135af4dfcafe77b332df97f45a2769b1166c2b7d8faa784fd55d2890a4336a0",
+          "bytes": 429727
+        }
+      },
+      "license": "CC-BY4_0 (http://creativecommons.org/licenses/by/4.0/)",
+      "status": "SOURCE_ACQUIRED; LONG_PERIOD_AND_TARGET_HOLD"
+    },
+    {
+      "id": "EQ04",
+      "role": "initial candidate, not design",
+      "event": "EMSC-20191126_0000013",
+      "date": "20191126",
+      "station": "MESG",
+      "network": "IV",
+      "mw": 6.4,
+      "epicentral_distance_km": 177.6,
+      "site_class_EC8": "B (inferred from geology)",
+      "vs30": null,
+      "dt": 0.005,
+      "npts": 32158,
+      "duration": 160.785,
+      "pga": [
+        0.040382600000000005,
+        0.037408670000000005
+      ],
+      "fc": [
+        0.05,
+        0.05
+      ],
+      "sa": 0.0029046700178148254,
+      "directory": "acquired_v2/EMSC-20191126_0000013__IV_MESG_blank_HN",
+      "original_sha256": "1e502ab7edf482514218c788abe949a5dd4aac388bcb8cf2f88b25296db421d5",
+      "files": {
+        "acceleration_SI.csv": {
+          "sha256": "f1fd62e6c00378a2cfcb01f5623f37fcbcc5336e4d24e07388507bf182d413cd",
+          "bytes": 1288035
+        },
+        "spectra_5pct.csv": {
+          "sha256": "834caa1b7d9a99ef6a47b847be802b4dac9d8f01fb3956d411f7d266e481b95f",
+          "bytes": 7253
+        },
+        "original_MP_ACC.zip": {
+          "sha256": "1e502ab7edf482514218c788abe949a5dd4aac388bcb8cf2f88b25296db421d5",
+          "bytes": 344694
+        }
+      },
+      "license": "CC-BY4_0 (http://creativecommons.org/licenses/by/4.0/)",
+      "status": "SOURCE_ACQUIRED; LONG_PERIOD_AND_TARGET_HOLD"
+    },
+    {
+      "id": "EQ05",
+      "role": "initial candidate, not design",
+      "event": "IT-2012-0011",
+      "date": "20120529",
+      "station": "ZOVE",
+      "network": "IV",
+      "mw": 6,
+      "epicentral_distance_km": 75.7,
+      "site_class_EC8": "A",
+      "vs30": 1013,
+      "dt": 0.005,
+      "npts": 40000,
+      "duration": 199.995,
+      "pga": [
+        0.12827143,
+        0.12722156
+      ],
+      "fc": [
+        0.05,
+        0.05
+      ],
+      "sa": 0.005503507931960488,
+      "directory": "acquired_v2/IT-2012-0011__IV_ZOVE_blank_HN",
+      "original_sha256": "e5d26895c028158b9dbb0e27cba5286a3129e7e6a3d7b39b71b20db1f39e42fe",
+      "files": {
+        "acceleration_SI.csv": {
+          "sha256": "4cc4e5aa44bb1768d8f1e4c86352a98c376a87ac3b65def1155e7f98fdc4756d",
+          "bytes": 1572777
+        },
+        "spectra_5pct.csv": {
+          "sha256": "71f221a5ca7dba55cea4863de690d4ead3a9997f7fd0a61688823a435ad542d9",
+          "bytes": 7175
+        },
+        "original_MP_ACC.zip": {
+          "sha256": "e5d26895c028158b9dbb0e27cba5286a3129e7e6a3d7b39b71b20db1f39e42fe",
+          "bytes": 401466
+        }
+      },
+      "license": "CC-BY4_0 (http://creativecommons.org/licenses/by/4.0/)",
+      "status": "SOURCE_ACQUIRED; LONG_PERIOD_AND_TARGET_HOLD"
+    },
+    {
+      "id": "EQ06",
+      "role": "initial candidate, not design",
+      "event": "EMSC-20161026_0000095",
+      "date": "20161026",
+      "station": "T1215",
+      "network": "8P",
+      "mw": 5.9,
+      "epicentral_distance_km": 25.3,
+      "site_class_EC8": "A (inferred from geology)",
+      "vs30": null,
+      "dt": 0.005,
+      "npts": 24143,
+      "duration": 120.71000000000001,
+      "pga": [
+        0.20516415,
+        0.27120018
+      ],
+      "fc": [
+        0.03,
+        0.03
+      ],
+      "sa": 0.00950986412455004,
+      "directory": "acquired_v2/EMSC-20161026_0000095__8P_T1215_blank_HN",
+      "original_sha256": "b196a886eac5adbaba761b7b4db7c44263c31fe3fc757117dd2aa51b06624c0d",
+      "files": {
+        "acceleration_SI.csv": {
+          "sha256": "a4d566c3cb8354272685f4d8b93e3c3655370563e0646b38be2ab1fcf7a96a9f",
+          "bytes": 685115
+        },
+        "spectra_5pct.csv": {
+          "sha256": "17b2dd872c477080a5877842162ff4e1d242cea255970c216003aa87caa46f65",
+          "bytes": 7032
+        },
+        "original_MP_ACC.zip": {
+          "sha256": "b196a886eac5adbaba761b7b4db7c44263c31fe3fc757117dd2aa51b06624c0d",
+          "bytes": 262188
+        }
+      },
+      "license": "CC-BY4_0 (http://creativecommons.org/licenses/by/4.0/)",
+      "status": "SOURCE_ACQUIRED; LONG_PERIOD_AND_TARGET_HOLD"
+    },
+    {
+      "id": "EQ07",
+      "role": "initial candidate, not design",
+      "event": "EMSC-20170118_0000034",
+      "date": "20170118",
+      "station": "FEMA",
+      "network": "IV",
+      "mw": 5.5,
+      "epicentral_distance_km": 48.9,
+      "site_class_EC8": "A (inferred from geology)",
+      "vs30": null,
+      "dt": 0.005,
+      "npts": 15568,
+      "duration": 77.83500000000001,
+      "pga": [
+        0.23621368,
+        0.27930833
+      ],
+      "fc": [
+        0.03,
+        0.03
+      ],
+      "sa": 0.0034175730696144125,
+      "directory": "acquired_v2/EMSC-20170118_0000034__IV_FEMA_blank_HN",
+      "original_sha256": "615a657b4c65cc00b4913ded36fe181fe040b86b074e62bc33305ef0adf7fe74",
+      "files": {
+        "acceleration_SI.csv": {
+          "sha256": "5bce007e0e8a65a2f518fa1a1096c311b0935d763c4b1d16ee9007f5a3226756",
+          "bytes": 621116
+        },
+        "spectra_5pct.csv": {
+          "sha256": "d3faab7125277c5bf2d604e3c901974feafd4a8ec3f1685f374b2a2442d5566f",
+          "bytes": 7128
+        },
+        "original_MP_ACC.zip": {
+          "sha256": "615a657b4c65cc00b4913ded36fe181fe040b86b074e62bc33305ef0adf7fe74",
+          "bytes": 183265
+        }
+      },
+      "license": "CC-BY4_0 (http://creativecommons.org/licenses/by/4.0/)",
+      "status": "SOURCE_ACQUIRED; LONG_PERIOD_AND_TARGET_HOLD"
+    },
+    {
+      "id": "SP01",
+      "role": "pulse sensitivity candidate",
+      "event": "EMSC-20161030_0000029",
+      "date": "20161030",
+      "station": "T1201",
+      "network": "8P",
+      "mw": 6.6,
+      "epicentral_distance_km": 22.6,
+      "site_class_EC8": "B (inferred from geology)",
+      "vs30": null,
+      "dt": 0.005,
+      "npts": 12096,
+      "duration": 60.475,
+      "pga": [
+        3.3924939000000003,
+        4.73694214
+      ],
+      "fc": [
+        0.04,
+        0.04
+      ],
+      "sa": 0.14242307320700906,
+      "directory": "acquired_v2/EMSC-20161030_0000029__8P_T1201_blank_HN",
+      "original_sha256": "38fb23a29d343bde0a64a1869b6bd385df59a5fac9c8ac7596964b120a53e68f",
+      "files": {
+        "acceleration_SI.csv": {
+          "sha256": "48e61076f190938886377770647f5903f5c9064a4181aa23ab4125bbbd8a3ea5",
+          "bytes": 478378
+        },
+        "spectra_5pct.csv": {
+          "sha256": "25a733d92e8d532c2c7688f0e5d0b04ef66bed7dadb6aa4848b1cf398a446ee7",
+          "bytes": 6570
+        },
+        "original_MP_ACC.zip": {
+          "sha256": "38fb23a29d343bde0a64a1869b6bd385df59a5fac9c8ac7596964b120a53e68f",
+          "bytes": 153438
+        }
+      },
+      "license": "CC-BY4_0 (http://creativecommons.org/licenses/by/4.0/)",
+      "status": "SOURCE_ACQUIRED; LONG_PERIOD_AND_TARGET_HOLD"
+    },
+    {
+      "id": "SP02",
+      "role": "published near-fault pulse sensitivity candidate",
+      "event": "GeoNet 3366146",
+      "date": "20100903",
+      "station": "DSLC",
+      "network": "NZ",
+      "mw": 7.1,
+      "dt": 0.02,
+      "npts": 7386,
+      "duration": 147.7,
+      "pga": [
+        2.3528000000000002,
+        2.4837,
+        2.8921
+      ],
+      "filter_transition_Hz": [
+        [
+          0.01,
+          0.1
+        ],
+        [
+          24.5,
+          25.5
+        ]
+      ],
+      "sa": 1.1585938235103241,
+      "directory": "geonet-dslc",
+      "original_sha256": "178b7b329e641188cb9758774a7bd57a7563a2ceab058d06d5e288272f01f463",
+      "license": "CC BY 3.0 NZ",
+      "status": "SOURCE_ACQUIRED; dt=0.02s and low-frequency transition; sensitivity only"
+    }
+  ],
+  "notes": [
+    "7 main candidates represent 7 distinct event IDs, not statistically independent across earthquake sequences. No assertion of nonpulse classification or hazard compatibility.",
+    "Earlier proposed PEER record IDs P01-P07 not obtained from ESM; alternatives explicitly substituted. Original DSLC is recovered, YPT not obtained; T1201 is the published pulse alternative.",
+    "T1201 identified in Yang et al. DOI 10.1111/mice.13408; DSLC in Dai et al. DOI 10.6052/j.issn.1000-4750.2021.02.0121.",
+    "Source spectrum diagnostic is based on 5% damping, 7.3937 s historical period. Reported corner <=0.05 Hz does not certify signal or 15 s usable period; missing hazard target, instrument checks, site and scale."
+  ]
+}
