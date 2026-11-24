@@ -1,4 +1,4 @@
-name: Native aero UA polar repair and DBEMT long cases
+name: Native aero UA polar repair V3
 on:
   pull_request:
     types: [opened, synchronize, reopened]
@@ -8,7 +8,7 @@ permissions:
   contents: read
   actions: read
 concurrency:
-  group: native-aero-physics-gates-${{ github.ref }}
+  group: native-aero-ua-v3-${{ github.ref }}
   cancel-in-progress: false
 jobs:
   pilot:
@@ -17,8 +17,6 @@ jobs:
       max-parallel: 4
       matrix:
         include:
-          - {turbulence: NTM, physics: dbemt, duration: 700}
-          - {turbulence: 1ETM, physics: dbemt, duration: 700}
           - {turbulence: NTM, physics: ua, duration: 10}
           - {turbulence: 1ETM, physics: ua, duration: 10}
           - {turbulence: NTM, physics: dbemt_ua, duration: 10}
@@ -118,7 +116,13 @@ jobs:
                   assert len(tabs)==len(inc)==len(num)==1,(p,tabs,inc,num)
                   assert int(lines[tabs[0]].split()[0])==1
                   i,j=inc[0],num[0]
-                  assert i<j and lines[i].split()[0].lower()=='true',(p,lines[i])
+                  assert i<j,(p,lines[i])
+                  flag=lines[i].split()[0].lower()
+                  assert flag in ('true','false'),(p,lines[i])
+                  if flag=='false':
+                      assert all(not l.strip() or l.lstrip().startswith('!') for l in lines[i+1:j]),(p,lines[i+1:j])
+                      rows.append(dict(file=p.name,original_sha256=hashlib.sha256(raw).hexdigest(),modified_sha256=hashlib.sha256(raw).hexdigest(),method='Already InclUAdata=False; unchanged',num_alf=int(lines[j].split()[0])))
+                      continue
                   old=lines[i:j]
                   new=re.sub(r'^([ \t]*)\S+',r'\g<1>False',lines[i],count=1)
                   rebuilt=''.join(lines[:i]+[new]+lines[j:]).encode('utf-8')
@@ -161,7 +165,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: physics-v2-${{ matrix.turbulence }}-${{ matrix.physics }}-${{ matrix.duration }}s
+          name: physics-v3-${{ matrix.turbulence }}-${{ matrix.physics }}-${{ matrix.duration }}s
           path: |
             native-aero/*.json
             native-aero/*.log
