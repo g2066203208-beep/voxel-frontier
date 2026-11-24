@@ -1,3 +1,6 @@
+## 2026-11-24｜REV13双水平地震试算输入 · START
+- READ_BASE_SHA=c5525fe41ad6d7ff27f69917042df467da3fc3a2；已读根/研究AGENTS、指挥室、白皮书v0.32.158、T079/T080、真实REV11/REV12、S08地震源收据；恢复Actions 12884814391原始归档并核对数值来源；核读Abaqus2025 *BOUNDARY/*DYNAMIC/*INITIAL CONDITIONS/*CONTACT CONTROLS及CDP恢复官方定义。用户明确授权准备可提交INP、由用户本机求解；本轮静态检查与独立E-only试算版，保留原件、禁止用结构反力冒充风外载，不声称物理验证或场址合规。不执行原生求解、不合并PR#42。
+
 ## 2026-11-24｜REV12钢材混合强化对照候选 · END
 - SOURCE=REV11 fa27040f66b1c6d85fe1c4d863fb62d1423960972a1cdf08fc9dbb0871b1e5fd；实际独立候选REV12_CYCLIC_SENS b2ad06256505ca556b2db7a19a5270be9481e8ecab0967bd23206255fdb7c686、34227427 bytes、3处差异。赵等2024表3/4和郏等2024表3完整4背应力系数迁移，保留母本E和初始屈服；16组独立单轴积分、200/400步对照及反向补丁校验通过。main c659d7e2b7be7e64e78014178af9cd24605e5eaf已归档候选补丁、脚本/审计，完整INP云备份，latest仍REV11；白皮书v0.32.158详录数值、实际关键词及既有原图。新原页未获得可归档字节，真实循环标定/法兰工艺/原生求解仍HOLD，HPB300/法兰不改，不合并PR#42。
 
