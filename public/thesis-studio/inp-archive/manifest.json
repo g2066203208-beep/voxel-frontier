@@ -3,6 +3,16 @@
   "latest": "REV11",
   "versions": [
     {
+      "version": "REV13_EQ_2H_CHECK",
+      "file": "HE_REV13_EQ_2H_CHECK.inp",
+      "date": "2026-11-24",
+      "size": 34232781,
+      "sha256": "7a56d8f7bfc059434f57dc4ddb99961e2ea1f41176b6aff27e587ad4fcd1f8d2",
+      "base": "REV11",
+      "patch": "REV13_EQ_2H_CHECK/patch.json",
+      "state": "双水平真实记录E-only试算；未加Rayleigh/风外载，非设计工况，原生未验"
+    },
+    {
       "version": "REV12_CYCLIC_SENS",
       "file": "HE_REV12_CYCLIC_SENS.inp",
       "date": "2026-11-24",
