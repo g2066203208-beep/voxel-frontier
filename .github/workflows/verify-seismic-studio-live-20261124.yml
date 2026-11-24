@@ -59,7 +59,7 @@ jobs:
                 console.log('LIVE_DOWNLOAD_PASS',l.href,b.length,h);
               }
               for(const n of ['nine_actual_waveforms.png','nine_actual_spectra.png','nine_velocity_diagnostics.png','nine_long_period_sensitivity.png']){
-                const img=page.locator('img[src="'+n+'"]');await img.scroll_into_view_if_needed();await img.evaluate(x=>x.decode());if(!await img.evaluate(x=>x.naturalWidth>100))throw Error('Invalid image '+n);
+                const img=page.locator('img[src="'+n+'"]');await img.scrollIntoViewIfNeeded();await img.evaluate(x=>x.decode());if(!await img.evaluate(x=>x.naturalWidth>100))throw Error('Invalid image '+n);
               }
               await page.evaluate(()=>scrollTo(0,0));await page.screenshot({path:'seismic-studio-live.png',fullPage:true});
               console.log('LIVE_BROWSER_PASS',links.length);
