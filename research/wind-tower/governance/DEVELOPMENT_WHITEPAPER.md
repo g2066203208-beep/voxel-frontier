@@ -1,3 +1,10 @@
+### 2026-11-24｜v0.32.199 — REV20无法直接导入CAE故障复核
+
+- 用户报告此前INP打不开，未提供具体文件或报错；先针对最新REV20排查。实下载artifact14900571562（12606328 bytes，SHA256 58f8afead62781ea80f3d01fc81055e97fb6ab5e85b04ce53d3ae9c65951e83f），ZIP CRC及14项manifest哈希通过，7个INP最大行长均≤256，无截断证据。
+- 两整塔ROM文件第204621行 *Element,type=SUBSTR,file=RNA_ROM10；[官方Using Substructures](https://docs.software.vt.edu/abaqusv2026/English/SIMACAEANLRefMap/simaanl-c-superelements.htm)明确CAE不支持通用SUBSTR；[官方CAE子结构导入](https://docs.software.vt.edu/abaqusv2026/English/SIMACAECAERefMap/simacae-t-dbsimportpartsubstructure.htm)需原生SIM及相应支持文件、ODB网格；当前包没有生成数据库。生成文件RECOVERY MATRIX=NO，不能承诺内部网格/恢复文件。原生命令行候选不是直接CAE导入模型，原始REV20冻结不覆盖。
+- 重新下载REV18 artifact14899050787、run45347120960，提取PRECHECK及LEAN010，原件SHA256分别be0a35e843cf171e9d98eae045bd032837bd71880c515a428c405f23d9c52322、91c4d7499ffc7cdd30144fe39f74da3d7fd4b6ce49bbfd6c716d4f5e0ae0b041。实际再次运行flatten_tower.py解析完整部件/实例/节点/单元/集合和引用；100部件/实例、96605节点、96464单元、30接触、62Embedded、108方程，检查495/562处限定引用，PRECHECK重建全阶展平SHA完全匹配既有d752f07d3165c34dc1e48c23ff18e0b9a48a7bd68d53dd9955c0d7a2a9c6c8ff。无外部FILE/INPUT依赖。作为完整柔性RNA自包含回退入口，不是REV20降阶版；环境无Abaqus可执行文件，原生CAE导入和求解仍NOT_RUN。
+- [实际检测报告](../experiments/T048/RNA_NATIVE_ROM_20261124/REV20_CAE_IMPORT_AUDIT_20261124.json)，commit 98c11c4cf5842f1ad703ae7bf4142459259544a2。纠正工作室REV20交付说明，保留REV18下载。未改变物理模型或地震时程。
+
 ### 2026-11-24｜v0.32.198 — 停止扩波；研究计算输入与REV20原生准入锁定
 
 - 原有研究波数量满足试算，不继续为第二套凑足七组。V7保持冻结，仅作为参数化研究基准输入候选，不升格正式设计；E02/E03单独开展脉冲敏感性；其他第二套数据及图保留，不删除、不宣称通过。历史自定5T1、倍率0.5–2、谱偏差20%、额外高通敏感性均为研究筛查，非统一规范强制淘汰条件。
