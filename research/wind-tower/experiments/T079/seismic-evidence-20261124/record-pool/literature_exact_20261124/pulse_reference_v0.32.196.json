@@ -1,0 +1,42 @@
+{
+  "version": "0.32.196",
+  "source": "Shahi & Baker (2014) NGA-West2 pulse classification research archive",
+  "database_version": "June 2012",
+  "computed_date": "2012-11-01",
+  "source_figures_viewed": true,
+  "figure_bytes_archived": false,
+  "reference_url": "https://www.jackwbaker.com/pulse-classification.html",
+  "records": [
+    {
+      "id": "E02",
+      "rsn": 6897,
+      "station": "DSLC",
+      "Mw": 7,
+      "Rrup_km": 8.5,
+      "Vs30": 275,
+      "Tp_s": 7.83,
+      "PGV_cm_s": 65.9,
+      "azimuth_deg_from_north": 44,
+      "fault_normal_pulse": true,
+      "directivity_pulse": true,
+      "page": "https://www.jackwbaker.com/pulse_classification_v2/6897.html",
+      "original_figure": "https://www.jackwbaker.com/pulse_classification_v2/Figures/6897.png"
+    },
+    {
+      "id": "E03",
+      "rsn": 1176,
+      "station": "Yarimca",
+      "Mw": 7.5,
+      "Rrup_km": 4.8,
+      "Vs30": 297,
+      "Tp_s": 4.95,
+      "PGV_cm_s": 90.6,
+      "azimuth_deg_from_north": 25,
+      "fault_normal_pulse": true,
+      "directivity_pulse": true,
+      "page": "https://www.jackwbaker.com/pulse_classification_v2/1176.html",
+      "original_figure": "https://www.jackwbaker.com/pulse_classification_v2/Figures/1176.png"
+    }
+  ],
+  "note": "Author-original figures actually visually inspected: original motion / extracted pulse / residual; no newly calculated pulse extraction. These values classify station-level records of reference version, not certify current source copy or individual as-recorded axes. Retain as special sensitivity pair, do not label other records from absence of pulse archive. No redistribution of author figures without confirmed permission."
+}
