@@ -1,0 +1,126 @@
+{
+  "case_source": "U11p4_NTM_S01 historical OpenFAST v3.5.3",
+  "source_commit": "5ce9b969cbbbf6a4e921d432eb43b596696458be",
+  "inputs": [
+    {
+      "name": "C02R3R2_158M_Tower_ZERO_DAMPING_20260831.dat",
+      "sha256": "6b45e4018657bfd60aa0d0259c5a0a112a2d4c1b404f0085ba2ee21abeccadd6",
+      "archive": "research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip",
+      "archive_sha256": "ddfa02734274ad5bd36e84d975d18544bb5360554e25d71d8689f32313a95267",
+      "member": "CASES/U09p343881_ETM_S01/C02R3R2_158M_Tower_ZERO_DAMPING_20260831.dat"
+    },
+    {
+      "name": "C02R3R2_158M_Tower.dat",
+      "sha256": "f738d35fc9c8b8d8745f2ed9490c92578b056cfe37201bbfa0bfdb24906d2983",
+      "archive": "research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip",
+      "archive_sha256": "ddfa02734274ad5bd36e84d975d18544bb5360554e25d71d8689f32313a95267",
+      "member": "CASES/U09p343881_ETM_S01/C02R3R2_158M_Tower.dat"
+    },
+    {
+      "name": "DTU_10MW_InflowWind.dat",
+      "sha256": "19ac4e2c8ec854a5a53b83b0256c026690d09979bf5befa5d104691f6f3992b3",
+      "archive": "research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-002.zip",
+      "archive_sha256": "5100b6b255e1706874feac95d6d967c7625b53536efac26d77719d56db63d71a",
+      "member": "CASES/U11p4_NTM_S01/DTU_10MW_InflowWind.dat"
+    },
+    {
+      "name": "DTU_10MW_RWT_ElastoDyn.dat",
+      "sha256": "6d2d871374e25edcfaeb50627831052e8df57bd27cccc5089cae256800492d65",
+      "archive": "research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip",
+      "archive_sha256": "ddfa02734274ad5bd36e84d975d18544bb5360554e25d71d8689f32313a95267",
+      "member": "CASES/U09p343881_ETM_S01/DTU_10MW_RWT_ElastoDyn.dat"
+    },
+    {
+      "name": "DTU_10MW_RWT.fst",
+      "sha256": "5307e04d27721095ce6cbb6c125b8be1b4be71790af6c6258e3187343f5db605",
+      "archive": "research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip",
+      "archive_sha256": "ddfa02734274ad5bd36e84d975d18544bb5360554e25d71d8689f32313a95267",
+      "member": "CASES/U09p343881_ETM_S01/DTU_10MW_RWT.fst"
+    },
+    {
+      "name": "Control/Cp_Ct_Cq_10MW.txt",
+      "sha256": "95bf5593e05f7b204dd24f1dc08810e95c175a71d9ed3ebdbc09da696e8005f9",
+      "archive": "research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip",
+      "archive_sha256": "ddfa02734274ad5bd36e84d975d18544bb5360554e25d71d8689f32313a95267",
+      "member": "CASES/U09p343881_ETM_S01/Control/Cp_Ct_Cq_10MW.txt"
+    },
+    {
+      "name": "Control/DTU_10MW_RWT_ServoDyn.dat",
+      "sha256": "103e7bd71209a095b833ca4ba62627ae7724870615112fdccfbff502076c966e",
+      "archive": "research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip",
+      "archive_sha256": "ddfa02734274ad5bd36e84d975d18544bb5360554e25d71d8689f32313a95267",
+      "member": "CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_ServoDyn.dat"
+    },
+    {
+      "name": "Rotor/DTU_10MW_AeroDyn15_blade.dat",
+      "sha256": "2e1597b858dab17c5bfd98d5963d0e00c2dc279f5107a5f21d4b2a48f8edb9fa",
+      "archive": "research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip",
+      "archive_sha256": "ddfa02734274ad5bd36e84d975d18544bb5360554e25d71d8689f32313a95267",
+      "member": "CASES/Rotor/DTU_10MW_AeroDyn15_blade.dat"
+    },
+    {
+      "name": "Rotor/DTU_10MW_ElastoDyn_Blades.dat",
+      "sha256": "6ad2426fd429f4e01008700d31d4b64d79358522bcf265ce12f7706e8a1f895d",
+      "archive": "research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip",
+      "archive_sha256": "ddfa02734274ad5bd36e84d975d18544bb5360554e25d71d8689f32313a95267",
+      "member": "CASES/Rotor/DTU_10MW_ElastoDyn_Blades.dat"
+    },
+    {
+      "name": "Rotor/DTU_10MW_RWT_AeroDyn15.dat",
+      "sha256": "e258d2e8fc7664b93f3e6a792c46ec38bea327859f95c3b200391e9f2bb1a568",
+      "archive": "research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip",
+      "archive_sha256": "ddfa02734274ad5bd36e84d975d18544bb5360554e25d71d8689f32313a95267",
+      "member": "CASES/Rotor/DTU_10MW_RWT_AeroDyn15.dat"
+    },
+    {
+      "name": "Rotor/Airfoils/Cylinder_Aerodyn15.dat",
+      "sha256": "2994cb5f79282170019be0a8c48b60155905365cac4ac88b21dda58c16f925cb",
+      "archive": "research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip",
+      "archive_sha256": "ddfa02734274ad5bd36e84d975d18544bb5360554e25d71d8689f32313a95267",
+      "member": "CASES/Rotor/Airfoils/Cylinder_Aerodyn15.dat"
+    },
+    {
+      "name": "Rotor/Airfoils/FFA_W3_241_AeroDyn15.dat",
+      "sha256": "6c5aff68e1e4d52021867a7cda42616aafc8fdd08d52d6f92d2b7841714c69fd",
+      "archive": "research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip",
+      "archive_sha256": "ddfa02734274ad5bd36e84d975d18544bb5360554e25d71d8689f32313a95267",
+      "member": "CASES/Rotor/Airfoils/FFA_W3_241_AeroDyn15.dat"
+    },
+    {
+      "name": "Rotor/Airfoils/FFA_W3_301_AeroDyn15.dat",
+      "sha256": "2a38e9062d278a55e7bbc8f879022bbb2696906a628ac57a896455146c798296",
+      "archive": "research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip",
+      "archive_sha256": "ddfa02734274ad5bd36e84d975d18544bb5360554e25d71d8689f32313a95267",
+      "member": "CASES/Rotor/Airfoils/FFA_W3_301_AeroDyn15.dat"
+    },
+    {
+      "name": "Rotor/Airfoils/FFA_W3_360_AeroDyn15.dat",
+      "sha256": "d32e7c2ef4babab699126167e2108d92471fbead0a61aafb2ddd40fb662dbcb4",
+      "archive": "research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip",
+      "archive_sha256": "ddfa02734274ad5bd36e84d975d18544bb5360554e25d71d8689f32313a95267",
+      "member": "CASES/Rotor/Airfoils/FFA_W3_360_AeroDyn15.dat"
+    },
+    {
+      "name": "Rotor/Airfoils/FFA_W3_480_AeroDyn15.dat",
+      "sha256": "a8933ac866dc3ec019d77a9c9b2a25fc45a8924f525807a0c36de0b727a3892d",
+      "archive": "research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip",
+      "archive_sha256": "ddfa02734274ad5bd36e84d975d18544bb5360554e25d71d8689f32313a95267",
+      "member": "CASES/Rotor/Airfoils/FFA_W3_480_AeroDyn15.dat"
+    },
+    {
+      "name": "Rotor/Airfoils/FFA_W3_600_AeroDyn15.dat",
+      "sha256": "0f8603417eb31cfd5604aedf64e2e2a5c2994d7d14b94db2ec9fd250a6d5934f",
+      "archive": "research/wind-tower/archive/local-assets-20261004/openfast-36-r2/part-001.zip",
+      "archive_sha256": "ddfa02734274ad5bd36e84d975d18544bb5360554e25d71d8689f32313a95267",
+      "member": "CASES/Rotor/Airfoils/FFA_W3_600_AeroDyn15.dat"
+    },
+    {
+      "name": "Control/DTU_10MW_RWT_DISCON.IN",
+      "sha256": "8f5d7546420ee34838e66b63e4b26d64460be5d5492f99c60b6d1ef977ffc61a",
+      "archive": "research/wind-tower/archive/local-assets-20261004-supplement/openfast-36-r2/part-001.zip",
+      "archive_sha256": "c8d8201f97025729634b3f6a97076524c4329179693a97778456e6e7201477b0",
+      "member": "CASES/U09p343881_ETM_S01/Control/DTU_10MW_RWT_DISCON.IN"
+    }
+  ],
+  "controller_binary_original": "not recovered; version-pinned substitute required"
+}
