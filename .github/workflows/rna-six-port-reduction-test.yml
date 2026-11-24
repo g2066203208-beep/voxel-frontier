@@ -12,7 +12,7 @@ permissions:
 jobs:
   demo:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
         with:
@@ -31,6 +31,11 @@ jobs:
         env:
           OPENBLAS_NUM_THREADS: '1'
         run: python research/wind-tower/experiments/T048/RNA_PORT_REDUCTION_20261124/assemble_one_blade.py --demo --out output/rna_cyclic_demo
+      - name: Build actual-source independent RNA reduced INP
+        env:
+          OPENBLAS_NUM_THREADS: '1'
+          OMP_NUM_THREADS: '1'
+        run: python research/wind-tower/experiments/T048/RNA_PORT_REDUCTION_20261124/build_source_port_inp.py --out output
       - uses: actions/upload-artifact@v4
         with:
           name: rna_port_synthetic_test
