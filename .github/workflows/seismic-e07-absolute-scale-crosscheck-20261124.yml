@@ -1,0 +1,79 @@
+name: T079 E07 exact-scale official crosscheck
+on:
+  push:
+    branches: [research/t080-seismic-integration-gates-20261022]
+    paths: ['.github/workflows/seismic-e07-absolute-scale-crosscheck-20261124.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  crosscheck:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install --quiet numpy scipy
+      - name: Read PEER bytes and compare full-duration research copy against rotated official record
+        run: |
+          mkdir -p evidence
+          python - <<'PY'
+          import urllib.request, zipfile, io, hashlib, json, pathlib, numpy as np
+          from scipy.signal import correlate
+          root=pathlib.Path('evidence')
+          def read(url):
+            with urllib.request.urlopen(url,timeout=45) as f:return f.read()
+          zbytes=read('https://apps.peer.berkeley.edu/transportation/wp-content/uploads/2010/09/Oak-50-50-gms-July-14.zip')
+          assert hashlib.sha256(zbytes).hexdigest()=='89537d51f547084869924f65c1999d91a7bc4594928b870ff7bcf6279e88c264'
+          scale=2.309816509105592
+          with zipfile.ZipFile(io.BytesIO(zbytes)) as z:
+            raw=[z.read('Oak_50_50_24_'+c+'.acc') for c in ['FN','FP','UP']]
+          expected=['7e392c66ab9e9981ca072b8de87845fe367a1f08ac22a75c0a4cd4c3f771ee5a','fa1c4a145a3f5244cc5043de32db137d8cff2c6f42e7e80468b1fc96ca03de88','d50ccbef2303e4077556cb99e5c5a44bd618c58feb8d30b6250d705b12163387']
+          assert [hashlib.sha256(v).hexdigest() for v in raw]==expected
+          def acc(raw,skip):
+            arr=np.fromstring(' '.join(raw.decode('ascii').splitlines()[skip:]),sep=' ')
+            assert np.isfinite(arr).all()
+            return arr
+          official=np.array([acc(raw[0],7),acc(raw[1],7),acc(raw[2],4)])
+          assert official.shape==(3,14000)
+          prefix='https://raw.githubusercontent.com/gerardjoreilly/Infilled-RC-Building-Database/266229a864ab330a013a4b91ef122fd91df13162/analysis/gmRecords/'
+          folders=[('L%27Aquila/SaT/0.5s/72',0.892),('Milano/AvgSa/0.5s/42',0.258)]
+          results=[]
+          for folder,sf in folders:
+            xy=np.array([acc(read(prefix+folder+'/RSN880_LANDERS_MCF'+c+'_SF_'+f'{sf:.3f}'+'.txt'),0) for c in ['000','090']])
+            assert xy.shape==(2,19963)
+            angles=np.deg2rad([267.,357.])
+            rotation=np.stack([np.cos(angles),np.sin(angles)],axis=1)
+            rotated=rotation@xy
+            target=official[:2]/scale
+            # Full overlap only; search common time origin. Fit a single positive amplitude ratio across both axes.
+            n=target.shape[1]
+            ss=np.r_[0.,np.cumsum(np.sum(rotated**2,axis=0))]
+            power=ss[n:]-ss[:-n]
+            dot=sum(correlate(rotated[i],target[i],mode='valid',method='fft') for i in range(2))
+            corr=dot/np.sqrt(power*np.sum(target**2))
+            offset=int(np.argmax(corr))
+            a=rotated[:,offset:offset+n]
+            fac=float(np.sum(a*target)/np.sum(a*a))
+            resid=float(np.linalg.norm(fac*a-target)/np.linalg.norm(target))
+            # Diagnostics, no raw-file claim. Relative residual and correlation decide admission of calibrated estimate.
+            results.append({'source_folder':folder,'filename_sf':sf,'offset_samples':offset,'offset_s':offset*.005,'correlation':float(corr[offset]),'fit_to_unscaled_factor':fac,'inferred_source_sf':1/fac if fac>0 else None,'relative_rms':resid,'inferred_unscaled_pga_g':(np.max(np.abs(xy),axis=1)*fac).tolist(),'fit_pass':bool(corr[offset]>.9999 and resid<.015 and fac>0)})
+          # E06 numerical scale/unit plausibility against official *uncorrected* station peaks; not identity.
+          e6=[]
+          for folder,sf in [('Milano/AvgSa/0.5s/72',0.778),('Napoli/AvgSa/0.5s/22',0.510)]:
+            a=np.array([acc(read(prefix+folder+'/RSN4205_NIIGATA_NIG015'+c+'_SF_'+f'{sf:.3f}'+'.txt'),0) for c in ['NS','EW']])
+            assert a.shape==(2,16769)
+            p=np.max(np.abs(a),axis=1)/sf*980.665
+            official_raw=np.array([66.69,78.92])
+            e6.append({'source_folder':folder,'filename_sf':sf,'unscaled_pga_assuming_g_cm_s2':p.tolist(),'official_uncorrected_pga_cm_s2':official_raw.tolist(),'relative_difference':(p/official_raw-1).tolist()})
+          out={'E07':{'official_scale':scale,'official_azimuths_deg':[267,357],'npts':14000,'dt':.005,'official_scaled_pga_g':np.max(np.abs(official),axis=1).tolist(),'official_inverse_scaled_pga_g':(np.max(np.abs(official),axis=1)/scale).tolist(),'full_copy_checks':results,'status':'CALIBRATED_ESTIMATE_ONLY_IF_FIT_PASS; exact original AT2 not obtained'},'E06':{'raw_pga_reference':'https://www.strongmotioncenter.org/vdc/scripts/event.plx?evt=947','checks':e6,'status':'PGA plausibility only; exact original and processing remain HOLD'},'E04':'no new waveform; CESMD registered download required'}
+          (root/'crosscheck.json').write_text(json.dumps(out,indent=2))
+          print(json.dumps(out,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: T079-E07-E06-scale-crosscheck
+          path: evidence/
+          retention-days: 30
