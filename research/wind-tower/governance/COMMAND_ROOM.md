@@ -1,3 +1,6 @@
+## 2026-11-24｜地震期刊制图 · START
+- READ_BASE_SHA=5eb8a576686a0250b026deba524c6b80eb9a419f；读根/研究AGENTS、指挥室、白皮书、V7实际数据说明/谱及FOH函数；继承V7为备用、DSLC文献精确记录；分别生成600dpi/矢量时程、PSD、反应谱及DSLC官方速度位移三联图。禁止把V7当新七波组，待实际RUN后验收。不改INP。
+
 ## 2026-11-24｜DSLC时程期刊风格修正 · START/END
 - READ_BASE_SHA=ecddbf7c2783fc991e0d53c88bb4a6299826ad28；读根/研究AGENTS、指挥室、白皮书、DSLC真实CSV；全7386点生成矢量时程，保留数据/时间/单位，仅图形增量，不改变选波。
 

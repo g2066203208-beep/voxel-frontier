@@ -1,0 +1,40 @@
+name: Journal seismic figures from verified records
+on:
+  push:
+    branches: [research/t080-seismic-integration-gates-20261022]
+    paths: ['.github/workflows/seismic-journal-figures.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  figures:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          sparse-checkout: research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install --quiet numpy scipy matplotlib
+      - name: Draw and verify actual figures
+        env:
+          OPENBLAS_NUM_THREADS: '1'
+        run: python research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool/journal_figures.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: journal-seismic-figures
+          path: research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool/journal_figures_20261124
+      - name: Commit actual outputs
+        run: |
+          git config user.name paper-studio-bot
+          git config user.email paper-studio-bot@users.noreply.github.com
+          git add research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool/journal_figures_20261124
+          git commit -m 'Archive 7-record backup and DSLC journal figures'
+          for i in 1 2 3; do
+            git pull --rebase origin ${GITHUB_REF_NAME}
+            if git push origin HEAD:${GITHUB_REF_NAME}; then exit 0; fi
+          done
+          exit 1
