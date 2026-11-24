@@ -1,0 +1,63 @@
+{
+  "schema": 1,
+  "latest": "REV09",
+  "versions": [
+    {
+      "version": "REV09",
+      "file": "HE_REV09_HE_CHECK.inp",
+      "date": "2026-11-24",
+      "size": 34225851,
+      "sha256": "cbe996780eb772a7fdb8f33d436c76b0936631ef835f3606d11ab7d90b4af1ef",
+      "zipSize": 8465321,
+      "zipSha256": "4afd9ecc7115e0cfb8b420be48dae3ba417f2d33fcaf4fb4a1351d50f55b2830",
+      "state": "原型复现候选；原生求解未验",
+      "parts": [
+        {
+          "path": "REV09/part-01.bin",
+          "size": 562500,
+          "gitBlob": "22c6a96a58ca6da0db29f5b6d544c5343d0d7a2a"
+        },
+        {
+          "path": "REV09/part-02.bin",
+          "size": 1125000,
+          "gitBlob": "ea1f582b20cd9e3f949518d6e891544c9b7824c1"
+        },
+        {
+          "path": "REV09/part-03.bin",
+          "size": 1125000,
+          "gitBlob": "c703486095f5aefc7c72a8060ba218235dce0273"
+        },
+        {
+          "path": "REV09/part-04.bin",
+          "size": 1125000,
+          "gitBlob": "4f3da80085facbf78089ffc5ff2001d036936c7f"
+        },
+        {
+          "path": "REV09/part-05.bin",
+          "size": 1125000,
+          "gitBlob": "c780e91a3e32a8c1b5ba5dbf2c6b07308e5d4cff"
+        },
+        {
+          "path": "REV09/part-06.bin",
+          "size": 1125000,
+          "gitBlob": "dafa7e9af87f3801c1dccb5d6b5d81aaa77206b3"
+        },
+        {
+          "path": "REV09/part-07.bin",
+          "size": 1125000,
+          "gitBlob": "fc837100ead6e1874da420867486d5099c829d66"
+        },
+        {
+          "path": "REV09/part-08.bin",
+          "size": 1125000,
+          "gitBlob": "662fa75df0902fe431c1e5088c1758708bb4e9b7"
+        },
+        {
+          "path": "REV09/part-09.bin",
+          "size": 27821,
+          "gitBlob": "aa2013440b2ff0c2e7c5ed788a6d895cb011ed07"
+        }
+      ]
+    }
+  ]
+}
