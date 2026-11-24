@@ -1,3 +1,11 @@
+### 2026-11-24｜v0.32.201 — REV21 实际归档独立复读与下一步门禁
+
+- 本轮从GitHub Actions artifact14928366764实际重新取得ZIP，9230994 bytes、SHA256 f389e927a4b42f0c26bf22f1f9ef24202255b8dd03a8d0e7585edfae83a6af91，CRC全通过，6个成员。FULL_ASSEMBLY/ROM10_NATIVE分别15693507/18225638 bytes、274768/276430行、最大行长176/134，SHA256分别7538ccb15a0af82364f0482f4a30e65a59d157a3b33efb94c4beb295a646721c及94b6d047f038aa501269e970050f83e32919e6b3ba4b6cd8ae8e99c93187b9c4，与v0.32.200相符。非仅读manifest。
+- 原件逐行关键字扫描：两模型均30 Contact Pair、62 Embedded Element、108 Equation、5 Tie、31 Nonstructural Mass、1 Coupling、7材料及7个材料Rayleigh定义、20 Amplitude、5完整Step；全阶100 Part/100 Instance。RNA全阶150 B31、155 MASS、155 ROTARYI；生成模型155 MASS/155 ROTARYI、51 SPRING1、900 Equation，两个文件155个质量定义直接求和均676727.2338445096 kg（非求解器实际装配质量证明）。全阶无外部FILE/INPUT；ROM使用文件第204623行SUBSTR依赖RNA_ROM10，生成第16123行保留6接口DOF和51模态、RECOVERY MATRIX=NO。
+- 两个地震INP的两幅值各40000对数据，实际逐点比对包内CSV（SHA256 640096c940f3c6d54cbe697fd2da9def7ab2428a3850316f228d451b791d1b67），时间/加速度最大绝对误差均0，Z方向取负N，步长.005/199.995/1e-7/.01；固定底部、等效惯性GRAV，风幅值18条未在动力步激活；PT初应力1.28e9Pa、摩擦.5、HARD法向。材料C65/C70、HRB400、HPB300_TIE、Q355_TOWER_T16_40、Q355_FLANGE_PLATE_T100、STRAND_1860。Alpha=.0145230339976、Beta=.00342441756784，历史暂定参数。
+- 新识别文档与验收风险：全阶开头仍有继承的“no Rayleigh damping”“unscaled”等历史注释，与实际REV21输入冲突；RNA的155质量及150梁截面未见显式独立阻尼关键字，ROM生成虽请求viscous damping matrix=YES，仍须原生核验其矩阵和全阶阻尼一致性，不能据此断言整个系统统一1%阻尼。保留原件，未更改物理参数。下一步以全阶预检查、ROM生成及单位惯性/质量/模态、整塔预应力重力接触和模态对照为门禁，核验模态有效质量及阻尼，再进行MODE同波和时间步收敛；不继续扩波。当前环境无Abaqus，CAE导入、原生datacheck和物理求解NOT_RUN，降阶精度/提速未证明，工程准入不变。
+- 本次审计对象为main提交e9531fc36913c54fb164e031496579fbe8dfcd0c发布的REV21；白皮书只更新记录，不修改INP或论文物理结论。
+
 ### 2026-11-24｜v0.32.200 — REV21 MODE同波整塔对照输入
 
 - 已实际生成REV21_MODE_PILOT，RUN45411602849成功，artifact14928366764，ZIP 9230994 bytes、SHA256 f389e927a4b42f0c26bf22f1f9ef24202255b8dd03a8d0e7585edfae83a6af91。已下载解压及成员哈希复核。REV21不是新RNA降阶算法，而是REV18完整装配与REV20原生ROM的同波计算输入。
