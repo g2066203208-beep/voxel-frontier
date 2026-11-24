@@ -1,3 +1,11 @@
+### 2026-11-24｜v0.32.194 — E07官方三分量实际提取与E04事件档案排除
+
+- [真实获取审计](../experiments/T079/seismic-evidence-20261124/record-pool/literature_exact_20261124/acquisition_audit_v0.32.194.json)，commit 2c90bec81e31ec607c7691d931a2d913ccc1b7ac。RUN45395196795实际完成，artifact14920677251（三分量ACC及获取收据，30天保留）。官方XLSX sheet2 row25：编号24，RSN880，Landers 1992，Mission Creek Fault，精确SF=2.309816509105592，文件名与三分量一一匹配。
+- E07 FN/FP/UP各14000点、dt=.005s、时程跨度69.995s、PGA=.281148/.291820/.195844g；FN/FP=267°/357°，原传感器H1/H2=090°/000°，顺时针旋转-93°。官方三分量源字节与SHA256见审计，不能冒充未调幅原始AT2；此前19963点的论文复现版保留。
+- E04 SCEDC事件级gzip完整流式遍历2011个文件，目标CE.00022/Winterhaven均未出现，排除该渠道；CESMD正式下载须已注册邮箱，PEER须账号授权，未获取E04时程。
+- E06从GitHub再次实际读取NS/EW各16769点，名义SF=.778；按g单位反调幅估算PGA65.1663/78.9700 cm/s²，与COSMOS主震未校正PGA66.69/78.92 cm/s²差-2.285%/+0.0634%；仅支持量纲、幅值合理性，不等于处理版本一致。
+- E07绝对幅值交叉核验workflow commit 57664baae5f16e2b7aad7caf5f8d38d2f85040d2，RUN45395793113因网络不可达在重新下载PEER包处失败，无拟合结果。改用前轮已取得的官方artifact及SHA256校验，commit daea1b4c1ac23f464504b90771f957de09a68702，RUN45395890431尚待结果。仍6/7组有时程，工程输入HOLD，第一套冻结，新增图件0。
+
 ### 2026-11-24｜v0.32.193 — E04精确编号与事件级原始档案、E07官方研究包
 
 - [真实获取审计](../experiments/T079/seismic-evidence-20261124/record-pool/literature_exact_20261124/acquisition_audit_v0.32.193.json)，commit 96568cbe4e7a23b3a6bd8339e4515a456e2efe72。E04=RSN5835，CE.00022，Mw7.2，Rrup73.31 km，Vs30=229.92 m/s；CSMIP 90° PGA57.28 cm/s²、PGV6.26 cm/s，360° PGA64.47、UP=-31.21 cm/s²（带符号峰值）。官方事件ci14607652，2010-04-04 22:40:42 UTC。
