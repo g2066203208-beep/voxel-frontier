@@ -1,3 +1,10 @@
+### 2026-11-24｜v0.32.144 PATCH — REV03 何原型接触模型配筋与本构整改（静态候选）
+- SOURCE=REV02B SHA256 e79ec1ccc9b1c7bcb6386d44142630eb5a1c4a16fa8222ec47be8107ae92acad；独立新文件 HE_REV03_HE_CHECK.inp SHA256 d3d9ade1800f05574127a8aa43138f14f5e756abbc5b66b36a95e3eac96c3d08（会话文件，未上传仓库）。原冻结输入、历史物理结果和主论文V8-R9不覆盖。
+- REF=何2024 PDF33–36、44–45；继承31+4段、C70/C65、S345、5440纵筋、36×140 mm² PT（同团队补充）、塔底固结。T046/T049历史来源账本；徐等2026 DOI 10.19912/j.0254-0096.tynxb.2024-1794（不同对象，不将其参数冒充何2024）；Dong等2025 DOI 10.3390/buildings15203786（混凝土摩擦0.6为其对象，当前0.5仍待标定）。
+- STANDARD=[GB50135-2019 §6.5](https://gf.cabr-fire.com/m/article-56526.htm) 作为构造交叉依据，非整塔合规认证；双层φ16环筋≤120 mm、φ6径向拉筋≤500 mm为规范推导候选，S345的设计强度暂以300 MPa作筛查假设，不冒充规范钢筋牌号。OFFICIAL=[Abaqus 2025 classical metal plasticity](https://docs.software.vt.edu/abaqusv2025/English/SIMACAEMATRefMap/simamat-c-metalplastic.htm)、[coupling constraints](https://docs.software.vt.edu/abaqusv2025/English/SIMACAECSTRefMap/simacst-c-coupling.htm)。
+- RUN=独立Python实际重建31段环筋与径向拉筋；183168/15168 T3D2单元；环筋57029.503761 kg、拉筋783.332082 kg；48边形实体宿主面径向净保护层最小32.0 mm（单元端点/中点检查），环筋间距最大118.000003 mm，单层最小名义配筋率0.3451063%，按上述假设筛查，径向拉筋环向间距最大499.740519 mm，竖向最大4×118 mm。原CSEG、SSEG、RBLONG、PT、RNA部件字节不变；30接触、62 Embedded、4 Tie、4验证步保留。径向拉筋共享环筋节点，属于等效构造，实际纵筋绑扎与施工锚固未验证。S345保留E=200 GPa、fy=345 MPa，采用补充假设总应变硬化率b=0.01，塑性切线E*b/(1-b)，两点等向硬化表至塑性应变0.1；何2024未公开强化率，循环本构待核。
+- HOLD=剩余6795.42 kg NSM归属、环筋移位后的原生Embedded宿主定位/绑扎、S345设计强度与强化来源、φ25纵筋及其端部锚固、PT半径与损失、真实钢法兰尺寸、CDP物理标定、RNA空间惯量、接缝摩擦、网格收敛、无人工稳定化的平衡与模态、阻尼重标定、地震场址选波/推覆/时程。当前唯一交付仅静力与模态检查，不含正式地震步。TEST=静态关键字数量及局部几何算术PASS；Abaqus Data Check/原生求解 NOT_RUN；不启动本机，不晋级12阶段，不合并PR#42；原论文旧结果仅属于相应旧版本。
+
 ### 2026-11-24｜v0.32.143 PATCH — S06真实18NTM同步峰值与异步包络膨胀分组图
 - SOURCE=T062 18行原生结构响应CSV Git blob `2078b1662402c31b857d8cd3d1744e288b7c221c`；RUN=100(U−P)/U，三风速六seed弯矩均值0.141426/0.348775/2.299637%，三向反力均值0.088555/0.093939/0.134291%。FIG=`research/wind-tower/manuscript/final-thesis/figures/FIG_S06_NATIVE_SYNCHRONOUS_ENVELOPE_INFLATION_18NTM_20261124.svg`，正文=`research/wind-tower/manuscript/journal-wind-fatigue-results.md`；TEST=18行正差及源级算术PASS，浏览器图形视觉/OUTB独立重解码NOT_RUN；非外部气动力、惯性归属或DLC1.2验收。REF/STANDARD/OFFICIAL无新增，12阶段晋级0/12，最大非Abaqus HOLD=同态同步独立W侧气动力与惯性归属。PR#42保持Draft。
 
