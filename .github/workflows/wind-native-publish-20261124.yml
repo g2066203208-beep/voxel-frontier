@@ -1,0 +1,111 @@
+name: Publish verified native wind figures 20261124
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/wind-native-publish-20261124.yml']
+  workflow_run:
+    workflows: ['Wind native TurbSim field figures 20261124']
+    types: [completed]
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: publish-native-wind-20261124
+  cancel-in-progress: false
+jobs:
+  publish:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.id == 45422889134
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          sparse-checkout: |
+            public/thesis-studio/wind-figures
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: 45422889134
+          pattern: native-pilot-11m4-*
+          path: incoming/pilots
+      - uses: actions/download-artifact@v4
+        if: github.event_name == 'workflow_run' || github.event_name == 'workflow_dispatch'
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: 45422889134
+          pattern: native-full-*
+          path: incoming/full
+      - name: Verify and archive only native results
+        shell: bash
+        run: |
+          python - <<'PY'
+          import pathlib, json, hashlib, shutil, html
+          P=pathlib.Path('public/thesis-studio/wind-figures/native')
+          P.mkdir(parents=True,exist_ok=True)
+          def sha(p):
+              h=hashlib.sha256()
+              with p.open('rb') as f:
+                  for chunk in iter(lambda:f.read(1024*1024),b''):h.update(chunk)
+              return h.hexdigest()
+          figs=['01_hub_uvw','02_height_timeseries','03_spatiotemporal','04_rotor_snapshots','05_psd_validation','06_profiles','07_coherence_validation']
+          titles=['轮毂三分量风速时程','多高度风速时程','纵向风速时空分布','瞬时扫掠面风速云图','实际风谱与Kaimal目标谱','平均风剖面与湍流强度','空间相干性比较']
+          verified=[]
+          for src in sorted(pathlib.Path('incoming/pilots').glob('native-pilot-*'))+sorted(pathlib.Path('incoming/full').glob('native-full-*-figures')):
+              aud=next(src.rglob('audit.json'),None)
+              if not aud:continue
+              audit=json.loads(aud.read_text()); is_pilot=src.name.startswith('native-pilot-')
+              if is_pilot:
+                  bts=next(src.rglob('case.bts'),None)
+              else:
+                  bts=next(src.with_name(src.name.removesuffix('-figures')+'-bts').rglob('case.bts'),None)
+              if not bts or sha(bts)!=audit['BTS_sha256'] or bts.stat().st_size!=audit['BTS_bytes']:continue
+              log=next(src.rglob('native.log'),None)
+              if not log or 'TurbSim terminated normally' not in log.read_text(errors='replace'):continue
+              if not all((aud.parent/(f+'.png')).is_file() for f in figs):continue
+              key=src.name.removesuffix('-figures')
+              dst=P/key;dst.mkdir(exist_ok=True)
+              for f in figs:
+                  fp=aud.parent/(f+'.png')
+                  if fp.read_bytes()[:8]!=b'\x89PNG\r\n\x1a\n':raise ValueError(fp)
+                  shutil.copy2(fp,dst/fp.name)
+                  sv=aud.parent/(f+'.svg')
+                  if sv.is_file() and sv.stat().st_size<2000000:shutil.copy2(sv,dst/sv.name)
+              for fp in aud.parent.glob('*.csv'):shutil.copy2(fp,dst/fp.name)
+              for name in ['case.inp','case_config.json','case.sum','native.log','executable_sha256.txt']:
+                  fp=next(src.rglob(name),None)
+                  if fp:shutil.copy2(fp,dst/name)
+              shutil.copy2(aud,dst/'audit.json')
+              if is_pilot:shutil.copy2(bts,dst/'case.bts')
+              record={'key':key,'grid':audit['nz'],'dt_s':audit['dt'],'duration_s':audit['config']['duration'],'speed':audit['config']['speed'],'type':audit['config']['type'],'hub_mean':audit['hub_mean'],'hub_std':audit['hub_std'],'target_sigma':audit['target_sigma'],'BTS_sha256':audit['BTS_sha256'],'BTS_bytes':audit['BTS_bytes'],'raw_permanent':is_pilot,'tower_lowest_z_m':audit['tower_lowest_z_m']}
+              verified.append(record)
+          # Preserve previous verified cases; a subsequent publisher must not erase them.
+          old=P/'manifest.json'
+          existing={r['key']:r for r in json.loads(old.read_text()).get('cases',[])} if old.exists() else {}
+          existing.update({r['key']:r for r in verified})
+          cases=sorted(existing.values(),key=lambda x:(x['grid'],x['speed'],x['type']))
+          if sum(c['grid']==11 for c in cases)!=2:raise RuntimeError('Both pilot cases are required')
+          (P/'manifest.json').write_text(json.dumps({'source_run':45422889134,'cases':cases,'pilot_count':sum(c['grid']==11 for c in cases),'full_count':sum(c['grid']==51 for c in cases)},ensure_ascii=False,indent=2))
+          esc=html.escape
+          body=[]
+          for r in cases:
+              key=r['key'];mode='试算' if r['grid']==11 else '完整网格研究工况'
+              header=f"{mode} · {r['speed']} m/s · {r['type']} · {r['grid']}×{r['grid']} · {r['duration_s']} s"
+              body.append(f'<section><h2>{esc(header)}</h2><p>纵向风速标准差：实际 {r["hub_std"][0]:.4f} m/s，目标 {r["target_sigma"][0]:.4f} m/s。BTS SHA-256 核验通过。</p><p><a href="{key}/audit.json">数值核验</a> · <a href="{key}/case.inp">输入文件</a> · <a href="{key}/native.log">原生日志</a> · <a href="{key}/case.sum">TurbSim摘要</a> · <a href="{key}/hub_uvw.csv">轮毂时程CSV</a>'+ (f' · <a href="{key}/case.bts" download>原始BTS下载</a>' if r['raw_permanent'] else ' · <a href="https://github.com/g2066203208-beep/voxel-frontier/actions/runs/45422889134">原始BTS工作流工件（限保留期）</a>')+'</p>')
+              for f,title in zip(figs,titles):body.append(f'<figure><a href="{key}/{f}.png"><img loading="lazy" src="{key}/{f}.png" alt="{esc(title)}"></a><figcaption>{esc(title)} · <a href="{key}/{f}.png" download>PNG</a></figcaption></figure>')
+              body.append('</section>')
+          page='<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>TurbSim原生风场｜论文工作室</title><style>body{margin:0;background:#f4f7f8;color:#20343e;font:16px/1.7 system-ui}header{background:#153643;padding:18px 24px;color:white}header a{color:#d3f2ee}main{max-width:1040px;margin:auto;padding:20px}section{margin:28px 0;border-top:1px solid #aabdc4}figure{margin:16px 0;padding:16px;background:white;border:1px solid #dce4e8}img{display:block;width:100%;height:auto}a{color:#126d76}h1{font-size:25px}h2{font-size:20px}</style><header><a href="../">风荷载图件</a> · <a href="../../manuscript-workbench.html#chapter-03">论文第三章</a></header><main><h1>TurbSim原生随机风场与数值核验</h1><p>独立新工况，非历史36组原件。原生程序正常退出、BTS字节SHA-256与图件记录一致方可入档。试算11×11/120 s与完整51×51/700 s分开，有限样本谱偏差不等于正式验证通过。无风荷载映射或结构求解。</p><p><a href="manifest.json">真实结果清单</a> · <a href="https://github.com/g2066203208-beep/voxel-frontier/actions/runs/45422889134">实际运行记录</a></p>'+''.join(body)+'</main></html>'
+          (P/'index.html').write_text(page)
+          print('Verified:',[(c['key'],c['BTS_sha256']) for c in cases])
+          PY
+      - name: Persist verified figures in the single thesis studio
+        shell: bash
+        run: |
+          git config user.name "thesis-wind-archive"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/thesis-studio/wind-figures/native
+          if git diff --cached --quiet; then echo 'No new verified result'; exit 0; fi
+          git commit -m "Archive verified native TurbSim wind fields from run 45422889134"
+          git pull --rebase origin main
+          git push origin HEAD:main
