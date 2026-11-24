@@ -5528,11 +5528,107 @@
         {
           "kind": "text",
           "style": "Normal",
-          "text": "上述关系为风轮气动力、塔身分布力与RNA连接作用建立统一的力学表示。本文历史风工况的塔身独立气动力输入尚未形成覆盖全塔高程的同步时程，因此该部分采用解析阻力与接口平衡关系描述，后续结构响应评价以独立载荷时程和动力条件为依据。",
+          "text": "上述关系为风轮气动力、塔身分布力与RNA连接作用建立统一的力学表示。历史整机计算未包含塔身气动阻力，故另取3.2节生成的六组随机风场，计算静止塔架的准定常分布风阻，作为独立载荷研究。",
           "has_media": false,
           "has_math": false,
           "id": "v8-097",
           "word_body_index": 502
+        },
+        {
+          "id": "wind-r14-001",
+          "kind": "text",
+          "style": "Normal",
+          "text": "由REV22精细有限元网格提取塔身各截面最大外半径及其高程，沿高程分段线性插值。受风区域由31个混凝土塔段、4个钢塔段及过渡法兰组成，总高158 m，迎风投影面积927.727 m²。TurbSim原生BTS的16个塔身补充节点与转子网格中心线共同构成入流离散点，剔除重复高程后在相邻节点间线性插值水平速度；最低有效高程1.369 m以下采用地面零风速至最低点线性过渡，并以最低点恒定风速作为对照。",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true
+        },
+        {
+          "id": "wind-r14-002",
+          "kind": "text",
+          "style": "Normal",
+          "text": "Galhardo等[134]在塔身阻力建模中采用0.5的常值阻力系数，Al-Sanad等[135]采用0.7。本文以历史AeroDyn输入及文献[134]的0.5为基准，以0.7为敏感性对照，空气密度取1.225 kg/m³。上述系数用于研究性计算，尚未依据本文钢材和混凝土表面粗糙度完成规范取值校核。忽略塔身运动反馈，采用式（3.3-33）分别计算纵向及横向风阻线荷载，在几何与风速插值节点划分的区间内进行三点Gauss积分。",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true
+        },
+        {
+          "id": "wind-r14-003",
+          "kind": "text",
+          "style": "Normal",
+          "text": "设第i个塔段的下、上端高程分别为z_i和z_{i+1}，纵横向分布风阻的合力为F_i，关于塔底的分量一阶矩为B_i，则相应上端等效力为(B_i-z_i F_i)/(z_{i+1}-z_i)，下端等效力为F_i减去上端等效力。该分配保持各分区的合力和关于塔底的一阶矩不变。六组工况的三点与五点Gauss积分最大相对差分别为9.47×10⁻⁵（力）和5.57×10⁻⁵（一阶矩），端点等效力与一阶矩最大绝对平衡残差分别小于10⁻⁸ N和10⁻⁶ N·m。端点等效力尚未转换为实际有限元节点载荷。",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true
+        },
+        {
+          "id": "wind-r14-004",
+          "kind": "text",
+          "style": "Normal",
+          "text": "图3.3-3给出额定风速下各结构分区纵向风阻线荷载的时间均值、标准差及绝对峰值分布。各分区的线荷载统计量由其积分合力除以区段长度得到；点线表示112 m钢—混转换位置。塔身直径随高程变化与风速剖面共同决定风阻分布，不能采用沿高度均匀的外力代替。",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true
+        },
+        {
+          "id": "wind-r14-005",
+          "kind": "caption",
+          "style": "Caption",
+          "text": "图3.3-3  额定风速下塔身纵向风阻线荷载沿高程分布",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true,
+          "figure_asset": "./wind-figures/tower-drag/01_heightwise_drag.svg",
+          "figure_caption_match": "图3.3-3  额定风速下塔身纵向风阻线荷载沿高程分布"
+        },
+        {
+          "id": "wind-r14-006",
+          "kind": "text",
+          "style": "Normal",
+          "text": "图3.3-4给出11.4 m/s下NTM与ETM的塔身纵向风阻合力及关于塔底的一阶矩时程。两工况的平均纵向风力分别为26.430和28.628 kN，绝对峰值分别为45.031和59.838 kN；纵向风阻对应的基底弯矩绝对峰值分别为3.697和4.806 MN·m。额定风速两组结果由REV22与原始BTS独立复算，与冻结REV21母本所得数值一致。",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true
+        },
+        {
+          "id": "wind-r14-007",
+          "kind": "caption",
+          "style": "Caption",
+          "text": "图3.3-4  额定风速下塔身风阻合力及基底一阶矩时程",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true,
+          "figure_asset": "./wind-figures/tower-drag/02_resultant_histories.svg",
+          "figure_caption_match": "图3.3-4  额定风速下塔身风阻合力及基底一阶矩时程"
+        },
+        {
+          "id": "wind-r14-008",
+          "kind": "text",
+          "style": "Normal",
+          "text": "由图3.3-5可见，三组参考风速中19.202 m/s的塔身纵向风阻峰值最大，NTM和ETM分别为125.667和148.033 kN，相应基底弯矩峰值分别为10.353和12.068 MN·m。固定入流与几何时，阻力系数由0.5提高至0.7使力及一阶矩按比例增加40%。该结果仅说明所采用准定常模型对阻力系数的直接比例关系，不代表结构动力响应同比例变化。",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true
+        },
+        {
+          "id": "wind-r14-009",
+          "kind": "caption",
+          "style": "Caption",
+          "text": "图3.3-5  不同参考风速下塔身风阻峰值及阻力系数敏感性",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true,
+          "figure_asset": "./wind-figures/tower-drag/03_cd_sensitivity.svg",
+          "figure_caption_match": "图3.3-5  不同参考风速下塔身风阻峰值及阻力系数敏感性"
+        },
+        {
+          "id": "wind-r14-010",
+          "kind": "text",
+          "style": "Normal",
+          "text": "上述六组结果为新生成风场驱动的静止塔架独立准定常风阻，不包含叶片气动力、RNA接口作用和结构运动反馈，亦非历史36组整机响应。后续联合计算须在同一入流、时间及坐标基准下取得叶片独立气动力，并建立有限元实际节点载荷映射；不得将历史塔底反力直接作为外部气动力叠加。",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true
         },
         {
           "id": "b0364",
@@ -8757,7 +8853,7 @@
           "id": "b0621",
           "kind": "text",
           "style": "Normal",
-          "text": "上部RNA和下部混合塔架可分别视为具有独立动力学自由度的子系统，其公共连接边界位于塔顶。对于塔身气动力，局部风速需覆盖结构从塔底至塔顶的实际高程。历史TurbSim入流网格以161.368806 m轮毂高度为中心，竖向跨度200 m，对应最低高度约61.37 m；该网格仅覆盖完整158 m塔架的一部分。塔身分布风载的计算需据此补充相应高度范围内的入流定义。",
+          "text": "上部RNA和下部混合塔架可分别视为具有独立动力学自由度的子系统，其公共连接边界位于塔顶。历史转子风场网格下边界高程为61.369 m，未覆盖完整塔高；新风场启用塔身补充节点后，已按3.3.4节建立六组静止塔架准定常分布风阻。该载荷与RNA独立气动力的统一时间、坐标及作用点映射仍需在同态联合模型中核验。",
           "has_media": false,
           "has_math": false,
           "word_body_index": 764
@@ -12176,17 +12272,36 @@
           "has_media": false,
           "has_math": false,
           "word_body_index": 1078
+        },
+        {
+          "id": "wind-r14-ref134",
+          "kind": "text",
+          "style": "Normal",
+          "text": "[134] GALHARDO A, BISCAYA A, SANTOS J P, et al. Predicting wind turbine aerodynamic loads using laser-scanned blade geometry with validation based on operational and structural data[J]. Wind Energy Science, 2026, 11: 4059–4075. DOI: 10.5194/wes-11-4059-2026.",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true
+        },
+        {
+          "id": "wind-r14-ref135",
+          "kind": "text",
+          "style": "Normal",
+          "text": "[135] AL-SANAD S, PAROL J, WANG L, et al. Structural optimisation framework for onshore wind turbine towers considering multiple design constraints[J]. International Journal of Sustainable Energy, 2022, 41(5): 469–491. DOI: 10.1080/14786451.2021.1953495.",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true
         }
       ]
     }
   ],
   "online_revision": {
-    "version": "V8-R13-HISTORICAL-AERO",
+    "version": "V8-R14-TOWER-DRAG",
     "date": "2026-11-24",
-    "scope": "V8-R12 plus 36 original historical OUTB SHA-verified operating histories, aerodynamic Ct and structural peak figures in 3.5.3; no current REV22 external force admission; Word/PDF unchanged.",
+    "scope": "V8-R13 plus six SHA-verified full BTS stationary tower quasi-steady drag cases, actual 36-part geometry and three figures in 3.3.4; no native FE load mapping or rotor aerodynamic coupling; Word/PDF unchanged.",
     "source_gate": "74fb3aee9dfef058b972a3f0e03aa571319c2fe2",
     "source_inp": "cdb719b95b8ce4301011489b4ab8ffc9e73c18bf",
     "wind_manifest": "./wind-figures/core/manifest.json",
-    "historical_control_receipt": "./wind-figures/historical-control/receipt.json"
+    "historical_control_receipt": "./wind-figures/historical-control/receipt.json",
+    "tower_drag_receipt": "./wind-figures/tower-drag/receipt.json"
   }
 }
