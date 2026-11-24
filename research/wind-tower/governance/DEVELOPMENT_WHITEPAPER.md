@@ -1,3 +1,10 @@
+### 2026-11-24｜v0.32.202 — REV22 原生验证包及RNA矩阵独立复算
+
+- 实际重新获取REV21 artifact14928366764及REV20 artifact14900571562，ZIP SHA256分别f389e927a4b42f0c26bf22f1f9ef24202255b8dd03a8d0e7585edfae83a6af91、58f8afead62781ea80f3d01fc81055e97fb6ab5e85b04ce53d3ae9c65951e83f；CRC及REV20清单14项全部核验。两整塔从冻结REV21截取原始前缀形成4步PRECHECK，另只替换动力最大增量.01为.005生成5步EQ005；未改变材料、阻尼、载荷、接触或RNA模型。四个SHA256见[实际审核](https://github.com/g2066203208-beep/voxel-frontier/blob/2c99f1fd6c97de9adf3881bf5378b0ad3f666764/public/thesis-studio/inp-archive/REV22_VALIDATION_KIT/REV22_AUDIT.json)。
+- 实际本地完整包21成员、29795243 bytes、SHA256 b4c3cc79b57d147a04776f863fe5b0f195c603756e33f79f6cfbe3bc0e24cfc2；ZIP CRC及成员SHA256通过、两项篡改拒绝测试通过。包含原始两EQ010、四个新增INP、原REV20全阶展平和三个独立RNA验证输入、生成INP、矩阵NPZ、真实CSV、清单、说明和ODB提取脚本。ODB脚本仅语法检查，原生odbAccess未运行。完整本地ZIP尚未直接托管；GitHub main提交0eafc45d7d66b61c0afaf80b93172d988be0f2df发布等价可复建程序，2c99f1fd6c97de9adf3881bf5378b0ad3f666764发布本地审核，4b05964704b033131806e56effc080af07dc0e15更新工作室源码入口；远端builder未实际运行、Pages部署未核验。
+- 用SciPy实际读取原RNA_REV20_10HZ_EXPECTED.npz的57×57 M/K/C矩阵，固定接口51维广义对称特征求解，最小/最大频率.6152482832215255/39.509971342793946 Hz，与归档51阶最大绝对差1.4988010832439613e-13 Hz；C-alpha*M Frobenius相对差0，三个接口平动质量均676727.2338445095kg。此为期望矩阵复算，非原生子结构或整塔结果。纠正v0.32.201阻尼记录：全阶REV21及RNA生成INP均实际存在155个带alpha的Mass及155个带alpha的Rotary Inertia定义；RNA期望阻尼C=alpha*M，不等于全系统统一1%阻尼。参考https://docs.software.vt.edu/abaqusv2026/English/SIMACAEANLRefMap/simaanl-c-freqextraction.htm 和 https://docs.software.vt.edu/abaqusv2026/English/SIMACAEANLRefMap/simaanl-c-superelementdef.htm。
+- 执行顺序：原生RNA生成及独立重力/旋转/单位加速度/预载模态，三方全阶装配/全阶展平/ROM Data Check及静力模态，随后同波两时间步对比。无Abaqus可执行文件，原生NOT_RUN、物理验收HOLD。未改论文物理结论、不新增地震波。非工程验收。
+ 
 ### 2026-11-24｜v0.32.201 — REV21 实际归档独立复读与下一步门禁
 
 - 本轮从GitHub Actions artifact14928366764实际重新取得ZIP，9230994 bytes、SHA256 f389e927a4b42f0c26bf22f1f9ef24202255b8dd03a8d0e7585edfae83a6af91，CRC全通过，6个成员。FULL_ASSEMBLY/ROM10_NATIVE分别15693507/18225638 bytes、274768/276430行、最大行长176/134，SHA256分别7538ccb15a0af82364f0482f4a30e65a59d157a3b33efb94c4beb295a646721c及94b6d047f038aa501269e970050f83e32919e6b3ba4b6cd8ae8e99c93187b9c4，与v0.32.200相符。非仅读manifest。
