@@ -1,0 +1,50 @@
+name: Publish REV21 same-wave pilot
+on:
+  push:
+    branches: [research/t080-seismic-integration-gates-20261022]
+    paths: ['.github/workflows/publish-rev21-mode-pilot.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          sparse-checkout: public/thesis-studio/inp-archive
+      - name: Verify and publish exact ZIP and current version note
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api repos/${GITHUB_REPOSITORY}/actions/artifacts/14928366764/zip > /tmp/rev21.zip
+          echo 'f389e927a4b42f0c26bf22f1f9ef24202255b8dd03a8d0e7585edfae83a6af91  /tmp/rev21.zip' | sha256sum -c
+          python - <<'PY'
+          import zipfile,hashlib,json,pathlib
+          p=pathlib.Path('public/thesis-studio/inp-archive');d=p/'REV21_MODE_PILOT';d.mkdir(exist_ok=True)
+          with zipfile.ZipFile('/tmp/rev21.zip') as z:
+              assert z.testzip() is None
+              a=json.loads(z.read('REV21_MODE_AUDIT.json'))
+              assert a['native']=='NOT_RUN'
+              for c in a['cases']:
+                  b=z.read(c['file']);assert hashlib.sha256(b).hexdigest()==c['sha256'] and len(b)==c['bytes']
+              assert hashlib.sha256(z.read('MODE_EQ01_scaled_reference_SI.csv')).hexdigest()==a['source_csv_sha256']
+              (d/'REV21_MODE_AUDIT.json').write_bytes(z.read('REV21_MODE_AUDIT.json'))
+          (d/'REV21_MODE_PILOT.zip').write_bytes(pathlib.Path('/tmp/rev21.zip').read_bytes())
+          h=p/'index.html';s=h.read_text()
+          block='<section id="rev21"><h2>REV21 · MODE 同波整塔对照试算</h2><p>最新计算输入版本：一组已调幅真实双水平地震波，40000点、0.005 s、199.995 s。完整柔性RNA采用REV18装配，降阶RNA采用REV20原生子结构；物理模型未改变。两振幅逐点回读通过，Abaqus原生尚未运行。</p><p><a class="download-link" href="REV21_MODE_PILOT/REV21_MODE_PILOT.zip" download>下载 REV21 对照计算包（ZIP）</a> · <a href="REV21_MODE_PILOT/REV21_MODE_AUDIT.json">实际检测报告</a></p><p>FULL_ASSEMBLY为自包含整塔INP，CAE实机导入未验证；ROM10_NATIVE必须先生成RNA_ROM10.sim，不可直接普通CAE导入。先重力、模态和子结构对照，再计算地震。非正式工程设计输入。</p></section>'
+          if 'id="rev21"' not in s:
+              assert '<section id="rev20">' in s;s=s.replace('<section id="rev20">',block+'<section id="rev20">',1)
+          h.write_text(s)
+          PY
+          git config user.name paper-studio-bot
+          git config user.email paper-studio-bot@users.noreply.github.com
+          git add public/thesis-studio/inp-archive
+          git commit -m 'Publish verified REV21 same-wave comparison and native gate'
+          git pull --rebase origin main
+          git push origin HEAD:main
+          gh workflow run pages.yml --ref main
