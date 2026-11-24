@@ -47,8 +47,14 @@ jobs:
           def txt(raw,skip=0):
             return np.array([float(x) for x in ' '.join(raw.decode('utf-8-sig').splitlines()[skip:]).split()])
           def csv(raw,skip):return np.loadtxt(io.BytesIO(raw),delimiter=',',skiprows=skip)
-          def pair(urls,blobs,skip,n):
-            vals=[txt(get(u,blob=h),skip) for u,h in zip(urls,blobs)]
+          def pair(urls,blobs,skip,n,dt):
+            vals=[]
+            for u,h in zip(urls,blobs):
+              raw=get(u,blob=h)
+              if 'ILA004-' in u:
+                x=np.loadtxt(io.BytesIO(raw));assert x.shape==(n,2) and np.allclose(np.diff(x[:,0]),dt,atol=1e-8)
+                vals.append(x[:,1])
+              else:vals.append(txt(raw,skip))
             assert all(len(x)==n for x in vals)
             return np.column_stack(vals)*G
           own='https://raw.githubusercontent.com/g2066203208-beep/voxel-frontier/'
@@ -65,7 +71,7 @@ jobs:
           def integ(a,dt):return cumulative_trapezoid(a,dx=dt,axis=0,initial=0)
           for k,name,status,dt,n,dirs,urls,blobs,skip in specs:
             try:
-              a=pair(urls,blobs,skip,n);records[k]=(name,status,dt,np.arange(n)*dt,a,integ(a,dt),integ(integ(a,dt),dt),dirs,False,urls)
+              a=pair(urls,blobs,skip,n,dt);records[k]=(name,status,dt,np.arange(n)*dt,a,integ(a,dt),integ(integ(a,dt),dt),dirs,False,urls)
             except Exception as e:errors[k]=repr(e)
           try:
             u=own+'ef91754b329de13b8899a74f62d65623f63bf9cd'+base+'geonet-dslc/682ed668_20100903_163541_DSLC_V2A.csv'
