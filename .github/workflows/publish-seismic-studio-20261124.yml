@@ -1,0 +1,89 @@
+name: Publish audited seismic records to Studio
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-seismic-studio-20261124.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: seismic-studio-publish
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            public/thesis-studio
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install --quiet numpy scipy matplotlib
+      - name: Recover immutable source archive and audited code
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          ROOT=research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool
+          gh api -H 'Accept: application/vnd.github.raw+json' "repos/${GITHUB_REPOSITORY}/contents/$ROOT/T079_NINE_REAL_SOURCE_CANDIDATES.zip?ref=d302057f249372e19cea2d3bfda84a481c395581" > /tmp/nine.zip
+          echo '89d25e81769f22481baef110ec0a41995902d3bc76725ec5442ba042496e8ca4  /tmp/nine.zip' | sha256sum -c
+          gh api -H 'Accept: application/vnd.github.raw+json' "repos/${GITHUB_REPOSITORY}/contents/$ROOT/audit_nine.py?ref=0d5133e8d6c941f424d3d72260da76e9922d5046" > /tmp/audit_nine.py
+          test "$(git hash-object /tmp/audit_nine.py)" = 1091475e27c4ceeaf256b380ea91effdeeb78cbf
+      - name: Reproduce diagnostic screens and generate individual download packages
+        env:
+          OPENBLAS_NUM_THREADS: '1'
+          OMP_NUM_THREADS: '1'
+        run: python /tmp/audit_nine.py /tmp/nine.zip public/thesis-studio/seismic-archive
+      - name: Build studio archive interface
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json,html,hashlib
+          p=Path('public/thesis-studio/seismic-archive')
+          q=json.loads((p/'quality_audit.json').read_text())
+          manifest=json.loads((p/'download-manifest.json').read_text())
+          assert len(q['records'])==9 and q['formal_design_eligible']==0
+          for n,v in manifest['files'].items():
+              b=(p/n).read_bytes()
+              assert len(b)==v['bytes'] and hashlib.sha256(b).hexdigest()==v['sha256'],n
+          states={'PRIORITY_FOR_TARGET_MATCH':'优先谱匹配','HOLD_FOR_BAND_BASELINE_REVIEW':'频带待复核','REPLACE_PRIORITY':'优先替换','SPECIAL_SENSITIVITY_ONLY':'特殊对照'}
+          names={'EQ01':'2009 拉奎拉','EQ02':'2012 艾米利亚','EQ03':'2016 意大利中部 8月24日','EQ04':'2019 阿尔巴尼亚','EQ05':'2012 艾米利亚 5月29日','EQ06':'2016 意大利中部 10月26日','EQ07':'2017 意大利中部','SP01':'2016 Norcia','SP02':'2010 Darfield'}
+          rows=[]
+          for r,d in zip(q['records'],q['downloads']):
+              assert r['id']==d['id']
+              rows.append(f'<tr><td><strong>{r["id"]}</strong><br>{names[r["id"]]} · {r["station"]}</td><td>{r["dt_s"]:.3f}</td><td>{r["npts"]:,}</td><td>{r["pga_hmax_m_s2"]:.4f}</td><td>{r["RotD50_T1_5pct"]:.5f}</td><td>{r["hp008_max_abs_4_12s_change_pct"]:.2f}%</td><td>{states[r["decision"]]}</td><td><a class="download" data-record="{r["id"]}" href="{d["file"]}" download>下载ZIP</a></td></tr>')
+          page='''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>地震动档案 · 湖北嘉鱼风机工作室</title><style>
+          :root{color-scheme:light dark;--accent:#157b70}*{box-sizing:border-box}body{font:15px/1.65 system-ui,sans-serif;margin:0;background:light-dark(#f4f6f5,#142020);color:light-dark(#1d2d2c,#e1eae9)}header{background:#112c33;color:white;padding:15px max(20px,calc((100% - 1180px)/2))}header a{color:#b9e4d8;text-decoration:none;margin-right:20px}main{max-width:1180px;margin:auto;padding:26px 20px}h1{font-size:26px;margin:0 0 6px}h2{font-size:18px;margin:18px 0 12px}.muted{color:light-dark(#526663,#acc5bf)}section{background:light-dark(white,#1e3030);border:1px solid light-dark(#d4e0dd,#3d5553);border-radius:10px;padding:20px;margin:16px 0}.scroll{overflow:auto}table{border-collapse:collapse;width:100%;min-width:870px;font-variant-numeric:tabular-nums}th,td{text-align:left;padding:10px 9px;border-bottom:1px solid light-dark(#e0e8e5,#405454);vertical-align:middle}th{font-size:12px;color:light-dark(#50635e,#b4c9c5)}a{color:light-dark(#136e66,#99dbce)}.download{display:inline-block;background:var(--accent);color:white!important;padding:8px 12px;border-radius:6px;text-decoration:none;white-space:nowrap}.big{padding:11px 18px;font-weight:650}.metrics{display:flex;gap:28px;flex-wrap:wrap}.metrics div{min-width:110px}.metrics strong{display:block;font-size:24px}.figures{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}figure{margin:0}figure img{display:block;width:100%;height:auto;background:white;border-radius:6px}figcaption{margin-top:6px;color:light-dark(#526663,#acc5bf);font-size:13px}details{margin-top:12px}code{overflow-wrap:anywhere;font-size:12px}summary{cursor:pointer;font-weight:600}@media(max-width:700px){.figures{grid-template-columns:1fr}main{padding:16px 12px}section{padding:14px}.metrics{gap:16px}}
+          </style></head><body><header><a href="../">← 工作室</a><a href="../inp-archive/">INP 模型档案</a></header><main><h1>地震动档案</h1><p class="muted">T079 · 真实强震记录 · 2026-11-24</p><section><div class="metrics"><div><strong>9 / 9</strong>原始数据核验</div><div><strong>2</strong>优先谱匹配</div><div><strong>3</strong>优先替换</div><div><strong>0 / 7</strong>正式设计波准入</div></div><p><a class="download big" id="full-download" href="T079_NINE_REAL_SOURCE_CANDIDATES.zip" download>下载完整九组原始数据包 · 6.52 MB</a></p><p><a href="quality_summary.csv" download>检测汇总 CSV</a> · <a href="period_diagnostics.csv" download>周期谱诊断 CSV</a> · <a href="quality_audit.json" download>完整检测报告 JSON</a> · <a href="download-manifest.json" download>SHA-256 校验清单</a></p><small>原始数据包未调幅；单组ZIP另含QC报告。正式长周期目标谱尚未确定。</small></section><section><h2>逐组记录与检测</h2><div class="scroll"><table><thead><tr><th>地震 · 台站</th><th>dt (s)</th><th>点数</th><th>PGA (m/s²)</th><th>T₁ RotD50 (m/s²)</th><th>滤波敏感性</th><th>初筛</th><th>原始文件</th></tr></thead><tbody>'''+''.join(rows)+'''</tbody></table></div><p class="muted">T₁=7.3937 s（历史模型）；敏感性为额外0.08 Hz高通对4–12 s谱的最大绝对变化。筛选阈值为研究诊断，不是强制规范限值。</p></section><section><h2>真实数据图集</h2><div class="figures">'''
+          for name,title in [('nine_actual_waveforms.png','原始双水平加速度时程'),('nine_actual_spectra.png','5%阻尼 RotD50 反应谱'),('nine_velocity_diagnostics.png','积分速度及官方速度诊断'),('nine_long_period_sensitivity.png','低频滤波敏感性')]:
+              page+=f'<figure><a href="{name}"><img src="{name}" alt="{title}" loading="lazy"></a><figcaption>{title} · <a href="{name}" download>下载原图</a></figcaption></figure>'
+          page+='''</div></section><section><h2>数据与方法</h2><p>ESM v3 (DOI 10.13127/esm.3) / GeoNet (CC BY 3.0 NZ)。原始文件、授权及来源信息随包保存；原始时程不缩放、不重采样。</p><p><a href="audit_source.py" download>可复算检测源码</a> · <a href="NINE_SOURCE_CANDIDATES.json" download>记录来源身份</a></p><details><summary>检测方法及边界</summary><p>逐点原始文件回读，积分末速与尾段均值，1%/2%/5%阻尼反应谱，双水平RotD50/100，4–12 s附加滤波敏感性。末速比例、滤波截止频率及参考PGA倍数仅是研究筛查；未获得场址长周期目标谱，不判定正式设计波。速度能量集中度不是Baker/Shahi脉冲分类。</p></details></section></main></body></html>'''
+          (p/'index.html').write_text(page)
+          for path,old,new in [
+              ('public/thesis-studio/index.html','<a href="./inp-archive/" style="font-weight:700;color:#7ce7ce">INP 模型档案 · 版本下载</a>','<a href="./inp-archive/" style="font-weight:700;color:#7ce7ce">INP 模型档案 · 版本下载</a><a href="./seismic-archive/" style="font-weight:700;color:#7ce7ce">地震动档案 · 数据与检测</a>'),
+              ('public/thesis-studio/inp-archive/index.html','<h1>INP 模型档案</h1>','<h1>INP 模型档案</h1><p><a class="download-link" href="../seismic-archive/">地震动档案 · 原始记录及检测下载</a></p>')]:
+              f=Path(path);s=f.read_text()
+              if 'href="./seismic-archive/"' in s or 'href="../seismic-archive/"' in s:continue
+              assert old in s,path;f.write_text(s.replace(old,new,1))
+          print('STUDIO_RECORDS',len(q['records']),'files',len(manifest['files']))
+          PY
+      - name: Commit permanent Studio download files and diagnostic figures
+        run: |
+          git config user.name paper-studio-bot
+          git config user.email paper-studio-bot@users.noreply.github.com
+          git add public/thesis-studio/seismic-archive public/thesis-studio/index.html public/thesis-studio/inp-archive/index.html
+          if ! git diff --cached --quiet; then
+            git commit -m 'Publish nine real ground motions and completed source-quality audit to Studio'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
+          echo "STUDIO_COMMIT=$(git rev-parse HEAD)"
+      - name: Deploy Studio Pages
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run pages.yml --ref main
