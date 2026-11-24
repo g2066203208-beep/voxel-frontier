@@ -3,6 +3,16 @@
   "latest": "REV11",
   "versions": [
     {
+      "version": "REV14_EQ_RAYLEIGH_1PCT",
+      "file": "HE_REV14_EQ_RAYLEIGH_1PCT.inp",
+      "date": "2026-11-24",
+      "size": 34233672,
+      "sha256": "70c88e645da2e2195fbc089c4af3432d9a37eb38c66296fd23a8b7e1437d5faa",
+      "base": "REV13_EQ_2H_CHECK",
+      "patch": "REV14_EQ_RAYLEIGH_1PCT/patch.json",
+      "state": "1%历史频率Rayleigh相对坐标双水平地震试算；原生未验；非正式标定"
+    },
+    {
       "version": "REV13_EQ_2H_CHECK",
       "file": "HE_REV13_EQ_2H_CHECK.inp",
       "date": "2026-11-24",

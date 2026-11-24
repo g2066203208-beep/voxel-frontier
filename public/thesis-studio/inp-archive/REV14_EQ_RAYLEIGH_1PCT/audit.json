@@ -1,0 +1,121 @@
+{
+  "sourceSha256": "7a56d8f7bfc059434f57dc4ddb99961e2ea1f41176b6aff27e587ad4fcd1f8d2",
+  "targetSha256": "70c88e645da2e2195fbc089c4af3432d9a37eb38c66296fd23a8b7e1437d5faa",
+  "targetSize": 34233672,
+  "editCount": 16,
+  "f1": 0.13525,
+  "f2": 0.79428,
+  "targetDamping": 0.01,
+  "alpha": 0.014523033997560875,
+  "beta": 0.003424417567843864,
+  "frequencySource": "historical BF1 2026-11-15; NOT REV13/14",
+  "materials": [
+    {
+      "name": "C65",
+      "alpha": 0.014523033997560875,
+      "beta": 0.003424417567843864
+    },
+    {
+      "name": "C70",
+      "alpha": 0.014523033997560875,
+      "beta": 0.003424417567843864
+    },
+    {
+      "name": "MAT_RNA_BLD_Z1",
+      "alpha": 0.014523033997560875,
+      "beta": 0.0
+    },
+    {
+      "name": "MAT_RNA_BLD_Z2",
+      "alpha": 0.014523033997560875,
+      "beta": 0.0
+    },
+    {
+      "name": "MAT_RNA_BLD_Z3",
+      "alpha": 0.014523033997560875,
+      "beta": 0.0
+    },
+    {
+      "name": "MAT_RNA_BLD_Z4",
+      "alpha": 0.014523033997560875,
+      "beta": 0.0
+    },
+    {
+      "name": "MAT_RNA_BLD_Z5",
+      "alpha": 0.014523033997560875,
+      "beta": 0.0
+    },
+    {
+      "name": "MAT_RNA_HUB_EQ",
+      "alpha": 0.014523033997560875,
+      "beta": 0.0
+    },
+    {
+      "name": "MAT_RNA_NAC_EQ",
+      "alpha": 0.014523033997560875,
+      "beta": 0.0
+    },
+    {
+      "name": "HPB300_TIE",
+      "alpha": 0.014523033997560875,
+      "beta": 0.003424417567843864
+    },
+    {
+      "name": "Q355_TOWER_T16_40",
+      "alpha": 0.014523033997560875,
+      "beta": 0.003424417567843864
+    },
+    {
+      "name": "Q355_FLANGE_PLATE_T100",
+      "alpha": 0.014523033997560875,
+      "beta": 0.003424417567843864
+    },
+    {
+      "name": "HRB400",
+      "alpha": 0.014523033997560875,
+      "beta": 0.003424417567843864
+    },
+    {
+      "name": "STRAND_1860",
+      "alpha": 0.014523033997560875,
+      "beta": 0.003424417567843864
+    }
+  ],
+  "amplitudes": {
+    "EQ_X_EAST_SI": {
+      "samples": 32040,
+      "first": [
+        0.0,
+        0.0
+      ],
+      "last": [
+        160.195,
+        3.25e-06
+      ],
+      "pga": 0.47522846
+    },
+    "EQ_Z_MINUS_NORTH_SI": {
+      "samples": 32040,
+      "first": [
+        0.0,
+        -0.0
+      ],
+      "last": [
+        160.195,
+        8.56e-06
+      ],
+      "pga": 0.51205727
+    }
+  },
+  "checks": [
+    "103/103 parts",
+    "first four steps byte identical",
+    "contact, sections, equations, rigid bodies, NSM keywords unchanged",
+    "two amplitude arrays exactly preserved",
+    "fixed supports and negative horizontal inertia directions",
+    "gravity reasserted",
+    "exact inverse reconstruction"
+  ],
+  "scope": "uniform translating base, relative coordinates; rigid RNA alpha only; material damping not full tangent K; solver participation and effective mass unverified; U,V,A relative, add ground motion for absolute outputs",
+  "native_solver": "NOT_RUN"
+}

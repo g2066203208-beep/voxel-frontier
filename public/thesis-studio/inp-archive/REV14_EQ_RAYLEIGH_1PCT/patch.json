@@ -1,0 +1,88 @@
+{
+  "base": "REV13_EQ_2H_CHECK",
+  "sourceSha256": "7a56d8f7bfc059434f57dc4ddb99961e2ea1f41176b6aff27e587ad4fcd1f8d2",
+  "targetSha256": "70c88e645da2e2195fbc089c4af3432d9a37eb38c66296fd23a8b7e1437d5faa",
+  "targetSize": 34233672,
+  "edits": [
+    {
+      "offset": 9,
+      "old": "** Job name: HE_REV13_EQ_2H_CHECK Model name: CONTACT_REV13_EQ_2H_CHECK\n",
+      "new": "** Job name: HE_REV14_EQ_RAYLEIGH_1PCT Model name: CONTACT_REV14_EQ_RELATIVE\n** Provisional 1% Rayleigh from historical BF1 modes 1/5; relative-coordinate inertia loading; native solver NOT_RUN.\n"
+    },
+    {
+      "offset": 34207194,
+      "old": "",
+      "new": "*Damping, alpha=0.0145230339976, beta=0.00342441756784\n"
+    },
+    {
+      "offset": 34210687,
+      "old": "",
+      "new": "*Damping, alpha=0.0145230339976, beta=0.00342441756784\n"
+    },
+    {
+      "offset": 34214212,
+      "old": "",
+      "new": "*Damping, alpha=0.0145230339976, beta=0\n"
+    },
+    {
+      "offset": 34214290,
+      "old": "",
+      "new": "*Damping, alpha=0.0145230339976, beta=0\n"
+    },
+    {
+      "offset": 34214368,
+      "old": "",
+      "new": "*Damping, alpha=0.0145230339976, beta=0\n"
+    },
+    {
+      "offset": 34214446,
+      "old": "",
+      "new": "*Damping, alpha=0.0145230339976, beta=0\n"
+    },
+    {
+      "offset": 34214524,
+      "old": "",
+      "new": "*Damping, alpha=0.0145230339976, beta=0\n"
+    },
+    {
+      "offset": 34214601,
+      "old": "",
+      "new": "*Damping, alpha=0.0145230339976, beta=0\n"
+    },
+    {
+      "offset": 34214679,
+      "old": "",
+      "new": "*Damping, alpha=0.0145230339976, beta=0\n"
+    },
+    {
+      "offset": 34214749,
+      "old": "",
+      "new": "*Damping, alpha=0.0145230339976, beta=0.00342441756784\n"
+    },
+    {
+      "offset": 34214848,
+      "old": "",
+      "new": "*Damping, alpha=0.0145230339976, beta=0.00342441756784\n"
+    },
+    {
+      "offset": 34214993,
+      "old": "",
+      "new": "*Damping, alpha=0.0145230339976, beta=0.00342441756784\n"
+    },
+    {
+      "offset": 34215081,
+      "old": "",
+      "new": "*Damping, alpha=0.0145230339976, beta=0.00342441756784\n"
+    },
+    {
+      "offset": 34215579,
+      "old": "",
+      "new": "*Damping, alpha=0.0145230339976, beta=0.00342441756784\n"
+    },
+    {
+      "offset": 34228249,
+      "old": "*Step, name=EQ_2H_RECORD_CHECK, nlgeom=YES, inc=2000000, unsymm=YES\nUnscaled ESM horizontal record; X East, Z minus North, Y up; not site-design wave.\n*Dynamic, application=TRANSIENT FIDELITY\n0.005, 160.195, 1.e-7, 0.005\n*Contact Controls, reset\n*Boundary, op=NEW, type=DISPLACEMENT\nCSEG_01-1.FACE_BOTTOM, 2, 2, 0.\nPT_36x15p2-1.SET_PT_BOTTOM_GEOM, 2, 2, 0.\n*Boundary, op=NEW, type=ACCELERATION, amplitude=EQ_X_EAST_SI\nCSEG_01-1.FACE_BOTTOM, 1, 1, 1.\nPT_36x15p2-1.SET_PT_BOTTOM_GEOM, 1, 1, 1.\n*Boundary, op=NEW, type=ACCELERATION, amplitude=EQ_Z_MINUS_NORTH_SI\nCSEG_01-1.FACE_BOTTOM, 3, 3, 1.\nPT_36x15p2-1.SET_PT_BOTTOM_GEOM, 3, 3, 1.\n",
+      "new": "*Step, name=EQ_2H_RAYLEIGH_REL, nlgeom=YES, inc=2000000, unsymm=YES\nUnscaled ESM horizontal record, fixed-base relative coordinates; provisional Rayleigh 1%.\n*Dynamic, application=TRANSIENT FIDELITY\n0.005, 160.195, 1.e-7, 0.005\n*Contact Controls, reset\n** Uniform support translation: -M r a_g; no simultaneous prescribed support motion.\n*Boundary, op=NEW, type=DISPLACEMENT\nCSEG_01-1.FACE_BOTTOM, 1, 3, 0.\nPT_36x15p2-1.SET_PT_BOTTOM_GEOM, 1, 3, 0.\n** Reassert self-weight when replacing distributed loads. All directions use the same whole-model mass selection.\n*Dload, op=NEW\n, GRAV, 9.81, 0., -1., 0.\n*Dload, op=NEW, amplitude=EQ_X_EAST_SI\n, GRAV, 1., -1., 0., 0.\n*Dload, op=NEW, amplitude=EQ_Z_MINUS_NORTH_SI\n, GRAV, 1., 0., 0., -1.\n"
+    }
+  ]
+}
