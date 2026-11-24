@@ -1,0 +1,12 @@
+candidate_id,role,event,table_row,component,classification_in_paper,fault_distance_km_as_reported,PGA_g_reported,actual_record_status
+P01,priority,Chi-Chi,25,ILA004N,far-field long-period,88.89,0.064,HOLD
+P01,priority,Chi-Chi,26,ILA004W,far-field long-period,88.89,0.073,HOLD
+P02,priority,El Mayor-Cucapah,56,00022-90,non-long-period,73.31,0.058,HOLD
+P03,priority,Tottori,51,SMN005EW,non-long-period,45.73,0.132,HOLD
+P03,priority,Tottori,52,SMN005NS,non-long-period,45.73,0.123,HOLD
+P04,priority,Hector Mine,47,HEC000,non-long-period,11.66,0.265,HOLD
+P05,priority,Northern Calif-07,41,PGS075,non-long-period,34.67,0.168,HOLD
+P06,priority,Imperial Valley-06,46,CPE147,non-long-period,15.19,0.168,HOLD
+P07,priority,Morgan Hill,54,G01230,non-long-period,14.91,0.070,HOLD
+S01,pulse-sensitivity,Kocaeli,3,YPT-150,near-field pulse,4.83,0.322,HOLD
+S02,pulse-sensitivity,Darfield,17,DSLCN-63E,near-field pulse,8.46,0.237,HOLD
