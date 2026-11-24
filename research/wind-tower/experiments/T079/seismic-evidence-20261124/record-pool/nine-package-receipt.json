@@ -1,0 +1,8 @@
+{
+  "zip": "T079_NINE_REAL_SOURCE_CANDIDATES.zip",
+  "bytes": 6515160,
+  "sha256": "89d25e81769f22481baef110ec0a41995902d3bc76725ec5442ba042496e8ca4",
+  "members": 49,
+  "records": 9,
+  "max_independent_spectral_rel_diff": 8.327302036126522e-05
+}

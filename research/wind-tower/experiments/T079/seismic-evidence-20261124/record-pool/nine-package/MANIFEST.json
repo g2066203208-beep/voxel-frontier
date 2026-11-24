@@ -1,0 +1,194 @@
+{
+  "NINE_SOURCE_CANDIDATES.json": {
+    "bytes": 14364,
+    "sha256": "c00d7138f0668006c8dee554e44b5c789341002e0d32686876703797e960328f"
+  },
+  "README.md": {
+    "bytes": 798,
+    "sha256": "524ca99740252a1d041c9942d66b538ed433e0c7399dc9697b5e5bba40317d39"
+  },
+  "acquire_esm.py": {
+    "bytes": 11895,
+    "sha256": "331c1a3d28b2752e8da6693c3df0930c4aa68cea2a406275a5aceffd28b88cce"
+  },
+  "nine_actual_spectra.png": {
+    "bytes": 290030,
+    "sha256": "313a108a52eb4669e740e30ec301e7ff1b20c7415cb416fa16039586e6331664"
+  },
+  "nine_actual_waveforms.png": {
+    "bytes": 460053,
+    "sha256": "019e6e762162a41d05d298ad5841969ffd4daf3bae8b13dfbb7abb611e97d465"
+  },
+  "package_nine.py": {
+    "bytes": 7422,
+    "sha256": "1ce4961b298032e1dddc66a823752b43a0c31724c7c37e1012de102461672de2"
+  },
+  "records/EQ01_CLN/acceleration_SI.csv": {
+    "bytes": 705595,
+    "sha256": "31fce81d2abda5484d8c62a59ad6c196d72596d18b6f8cee2e8ba6251829d863"
+  },
+  "records/EQ01_CLN/original_MP_ACC.zip": {
+    "bytes": 202679,
+    "sha256": "ac2a42a24945979c5fa1972b7f3a4c1a12f4fb0d31d89231851735e8dea35e3f"
+  },
+  "records/EQ01_CLN/receipt.json": {
+    "bytes": 12687,
+    "sha256": "71371d1d8a6507051ee69832cd86f35bbf082f6b761f9b3474a007d75ade8fcf"
+  },
+  "records/EQ01_CLN/spectra_5pct.csv": {
+    "bytes": 6792,
+    "sha256": "1befcc4b17d386e478538ca70c7f6d3ba35e7dfa074d3be12c2c27a8b9f0ed89"
+  },
+  "records/EQ02_MODE/acceleration_SI.csv": {
+    "bytes": 1604115,
+    "sha256": "2b7f59d2393e6a5766eb20a25ba0afa4ae9d8d49c259ef102784f13e5f27cc80"
+  },
+  "records/EQ02_MODE/original_MP_ACC.zip": {
+    "bytes": 446991,
+    "sha256": "788095e883cc6990d450b72b7a3d41c9f2a6b96336657b1b2a01817aedd8bd8d"
+  },
+  "records/EQ02_MODE/receipt.json": {
+    "bytes": 12444,
+    "sha256": "773b5c4792bc91ccb3237f19127e791cd4d2585ee275ea267113900d64d6c65b"
+  },
+  "records/EQ02_MODE/spectra_5pct.csv": {
+    "bytes": 6869,
+    "sha256": "a72c09633549e9e78725f2b023eca2ea0f0a1f1d1046a2b65210bd27df933f18"
+  },
+  "records/EQ03_COR1/acceleration_SI.csv": {
+    "bytes": 1572089,
+    "sha256": "f8cb81af4d9266c909e5a06c513243fe1f2e4717b292efcd8b4e363642e92ba0"
+  },
+  "records/EQ03_COR1/original_MP_ACC.zip": {
+    "bytes": 429727,
+    "sha256": "5135af4dfcafe77b332df97f45a2769b1166c2b7d8faa784fd55d2890a4336a0"
+  },
+  "records/EQ03_COR1/receipt.json": {
+    "bytes": 12549,
+    "sha256": "cc7e23c82655e862272421412b21eea71ce5ade26886a4f81e08a42b88b8bbd8"
+  },
+  "records/EQ03_COR1/spectra_5pct.csv": {
+    "bytes": 6935,
+    "sha256": "17b6183aa9eec75a6d014d28eb62a06cabed07471551877261ce1f922411e894"
+  },
+  "records/EQ04_MESG/acceleration_SI.csv": {
+    "bytes": 1288035,
+    "sha256": "f1fd62e6c00378a2cfcb01f5623f37fcbcc5336e4d24e07388507bf182d413cd"
+  },
+  "records/EQ04_MESG/original_MP_ACC.zip": {
+    "bytes": 344694,
+    "sha256": "1e502ab7edf482514218c788abe949a5dd4aac388bcb8cf2f88b25296db421d5"
+  },
+  "records/EQ04_MESG/receipt.json": {
+    "bytes": 12602,
+    "sha256": "21baf4967421f1723b5c5a1396f32c51395b7a816ea7c415bcf98d7cec5e0a04"
+  },
+  "records/EQ04_MESG/spectra_5pct.csv": {
+    "bytes": 7253,
+    "sha256": "834caa1b7d9a99ef6a47b847be802b4dac9d8f01fb3956d411f7d266e481b95f"
+  },
+  "records/EQ05_ZOVE/acceleration_SI.csv": {
+    "bytes": 1572777,
+    "sha256": "4cc4e5aa44bb1768d8f1e4c86352a98c376a87ac3b65def1155e7f98fdc4756d"
+  },
+  "records/EQ05_ZOVE/original_MP_ACC.zip": {
+    "bytes": 401466,
+    "sha256": "e5d26895c028158b9dbb0e27cba5286a3129e7e6a3d7b39b71b20db1f39e42fe"
+  },
+  "records/EQ05_ZOVE/receipt.json": {
+    "bytes": 12470,
+    "sha256": "e90abd81b6f2e981a679157dcbf5a7230639fc85142653a187d4e82a80607049"
+  },
+  "records/EQ05_ZOVE/spectra_5pct.csv": {
+    "bytes": 7175,
+    "sha256": "71f221a5ca7dba55cea4863de690d4ead3a9997f7fd0a61688823a435ad542d9"
+  },
+  "records/EQ06_T1215/acceleration_SI.csv": {
+    "bytes": 685115,
+    "sha256": "a4d566c3cb8354272685f4d8b93e3c3655370563e0646b38be2ab1fcf7a96a9f"
+  },
+  "records/EQ06_T1215/original_MP_ACC.zip": {
+    "bytes": 262188,
+    "sha256": "b196a886eac5adbaba761b7b4db7c44263c31fe3fc757117dd2aa51b06624c0d"
+  },
+  "records/EQ06_T1215/receipt.json": {
+    "bytes": 12255,
+    "sha256": "a642fcb5f7c407ee603cdd8d1f1fa2d6827e55bbf100a59d706fe7b291fb8a80"
+  },
+  "records/EQ06_T1215/spectra_5pct.csv": {
+    "bytes": 7032,
+    "sha256": "17b2dd872c477080a5877842162ff4e1d242cea255970c216003aa87caa46f65"
+  },
+  "records/EQ07_FEMA/acceleration_SI.csv": {
+    "bytes": 621116,
+    "sha256": "5bce007e0e8a65a2f518fa1a1096c311b0935d763c4b1d16ee9007f5a3226756"
+  },
+  "records/EQ07_FEMA/original_MP_ACC.zip": {
+    "bytes": 183265,
+    "sha256": "615a657b4c65cc00b4913ded36fe181fe040b86b074e62bc33305ef0adf7fe74"
+  },
+  "records/EQ07_FEMA/receipt.json": {
+    "bytes": 12575,
+    "sha256": "e6f98fc6fc3e71f21d71e1cfa359d572484343f5358ec4deadcb27282e8de3de"
+  },
+  "records/EQ07_FEMA/spectra_5pct.csv": {
+    "bytes": 7128,
+    "sha256": "d3faab7125277c5bf2d604e3c901974feafd4a8ec3f1685f374b2a2442d5566f"
+  },
+  "records/SP01_T1201/acceleration_SI.csv": {
+    "bytes": 478378,
+    "sha256": "48e61076f190938886377770647f5903f5c9064a4181aa23ab4125bbbd8a3ea5"
+  },
+  "records/SP01_T1201/original_MP_ACC.zip": {
+    "bytes": 153438,
+    "sha256": "38fb23a29d343bde0a64a1869b6bd385df59a5fac9c8ac7596964b120a53e68f"
+  },
+  "records/SP01_T1201/receipt.json": {
+    "bytes": 11828,
+    "sha256": "1fdd6c4c199182868daead69aee0df24a5856a428471d7252a371a572be58d4e"
+  },
+  "records/SP01_T1201/spectra_5pct.csv": {
+    "bytes": 6570,
+    "sha256": "25a733d92e8d532c2c7688f0e5d0b04ef66bed7dadb6aa4848b1cf398a446ee7"
+  },
+  "records/SP02_DSLC/682ed668_20100903_163541_DSLC_V2A.csv": {
+    "bytes": 967924,
+    "sha256": "178b7b329e641188cb9758774a7bd57a7563a2ceab058d06d5e288272f01f463"
+  },
+  "records/SP02_DSLC/6fe6bba7_20100903_163541_DSLC.v3a": {
+    "bytes": 58758,
+    "sha256": "43e86aaf76f919f82c2ba5d93f4e85c2bf3441ad612e0ead752d2d296a77db10"
+  },
+  "records/SP02_DSLC/95b21a1f_20100903_163541_DSLC.V2A": {
+    "bytes": 551490,
+    "sha256": "f8abe25d58208fc53dee4e43a0cd1313eeccfee8a612b6a0f2989693b18032c8"
+  },
+  "records/SP02_DSLC/DSLC_numeric_QC.json": {
+    "bytes": 932,
+    "sha256": "c15cbca959a10bd5b30781254f741b23acf4e842e1bf03d51d8917ff4154e37b"
+  },
+  "records/SP02_DSLC/acceleration_SI.csv": {
+    "bytes": 208008,
+    "sha256": "e46661e155e3359afd97d3b7fc9c1cf5bb3f44ad74db8c65c8aa0f27f259a6fd"
+  },
+  "records/SP02_DSLC/e4c0ae84_20100903_163541_DSLC_V3A.csv": {
+    "bytes": 58347,
+    "sha256": "8e4a7249a4be00abf55cb76f306782b3c66b3bfc410aac63d186f5635032c5ad"
+  },
+  "records/SP02_DSLC/official-event-3366146.json": {
+    "bytes": 9108,
+    "sha256": "458923fd55dff2e9b212cf7504df947aaddbe80b7bb1d5bec93766d6d5e59633"
+  },
+  "records/SP02_DSLC/receipt.json": {
+    "bytes": 22124,
+    "sha256": "00de07de1d573ef1608bcb91c20c60efc39a38fe9613121080f6784913f64c42"
+  },
+  "records/SP02_DSLC/spectra_5pct.csv": {
+    "bytes": 6433,
+    "sha256": "194dfe16c4a8ba560508747b16161b3c6b22a2a3193df28e47d5bf7686b19377"
+  },
+  "summary.csv": {
+    "bytes": 1587,
+    "sha256": "9db5dcb4ad481f1df1457302e3eef3cd68198b902043d14df3304a58ac380c84"
+  }
+}
