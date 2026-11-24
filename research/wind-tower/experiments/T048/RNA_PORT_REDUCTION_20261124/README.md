@@ -36,3 +36,9 @@
 - 90内部自由度合成测试：run 45348878881 SUCCESS，12精确保留+12尾部补偿=24；全带2Hz、质量归一化阻抗误差上界0.0011135271736877224；401频点最大1.2913500893789258e-5；并非真实RNA频率或真实抗震响应。对照普通前24阶CB合成样本最大0.00809693328853886（本地独立计算）。输入真实记录、原生求解、预载和有限转动未验证。
 
 Abaqus 2025 [矩阵生成](https://docs.software.vt.edu/abaqusv2025/English/SIMACAEANLRefMap/simaanl-c-mtxgenerationperturbation.htm)、[子结构理论](https://docs.software.vt.edu/abaqusv2025/English/SIMACAETHERefMap/simathe-c-superelements.htm)。首先仅运行两个独立矩阵INP，核对.dat、原生M/K/C、RP映射；用完整RNA原生矩阵对照单叶片重构；再做真实频带选阶、对等阶CB、全塔预应力重力模态与地震对照。矩阵输入不等于自动兼容有限转动。需要原生协转/UEL能量及重力加载验证后才替换REV18。禁止自行捏造DTU内部频率或以合成测试冒充原生验证。
+
+## REV19 独立真实参数候选（本轮新增）
+
+`build_source_port_inp.py` 直接读取冻结单叶片的50个B31区段的几何、EA/EI/GJ、剪切刚度、剪心及51个质量和惯量点；采用独立线性Timoshenko静力精确端刚度与偏置点质量映射，检查刚体零刚度及空间质量块，再做三叶片循环重构、带宽选阶及与同阶CB对照。此处为独立梁有限元离散，不是Abaqus原生B31矩阵，不把截断界扩展到两种单元离散之间的误差。输出平坦模型级MATRIX INPUT/ASSEMBLE固定/自由接口独立INP和NPZ；广义标量节点不是实体点质量。只用于独立线性模态/接口验证；普通矩阵输入不支持Part/Assembly、体力以及大转动更新，因此不能直接替换REV18。见 [Using Matrices](https://docs.software.vt.edu/abaqusv2026/English/SIMACAEANLRefMap/simaanl-c-definingmatrices.htm)。
+
+`RNA_REV19_NATIVE_CB_GENERATE.inp` 为原始REV16展平后原生CB12/30/60基准生成输入；不施加非自平衡重力预载，固定六接口自由度仅在频率扰动步施加，子结构生成时保留6DOF、请求重力向量、质量、黏性阻尼及对称/非对称刚度。原生子结构数据库必须由用户本机Abaqus实际生成，不冒充独立误差控制算法原生实现；不改整塔。见 [Generating Substructures](https://docs.software.vt.edu/abaqusv2025/English/SIMACAEANLRefMap/simaanl-c-superelementdef.htm)。
