@@ -1,0 +1,328 @@
+{
+  "base": "REV09",
+  "sourceSha256": "cbe996780eb772a7fdb8f33d436c76b0936631ef835f3606d11ab7d90b4af1ef",
+  "targetSha256": "5ec5518edbe6f0fb038f24fafe402b72c0dbc2e0a51c72af44fe069c104d1507",
+  "targetSize": 34226331,
+  "edits": [
+    {
+      "offset": 9,
+      "old": "** Job name: HE_REV09_HE_CHECK Model name: CONTACT_REV09\n",
+      "new": "** Job name: HE_REV10_HE_CHECK Model name: CONTACT_REV10\n** REV10: HRB400 longitudinal and hoop reinforcement only; standard yield and nominal density; inherited bilinear hardening sensitivity, not calibrated.\n"
+    },
+    {
+      "offset": 11547471,
+      "old": "*Solid Section, elset=SET_ALL, material=S345\n",
+      "new": "*Solid Section, elset=SET_ALL, material=HRB400\n"
+    },
+    {
+      "offset": 11570715,
+      "old": "*Solid Section, elset=SET_ALL, material=S345\n",
+      "new": "*Solid Section, elset=SET_ALL, material=HRB400\n"
+    },
+    {
+      "offset": 11593959,
+      "old": "*Solid Section, elset=SET_ALL, material=S345\n",
+      "new": "*Solid Section, elset=SET_ALL, material=HRB400\n"
+    },
+    {
+      "offset": 11617203,
+      "old": "*Solid Section, elset=SET_ALL, material=S345\n",
+      "new": "*Solid Section, elset=SET_ALL, material=HRB400\n"
+    },
+    {
+      "offset": 11637855,
+      "old": "*Solid Section, elset=SET_ALL, material=S345\n",
+      "new": "*Solid Section, elset=SET_ALL, material=HRB400\n"
+    },
+    {
+      "offset": 11658507,
+      "old": "*Solid Section, elset=SET_ALL, material=S345\n",
+      "new": "*Solid Section, elset=SET_ALL, material=HRB400\n"
+    },
+    {
+      "offset": 11679159,
+      "old": "*Solid Section, elset=SET_ALL, material=S345\n",
+      "new": "*Solid Section, elset=SET_ALL, material=HRB400\n"
+    },
+    {
+      "offset": 11699811,
+      "old": "*Solid Section, elset=SET_ALL, material=S345\n",
+      "new": "*Solid Section, elset=SET_ALL, material=HRB400\n"
+    },
+    {
+      "offset": 11720463,
+      "old": "*Solid Section, elset=SET_ALL, material=S345\n",
+      "new": "*Solid Section, elset=SET_ALL, material=HRB400\n"
+    },
+    {
+      "offset": 11741115,
+      "old": "*Solid Section, elset=SET_ALL, material=S345\n",
+      "new": "*Solid Section, elset=SET_ALL, material=HRB400\n"
+    },
+    {
+      "offset": 11761767,
+      "old": "*Solid Section, elset=SET_ALL, material=S345\n",
+      "new": "*Solid Section, elset=SET_ALL, material=HRB400\n"
+    },
+    {
+      "offset": 11781127,
+      "old": "*Solid Section, elset=SET_ALL, material=S345\n",
+      "new": "*Solid Section, elset=SET_ALL, material=HRB400\n"
+    },
+    {
+      "offset": 11800487,
+      "old": "*Solid Section, elset=SET_ALL, material=S345\n",
+      "new": "*Solid Section, elset=SET_ALL, material=HRB400\n"
+    },
+    {
+      "offset": 11819847,
+      "old": "*Solid Section, elset=SET_ALL, material=S345\n",
+      "new": "*Solid Section, elset=SET_ALL, material=HRB400\n"
+    },
+    {
+      "offset": 11839207,
+      "old": "*Solid Section, elset=SET_ALL, material=S345\n",
+      "new": "*Solid Section, elset=SET_ALL, material=HRB400\n"
+    },
+    {
+      "offset": 11857267,
+      "old": "*Solid Section, elset=SET_ALL, material=S345\n",
+      "new": "*Solid Section, elset=SET_ALL, material=HRB400\n"
+    },
+    {
+      "offset": 11875327,
+      "old": "*Solid Section, elset=SET_ALL, material=S345\n",
+      "new": "*Solid Section, elset=SET_ALL, material=HRB400\n"
+    },
+    {
+      "offset": 11893387,
+      "old": "*Solid Section, elset=SET_ALL, material=S345\n",
+      "new": "*Solid Section, elset=SET_ALL, material=HRB400\n"
+    },
+    {
+      "offset": 11911447,
+      "old": "*Solid Section, elset=SET_ALL, material=S345\n",
+      "new": "*Solid Section, elset=SET_ALL, material=HRB400\n"
+    },
+    {
+      "offset": 11929507,
+      "old": "*Solid Section, elset=SET_ALL, material=S345\n",
+      "new": "*Solid Section, elset=SET_ALL, material=HRB400\n"
+    },
+    {
+      "offset": 11945839,
+      "old": "*Solid Section, elset=SET_ALL, material=S345\n",
+      "new": "*Solid Section, elset=SET_ALL, material=HRB400\n"
+    },
+    {
+      "offset": 11962171,
+      "old": "*Solid Section, elset=SET_ALL, material=S345\n",
+      "new": "*Solid Section, elset=SET_ALL, material=HRB400\n"
+    },
+    {
+      "offset": 11978503,
+      "old": "*Solid Section, elset=SET_ALL, material=S345\n",
+      "new": "*Solid Section, elset=SET_ALL, material=HRB400\n"
+    },
+    {
+      "offset": 11994835,
+      "old": "*Solid Section, elset=SET_ALL, material=S345\n",
+      "new": "*Solid Section, elset=SET_ALL, material=HRB400\n"
+    },
+    {
+      "offset": 12011167,
+      "old": "*Solid Section, elset=SET_ALL, material=S345\n",
+      "new": "*Solid Section, elset=SET_ALL, material=HRB400\n"
+    },
+    {
+      "offset": 12027499,
+      "old": "*Solid Section, elset=SET_ALL, material=S345\n",
+      "new": "*Solid Section, elset=SET_ALL, material=HRB400\n"
+    },
+    {
+      "offset": 12043831,
+      "old": "*Solid Section, elset=SET_ALL, material=S345\n",
+      "new": "*Solid Section, elset=SET_ALL, material=HRB400\n"
+    },
+    {
+      "offset": 12060163,
+      "old": "*Solid Section, elset=SET_ALL, material=S345\n",
+      "new": "*Solid Section, elset=SET_ALL, material=HRB400\n"
+    },
+    {
+      "offset": 12076495,
+      "old": "*Solid Section, elset=SET_ALL, material=S345\n",
+      "new": "*Solid Section, elset=SET_ALL, material=HRB400\n"
+    },
+    {
+      "offset": 12092827,
+      "old": "*Solid Section, elset=SET_ALL, material=S345\n",
+      "new": "*Solid Section, elset=SET_ALL, material=HRB400\n"
+    },
+    {
+      "offset": 12109159,
+      "old": "*Solid Section, elset=SET_ALL, material=S345\n",
+      "new": "*Solid Section, elset=SET_ALL, material=HRB400\n"
+    },
+    {
+      "offset": 12506039,
+      "old": "*Solid Section, elset=SET_HOOP, material=S345\n",
+      "new": "*Solid Section, elset=SET_HOOP, material=HRB400\n"
+    },
+    {
+      "offset": 12902990,
+      "old": "*Solid Section, elset=SET_HOOP, material=S345\n",
+      "new": "*Solid Section, elset=SET_HOOP, material=HRB400\n"
+    },
+    {
+      "offset": 13299941,
+      "old": "*Solid Section, elset=SET_HOOP, material=S345\n",
+      "new": "*Solid Section, elset=SET_HOOP, material=HRB400\n"
+    },
+    {
+      "offset": 13696892,
+      "old": "*Solid Section, elset=SET_HOOP, material=S345\n",
+      "new": "*Solid Section, elset=SET_HOOP, material=HRB400\n"
+    },
+    {
+      "offset": 14088947,
+      "old": "*Solid Section, elset=SET_HOOP, material=S345\n",
+      "new": "*Solid Section, elset=SET_HOOP, material=HRB400\n"
+    },
+    {
+      "offset": 14478799,
+      "old": "*Solid Section, elset=SET_HOOP, material=S345\n",
+      "new": "*Solid Section, elset=SET_HOOP, material=HRB400\n"
+    },
+    {
+      "offset": 14868651,
+      "old": "*Solid Section, elset=SET_HOOP, material=S345\n",
+      "new": "*Solid Section, elset=SET_HOOP, material=HRB400\n"
+    },
+    {
+      "offset": 15258503,
+      "old": "*Solid Section, elset=SET_HOOP, material=S345\n",
+      "new": "*Solid Section, elset=SET_HOOP, material=HRB400\n"
+    },
+    {
+      "offset": 15648355,
+      "old": "*Solid Section, elset=SET_HOOP, material=S345\n",
+      "new": "*Solid Section, elset=SET_HOOP, material=HRB400\n"
+    },
+    {
+      "offset": 16038207,
+      "old": "*Solid Section, elset=SET_HOOP, material=S345\n",
+      "new": "*Solid Section, elset=SET_HOOP, material=HRB400\n"
+    },
+    {
+      "offset": 16428059,
+      "old": "*Solid Section, elset=SET_HOOP, material=S345\n",
+      "new": "*Solid Section, elset=SET_HOOP, material=HRB400\n"
+    },
+    {
+      "offset": 16817911,
+      "old": "*Solid Section, elset=SET_HOOP, material=S345\n",
+      "new": "*Solid Section, elset=SET_HOOP, material=HRB400\n"
+    },
+    {
+      "offset": 17207763,
+      "old": "*Solid Section, elset=SET_HOOP, material=S345\n",
+      "new": "*Solid Section, elset=SET_HOOP, material=HRB400\n"
+    },
+    {
+      "offset": 17597615,
+      "old": "*Solid Section, elset=SET_HOOP, material=S345\n",
+      "new": "*Solid Section, elset=SET_HOOP, material=HRB400\n"
+    },
+    {
+      "offset": 17987467,
+      "old": "*Solid Section, elset=SET_HOOP, material=S345\n",
+      "new": "*Solid Section, elset=SET_HOOP, material=HRB400\n"
+    },
+    {
+      "offset": 18377319,
+      "old": "*Solid Section, elset=SET_HOOP, material=S345\n",
+      "new": "*Solid Section, elset=SET_HOOP, material=HRB400\n"
+    },
+    {
+      "offset": 18767171,
+      "old": "*Solid Section, elset=SET_HOOP, material=S345\n",
+      "new": "*Solid Section, elset=SET_HOOP, material=HRB400\n"
+    },
+    {
+      "offset": 19157023,
+      "old": "*Solid Section, elset=SET_HOOP, material=S345\n",
+      "new": "*Solid Section, elset=SET_HOOP, material=HRB400\n"
+    },
+    {
+      "offset": 19546875,
+      "old": "*Solid Section, elset=SET_HOOP, material=S345\n",
+      "new": "*Solid Section, elset=SET_HOOP, material=HRB400\n"
+    },
+    {
+      "offset": 19936727,
+      "old": "*Solid Section, elset=SET_HOOP, material=S345\n",
+      "new": "*Solid Section, elset=SET_HOOP, material=HRB400\n"
+    },
+    {
+      "offset": 20326579,
+      "old": "*Solid Section, elset=SET_HOOP, material=S345\n",
+      "new": "*Solid Section, elset=SET_HOOP, material=HRB400\n"
+    },
+    {
+      "offset": 20716431,
+      "old": "*Solid Section, elset=SET_HOOP, material=S345\n",
+      "new": "*Solid Section, elset=SET_HOOP, material=HRB400\n"
+    },
+    {
+      "offset": 21106283,
+      "old": "*Solid Section, elset=SET_HOOP, material=S345\n",
+      "new": "*Solid Section, elset=SET_HOOP, material=HRB400\n"
+    },
+    {
+      "offset": 21496135,
+      "old": "*Solid Section, elset=SET_HOOP, material=S345\n",
+      "new": "*Solid Section, elset=SET_HOOP, material=HRB400\n"
+    },
+    {
+      "offset": 21885987,
+      "old": "*Solid Section, elset=SET_HOOP, material=S345\n",
+      "new": "*Solid Section, elset=SET_HOOP, material=HRB400\n"
+    },
+    {
+      "offset": 22275839,
+      "old": "*Solid Section, elset=SET_HOOP, material=S345\n",
+      "new": "*Solid Section, elset=SET_HOOP, material=HRB400\n"
+    },
+    {
+      "offset": 22665691,
+      "old": "*Solid Section, elset=SET_HOOP, material=S345\n",
+      "new": "*Solid Section, elset=SET_HOOP, material=HRB400\n"
+    },
+    {
+      "offset": 23055543,
+      "old": "*Solid Section, elset=SET_HOOP, material=S345\n",
+      "new": "*Solid Section, elset=SET_HOOP, material=HRB400\n"
+    },
+    {
+      "offset": 23445395,
+      "old": "*Solid Section, elset=SET_HOOP, material=S345\n",
+      "new": "*Solid Section, elset=SET_HOOP, material=HRB400\n"
+    },
+    {
+      "offset": 23835247,
+      "old": "*Solid Section, elset=SET_HOOP, material=S345\n",
+      "new": "*Solid Section, elset=SET_HOOP, material=HRB400\n"
+    },
+    {
+      "offset": 24136121,
+      "old": "*Solid Section, elset=SET_HOOP, material=S345\n",
+      "new": "*Solid Section, elset=SET_HOOP, material=HRB400\n"
+    },
+    {
+      "offset": 34213534,
+      "old": "*Material, name=STRAND_1860\n",
+      "new": "*Material, name=HRB400\n*Density\n7850.,\n*Elastic\n 2e+11, 0.3\n** Candidate inherited b=0.01 isotropic hardening; not a calibrated cyclic or fracture model.\n*Plastic\n400000000., 0.\n602020202.020202041, 0.1\n*Material, name=STRAND_1860\n"
+    }
+  ]
+}

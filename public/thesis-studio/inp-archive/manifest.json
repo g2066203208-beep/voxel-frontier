@@ -1,7 +1,17 @@
 {
   "schema": 1,
-  "latest": "REV09",
+  "latest": "REV10",
   "versions": [
+    {
+      "version": "REV10",
+      "file": "HE_REV10_HE_CHECK.inp",
+      "date": "2026-11-24",
+      "size": 34226331,
+      "sha256": "5ec5518edbe6f0fb038f24fafe402b72c0dbc2e0a51c72af44fe069c104d1507",
+      "base": "REV09",
+      "patch": "REV10/patch.json",
+      "state": "HRB400纵筋与环筋；静态输入候选，循环本构及原生求解未验"
+    },
     {
       "version": "REV09",
       "file": "HE_REV09_HE_CHECK.inp",
