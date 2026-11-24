@@ -1,3 +1,11 @@
+### 2026-11-24｜v0.32.155 PATCH — REV11 钢材分离及规范-文献单调本构重建
+
+- SOURCE=REV10实际SHA256 5ec5518edbe6f0fb038f24fafe402b72c0dbc2e0a51c72af44fe069c104d1507；目标REV11 HE_REV11_HE_CHECK.inp，34227226 bytes，SHA256 fa27040f66b1c6d85fe1c4d863fb62d1423960972a1cdf08fc9dbb0871b1e5fd。用户明确授权钢材整改，优先保持何原型几何/配筋/预应力/接触及分析步。
+- STANDARD=GB1499.2—2024表6 HRB400名义400/540MPa；GB1499.1—2024表6 HPB300名义300/420MPa；GB/T50010—2010(2024版)表4.2.5 E200/210GPa及附录C.1.2；GB50135—2019 §6.5.7构造；GB/T1591—2018表7热轧Q355 16–40mm=345MPa/100mm=315MPa；GB50017—2017表4.4.8 E206GPa、7850kg/m³。REF=何2024与Xu/He2025同对象表2（Q345、206GPa）；张耀庭等2016《工程力学》表1及图5实际原页，HRB400三组试件平均强化起点1.64%、峰值应变13.39%，转用应变锚点与规范名义强度组合，不是实测本塔曲线。OFFICIAL=Abaqus2025 *PLASTIC及循环强化手册。
+- RUN=31组SET_TIE独立HPB300理想弹塑性候选；4组钢塔Q355 345MPa/206GPa，沿用已有5MW文献b=.01敏感性候选、改线性随动；100mm法兰Q355钢板315MPa/206GPa独立理想弹塑性候选（真实锻轧工艺和牌号未定，若锻件应核GB/T44508—2024）。HRB400三段式工程包络转换15点真应力-塑性应变，首行400.8MPa/0，末行612.306MPa/0.122601488，不是破坏阈值。HPB300/法兰理想弹塑性为未标定简化，不冒称规范规定完整本构；钢材循环/疲劳/损伤仍HOLD。
+- TEST=39处精确差异，103/103 Part闭合、活动S345=0、分析步逐字不变、反向重建原件一致、HRB400表单调性PASS。按既有质量账本比例重算质量增1267.829724kg，整机2586735.603297kg，非ODB结果；原生Data Check/单元循环/平衡/模态/地震NOT_RUN。不覆盖历史结果，不合并PR#42。
+- 归档：完整REV11及脚本/差异/审计已另存Google Drive；main [5183ea9](https://github.com/g2066203208-beep/voxel-frontier/commit/5183ea999031245c1de384164997e0ee083c0ce5)，[材料证据及原页链接](https://github.com/g2066203208-beep/voxel-frontier/blob/main/public/thesis-studio/inp-archive/REV11/MATERIAL_EVIDENCE.md)，[补丁](https://github.com/g2066203208-beep/voxel-frontier/blob/main/public/thesis-studio/inp-archive/REV11/patch.json) blob e90d99ac517a7c7f026f952d4605ec8e51622811；远端差异逐字回读一致，manifest.latest=REV11，Pages部署未核。剩余材料HOLD=HPB300/法兰实测强化、HRB400循环标定、Q355循环敏感性、法兰工艺及专项规范与结构验算；不能将牌号修正视为物理验证完成。
+
 ### 2026-11-24｜v0.32.154 PATCH — REV10 HRB400纵筋与环筋实际材料赋值
 
 - 用户明确选HRB400；原型几何、配筋数量、接触、PT及分析步保持，材料修正非何2024原型完全复现。SOURCE=实际REV09 SHA256 cbe996780eb772a7fdb8f33d436c76b0936631ef835f3606d11ab7d90b4af1ef；唯一REV10 HE_REV10_HE_CHECK.inp 34226331 bytes，SHA256 5ec5518edbe6f0fb038f24fafe402b72c0dbc2e0a51c72af44fe069c104d1507。
