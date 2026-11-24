@@ -1,0 +1,149 @@
+[
+  {
+    "id": "GB_A017_JIAYU",
+    "kind": "image",
+    "url": "https://gf.cabr-fire.com/Web/uploads/allimg/230914/153403I32-34.jpg",
+    "needle": "附录A.0.17 湖北原表，嘉鱼行",
+    "scope": "direct original image"
+  },
+  {
+    "id": "GB_5122_PGA",
+    "kind": "image",
+    "url": "https://gf.cabr-fire.com/Web/uploads/allimg/230518/14192U142-1.jpg",
+    "needle": "表5.1.2-2",
+    "scope": "direct original image"
+  },
+  {
+    "id": "GB_5141_ALPHA",
+    "kind": "image",
+    "url": "https://gf.cabr-fire.com/Web/uploads/allimg/230518/14192Q427-3.jpg",
+    "needle": "表5.1.4-1",
+    "scope": "direct original image"
+  },
+  {
+    "id": "GB_5142_TG",
+    "kind": "image",
+    "url": "https://gf.cabr-fire.com/Web/uploads/allimg/230518/14192VM3-4.jpg",
+    "needle": "表5.1.4-2",
+    "scope": "direct original image"
+  },
+  {
+    "id": "GB_514_OVER6S",
+    "kind": "page",
+    "url": "https://gf.cabr-fire.com/article-15665.htm",
+    "needle": "周期大于6.0s",
+    "scope": "clause excerpt"
+  },
+  {
+    "id": "NBT11600",
+    "kind": "page",
+    "url": "https://std.samr.gov.cn/hb/search/stdHBDetailed?id=27F4946613AA0758E06397BE0A0A01BA",
+    "needle": "NB/T 11600-2024",
+    "scope": "registration only"
+  },
+  {
+    "id": "NBT10907",
+    "kind": "page",
+    "url": "https://hbba.sacinfo.org.cn/stdDetail/95e0a39923ba033c47f917f3691d2f6f940f1e0488ca5b0a4e50e0ae665afcf5",
+    "needle": "10907",
+    "scope": "registration only"
+  },
+  {
+    "id": "GB18306",
+    "kind": "page",
+    "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=EC0585F90CA21ABE02826394F266B623",
+    "needle": "GB 18306",
+    "scope": "registration only"
+  },
+  {
+    "id": "GB18306_AMD2026",
+    "kind": "page",
+    "url": "https://dzj.baoji.gov.cn/col3813/col3811/202604/t20260407_1261239.html",
+    "needle": "地震动参数区划图",
+    "scope": "official notice"
+  },
+  {
+    "id": "IEC61400_2025",
+    "kind": "page",
+    "url": "https://webstore.iec.ch/en/publication/111042",
+    "needle": "IEC 61400-1:2019+AMD1:2025",
+    "scope": "registration only"
+  },
+  {
+    "id": "IEC61400_COR2026",
+    "kind": "page",
+    "url": "https://webstore.iec.ch/en/publication/116398",
+    "needle": "IEC 61400-1:2019/AMD1:2025/COR1:2026",
+    "scope": "registration only"
+  },
+  {
+    "id": "DNV0585",
+    "kind": "page",
+    "url": "https://www.dnv.com/energy/standards-guidelines/dnv-rp-0585-seismic-design-of-wind-power-plants/",
+    "needle": "DNV-RP-0585",
+    "scope": "registration only"
+  },
+  {
+    "id": "DAI2021_TABLE2",
+    "kind": "pdf",
+    "url": "https://pubs.cstam.org.cn/data/article/em/preview/pdf/2021-0121.pdf",
+    "needle": "地震动信息",
+    "scope": "table crop only; no full paper redistribution"
+  },
+  {
+    "id": "ENERGIES2021",
+    "kind": "page",
+    "url": "https://www.mdpi.com/1996-1073/14/12/3496",
+    "needle": "seven earthquake events",
+    "scope": "short method excerpt, open access"
+  },
+  {
+    "id": "CHINA_RE2024",
+    "kind": "page",
+    "url": "https://castjournals.cast.org.cn/joweb/kzsny/CN/1154430577907327838",
+    "needle": "刘嘉琳",
+    "scope": "metadata only"
+  },
+  {
+    "id": "DISASTER2025",
+    "kind": "page",
+    "url": "https://ddyj.cbpt.cnki.net/portal/journal/portal/client/paper/acfb3e65a76cba1f749899361584aad4",
+    "needle": "混塔风机在地震作用下的抗灾性能分析",
+    "scope": "metadata only"
+  },
+  {
+    "id": "RCNS2026",
+    "kind": "page",
+    "url": "https://journal.hep.com.cn/rcs/EN/2026/5/2",
+    "needle": "Research on the dynamic response and disaster-resistance performance enhancement of hybrid tower under strong wind and earthquake",
+    "scope": "metadata only"
+  },
+  {
+    "id": "SDEE2026",
+    "kind": "page",
+    "url": "https://www.sciencedirect.com/science/article/abs/pii/S0267726125008577",
+    "needle": "Probabilistic seismic performance and damage mechanisms",
+    "scope": "metadata only"
+  },
+  {
+    "id": "OCEAN2026_VERIFIED",
+    "kind": "page",
+    "url": "https://www.sciencedirect.com/science/article/abs/pii/S0029801826017415",
+    "needle": "Seismic analysis of a monopile-supported offshore wind turbine",
+    "scope": "metadata only; corrected DOI 10.1016/j.oceaneng.2026.125907"
+  },
+  {
+    "id": "PEER",
+    "kind": "page",
+    "url": "https://ngawest2.berkeley.edu/",
+    "needle": "PEER",
+    "scope": "database identity only"
+  },
+  {
+    "id": "ESM",
+    "kind": "page",
+    "url": "https://esm-db.eu/",
+    "needle": "Engineering Strong-Motion",
+    "scope": "database identity only"
+  }
+]
