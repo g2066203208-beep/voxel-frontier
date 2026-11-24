@@ -1,0 +1,41 @@
+name: Acquire additional distinct earthquake events V5
+on:
+  push:
+    branches: [research/t080-seismic-integration-gates-20261022]
+    paths: ['.github/workflows/seismic-distinct-events-v5.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install --quiet numpy scipy requests matplotlib
+      - name: Acquire real records only, preserve failures
+        env:
+          OPENBLAS_NUM_THREADS: '1'
+          OMP_NUM_THREADS: '1'
+        run: python research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool/distinct_events_v5.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: T079-distinct-events-v5
+          path: research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool/replacement_v5
+      - name: Archive new original data
+        run: |
+          git config user.name paper-studio-bot
+          git config user.email paper-studio-bot@users.noreply.github.com
+          git add research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool/replacement_v5
+          git commit -m 'Archive real V5 distinct earthquake records and receipts'
+          for i in 1 2 3 4 5; do
+            git pull --rebase origin ${GITHUB_REF_NAME}
+            if git push origin HEAD:${GITHUB_REF_NAME}; then exit 0; fi
+            sleep 4
+          done
+          exit 1

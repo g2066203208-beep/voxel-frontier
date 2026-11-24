@@ -1,3 +1,7 @@
+### 2026-11-24｜v0.32.183 PATCH — V2工作室发布核实及V5不同事件扩库脚本
+
+核实main实际V2发布run45360746053 SUCCESS、Pages run45361068761 SUCCESS（head 0df7c1ba6c6d3a0692c6ad6036ba4b195355b8b7）；V2整包5887635 bytes，manifest登记SHA256 5e51250a1d0b6abd93ba56d50824e79b81e42eb02911dd523b9b5afaf1521a60，10个单组ZIP、完整包及工作室/INP入口已在GitHub读回；本轮未独立浏览器下载V2。工作室 https://g2066203208-beep.github.io/voxel-frontier/thesis-studio/seismic-archive/v2/ 。新增V5脚本修正ESM flatfile实际字段u_t90/v_t90大小写，排除已尝试台站及已有优先事件，按事件轮转最多48次实际原波请求，继续既有授权/频带/持续时间门禁；不重算旧51组，不绕过授权。不宣称新波已取得，V5运行待核，正式0/7、优先2/7不变。不修改INP、不合并PR#42。
+
 ### 2026-11-24｜v0.32.182 PATCH — 长周期研究谱参数及首波锁定
 
 实际核读聂利英等2022正文154页§1/158页表6，0.05g、II类假定Vs30 450m/s、Tcut10s的TD=6.56s；6.14/7.12s敏感性。采用独立参数化5%研究谱（A=2.5PGAref、Tg=.35s；1/T及1/T²衰减，至10s），不是场址或风电规范认证谱。连接器JS读取51组screen.json blob 6c82a0b76c456a136c325001d3d41fae3fb2d011，8组源通过实际T1单点倍率及PGA调幅偏差复算，T1目标=0.051502m/s²。SBT锁定为未调幅首波研究试算，MODE第二波；正式0/7，优先独立事件2/7，SBT/SP01同事件不计独立。原页图未归档，正式长周期危险谱/震源场地/全谱均值与方差仍HOLD，不修改INP/不运行Abaqus/不合并PR#42。[完整决策](../experiments/T079/SEISMIC_SELECTION_DECISION_20261124.md)及[实际数值](../experiments/T079/seismic-evidence-20261124/record-pool/PARAMETRIC_TARGET_V1.json)。
