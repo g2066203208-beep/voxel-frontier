@@ -1,0 +1,143 @@
+name: Native aerodynamic physics gates
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths: ['.github/workflows/native-aero-physics-gates.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: native-aero-physics-gates-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  pilot:
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        turbulence: [NTM, 1ETM]
+        physics: [baseline, dbemt, ua, dbemt_ua]
+    runs-on: windows-latest
+    timeout-minutes: 35
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          sparse-checkout: |
+            research/wind-tower/experiments/BLADE_AERO_NATIVE_20261125
+            public/thesis-studio/wind-figures/blade-aero
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Restore archived input bytes and check every SHA
+        run: |
+          @'
+          import zipfile,hashlib,json,pathlib
+          base=pathlib.Path("public/thesis-studio/wind-figures/blade-aero")
+          out=pathlib.Path("native-aero");out.mkdir(exist_ok=True)
+          receipt=json.loads((base/"source_receipt.json").read_text())
+          with zipfile.ZipFile(base/"original-inputs.zip") as z:
+              assert z.testzip() is None
+              z.extractall(out/"case")
+          assert len(receipt["inputs"])==17
+          for row in receipt["inputs"]:
+              p=out/"case"/row["name"]
+              assert hashlib.sha256(p.read_bytes()).hexdigest()==row["sha256"],p
+          (out/"source_receipt.json").write_text(json.dumps(receipt,indent=2))
+          print("17 ORIGINAL INPUT HASHES PASS")
+          '@ | python -
+          if ($LASTEXITCODE -ne 0) { throw 'Restoration failed' }
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: 45422889134
+          name: native-full-11.4-${{ matrix.turbulence }}-bts
+          path: incoming
+      - name: Resolve official versioned solver and ROSCO controller
+        run: |
+          $ErrorActionPreference='Stop'
+          New-Item -ItemType Directory -Force bin | Out-Null
+          curl.exe -fLsS --retry 2 https://github.com/OpenFAST/openfast/releases/download/v3.5.3/openfast_x64.exe -o bin/openfast_x64.exe
+          if ($LASTEXITCODE -ne 0) { throw 'OpenFAST download failed' }
+          $url='https://github.com/NatLabRockies/ROSCO/releases/download/v2.6.0/libdiscon.dll'
+          curl.exe -fLsS --retry 1 $url -o bin/libdiscon.dll
+          if ($LASTEXITCODE -eq 0) { $source=$url } else {
+            Remove-Item bin/libdiscon.dll -ErrorAction SilentlyContinue
+            $release=$null
+            try { $release=Invoke-RestMethod -Uri 'https://api.github.com/repos/NatLabRockies/ROSCO/releases/tags/v2.6.0' } catch { Write-Host $_ }
+            $asset=$release.assets | Where-Object { $_.name -match '(?i)discon.*\.dll$' -and $_.name -notmatch '32' } | Select-Object -First 1
+            if ($asset) {
+              curl.exe -fLsS --retry 2 $asset.browser_download_url -o bin/libdiscon.dll
+              if ($LASTEXITCODE -ne 0) { throw 'Release DLL download failed' }
+              $source=$asset.browser_download_url
+            } else {
+              & "$env:CONDA\Scripts\conda.exe" create --yes --prefix "$pwd\rosco-env" --channel conda-forge --override-channels rosco=2.6.0
+              if ($LASTEXITCODE -ne 0) { throw 'Pinned ROSCO package unavailable; no version substitution' }
+              $dll=Get-ChildItem rosco-env -Recurse -Filter libdiscon.dll | Select-Object -First 1
+              if (!$dll) { throw 'Pinned controller not found' }
+              Get-ChildItem rosco-env\Library\bin -Filter *.dll | Copy-Item -Destination bin -Force
+              Copy-Item $dll.FullName bin/libdiscon.dll -Force
+              $source='conda-forge:rosco=2.6.0'
+            }
+          }
+          $hash=(Get-FileHash bin/libdiscon.dll -Algorithm SHA256).Hash
+          @{source=$source;sha256=$hash;original_binary_identity='unverified'} | ConvertTo-Json | Out-File -Encoding utf8 native-aero/controller_receipt.json
+          Write-Host "ROSCO_SOURCE $source SHA256 $hash"
+      - name: Execute isolated native 10-second physics pilot and validate all channels
+        run: |
+          $env:PATH="$pwd\bin;$env:PATH"
+          python -m pip install numpy==1.26.4 matplotlib==3.9.2
+          $p='research/wind-tower/experiments/BLADE_AERO_NATIVE_20261125/native_blade.py'
+          curl.exe -fLsS --retry 3 https://raw.githubusercontent.com/g2066203208-beep/voxel-frontier/6f113a16ebc80236cbfb9bfbdc48781ba92634ad/research/wind-tower/experiments/BLADE_AERO_NATIVE_20261125/native_blade.py -o $p
+          if ($LASTEXITCODE -ne 0) { throw 'Pinned baseline script unavailable' }
+          $env:AERO_PROFILE='${{ matrix.physics }}'
+          $env:NATIVE_SCRIPT=$p
+          @'
+          import os,pathlib
+          p=pathlib.Path(os.environ['NATIVE_SCRIPT'])
+          s=p.read_text(encoding='utf-8')
+          marker='    audit=[]\n'
+          assert s.count(marker)==1
+          insert="""    profile=os.environ['AERO_PROFILE']
+              assert getval(ad,'WakeMod')=='1' and getval(ad,'AFAeroMod')=='1'
+              assert getval(ad,'DBEMT_Mod')=='2' and getval(ad,'UAMod')=='3'
+              if profile in ('dbemt','dbemt_ua'): edits.append((ad,'WakeMod',2))
+              if profile in ('ua','dbemt_ua'): edits.append((ad,'AFAeroMod',2))
+              assert profile in ('baseline','dbemt','ua','dbemt_ua')
+          """
+          # Dedent here only: the first inserted line already has four spaces.
+          insert='\n'.join(line[6:] if line.startswith('          ') else line for line in insert.split('\n'))
+          p.write_text(s.replace(marker,insert+marker),encoding='utf-8')
+          compile(p.read_text(encoding='utf-8'),str(p),'exec')
+          '@ | python -
+          if ($LASTEXITCODE -ne 0) { throw 'Physics patch or syntax validation failed' }
+          $reader='research/wind-tower/experiments/BLADE_AERO_NATIVE_20261125/outb_reader.py'
+          curl.exe -fLsS --retry 2 https://raw.githubusercontent.com/g2066203208-beep/voxel-frontier/5ce9b969cbbbf6a4e921d432eb43b596696458be/research/wind-tower/experiments/T062/s06_historical_outb_source_gate.py -o $reader
+          if ($LASTEXITCODE -ne 0) { throw 'Pinned reader not available' }
+          python $p --stage run --type "${{ matrix.turbulence }}" --duration 10 --exe bin/openfast_x64.exe --dll bin/libdiscon.dll
+          if ($LASTEXITCODE -ne 0) { throw 'Native pilot failed' }
+          python $p --stage post --type "${{ matrix.turbulence }}" --duration 10
+          if ($LASTEXITCODE -ne 0) { throw 'Native output audit failed' }
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: physics-${{ matrix.turbulence }}-${{ matrix.physics }}
+          path: |
+            native-aero/*.json
+            native-aero/*.log
+            native-aero/*.csv
+            native-aero/*.npz
+            native-aero/*.png
+            native-aero/*.svg
+            native-aero/*.pdf
+            native-aero/case/*.outb
+            native-aero/case/*.sum
+            native-aero/case/*.fst
+            native-aero/case/*.dat
+            native-aero/case/Rotor/*.dat
+            research/wind-tower/experiments/BLADE_AERO_NATIVE_20261125/native_blade.py
+          retention-days: 30
