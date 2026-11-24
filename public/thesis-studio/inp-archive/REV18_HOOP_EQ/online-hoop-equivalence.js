@@ -61,7 +61,7 @@ function reducePart(name,body){
  while(remaining.size){
   const first=remaining.values().next().value,stack=[first],es=[],ns=new Set();
   while(stack.length){const e=stack.pop();if(!remaining.delete(e))continue;es.push(e);for(const n of elements.get(e).a.slice(1)){ns.add(n);for(const f of adj.get(n))if(remaining.has(f))stack.push(f)}}
-  check(es.length===48&&ns.size===48,name+" non-48 ring "+es.length);
+  check([48,96].includes(es.length)&&ns.size===es.length,name+" unexpected original ring topology "+es.length);
   es.sort((a,b)=>a-b);const ps=[...ns].map(n=>nodes.get(n).p),y=sum(ps.map(p=>p[1]))/ps.length;
   check(ps.every(p=>Math.abs(p[1]-y)<1e-6),name+" non-planar hoop");
   const radius=sum(ps.map(p=>Math.hypot(p[0],p[2])))/ps.length;
@@ -69,7 +69,7 @@ function reducePart(name,body){
   check(L>0&&radius>0,name+" invalid ring length/radius");
   rings.push({es,ns,y,radius,L,V:A*L,keep:[...ns].some(n=>tieNodes.has(n)),assigned:0});
  }
- check(rings.length%2===0,name+" odd ring count");
+ check(rings.length%2===0&&new Set(rings.map(r=>r.es.length)).size===1,name+" inconsistent original ring topology");
  rings.sort((a,b)=>a.y-b.y||a.radius-b.radius);
  const layers=[[],[]];
  for(let i=0;i<rings.length;i+=2){
@@ -111,7 +111,7 @@ function reducePart(name,body){
  for(const [h,ids] of [["*Nset, nset=SET_ALL, generate",retainedNodes],["*Elset, elset=SET_ALL, generate",retainedEls],["*Elset, elset=SET_HOOP, generate",retainedHoop],["*Elset, elset=SET_TIE, generate",tie]])text+=h+"\n"+ranges(ids);
  kept.forEach((r,i)=>{const set="REV18_H"+String(i+1).padStart(3,"0");text+="*Elset, elset="+set+", generate\n"+ranges(r.es)+"*Solid Section, elset="+set+", material=HRB400\n"+r.area.toExponential(15)+",\n"});
  text+=b[7].head+"\n"+b[7].rows.join("\n")+"\n*End Part\n";
- return {text,report:{part:name,oldNodes:nodes.size,newNodes:retainedNodes.size,oldHoop:hoop.size,newHoop:retainedHoop.size,ties:tie.size,oldRings:rings.length,newRings:kept.length,volume_m3:m0.v,volumeError,cgError_m:cgError,diagonalInertiaRelativeError:inertiaError,maxAreaFactor:maxFactor,maxQuadratureGap_m:maxGap}};
+ return {text,report:{part:name,oldNodes:nodes.size,newNodes:retainedNodes.size,oldHoop:hoop.size,newHoop:retainedHoop.size,ties:tie.size,oldRings:rings.length,newRings:kept.length,elementsPerOriginalRing:rings[0].es.length,volume_m3:m0.v,volumeError,cgError_m:cgError,diagonalInertiaRelativeError:inertiaError,maxAreaFactor:maxFactor,maxQuadratureGap_m:maxGap}};
 }
 function coarsen(src){
  const matches=[...src.matchAll(HOOP_PART)];check(matches.length===31,"Expected 31 RHOOP parts");
