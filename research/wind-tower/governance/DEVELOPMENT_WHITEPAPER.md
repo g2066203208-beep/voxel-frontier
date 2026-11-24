@@ -1,3 +1,8 @@
+### 2026-11-24｜v0.32.210 — V8-R12在线论文及六组原生完整风场归档复核
+
+- main实际回读在线正文JSON blob 9be0cb3f20b7bdae0ba703a527d3aa83bb0e2528，版本V8-R12-WIND-CORE，3.2节三幅图及对应实算段落已持久化；回读三SVG blob 50a26122c1b2ec4d04990e6deecc2ddff2fffff9 / 0a21504cabfa29d4a793fbe089874a06554e59d1 / b6e9201f50ae3a08473be27705e62440618b6a51，SVG首尾有效，编辑器figure_asset渲染路径匹配；core manifest回读两组12000采样点及CSV谱复算。原理论图保留档案，不再正文独立占图。
+- 更新在线论文可见版本及入口0d3451796d66757d49baf7fc57468644dc49b56a，正式三图独立下载页9bd5250b2b63955a9006509e83afea91b33dc4f7，图集入口44346da07d9357a38ae8aea73c226d64c850a033。native manifest实际回读pilot_count=2、full_count=6，六组51×51、700s风场图/CSV/审核永久入档，完整BTS仅Actions保留期工件（raw_permanent=false）；两试算BTS永久入档。未执行实时浏览器视觉复核、Word/PDF全文重排或外载/Abaqus新计算。
+
 ### 2026-11-24｜v0.32.209 — 对照何泽瑜原图的完整网格三幅核心风场图
 
 - 何泽瑜2024原PDF第20页（印刷9）实看原图2-1点阵网格/风机、2-2轮毂纵向风速600s、2-3模拟自谱/目标谱；另取得Buildings 14(11)3453、Energies 19(10)2409共11幅原图，实际下载artifact14937008119、Actions45429055830，原图校验与会话展示。Jeong原图未恢复。正文图不再堆多高度九格或纯理论目标图。
