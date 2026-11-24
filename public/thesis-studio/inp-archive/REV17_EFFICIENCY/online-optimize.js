@@ -14,7 +14,7 @@ const modes={
  trial40:{name:"HE_REV17_EQ_TRIAL40.inp",max:0.01,period:40}
 };
 function one(s,a,b){if(s.indexOf(a)<0||s.indexOf(a)!==s.lastIndexOf(a))throw Error("Expected one source block: "+a.slice(0,70));return s.replace(a,b)}
-function inspect(text){
+function inspect(text,overrides={},expectedSteps="PT_BALANCE|GRAVITY|GRAVITY_CHECK|MODAL_30|EQ_2H_RAYLEIGH_REL"){
  const counts={},parts=new Map(),instances=new Map(),materials=new Set(),materialRefs=[],steps=[],errors=[];
  const count=(k)=>counts[k]=(counts[k]||0)+1;
  let part=null,mode="",etype="",currentStep=null;
@@ -46,9 +46,9 @@ function inspect(text){
  if(part||currentStep)errors.push("Unclosed part or step");
  for(const [n,p] of instances)if(!parts.has(p))errors.push("Instance "+n+" references missing part "+p);
  for(const n of materialRefs)if(!materials.has(n))errors.push("Missing material "+n);
- const expect={PART:100,"END PART":100,INSTANCE:100,"END INSTANCE":100,ASSEMBLY:1,"END ASSEMBLY":1,"CONTACT PAIR":30,"EMBEDDED ELEMENT":62,TIE:5,"RIGID BODY":1,ELEMENT_C3D8R:2976,ELEMENT_C3D8I:7296,ELEMENT_T3D2:203812,ELEMENT_B31:150,ELEMENT_MASS:155,ELEMENT_ROTARYI:155};
- for(const [k,v] of Object.entries(expect))if(counts[k]!==v)errors.push(k+": expected "+v+", got "+counts[k]);
- if(steps.join("|")!=="PT_BALANCE|GRAVITY|GRAVITY_CHECK|MODAL_30|EQ_2H_RAYLEIGH_REL")errors.push("Unexpected analysis sequence "+steps.join("|"));
+ const expect={PART_NODES:214684,PART:100,"END PART":100,INSTANCE:100,"END INSTANCE":100,ASSEMBLY:1,"END ASSEMBLY":1,"CONTACT PAIR":30,"EMBEDDED ELEMENT":62,TIE:5,"RIGID BODY":1,ELEMENT_C3D8R:2976,ELEMENT_C3D8I:7296,ELEMENT_T3D2:203812,ELEMENT_B31:150,ELEMENT_MASS:155,ELEMENT_ROTARYI:155};
+ for(const [k,v] of Object.entries(Object.assign(expect,overrides)))if(counts[k]!==v)errors.push(k+": expected "+v+", got "+counts[k]);
+ if(steps.join("|")!==expectedSteps)errors.push("Unexpected analysis sequence "+steps.join("|"));
  if(errors.length)throw Error(errors.slice(0,20).join("; "));
  return {counts,steps,materialNames:[...materials],scope:"Part-level connectivity/material references, keyword counts and step sequence; not Abaqus data check."};
 }
