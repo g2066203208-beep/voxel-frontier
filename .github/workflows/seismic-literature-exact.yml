@@ -32,3 +32,5 @@ jobs:
             if git push origin HEAD:${GITHUB_REF_NAME}; then exit 0; fi
           done
           exit 1
+
+# Source revision 2: preserve distinct official processing variants and check YPT public response.

@@ -1,3 +1,7 @@
+### 2026-11-24｜v0.32.190 — 文献同源定向获取：SBRC官方原件
+
+实际RUN45391764497与commit 5c8458d3a45163091ce5b9a47018eb94789059ec。GeoNet 2011-02-21 23:51:42 UTC Christchurch、SBRC扩展频带校正CSV SHA256 07e4c2a11cbcc7faf8fe9b28cb5f615ef841b3372e182120b243b7edf385ff35，315937 bytes，2409点 dt .02s；S59W/S31E/UP PGA .4652/.6854/.1945 m/s²。低频过渡.05–.10Hz、上频24.50–25.50Hz。原始a/v/u数值及SI转换已归档，未调幅；PEER RSN8127的具体处理版本、分量及论文表4仍待核。修复常规和扩展文件重名（CSV无冲突），旧记录保留。ESM YPT metadata返回200，TK-1999-0077, net A, loc00, MP/CV, quality UNDEF computation failure；不可直接认定通过。CESMD第一次查询缺groupby返回400，重新修正，不伪称数据获取。日本NIED官方需要注册。文献同源记录现有DSLC及SBRC事件台站两组，均不等于正式工程输入。参见[获取收据](../experiments/T079/seismic-evidence-20261124/record-pool/literature_exact_20261124/receipt.json)。
+
 ### 2026-11-24｜v0.32.189 — 期刊地震图件托管工作室直读
 
 按用户再次明确的全程GitHub托管要求，main b14bed9314f7f99d712fdd0e7f57ece62ab1974e 新增地震期刊图件站内阅读页及主页、地震档案、V7入口，复用研究分支31个已验证原始blob（7图×3格式、9个数值CSV及manifest），31/31逐blob一致，不重复计算、不要求用户下载。研究输入状态不变，V7标明备用，DSLC为文献同源样稿。站内入口：https://g2066203208-beep.github.io/voxel-frontier/thesis-studio/seismic-archive/journal-figures/ 。主分支已核验，Pages部署另以实际运行状态为准。
