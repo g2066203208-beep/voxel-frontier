@@ -1,3 +1,10 @@
+### 2026-11-24｜v0.32.193 — E04精确编号与事件级原始档案、E07官方研究包
+
+- [真实获取审计](../experiments/T079/seismic-evidence-20261124/record-pool/literature_exact_20261124/acquisition_audit_v0.32.193.json)，commit 96568cbe4e7a23b3a6bd8339e4515a456e2efe72。E04=RSN5835，CE.00022，Mw7.2，Rrup73.31 km，Vs30=229.92 m/s；CSMIP 90° PGA57.28 cm/s²、PGV6.26 cm/s，360° PGA64.47、UP=-31.21 cm/s²（带符号峰值）。官方事件ci14607652，2010-04-04 22:40:42 UTC。
+- RUN45394714938：SCEDC StationXML实际获取8705 bytes，SHA256 0f514ea9e34ba03c8ad0d2ac7b8187823608c0292634b004860068b5237fd0a9，artifact14920127360；连续波形HTTP204、CESMD元数据HTTP404，未获得时程。RUN45394895912：事件触发压缩流HTTP200，读取100000001 bytes触发100 MB上限，部分哈希不得当作完整文件哈希；目标台站未提取。
+- E07=RSN880，PEER Report 2011/03 Table A.7 Oakland 50%/50yr编号24。RUN45394895912实读官方ZIP 3369435 bytes、120个文件，SHA256 89537d51f547084869924f65c1999d91a7bc4594928b870ff7bcf6279e88c264；配套XLSX 272118 bytes、SHA256 63f00fa86a23b2d8c88966592a38d919d6e8fccd64fab4d2d4ff75559e8d2422。ZIP按序号FN/FP/UP命名，首轮台站名称匹配未命中。artifact14920018328仅含获取收据与表格。来源为PEER交通研究项目，不得把旋转/调幅版本当原始传感器轴数据。
+- 改进源获取workflow commit 7ab3077dc637fff631cb20fe7bbbf91b487b6277：按编号24提取E07、E04采用事件级tar流式筛选，不再使用100 MB截断；RUN45395196795的结果在本次审计写入时尚未验证。第二套仍6/7组真实时程可读，E04、原波一致性及工程准入HOLD；第一套冻结，新增图件0。不得以workflow success代替数据验收。
+
 ### 2026-11-24｜v0.32.192 — 第二套文献候选波四组真实数值突破
 
 - 实际源级读取及逐点核验记录：commit 692a9b95352f34ae84e35a06791dd05ce97a8085，`research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool/literature_exact_20261124/acquisition_audit_v0.32.192.json`，含不可变源链接与Git blob SHA。第二套6/7组可读取数值（其中2组此前官方归档），E04仍缺波形；第一套冻结。
