@@ -1,0 +1,50 @@
+name: Build REV18 hoop-equivalent INP
+on:
+  push:
+    paths:
+      - '.github/workflows/coarsen-rev18-hoop.yml'
+      - 'public/thesis-studio/inp-archive/REV18_HOOP_EQ/**'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: public/thesis-studio/inp-archive
+      - name: Restore frozen complete REV16
+        run: python public/thesis-studio/inp-archive/REV16_EQ_FLEX_RNA/build_rev16.py --archive public/thesis-studio/inp-archive --output output/HE_REV16_EQ_FLEX_RNA.inp
+      - name: Build and independently inspect complete hoop-equivalent variants
+        run: |
+          node <<'JS'
+          const fs=require('fs'),crypto=require('crypto');
+          require('./public/thesis-studio/inp-archive/REV17_EFFICIENCY/online-optimize.js');
+          require('./public/thesis-studio/inp-archive/REV18_HOOP_EQ/online-hoop-equivalence.js');
+          const source=fs.readFileSync('output/HE_REV16_EQ_FLEX_RNA.inp','utf8');
+          const sha=s=>crypto.createHash('sha256').update(s).digest('hex');
+          if(sha(source)!=='f87528658941289b1bf5a86f2b295123ff569cfd62be6057f6737c8d1e84f1e1')throw Error('Wrong parent');
+          Rev17.inspect(source);
+          const targets=[];
+          let summary;
+          for(const mode of ['precheck','lean005','lean010','lean020','trial40']){
+            const base=Rev17.apply(source,mode);
+            const r=Rev18.coarsen(base.text);
+            const expectedSteps='PT_BALANCE|GRAVITY|GRAVITY_CHECK|MODAL_30'+(mode==='precheck'?'':'|EQ_2H_RAYLEIGH_REL');
+            const audit=Rev17.inspect(r.text,{PART_NODES:r.report.newPartNodes,ELEMENT_T3D2:r.report.newT3D2},expectedSteps);
+            if(!summary){summary=r.report;console.log('HOOP_AUDIT',JSON.stringify({...summary,parts:undefined}));console.log('HOOP_PART_AUDITS',JSON.stringify(summary.parts))}
+            const b=Buffer.from(r.text);fs.writeFileSync('output/'+r.file,b);
+            targets.push({mode,file:r.file,bytes:b.length,sha256:sha(b),counts:audit.counts,steps:audit.steps,period:base.period,maximumIncrement:base.maximumIncrement});
+          }
+          console.log('REV18_TARGETS',JSON.stringify(targets.map(({counts,steps,...x})=>x)));
+          fs.writeFileSync('output/REV18_HOOP_AUDIT.json',JSON.stringify({source_sha256:sha(source),summary,targets,abaqus_native:'NOT_RUN'},null,2));
+          JS
+      - uses: actions/upload-artifact@v4
+        with:
+          name: HE_REV18_HOOP_EQ
+          path: |
+            output/HE_REV18_*.inp
+            output/REV18_HOOP_AUDIT.json
+          if-no-files-found: error
