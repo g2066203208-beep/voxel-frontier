@@ -1,0 +1,79 @@
+{
+  "version": "0.32.199",
+  "issue": "User reports prior INP cannot open; latest REV20 assumed, exact user filename/error not supplied",
+  "archive": {
+    "artifact": 14900571562,
+    "run": 45351782526,
+    "bytes": 12606328,
+    "sha256": "58f8afead62781ea80f3d01fc81055e97fb6ab5e85b04ce53d3ae9c65951e83f",
+    "crc": "PASS",
+    "manifest_entries": 14,
+    "hashes": "PASS",
+    "inp_count": 7,
+    "all_lines_max_256": true
+  },
+  "findings": [
+    {
+      "files": [
+        "HE_REV20_ROM10_PRECHECK.inp",
+        "HE_REV20_ROM10_EQ_LEAN010.inp"
+      ],
+      "line": 204621,
+      "keyword": "*Element, type=SUBSTR, file=RNA_ROM10, elset=REV20_RNA",
+      "diagnosis": "Abaqus/CAE does not support specifying generic SUBSTR; native Standard usage requires generated RNA_ROM10.sim. No native databases in package; RECOVERY MATRIX=NO generation does not provide standard recoverable model data."
+    },
+    {
+      "file": "RNA_REV20_10HZ_GRAVITY_TEST.inp",
+      "line": 5,
+      "diagnosis": "same native dependency"
+    },
+    {
+      "file": "RNA_REV20_10HZ_GENERATE.inp",
+      "line": 16123,
+      "diagnosis": "generation deck, not ordinary CAE importable tower; native NOT_RUN"
+    }
+  ],
+  "official_refs": [
+    "https://docs.software.vt.edu/abaqusv2026/English/SIMACAEANLRefMap/simaanl-c-superelements.htm",
+    "https://docs.software.vt.edu/abaqusv2026/English/SIMACAECAERefMap/simacae-t-dbsimportpartsubstructure.htm",
+    "https://docs.software.vt.edu/abaqusv2026/English/SIMACAEANLRefMap/simaanl-c-superelementdef.htm"
+  ],
+  "fallback": {
+    "artifact": 14899050787,
+    "run": 45347120960,
+    "zip_crc": "PASS",
+    "files": [
+      {
+        "name": "HE_REV18_HOOP_EQ_PRECHECK.inp",
+        "bytes": 15911793,
+        "sha256": "be0a35e843cf171e9d98eae045bd032837bd71880c515a428c405f23d9c52322",
+        "steps": 4,
+        "qualified_references_checked": 495,
+        "reconstruction_sha256": "d752f07d3165c34dc1e48c23ff18e0b9a48a7bd68d53dd9955c0d7a2a9c6c8ff"
+      },
+      {
+        "name": "HE_REV18_HOOP_EQ_EQ_LEAN010.inp",
+        "bytes": 15916594,
+        "sha256": "91c4d7499ffc7cdd30144fe39f74da3d7fd4b6ce49bbfd6c716d4f5e0ae0b041",
+        "steps": 5,
+        "qualified_references_checked": 562,
+        "reconstruction_sha256": "c4b517c013edff10ef2a5d8e305f2e45815b7fb2f3ba3d58cb8efdc072356a1d"
+      }
+    ],
+    "checks": {
+      "parts": 100,
+      "instances": 100,
+      "nodes": 96605,
+      "elements": 96464,
+      "contact_pairs": 30,
+      "embedded": 62,
+      "equations": 108,
+      "external_file_dependencies": 0,
+      "static_connectivity_and_set_checks": "PASS",
+      "independent_reparse": "actual extracted parent bytes reprocessed with archived flatten_tower.py; precheck reconstructed exactly matches frozen REV20 full reference SHA"
+    },
+    "scope": "exact frozen full flexible RNA REV18, not REV20 ROM and not native import verified"
+  },
+  "native": "NOT_RUN (no Abaqus executable in current container)",
+  "decision": "Do not label native SUBSTR usage decks as directly CAE importable; keep original bytes, provide independent assembly-based REV18 entry. Native REV20 generator then datacheck in installed matching Abaqus. No seismic waveform replacement and no physical model modifications."
+}
