@@ -1,3 +1,6 @@
+## 2026-11-24｜REV13双水平地震试算输入 · END
+- 目标SHA256 7a56d8f7bfc059434f57dc4ddb99961e2ea1f41176b6aff27e587ad4fcd1f8d2，34232781 bytes，9处差异；源级64,080水平值、103部件连接、CDP塑性应变、材料引用、反向补丁检查PASS；main 284b912555c94a8dcde69158d3400cded50e5ac6、工作室补丁blob 724535986a4aeaf0cb4a467c0c846d1d83a73324远端一致。白皮书v0.32.159；新增真实原波未缩放E-only动态步，未加Rayleigh及风响应外载，原生NOT_RUN。云备份失败，完整输入已直接交付，工作室可精确恢复。剩余物理问题HOLD、不升级阶段/合并PR#42。
+
 ## 2026-11-24｜REV13双水平地震试算输入 · START
 - READ_BASE_SHA=c5525fe41ad6d7ff27f69917042df467da3fc3a2；已读根/研究AGENTS、指挥室、白皮书v0.32.158、T079/T080、真实REV11/REV12、S08地震源收据；恢复Actions 12884814391原始归档并核对数值来源；核读Abaqus2025 *BOUNDARY/*DYNAMIC/*INITIAL CONDITIONS/*CONTACT CONTROLS及CDP恢复官方定义。用户明确授权准备可提交INP、由用户本机求解；本轮静态检查与独立E-only试算版，保留原件、禁止用结构反力冒充风外载，不声称物理验证或场址合规。不执行原生求解、不合并PR#42。
 

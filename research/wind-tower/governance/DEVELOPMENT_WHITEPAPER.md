@@ -1,3 +1,70 @@
+### 2026-11-24｜v0.32.159 PATCH — REV13真实双水平地震输入及整塔源级检查
+
+**版本与实际交付：** 母本REV11 SHA256 fa27040f66b1c6d85fe1c4d863fb62d1423960972a1cdf08fc9dbb0871b1e5fd；实际目标 HE_REV13_EQ_2H_CHECK.inp，34232781 bytes，SHA256 7a56d8f7bfc059434f57dc4ddb99961e2ea1f41176b6aff27e587ad4fcd1f8d2。9处精确差异及逆向恢复原件通过。GitHub main commit 284b912555c94a8dcde69158d3400cded50e5ac6，工作室补丁 Git blob 724535986a4aeaf0cb4a467c0c846d1d83a73324 与本地实际补丁一致并逐字回读；manifest含REV13独立试算版、REV11仍为基础母本。完整文件本轮直接交付用户，Google Drive备份接口两次失败，不冒称独立云备份成功；工作室仍可从既有REV09→10→11→13精确补丁恢复并校验完整INP。Pages部署实际访问未验。
+
+#### 1. 混凝土与整塔源级检查
+
+实际Python读取34MB输入，检查103/103部件定义、318647部件定义节点、421713部件定义单元（非实例装配计数）：C3D8R 2976、C3D8I 7296、S3 207601、T3D2 203812、B31 28；部件内节点/单元ID唯一、节点连接存在、14种材料引用存在；30道水平接触、62 Embedded、5 Tie保持。仅增加2个已有节点的输出探针，不改网格与几何。原有四分析步逐字保持。CDP四组应力/损伤表横坐标一致、损伤非负单调且小于1；按 εpl=εin−d/(1−d)·σ/E，逐点验证非负单调。
+
+|材料|分支|表点数|峰值MPa|最大损伤|最小塑性应变增量|峰后应力-非弹性应变积分 J/m³|
+|---|---|---:|---:|---:|---:|---:|
+|C65|压|26|41.5|0.779903254|1.889843364e-5|110093.905188|
+|C65|拉|24|2.93|0.925047227|9.040082368e-7|778.520906|
+|C70|压|26|44.5|0.782329678|1.698116884e-5|118808.502237|
+|C70|拉|24|2.99|0.926503512|9.256965111e-7|787.277460|
+
+以上积分是应力-非弹性应变曲线的截断面积，不是Gf（J/m²）。无本塔断裂能和网格收敛数据，保留REV09应变型软化，不随意转换Gf。膨胀角30°、偏心率0.1、双轴比1.16、Kc=0.666667、黏性1e-5均保留候选；显式写入Abaqus默认恢复系数（压转拉w_t=0、拉转压w_c=1），不是标定新参数。专项规范NB/T10907—2021表4.1.2/4.1.3原图如下（既有原始证据）：
+
+![NB/T10907 PDF18正文8原图](../experiments/T061/audit_evidence_20261007/NBT10907_pdf_18.jpg)
+
+材料与连接仍继承REV11，接缝硬接触、有限滑移、摩擦0.5为待验证候选；预应力36×140mm²、1280MPa初始应力为BF1假设，不把损失计算直接叠加；转换法兰及RNA等效未完成实体验证。He原结构与法兰原图：
+
+![何2024 PDF35正文24原图](../references/evidence-screenshots/He2024_PDF_page_35.png)
+
+#### 2. 真实地震源、方向、单位与逐点核验
+
+恢复历史Actions run 40847442979 artifact 12884814391：ESM v3 IT-2012-0008/NVL/MP，2012-05-20意大利地震，台站Novellara，Mw6.1，MP人工处理、去基线、Butterworth 0.04–30Hz；数据CC BY 3.0 IT，数据库DOI 10.13127/esm.3。实际归档内原ZIP SHA256 ad370abe14e308856754456e5bf172bb327ca59cb002344e2937726c14fec2b7 与其同包检索收据一致；旧摘要记录另一ZIP SHA256 dec0f0bf59bea4e6a5049c824b6656c7e7798eb5379beba5162aff7304b113c6，不同文件不强行等同。三分量规范化数值SHA256全部与此前收据一致：
+HNE f1c06ee4b201276657c3da627b24121e2b05377936ecc3adc11d78f7f3d3242a；
+HNN bfef0cf1623fbbd8c15f95ec49bb7a714d300fb98fea11d03b159a4e77ede275；
+HNZ 69443ba0a689d39ed202de7d40487a62ef39c969dc2605170cf9a211bce4fd81。
+三分量CSV SHA256 a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34 与旧收据一致；原cm/s²乘0.01与CSV误差小于1e-12m/s²；两水平32040×2点与实际INP完全一致。X=HNE，Z=−HNN，Y上；假定塔架方位0°，不加未确认正方向的竖向分量。
+
+|方向|PGA m/s²|峰值时刻s|梯形积分终速m/s|二次梯形积分终位移m|最大绝对积分位移m|
+|---|---:|---:|---:|---:|---:|
+|X|0.47522846|33.670|−2.14250e-8|−3.07519e-7|0.007659124|
+|Z|0.51205727|33.455|−4.95500e-8|−4.84345e-7|0.010533236|
+
+积分用于源时程漂移筛查，不是结构响应。dt0.005s、最后时刻160.195s；原始强度不缩放，无嘉鱼目标谱和长周期有效频带验收，非设计地震。原始数据完整归档位于已恢复的Actions artifact，非自行生成。18条历史风响应幅值保留但不激活；不得将结构反力施加为气动力。
+
+#### 3. 实际新增输入与官方依据
+
+母本原分析步 PT_BALANCE→Gravity→GRAVITY_CHECK→MODAL_30 全保留，新增EQ_2H_RECORD_CHECK一般隐式动力分析；上一一般步应力、重力和接触状态延续，模态扰动不作为新的平衡状态。初始基底速度零；初始塔底约束从ENCASTRE改为固体平动1–3直接格式，动态步全部OP=NEW，两个支承集合一致重新声明六个平动自由度：Y=0，X/Z为各自加速度幅值×1（SI）；不使用仅用于模态叠加的*BASE MOTION。实际关键块：
+
+```inp
+*Step, name=EQ_2H_RECORD_CHECK, nlgeom=YES, inc=2000000, unsymm=YES
+Unscaled ESM horizontal record; X East, Z minus North, Y up; not site-design wave.
+*Dynamic, application=TRANSIENT FIDELITY
+0.005, 160.195, 1.e-7, 0.005
+*Contact Controls, reset
+*Boundary, op=NEW, type=DISPLACEMENT
+CSEG_01-1.FACE_BOTTOM, 2, 2, 0.
+PT_36x15p2-1.SET_PT_BOTTOM_GEOM, 2, 2, 0.
+*Boundary, op=NEW, type=ACCELERATION, amplitude=EQ_X_EAST_SI
+CSEG_01-1.FACE_BOTTOM, 1, 1, 1.
+PT_36x15p2-1.SET_PT_BOTTOM_GEOM, 1, 1, 1.
+*Boundary, op=NEW, type=ACCELERATION, amplitude=EQ_Z_MINUS_NORTH_SI
+CSEG_01-1.FACE_BOTTOM, 3, 3, 1.
+PT_36x15p2-1.SET_PT_BOTTOM_GEOM, 3, 3, 1.
+```
+
+场输出80间隔、时间标志NO；历史每增量，RNA RP、基底反力、两支承探针运动、选定混凝土/钢塔应力应变、PT36根轴应力、30接缝合力/面积和能量；保留完整场输出，局部峰值仍须更密输出验收。每1000增量overlay重启动。未增加Rayleigh：旧模态0.135Hz来自不同版本，禁止冒充本版；当前仅CDP黏性、塑性、接触摩擦和积分数值耗散，不称无耗散。获得实际本版模态f1/fj与目标ζ后再按α+βω²=2ζω拟合，且检查适用频带。无物理阻尼标定，不得用于正式抗震结论。
+
+官方文档（当前核读，未将文档全文或原图冒充已归档）：Abaqus 2025 [*DYNAMIC](https://docs.software.vt.edu/abaqusv2025/English/SIMACAEKEYRefMap/simakey-r-dynamic.htm)、[*BOUNDARY](https://docs.software.vt.edu/abaqusv2025/English/SIMACAEKEYRefMap/simakey-r-boundary.htm)、[*INITIAL CONDITIONS](https://docs.software.vt.edu/abaqusv2025/English/SIMACAEKEYRefMap/simakey-r-initialconditions.htm)、[*CONTACT CONTROLS](https://docs.software.vt.edu/abaqusv2025/English/SIMACAEKEYRefMap/simakey-r-contactcontrols.htm)、[*OUTPUT](https://docs.software.vt.edu/abaqusv2025/English/SIMACAEKEYRefMap/simakey-r-output.htm)、[CDP](https://docs.software.vt.edu/abaqusv2025/English/SIMACAEMATRefMap/simamat-c-concretedamaged.htm)、[*CONCRETE COMPRESSION DAMAGE](https://docs.software.vt.edu/abaqusv2025/English/SIMACAEKEYRefMap/simakey-r-concretecompressiondamage.htm)、[*CONCRETE TENSION DAMAGE](https://docs.software.vt.edu/abaqusv2025/English/SIMACAEKEYRefMap/simakey-r-concretetensiondamage.htm)。没有新的原图文件，不宣称已嵌入。
+
+#### 4. 求解交付及未关闭门禁
+
+先运行REV11静力与模态，Data Check、PT平衡、重力合力及接触无异常后再运行REV13 Data Check与动力；回收sta/msg/dat/odb频率、反力、位移及能量。REV13最大增量0.005s意味着至少32039个动力增量，可能需要较高磁盘/计算资源，不预诺收敛。已完成静态结构检查，不等于Abaqus语法解析、平衡、模态、推覆或动力验收。原生NOT_RUN。尚HOLD：混凝土断裂能/黏性参数与网格敏感性、接触摩擦标定、钢混法兰真实工艺/螺栓细节、PT束数/实际有效预应力、RNA/整塔独立验证、结构阻尼、目标场址地震谱及方位、独立风外载/风震组合。当前不能声称全部物理问题完成，不升级12阶段，不合并PR#42。研究白皮书版本更新，不覆盖历史结论。
+
 ### 2026-11-24｜v0.32.158 PATCH — REV12_CYCLIC_SENS 钢材循环混合强化对照
 
 **SOURCE / 版本身份：** 母本 REV11 SHA256 `fa27040f66b1c6d85fe1c4d863fb62d1423960972a1cdf08fc9dbb0871b1e5fd`；独立对照 HE_REV12_CYCLIC_SENS.inp SHA256 `b2ad06256505ca556b2db7a19a5270be9481e8ecab0967bd23206255fdb7c686`，34227427 bytes。工作室 main commit c659d7e2b7be7e64e78014178af9cd24605e5eaf，保存完整云端原件、可复现差异/脚本/审计；manifest仍以REV11为当前母本，REV12_CYCLIC_SENS为显式对照候选。用户要求快且可靠，不以不明来源参数覆盖正式母本。
