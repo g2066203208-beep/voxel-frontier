@@ -71,9 +71,10 @@ jobs:
                   assert len(a)==n and np.isfinite(a).all()
                   assert abs(max(abs(np.array(a)))-peak)<=max(.2,peak*.002),("peak",p.name,cm.group(1),max(abs(np.array(a))),peak)
                   rows.append((cm.group(1),cm.group(2).strip(),dt,np.array(a)*.001))
-              horizontal=[r for r in rows if re.match(r"^[NS]\d+[EW]$",r[0],re.I)]
+              horizontal=[r for r in rows if re.match(r"^[NS]\d+[EW]$|^[EN]$",r[0],re.I)]
               assert len(horizontal)==2,[(r[0],r[1]) for r in rows]
               def azi(s):
+                  if s.upper() in ("E","N"):return 90 if s.upper()=="E" else 0
                   a=int(s[1:-1]);return (a if s[0]=="N" and s[-1]=="E" else -a if s[0]=="N" else 180-a if s[-1]=="E" else 180+a)%360
               assert abs((azi(horizontal[0][0])-azi(horizontal[1][0]))%180-90)<=2
               d1,d2=horizontal;assert d1[2]==d2[2] and len(d1[3])==len(d2[3])
@@ -136,7 +137,7 @@ jobs:
                       p=pathlib.Path(tmp)/f['file'];p.write_bytes(raw);a,dt,dirs=parse_v2(p)
                   assert m['fmin']<=1/15
                   depth=None
-                  for key in ['Depth','Depth_km','Depth_km_','HypocentreDepth','HypocentralDepth','HypocentreDepth_km']:
+                  for key in ['HypDepth_km','Depth','Depth_km','Depth_km_','HypocentreDepth','HypocentralDepth','HypocentreDepth_km']:
                       if m['row'].get(key):
                           try:depth=float(m['row'][key]);break
                           except ValueError:pass
