@@ -1,0 +1,205 @@
+[
+  {
+    "id": "E05",
+    "station": "SBRC",
+    "event": "2011-02-21 23:51:42 UTC",
+    "status": "OFFICIAL_EVENT_STATION_ACQUIRED_COMPONENT_PENDING_PEER_MATCH",
+    "year_prefixes": [
+      "seismic-products/strong-motion/volume-products/2011/01_Jan/",
+      "seismic-products/strong-motion/volume-products/2011/02_Christchurch_mainshock_extended_pass_band/",
+      "seismic-products/strong-motion/volume-products/2011/02_Feb/",
+      "seismic-products/strong-motion/volume-products/2011/03_Mar/",
+      "seismic-products/strong-motion/volume-products/2011/04_Apr/",
+      "seismic-products/strong-motion/volume-products/2011/05_May/",
+      "seismic-products/strong-motion/volume-products/2011/06_Christchurch_13_June_extended pass band/",
+      "seismic-products/strong-motion/volume-products/2011/06_Jun/",
+      "seismic-products/strong-motion/volume-products/2011/07_Jul/",
+      "seismic-products/strong-motion/volume-products/2011/08_Aug/",
+      "seismic-products/strong-motion/volume-products/2011/09_Sep/",
+      "seismic-products/strong-motion/volume-products/2011/10_Oct/",
+      "seismic-products/strong-motion/volume-products/2011/11_Nov/",
+      "seismic-products/strong-motion/volume-products/2011/12_Dec/"
+    ],
+    "matching_keys": [
+      "seismic-products/strong-motion/volume-products/2011/02_Christchurch_mainshock_extended_pass_band/Vol2/data in csv format/20110221_235142_SBRC_V2A.csv",
+      "seismic-products/strong-motion/volume-products/2011/02_Christchurch_mainshock_extended_pass_band/Vol2/data/20110221_235142_SBRC.V2A",
+      "seismic-products/strong-motion/volume-products/2011/02_Christchurch_mainshock_extended_pass_band/Vol2/plots/20110221_235142_SBRC.pdf",
+      "seismic-products/strong-motion/volume-products/2011/02_Christchurch_mainshock_extended_pass_band/Vol2/polar plots/20110221_235142_SBRC.xls",
+      "seismic-products/strong-motion/volume-products/2011/02_Christchurch_mainshock_extended_pass_band/Vol3/data in csv format/20110221_235142_SBRC_V3A.csv",
+      "seismic-products/strong-motion/volume-products/2011/02_Christchurch_mainshock_extended_pass_band/Vol3/data/20110221_235142_SBRC.v3a",
+      "seismic-products/strong-motion/volume-products/2011/02_Christchurch_mainshock_extended_pass_band/Vol3/plots/20110221_235142_SBRC.pdf",
+      "seismic-products/strong-motion/volume-products/2011/02_Christchurch_mainshock_extended_pass_band/Vol4/plots/20110221_235142_SBRC.pdf",
+      "seismic-products/strong-motion/volume-products/2011/02_Feb/2011-02-21_235142/Vol1/data/20110221_235142_SBRC.V1A",
+      "seismic-products/strong-motion/volume-products/2011/02_Feb/2011-02-21_235142/Vol1/plots/20110221_235142_SBRC.PDF",
+      "seismic-products/strong-motion/volume-products/2011/02_Feb/2011-02-21_235142/Vol2/data/20110221_235142_SBRC.V2A",
+      "seismic-products/strong-motion/volume-products/2011/02_Feb/2011-02-21_235142/Vol2/plots/20110221_235142_SBRC.PDF",
+      "seismic-products/strong-motion/volume-products/2011/02_Feb/2011-02-21_235142/Vol3/data/20110221_235142_SBRC.V3A",
+      "seismic-products/strong-motion/volume-products/2011/02_Feb/2011-02-21_235142/Vol3/plots/20110221_235142_SBRC.PDF",
+      "seismic-products/strong-motion/volume-products/2011/02_Feb/2011-02-21_235142/Vol4/plots/20110221_235142_SBRC.PDF"
+    ],
+    "npts": 2409,
+    "dt_s": 0.019999999999999574,
+    "pga_m_s2": [
+      0.4652,
+      0.6854,
+      0.1945
+    ],
+    "header": [
+      "Site,SBRC,SBRC,SBRC,SBRC,SBRC,SBRC,SBRC,SBRC,SBRC",
+      "Component,S59W,S31E,UP  ,S59W,S31E,UP  ,S59W,S31E,UP  ",
+      "Filtering,Band-pass filter transition bands are  0.05- 0.10 Hz and 24.50-25.50 Hz         ",
+      "Time,Acceleration,Acceleration,Acceleration,Velocity,Velocity,Velocity,Displacement,Displacement,Displacement",
+      "s,mm/s/s,mm/s/s,mm/s/s,mm/s,mm/s,mm/s,mm,mm,mm"
+    ],
+    "files": [
+      {
+        "url": "https://geonet-open-data.s3.ap-southeast-2.amazonaws.com/seismic-products/strong-motion/volume-products/2011/02_Christchurch_mainshock_extended_pass_band/Vol2/data%20in%20csv%20format/20110221_235142_SBRC_V2A.csv",
+        "file": "20110221_235142_SBRC_V2A.csv",
+        "sha256": "07e4c2a11cbcc7faf8fe9b28cb5f615ef841b3372e182120b243b7edf385ff35",
+        "bytes": 315937
+      },
+      {
+        "url": "https://geonet-open-data.s3.ap-southeast-2.amazonaws.com/seismic-products/strong-motion/volume-products/2011/02_Christchurch_mainshock_extended_pass_band/Vol2/data/20110221_235142_SBRC.V2A",
+        "file": "20110221_235142_SBRC.V2A",
+        "sha256": "3963562ff0525fab425090d225033b99b3376430e256d83b8fc2214e61c5b6c6",
+        "bytes": 184182
+      },
+      {
+        "url": "https://geonet-open-data.s3.ap-southeast-2.amazonaws.com/seismic-products/strong-motion/volume-products/2011/02_Christchurch_mainshock_extended_pass_band/Vol3/data%20in%20csv%20format/20110221_235142_SBRC_V3A.csv",
+        "file": "20110221_235142_SBRC_V3A.csv",
+        "sha256": "65ac6cce879002f62b354d05619fdc15ba968d4825d51318b75a910ef4b88493",
+        "bytes": 58347
+      },
+      {
+        "url": "https://geonet-open-data.s3.ap-southeast-2.amazonaws.com/seismic-products/strong-motion/volume-products/2011/02_Christchurch_mainshock_extended_pass_band/Vol3/data/20110221_235142_SBRC.v3a",
+        "file": "20110221_235142_SBRC.v3a",
+        "sha256": "96d639dcddb7e7138e7770f6a89256a938a63a69cd8a7084820a1144d27eaf7f",
+        "bytes": 58758
+      },
+      {
+        "url": "https://geonet-open-data.s3.ap-southeast-2.amazonaws.com/seismic-products/strong-motion/volume-products/2011/02_Feb/2011-02-21_235142/Vol2/data/20110221_235142_SBRC.V2A",
+        "file": "20110221_235142_SBRC.V2A",
+        "sha256": "fa980172bdb387f6227f9abd6155fc03ad7674e53611c8646ee6131c69fc5016",
+        "bytes": 180645
+      },
+      {
+        "url": "https://geonet-open-data.s3.ap-southeast-2.amazonaws.com/seismic-products/strong-motion/volume-products/2011/02_Feb/2011-02-21_235142/Vol3/data/20110221_235142_SBRC.V3A",
+        "file": "20110221_235142_SBRC.V3A",
+        "sha256": "c70682cc39a827c26ce72de2b9d9a9c6649366af5ed56ea69b4d473cf52e2ef6",
+        "bytes": 56823
+      }
+    ]
+  },
+  {
+    "id": "PAPER_TABLE4",
+    "status": "NO_TEXT_ROWS_TABLE_MAY_BE_IMAGE",
+    "url": "https://dzyj.paperopen.com/upload/html/202404014.html",
+    "http": 200,
+    "source_sha256": "5c29ccd6101dbd52cd503845614e043a2490eec0389cf11d5e71767e480d8838",
+    "matching_rows": [],
+    "table_image_links": [
+      "https://dzyj.paperopen.com/upload/html/2024年04期/pic122.jpg",
+      "https://dzyj.paperopen.com/upload/html/2024年04期/pic123.jpg",
+      "https://dzyj.paperopen.com/upload/html/2024年04期/pic124.jpg",
+      "https://dzyj.paperopen.com/upload/html/2024年04期/pic125.jpg",
+      "https://dzyj.paperopen.com/upload/html/2024年04期/pic126.jpg",
+      "https://dzyj.paperopen.com/upload/html/2024年04期/pic127.jpg",
+      "https://dzyj.paperopen.com/upload/html/2024年04期/pic128.jpg",
+      "https://dzyj.paperopen.com/upload/html/2024年04期/pic129.jpg",
+      "https://dzyj.paperopen.com/upload/html/2024年04期/pic130.jpg",
+      "https://dzyj.paperopen.com/upload/html/2024年04期/gs39.jpg",
+      "https://dzyj.paperopen.com/upload/html/2024年04期/pic131.jpg",
+      "https://dzyj.paperopen.com/upload/html/2024年04期/pic132.jpg",
+      "https://dzyj.paperopen.com/upload/html/2024年04期/pic133.jpg",
+      "https://dzyj.paperopen.com/upload/html/2024年04期/pic134.jpg",
+      "https://dzyj.paperopen.com/upload/html/2024年04期/gs40.jpg",
+      "https://dzyj.paperopen.com/upload/html/2024年04期/gs41.jpg",
+      "https://dzyj.paperopen.com/upload/html/2024年04期/pic135.jpg",
+      "https://dzyj.paperopen.com/upload/html/2024年04期/pic122.jpg",
+      "https://dzyj.paperopen.com/upload/html/2024年04期/pic123.jpg",
+      "https://dzyj.paperopen.com/upload/html/2024年04期/pic124.jpg",
+      "https://dzyj.paperopen.com/upload/html/2024年04期/pic125.jpg",
+      "https://dzyj.paperopen.com/upload/html/2024年04期/pic126.jpg",
+      "https://dzyj.paperopen.com/upload/html/2024年04期/pic127.jpg",
+      "https://dzyj.paperopen.com/upload/html/2024年04期/pic128.jpg",
+      "https://dzyj.paperopen.com/upload/html/2024年04期/pic129.jpg",
+      "https://dzyj.paperopen.com/upload/html/2024年04期/pic130.jpg",
+      "https://dzyj.paperopen.com/upload/html/2024年04期/pic131.jpg",
+      "https://dzyj.paperopen.com/upload/html/2024年04期/pic132.jpg",
+      "https://dzyj.paperopen.com/upload/html/2024年04期/pic133.jpg",
+      "https://dzyj.paperopen.com/upload/html/2024年04期/pic134.jpg",
+      "https://dzyj.paperopen.com/upload/html/2024年04期/pic135.jpg",
+      "https://dzyj.paperopen.com/upload/html/2024年04期/qkfm.jpg"
+    ]
+  },
+  {
+    "id": "E03_ESM",
+    "status": "NOT_ACQUIRED",
+    "station": "YPT",
+    "http": 200,
+    "url": "https://esm-db.eu/esmws/dataset-selection/1/query?starttime=1999-08-17&endtime=1999-08-18&minmag=7&station=YPT",
+    "sha256": "d4c6637acb4f9876a68a04149c2b3a4d59f44b6cb658d43218586204b9da83f7",
+    "excerpt": "[{\"net_name\": \"A\", \"station_code\": \"YPT\", \"location_code\": \"00\", \"instr_code\": \"HN*\", \"event_id\": \"TK-1999-0077\", \"event_time\": \"1999-08-17T00:01:40\", \"epi_dist\": 20.0, \"mag_value\": 7.6, \"mag_type\": \"Mw\", \"uncorr_PGA\": 315.881, \"corr_hz_PGA\": 316.114, \"processing_avail\": [\"CV\", \"MP\"], \"class\": \"UNDEF\", \"reason\": \"computation failure\", \"processed_code\": 1, \"processing_type\": \"mp\", \"epi_area_flag\": 1}]"
+  },
+  {
+    "id": "E01",
+    "station": "ILA004",
+    "event_date": "1999-09-20",
+    "status": "METADATA_ONLY_NOT_ACQUIRED",
+    "auth": "CESMD dataset API requires registered email; no bypass",
+    "url": "https://www.strongmotioncenter.org/wserv/records/query?startdate=1999-09-20+00%3A00%3A00&enddate=1999-09-20+23%3A59%3A59&stname=%2AILA004%2A&rettype=metadata&format=json&nodata=404",
+    "http": 400,
+    "bytes": 368,
+    "sha256": "6049f9a29a9dad5e2e96deabbc9cae179af566d219affe60e8adeb0d736d3471",
+    "excerpt": "Error 400: Bad Request\n\nPlease provide an value for the \"groupby\" parameter.\n\nRequest:\nhttps://www.strongmotioncenter.org/wserv/records/query?startdate=1999-09-20+00%3A00%3A00&enddate=1999-09-20+23%3A59%3A59&stname=%2AILA004%2A&rettype=metadata&format=json&nodata=404\n\nRequest Submitted:\n2026/11/24 12:15:41 UTC\n\nService version:\nService: fdsnws-station  version: 1.1b"
+  },
+  {
+    "id": "E03",
+    "station": "YPT",
+    "event_date": "1999-08-17",
+    "status": "METADATA_ONLY_NOT_ACQUIRED",
+    "auth": "CESMD dataset API requires registered email; no bypass",
+    "url": "https://www.strongmotioncenter.org/wserv/records/query?startdate=1999-08-17+00%3A00%3A00&enddate=1999-08-17+23%3A59%3A59&stname=%2AYarimca%2A&rettype=metadata&format=json&nodata=404",
+    "http": 400,
+    "bytes": 369,
+    "sha256": "80a3c94a0518395d36768faca4cba98ae4e4d82d01dc87e4555cdb8af1c4c009",
+    "excerpt": "Error 400: Bad Request\n\nPlease provide an value for the \"groupby\" parameter.\n\nRequest:\nhttps://www.strongmotioncenter.org/wserv/records/query?startdate=1999-08-17+00%3A00%3A00&enddate=1999-08-17+23%3A59%3A59&stname=%2AYarimca%2A&rettype=metadata&format=json&nodata=404\n\nRequest Submitted:\n2026/11/24 12:15:41 UTC\n\nService version:\nService: fdsnws-station  version: 1.1b"
+  },
+  {
+    "id": "E04",
+    "station": "00022",
+    "event_date": "2010-04-04",
+    "status": "METADATA_ONLY_NOT_ACQUIRED",
+    "auth": "CESMD dataset API requires registered email; no bypass",
+    "url": "https://www.strongmotioncenter.org/wserv/records/query?startdate=2010-04-04+00%3A00%3A00&enddate=2010-04-04+23%3A59%3A59&stname=%2A00022%2A&rettype=metadata&format=json&nodata=404",
+    "http": 400,
+    "bytes": 367,
+    "sha256": "a586ee4c571a0765c65b09d8fb01bdecd2efa3cef8dee8455b402ca8c9fb0303",
+    "excerpt": "Error 400: Bad Request\n\nPlease provide an value for the \"groupby\" parameter.\n\nRequest:\nhttps://www.strongmotioncenter.org/wserv/records/query?startdate=2010-04-04+00%3A00%3A00&enddate=2010-04-04+23%3A59%3A59&stname=%2A00022%2A&rettype=metadata&format=json&nodata=404\n\nRequest Submitted:\n2026/11/24 12:15:41 UTC\n\nService version:\nService: fdsnws-station  version: 1.1b"
+  },
+  {
+    "id": "E07",
+    "station": "Mission Creek Fault",
+    "event_date": "1992-06-28",
+    "status": "METADATA_ONLY_NOT_ACQUIRED",
+    "auth": "CESMD dataset API requires registered email; no bypass",
+    "url": "https://www.strongmotioncenter.org/wserv/records/query?startdate=1992-06-28+00%3A00%3A00&enddate=1992-06-28+23%3A59%3A59&stname=%2AMission+Creek%2A&rettype=metadata&format=json&nodata=404",
+    "http": 400,
+    "bytes": 375,
+    "sha256": "da46013be99ccf8273e7732178e586a8c734b0c2ccc6ba6b6f2e73b6bfef0a2e",
+    "excerpt": "Error 400: Bad Request\n\nPlease provide an value for the \"groupby\" parameter.\n\nRequest:\nhttps://www.strongmotioncenter.org/wserv/records/query?startdate=1992-06-28+00%3A00%3A00&enddate=1992-06-28+23%3A59%3A59&stname=%2AMission+Creek%2A&rettype=metadata&format=json&nodata=404\n\nRequest Submitted:\n2026/11/24 12:15:41 UTC\n\nService version:\nService: fdsnws-station  version: 1.1b"
+  },
+  {
+    "id": "E06",
+    "station": "NIG015",
+    "RSN": 4205,
+    "status": "NOT_ACQUIRED_REGISTRATION_REQUIRED",
+    "source": "https://www.kyoshin.bosai.go.jp/en/https_download/"
+  },
+  {
+    "id": "E02",
+    "station": "DSLC",
+    "status": "EXISTING_OFFICIAL_DATA",
+    "path": "../geonet-dslc/"
+  }
+]

@@ -1,0 +1,91 @@
+{
+  "id": "E05",
+  "station": "SBRC",
+  "event": "2011-02-21 23:51:42 UTC",
+  "status": "OFFICIAL_EVENT_STATION_ACQUIRED_COMPONENT_PENDING_PEER_MATCH",
+  "year_prefixes": [
+    "seismic-products/strong-motion/volume-products/2011/01_Jan/",
+    "seismic-products/strong-motion/volume-products/2011/02_Christchurch_mainshock_extended_pass_band/",
+    "seismic-products/strong-motion/volume-products/2011/02_Feb/",
+    "seismic-products/strong-motion/volume-products/2011/03_Mar/",
+    "seismic-products/strong-motion/volume-products/2011/04_Apr/",
+    "seismic-products/strong-motion/volume-products/2011/05_May/",
+    "seismic-products/strong-motion/volume-products/2011/06_Christchurch_13_June_extended pass band/",
+    "seismic-products/strong-motion/volume-products/2011/06_Jun/",
+    "seismic-products/strong-motion/volume-products/2011/07_Jul/",
+    "seismic-products/strong-motion/volume-products/2011/08_Aug/",
+    "seismic-products/strong-motion/volume-products/2011/09_Sep/",
+    "seismic-products/strong-motion/volume-products/2011/10_Oct/",
+    "seismic-products/strong-motion/volume-products/2011/11_Nov/",
+    "seismic-products/strong-motion/volume-products/2011/12_Dec/"
+  ],
+  "matching_keys": [
+    "seismic-products/strong-motion/volume-products/2011/02_Christchurch_mainshock_extended_pass_band/Vol2/data in csv format/20110221_235142_SBRC_V2A.csv",
+    "seismic-products/strong-motion/volume-products/2011/02_Christchurch_mainshock_extended_pass_band/Vol2/data/20110221_235142_SBRC.V2A",
+    "seismic-products/strong-motion/volume-products/2011/02_Christchurch_mainshock_extended_pass_band/Vol2/plots/20110221_235142_SBRC.pdf",
+    "seismic-products/strong-motion/volume-products/2011/02_Christchurch_mainshock_extended_pass_band/Vol2/polar plots/20110221_235142_SBRC.xls",
+    "seismic-products/strong-motion/volume-products/2011/02_Christchurch_mainshock_extended_pass_band/Vol3/data in csv format/20110221_235142_SBRC_V3A.csv",
+    "seismic-products/strong-motion/volume-products/2011/02_Christchurch_mainshock_extended_pass_band/Vol3/data/20110221_235142_SBRC.v3a",
+    "seismic-products/strong-motion/volume-products/2011/02_Christchurch_mainshock_extended_pass_band/Vol3/plots/20110221_235142_SBRC.pdf",
+    "seismic-products/strong-motion/volume-products/2011/02_Christchurch_mainshock_extended_pass_band/Vol4/plots/20110221_235142_SBRC.pdf",
+    "seismic-products/strong-motion/volume-products/2011/02_Feb/2011-02-21_235142/Vol1/data/20110221_235142_SBRC.V1A",
+    "seismic-products/strong-motion/volume-products/2011/02_Feb/2011-02-21_235142/Vol1/plots/20110221_235142_SBRC.PDF",
+    "seismic-products/strong-motion/volume-products/2011/02_Feb/2011-02-21_235142/Vol2/data/20110221_235142_SBRC.V2A",
+    "seismic-products/strong-motion/volume-products/2011/02_Feb/2011-02-21_235142/Vol2/plots/20110221_235142_SBRC.PDF",
+    "seismic-products/strong-motion/volume-products/2011/02_Feb/2011-02-21_235142/Vol3/data/20110221_235142_SBRC.V3A",
+    "seismic-products/strong-motion/volume-products/2011/02_Feb/2011-02-21_235142/Vol3/plots/20110221_235142_SBRC.PDF",
+    "seismic-products/strong-motion/volume-products/2011/02_Feb/2011-02-21_235142/Vol4/plots/20110221_235142_SBRC.PDF"
+  ],
+  "npts": 2409,
+  "dt_s": 0.019999999999999574,
+  "pga_m_s2": [
+    0.4652,
+    0.6854,
+    0.1945
+  ],
+  "header": [
+    "Site,SBRC,SBRC,SBRC,SBRC,SBRC,SBRC,SBRC,SBRC,SBRC",
+    "Component,S59W,S31E,UP  ,S59W,S31E,UP  ,S59W,S31E,UP  ",
+    "Filtering,Band-pass filter transition bands are  0.05- 0.10 Hz and 24.50-25.50 Hz         ",
+    "Time,Acceleration,Acceleration,Acceleration,Velocity,Velocity,Velocity,Displacement,Displacement,Displacement",
+    "s,mm/s/s,mm/s/s,mm/s/s,mm/s,mm/s,mm/s,mm,mm,mm"
+  ],
+  "files": [
+    {
+      "url": "https://geonet-open-data.s3.ap-southeast-2.amazonaws.com/seismic-products/strong-motion/volume-products/2011/02_Christchurch_mainshock_extended_pass_band/Vol2/data%20in%20csv%20format/20110221_235142_SBRC_V2A.csv",
+      "file": "20110221_235142_SBRC_V2A.csv",
+      "sha256": "07e4c2a11cbcc7faf8fe9b28cb5f615ef841b3372e182120b243b7edf385ff35",
+      "bytes": 315937
+    },
+    {
+      "url": "https://geonet-open-data.s3.ap-southeast-2.amazonaws.com/seismic-products/strong-motion/volume-products/2011/02_Christchurch_mainshock_extended_pass_band/Vol2/data/20110221_235142_SBRC.V2A",
+      "file": "20110221_235142_SBRC.V2A",
+      "sha256": "3963562ff0525fab425090d225033b99b3376430e256d83b8fc2214e61c5b6c6",
+      "bytes": 184182
+    },
+    {
+      "url": "https://geonet-open-data.s3.ap-southeast-2.amazonaws.com/seismic-products/strong-motion/volume-products/2011/02_Christchurch_mainshock_extended_pass_band/Vol3/data%20in%20csv%20format/20110221_235142_SBRC_V3A.csv",
+      "file": "20110221_235142_SBRC_V3A.csv",
+      "sha256": "65ac6cce879002f62b354d05619fdc15ba968d4825d51318b75a910ef4b88493",
+      "bytes": 58347
+    },
+    {
+      "url": "https://geonet-open-data.s3.ap-southeast-2.amazonaws.com/seismic-products/strong-motion/volume-products/2011/02_Christchurch_mainshock_extended_pass_band/Vol3/data/20110221_235142_SBRC.v3a",
+      "file": "20110221_235142_SBRC.v3a",
+      "sha256": "96d639dcddb7e7138e7770f6a89256a938a63a69cd8a7084820a1144d27eaf7f",
+      "bytes": 58758
+    },
+    {
+      "url": "https://geonet-open-data.s3.ap-southeast-2.amazonaws.com/seismic-products/strong-motion/volume-products/2011/02_Feb/2011-02-21_235142/Vol2/data/20110221_235142_SBRC.V2A",
+      "file": "20110221_235142_SBRC.V2A",
+      "sha256": "fa980172bdb387f6227f9abd6155fc03ad7674e53611c8646ee6131c69fc5016",
+      "bytes": 180645
+    },
+    {
+      "url": "https://geonet-open-data.s3.ap-southeast-2.amazonaws.com/seismic-products/strong-motion/volume-products/2011/02_Feb/2011-02-21_235142/Vol3/data/20110221_235142_SBRC.V3A",
+      "file": "20110221_235142_SBRC.V3A",
+      "sha256": "c70682cc39a827c26ce72de2b9d9a9c6649366af5ed56ea69b4d473cf52e2ef6",
+      "bytes": 56823
+    }
+  ]
+}
