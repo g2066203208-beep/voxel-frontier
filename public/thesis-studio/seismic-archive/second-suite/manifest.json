@@ -1,0 +1,211 @@
+{
+  "version": "0.32.195",
+  "scope": "second suite only, no V7",
+  "records": {
+    "E01": {
+      "name": "Chi-Chi 1999 | ILA004",
+      "source_status": "Research copy; PGA matches literature; g",
+      "source_urls": [
+        "https://raw.githubusercontent.com/YouTian-Lab/Paper-IMTongjiBldLoss/87735e2927038e0ccccf8051d842cf70fd6a6aee/Data/EQ%20Records/Chi-Chi19990920/RSN1310_CHICHI_ILA004-N.txt",
+        "https://raw.githubusercontent.com/YouTian-Lab/Paper-IMTongjiBldLoss/87735e2927038e0ccccf8051d842cf70fd6a6aee/Data/EQ%20Records/Chi-Chi19990920/RSN1310_CHICHI_ILA004-W.txt"
+      ],
+      "npts": 33750,
+      "dt_s": 0.004,
+      "PGA_m_s2": [
+        0.6274667322699999,
+        0.717341737525
+      ],
+      "D5_95_s": [
+        53.849506963452605,
+        40.9884680917233
+      ],
+      "velocity_displacement_status": "direct integration diagnostic ONLY",
+      "terminal_velocity_m_s": [
+        -7.90240780616467e-07,
+        -8.226329791685505e-07
+      ],
+      "terminal_displacement_m": [
+        -1.0034724073321452e-05,
+        -1.2391748962660068e-05
+      ],
+      "PSA_at_T1_m_s2": [
+        0.42916050368638836,
+        0.5780661601385165
+      ]
+    },
+    "E02": {
+      "name": "Darfield 2010 | DSLC",
+      "source_status": "GeoNet corrected; unscaled",
+      "source_urls": [
+        "https://raw.githubusercontent.com/g2066203208-beep/voxel-frontier/ef91754b329de13b8899a74f62d65623f63bf9cd/research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool/geonet-dslc/682ed668_20100903_163541_DSLC_V2A.csv"
+      ],
+      "npts": 7386,
+      "dt_s": 0.02,
+      "PGA_m_s2": [
+        2.3528000000000002,
+        2.4837
+      ],
+      "D5_95_s": [
+        19.58323046068441,
+        18.208565820644193
+      ],
+      "velocity_displacement_status": "provider corrected",
+      "terminal_velocity_m_s": [
+        0.00032,
+        0.00026000000000000003
+      ],
+      "terminal_displacement_m": [
+        -0.0077,
+        -0.0035
+      ],
+      "PSA_at_T1_m_s2": [
+        1.4604007920069313,
+        0.7190521050734997
+      ]
+    },
+    "E03": {
+      "name": "Kocaeli 1999 | Yarimca",
+      "source_status": "Research AT2; PGA matches literature; g",
+      "source_urls": [
+        "https://raw.githubusercontent.com/ArtetaResearchGroup/RC-Fiap/f6b1593ddd95c4b19079d8ab90a5a5c7f207ceeb/CSS_Gmotions/Hazard_Level_1/gmotions/RSN1176_KOCAELI_YPT060.AT2",
+        "https://raw.githubusercontent.com/ArtetaResearchGroup/RC-Fiap/f6b1593ddd95c4b19079d8ab90a5a5c7f207ceeb/CSS_Gmotions/Hazard_Level_1/gmotions/RSN1176_KOCAELI_YPT150.AT2"
+      ],
+      "npts": 7000,
+      "dt_s": 0.005,
+      "PGA_m_s2": [
+        2.22369515277,
+        3.1558280225849997
+      ],
+      "D5_95_s": [
+        15.102442269003419,
+        15.082268605481557
+      ],
+      "velocity_displacement_status": "direct integration diagnostic ONLY",
+      "terminal_velocity_m_s": [
+        -5.666760139303508e-05,
+        -4.500167636406115e-05
+      ],
+      "terminal_displacement_m": [
+        -0.00019719101612773127,
+        -0.00015645503874408927
+      ],
+      "PSA_at_T1_m_s2": [
+        1.0017241611309045,
+        0.7004923984907769
+      ]
+    },
+    "E05": {
+      "name": "Christchurch 2011 | SBRC",
+      "source_status": "GeoNet corrected; unscaled",
+      "source_urls": [
+        "https://raw.githubusercontent.com/g2066203208-beep/voxel-frontier/5c8458d3a45163091ce5b9a47018eb94789059ec/research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool/literature_exact_20261124/E05_SBRC/official_SI.csv"
+      ],
+      "npts": 2409,
+      "dt_s": 0.02,
+      "PGA_m_s2": [
+        0.4652,
+        0.6854
+      ],
+      "D5_95_s": [
+        12.374977851938695,
+        13.936194879969438
+      ],
+      "velocity_displacement_status": "provider corrected",
+      "terminal_velocity_m_s": [
+        0.00139,
+        -0.00264
+      ],
+      "terminal_displacement_m": [
+        -0.002014,
+        0.00661
+      ],
+      "PSA_at_T1_m_s2": [
+        0.02440261619011677,
+        0.06440466153056774
+      ]
+    },
+    "E06": {
+      "name": "Niigata 2004 | NIG015",
+      "source_status": "Scaled copy; SF 0.778 (rounded); g assumed",
+      "source_urls": [
+        "https://raw.githubusercontent.com/gerardjoreilly/Infilled-RC-Building-Database/266229a864ab330a013a4b91ef122fd91df13162/analysis/gmRecords/Milano/AvgSa/0.5s/72/RSN4205_NIIGATA_NIG015NS_SF_0.778.txt",
+        "https://raw.githubusercontent.com/gerardjoreilly/Infilled-RC-Building-Database/266229a864ab330a013a4b91ef122fd91df13162/analysis/gmRecords/Milano/AvgSa/0.5s/72/RSN4205_NIIGATA_NIG015EW_SF_0.778.txt"
+      ],
+      "npts": 16769,
+      "dt_s": 0.01,
+      "PGA_m_s2": [
+        0.50699399835,
+        0.6143866225
+      ],
+      "D5_95_s": [
+        38.51599142101684,
+        39.38600469132704
+      ],
+      "velocity_displacement_status": "direct integration diagnostic ONLY",
+      "terminal_velocity_m_s": [
+        -5.391576605176032e-07,
+        -6.059049195999725e-07
+      ],
+      "terminal_displacement_m": [
+        -7.754532593020083e-05,
+        -8.114692293632509e-05
+      ],
+      "PSA_at_T1_m_s2": [
+        0.03812371912745616,
+        0.031184465151227088
+      ]
+    },
+    "E07": {
+      "name": "Landers 1992 | Mission Creek Fault",
+      "source_status": "Scaled copy; SF 0.892 (rounded); g assumed",
+      "source_urls": [
+        "https://raw.githubusercontent.com/gerardjoreilly/Infilled-RC-Building-Database/266229a864ab330a013a4b91ef122fd91df13162/analysis/gmRecords/L%27Aquila/SaT/0.5s/72/RSN880_LANDERS_MCF000_SF_0.892.txt",
+        "https://raw.githubusercontent.com/gerardjoreilly/Infilled-RC-Building-Database/266229a864ab330a013a4b91ef122fd91df13162/analysis/gmRecords/L%27Aquila/SaT/0.5s/72/RSN880_LANDERS_MCF090_SF_0.892.txt"
+      ],
+      "npts": 19963,
+      "dt_s": 0.005,
+      "PGA_m_s2": [
+        1.1041307235,
+        1.1510065105
+      ],
+      "D5_95_s": [
+        35.722333893907795,
+        40.77929540883122
+      ],
+      "velocity_displacement_status": "direct integration diagnostic ONLY",
+      "terminal_velocity_m_s": [
+        3.3798006314724247e-07,
+        7.640978837610919e-07
+      ],
+      "terminal_displacement_m": [
+        -2.7719236036007465e-06,
+        -7.722483495276564e-06
+      ],
+      "PSA_at_T1_m_s2": [
+        0.025782156311985993,
+        0.15184587555433096
+      ]
+    }
+  },
+  "errors": {},
+  "E04": "no waveform; not plotted",
+  "figures": {
+    "overview_spectra.svg": "0a6639638e0cda0c0c29d0bddc3482a37f461344f8312ee200cffabc563c4cec",
+    "E06_seven_panels.png": "4afb65c9db703a01259000cc64961c7164d6e18c20e9d5d09aa746f6873bc8f4",
+    "E07_seven_panels.svg": "ae541616380e22d03171ed43779422af128849613de32f896651341fdc027ddd",
+    "overview_spectra.png": "552d6dae35a67979e62c9d6e7e1e58feb7e9cda6986ba8a995fa2606e60bc809",
+    "E02_seven_panels.svg": "3920eb56b85ee7bac5429dd8ba075badf0fd02f7717b994ff9c408d962af4f05",
+    "E03_seven_panels.png": "2c058e5bbd52c56dd66177b6ebfcdd61a53d654f1a9644523c358cff1ba8d65f",
+    "E06_seven_panels.svg": "a1929a007644a7b877817cb08724c95ae06aecf9aeaa1aa7de34ae49eeec6226",
+    "E01_seven_panels.svg": "dadccfbbd26b894fdc20d39f140123a65bac1fa052834e06a878677d223daa5c",
+    "E01_seven_panels.png": "a9ee61d112ec5a07bcb922aec412548665adb6dcd140bbe09e04100e42e5ea29",
+    "overview_acceleration.svg": "98d86117f015de680941a05db8819d5e85d60976d17c38148643791f92ad8959",
+    "overview_acceleration.png": "becdf700094c5d7b2a16ff50dac6a294f4da7ad0ed8a259185781b50169efc63",
+    "E05_seven_panels.svg": "e9a95f8dbc273e28efdd05dc409e135c0f168a7da4d115f441cfd0c88bf03dc9",
+    "E05_seven_panels.png": "2e50f20d22ce8b7c67a06dd83bcd4d8bc5e156c34d8ef8ce87db676ec27f5394",
+    "E07_seven_panels.png": "414609ac225db8d6e07bda1681101e759f4820427c47bd597ffc1d12c27088d1",
+    "E02_seven_panels.png": "1a5f116b2cae40cbbc77b9c60be13c8052625dc3b72c98537486969fa700bcf8",
+    "E03_seven_panels.svg": "5dcbbe644ae8d02e8eab06805247cc6c93f40e61d031cff229b402ccb092e0f5"
+  },
+  "notes": "300 dpi PNG and SVG; E06/E07 scaled and g assumed; diagnostic v/u not baseline corrected; no formal target spectrum claim"
+}
