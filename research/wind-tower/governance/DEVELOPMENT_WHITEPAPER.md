@@ -1,3 +1,11 @@
+### 2026-11-24｜v0.32.192 — 第二套文献候选波四组真实数值突破
+
+- 实际源级读取及逐点核验记录：commit 692a9b95352f34ae84e35a06791dd05ce97a8085，`research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool/literature_exact_20261124/acquisition_audit_v0.32.192.json`，含不可变源链接与Git blob SHA。第二套6/7组可读取数值（其中2组此前官方归档），E04仍缺波形；第一套冻结。
+- E01 RSN1310：YouTian-Lab/Paper-IMTongjiBldLoss 两分量均33750点、dt=.004s，PGA=.0639838/.0731485g，与戴等表2 .064/.073g一致。OpenSees官方示例另有N分量AT2，PGA=.06600218g，处理版本不同，不能混用。正式PEER源包待核。
+- E03 RSN1176：ArtetaResearchGroup/RC-Fiap 两个带PEER NGA文件头的060/150 AT2，7000点、dt=.005s，PGA=.2267538/.3218049g，150与戴等表2 .322g一致。非官方门户直接下载；转载权限HOLD。
+- E06 RSN4205、E07 RSN880：Nafeh & O'Reilly 2022, Soil Dynamics and Earthquake Engineering 157, 107253, DOI:10.1016/j.soildyn.2022.107253 论文复现库。E06 NS/EW 各16769点、dt=.01s；E07 000/090各19963点、dt=.005s。分别读取两套不同调幅副本，四个分量相关系数均>0.999999999，最小二乘比例拟合相对RMS残差<2.18e-5。文件名SF三位小数与实际拟合比例存在约0.1–0.2%差异，故禁止宣称精确恢复PEER原波，调幅TXT单位及处理版本待独立核验。
+- E04 CSMIP 00022-90仍无时程；CESMD注册下载限制未解决，本地DNS不可用。原始数据权利独立于代码GPL许可证，故外部波形保留固定源链接，未重传到公开仓库。TEST=实际数值读取4组、交叉核验PASS；正式波组、场址目标谱及Abaqus HOLD；新增图件0。
+
 ### 2026-11-24｜v0.32.191 — 第二套文献候选地震动定向获取审计
 
 - 过程提交：97597cdcbe5fd93f7b930965fcffb9bf3d24ef1b；审计文件 `research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool/literature_exact_20261124/acquisition_audit_v0.32.191.json`。V7备用波组冻结，本轮无新增图件、无新增波形；不得将元数据或下载失败计为波形获取。
