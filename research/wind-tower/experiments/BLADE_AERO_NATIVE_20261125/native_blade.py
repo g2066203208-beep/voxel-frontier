@@ -115,7 +115,7 @@ def post():
     C=lambda k:v[:,names.index(k)-1]
     rotor=['RtAero'+k+'h' for k in ['Fx','Fy','Fz','Mx','My','Mz']]
     assert all(k in names for k in rotor),rotor
-    assert all(units[k]==('(N)' if i<3 else '(N-m)') for i,k in enumerate(rotor)
+    assert all(units[k]==('(N)' if i<3 else '(N-m)') for i,k in enumerate(rotor))
     np.savez_compressed(OUT/'blade_node_aero.npz',time_s=t,span_m=radii,blade=np.arange(1,4),node=nodeids,**{g:np.stack([np.stack([C(nd[b,j,g]) for j in nodeids],1) for b in range(1,4)],1) for g in groups})
     np.savetxt(OUT/'rotor_aero_wrench.csv',np.column_stack([t]+[C(k) for k in rotor]),delimiter=',',header='time_s,'+','.join(rotor),comments='')
     stats=[]
