@@ -1,0 +1,277 @@
+name: T079 second suite spectrum and source qualification
+on:
+  push:
+    branches: [research/t080-seismic-integration-gates-20261022]
+    paths: ['.github/workflows/seismic-second-six-qualification-20261124.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  plot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install --quiet numpy scipy matplotlib pillow
+      - name: Compute and render six source-locked records
+        env:
+          OPENBLAS_NUM_THREADS: '1'
+          OMP_NUM_THREADS: '1'
+        run: |
+          mkdir -p output
+          python - <<'PY'
+          import pathlib, hashlib, urllib.request, time, io, re, json, numpy as np
+          from scipy.signal import welch,cont2discrete,ss2tf,lfilter
+          from scipy.linalg import expm
+          from scipy.integrate import cumulative_trapezoid
+          import matplotlib
+          matplotlib.use('Agg')
+          import matplotlib.pyplot as plt
+          from matplotlib.ticker import MaxNLocator
+          from PIL import Image
+          O=pathlib.Path('output')
+          plt.rcParams.update({'font.family':'STIXGeneral','mathtext.fontset':'stix','font.size':10,'axes.linewidth':.7,'xtick.direction':'in','ytick.direction':'in','xtick.top':True,'ytick.right':True,'legend.frameon':False,'legend.fontsize':8,'svg.fonttype':'none','path.simplify':False})
+          G=9.80665; T1=7.3937
+          def get(url,blob=None,sha=None):
+            for i in range(3):
+              try:
+                with urllib.request.urlopen(urllib.request.Request(url,headers={'User-Agent':'T079 research plot validation'}),timeout=35) as f: raw=f.read()
+                if blob:assert hashlib.sha1(b'blob '+str(len(raw)).encode()+b'\0'+raw).hexdigest()==blob, url
+                if sha:assert hashlib.sha256(raw).hexdigest()==sha,url
+                return raw
+              except Exception:
+                if i==2:raise
+                time.sleep(2)
+          def txt(raw,skip=0):
+            return np.array([float(x) for x in ' '.join(raw.decode('utf-8-sig').splitlines()[skip:]).split()])
+          def csv(raw,skip):return np.loadtxt(io.BytesIO(raw),delimiter=',',skiprows=skip)
+          def pair(urls,blobs,skip,n,dt):
+            vals=[]
+            for u,h in zip(urls,blobs):
+              raw=get(u,blob=h)
+              if 'ILA004-' in u:
+                x=np.loadtxt(io.BytesIO(raw));assert x.shape==(n,2) and np.allclose(np.diff(x[:,0]),dt,atol=1e-8)
+                vals.append(x[:,1])
+              else:vals.append(txt(raw,skip))
+            assert all(len(x)==n for x in vals)
+            return np.column_stack(vals)*G
+          own='https://raw.githubusercontent.com/g2066203208-beep/voxel-frontier/'
+          base='/research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool/'
+          yt='https://raw.githubusercontent.com/YouTian-Lab/Paper-IMTongjiBldLoss/87735e2927038e0ccccf8051d842cf70fd6a6aee/Data/EQ%20Records/Chi-Chi19990920/RSN1310_CHICHI_ILA004-'
+          ar='https://raw.githubusercontent.com/ArtetaResearchGroup/RC-Fiap/f6b1593ddd95c4b19079d8ab90a5a5c7f207ceeb/CSS_Gmotions/Hazard_Level_1/gmotions/RSN1176_KOCAELI_YPT'
+          gr='https://raw.githubusercontent.com/gerardjoreilly/Infilled-RC-Building-Database/266229a864ab330a013a4b91ef122fd91df13162/analysis/gmRecords/'
+          specs=[
+            ('E01','Chi-Chi 1999 | ILA004','Research copy; PGA matches literature; g',.004,33750,['N','W'],[yt+c+'.txt' for c in ['N','W']],['79062a7b5a753deb2eefbc36f1ce885b0bbb167c','ddde08113a61961d43b91581aea4b67e9c7e5b03'],0),
+            ('E03','Kocaeli 1999 | Yarimca','Research AT2; PGA matches literature; g',.005,7000,['060','150'],[ar+c+'.AT2' for c in ['060','150']],['491c9b7d747eb735a93bba6e74c174f8a63972a2','5fb8ada336f63e79d36d2e53c7d93f1bf5ecc4c9'],4),
+            ('E06','Niigata 2004 | NIG015','Scaled copy; SF 0.778 (rounded); g assumed',.01,16769,['NS','EW'],[gr+'Milano/AvgSa/0.5s/72/RSN4205_NIIGATA_NIG015'+c+'_SF_0.778.txt' for c in ['NS','EW']],['0f3c1277f001a830149ffea5e592eeec8e105939','fe3d4b87829dd5174ab0e183352ad7175079590e'],0),
+            ('E07','Landers 1992 | Mission Creek Fault','Scaled copy; SF 0.892 (rounded); g assumed',.005,19963,['000','090'],[gr+'L%27Aquila/SaT/0.5s/72/RSN880_LANDERS_MCF'+c+'_SF_0.892.txt' for c in ['000','090']],['80641e03af3da9618eed95965407fdc9a5e86594','a7ef57cf3a0324f0191886fa7ccc509b95d955c6'],0)]
+          records={}; errors={}
+          def integ(a,dt):return cumulative_trapezoid(a,dx=dt,axis=0,initial=0)
+          for k,name,status,dt,n,dirs,urls,blobs,skip in specs:
+            try:
+              a=pair(urls,blobs,skip,n,dt);records[k]=(name,status,dt,np.arange(n)*dt,a,integ(a,dt),integ(integ(a,dt),dt),dirs,False,urls)
+            except Exception as e:errors[k]=repr(e)
+          try:
+            u=own+'ef91754b329de13b8899a74f62d65623f63bf9cd'+base+'geonet-dslc/682ed668_20100903_163541_DSLC_V2A.csv'
+            x=csv(get(u,sha='178b7b329e641188cb9758774a7bd57a7563a2ceab058d06d5e288272f01f463'),5);assert len(x)==7386
+            records['E02']=('Darfield 2010 | DSLC','GeoNet corrected; unscaled',.02,x[:,0],x[:,1:3]*.001,x[:,4:6]*.001,x[:,7:9]*.001,['N63E','N27W'],True,[u])
+          except Exception as e:errors['E02']=repr(e)
+          try:
+            u=own+'5c8458d3a45163091ce5b9a47018eb94789059ec'+base+'literature_exact_20261124/E05_SBRC/official_SI.csv'
+            x=csv(get(u,blob='82138d81abb9842de15d1c1a372ee4554ccc5162'),1);assert len(x)==2409
+            records['E05']=('Christchurch 2011 | SBRC','GeoNet corrected; unscaled',.02,x[:,0],x[:,1:3],x[:,4:6],x[:,7:9],['S59W','S31E'],True,[u])
+          except Exception as e:errors['E05']=repr(e)
+          print('SOURCE_ERRORS',json.dumps(errors),flush=True)
+          assert len(records)==6,errors
+          from scipy.signal import periodogram
+          import csv as csvmod
+          # The project research target is frozen in v0.32.182; not a site hazard spectrum.
+          targeturl=own+'79cedc0fcdfcd8b52d25b72b50f8105db0d713fe'+base+'PARAMETRIC_TARGET_V1.json'
+          targetmeta=json.loads(get(targeturl))
+          assert targetmeta['scope']=='PARAMETRIC_RESEARCH_ONLY_0_TO_10S_NOT_SITE_HAZARD'
+          assert targetmeta['T1']==T1 and targetmeta['TD']==[6.14,6.56,7.12]
+          T=np.unique(np.r_[np.geomspace(.1,15,181),1.48,4,6,7.3937,8,10,12,14.7874])
+          tt=T[T<=10];ix=T<=10
+          def ref(T,td=6.56):
+            assert np.all(T<=10)
+            p=targetmeta['reference_PGA'];a=targetmeta['plateau'];tg=targetmeta['Tg']
+            return np.where(T<.1,p+(a-p)*T/.1,np.where(T<=tg,a,np.where(T<=td,a*tg/T,a*tg*td/T**2)))
+          target=ref(tt)
+          def response(a,dt,periods,zeta=.05):
+            # FOH oscillator displacement and velocity; physical zero-state initial correction.
+            # Include 5 natural periods of free response using zero-input continuation.
+            out=[]; angles=np.deg2rad(np.arange(0,180,1))
+            ca=np.cos(angles);sa=np.sin(angles)
+            for t in periods:
+              w=2*np.pi/t
+              A=np.array([[0.,1.],[-w*w,-2*zeta*w]]);B=np.array([[0.],[-1.]])
+              C=np.eye(2);D=np.zeros((2,1))
+              ad,bd,cd,dd,_=cont2discrete((A,B,C,D),dt,method='foh')
+              n,d=ss2tf(ad,bd,cd,dd)
+              K=np.zeros((4,4));K[:2,:2]=A;K[:2,2:3]=B;K[2,3]=1
+              b1=expm(K*dt)[:2,3]/dt
+              # Follow prior record-end convention; don't force terminal sample to zero.
+              inp=np.vstack([a,np.zeros((int(np.ceil(5*t/dt)),2))])
+              impulse=np.zeros(len(inp));impulse[0]=1
+              y=[]
+              for j in range(2):
+                c0=float((-cd[j]@b1).item());c1=float((-cd[j]@ad@b1).item())
+                q=lfilter(n[j],d,inp,axis=0)+lfilter([c0,c1+d[1]*c0],d,impulse)[:,None]*inp[0]
+                y.append(q)
+              u,v=y
+              # 180 one-degree projections, in batches to limit memory.
+              peak=np.concatenate([np.max(np.abs(u[:,0,None]*ca[j:j+15]+u[:,1,None]*sa[j:j+15]),axis=0) for j in range(0,180,15)])
+              out.append([np.median(peak)*w*w,np.max(np.linalg.norm(u,axis=1))*w*w,*np.max(np.abs(u),axis=0)*w*w,*np.max(np.abs(v),axis=0)])
+            return np.asarray(out)
+          # Independent known sinusoidal steady-state check, plus rotation invariance.
+          xs=np.arange(0,30,.01);x=np.column_stack([np.sin(2*np.pi*xs),np.zeros(len(xs))])
+          z=response(x,.01,np.array([1.]))
+          assert 8<z[0,2]<11 and np.isclose(z[0,3],0)
+          ang=np.deg2rad(37);Q=np.array([[np.cos(ang),-np.sin(ang)],[np.sin(ang),np.cos(ang)]])
+          zr=response(x@Q,.01,np.array([1.]))
+          assert np.allclose(z[0,:2],zr[0,:2],rtol=1e-5)
+          colors={'E01':'#184e77','E02':'#a23e48','E03':'#795b20','E05':'#3b7c70','E06':'#7163a4','E07':'#686868'}
+          keys=sorted(records);data={};metrics={};curves=[]
+          for k in keys:
+            name,status,dt,t,a,v,u,dirs,official,urls=records[k]
+            S=response(a,dt,T);assert np.isfinite(S).all() and (S[:,0]>0).all()
+            S1=response(a,dt,T,.01);S2=response(a,dt,T,.02)
+            w=2*np.pi/T
+            # RotD50 of oscillator displacement, then pseudo-velocity and PSA scaling.
+            pga=np.max(abs(a),axis=0);pga_geo=float(np.sqrt(np.prod(pga)))
+            # common PGA scaling uses geometric mean of component PGA, not RotD50 PGA.
+            ar=np.pi/(2*G)*integ(a*a,dt);fr=ar/ar[-1]
+            d75=[];d95=[]
+            for j in range(2):
+              t5=np.interp(.05,fr[:,j],t)
+              d75.append(float(np.interp(.75,fr[:,j],t)-t5));d95.append(float(np.interp(.95,fr[:,j],t)-t5))
+            f,P=periodogram(a,fs=1/dt,window='boxcar',detrend='constant',axis=0,scaling='density')
+            # Full-record one-sided acceleration-energy fraction (not proof of usable band).
+            df=f[1]-f[0];long=(f>=1/15)&(f<=1/4);peak=(f>0)&(f<=2)
+            frac=np.sum(P[long],axis=0)*df/(np.sum(P,axis=0)*df)
+            spec=S[ix,0]
+            assert len(spec)==len(target)
+            kfree=float(np.exp(np.trapezoid(np.log(target/spec),np.log(tt))/(np.log(tt[-1])-np.log(tt[0]))))
+            kbounded=float(np.clip(kfree,.5,2))
+            data[k]={'S':S,'S1':S1,'S2':S2,'pga':pga,'pga_geo':pga_geo,'f':f,'P':P,'k':kbounded,'kfree':kfree,'spec':spec}
+            metrics[k]={'source_status':status,'npts':len(t),'dt_s':dt,'PGA_m_s2':pga.tolist(),'PGA_geomean_m_s2':pga_geo,'PGV_m_s':np.max(abs(v),axis=0).tolist(),'PGD_m':np.max(abs(u),axis=0).tolist(),'PGV_PGD_status':'provider corrected' if official else 'direct integration diagnostic only','Arias_m_s':ar[-1].tolist(),'D5_75_s':d75,'D5_95_s':d95,'frequency_resolution_Hz':float(df),'acceleration_energy_fraction_4_to_15s':frac.tolist(),'RotD50_at_T1':float(S[np.where(T==T1)[0][0],0]),'research_scale_unconstrained':kfree,'research_scale_bounded':kbounded,'scale_clipped':kfree<.5 or kfree>2,'reliable_period_status':'HOLD: source processing and usable band not independently established for this version'}
+            curves.append(kbounded*spec)
+            np.savetxt(O/(k+'_spectra.csv'),np.column_stack([T,S[:,0],S[:,1],S[:,2:4],S[:,0]/w,S[:,0]/w**2,S[:,4:6],S1[:,0],S2[:,0]]),delimiter=',',header='T_s,RotD50_PSA_m_s2,RotD100_PSA_m_s2,H1_PSA,H2_PSA,RotD50_PSV_m_s,RotD50_SD_m,H1_true_velocity_response,H2_true_velocity_response,RotD50_PSA_zeta01,RotD50_PSA_zeta02',comments='')
+            print('RECORD_DONE',k,flush=True)
+          # Illustrative target fit only: no certified site spectrum, no seventh record, no formal scale.
+          curves=np.array(curves);mean=curves.mean(axis=0);ratio=mean/target;sd=np.std(np.log(curves),axis=0,ddof=1)
+          mask=(tt>=4)&(tt<=10)
+          qc={'version':'0.32.196','records':metrics,'target_scope':targetmeta['scope'],'target_source':targeturl,'fit_scope':'0.1–10 s logarithmic-period least squares, common multiplier per pair; clip to 0.5–2 as research bound; applied to already scaled E06/E07 as supplied, not original SF','research_mean_error_4_10s_max_abs':float(np.max(abs(ratio[mask]-1))),'research_mean_error_4_10s_within_20pct':bool(np.all(abs(ratio[mask]-1)<=.2)),'target_validity':'HOLD site-specific spectrum and >10 s target; no extrapolation','classification':'HOLD E02/E03 pulse candidates, quantitative pulse extraction not yet validated; other groups not assigned','modal_status':'only historical T1 confirmed in project decision; further modes HOLD','E04':'missing','formal_design_admitted':0,'solver_validation':{'sinusoidal_resonance_PSA':float(z[0,2]),'RotD_integer_rotation_relative_error':float(abs(zr[0,0]/z[0,0]-1)),'free_response_tail':'5 natural periods; source ends followed by zero forcing, one sample transition'}}
+          (O/'qualification.json').write_text(json.dumps(qc,indent=2,ensure_ascii=False))
+          np.savetxt(O/'research_target_fit.csv',np.column_stack([tt,target,ref(tt,6.14),ref(tt,7.12),curves.T,mean,ratio,sd]),delimiter=',',header='T_s,research_target,TD6_14,TD7_12,'+','.join(keys)+',mean,mean_to_target,log_sd',comments='')
+          def setup(ax,x,y,title):
+            ax.set(xlabel=x,ylabel=y,title=title);ax.grid(alpha=.18,lw=.4)
+          def line(ax,x,y,k,kind='loglog',**kw):
+            getattr(ax,kind)(x,y,label=k+(' (scaled source)' if k in ['E06','E07'] else ''),color=colors[k],lw=1,**kw)
+          def modal(ax):
+            ax.axvline(T1,color='.25',ls=':',lw=.8);ax.axvspan(4,12,color='.5',alpha=.06)
+            ax.set_xlim(.1,15)
+          def save(fig,name):
+            for ext in ['png','svg']:fig.savefig(O/(name+'.'+ext),dpi=300,bbox_inches='tight',pad_inches=.08,facecolor='white')
+            plt.close(fig)
+            with Image.open(O/(name+'.png')) as im:assert im.width>800 and im.height>600
+          fig,axs=plt.subplots(2,2,figsize=(9,7),layout='constrained')
+          for k in keys:
+            d=data[k];s=d['S'][:,0];w=2*np.pi/T
+            line(axs[0,0],T,s/d['pga_geo'],k)
+            line(axs[0,1],T,s/w,k)
+            line(axs[1,0],T,s/w**2,k)
+            line(axs[1,1],T,np.sqrt(d['S'][:,4]*d['S'][:,5]),k)
+          for ax,y,title in zip(axs.flat,['PSA / geometric mean PGA','PSV (m/s)','SD (m)','Geometric mean peak relative velocity (m/s)'],['(a) Equal-PGA normalized spectrum','(b) RotD50 pseudo-velocity','(c) RotD50 spectral displacement','(d) True relative-velocity spectrum']):
+            setup(ax,'Period (s)',y,title);modal(ax)
+          axs[0,0].legend(fontsize=7,ncol=2)
+          fig.suptitle('Second suite | 5% damped spectral characteristics\nAs-supplied sources; 4–12 s diagnostic band, source validity HOLD',fontsize=13)
+          save(fig,'01_normalized_velocity_displacement_spectra')
+          fig,axs=plt.subplots(2,2,figsize=(9,7),layout='constrained')
+          for k,y in zip(keys,curves):
+            line(axs[0,0],tt,y,k);line(axs[0,1],tt,y/target,k,'semilogx')
+          axs[0,0].loglog(tt,target,'k--',lw=1.4,label='Research target')
+          axs[0,0].loglog(tt,mean,'k-',lw=2,label='Six-record mean')
+          axs[0,0].fill_between(tt,ref(tt,6.14),ref(tt,7.12),color='gray',alpha=.18,label='TD sensitivity')
+          axs[0,1].semilogx(tt,ratio,'k-',lw=2,label='Mean / target')
+          axs[0,1].axhspan(.8,1.2,color='#3b7c70',alpha=.12,label='Research ±20% band')
+          axs[0,1].axhline(1,color='.2',ls='--')
+          axs[1,0].semilogx(tt,100*(ratio-1),'k-',lw=1.2);axs[1,0].axhspan(-20,20,color='#3b7c70',alpha=.12)
+          axs[1,1].semilogx(tt,sd,'k-',lw=1.2)
+          for ax,y,title in zip(axs.flat,['RotD50 PSA (m/s²)','Spectrum ratio','Mean relative error (%)','Sample SD of ln PSA'],['(a) Research spectrum fit','(b) Individual and mean ratios','(c) Mean mismatch','(d) Record-to-record dispersion']):
+            setup(ax,'Period (s)',y,title);ax.axvline(T1,color='.3',ls=':',lw=.7);ax.set_xlim(.1,10)
+          axs[0,0].legend(ncol=2,fontsize=6.5);axs[0,1].legend(fontsize=7)
+          fig.suptitle('Parametric research target only | six candidate records\nNot Jiayu site design spectrum; no target beyond 10 s',fontsize=13)
+          save(fig,'02_research_target_fit_and_error')
+          fig,axs=plt.subplots(2,3,figsize=(10,6),layout='constrained');xx=np.arange(6)
+          for ax,m,unit,title in zip(axs.flat,['PGA_m_s2','PGV_m_s','PGD_m','Arias_m_s','D5_75_s','D5_95_s'],['m/s²','m/s','m','m/s','s','s'],['PGA','PGV','PGD','Arias intensity','D5–75','D5–95']):
+            v=np.array([metrics[k][m] for k in keys])
+            for j in range(2):
+              bars=ax.bar(xx+(j-.5)*.34,v[:,j],width=.34,color=['#184e77','#ad563a'][j],label='H'+str(j+1))
+              for i,k in enumerate(keys):
+                if (m in ['PGV_m_s','PGD_m'] and k not in ['E02','E05']) or k in ['E06','E07']:bars[i].set_hatch('//');bars[i].set_edgecolor('white')
+            ax.set_xticks(xx,keys);setup(ax,'Record',unit,title)
+          axs[0,0].legend()
+          fig.suptitle('Intensity measures | as supplied; hatched = scaled or integration diagnostic',fontsize=13)
+          save(fig,'03_intensity_duration_statistics')
+          fig,axs=plt.subplots(2,2,figsize=(9,7),layout='constrained')
+          for k in keys:
+            d=data[k];f=d['f'];P=d['P'].mean(axis=1);maskf=(f>0)&(f<=2)
+            q=P[maskf]/np.sum(P)/ (f[1]-f[0])
+            line(axs[0,0],f[maskf],np.maximum(q,1e-16),k,'semilogy')
+            cs=np.cumsum(P)/np.sum(P)
+            line(axs[0,1],f[maskf],cs[maskf],k,'plot')
+            line(axs[1,0],T,d['S1'][:,0]/d['S'][:,0],k,'semilogx')
+            line(axs[1,1],T,d['S2'][:,0]/d['S'][:,0],k,'semilogx')
+          for ax,y,title in [(axs[0,0],'Normalized acceleration PSD (1/Hz)','(a) Full-record periodogram'),(axs[0,1],'Cumulative spectral energy fraction','(b) Low-frequency cumulative energy')]:
+            setup(ax,'Frequency (Hz)',y,title);ax.set_xlim(0,2);ax.axvspan(1/15,1/4,color='.5',alpha=.12);ax.axvline(1/T1,color='.3',ls=':')
+          for ax,y,title in [(axs[1,0],'PSA(1%) / PSA(5%)','(c) 1% damping sensitivity'),(axs[1,1],'PSA(2%) / PSA(5%)','(d) 2% damping sensitivity')]:
+            setup(ax,'Period (s)',y,title);modal(ax)
+          axs[0,0].legend(fontsize=7,ncol=2)
+          fig.suptitle('Long-period diagnostics | energy is not usable-band certification',fontsize=13)
+          save(fig,'04_long_period_energy_and_damping')
+          fig,axs=plt.subplots(1,2,figsize=(9,3.7),layout='constrained')
+          for ax,k in zip(axs,['E02','E03']):
+            _,status,dt,t,a,v,u,dirs,official,urls=records[k]
+            # Plot measured or directly integrated velocity only. No invented pulse.
+            for j,c in enumerate(['#184e77','#ad563a']):ax.plot(t,v[:,j],color=c,lw=.65,label=dirs[j])
+            setup(ax,'Time (s)','Velocity (m/s)',k+' | pulse candidate')
+            ax.legend();ax.text(.02,.03,'Provider corrected' if official else 'Direct integration diagnostic',transform=ax.transAxes,fontsize=8)
+          fig.suptitle('Velocity histories for pulse screening | pulse identification HOLD',fontsize=13)
+          save(fig,'05_pulse_candidate_velocity_screening')
+          manifest={'version':'0.32.196','scope':'second suite only','files':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in O.iterdir()},'formal_design':0}
+          (O/'manifest.json').write_text(json.dumps(manifest,indent=2))
+          print('QUALIFICATION',json.dumps(qc,ensure_ascii=False),flush=True)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: second-suite-qualification
+          path: output/
+          retention-days: 90
+      - name: Publish qualification only to studio main
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'PY'
+          import subprocess,json,base64,pathlib,os
+          R=os.environ['GITHUB_REPOSITORY'];P=pathlib.Path('output')
+          m=json.loads((P/'qualification.json').read_text());assert len(m['records'])==6 and m['formal_design_admitted']==0
+          def api(path,payload=None,method=None):
+            cmd=['gh','api',f'repos/{R}/{path}']
+            if method:cmd+=['--method',method]
+            if payload is not None:cmd+=['--input','-']
+            return json.loads(subprocess.check_output(cmd,input=json.dumps(payload).encode() if payload is not None else None))
+          head=api('git/ref/heads/main')['object']['sha'];tree=api('git/commits/'+head)['tree']['sha']
+          prefix='public/thesis-studio/seismic-archive/second-suite/qualification/'
+          rows=[]
+          for p in sorted(P.iterdir()):
+            blob=api('git/blobs',{'content':base64.b64encode(p.read_bytes()).decode(),'encoding':'base64'},'POST')['sha']
+            rows.append({'path':prefix+p.name,'mode':'100644','type':'blob','sha':blob})
+          t=api('git/trees',{'base_tree':tree,'tree':rows},'POST')['sha']
+          c=api('git/commits',{'message':'T079 v0.32.196 second suite spectrum qualification and research target diagnostics','tree':t,'parents':[head]},'POST')['sha']
+          api('git/refs/heads/main',{'sha':c,'force':False},'PATCH')
+          print('STUDIO_MAIN_COMMIT',c,flush=True)
+          PY
