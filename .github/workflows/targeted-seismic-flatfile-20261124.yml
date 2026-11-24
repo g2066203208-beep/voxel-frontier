@@ -23,11 +23,19 @@ jobs:
           OPENBLAS_NUM_THREADS: '1'
           OMP_NUM_THREADS: '1'
         run: python research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool/targeted_flatfile.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: T079-targeted-flatfile-pool
+          path: research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool/replacement_v4
       - name: Archive actual data and diagnostics
         run: |
           git config user.name paper-studio-bot
           git config user.email paper-studio-bot@users.noreply.github.com
           git add research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool/replacement_v4
           git commit -m 'Archive targeted long-period ESM flatfile source selection and duration checks'
-          git pull --rebase origin ${GITHUB_REF_NAME}
-          git push origin HEAD:${GITHUB_REF_NAME}
+          for i in 1 2 3 4 5; do
+            git pull --rebase origin ${GITHUB_REF_NAME}
+            if git push origin HEAD:${GITHUB_REF_NAME}; then exit 0; fi
+            sleep 4
+          done
+          exit 1
