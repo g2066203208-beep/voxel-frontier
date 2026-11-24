@@ -1,3 +1,6 @@
+## 2026-11-24｜REV14阻尼方法规范复核 · START
+- READ_BASE_SHA=54cadfebeca8307e05105ded3fe413c5a85d47af；已读根/研究AGENTS、指挥室、白皮书v0.32.161、REV14真实审计。核读GB50135—2019 §4.4.6及表注、T/CEC5008—2018 §5.4.1、NIST非线性抗震指南§6.3/§3.7、Hall/Charney、Qu2026 §3.1、Zhang2024及Abaqus2025 Material Damping。任务为区分规范反应谱等效阻尼、非线性附加黏性及材料赋值，补白皮书；不修改INP、不冒称新求解。原页截图请求失败，明确缺证。
+
 ## 2026-11-24｜REV14 1% Rayleigh地震试算 · END
 - 实际生成HE_REV14_EQ_RAYLEIGH_1PCT.inp，34233672 bytes，SHA256 70c88e645da2e2195fbc089c4af3432d9a37eb38c66296fd23a8b7e1437d5faa；16处差异，7种变形材料αβ、7种刚体骨架材料α/β=0、相对坐标负水平惯性GRAV及重列自重，双波幅值、前四步、连接及逆向恢复检查通过。main 24c14a3d561ed919b022a4a6f6376ec54b629c0d远端回读一致，完整INP/脚本/审计云备份成功，白皮书v0.32.161；原生NOT_RUN、当前频率及惯性参与/能量待验、风HOLD，REV11仍基础，不合并PR#42。
 
