@@ -1,0 +1,87 @@
+name: Retrieve GeoNet Darfield DSLC original source
+on:
+  push:
+    branches:
+      - research/t080-seismic-integration-gates-20261022
+    paths:
+      - '.github/workflows/acquire-geonet-darfield-20261124.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool
+      - name: Obtain official public S3 keys and source records
+        shell: bash
+        run: |
+          python - <<'PY'
+          import urllib.request as u,urllib.parse as p,xml.etree.ElementTree as ET,json,hashlib,pathlib,datetime
+          root=pathlib.Path('research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool/geonet-dslc')
+          root.mkdir(exist_ok=True)
+          base='https://geonet-open-data.s3.ap-southeast-2.amazonaws.com/'
+          ns={'s':'http://s3.amazonaws.com/doc/2006-03-01/'}
+          attempts=[]
+          def get(url): 
+              with u.urlopen(url,timeout=25) as r:return r.read()
+          def listing(prefix,delimiter=None):
+              params={'list-type':'2','prefix':prefix,'max-keys':'1000'}
+              if delimiter:params['delimiter']=delimiter
+              keys=[];prefixes=[]
+              for i in range(5):
+                  url=base+'?'+p.urlencode(params)
+                  data=get(url);e=ET.fromstring(data)
+                  keys += [x.text for x in e.findall('s:Contents/s:Key',ns)]
+                  prefixes += [x.text for x in e.findall('s:CommonPrefixes/s:Prefix',ns)]
+                  attempts.append({'url':url,'sha256':hashlib.sha256(data).hexdigest(),'count':len(keys),'prefixes':prefixes})
+                  token=e.findtext('s:NextContinuationToken',namespaces=ns)
+                  if not token:break
+                  params['continuation-token']=token
+              return keys,prefixes
+          records=[]
+          try:
+              keys,dirs=listing('seismic-products/strong-motion/volume-products/2010/','/')
+              print('ROOT',dirs,keys[:20],flush=True)
+              chosen=[x for x in dirs if '09' in x.split('/')[-2] or 'darfield' in x.lower()]
+              for d in chosen:
+                  ks,ps=listing(d,'/')
+                  print('DIR',d,ps,ks[:20],flush=True)
+                  if 'darfield' in d.lower():
+                      sub=ps
+                  else:
+                      sub=[x for x in ps if 'darfield' in x.lower() or '20100903' in x]
+                  for s in sub:
+                      allkeys,_=listing(s)
+                      ks+=allkeys
+                  for k in ks:
+                      lk=k.lower()
+                      if 'dslc' not in lk or ('20100903' not in lk and 'darfield' not in lk):continue
+                      if not any(x in lk for x in ('.v1','.v2','.v3','.zip','.txt','.csv','.asc')):continue
+                      b=get(base+p.quote(k,safe='/'))
+                      n=k.split('/')[-1];fn=hashlib.sha256(k.encode()).hexdigest()[:8]+'_'+n
+                      (root/fn).write_bytes(b);records.append({'key':k,'file':fn,'bytes':len(b),'sha256':hashlib.sha256(b).hexdigest()})
+                      print('GEONET_RECORD',records[-1],flush=True)
+          except Exception as e:attempts.append({'error':str(e)})
+          try:
+              url='https://api.geonet.org.nz/intensity/strong/processed/3366146'
+              b=get(url);j=json.loads(b)
+              (root/'official-event-3366146.json').write_bytes(b)
+              attempts.append({'url':url,'sha256':hashlib.sha256(b).hexdigest(),'bytes':len(b)})
+          except Exception as e:attempts.append({'error':str(e)})
+          (root/'receipt.json').write_text(json.dumps({'event':'2010 Darfield, publicID 3366146, DSLC','citation':'GeoNet, Earth Sciences New Zealand; CC BY 3.0 NZ; https://www.geonet.org.nz/data/types/strong_motion','records':records,'attempts':attempts,'status':'SOURCE_RETRIEVAL_NOT_DESIGN'},indent=2)+'\n')
+          print('GEONET_TOTAL',len(records))
+          PY
+      - name: Commit GeoNet source evidence
+        run: |
+          git config user.name paper-studio-bot
+          git config user.email paper-studio-bot@users.noreply.github.com
+          git add research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool/geonet-dslc
+          if ! git diff --cached --quiet; then
+            git commit -m 'Archive actual GeoNet Darfield source retrieval and receipt'
+            git pull --rebase origin ${GITHUB_REF_NAME}
+            git push origin HEAD:${GITHUB_REF_NAME}
+          fi
