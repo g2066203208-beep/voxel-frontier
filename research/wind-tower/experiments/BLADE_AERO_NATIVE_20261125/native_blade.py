@@ -54,7 +54,15 @@ def run():
     fst=CASE/'DTU_10MW_RWT.fst';ifw=CASE/'DTU_10MW_InflowWind.dat';ad=CASE/'Rotor/DTU_10MW_RWT_AeroDyn15.dat';srv=CASE/'Control/DTU_10MW_RWT_ServoDyn.dat'
     # Preserve physical model and original control parameters; only input wind and output configuration change.
     assert getval(ad,'TwrAero').lower()=='false'
-    edits=[(fst,'TMax',a.duration),(fst,'TStart',0 if a.duration<100 else 100),(fst,'DT_Out',0.05),(fst,'OutFileFmt',2),(ifw,'WindType',3),(ifw,'FileName_BTS','"new_wind.bts"'),(srv,'DLL_FileName','"libdiscon.dll"')]
+    ed=CASE/'DTU_10MW_RWT_ElastoDyn.dat'
+    edits=[(fst,'AeroFile','"Rotor/DTU_10MW_RWT_AeroDyn15.dat"'),(fst,'TMax',a.duration),(fst,'TStart',0 if a.duration<100 else 100),(fst,'DT_Out',0.05),(fst,'OutFileFmt',2),(ifw,'WindType',3),(ifw,'FileName_BTS','"new_wind.bts"'),(srv,'DLL_FileName','"libdiscon.dll"')]
+    # ED references historically point to shared ../Rotor; relocate only those active paths.
+    for key in ['BldFile(1)','BldFile(2)','BldFile(3)']:
+        old=getval(ed,key).strip('"').replace('\\','/')
+        if old.startswith('../Rotor/'):
+            edits.append((ed,key,'"'+old[3:]+'"'))
+        else:
+            assert (CASE/old).is_file(),(key,old)
     audit=[]
     for path,k,v in edits:
         old=getval(path,k);change(path,k,v);audit.append({'file':str(path.relative_to(CASE)),'field':k,'old':old,'new':str(v)})
@@ -86,7 +94,7 @@ def post():
     groups=['Fx','Fy','Mm','Fn','Ft','Fl','Fd','VRel','Alpha']
     pat=re.compile(r'^B([123])N(\d{3})('+ '|'.join(groups)+r')$')
     nd={(int(m[1]),int(m[2]),m[3]):k for k in names if (m:=pat.fullmatch(k))}
-    nodeids=sorted({k[1] for k in nd});assert nodeids==list(range(1,len(nodeids)+1)) and len(nodeids)>9
+    nodeids=sorted({k[1] for k in nd});assert nodeids==list(range(1,41))
     assert len(nd)==3*len(nodeids)*len(groups),(len(nd),len(nodeids))
     blade=CASE/'Rotor/DTU_10MW_AeroDyn15_blade.dat';lines=blade.read_text().splitlines()
     ix=next(i for i,l in enumerate(lines) if 'BlSpn' in l)
@@ -97,7 +105,7 @@ def post():
             if len(vals)!=7:break
             radii.append(vals[0])
         except ValueError:break
-    assert len(radii)==len(nodeids),(len(radii),nodeids)
+    assert len(radii)==len(nodeids)==40,(len(radii),nodeids)
     C=lambda k:v[:,names.index(k)-1]
     rotor=['RtAero'+k+'h' for k in ['Fx','Fy','Fz','Mx','My','Mz']]
     assert all(k in names for k in rotor),rotor
