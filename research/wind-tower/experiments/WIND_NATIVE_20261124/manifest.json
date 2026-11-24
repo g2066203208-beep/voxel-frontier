@@ -1,0 +1,36 @@
+{
+  "version": "WIND_NATIVE_20261124_R1",
+  "template": "OpenFAST/openfast@v3.5.3:docs/source/user/turbsim/examples/TurbSim.inp",
+  "template_git_blob": "22413d4a9e58abde0c78f7e664da060749bf5fcc",
+  "exe": "https://github.com/OpenFAST/openfast/releases/download/v3.5.3/TurbSim_x64.exe",
+  "hub_height": 161.368806,
+  "grid_width": 200,
+  "grid_height": 200,
+  "dt": 0.05,
+  "IECstandard": "1-Ed3",
+  "turbulence_class": "A",
+  "wind_types": [
+    "NTM",
+    "1ETM"
+  ],
+  "seed": 20261124,
+  "random_generator": "RanLux",
+  "scale_iec": 0,
+  "PLExp": "default",
+  "tower_points": true,
+  "case_speeds": [
+    9.343881,
+    11.4,
+    19.20214
+  ],
+  "scope": "new research simulations, not the original 36 archived cases; no wind load mapping or structural response",
+  "pilot": {
+    "grid": 11,
+    "duration": 120
+  },
+  "full": {
+    "grid": 51,
+    "duration": 700,
+    "statistics_start": 100
+  }
+}
