@@ -1,3 +1,7 @@
+### 2026-11-24｜v0.32.175 PATCH — 嘉鱼参考地震条件与长周期选波决策
+
+新增[SEISMIC_SELECTION_DECISION_20261124](../experiments/T079/SEISMIC_SELECTION_DECISION_20261124.md)，commit 19195dac2b8c7ca9c604a3ae8177ade1039d17ed。实际视觉复核GB/T50011(2024)附录A.0.17嘉鱼6度/0.05g/第一组、5.1.2-2多遇18/罕遇125cm/s²、5.1.4-1 αmax 0.04/0.28、5.1.4-2 第一组II类0.35s，罕遇+0.05s；5.1.4 T>6s专门研究，历史T1=7.394s不能外推建筑谱。NB/T11600-2024现行适用6–9度陆海风电，NB/T10907-2021、IEC61400-1 2025修订及2026勘误、DNV-RP0585 2026更新官方登记核实，完整授权条款未核。嘉鱼实际工址和场地类别未定，II类仅参考假设。决定7组真实双水平不同事件优先、三水准21组、2组独立脉冲敏感性；50–100组初筛，15s可靠周期初选、dt≤0.01s优先，RotD50共同尺度、保留RotD100及1/2/5%谱，最终需长周期目标及原始波元数据准入。列7候选台站与2脉冲台站据工程力学2021表2，非最终目标匹配结果。NVL IT-2012-0008保留调试基准，CI.CLC低频基线未过、IT-2012-0009高通0.08Hz不优先。源级归档及规范核查完成，原波扩充/目标谱/正式7组HOLD，不改INP、不运行Abaqus、不合并PR#42。
+
 ### 2026-11-24｜v0.32.174 PATCH — REV20 工作室原件直下及永久归档
 
 用户要求工作室内直接下载，不跳转Actions。REV20远端构建run45351782526 SUCCESS，artifact14900571562；发布run45352159798 SUCCESS，下载实际ZIP并通过整包SHA256 58f8afead62781ea80f3d01fc81055e97fb6ab5e85b04ce53d3ae9c65951e83f、12606328字节、ZIP CRC和全部清单成员逐项SHA256/长度验证；原件永久提交main public/thesis-studio/inp-archive/REV20_NATIVE_RNA/REV20_RNA_FULL_PACKAGE.zip。清单blob 8207a39cfb400d97db1db1265fe7fc4bd5e7faaf。main 81bea6645e373d7aeef876e99cf26ebf82bcda00 工作室新增ZIP直接下载及4个单INP按钮（浏览器取原包，检查整包身份、中央目录与成员SHA256/长度，不重建或修改INP；JS语法通过，实际浏览器下载未验）。整包与原始Actions产物字节一致，原生仍NOT_RUN。生成INP远端785e777aa47e1775882941fc27c74f5fe67d422d2abdff143bb9a5eecd0514b4，与上一版本地浮点舍入差异区分，三个整塔INP SHA256一致。页面部署需检查对应Pages run，不以提交冒充上线。工作室 https://g2066203208-beep.github.io/voxel-frontier/thesis-studio/inp-archive/#rev20 。不覆盖REV18，不合并PR#42。
