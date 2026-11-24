@@ -12,6 +12,8 @@ concurrency:
   cancel-in-progress: true
 jobs:
   restore:
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -23,6 +25,18 @@ jobs:
         with:
           python-version: '3.11'
       - run: python research/wind-tower/experiments/BLADE_AERO_NATIVE_20261125/native_blade.py --stage restore
+      - name: Persist verified original-input evidence in the studio
+        run: |
+          mkdir -p public/thesis-studio/wind-figures/blade-aero
+          cp native-aero/source_receipt.json native-aero/original-inputs.zip public/thesis-studio/wind-figures/blade-aero/
+          git config user.name thesis-wind-archive
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/thesis-studio/wind-figures/blade-aero
+          if ! git diff --cached --quiet; then
+            git commit -m 'Preserve SHA-verified original DTU158 aero and control inputs'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
       - uses: actions/upload-artifact@v4
         with:
           name: native-blade-restored-inputs
@@ -70,11 +84,14 @@ jobs:
             $dll = Get-ChildItem rosco-env -Recurse -Filter libdiscon.dll | Select-Object -First 1
             if (-not $dll) { throw 'ROSCO DLL not found' }
             Copy-Item $dll.FullName bin/libdiscon.dll
-            "$pwd\rosco-env\Library\bin" | Out-File -FilePath $env:GITHUB_PATH -Append
+            Get-ChildItem rosco-env\Library\bin -Filter *.dll | Copy-Item -Destination bin -Force
+            "$pwd\bin" | Out-File -FilePath $env:GITHUB_PATH -Append
           }
           Get-FileHash bin/*.exe,bin/*.dll -Algorithm SHA256 | Format-List
       - name: Native 10 s pilot with all three blade nodal outputs
         run: |
+          $env:PATH = "$pwd\bin;$env:PATH"
+          $env:PATH = "$pwd\bin;$env:PATH"
           python -m pip install numpy==1.26.4 matplotlib==3.9.2
           $p = 'research/wind-tower/experiments/BLADE_AERO_NATIVE_20261125/native_blade.py'
           $reader = 'research/wind-tower/experiments/BLADE_AERO_NATIVE_20261125/outb_reader.py'
