@@ -1,0 +1,203 @@
+{
+  "base": "REV10",
+  "sourceSha256": "5ec5518edbe6f0fb038f24fafe402b72c0dbc2e0a51c72af44fe069c104d1507",
+  "targetSha256": "fa27040f66b1c6d85fe1c4d863fb62d1423960972a1cdf08fc9dbb0871b1e5fd",
+  "targetSize": 34227226,
+  "edits": [
+    {
+      "offset": 9,
+      "old": "** Job name: HE_REV10_HE_CHECK Model name: CONTACT_REV10\n",
+      "new": "** Job name: HE_REV11_HE_CHECK Model name: CONTACT_REV11\n** REV11: HRB400 standard-strength envelope with literature strain landmarks; HPB300 ties; Q355 hot-rolled tower; Q355 100mm plate flange candidate. Cyclic calibration pending.\n"
+    },
+    {
+      "offset": 755,
+      "old": "** GB50135-2019 6.5 reference; assumed design fy=300 MPa for screening only.",
+      "new": "** GB50135-2019 6.5 reference; HRB400 design fy=360 MPa for hoop screening; not full code compliance."
+    },
+    {
+      "offset": 12506320,
+      "old": "*Solid Section, elset=SET_TIE, material=S345",
+      "new": "*Solid Section, elset=SET_TIE, material=HPB300_TIE"
+    },
+    {
+      "offset": 12903273,
+      "old": "*Solid Section, elset=SET_TIE, material=S345",
+      "new": "*Solid Section, elset=SET_TIE, material=HPB300_TIE"
+    },
+    {
+      "offset": 13300226,
+      "old": "*Solid Section, elset=SET_TIE, material=S345",
+      "new": "*Solid Section, elset=SET_TIE, material=HPB300_TIE"
+    },
+    {
+      "offset": 13697179,
+      "old": "*Solid Section, elset=SET_TIE, material=S345",
+      "new": "*Solid Section, elset=SET_TIE, material=HPB300_TIE"
+    },
+    {
+      "offset": 14089236,
+      "old": "*Solid Section, elset=SET_TIE, material=S345",
+      "new": "*Solid Section, elset=SET_TIE, material=HPB300_TIE"
+    },
+    {
+      "offset": 14479090,
+      "old": "*Solid Section, elset=SET_TIE, material=S345",
+      "new": "*Solid Section, elset=SET_TIE, material=HPB300_TIE"
+    },
+    {
+      "offset": 14868944,
+      "old": "*Solid Section, elset=SET_TIE, material=S345",
+      "new": "*Solid Section, elset=SET_TIE, material=HPB300_TIE"
+    },
+    {
+      "offset": 15258798,
+      "old": "*Solid Section, elset=SET_TIE, material=S345",
+      "new": "*Solid Section, elset=SET_TIE, material=HPB300_TIE"
+    },
+    {
+      "offset": 15648652,
+      "old": "*Solid Section, elset=SET_TIE, material=S345",
+      "new": "*Solid Section, elset=SET_TIE, material=HPB300_TIE"
+    },
+    {
+      "offset": 16038506,
+      "old": "*Solid Section, elset=SET_TIE, material=S345",
+      "new": "*Solid Section, elset=SET_TIE, material=HPB300_TIE"
+    },
+    {
+      "offset": 16428360,
+      "old": "*Solid Section, elset=SET_TIE, material=S345",
+      "new": "*Solid Section, elset=SET_TIE, material=HPB300_TIE"
+    },
+    {
+      "offset": 16818214,
+      "old": "*Solid Section, elset=SET_TIE, material=S345",
+      "new": "*Solid Section, elset=SET_TIE, material=HPB300_TIE"
+    },
+    {
+      "offset": 17208068,
+      "old": "*Solid Section, elset=SET_TIE, material=S345",
+      "new": "*Solid Section, elset=SET_TIE, material=HPB300_TIE"
+    },
+    {
+      "offset": 17597922,
+      "old": "*Solid Section, elset=SET_TIE, material=S345",
+      "new": "*Solid Section, elset=SET_TIE, material=HPB300_TIE"
+    },
+    {
+      "offset": 17987776,
+      "old": "*Solid Section, elset=SET_TIE, material=S345",
+      "new": "*Solid Section, elset=SET_TIE, material=HPB300_TIE"
+    },
+    {
+      "offset": 18377630,
+      "old": "*Solid Section, elset=SET_TIE, material=S345",
+      "new": "*Solid Section, elset=SET_TIE, material=HPB300_TIE"
+    },
+    {
+      "offset": 18767484,
+      "old": "*Solid Section, elset=SET_TIE, material=S345",
+      "new": "*Solid Section, elset=SET_TIE, material=HPB300_TIE"
+    },
+    {
+      "offset": 19157338,
+      "old": "*Solid Section, elset=SET_TIE, material=S345",
+      "new": "*Solid Section, elset=SET_TIE, material=HPB300_TIE"
+    },
+    {
+      "offset": 19547192,
+      "old": "*Solid Section, elset=SET_TIE, material=S345",
+      "new": "*Solid Section, elset=SET_TIE, material=HPB300_TIE"
+    },
+    {
+      "offset": 19937046,
+      "old": "*Solid Section, elset=SET_TIE, material=S345",
+      "new": "*Solid Section, elset=SET_TIE, material=HPB300_TIE"
+    },
+    {
+      "offset": 20326900,
+      "old": "*Solid Section, elset=SET_TIE, material=S345",
+      "new": "*Solid Section, elset=SET_TIE, material=HPB300_TIE"
+    },
+    {
+      "offset": 20716754,
+      "old": "*Solid Section, elset=SET_TIE, material=S345",
+      "new": "*Solid Section, elset=SET_TIE, material=HPB300_TIE"
+    },
+    {
+      "offset": 21106608,
+      "old": "*Solid Section, elset=SET_TIE, material=S345",
+      "new": "*Solid Section, elset=SET_TIE, material=HPB300_TIE"
+    },
+    {
+      "offset": 21496462,
+      "old": "*Solid Section, elset=SET_TIE, material=S345",
+      "new": "*Solid Section, elset=SET_TIE, material=HPB300_TIE"
+    },
+    {
+      "offset": 21886316,
+      "old": "*Solid Section, elset=SET_TIE, material=S345",
+      "new": "*Solid Section, elset=SET_TIE, material=HPB300_TIE"
+    },
+    {
+      "offset": 22276170,
+      "old": "*Solid Section, elset=SET_TIE, material=S345",
+      "new": "*Solid Section, elset=SET_TIE, material=HPB300_TIE"
+    },
+    {
+      "offset": 22666024,
+      "old": "*Solid Section, elset=SET_TIE, material=S345",
+      "new": "*Solid Section, elset=SET_TIE, material=HPB300_TIE"
+    },
+    {
+      "offset": 23055878,
+      "old": "*Solid Section, elset=SET_TIE, material=S345",
+      "new": "*Solid Section, elset=SET_TIE, material=HPB300_TIE"
+    },
+    {
+      "offset": 23445732,
+      "old": "*Solid Section, elset=SET_TIE, material=S345",
+      "new": "*Solid Section, elset=SET_TIE, material=HPB300_TIE"
+    },
+    {
+      "offset": 23835586,
+      "old": "*Solid Section, elset=SET_TIE, material=S345",
+      "new": "*Solid Section, elset=SET_TIE, material=HPB300_TIE"
+    },
+    {
+      "offset": 24136462,
+      "old": "*Solid Section, elset=SET_TIE, material=S345",
+      "new": "*Solid Section, elset=SET_TIE, material=HPB300_TIE"
+    },
+    {
+      "offset": 24158508,
+      "old": "*Solid Section, elset=SET_ALL, material=S345",
+      "new": "*Solid Section, elset=SET_ALL, material=Q355_TOWER_T16_40"
+    },
+    {
+      "offset": 24175303,
+      "old": "*Solid Section, elset=SET_ALL, material=S345",
+      "new": "*Solid Section, elset=SET_ALL, material=Q355_TOWER_T16_40"
+    },
+    {
+      "offset": 24192098,
+      "old": "*Solid Section, elset=SET_ALL, material=S345",
+      "new": "*Solid Section, elset=SET_ALL, material=Q355_TOWER_T16_40"
+    },
+    {
+      "offset": 24208893,
+      "old": "*Solid Section, elset=SET_ALL, material=S345",
+      "new": "*Solid Section, elset=SET_ALL, material=Q355_TOWER_T16_40"
+    },
+    {
+      "offset": 25088963,
+      "old": "*Solid Section, elset=SET_ALL, material=S345",
+      "new": "*Solid Section, elset=SET_ALL, material=Q355_FLANGE_PLATE_T100"
+    },
+    {
+      "offset": 34213619,
+      "old": "*Material, name=S345\n*Density\n7800.,\n*Elastic\n 2e+11, 0.3\n** REV03: bilinear envelope, supplemental b=0.01 assumption; not He2024 direct data.\n*Plastic\n345000000., 0.\n547020202.020202041, 0.1\n*Material, name=HRB400\n*Density\n7850.,\n*Elastic\n 2e+11, 0.3\n** Candidate inherited b=0.01 isotropic hardening; not a calibrated cyclic or fracture model.\n*Plastic\n400000000., 0.\n602020202.020202041, 0.1\n",
+      "new": "*Material, name=HPB300_TIE\n*Density\n7850.,\n*Elastic\n210000000000, 0.3\n*Plastic\n300000000, 0\n*Material, name=Q355_TOWER_T16_40\n*Density\n7850.,\n*Elastic\n206000000000, 0.3\n*Plastic, hardening=KINEMATIC\n345000000, 0\n365808080.808, 0.01\n*Material, name=Q355_FLANGE_PLATE_T100\n*Density\n7850.,\n*Elastic\n206000000000, 0.3\n*Plastic\n315000000, 0\n*Material, name=HRB400\n*Density\n7850.,\n*Elastic\n200000000000, 0.3\n*Plastic\n400800000, 0\n404000000, 0.00793033085317\n406560000, 0.0142341724639\n422448902.778, 0.0237422944046\n438566277.778, 0.0331582248029\n454912125, 0.0424836767168\n471486444.444, 0.0517203153084\n488289236.111, 0.0608697596136\n505320500, 0.0699335842293\n522580236.111, 0.0789133209257\n540068444.444, 0.0878104601853\n557785125, 0.0966264526732\n575730277.778, 0.105362710643\n593903902.778, 0.114020609282\n612306000, 0.122601487996\n"
+    }
+  ]
+}

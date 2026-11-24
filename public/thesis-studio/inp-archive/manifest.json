@@ -1,7 +1,17 @@
 {
   "schema": 1,
-  "latest": "REV10",
+  "latest": "REV11",
   "versions": [
+    {
+      "version": "REV11",
+      "file": "HE_REV11_HE_CHECK.inp",
+      "date": "2026-11-24",
+      "size": 34227226,
+      "sha256": "fa27040f66b1c6d85fe1c4d863fb62d1423960972a1cdf08fc9dbb0871b1e5fd",
+      "base": "REV10",
+      "patch": "REV11/patch.json",
+      "state": "钢材分类及规范强度/文献包络候选；循环、法兰工艺、原生求解待验"
+    },
     {
       "version": "REV10",
       "file": "HE_REV10_HE_CHECK.inp",
