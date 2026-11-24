@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>INP 模型档案 · 湖北嘉鱼风机工作室</title><style>
 :root{color-scheme:light dark;--accent:#157b70}*{box-sizing:border-box}body{font:15px/1.6 system-ui,sans-serif;margin:0;background:light-dark(#f4f6f5,#142020);color:light-dark(#1d2d2c,#e1eae9)}header{background:#112c33;color:#fff;padding:16px max(20px,calc((100% - 1000px)/2))}header a{color:#b9e4d8;text-decoration:none}main{max-width:1000px;margin:auto;padding:28px 20px}h1{font-size:26px;margin:0 0 16px}section{border:1px solid light-dark(#d4e0dd,#3d5553);border-radius:10px;background:light-dark(#fff,#1e3030);padding:20px;margin-bottom:16px}h2{font-size:18px;margin:0 0 12px}dl{display:grid;grid-template-columns:120px 1fr;gap:8px;margin:0 0 14px}dt{color:light-dark(#506560,#b1c9c3)}dd{margin:0;overflow-wrap:anywhere}code{font-size:12px}button{font:inherit;background:var(--accent);color:white;border:0;padding:9px 14px;border-radius:6px;margin:3px 8px 3px 0;cursor:pointer}button:disabled{opacity:.55;cursor:wait}a{color:light-dark(#136e66,#99dbce)}#status{min-height:24px;overflow-wrap:anywhere}small{color:light-dark(#506560,#b1c9c3)}@media(max-width:540px){dl{grid-template-columns:1fr}dd{margin-bottom:4px}}
-</style></head><body><header><a href="../">← 湖北嘉鱼风机工作室</a></header><main><h1>INP 模型档案</h1><div id="versions" aria-live="polite">正在读取版本目录…</div><section><h2>版本控制</h2><p>冻结原件不覆盖；每次修改另建 REV 版本，并记录原件与新件 SHA-256、修改范围及验证状态。工作室从 GitHub 读取持久化原始字节。下载前校验压缩包，解压后再次校验 INP。</p><a href="https://github.com/g2066203208-beep/voxel-frontier/tree/main/public/thesis-studio/inp-archive">GitHub 版本目录</a> · <a href="https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/governance/DEVELOPMENT_WHITEPAPER.md">研发白皮书</a><p><small>此页面为版本读取与校验下载入口。远端修改由授权的 GitHub 提交完成；浏览器本地草稿不视为远端已保存。</small></p></section><p id="status" role="status"></p></main><script>
+</style></head><body><header><a href="../">← 湖北嘉鱼风机工作室</a></header><main><h1>INP 模型档案</h1><section id="rev16"><h2>REV16 · 柔性 RNA 整塔输入</h2><dl><dt>文件</dt><dd>HE_REV16_EQ_FLEX_RNA.inp</dd><dt>母本</dt><dd>REV15_EQ_RNA_LUMPED</dd><dt>修改范围</dt><dd>三片柔性叶片、分布质量、转动惯量及 RNA 连接；保留全部原分析步</dd><dt>状态</dt><dd>静态重建候选 · Abaqus 原生验证未运行</dd><dt>大小</dt><dd>23,447,305 bytes（差异计算值）</dd></dl><button id="build16" disabled>在线生成并下载完整 INP</button><a href="REV16_EQ_FLEX_RNA/RNA_FLEX_STANDALONE.inp" download>独立 RNA 验证 INP</a><p id="status16" role="status" aria-live="polite">正在读取版本目录…</p><p><small>从 GitHub 归档自动恢复母本，校验原文，替换 RNA，计算最终文件 SHA-256 后下载。无需上传本地文件。</small></p></section><div id="versions" aria-live="polite">正在读取版本目录…</div><section><h2>版本控制</h2><p>冻结原件不覆盖；每次修改另建 REV 版本，并记录原件与新件 SHA-256、修改范围及验证状态。工作室从 GitHub 读取持久化原始字节。下载前校验压缩包，解压后再次校验 INP。</p><a href="https://github.com/g2066203208-beep/voxel-frontier/tree/main/public/thesis-studio/inp-archive">GitHub 版本目录</a> · <a href="https://github.com/g2066203208-beep/voxel-frontier/blob/research/t080-seismic-integration-gates-20261022/research/wind-tower/governance/DEVELOPMENT_WHITEPAPER.md">研发白皮书</a><p><small>此页面为版本读取与校验下载入口。远端修改由授权的 GitHub 提交完成；浏览器本地草稿不视为远端已保存。</small></p></section><p id="status" role="status"></p></main><script>
 "use strict";
 const status=document.getElementById("status");
 async function sha256(buf){return Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256",buf)),x=>x.toString(16).padStart(2,"0")).join("")}
@@ -11,6 +11,50 @@ async function unpack(zip,v){const d=new DataView(zip.buffer,zip.byteOffset,zip.
 let archiveVersions=[];
 async function recover(v){if(!v.base)return new Uint8Array(await unpack(await assemble(v),v));const parent=archiveVersions.find(x=>x.version===v.base);if(!parent)throw Error("母本版本缺失");const src=await recover(parent);const r=await fetch(v.patch,{cache:"no-store"});if(!r.ok)throw Error("差异档案读取失败");const p=await r.json();if(p.sourceSha256!==await sha256(src)||p.targetSha256!==v.sha256||p.targetSize!==v.size)throw Error("差异版本身份不符");const enc=new TextEncoder(),out=new Uint8Array(v.size);let cursor=0,dest=0;for(const e of p.edits){const b=enc.encode(e.new),i=e.offset,compact=p.schema===2,a=compact?null:enc.encode(e.old),n=compact?e.oldLength:a.length;if(!Number.isSafeInteger(i)||!Number.isSafeInteger(n)||n<0||i<cursor||i+n>src.length)throw Error("差异定位不符");if(compact?await sha256(src.subarray(i,i+n))!==e.oldSha256:a.some((x,j)=>src[i+j]!==x))throw Error("差异原文校验不符");out.set(src.subarray(cursor,i),dest);dest+=i-cursor;out.set(b,dest);dest+=b.length;cursor=i+n}out.set(src.subarray(cursor),dest);dest+=src.length-cursor;if(dest!==v.size||await sha256(out)!==v.sha256)throw Error("新版INP校验失败");return out}
 async function download(v,kind,buttons){buttons.forEach(b=>b.disabled=true);try{if(v.base){const inp=await recover(v);save(inp,v.file,"application/octet-stream");status.textContent="INP 大小及 SHA-256 校验通过，已触发下载。";return}const zip=await assemble(v);if(kind==="zip"){save(zip,v.file.replace(/\.inp$/i,".zip"),"application/zip");status.textContent="ZIP 校验通过，已触发下载。"}else{const inp=await unpack(zip,v);save(inp,v.file,"application/octet-stream");status.textContent="INP 大小及 SHA-256 校验通过，已触发下载。"}}catch(e){status.textContent="下载中止："+e.message+"。可尝试 ZIP 下载。"}finally{buttons.forEach(b=>b.disabled=false)}}
+
+function bytesEqual(a,b){return a.length===b.length&&a.every((x,i)=>x===b[i])}
+async function gitBlobSha1(bytes){
+ const h=new TextEncoder().encode("blob "+bytes.length+"\0"),buf=new Uint8Array(h.length+bytes.length);buf.set(h);buf.set(bytes,h.length);
+ return Array.from(new Uint8Array(await crypto.subtle.digest("SHA-1",buf)),x=>x.toString(16).padStart(2,"0")).join("");
+}
+async function build16(){
+ const button=document.getElementById("build16"),note=document.getElementById("status16");button.disabled=true;
+ try{
+  note.textContent="正在核验 REV15 归档…";
+  const rr=await fetch("REV16_EQ_FLEX_RNA/online-recipe.json",{cache:"no-store"});if(!rr.ok)throw Error("REV16 修改档案无法读取");const p=await rr.json();
+  if(p.schema!=="rna-text-recipe-1"||p.version!=="REV16_EQ_FLEX_RNA"||p.file!=="HE_REV16_EQ_FLEX_RNA.inp"||p.edits.length!==4||p.targetSize!==23447305)throw Error("REV16 版本身份不符");
+  const parent=archiveVersions.find(x=>x.version===p.base);
+  if(!parent||parent.sha256!==p.sourceSha256||parent.size!==p.sourceSize)throw Error("REV15 母本身份不符");
+  const src=await recover(parent);if(src.length!==p.sourceSize||await sha256(src)!==p.sourceSha256)throw Error("REV15 原始字节校验失败");
+  note.textContent="母本校验通过，读取柔性 RNA…";
+  const response=await fetch(p.standalone,{cache:"no-store"});if(!response.ok)throw Error("RNA 文件读取失败");
+  const raw=new Uint8Array(await response.arrayBuffer());
+  if(raw.length!==p.standaloneSize||await gitBlobSha1(raw)!==p.standaloneGitBlob)throw Error("RNA Git blob 校验失败");
+  const dec=new TextDecoder("utf-8",{fatal:true}),enc=new TextEncoder(),st=dec.decode(raw),start=st.indexOf("*Part, name=RNA_FLEX_DPM"),end=st.indexOf("*End Part",start);
+  if(start<0||end<start)throw Error("RNA 部件未闭合");
+  const part=st.slice(start,end+10)+"\n",out=new Uint8Array(p.targetSize);
+  let cursor=0,dest=0;
+  for(const e of p.edits){
+   const i=e.offset,a=enc.encode(e.old),b=enc.encode(e.newFrom==="standalonePart"?part:e.new);
+   if(!Number.isSafeInteger(i)||i<cursor||i+a.length>src.length||!bytesEqual(src.subarray(i,i+a.length),a))throw Error("RNA 原文位置或内容不匹配："+i);
+   out.set(src.subarray(cursor,i),dest);dest+=i-cursor;out.set(b,dest);dest+=b.length;cursor=i+a.length;
+  }
+  out.set(src.subarray(cursor),dest);dest+=src.length-cursor;
+  if(dest!==p.targetSize)throw Error("新版长度不符");
+  note.textContent="RNA 已替换，正在核验分析步及约束…";
+  const original=dec.decode(src),result=dec.decode(out),step=/^\*Step,/mi;
+  const i=original.search(step),j=result.search(step);
+  if(i<0||j<0||original.slice(i)!==result.slice(j)||result.includes("RNA_LUMPED_INERTIA"))throw Error("分析步或 RNA 引用检查失败");
+  for(const k of ["Part","End Part","Instance","End Instance","Rigid Body","Step","End Step","Contact Pair","Tie","Embedded Element","Equation","Coupling"]){
+    const re=new RegExp("^\\*"+k+"(?=,|\\r?$)","gmi");
+    if((original.match(re)||[]).length!==(result.match(re)||[]).length)throw Error("非预期关键字变化："+k);
+  }
+  const digest=await sha256(out);save(out,p.file,"application/octet-stream");
+  note.textContent="完整 INP 已生成并触发下载。SHA-256："+digest;
+  status.textContent="REV16：母本、RNA 原文、四处替换及全部分析步静态检查通过；Abaqus 原生验证未运行。";
+ }catch(e){note.textContent="生成中止："+e.message;status.textContent="REV16 未生成，不输出未经校验的文件。";}finally{button.disabled=false}
+}
+
 function addField(dl,label,value,code=false){const dt=document.createElement("dt"),dd=document.createElement("dd");dt.textContent=label;if(code){const c=document.createElement("code");c.textContent=value;dd.append(c)}else dd.textContent=value;dl.append(dt,dd)}
-(async()=>{try{const r=await fetch("manifest.json",{cache:"no-store"});if(!r.ok)throw Error("版本目录读取失败");const m=await r.json();archiveVersions=m.versions;const host=document.getElementById("versions");host.replaceChildren();for(const v of m.versions){const s=document.createElement("section"),h=document.createElement("h2"),dl=document.createElement("dl");h.textContent=v.version+(v.version===m.latest?" · 当前归档":"");addField(dl,"文件",v.file);addField(dl,"归档日期",v.date);addField(dl,"大小",v.size.toLocaleString()+" bytes");addField(dl,"状态",v.state);addField(dl,"SHA-256",v.sha256,true);const a=document.createElement("button"),b=document.createElement("button");a.textContent="校验并下载 INP";b.textContent="校验并下载 ZIP";a.onclick=()=>download(v,"inp",[a,b]);b.onclick=()=>download(v,"zip",[a,b]);s.append(h,dl,a);if(!v.base)s.append(b);host.append(s)}}catch(e){document.getElementById("versions").textContent=e.message}})();
+(async()=>{try{const r=await fetch("manifest.json",{cache:"no-store"});if(!r.ok)throw Error("版本目录读取失败");const m=await r.json();archiveVersions=m.versions;const buildButton=document.getElementById("build16");buildButton.disabled=false;buildButton.onclick=build16;document.getElementById("status16").textContent="可以生成整塔 INP。";const host=document.getElementById("versions");host.replaceChildren();for(const v of m.versions){const s=document.createElement("section"),h=document.createElement("h2"),dl=document.createElement("dl");h.textContent=v.version+(v.version===m.latest?" · 当前归档":"");addField(dl,"文件",v.file);addField(dl,"归档日期",v.date);addField(dl,"大小",v.size.toLocaleString()+" bytes");addField(dl,"状态",v.state);addField(dl,"SHA-256",v.sha256,true);const a=document.createElement("button"),b=document.createElement("button");a.textContent="校验并下载 INP";b.textContent="校验并下载 ZIP";a.onclick=()=>download(v,"inp",[a,b]);b.onclick=()=>download(v,"zip",[a,b]);s.append(h,dl,a);if(!v.base)s.append(b);host.append(s)}}catch(e){document.getElementById("versions").textContent=e.message}})();
 </script></body></html>
