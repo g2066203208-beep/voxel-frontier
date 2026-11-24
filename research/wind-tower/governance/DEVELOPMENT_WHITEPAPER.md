@@ -1,3 +1,9 @@
+### 2026-11-25｜v0.32.213 — 历史整机输入完整恢复与原生叶片气动力试算
+
+- SOURCE=固定commit 5ce9b969cbbbf6a4e921d432eb43b596696458be 两套历史去重清单及3个原始ZIP，实际恢复17份OpenFAST/ElastoDyn/AeroDyn/InflowWind/ServoDyn/ROSCO与六翼型输入；main归档commit 13b06d1eeda8fcb4e3029adee20043b8e0446c01，public/thesis-studio/wind-figures/blade-aero/source_receipt.json、original-inputs.zip（blob bcafa8710e6d8efa3d26986f517b282e1f0d09f4），原始DLL未恢复，不声称同字节。原DISCON.IN确为ROSCO 2.6.0调参逻辑。另用JS实际解压回读FST、InflowWind、ServoDyn、DISCON及叶片文件，原FST AeroFile指向../Rotor，恢复包Rotor位于工况目录；NumBlNds=40，三片叶片120节点。
+- CODE=main初始原生程序68bde92a312891e25bb7504a3ba60ced62dbf55f、工作流5b3c1ce16c082547d18156220308785660cb363f/786ded8acb1b11f9aecf567ede0dad7c974e5df5/41547832cbbe93f39c6413d6c630b1c44556d3c1；另PR#48 research/native-blade-pilot-20261125，路径修正97c0c0045110b56d9c2d49e14a860c306c79967a，独立可追踪10s验证流程0f19260b9b0a7f1be7b7c455f4b9091047981559。依据OpenFAST v3.5.3官方手册4.2.1.3.2.14，BldNd_BladesOut=3、BldNd_BlOutNd=99，输出Fx/Fy/Mm/Fn/Ft/Fl/Fd/VRel/Alpha及RtAero六分量；逐节点输出120×9=1080通道为预期，不是已有实算。TwrAero保留False，与独立塔身风阻区分，模型仍为历史降阶整机而非REV22。
+- RUN=Actions 45439098884 job138604909328，回读17输入SHA/ZIP CRC检查成功、BTS下载成功、官方版本求解器及控制器获取步骤成功；10s原生求解与输出校验步骤仍在运行，未取得结果，不宣布叶片分布外载通过或正式700s完成。原生控制器SHA/出处须回读controller_receipt；当前未发布图件或修改论文、INP，未进行FE节点映射。白皮书依据实际状态记录，不使用历史反力替代外气动力。
+
 ### 2026-11-24｜v0.32.212 — 六组独立塔身准定常风阻与守恒端点载荷
 
 - SOURCE=REV22实读SHA e84851887735305c6387ca38a972bebd97ba9cdff7baa7735c0ed89cecf925b5，冻结REV21父本ZIP SHA f389e927a4b42f0c26bf22f1f9ef24202255b8dd03a8d0e7585edfae83a6af91、INP SHA7538ccb15a0af82364f0482f4a30e65a59d157a3b33efb94c4beb295a646721c。真实网格31混凝土段+4钢段+0.1m法兰，36分区连续0–158m，外径8.33→4.42m，投影面积927.727451m²。完整六BTS原生SHA逐件验证，51×51+16塔身节点，12000点/600s，重复底节点速度相等。最低1.368805m以下零地面至最低点线性插值，另做最低点恒值对照；最大全塔纵向力差1022.758N，第一矩524.382Nm。rho=1.225、Cd=.5，.7仅比例敏感性；来源Galhardo et al. WES 2026 11:4059–4075 DOI10.5194/wes-11-4059-2026、Al-Sanad et al. IJSE 2022 41:469–491 DOI10.1080/14786451.2021.1953495（可访问摘要与公式，出版社全文打开403）。未核定粗糙度/规范最终Cd，Re范围已在receipt记录。无结构速度反馈，无旋翼气动力。
