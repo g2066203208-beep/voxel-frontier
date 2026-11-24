@@ -1,0 +1,16 @@
+{
+  "source_blob": "8d3de6a2dfb51b3ffea734665e0f71d2858baedc",
+  "node_coordinate_rotation_max_abs_m": 1.0925704367916669e-11,
+  "section_orientation_rotation_max_norm": 1.781795545219835e-14,
+  "section_property_max_relative": 0,
+  "mass_max_relative": 0,
+  "rotary_tensor_max_relative": 4.15875627678639e-14,
+  "blade2_azimuth_deg": -120,
+  "blade3_azimuth_deg": 120,
+  "one_blade_nodes": 102,
+  "one_blade_B31": 50,
+  "one_blade_MASS": 51,
+  "one_blade_ROTARYI": 51,
+  "one_blade_MPC": 50,
+  "scope": "Source geometry/material/rotary-tensor cyclic symmetry. No native Abaqus, no prestressed/operating transfer symmetry proof."
+}
