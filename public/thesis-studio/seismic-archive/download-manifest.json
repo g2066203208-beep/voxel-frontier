@@ -1,0 +1,85 @@
+{
+  "source_sha256": "89d25e81769f22481baef110ec0a41995902d3bc76725ec5442ba042496e8ca4",
+  "files": {
+    "NINE_SOURCE_CANDIDATES.json": {
+      "bytes": 14364,
+      "sha256": "c00d7138f0668006c8dee554e44b5c789341002e0d32686876703797e960328f"
+    },
+    "README.md": {
+      "bytes": 798,
+      "sha256": "524ca99740252a1d041c9942d66b538ed433e0c7399dc9697b5e5bba40317d39"
+    },
+    "T079_NINE_REAL_SOURCE_CANDIDATES.zip": {
+      "bytes": 6515160,
+      "sha256": "89d25e81769f22481baef110ec0a41995902d3bc76725ec5442ba042496e8ca4"
+    },
+    "audit_source.py": {
+      "bytes": 12761,
+      "sha256": "f07893cb86f4501fd7de798f4ab3cf8c985136a2773e29c0ffdb01791fe5ef3b"
+    },
+    "nine_actual_spectra.png": {
+      "bytes": 290030,
+      "sha256": "313a108a52eb4669e740e30ec301e7ff1b20c7415cb416fa16039586e6331664"
+    },
+    "nine_actual_waveforms.png": {
+      "bytes": 460053,
+      "sha256": "019e6e762162a41d05d298ad5841969ffd4daf3bae8b13dfbb7abb611e97d465"
+    },
+    "nine_long_period_sensitivity.png": {
+      "bytes": 125335,
+      "sha256": "848cbfc85efb1265fb63f4e04b446ea4ff733f4ed2b482395a7d5c79edab6d73"
+    },
+    "nine_velocity_diagnostics.png": {
+      "bytes": 446374,
+      "sha256": "a94fbf8549dc13485be5d85190ea286deaa0d2ff51fb5e5ed5c7b699e4588705"
+    },
+    "period_diagnostics.csv": {
+      "bytes": 14892,
+      "sha256": "a283194457754462f9bb1c896648216d10326725eb6825a32b1efb8618d092cd"
+    },
+    "quality_audit.json": {
+      "bytes": 16866,
+      "sha256": "f7bf887321cf667fb6864575ecb6b891602fd4b88295422b47777548d6a87492"
+    },
+    "quality_summary.csv": {
+      "bytes": 5868,
+      "sha256": "899cbc2d9b371c39256622ea4be140642f6660a5ac0423ccee0c30755f9bbdc2"
+    },
+    "records/EQ01_CLN.zip": {
+      "bytes": 452625,
+      "sha256": "0060c8ee1c54ef36dae5ef8c3509137e368535017f22b16d4cc997a3224e35e6"
+    },
+    "records/EQ02_MODE.zip": {
+      "bytes": 1003218,
+      "sha256": "389e15b8b789ce9aeba13bdd095d35631a5fdccd05dbff1891e9df5431f4f404"
+    },
+    "records/EQ03_COR1.zip": {
+      "bytes": 966084,
+      "sha256": "97532577ccff902b8a5662fc3e9902035ba602c87af05f04c2df0254caf66e91"
+    },
+    "records/EQ04_MESG.zip": {
+      "bytes": 780861,
+      "sha256": "6ff64e46fec2d2c7285507f07300747a0a9523c64c4fb997191d8c5e848c8a78"
+    },
+    "records/EQ05_ZOVE.zip": {
+      "bytes": 917473,
+      "sha256": "0fae32ffeee3ef53a2b258d499712b1a4e5534fc49d89b14ff8c58c76239375f"
+    },
+    "records/EQ06_T1215.zip": {
+      "bytes": 501651,
+      "sha256": "06258a839cd8d4558edbe13bc35603606f0140c8d70452918e492822714c3129"
+    },
+    "records/EQ07_FEMA.zip": {
+      "bytes": 408691,
+      "sha256": "a241e2a73904abe8105952a3d98d383d7d25384e7a166b14c9e7e23ccf9ab055"
+    },
+    "records/SP01_T1201.zip": {
+      "bytes": 335173,
+      "sha256": "27b436b2548dd9953c80c5f27a86e5572a0cc6bb5125e4e35669a44d091c6b74"
+    },
+    "records/SP02_DSLC.zip": {
+      "bytes": 436443,
+      "sha256": "56ac53bb5618f6e700b3f3ce8f246ac7621cacd4a0251962b6e4f9d73f761ea1"
+    }
+  }
+}
