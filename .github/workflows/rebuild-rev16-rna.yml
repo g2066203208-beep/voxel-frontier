@@ -1,0 +1,24 @@
+name: Rebuild REV16 flexible RNA INP
+on:
+  push:
+    paths:
+      - '.github/workflows/rebuild-rev16-rna.yml'
+      - 'public/thesis-studio/inp-archive/REV16_EQ_FLEX_RNA/build_rev16.py'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Rebuild from hashed archive
+        run: |
+          python public/thesis-studio/inp-archive/REV16_EQ_FLEX_RNA/build_rev16.py --archive public/thesis-studio/inp-archive --output output/HE_REV16_EQ_FLEX_RNA.inp
+          ls -lh output
+      - uses: actions/upload-artifact@v4
+        with:
+          name: HE_REV16_EQ_FLEX_RNA
+          path: output/
+          if-no-files-found: error
