@@ -1,0 +1,46 @@
+name: Publish second ordinary rescreen evidence
+on:
+  push:
+    branches: [research/t080-seismic-integration-gates-20261022]
+    paths: ['.github/workflows/seismic-second-rescreen-publish-20261124.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: second-ordinary-rescreen
+          run-id: 45406128427
+          github-token: ${{ github.token }}
+          path: evidence
+      - name: Verify hashes and publish only corrected diagnostic files
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'PY'
+          import subprocess,json,base64,pathlib,hashlib,os
+          R=os.environ['GITHUB_REPOSITORY'];P=pathlib.Path('evidence')
+          m=json.loads((P/'manifest.json').read_text());q=json.loads((P/'rescreen.json').read_text())
+          assert len(m)==19 and q['verified_records']==26 and not q['failed_sources'] and q['formal_design_admitted']==0
+          assert all(hashlib.sha256((P/n).read_bytes()).hexdigest()==h for n,h in m.items())
+          def api(path,payload=None,method=None):
+            cmd=['gh','api',f'repos/{R}/{path}']
+            if method:cmd+=['--method',method]
+            if payload is not None:cmd+=['--input','-']
+            return json.loads(subprocess.check_output(cmd,input=json.dumps(payload).encode() if payload is not None else None))
+          head=api('git/ref/heads/main')['object']['sha'];tree=api('git/commits/'+head)['tree']['sha']
+          prefix='public/thesis-studio/seismic-archive/second-suite/ordinary-rescreen/'
+          rows=[]
+          for p in sorted(P.iterdir()):
+            blob=api('git/blobs',{'content':base64.b64encode(p.read_bytes()).decode(),'encoding':'base64'},'POST')['sha']
+            rows.append({'path':prefix+p.name,'mode':'100644','type':'blob','sha':blob})
+          t=api('git/trees',{'base_tree':tree,'tree':rows},'POST')['sha']
+          c=api('git/commits',{'message':'T079 v0.32.197 corrected second-suite ordinary rescreen evidence','tree':t,'parents':[head]},'POST')['sha']
+          api('git/refs/heads/main',{'sha':c,'force':False},'PATCH')
+          print('STUDIO_MAIN_COMMIT',c)
+          PY
