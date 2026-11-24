@@ -3,9 +3,15 @@ on:
   push:
     branches: [research/t080-seismic-integration-gates-20261022]
     paths: ['.github/workflows/historical-control-aero-36.yml']
+  pull_request:
+    types: [synchronize, opened, reopened]
+    paths: ['.github/workflows/historical-control-aero-36.yml', 'research/wind-tower/experiments/T062/recover_control_aero_36.py']
   workflow_dispatch:
 permissions:
   contents: read
+concurrency:
+  group: historical-control-aero-36
+  cancel-in-progress: true
 jobs:
   recover:
     runs-on: ubuntu-latest
@@ -13,6 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             research/wind-tower/experiments/T062/recover_control_aero_36.py
