@@ -1,0 +1,102 @@
+{
+  "version": "0.32.194",
+  "date": "2026-11-24",
+  "scope": "second set only",
+  "counts": {
+    "numeric_groups": 6,
+    "new_group_count": 0,
+    "official_geonet_archived": 2
+  },
+  "E07": {
+    "RSN": 880,
+    "status": "official rotated/scaled three component bytes extracted and identity checked; not original NGA-West2 AT2",
+    "run": 45395196795,
+    "artifact": 14920677251,
+    "table_row": {
+      "sheet": "xl/worksheets/sheet2.xml",
+      "row": 25,
+      "index": 24,
+      "RSN": 880,
+      "station": "Mission Creek Fault",
+      "scale": 2.309816509105592
+    },
+    "dt_s": 0.005,
+    "npts": 14000,
+    "time_span_s": 69.995,
+    "components": [
+      {
+        "name": "Oak_50_50_24_FN.acc",
+        "azimuth_deg": 267,
+        "pga_g": 0.281148,
+        "bytes": 183590,
+        "sha256": "7e392c66ab9e9981ca072b8de87845fe367a1f08ac22a75c0a4cd4c3f771ee5a"
+      },
+      {
+        "name": "Oak_50_50_24_FP.acc",
+        "azimuth_deg": 357,
+        "pga_g": 0.29182,
+        "bytes": 183962,
+        "sha256": "fa1c4a145a3f5244cc5043de32db137d8cff2c6f42e7e80468b1fc96ca03de88"
+      },
+      {
+        "name": "Oak_50_50_24_UP.acc",
+        "pga_g": 0.195844,
+        "bytes": 183837,
+        "sha256": "d50ccbef2303e4077556cb99e5c5a44bd618c58feb8d30b6250d705b12163387"
+      }
+    ],
+    "original_sensor_axes": [
+      90,
+      0
+    ],
+    "rotation_clockwise_deg": -93,
+    "artifact_zip_sha256": "fa3072160f7404ca6ba98e6b12e7a47477497a6688f93721435ff9c87c1aa293",
+    "longer_copy_npts": 19963,
+    "limitations": "official scale and rotation known; truncated/processing differences may remain; no exact AT2 assertion"
+  },
+  "E04": {
+    "RSN": 5835,
+    "run": 45395196795,
+    "event": "ci14607652",
+    "scanned_members": 2011,
+    "selected": [],
+    "http": 200,
+    "status": "COMPLETE_SCEDC_TRIGGERED_ARCHIVE_TARGET_ABSENT",
+    "source": "https://www.strongmotioncenter.org/vdc/scripts/stnpage.plx?stations=4560",
+    "official_data_access": "https://www.strongmotioncenter.org/wserv/records/documentation/",
+    "blocker": "registered CESMD email required; PEER login required; no authorization provided; no waveform"
+  },
+  "E06": {
+    "RSN": 4205,
+    "npts": 16769,
+    "source": "Nafeh/O'Reilly 2022 source pinned in v0.32.192",
+    "official_reference": "https://www.strongmotioncenter.org/vdc/scripts/event.plx?evt=947",
+    "nominal_sf": 0.778,
+    "components": [
+      {
+        "c": "NS",
+        "scaled_peak": 0.051699,
+        "estimated_unscaled_cm_s2": 65.16632369537275,
+        "official_raw_cm_s2": 66.69,
+        "relative_difference": -0.022847148067585032
+      },
+      {
+        "c": "EW",
+        "scaled_peak": 0.06265,
+        "estimated_unscaled_cm_s2": 78.97000289203085,
+        "official_raw_cm_s2": 78.92,
+        "relative_difference": 0.000633589610122165
+      }
+    ],
+    "status": "unit g assumption plausible; raw versus processed not exact identity, original HOLD"
+  },
+  "crosscheck": {
+    "failed_run": 45395793113,
+    "reason": "Network is unreachable at official archive re-download; no numerical fit",
+    "revised_run": 45395890431,
+    "status": "in_progress at receipt write; reuse prior official artifact with verified hashes"
+  },
+  "backup": "frozen; no drawings",
+  "public_mirroring": "no unauthorized third party waveforms mirrored; official research package link and artifact only",
+  "admission": "HOLD: exact original and E04 missing, site spectrum compatibility unvalidated"
+}
