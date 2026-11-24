@@ -1,3 +1,25 @@
+### 2026-11-24｜v0.32.170 PATCH — REV16完整源级复核、REV17计算控制、REV18环筋等效减负实际构建
+
+#### 1. 冻结母本及实际全面静态审计
+
+REV16 GitHub Actions [45344668964](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/45344668964) SUCCESS，完整INP 23447305 bytes、SHA256 f87528658941289b1bf5a86f2b295123ff569cfd62be6057f6737c8d1e84f1e1，artifact 14898075301，Python重建检查PASS。main bc98d1e5b7e52cdcb42675dc8408e5ec70f45bc3 保存完整差异与目标hash，8bd07e2a72dab25b5c424b1a240e30ed896727a3 更新永久manifest；REV11仍保留基础归档口径。此前NOT_VERIFIED状态由实际重建结果关闭，不等于原生求解成功。
+
+REV17 [45346626474](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/45346626474) SUCCESS，实际完整输入独立扫描214684部件定义节点、214544单元、100/100 Part/End Part、100/100 Instance/End Instance、1 Assembly、2976 C3D8R、7296 C3D8I、203812 T3D2、150 B31、155 MASS、155 ROTARYI、30 Contact Pair、62 Embedded、5 Tie、108 Equation、1 Coupling、1 Rigid Body、31 NSM、7种材料、5步 PT_BALANCE/Gravity/GRAVITY_CHECK/MODAL_30/EQ_2H_RAYLEIGH_REL。实际逐部件ID唯一、节点连通、截面材料引用、实例部件引用及关键字计数检查PASS；不是全部语义、接触配对原生建立、收敛或物理验证。原RNA无展示网格；环筋原模型每环96个T3D2（宿主48边形不同），183168环筋、15168拉筋、5440纵筋、36 PT。
+
+#### 2. 计算步和输出控制
+
+REV17五个完整文件实际生成、独立检查PASS，artifact 14898556792；源同一完整REV16。precheck只保留前4步，lean005/010/020完整160.195s，初增量0.005、最小1e-7、最大分别0.005/0.01/0.02；最少32039/16020/8010增量（实际切步可能更多）；trial40为0–40s短程诊断，最大0.01，仅4000理论下界，不能当完整地震响应。原始ESM双水平记录32040×2点、0.005s不降采样、不改材料/接触/阻尼/网格、不放松收敛条件、不强制对称矩阵、不质量缩放。全部地震历史输出字节保持，30接缝合力/面积、原80间隔结构场和重启设置保留，全钢筋S/LE/PEEQ独立10间隔（间隔减少87.5%，不是实测ODB或运行时间减少）。保存 [实际hash与产物](https://github.com/g2066203208-beep/voxel-frontier/blob/main/public/thesis-studio/inp-archive/REV17_EFFICIENCY/verified-targets.json)，main 8deac02789755ef65dc0928363bc713e2ba594e3。Abaqus官方 [时间增量选择](https://docs.software.vt.edu/abaqusv2026/English/SIMACAETHERefMap/simathe-c-dynamics.htm)、[DYNAMIC](https://docs.software.vt.edu/abaqusv2025/English/SIMACAEKEYRefMap/simakey-r-dynamic.htm)、[OUTPUT](https://docs.software.vt.edu/abaqusv2025/English/SIMACAEKEYRefMap/simakey-r-output.htm)。粗步长需按主要频带、接触状态、峰值及时间收敛验证，尤其原30Hz滤波上限不能由0.02s保证准确，禁止直接晋级正式计算。
+
+#### 3. REV18实际环筋等效减负
+
+源实际31个RHOOP部件，每部件双层闭合96边环，保留所有径向拉筋端点关联环、内外层首尾各两排，超过0.50m的等效间距则增设原节点环。其余环原钢材体积V=A·L按高度线性权重分配给同层上下相邻保留环，等效截面A'=V'/L；保持每层钢材体积、竖向一阶矩及均匀环向应变下的钢材应变能权重，不改变实体配筋构造含义。保留原节点、材料及全部拉筋，31负NSM原文保持（钢筋体积不变），原SET_ALL/SET_HOOP/SET_TIE重建，外部仅允许原实例集引用，非RHOOP源文本除Job名称完全一致；全部原分析步保留自相应REV17。首次CI发现真实环为96而非预设48，run45347020866拒绝生成，修正后[45347120960](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/45347120960) SUCCESS，artifact14899050787。实际31段环筋原体积7.311474841126555m³（未含拉筋），183168→65088环筋单元，T3D2 203812→85732，整塔214544→96464，部件节点214684→96604；全长010文件15916594 bytes SHA256 91c4d7499ffc7cdd30144fe39f74da3d7fd4b6ce49bbfd6c716d4f5e0ae0b041。31段最大环筋体积相对误差2.142730437526552e-14，质心误差3.5305092802495624e-14m，对角惯量最大相对误差0.007256373140411165，等效面积最大约4倍、最大离散间距0.472000012m。独立整塔静态扫描目标节点/单元/接触/材料/步序PASS。不是实际施工间距变大、局部裂缝/钢筋应变等效、原生求解或精度认证。局部约束、非均匀应变及裂缝需对照；不删除PT、纵筋、拉筋、接触、混凝土实体、法兰及柔性RNA。官方[Embedded](https://docs.software.vt.edu/abaqusv2026/English/SIMACAECSTRefMap/simacst-c-embeddedelement.htm)说明相应嵌入平动自由度消元，单元减少不是相同比例求解自由度或时间减少；[配筋层](https://docs.software.vt.edu/abaqusv2026/English/SIMACAEMODRefMap/simamod-c-rebarlayer.htm)为后续独立方法，不冒称本版使用rebar layer。
+
+完整REV18 [已验证hash与31段实际审计](https://github.com/g2066203208-beep/voxel-frontier/blob/main/public/thesis-studio/inp-archive/REV18_HOOP_EQ/verified-targets.json)，main 2cd998801a2e0b6c188ad2a0bb1286ef65b4d267；工作室源 main 8827eab947ab2b1499608b9bb8de67a04de2cd03，网页 https://g2066203208-beep.github.io/voxel-frontier/thesis-studio/inp-archive/#rev18，在线重建逐项核母本与最终CI目标hash。独立文件产物已确认，Pages最新部署仍需实际核验。非历史版本覆盖，PR#42不合并。
+
+#### 4. 未关闭问题与原生门禁
+
+当前版本原生NOT_RUN。先REV17-PRECHECK与REV18-PRECHECK分别Data Check/PT平衡/重力/30阶模态，核反力与质量、接触状态、ALLSD/ALLIE、首阶配对与参与质量；再同一原始0.005地震窗口比较环筋等效误差，后做0.01/0.02时间步收敛。验收候选目标：主要频率差≤2%、配对MAC≥0.95、塔顶位移/塔底弯矩峰值≤5%、关键接缝开口/滑移/PT增量≤10%且接缝开闭分类一致（近零量用绝对阈值，非规范限值）；必须保存真实sta/msg/dat/odb、迭代/回退、求解自由度、内存/CPU/墙钟，不能承诺实际倍速。PT 36×140mm²/1280MPa、摩擦0.5、CDP应变软化与黏性、循环材料、法兰真实锚固、固定转子RNA高阶模态、历史BF1阻尼系数、目标嘉鱼谱选波、风外载仍未物理验收。历史Rayleigh alpha/beta同时赋值材料的比例阻尼指示5/10/20Hz约5.4/10.8/21.5%，实际全系统RNA beta=0等非一致材料阻尼，须据本版模态重新标定。ESM原记录PGA0.475/0.512m/s²，非设计地震；不删尾波冒充完整时程。钢塔壳单元替换、配筋层和断裂能网格客观性另立对照，不随意修改混凝土粗网格、接触刚度或用Tie掩盖不收敛。
+
 ### 2026-11-24｜v0.32.169 PATCH — 论文工作室内直接生成 REV16 完整 INP
 
 - 用户明确要求全程GitHub及工作室在线修改，不要求用户重新上传母本。main提交 9228b408015e9177bdb622c0f573ea356875b1aa 新增REV16四处精确文本替换配方，7dfa251277ea922c7e28b517e8e5a9ec36db411e 更新工作室INP档案页面，顶部增加“在线生成并下载完整 INP”。配方由已归档REV15补丁偏移推导，原文位置9/13213509/14170433/14211056，原长187/418/76/111；预测目标23447305字节。浏览器从原REV09分块至REV15逐级重建并校验原SHA-256，核对RNA独立INP的Git blob SHA-1及长度，四处文本逐字节匹配后替换，检查全部原分析步和主要连接关键字计数，计算目标实际SHA-256并触发下载；任何失败均中止。
