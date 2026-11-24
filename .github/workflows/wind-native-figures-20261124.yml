@@ -1,0 +1,124 @@
+name: Wind native TurbSim field figures 20261124
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'research/wind-tower/experiments/WIND_NATIVE_20261124/**'
+      - '.github/workflows/wind-native-figures-20261124.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: wind-native-20261124-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  pilot:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        kind: [NTM, 1ETM]
+    env:
+      SRC: research/wind-tower/experiments/WIND_NATIVE_20261124
+      OMP_NUM_THREADS: '2'
+      OPENBLAS_NUM_THREADS: '2'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install postprocessor dependencies
+        run: python -m pip install numpy==1.26.4 scipy==1.13.1 matplotlib==3.9.2
+      - name: Download official native executable and generate pilot input
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Invoke-WebRequest -Uri 'https://github.com/OpenFAST/openfast/releases/download/v3.5.3/TurbSim_x64.exe' -OutFile TurbSim_x64.exe
+          python "$env:SRC/make_case.py" --speed 11.4 --type '${{ matrix.kind }}' --grid 11 --duration 120 --out pilot
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          Get-FileHash TurbSim_x64.exe -Algorithm SHA256 | Format-List | Out-File pilot/executable_sha256.txt
+      - name: Run actual TurbSim
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Push-Location pilot
+          & ../TurbSim_x64.exe case.inp 2>&1 | Tee-Object native.log
+          $rc = $LASTEXITCODE
+          Pop-Location
+          if ($rc -ne 0) { exit $rc }
+          if (!(Test-Path pilot/case.bts)) { throw 'Native BTS missing' }
+      - name: Decode actual BTS and render figures
+        run: python "$env:SRC/postprocess_bts.py" pilot/case.bts pilot/case_config.json pilot/figures
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-pilot-11m4-${{ matrix.kind }}
+          path: pilot/
+          retention-days: 14
+          if-no-files-found: warn
+  full:
+    needs: pilot
+    runs-on: windows-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        speed: [9.343881, 11.4, 19.20214]
+        kind: [NTM, 1ETM]
+    env:
+      SRC: research/wind-tower/experiments/WIND_NATIVE_20261124
+      OMP_NUM_THREADS: '2'
+      OPENBLAS_NUM_THREADS: '2'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install postprocessor dependencies
+        run: python -m pip install numpy==1.26.4 scipy==1.13.1 matplotlib==3.9.2
+      - name: Download official native executable and generate 51x51 case
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Invoke-WebRequest -Uri 'https://github.com/OpenFAST/openfast/releases/download/v3.5.3/TurbSim_x64.exe' -OutFile TurbSim_x64.exe
+          python "$env:SRC/make_case.py" --speed ${{ matrix.speed }} --type '${{ matrix.kind }}' --grid 51 --duration 700 --out full
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          Get-FileHash TurbSim_x64.exe -Algorithm SHA256 | Format-List | Out-File full/executable_sha256.txt
+      - name: Run actual TurbSim
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Push-Location full
+          & ../TurbSim_x64.exe case.inp 2>&1 | Tee-Object native.log
+          $rc = $LASTEXITCODE
+          Pop-Location
+          if ($rc -ne 0) { exit $rc }
+          if (!(Test-Path full/case.bts)) { throw 'Native BTS missing' }
+      - name: Decode actual BTS and render figures
+        run: python "$env:SRC/postprocess_bts.py" full/case.bts full/case_config.json full/figures
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-full-${{ matrix.speed }}-${{ matrix.kind }}-figures
+          path: |
+            full/*.inp
+            full/*.json
+            full/*.txt
+            full/*.log
+            full/*.sum
+            full/figures/
+          retention-days: 30
+          if-no-files-found: warn
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: native-full-${{ matrix.speed }}-${{ matrix.kind }}-bts
+          path: full/case.bts
+          retention-days: 14
+          compression-level: 1
