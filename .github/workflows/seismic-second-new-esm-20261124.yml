@@ -1,0 +1,227 @@
+name: T079 second suite new shallow nonpulse ESM acquisition
+on:
+  push:
+    branches: [research/t080-seismic-integration-gates-20261022]
+    paths: ['.github/workflows/seismic-second-new-esm-20261124.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  acquire:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install --quiet numpy scipy requests
+      - name: Official flatfile and waveform acquisition
+        env:
+          OPENBLAS_NUM_THREADS: '1'
+          OMP_NUM_THREADS: '1'
+        run: |
+          python - <<'PY'
+          import concurrent.futures as cf, hashlib, io, json, csv, re, zipfile, datetime, pathlib, math, time
+          import requests, numpy as np
+          from scipy.signal import lfilter, cont2discrete, butter, sosfiltfilt
+          from scipy.integrate import cumulative_trapezoid
+          ROOT=pathlib.Path.cwd()
+          OUT=ROOT/'new_records';OUT.mkdir(exist_ok=True)
+          BASE='https://esm-db.eu/esmws/'
+          PERIODS=np.unique(np.r_[np.geomspace(.1,10,61),4,6,7.3937,8,10,12,15])
+          def digest(b):return hashlib.sha256(b).hexdigest()
+          def request(endpoint,params):
+              url=BASE+endpoint+"/1/query"
+              r=requests.get(url,params=params,timeout=(10,50),headers={"User-Agent":"T079-seismic-research/1.0"})
+              return r
+          def num(x,d=math.nan):
+              try:return float(x)
+              except:return d
+          def query(row):
+              label,st,en,m,station=row
+              p={"starttime":st,"endtime":en,"minmag":m,"maxdist":200,"unprocessed":"false","discarded":"false","automatic":"false","manual":"true"}
+              if station:p["station"]=station
+              try:
+                  r=request("dataset-selection",p)
+                  rec={"label":label,"url":r.url,"http":r.status_code,"sha256":digest(r.content)}
+                  if r.status_code!=200:return rec,[]
+                  j=r.json()
+                  if not isinstance(j,list):raise ValueError("unexpected JSON shape")
+                  rec["count"]=len(j);(OUT/(label+"_metadata.json")).write_bytes(r.content)
+                  return rec,j
+              except Exception as e:return {"label":label,"error":str(e)},[]
+          def parse(b):
+              h={}; vals=[]
+              for l in b.decode("utf-8-sig").splitlines():
+                  l=l.strip()
+                  if not l:continue
+                  if ":" in l and not vals:
+                      k,v=l.split(":",1);h[k.strip()]=v.strip()
+                  else:
+                      vals.extend(float(x) for x in l.split())
+              a=np.asarray(vals)
+              if len(a)!=int(h["NDATA"]) or not np.isfinite(a).all():raise ValueError("sample count or finite values")
+              if h["UNITS"]!="cm/s^2" or h["DATA_TYPE"]!="ACCELERATION":raise ValueError("units/type")
+              dt=float(h["SAMPLING_INTERVAL_S"])
+              if dt<=0 or dt>0.02:raise ValueError("sampling interval")
+              if abs(np.max(np.abs(a))-abs(float(h["PGA_CM/S^2"])))>max(0.001,0.001*np.max(np.abs(a))):raise ValueError("PGA header mismatch")
+              return h,a*.01,dt
+          def spectra(a,b,dt):
+              # Exact discrete state-space with piecewise-linear acceleration input.
+              # scipy FOH yields equivalent transfer function with input feedthrough.
+              ang=np.deg2rad(np.arange(180)); cs=np.cos(ang);ss=np.sin(ang)
+              result=[]
+              for T in PERIODS:
+                  w=2*np.pi/T
+                  A=np.array([[0,1],[-w*w,-.1*w]])
+                  B=np.array([[0],[-1.]])
+                  C=np.array([[w*w,0.]])
+                  Ad,Bd,Cd,Dd,_=cont2discrete((A,B,C,np.array([[0.]])),dt,method="foh")
+                  # state at first step corrected for FOH initial input; initial physical state zero.
+                  # Use ZOH state transfer and FOH b; x_d0=-B1*u0, where B1 obtained via augmented exp.
+                  from scipy.linalg import expm
+                  H=np.zeros((4,4)); H[:2,:2]=A;H[:2,2:3]=B;H[2,3]=1.
+                  E=expm(H*dt);b1=E[:2,3]/dt
+                  # scipy dlsim with explicit initial state is slower; transfer lfilter
+                  # homogeneous correction for nonzero first sample calculated separately.
+                  from scipy.signal import ss2tf
+                  n,d=ss2tf(Ad,Bd,Cd,Dd)
+                  u=lfilter(n[0],d,a);v=lfilter(n[0],d,b)
+                  if a[0]!=0 or b[0]!=0:
+                      # correction from zero discrete state to correct physical initial state
+                      c0=float((-Cd@b1).item())
+                      c1=float((-Cd@Ad@b1).item())
+                      corr=lfilter([c0,c1+d[1]*c0],d,np.r_[1.,np.zeros(len(a)-1)])
+                      u+=corr*a[0];v+=corr*b[0]
+                  peaks=np.array([np.max(np.abs(u*c+v*s)) for c,s in zip(cs,ss)])
+                  result.append([T,np.median(peaks),np.max(np.hypot(u,v)),np.max(abs(u)),np.max(abs(v))])
+              return result
+          def acquire(task):
+              label,event,net,station,loc,ins,meta=task
+              params={"eventid":event,"station":station,"format":"ascii","processing-type":"MP","data-type":"ACC","quality-class":"BEST,GOOD"}
+              if net:params["network"]=net
+              if loc:params["location"]=loc
+              if ins:params["channel"]=ins+"*"
+              rct={"label":label,"event":event,"station":station,"network_requested":net,"metadata":meta,"status":"HOLD"}
+              try:
+                  r=request("eventdata",params)
+                  if r.status_code==400:
+                      params.pop("location",None);params.pop("channel",None);r=request("eventdata",params)
+                  rct.update(url=r.url,http=r.status_code,source_sha256=digest(r.content),bytes=len(r.content))
+                  if not r.ok:rct["response_excerpt"]=r.text[:300]
+                  if not r.ok or not zipfile.is_zipfile(io.BytesIO(r.content)):raise ValueError("not a public processed ZIP")
+                  with zipfile.ZipFile(io.BytesIO(r.content)) as z:
+                      if z.testzip():raise ValueError("CRC error")
+                      chans={}
+                      for name in z.namelist():
+                          if not name.upper().endswith(".ASC"):continue
+                          h,a,dt=parse(z.read(name))
+                          if h["EVENT_ID"]!=event or h["STATION_CODE"]!=station:raise ValueError("event/station mismatch")
+                          k=(h["NETWORK"],h["LOCATION"],h["STREAM"][:2]);chans.setdefault(k,{})[h["STREAM"][-1]]=(h,a,dt,name,digest(z.read(name)))
+                      eligible=[(k,v) for k,v in chans.items() if ("E" in v and "N" in v)]
+                      if len(eligible)!=1:raise ValueError("ambiguous or missing synchronized E/N pair")
+                      k,v=eligible[0];h,a,dt,*_=v["E"];g,b,dt2,*_=v["N"]
+                      if len(a)!=len(b) or dt!=dt2 or h["DATE_TIME_FIRST_SAMPLE_YYYYMMDD_HHMMSS"]!=g["DATE_TIME_FIRST_SAMPLE_YYYYMMDD_HHMMSS"]:raise ValueError("pair grid mismatch")
+                      rct["licenses"]=[x[0].get("DATA_LICENSE","") for x in v.values()]
+                      if not all(re.search(r"CC[-_ ]?BY(?:[-_ ]|[0-9])",x,re.I) and not re.search(r"\b(?:NC|ND)\b|NONCOMMERCIAL|NODERIVATIVES",x,re.I) for x in rct["licenses"]):raise ValueError("redistribution license not verified")
+                      fc=[num(x[0].get("LOW_CUT_FREQUENCY_HZ")) for x in [v["E"],v["N"]]]
+                      d=OUT/(event+"__"+k[0]+"_"+station+"_"+(k[1] or "blank")+"_"+k[2]);d.mkdir(exist_ok=True)
+                      (d/"original_MP_ACC.zip").write_bytes(r.content)
+                      t=np.arange(len(a))*dt
+                      data=[t,a,b]; cols="time_s,E_m_s2,N_m_s2"
+                      if "Z" in v and len(v["Z"][1])==len(a) and v["Z"][2]==dt and v["Z"][0]["DATE_TIME_FIRST_SAMPLE_YYYYMMDD_HHMMSS"]==h["DATE_TIME_FIRST_SAMPLE_YYYYMMDD_HHMMSS"]:
+                          data.append(v["Z"][1]);cols+=",Z_m_s2"
+                      np.savetxt(d/"acceleration_SI.csv",np.column_stack(data),delimiter=",",header=cols,comments="",fmt="%.10g")
+                      rs=spectra(a,b,dt)
+                      np.savetxt(d/"spectra_5pct.csv",rs,delimiter=",",header="T_s,RotD50_m_s2,RotD100_m_s2,E_PSA_m_s2,N_PSA_m_s2",comments="",fmt="%.10g")
+                      ari=cumulative_trapezoid(a*a+b*b,dx=dt,initial=0)
+                      dur=float(np.interp(.95*ari[-1],ari,t)-np.interp(.05*ari[-1],ari,t))
+                      rct.update(status="SOURCE_PAIR_ACQUIRED_NOT_DESIGN",directory=str(d.relative_to(ROOT)),dt_s=dt,npts=len(a),duration_s=float(t[-1]),PGA_m_s2=[float(max(abs(a))),float(max(abs(b)))],D5_95_pair_s=dur,low_cut_hz=fc,reported_fc_le_005=bool(all(np.isfinite(fc)) and max(fc)<=.05),Sa7_3937_RotD50=float(np.array(rs)[np.where(PERIODS==7.3937)[0][0],1]),headers=[dict(stream=x[0]["STREAM"],member=x[3],sha256=x[4],header=x[0]) for x in v.values()],files={p.name:{"sha256":digest(p.read_bytes()),"bytes":p.stat().st_size} for p in d.iterdir() if p.is_file()},scope="official processed samples, cutoff screen only, no site target or instrument reliability certification")
+                      (d/"receipt.json").write_text(json.dumps(rct,indent=2,ensure_ascii=False,allow_nan=True)+"\n")
+              except Exception as e:rct["error"]=str(e)
+              print("PAIR",json.dumps({k:v for k,v in rct.items() if k not in ("headers","metadata","files")},ensure_ascii=False),flush=True)
+              return rct
+          
+          archive='https://raw.githubusercontent.com/g2066203208-beep/voxel-frontier/bc34f83061b15cd35f1c833731cd4fcda6d7fd7a/research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool/'
+          old=requests.get(archive+'replacement_v5/screen.json',timeout=30);old.raise_for_status()
+          prev=old.json()
+          excluded_events={r['event'] for r in prev};excluded_stations={r['station'] for r in prev}
+          FIELDS="esm_event_id,event_time,ev_nation_code,mw,fm_type_code,network_code,station_code,location_code,channel_code,sensor_depth_m,proximity,preferred_vs30_m_s,preferred_ec8_code,epi_dist,jb_dist,rup_dist,instrument_type_code,quality_class,processing_type,u_hp,v_hp,u_pga,v_pga,rotD50_pga,rotD50_pgv,u_T90,v_T90,rotD50_T90,u_t4_000,v_t4_000,u_t7_000,v_t7_000,u_t10_000,v_t10_000"
+          def query_new(q):
+              label,st,en=q
+              params={'starttime':st,'endtime':en,'min-magnitude':5.5,'max-event-depth':35,'min-epicentral-distance':20,'max-epicentral-distance':250,'min-pga':5,'max-pga':200,'channel':'HN,HG,HL','instrument-type':'D','processing-type':'MP','quality-class':'BEST,GOOD','late-triggered':'N','include-pulse-like':'0','include-fields':FIELDS,'spectra':'SA'}
+              rec={'label':label,'params':params}
+              try:
+                  response=requests.get(BASE+'flatfile/1/query',params=params,timeout=(15,90));rec.update(url=response.url,http=response.status_code,bytes=len(response.content),sha256=digest(response.content))
+                  if not response.ok:return rec,[]
+                  (OUT/(label+'_flatfile.csv')).write_bytes(response.content)
+                  s=response.content.decode('utf-8-sig');dialect=csv.Sniffer().sniff(s[:8192],delimiters=';,\t')
+                  rows=list(csv.DictReader(io.StringIO(s),dialect=dialect));rec['rows']=len(rows)
+                  assert rows and 'esm_event_id' in rows[0] and 'u_hp' in rows[0]
+                  return rec,rows
+              except Exception as e:rec['error']=repr(e);return rec,[]
+          windows=[('1990_2007','1990-01-01','2007-12-31'),('2008_2015','2008-01-01','2015-12-31'),('2016_2020','2016-01-01','2020-12-31'),('2021_2026','2021-01-01','2026-11-24')]
+          with cf.ThreadPoolExecutor(max_workers=4) as ex:queries=list(ex.map(query_new,windows))
+          def fl(r,k):
+              return num(r.get(k),math.nan)
+          groups={};seen=set()
+          for rec,rows in queries:
+              print('FLATFILE',json.dumps(rec),flush=True)
+              for r in rows:
+                  e=r['esm_event_id'];s=r['station_code'];key=(e,s)
+                  fc=max(fl(r,'u_hp'),fl(r,'v_hp'))
+                  if not e or not s or e in excluded_events or s in excluded_stations or key in seen or not 0<fc<=1/30:continue
+                  if not 0<=fl(r,'sensor_depth_m')<=1:continue
+                  if r.get('proximity','').lower().startswith(('inside','close')):continue
+                  sa=math.sqrt(abs(fl(r,'u_t7_000')*fl(r,'v_t7_000')))*.01
+                  d=min(fl(r,'u_t90'),fl(r,'v_t90'))
+                  if not math.isfinite(sa) or sa<=0:continue
+                  if not math.isfinite(d):d=0
+                  r['_score']=[-min(d,50),abs(math.log(sa/.0515023746765)),fc]
+                  seen.add(key);groups.setdefault(e,[]).append(r)
+          for e in groups:groups[e].sort(key=lambda r:r['_score'])
+          keys=sorted(groups,key=lambda e:groups[e][0]['_score'])
+          chosen=[]
+          for i in range(2):
+              for e in keys:
+                  if i<len(groups[e]):chosen.append(groups[e][i])
+                  if len(chosen)>=16:break
+              if len(chosen)>=16:break
+          print('NEW_METADATA',len(seen),len(groups),'REQUESTS',len(chosen),flush=True)
+          (OUT/'new_candidate_metadata.json').write_text(json.dumps({'queries':[q for q,_ in queries],'eligible_events':len(groups),'eligible_records':len(seen),'selected':chosen},indent=2,ensure_ascii=False))
+          tasks=[('SECOND_NEW',r['esm_event_id'],r['network_code'],r['station_code'],r.get('location_code') or None,r.get('channel_code') or None,r) for r in chosen]
+          with cf.ThreadPoolExecutor(max_workers=5) as ex:got=list(ex.map(acquire,tasks))
+          qualified=[]
+          for rc in got:
+              if rc['status']!='SOURCE_PAIR_ACQUIRED_NOT_DESIGN':continue
+              try:
+                  d=ROOT/rc['directory'];a=np.loadtxt(d/'acceleration_SI.csv',delimiter=',',skiprows=1)[:,1:3];dt=rc['dt_s'];f=max(rc['low_cut_hz']);v=cumulative_trapezoid(a,dx=dt,axis=0,initial=0)
+                  ds=[]
+                  for x in a.T:
+                      j=np.flatnonzero(abs(x)>=.1*max(abs(x)));ds.append(float((j[-1]-j[0])*dt))
+                  end=float(np.linalg.norm(v[-1])/max(np.max(np.linalg.norm(v,axis=1)),1e-15));tail=float(np.linalg.norm(a[-round(5/dt):].mean(axis=0))/np.max(abs(a)))
+                  dep=float(rc['headers'][0]['header']['EVENT_DEPTH_KM'])
+                  # actual additional-filter sensitivity on discrete 4–12s ordinates
+                  P=np.loadtxt(d/'spectra_5pct.csv',delimiter=',',skiprows=1);x=sosfiltfilt(butter(4,.08,fs=1/dt,btype='highpass',output='sos'),a,axis=0,padlen=min(len(a)-1,round(3/.08/dt)))
+                  sp=np.array(spectra(x[:,0],x[:,1],dt));mask=(P[:,0]>=4)&(P[:,0]<=12)
+                  sens=float(np.max(abs(sp[mask,1]/P[mask,1]-1)))
+                  flags=[]
+                  if not 0<dep<=35:flags.append('DEPTH')
+                  if not 0<f<=1/30:flags.append('BAND')
+                  if min(ds)<5*7.3937:flags.append('DURATION_5T1_RESEARCH')
+                  if end>.05:flags.append('TERMINAL_VELOCITY')
+                  if tail>.01:flags.append('TAIL_MEAN')
+                  if sens>.2:flags.append('HP_SENS')
+                  qualified.append({'event':rc['event'],'station':rc['station'],'depth_km':dep,'source_sha256':rc['source_sha256'],'directory':rc['directory'],'npts':rc['npts'],'dt':dt,'low_cut_hz':f,'duration_10pct_s':ds,'T1_sa':rc['Sa7_3937_RotD50'],'hp_sensitivity':sens,'end_velocity_ratio':end,'tail_ratio':tail,'flags':flags,'strict_screen':not flags,'formal_design':False})
+              except Exception as e:qualified.append({'event':rc['event'],'station':rc['station'],'error':repr(e),'strict_screen':False})
+          result={'version':'0.32.197','scope':'new ESM source acquisition; nonpulse query filter; official MP pairs and source checks, not formal design','queries':[q for q,_ in queries],'metadata_records':len(seen),'metadata_events':len(groups),'requests':len(tasks),'acquired':sum(r['status']=='SOURCE_PAIR_ACQUIRED_NOT_DESIGN' for r in got),'qualified':qualified,'strict_distinct_events':len({r['event'] for r in qualified if r['strict_screen']}),'formal_design':0}
+          (OUT/'acquisition_receipt.json').write_text(json.dumps({'result':result,'records':got},indent=2,ensure_ascii=False))
+          print('NEW_RESULT',json.dumps(result,ensure_ascii=False),flush=True)
+          
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: second-new-esm
+          path: new_records/
+          retention-days: 90
