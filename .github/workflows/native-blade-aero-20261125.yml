@@ -21,6 +21,7 @@ jobs:
         with:
           sparse-checkout: |
             research/wind-tower/experiments/BLADE_AERO_NATIVE_20261125
+            public/thesis-studio/wind-figures/blade-aero
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -31,7 +32,7 @@ jobs:
           cp native-aero/source_receipt.json native-aero/original-inputs.zip public/thesis-studio/wind-figures/blade-aero/
           git config user.name thesis-wind-archive
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add public/thesis-studio/wind-figures/blade-aero
+          git add --sparse public/thesis-studio/wind-figures/blade-aero
           if ! git diff --cached --quiet; then
             git commit -m 'Preserve SHA-verified original DTU158 aero and control inputs'
             git pull --rebase origin main
@@ -90,7 +91,6 @@ jobs:
           Get-FileHash bin/*.exe,bin/*.dll -Algorithm SHA256 | Format-List
       - name: Native 10 s pilot with all three blade nodal outputs
         run: |
-          $env:PATH = "$pwd\bin;$env:PATH"
           $env:PATH = "$pwd\bin;$env:PATH"
           python -m pip install numpy==1.26.4 matplotlib==3.9.2
           $p = 'research/wind-tower/experiments/BLADE_AERO_NATIVE_20261125/native_blade.py'
