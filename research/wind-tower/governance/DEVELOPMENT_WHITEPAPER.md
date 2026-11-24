@@ -1,3 +1,8 @@
+### 2026-11-24｜v0.32.203 — 工作室单一当前INP交付入口
+
+- 按用户要求将默认交付精简为唯一自包含整塔 HE_REV22_FULL_ASSEMBLY_EQ005.inp（15693508 bytes，SHA256 e84851887735305c6387ca38a972bebd97ba9cdff7baa7735c0ed89cecf925b5），完整柔性RNA而非57自由度原生ROM；含五步及MODE双水平地震，不依赖SIM。历史及技术验证文件折叠保留，不删除证据。
+- main提交 cdb719b95b8ce4301011489b4ab8ffc9e73c18bf 更新工作室页面并已回读：单按钮从已永久托管的REV21 ZIP读取校验、解压指定成员、唯一替换最大增量.01为.005、核验最终文件SHA256，触发单个INP下载，无须用户解压或运行脚本。实际本地Node v22以同逻辑运行ZIP读取及字节生成，输出与REV22真实验证包成员逐字节相同；篡改ZIP拒绝通过。独立INP未作为额外Git blob发布，浏览器完整交互及Pages部署仍未验证；Abaqus原生未运行。未改物理参数或地震数据。
+
 ### 2026-11-24｜v0.32.202 — REV22 原生验证包及RNA矩阵独立复算
 
 - 实际重新获取REV21 artifact14928366764及REV20 artifact14900571562，ZIP SHA256分别f389e927a4b42f0c26bf22f1f9ef24202255b8dd03a8d0e7585edfae83a6af91、58f8afead62781ea80f3d01fc81055e97fb6ab5e85b04ce53d3ae9c65951e83f；CRC及REV20清单14项全部核验。两整塔从冻结REV21截取原始前缀形成4步PRECHECK，另只替换动力最大增量.01为.005生成5步EQ005；未改变材料、阻尼、载荷、接触或RNA模型。四个SHA256见[实际审核](https://github.com/g2066203208-beep/voxel-frontier/blob/2c99f1fd6c97de9adf3881bf5378b0ad3f666764/public/thesis-studio/inp-archive/REV22_VALIDATION_KIT/REV22_AUDIT.json)。
