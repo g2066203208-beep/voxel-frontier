@@ -1,3 +1,18 @@
+### 2026-11-24｜v0.32.152 PATCH — REV09后钢材牌号分离、同对象期刊及规范本构证据（仅来源整改）
+
+- SOURCE=REV09登记SHA256 cbe996780eb772a7fdb8f33d436c76b0936631ef835f3606d11ab7d90b4af1ef，原文件本轮未获得；[T046来源账本H节](../experiments/T046/SOURCE_LEDGER.md)，commit [05bbaec](https://github.com/g2066203208-beep/voxel-frontier/commit/05bbaec3cf38278de15df1e2a6376566b54bf899)。何2024 PDF33原文钢筋网/钢塔S345；同团队同对象Xu/He 2025 Renewable Energy 243:122475 [DOI](https://doi.org/10.1016/j.renene.2025.122475) [公开全文](https://www.researchgate.net/publication/388434459_Nonlinear_dynamic_response_analyses_of_Onshore_Wind_Turbines_with_Steel-Concrete_Hybrid_Tower_using_a_co-simulation_approach) §2.2.2表2明确HRB335（335/455/200000 MPa）、Q345（345/470/206000 MPa）、PT（1320/1860/195000 MPa），原型为DTU10MW、158/112m及C70/C65。Steel01为双线性随动强化、可选等向强化，原等向强化不能称等效。Xu等2026 [DOI](https://doi.org/10.19912/j.0254-0096.tynxb.2024-1794) 异对象5MW表2 Q345 b=.01为敏感性依据，不是同对象标定。保留原文复现REV09，后续同对象期刊候选分别定义普通筋HRB335、钢塔Q345；补建环筋及HPB300拉筋为候选，法兰和RNA材料单独核对，不全局替换S345。
+- STANDARD=[2024混凝土设计标准修订说明](https://gf.cabr-fire.com/article-67379.htm) 删除HRB335；[GB1499.2-2024](https://www.gb-gbt.com/PDF/Chinese.aspx/GB1499.2-2024) 新设计候选HRB400纵/环筋与HPB300拉筋，非原型实测；[GB/T1591-2018表7原页](https://www.bsteel.com.cn/ywsj/upload/2020120810224394548644826.pdf#page=15) 普通热轧Q355在钢塔16–40mm档345MPa、100mm法兰档315MPa（交货状态与法兰钢号未定）；何PDF35四段顶端38/37/36/35mm。NB/T10907材料章原文仍HOLD。
+- OFFICIAL=[OpenSees Steel01](https://opensees.github.io/OpenSeesDocumentation/user/manual/material/uniaxialMaterials/Steel01.html)、[Abaqus2025循环强化](https://docs.software.vt.edu/abaqusv2025/English/SIMACAEMATRefMap/simamat-c-hardening.htm)。RUN=JS真实解析算术，b=.01假设下HRB335/Q345的H=2020.202020/2080.808081 MPa，总应变1%应力351.65/362.15MPa。附录C.1有屈服平台、强化、反向再加载关系，平台终点、峰值应变及循环参数仍需来源和试件标定；不将工程fu直接作真实应力破坏上限。仅材料来源/算术，不生成REV10，不更新原生验收状态。
+- FIG=下列原页或原站原图链接，非自绘或本地新归档；TAB=T046 H节；TEST=材料来源冲突确认及解析算术完成；实际REV09绑定/原生试件、平衡、模态、地震NOT_RUN。未更改INP/冻结母本/历史物理结果，不合并PR#42、不发布主站。
+
+![何2024 PDF33钢材原文](../references/evidence-screenshots/He2024_PDF_page_33.png)
+
+![何2024 PDF35钢塔厚度](../references/evidence-screenshots/He2024_PDF_page_35.png)
+
+![GB/T50010附录C.1单调本构原图](https://gf.cabr-fire.com/Web/uploads/allimg/161214/4-16121416200I22.png)
+
+![GB/T50010附录C.1反复加载原图](https://gf.cabr-fire.com/Web/uploads/allimg/161214/4-161214162022355.png)
+
 ### 2026-11-24｜v0.32.151 PATCH — REV09 C65/C70规范本构重建及原文原图证据
 
 **SOURCE / RUN / TEST.** REV08 SHA256 `5d0a1d61ffe24b5d28b2a0b6e34f1a95e46ac4f206a3400d40ba5c6f35cbe052`；唯一新版 HE_REV09_HE_CHECK.inp SHA256 `cbe996780eb772a7fdb8f33d436c76b0936631ef835f3606d11ab7d90b4af1ef`，34225851 bytes，会话交付，未上传仓库。独立Python实际重新生成C65、C70四类CDP表，每等级26个压缩点/24个拉伸点；103 Part/103 End Part；除标题与两材料CDP表外其他内容相同。未改密度/弹性模量、截面、配筋、PT、法兰、接触或分析步；整机质量沿用REV08 2584628.544636 kg。原生Data Check/四单元试件/平衡/模态/地震 NOT_RUN。
