@@ -1,0 +1,76 @@
+{
+  "V7_status": "backup suite; not the seven literature-exact records",
+  "DSLC_status": "one verified literature-exact station/component; original amplitudes",
+  "T1_s": 7.3937,
+  "PSD": "Welch Hann 40 s, 50% overlap, constant detrend, one-sided density; df 0.025 Hz",
+  "response": "5% PSA, V7 original stored scaled RotD50 spectra, DSLC FOH computed",
+  "source_V7": [
+    {
+      "station": "MODE",
+      "sha256": "640096c940f3c6d54cbe697fd2da9def7ab2428a3850316f228d451b791d1b67",
+      "npts": 40000,
+      "PGA_m_s2": 0.4754302384
+    },
+    {
+      "station": "FDCS",
+      "sha256": "446f0cae834a6b139e2fa0cd29b8d677a4806890952559e66d09ee6f0fd505d2",
+      "npts": 20600,
+      "PGA_m_s2": 0.2935079757
+    },
+    {
+      "station": "CIMA",
+      "sha256": "f14cd94c2fb26aeb00ae7cd9107f1416c35709b4f9382b99bd848cbac0f5754f",
+      "npts": 37864,
+      "PGA_m_s2": 0.1401667819
+    },
+    {
+      "station": "PFAS",
+      "sha256": "7104c360d8bd04600c5af70fe7869d1ea3d8f4188cee4c5805cf4dae9e34bff0",
+      "npts": 16000,
+      "PGA_m_s2": 1.326142079
+    },
+    {
+      "station": "CACS",
+      "sha256": "cb2319b37f52061985613d8254b17abf52212d01133ea6d360c136cc475338cd",
+      "npts": 17000,
+      "PGA_m_s2": 1.615393255
+    },
+    {
+      "station": "CTS",
+      "sha256": "0672bc48d3a505fdd8fe0048c3f63631bc6a5daac8aed8c165f5e5991051c17e",
+      "npts": 36000,
+      "PGA_m_s2": 0.1492562407
+    },
+    {
+      "station": "NNZ",
+      "sha256": "627be0d90725d52a985e9e6b5bb998137a0e7e631e8f7cd85e72131a173c544d",
+      "npts": 49800,
+      "PGA_m_s2": 0.2465102862
+    }
+  ],
+  "source_DSLC_sha256": "178b7b329e641188cb9758774a7bd57a7563a2ceab058d06d5e288272f01f463",
+  "source_DSLC_npts": 7386,
+  "figures": {
+    "V7_backup_03_response_spectra.svg": "f5175a046e0c226a26996afd40e4eb77b6571783d0aaba31f33af4d953ed98c6",
+    "V7_backup_01_acceleration.pdf": "9efe8fb0f73760e68d7f9b176cfcc0cb842b17bf17a6b49307a9df634dbe4a7b",
+    "DSLC_04_three_motion_histories.svg": "51919f72125ae35e2f4b7ec131907a4a4c9fb3c2604fd34a515d40e2f381ce33",
+    "DSLC_01_acceleration.png": "46d90dfba22b43fa6eafe474354edf37559e82ff49f2e2aabd6e1583ae3c4ed9",
+    "V7_backup_02_PSD.svg": "cacbcb7eebf994c8873352e144ff0e8e9ff770cc294a57a95f8d566c94853548",
+    "V7_backup_01_acceleration.png": "d423b73fd63caec86acbe797f03d8387a5743927b1a60a9be4475973929df81d",
+    "V7_backup_03_response_spectra.png": "c8c91bc908f57c75dbe78f70e705652db356c93ee03925f13217f0b8cce2f305",
+    "DSLC_04_three_motion_histories.pdf": "585fe76a7c268b9ff5c48599038fc6223379b33ce2b804f75d53626bde89d0fe",
+    "DSLC_02_PSD.svg": "fa2202d2ea3417862faa122e8874429e9749f498fe357291f45b612e245fd48e",
+    "DSLC_03_response_spectra.png": "7174bf2b35d241fbec661f20251e4e607a7741025083df1fb5cca0a2283f4d79",
+    "V7_backup_02_PSD.png": "d36e7209921f4cb3004eda20d7986ff4605d9500549614b9a760ed280da52038",
+    "DSLC_01_acceleration.pdf": "da12d26a78a6765284071d1f8976f244fa0329e400bcd30541ce117b33057531",
+    "DSLC_01_acceleration.svg": "3ab68043d74e27467d44eb4cbd50e9e7a6bb4cf11e679bb0e80c89d4f8ce6b9a",
+    "DSLC_02_PSD.pdf": "908c777f2dbf4ad1b7488b686e5a968a0c015359b658082b60d8d3c370ead17c",
+    "V7_backup_02_PSD.pdf": "ca109e12307a96267a22cc0246a8422328c5ff0e0b5d85e96ac37cd39a92d701",
+    "DSLC_02_PSD.png": "90ae97460d2b0f054afa6f51ce78f476ef33b18aedb73b9f2e2d71f9a8d526b0",
+    "DSLC_03_response_spectra.svg": "d8c8f0b85927f8037a5ad85bbe5f164939b74880963059957b18bf4d9c5efbcf",
+    "DSLC_04_three_motion_histories.png": "afc39922302a8d83d275b9896037a53ce7a3ccbb17f3b605bf83072b1060c3f5",
+    "DSLC_03_response_spectra.pdf": "0c2393b66edcd414fa8c8bde9b16ef0d8dcbd94f3e58c25c6a581ae66f8ee907",
+    "V7_backup_03_response_spectra.pdf": "e86334f47d8995fd75421d1c6b66bf0165591c478d6c61bf356585f47ed1c6c2",
+    "V7_backup_01_acceleration.svg": "f632c0bb951bdb75a8f9a6f68fe0f18ce097604c6fc69b7ad7bb76b539e13501"
+  }
+}
