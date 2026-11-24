@@ -1,0 +1,47 @@
+{
+  "version": "REV21_MODE_PILOT",
+  "scope": "same MODE EQ01 research excitation for frozen REV18 full assembly and REV20 native RNA; no physical model or damping change; not final engineering input",
+  "source_url": "https://raw.githubusercontent.com/g2066203208-beep/voxel-frontier/main/public/thesis-studio/seismic-archive/v7/EQ01_MODE.zip",
+  "source_zip_sha256": "1c02637c46cdab14a8b95655ff951130cd17814bc5bae715e1d8fdcf4ea965e9",
+  "source_csv_sha256": "640096c940f3c6d54cbe697fd2da9def7ab2428a3850316f228d451b791d1b67",
+  "source_header": [
+    "time_s",
+    "H1_m_s2",
+    "H2_m_s2"
+  ],
+  "npts": 40000,
+  "dt_s": 0.005,
+  "end_s": 199.995,
+  "already_applied_scale": 1.135383557607063,
+  "extra_scale": 1,
+  "pga_E_N_m_s2": [
+    0.3062418524,
+    0.4754302384
+  ],
+  "axes": "X=E, Y=up, Z=-N; relative-coordinate inertia -M a_g with fixed supports; no prescribed base acceleration",
+  "cases": [
+    {
+      "file": "HE_REV21_MODE_FULL_ASSEMBLY.inp",
+      "bytes": 15693507,
+      "sha256": "7538ccb15a0af82364f0482f4a30e65a59d157a3b33efb94c4beb295a646721c",
+      "parent_sha256": "91c4d7499ffc7cdd30144fe39f74da3d7fd4b6ce49bbfd6c716d4f5e0ae0b041",
+      "exact_nonload_content_match": true,
+      "two_amplitudes_readback": "PASS",
+      "steps": 5,
+      "native_dependency": "none; CAE import NOT_RUN",
+      "max_increment_s": 0.01
+    },
+    {
+      "file": "HE_REV21_MODE_ROM10_NATIVE.inp",
+      "bytes": 18225638,
+      "sha256": "94b6d047f038aa501269e970050f83e32919e6b3ba4b6cd8ae8e99c93187b9c4",
+      "parent_sha256": "87fc6e78ce7e0eb7a0eb8defbc001276ada110d030cd294f89acffd23b64cf15",
+      "exact_nonload_content_match": true,
+      "two_amplitudes_readback": "PASS",
+      "steps": 5,
+      "native_dependency": "RNA_ROM10.sim from matching REV20 generation; not directly CAE importable",
+      "max_increment_s": 0.01
+    }
+  ],
+  "native": "NOT_RUN"
+}
