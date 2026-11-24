@@ -1,3 +1,7 @@
+### 2026-11-24｜v0.32.174 PATCH — REV20 工作室原件直下及永久归档
+
+用户要求工作室内直接下载，不跳转Actions。REV20远端构建run45351782526 SUCCESS，artifact14900571562；发布run45352159798 SUCCESS，下载实际ZIP并通过整包SHA256 58f8afead62781ea80f3d01fc81055e97fb6ab5e85b04ce53d3ae9c65951e83f、12606328字节、ZIP CRC和全部清单成员逐项SHA256/长度验证；原件永久提交main public/thesis-studio/inp-archive/REV20_NATIVE_RNA/REV20_RNA_FULL_PACKAGE.zip。清单blob 8207a39cfb400d97db1db1265fe7fc4bd5e7faaf。main 81bea6645e373d7aeef876e99cf26ebf82bcda00 工作室新增ZIP直接下载及4个单INP按钮（浏览器取原包，检查整包身份、中央目录与成员SHA256/长度，不重建或修改INP；JS语法通过，实际浏览器下载未验）。整包与原始Actions产物字节一致，原生仍NOT_RUN。生成INP远端785e777aa47e1775882941fc27c74f5fe67d422d2abdff143bb9a5eecd0514b4，与上一版本地浮点舍入差异区分，三个整塔INP SHA256一致。页面部署需检查对应Pages run，不以提交冒充上线。工作室 https://g2066203208-beep.github.io/voxel-frontier/thesis-studio/inp-archive/#rev20 。不覆盖REV18，不合并PR#42。
+
 ### 2026-11-24｜v0.32.173 PATCH — REV20 原生子结构物理质量实现与整塔候选实际接入
 
 冻结REV18全长010 SHA256 91c4d7499ffc7cdd30144fe39f74da3d7fd4b6ce49bbfd6c716d4f5e0ae0b041；REV19 10Hz独立参考矩阵run45350001907。按真实物理点运动投影重构155原质量/惯量点，保留原坐标、质量、惯量及alpha，900条线性方程、51个数学广义SPRING1节点（仅生成阶段，不是实际支承），原始塔顶RP保持6DOF。选39个低频+12尾补偿模态；原生子结构生成级计算质量/黏性阻尼/固定方向重力向量，使用级以一个SUBSTR连接RP，LARGE ROTATIONS=YES、VISCOUS=ELEMENT，绝不使用固定矩阵冒充协转RNA。不含内部重力预载几何刚度、运行转速/气弹及控制。官方[Abaqus子结构](https://docs.software.vt.edu/abaqusv2026/English/SIMACAEANLRefMap/simaanl-c-superelements.htm)、[子结构理论](https://docs.software.vt.edu/abaqusv2025/English/SIMACAETHERefMap/simathe-c-superelements.htm)、[重力向量生成](https://docs.software.vt.edu/abaqusv2025/English/SIMACAEKEYRefMap/simakey-r-substructuregenerate.htm)。
