@@ -1,0 +1,63 @@
+name: Permanently archive verified ESM source records
+on:
+  push:
+    branches:
+      - research/t080-seismic-integration-gates-20261022
+    paths:
+      - '.github/workflows/archive-esm-original-20261124.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: research/wind-tower/experiments/T079
+      - uses: actions/download-artifact@v4
+        with:
+          name: s05-esm-v3-public-processed-source-or-failure-NOT-DESIGN-WAVE
+          run-id: 40847442979
+          github-token: ${{ github.token }}
+          path: rawsource
+      - name: Verify source bytes and preserve attribution
+        run: |
+          python - <<'PY'
+          import pathlib,zipfile,hashlib,json,shutil
+          p=pathlib.Path('rawsource')
+          dest=pathlib.Path('research/wind-tower/experiments/T079/seismic-evidence-20261124/ESM_NV L'.replace('NV L','NVL'))
+          dest.mkdir(parents=True,exist_ok=True)
+          files={
+          'ESM_IT-2012-0008_NVL_MP_ACC_original.zip':'ad370abe14e308856754456e5bf172bb327ca59cb002344e2937726c14fec2b7',
+          'S08_ESM_IT2012_NVL_MP_3COMP_ACCEL_SI_NOT_DESIGN_WAVE.csv':'a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34',
+          'ESM_IT-2012-0008_NVL_MP_ACC_receipt.json':'8177ad92cc97c9d68bee5ea5cd9fa8f6f45f89f41598541b66a5fb7a35908c88',
+          'S08_ESM_IT2012_NVL_MP_ACCEL_SI_SOURCE_RECEIPT.json':'2aa8b20eb2bd1c5680215275dab64db03776013ac8a1abf7d5eb29d3079d58ca'}
+          for n,h in files.items():
+              b=(p/n).read_bytes()
+              assert hashlib.sha256(b).hexdigest()==h,n
+              (dest/n).write_bytes(b)
+          rows=[]
+          with zipfile.ZipFile(dest/next(iter(files))) as z:
+              assert z.testzip() is None
+              for n in z.namelist():
+                  b=z.read(n); header=b.decode().splitlines()[:64]
+                  assert 'CC-BY3_0-IT' in b[:4000].decode() and 'IT-2012-0008' in n
+                  rows.append({'member':n,'bytes':len(b),'sha256':hashlib.sha256(b).hexdigest(),'original_header':header})
+          assert len(rows)==3
+          (dest/'SOURCE_ARCHIVE_RECEIPT.json').write_text(json.dumps({'source_run':40847442979,'source_artifact':12884814391,'files':files,'original_members':rows,'status':'VERIFIED_SOURCE_NOT_SITE_DESIGN'},indent=2,ensure_ascii=False)+'\n')
+          (dest/'README.md').write_text('# ESM actual original source archive\n\nIT-2012-0008 / IT.NVL Novellara / MP ACC HNE, HNN, HNZ. Exact archived bytes, not a synthetic record or Jiayu design wave. 32040 samples, dt=0.005 s. Original headers retained; conversion CSV in m/s². License CC BY 3.0 IT as recorded in original headers. Citation: Mascandola et al. (2026), Engineering Strong Motion Database (ESM), version 3.0, INGV, DOI 10.13127/esm.3. Original network IT (RAN), DOI 10.7914/SN/IT. The derived CSV is an SI conversion, not a new official release.\n')
+          print('ESM_ORIGINAL_VERIFIED',len(rows),files)
+          PY
+      - name: Commit exact data and source receipts
+        run: |
+          git config user.name 'paper-studio-bot'
+          git config user.email 'paper-studio-bot@users.noreply.github.com'
+          git add research/wind-tower/experiments/T079/seismic-evidence-20261124/ESM_NVL
+          if ! git diff --cached --quiet; then
+            git commit -m 'Archive CC BY ESM original NVL three-component wave and SI data'
+            git pull --rebase origin ${GITHUB_REF_NAME}
+            git push origin HEAD:${GITHUB_REF_NAME}
+          fi
