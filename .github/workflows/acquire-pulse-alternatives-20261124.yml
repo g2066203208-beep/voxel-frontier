@@ -1,0 +1,50 @@
+name: Retrieve published pulse-like ESM station alternatives
+on:
+  push:
+    branches:
+      - research/t080-seismic-integration-gates-20261022
+    paths:
+      - '.github/workflows/acquire-pulse-alternatives-20261124.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install --quiet requests numpy scipy
+      - name: Acquire actual pulse-like records reported in Yang et al 2025
+        env:
+          OPENBLAS_NUM_THREADS: '1'
+          OMP_NUM_THREADS: '1'
+        run: |
+          cd research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool
+          python - <<'PY'
+          import acquire_esm as a, pathlib,json,concurrent.futures
+          a.OUT=a.ROOT/'pulse-alternatives';a.OUT.mkdir(exist_ok=True)
+          candidates=[
+           ('S05_ALT','IT-2012-0011',None,'SAN0',None,None,{'reference':'10.1111/mice.13408','table_row':'83','pulse_component':'NS','reported_Tp_s':2.5,'reported_Rrup_km':6.1}),
+           ('S06_ALT','EMSC-20161026_0000095',None,'T1245',None,None,{'reference':'10.1111/mice.13408','table_row':'86','pulse_component':'NS','reported_Tp_s':0.9,'reported_Rrup_km':2.0}),
+           ('S07_ALT','IS-2000-0048',None,'103',None,None,{'reference':'10.1111/mice.13408','table_row':'FS1','pulse_component':'3','reported_Tp_s':5.0,'reported_Rrup_km':6.6}),
+           ('S08_ALT','IS-2000-0053',None,'107',None,None,{'reference':'10.1111/mice.13408','table_row':'FS3','pulse_component':'3','reported_Tp_s':2.4,'reported_Rrup_km':2.9})]
+          with concurrent.futures.ThreadPoolExecutor(max_workers=4) as ex:r=list(ex.map(a.acquire,candidates))
+          (a.OUT/'receipt.json').write_text(json.dumps(r,ensure_ascii=False,indent=2)+'\n')
+          print('PULSE_TOTAL',sum(x['status']=='SOURCE_PAIR_ACQUIRED_NOT_DESIGN' for x in r))
+          PY
+      - name: Commit sources and receipts
+        run: |
+          git config user.name paper-studio-bot
+          git config user.email paper-studio-bot@users.noreply.github.com
+          git add research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool/pulse-alternatives
+          if ! git diff --cached --quiet; then
+            git commit -m 'Archive published pulse record alternatives with original data and spectra'
+            git pull --rebase origin ${GITHUB_REF_NAME}
+            git push origin HEAD:${GITHUB_REF_NAME}
+          fi
