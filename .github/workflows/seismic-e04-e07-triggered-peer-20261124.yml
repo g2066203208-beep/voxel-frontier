@@ -1,0 +1,74 @@
+name: T079 E04 triggered and E07 PEER research archive
+on:
+  push:
+    branches: [research/t080-seismic-integration-gates-20261022]
+    paths: ['.github/workflows/seismic-e04-e07-triggered-peer-20261124.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Retrieve published sources, inspect exact station filenames and retain target records
+        run: |
+          mkdir -p evidence
+          python - <<'PY'
+          import urllib.request, urllib.parse, urllib.error, concurrent.futures, hashlib, json, pathlib, zipfile, tarfile, io, re
+          root=pathlib.Path('evidence')
+          stp='https://service.scedc.caltech.edu/webstp/query?'+urllib.parse.urlencode({'outputformat':'cosmos-v1','requesttype':'triggered','eventselection':'14607652','Submit':'Submit'})
+          urls={
+            'E04_triggered':stp,
+            'E07_PEER_set4':'https://apps.peer.berkeley.edu/transportation/wp-content/uploads/2010/09/Oak-50-50-gms-July-14.zip',
+            'E07_PEER_table':'https://peer.berkeley.edu/sites/default/files/oak-50-50-gms-july-14.xlsx'
+          }
+          def work(item):
+            label,url=item
+            rec={'id':label,'url':url}
+            try:
+              with urllib.request.urlopen(urllib.request.Request(url,headers={'User-Agent':'T079 academic source verification'}),timeout=70) as res:
+                data=res.read(100_000_001)
+                rec.update(http=res.status,bytes=len(data),content_type=res.headers.get('Content-Type'),sha256=hashlib.sha256(data).hexdigest())
+              if not data or len(data)>100_000_000:raise ValueError('empty or oversized response')
+              if label=='E07_PEER_table':
+                with zipfile.ZipFile(io.BytesIO(data)) as z: assert 'xl/workbook.xml' in z.namelist()
+                (root/'E07_PEER_table.xlsx').write_bytes(data)
+                rec['status']='METADATA_RECEIVED'
+                return rec
+              if label=='E07_PEER_set4':
+                with zipfile.ZipFile(io.BytesIO(data)) as z:
+                  names=z.namelist()
+                  selected=[n for n in names if not n.endswith('/') and re.search(r'(?i)(MCF|Mission.?Creek|(?:^|[^0-9])(?:RSN)?0*880(?:[^0-9]|$))',n)]
+                  rec.update(member_count=len(names),members_preview=names[:35],selected=selected)
+                  for i,n in enumerate(selected):
+                    raw=z.read(n); dst=root/('E07_'+str(i)+'_'+pathlib.PurePosixPath(n).name)
+                    dst.write_bytes(raw)
+                    rec.setdefault('files',[]).append({'name':n,'bytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest(),'header':raw[:300].decode('ascii','replace')})
+              else:
+                with tarfile.open(fileobj=io.BytesIO(data),mode='r:*') as tar:
+                  members=[m for m in tar.getmembers() if m.isfile()]
+                  selected=[m for m in members if re.search(r'(?i)(?:^|[._/-])00022(?:[._/-]|$)|Winterhaven',m.name)]
+                  rec.update(member_count=len(members),members_preview=[m.name for m in members[:35]],selected=[m.name for m in selected])
+                  for i,m in enumerate(selected):
+                    raw=tar.extractfile(m).read(); dst=root/('E04_'+str(i)+'_'+pathlib.PurePosixPath(m.name).name)
+                    dst.write_bytes(raw)
+                    rec.setdefault('files',[]).append({'name':m.name,'bytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest(),'header':raw[:300].decode('ascii','replace')})
+              rec['status']='TARGET_BYTES_RECEIVED_PENDING_PARSE' if selected else 'ARCHIVE_READ_TARGET_NOT_FOUND'
+            except Exception as e:
+              rec.update(status='NOT_ACQUIRED',error=str(e))
+              if isinstance(e,urllib.error.HTTPError):rec['http']=e.code
+            return rec
+          with concurrent.futures.ThreadPoolExecutor(max_workers=3) as ex: rows=list(ex.map(work,urls.items()))
+          out={'records':rows,'limits':'PEER Set 4 may use rotated/scaled records; not identical to sensor-axis AT2 unless proven. SCEDC triggered source requires further processing.'}
+          (root/'receipt.json').write_text(json.dumps(out,indent=2))
+          print(json.dumps(out,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: T079-E04-E07-target-source
+          path: evidence/
+          retention-days: 30
