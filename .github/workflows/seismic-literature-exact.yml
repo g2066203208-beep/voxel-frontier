@@ -1,0 +1,34 @@
+name: Acquire literature exact earthquake recordings
+on:
+  push:
+    branches: [research/t080-seismic-integration-gates-20261022]
+    paths: ['.github/workflows/seismic-literature-exact.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  exact:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          sparse-checkout: research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install --quiet requests numpy beautifulsoup4
+      - name: Acquire exact sources and preserve receipt
+        run: python research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool/acquire_literature_exact.py
+      - name: Archive actual receipts and data
+        run: |
+          git config user.name paper-studio-bot
+          git config user.email paper-studio-bot@users.noreply.github.com
+          git add research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool/literature_exact_20261124
+          git commit -m 'Archive exact literature acquisition receipts and official data'
+          for i in 1 2 3; do
+            git pull --rebase origin ${GITHUB_REF_NAME}
+            if git push origin HEAD:${GITHUB_REF_NAME}; then exit 0; fi
+          done
+          exit 1

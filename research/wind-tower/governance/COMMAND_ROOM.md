@@ -1,3 +1,6 @@
+## 2026-11-24｜文献同源波优先获取 · START
+- READ_BASE_SHA=63065d4d9b512084535163c45802e82c620c0672；核对根/研究AGENTS、指挥室、白皮书、旧ESM获取收据、GeoNet V6目录及戴2021表2。用户明确停止备用V7制图，优先第二套。精确查SBRC官方S3，CESMD公开元数据、ESM YPT、申2024表4；不绕注册许可、不替换台站、不改INP。实际RUN后再验收。
+
 ## 2026-11-24｜全程论文托管交付 · START/END
 - READ_BASE_SHA=ef91754b329de13b8899a74f62d65623f63bf9cd；核读根/研究AGENTS、白皮书、指挥室及源manifest/主站页面，main b14bed9314f7f99d712fdd0e7f57ece62ab1974e 31/31原blob核验，在线图件页及3处导航入库。用户明确不以下载为交付，写入研究AGENTS，白皮书v0.32.189；不改INP、不合并PR、不改变选波。
 
