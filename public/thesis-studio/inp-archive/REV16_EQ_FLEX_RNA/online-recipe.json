@@ -1,0 +1,36 @@
+{
+  "schema": "rna-text-recipe-1",
+  "version": "REV16_EQ_FLEX_RNA",
+  "file": "HE_REV16_EQ_FLEX_RNA.inp",
+  "base": "REV15_EQ_RNA_LUMPED",
+  "sourceSha256": "ab66bc21c4ba9d642c60dd217f7219c01111a0695c9d2f14f9e11132cbaf83d7",
+  "sourceSize": 23300318,
+  "targetSize": 23447305,
+  "standalone": "REV16_EQ_FLEX_RNA/RNA_FLEX_STANDALONE.inp",
+  "standaloneGitBlob": "8d3de6a2dfb51b3ffea734665e0f71d2858baedc",
+  "standaloneSize": 147891,
+  "edits": [
+    {
+      "offset": 9,
+      "old": "** Job name: HE_REV15_EQ_RNA_LUMPED Model name: CONTACT_REV15_RNA_LUMPED\n** REV15: display meshes removed; inherited rigid RNA analytical mass/inertia at CG; native verification pending.\n",
+      "new": "** Job name: HE_REV16_EQ_FLEX_RNA Model name: CONTACT_REV16_FLEX_RNA\n** REV16: three flexible blades from frozen HAWC2 v9; fixed rotor; native solver validation pending.\n"
+    },
+    {
+      "offset": 13213509,
+      "old": "*Part, name=RNA_LUMPED_INERTIA\n*Node\n1, 0, 160.296630051916, -0.64857912584276\n*Nset, nset=SET_RNA_CG\n1,\n*Element, type=MASS, elset=SET_RNA_MASS\n1, 1\n*Mass, elset=SET_RNA_MASS, alpha=0.0145230339976\n676604.564999807,\n*Element, type=ROTARYI, elset=SET_RNA_INERTIA\n2, 1\n*Rotary Inertia, elset=SET_RNA_INERTIA, alpha=0.0145230339976\n98550474.6869494, 98519682.6571624, 159738733.119879, 0, 0, -669456.044896966\n*End Part\n",
+      "new": null,
+      "newFrom": "standalonePart"
+    },
+    {
+      "offset": 14170433,
+      "old": "*Instance, name=RNA_LUMPED_INERTIA-1, part=RNA_LUMPED_INERTIA\n*End Instance\n",
+      "new": "*Instance, name=RNA_FLEX_DPM-1, part=RNA_FLEX_DPM\n*End Instance\n"
+    },
+    {
+      "offset": 14211056,
+      "old": "** Constraint: RB_RNA_LUMPED_OFFSET\n*Rigid Body, ref node=SET_RNA_RP, tie nset=RNA_LUMPED_INERTIA-1.SET_RNA_CG\n",
+      "new": "** Constraint: RB_RNA_FLEX_BACKBONE\n*Rigid Body, ref node=SET_RNA_RP, tie nset=RNA_FLEX_DPM-1.RNA_RIGID\n"
+    }
+  ],
+  "validation": "target SHA-256 calculated after verified browser reconstruction; native Abaqus NOT_RUN"
+}
