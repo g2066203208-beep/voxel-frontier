@@ -1,0 +1,119 @@
+name: Build REV21 same-wave MODE pilot decks
+on:
+  push:
+    branches: [research/t080-seismic-integration-gates-20261022]
+    paths: ['.github/workflows/build-rev21-mode-pilot-20261124.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: HE_REV18_HOOP_EQ
+          run-id: 45347120960
+          github-token: ${{ github.token }}
+          path: parent18
+      - uses: actions/download-artifact@v4
+        with:
+          name: HE_REV20_NATIVE_RNA
+          run-id: 45351782526
+          github-token: ${{ github.token }}
+          path: parent20
+      - name: Build and independently read back both decks
+        run: |
+          python - <<'PY'
+          import pathlib,hashlib,zipfile,json,re,io,csv,urllib.request,decimal,math
+          P=pathlib.Path
+          O=P('output');O.mkdir(exist_ok=True)
+          def sha(b):return hashlib.sha256(b).hexdigest()
+          url='https://raw.githubusercontent.com/g2066203208-beep/voxel-frontier/main/public/thesis-studio/seismic-archive/v7/EQ01_MODE.zip'
+          with urllib.request.urlopen(url,timeout=60) as f:raw=f.read()
+          assert sha(raw)=='1c02637c46cdab14a8b95655ff951130cd17814bc5bae715e1d8fdcf4ea965e9'
+          with zipfile.ZipFile(io.BytesIO(raw)) as z:
+              assert z.testzip() is None
+              data=z.read('scaled_reference_SI.csv')
+          assert sha(data)=='640096c940f3c6d54cbe697fd2da9def7ab2428a3850316f228d451b791d1b67'
+          rows=list(csv.reader(io.StringIO(data.decode('ascii'))))
+          assert len(rows)==40001 and len(rows[0])==3, rows[0]
+          v=[tuple(map(decimal.Decimal,r)) for r in rows[1:]]
+          assert all(len(x)==3 and all(q.is_finite() for q in x) for x in v)
+          assert v[0][0]==0 and v[-1][0]==decimal.Decimal('199.995')
+          assert all(v[i][0]-v[i-1][0]==decimal.Decimal('.005') for i in range(1,len(v)))
+          assert abs(float(max(abs(x) for r in v for x in r[1:]))-.4754302384203278)<1e-8
+          # Geographic mapping inherited from REV18: X=East, Y=up, Z=-North. Inertia force is -M a_g.
+          def card(name,col,sign):
+              a=[(str(r[0]),str(r[col]*sign)) for r in v]
+              return '*Amplitude, name='+name+'\n'+'\n'.join(', '.join(x for pair in a[i:i+4] for x in pair) for i in range(0,len(a),4))+'\n'
+          names=['EQ_X_EAST_SI','EQ_Z_MINUS_NORTH_SI']
+          def extract(s,n):
+              pat=r'(?m)^\*Amplitude, name='+n+r'\s*\n([^*]*(?:\n|$))'
+              m=list(re.finditer(pat,s));assert len(m)==1,(n,len(m))
+              return m[0]
+          def reverse(new,n,col,sg):
+              m=extract(new,n)
+              vals=[decimal.Decimal(a.strip()) for a in re.split(r'[,\n]',m[0].split('\n',1)[1]) if a.strip()]
+              assert len(vals)==80000
+              assert all(vals[2*i]==r[0] and vals[2*i+1]==r[col]*sg for i,r in enumerate(v))
+              return len(vals)//2
+          parents=[
+           ('FULL_ASSEMBLY','parent18/HE_REV18_HOOP_EQ_EQ_LEAN010.inp','91c4d7499ffc7cdd30144fe39f74da3d7fd4b6ce49bbfd6c716d4f5e0ae0b041'),
+           ('ROM10_NATIVE','parent20/HE_REV20_ROM10_EQ_LEAN010.inp','87fc6e78ce7e0eb7a0eb8defbc001276ada110d030cd294f89acffd23b64cf15')]
+          report={'version':'REV21_MODE_PILOT','scope':'same MODE EQ01 research excitation for frozen REV18 full assembly and REV20 native RNA; no physical model or damping change; not final engineering input','source_url':url,'source_zip_sha256':sha(raw),'source_csv_sha256':sha(data),'source_header':rows[0],'npts':40000,'dt_s':.005,'end_s':199.995,'already_applied_scale':1.135383557607063,'extra_scale':1,'pga_E_N_m_s2':[float(max(abs(r[i]) for r in v)) for i in (1,2)],'axes':'X=E, Y=up, Z=-N; relative-coordinate inertia -M a_g with fixed supports; no prescribed base acceleration','cases':[],'native':'NOT_RUN'}
+          for kind,path,expected in parents:
+              rawp=P(path).read_bytes();assert sha(rawp)==expected
+              s=rawp.decode('ascii')
+              assert '\r' not in s
+              out=s
+              for n,col,sign in [(names[0],1,1),(names[1],2,-1)]:
+                  m=extract(out,n);out=out[:m.start()]+card(n,col,sign)+out[m.end():]
+              old='0.005, 160.195, 1.e-7, 0.01'
+              assert out.count(old)==1
+              out=out.replace(old,'0.005, 199.995, 1.e-7, 0.01')
+              oldcomment='Unscaled ESM horizontal record, fixed-base relative coordinates; provisional Rayleigh 1%.'
+              assert out.count(oldcomment)==1
+              out=out.replace(oldcomment,'MODE EQ01 research-scaled horizontal record; fixed-base relative coordinates; inherited provisional damping.')
+              out=out.replace('*Heading\n','*Heading\n** REV21 pilot: EQ01 MODE, 40000 samples, dt=0.005 s, common research scale already applied.\n** Frozen physical parent; original legacy comments below describe earlier revisions. Native NOT_RUN.\n',1)
+              # Prove the only changed portions are two amplitude blocks, dynamic duration, and descriptive comments.
+              def canonical(x):
+                  x=re.sub(r'(?m)^\*Amplitude, name=(EQ_X_EAST_SI|EQ_Z_MINUS_NORTH_SI)\s*\n[^*]*(?:\n|$)',lambda m:'*Amplitude, name='+m[1]+'\nPLACEHOLDER\n',x)
+                  x=x.replace('0.005, 160.195, 1.e-7, 0.01','DURATION').replace('0.005, 199.995, 1.e-7, 0.01','DURATION')
+                  x=x.replace(oldcomment,'STEP DESCRIPTION').replace('MODE EQ01 research-scaled horizontal record; fixed-base relative coordinates; inherited provisional damping.','STEP DESCRIPTION')
+                  return re.sub(r'(?m)^\*\* (REV21 pilot:|Frozen physical parent;).*\n','',x)
+              assert canonical(s)==canonical(out)
+              for n,col,sign in [(names[0],1,1),(names[1],2,-1)]:assert reverse(out,n,col,sign)==40000
+              assert max(map(len,out.splitlines()))<=256
+              assert len(re.findall(r'(?im)^\*Step,',out))==len(re.findall(r'(?im)^\*End Step\s*$',out))==5
+              eq=out[out.index('*Step, name=EQ_2H_RAYLEIGH_REL'):]
+              assert eq.count('*Dload, op=NEW')==3
+              assert eq.count('amplitude=EQ_X_EAST_SI')==1 and eq.count('amplitude=EQ_Z_MINUS_NORTH_SI')==1
+              assert '*Boundary, op=NEW, type=DISPLACEMENT' in eq
+              assert 'GRAV, 9.81, 0., -1., 0.' in eq
+              assert 'GRAV, 1., -1., 0., 0.' in eq and 'GRAV, 1., 0., 0., -1.' in eq
+              if kind=='FULL_ASSEMBLY':
+                  assert out.count('*Part, name=')==100 and out.count('*Instance, name=')==100
+                  assert not re.search(r'(?im)^\*[^\n]*\b(?:file|input)\s*=',out)
+              else:
+                  assert out.count('*Element, type=SUBSTR, file=RNA_ROM10, elset=REV20_RNA')==1
+                  assert eq.count('REV20_TOWER_ALL, GRAV')==3 and eq.count('REV20_RNA, GRAV')==3
+              name='HE_REV21_MODE_'+kind+'.inp';blob=out.encode('ascii');(O/name).write_bytes(blob)
+              report['cases'].append({'file':name,'bytes':len(blob),'sha256':sha(blob),'parent_sha256':expected,'exact_nonload_content_match':True,'two_amplitudes_readback':'PASS','steps':5,'native_dependency':'RNA_ROM10.sim from matching REV20 generation; not directly CAE importable' if kind=='ROM10_NATIVE' else 'none; CAE import NOT_RUN','max_increment_s':.01})
+          (O/'MODE_EQ01_scaled_reference_SI.csv').write_bytes(data)
+          # Do not duplicate or modify the generator, carry exact frozen generator for the ROM dependency.
+          g=P('parent20/RNA_REV20_10HZ_GENERATE.inp').read_bytes();assert sha(g)=='785e777aa47e1775882941fc27c74f5fe67d422d2abdff143bb9a5eecd0514b4'
+          (O/'RNA_REV20_10HZ_GENERATE.inp').write_bytes(g)
+          (O/'REV21_MODE_AUDIT.json').write_text(json.dumps(report,indent=2)+'\n')
+          (O/'README.txt').write_text('REV21 MODE EQ01 pilot only. No new RNA formulation. FULL_ASSEMBLY = frozen REV18, self-contained (native CAE import untested). ROM10_NATIVE = frozen REV20, requires native RNA_ROM10 generation and precheck first. Use same Abaqus release and working directory. Source is already scaled. Max increment 0.01 s is a pilot; compare 0.005 s for time-step sensitivity. Native damping and modes not yet validated. Not site-approved. Do not run full dynamics before gravity/modal prechecks.\n')
+          print('AUDIT',json.dumps(report),flush=True)
+          
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: REV21_MODE_PILOT
+          path: output/
+          retention-days: 90
+          if-no-files-found: error
