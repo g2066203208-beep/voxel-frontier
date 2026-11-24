@@ -1,3 +1,21 @@
+### 2026-11-24｜v0.32.188 — 地震期刊制图真实输出
+
+RUN45381499918：绘图、上传artifact14913772027、研究分支归档9e9d942e0783c9640b711106678901c597876682已回读manifest。7张图各PNG 600dpi、PDF/SVG，V7仅备用，DSLC为文献匹配原波样稿。V7七个scaled CSV逐一核对SHA256和采样数（40000/20600/37864/16000/17000/36000/49800），DSLC 7386点、源SHA256 178b7b329e641188cb9758774a7bd57a7563a2ceab058d06d5e288272f01f463。PSD Welch Hann 40s、50%重叠、去均值、单边密度、df=.025Hz、图示0–2Hz，f1=1/7.3937Hz；反应谱5% PSA，V7已计算RotD50，DSLC原始双水平FOH新算，官方速度位移直接取源列。仅绘图不改变波组和工程准入；未宣称六条新文献波已取得。详见[manifest](../experiments/T079/seismic-evidence-20261124/record-pool/journal_figures_20261124/manifest.json)。
+
+![DSLC_01_acceleration.png](../experiments/T079/seismic-evidence-20261124/record-pool/journal_figures_20261124/DSLC_01_acceleration.png)
+
+![DSLC_02_PSD.png](../experiments/T079/seismic-evidence-20261124/record-pool/journal_figures_20261124/DSLC_02_PSD.png)
+
+![DSLC_03_response_spectra.png](../experiments/T079/seismic-evidence-20261124/record-pool/journal_figures_20261124/DSLC_03_response_spectra.png)
+
+![DSLC_04_three_motion_histories.png](../experiments/T079/seismic-evidence-20261124/record-pool/journal_figures_20261124/DSLC_04_three_motion_histories.png)
+
+![V7_backup_01_acceleration.png](../experiments/T079/seismic-evidence-20261124/record-pool/journal_figures_20261124/V7_backup_01_acceleration.png)
+
+![V7_backup_02_PSD.png](../experiments/T079/seismic-evidence-20261124/record-pool/journal_figures_20261124/V7_backup_02_PSD.png)
+
+![V7_backup_03_response_spectra.png](../experiments/T079/seismic-evidence-20261124/record-pool/journal_figures_20261124/V7_backup_03_response_spectra.png)
+
 ### 2026-11-24｜v0.32.187 — DSLC连续原始时程论文制图样稿
 
 源CSV Git blob 0bf889d61a073e209afdd79173eaa02780cd285a，核对7386点、原始时间-5–142.70s、dt=.02s，N63E PGA2.3528 m/s²。直接逐点连线生成SVG，单位mm/s²→m/s²，不重采样、不调幅、不删尾段；165mm宽、黑色细实线、内向刻度、矢量文本；仅DSLC样稿，不代表其余六条已取得或新版波组完成。原图[SVG](../experiments/T079/seismic-evidence-20261124/record-pool/geonet-dslc/DSLC_N63E_time_history_journal.svg)。
