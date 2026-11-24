@@ -102,15 +102,17 @@ jobs:
           s=p.read_text(encoding='utf-8')
           marker='    audit=[]\n'
           assert s.count(marker)==1
-          insert="""    profile=os.environ['AERO_PROFILE']
-              assert getval(ad,'WakeMod')=='1' and getval(ad,'AFAeroMod')=='1'
-              assert getval(ad,'DBEMT_Mod')=='2' and getval(ad,'UAMod')=='3'
-              if profile in ('dbemt','dbemt_ua'): edits.append((ad,'WakeMod',2))
-              if profile in ('ua','dbemt_ua'): edits.append((ad,'AFAeroMod',2))
-              assert profile in ('baseline','dbemt','ua','dbemt_ua')
-          """
-          # Dedent here only: the first inserted line already has four spaces.
-          insert='\n'.join(line[6:] if line.startswith('          ') else line for line in insert.split('\n'))
+          insert='\n'.join([
+              "    profile=os.environ['AERO_PROFILE']",
+              "    assert getval(ad,'WakeMod')=='1' and getval(ad,'AFAeroMod')=='1'",
+              "    assert getval(ad,'DBEMT_Mod')=='2' and getval(ad,'UAMod')=='3'",
+              "    assert getval(ed,'NumBl')=='3' and getval(ed,'BldNodes')=='51'",
+              "    assert all(getval(ed,k).lower()=='true' for k in ('FlapDOF1','FlapDOF2','EdgeDOF','DrTrDOF','GenDOF','TwFADOF1','TwFADOF2','TwSSDOF1','TwSSDOF2'))",
+              "    assert getval(srv,'PCMode')=='5' and getval(srv,'VSContrl')=='5'",
+              "    if profile in ('dbemt','dbemt_ua'): edits.append((ad,'WakeMod',2))",
+              "    if profile in ('ua','dbemt_ua'): edits.append((ad,'AFAeroMod',2))",
+              "    assert profile in ('baseline','dbemt','ua','dbemt_ua')",
+          ])+'\n'
           p.write_text(s.replace(marker,insert+marker),encoding='utf-8')
           compile(p.read_text(encoding='utf-8'),str(p),'exec')
           '@ | python -
