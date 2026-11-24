@@ -1,3 +1,6 @@
+## 2026-11-24｜Rayleigh阻尼目标与历史模态系数计算 · START
+- READ_BASE_SHA=3cc19069ad9b78a529dbb7dbd1ffd4dac95c6ed1；已读根/研究AGENTS、指挥室、白皮书v0.32.159、T082 BF1原始30阶频率及报告、Xu/He2025同对象论文公开全文、Buildings 2026 §3.1、Shock and Vibration 2025混塔抗震、Abaqus材料阻尼及USBR DSO-07-03基底运动问题。用户授权确定阻尼目标并算系数；只做历史频率预估与方法/论文记录，不把BF1频率冒充REV11/13结果、不修改INP或启动原生求解。拟保存白皮书和可复算数据。
+
 ## 2026-11-24｜REV13双水平地震试算输入 · END
 - 目标SHA256 7a56d8f7bfc059434f57dc4ddb99961e2ea1f41176b6aff27e587ad4fcd1f8d2，34232781 bytes，9处差异；源级64,080水平值、103部件连接、CDP塑性应变、材料引用、反向补丁检查PASS；main 284b912555c94a8dcde69158d3400cded50e5ac6、工作室补丁blob 724535986a4aeaf0cb4a467c0c846d1d83a73324远端一致。白皮书v0.32.159；新增真实原波未缩放E-only动态步，未加Rayleigh及风响应外载，原生NOT_RUN。云备份失败，完整输入已直接交付，工作室可精确恢复。剩余物理问题HOLD、不升级阶段/合并PR#42。
 
