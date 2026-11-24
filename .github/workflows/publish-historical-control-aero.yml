@@ -1,0 +1,79 @@
+name: Publish verified historical OpenFAST figures
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/publish-historical-control-aero.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: historical-control-aero-36
+  cancel-in-progress: true
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            public/thesis-studio/wind-figures
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install numpy==1.26.4 matplotlib==3.9.2 pillow
+      - name: Restore pinned historical source parser and manifest
+        run: |
+          set -euo pipefail
+          pin=902f8870fdc7d1b961a6e511706066bf831736f3
+          for p in research/wind-tower/experiments/T062/recover_control_aero_36.py research/wind-tower/experiments/T062/s06_historical_outb_source_gate.py research/wind-tower/archive/local-assets-20261004-supplement/file-manifest.json; do
+            mkdir -p "$(dirname "$p")"
+            curl -fLsS --retry 3 "https://raw.githubusercontent.com/$GITHUB_REPOSITORY/$pin/$p" -o "$p"
+          done
+          python research/wind-tower/experiments/T062/recover_control_aero_36.py
+      - name: Check source receipt and publish verified figures
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json,shutil
+          from PIL import Image
+          src=Path('historical-control-figures')
+          dst=Path('public/thesis-studio/wind-figures/historical-control')
+          dst.mkdir(parents=True,exist_ok=True)
+          m=json.loads((src/'receipt.json').read_text())
+          assert len(m['cases'])==36 and m['rows']==432036 and m['tower_aero'] is False
+          figs=['01_synchronous_control_response','02_power_rotor_thrust','03_aerodynamic_ct','04_structural_peak_loads']
+          for s in figs:
+              for ext in ['png','svg','pdf']:
+                  p=src/(s+'.'+ext)
+                  if ext=='png':
+                      with Image.open(p) as im:im.verify()
+                  elif ext=='svg':assert p.read_text().rstrip().endswith('</svg>')
+                  else:assert p.read_bytes().startswith(b'%PDF-')
+                  shutil.copy2(p,dst/p.name)
+          for name in ['receipt.json','statistics.csv']:
+              shutil.copy2(src/name,dst/name)
+          for k in ['NTM','ETM']:
+              p=src/'time-series'/f'U11p4_{k}_S01.csv'
+              shutil.copy2(p,dst/p.name)
+          shutil.copy2('research/wind-tower/experiments/T062/recover_control_aero_36.py',dst/'recover_control_aero_36.py')
+          titles=['风速、转速、桨距、功率与塔底弯矩同步时程','发电功率与转子推力通道时程','三风速下气动推力系数统计','塔底及叶根弯矩绝对峰值统计']
+          figs_html=''.join(f'<figure><a href="{s}.svg"><img loading="lazy" src="{s}.png" alt="{t}"></a><figcaption>{t} · <a href="{s}.svg">SVG</a> · <a href="{s}.pdf">PDF</a></figcaption></figure>' for s,t in zip(figs,titles))
+          page='<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>历史整机运行与气动系数｜论文工作室</title><style>body{margin:0;background:#f5f7f8;color:#23343d;font:16px/1.65 system-ui}header{background:#153643;color:white;padding:18px 24px}header a{color:#d5f0ec}main{max-width:1050px;margin:auto;padding:20px}figure{margin:20px 0;padding:18px;background:white;border:1px solid #dce3e7}img{display:block;width:100%;height:auto}figcaption{text-align:center}a{color:#116b76}</style><header><a href="../">风荷载图集</a> · <a href="../../manuscript-workbench.html#chapter-03">第三章</a></header><main><h1>历史36组整机运行与气动系数</h1><p>原始OUTB SHA-256逐件核验。三风速、NTM/ETM各六seed。额定风速S01时程仅为代表例，100–700 s。与新风场和当前REV22精细混塔分开；旧TwrAero=False，转子推力与塔底/叶根内力不可直接当作独立外力加载。</p><p><a href="receipt.json">来源审核</a> · <a href="statistics.csv">36组统计</a> · <a href="U11p4_NTM_S01.csv">NTM时程</a> · <a href="U11p4_ETM_S01.csv">ETM时程</a> · <a href="recover_control_aero_36.py">复现程序</a></p>'+figs_html+'</main></html>'
+          (dst/'index.html').write_text(page)
+          PY
+      - name: Archive in existing studio
+        run: |
+          git config user.name thesis-wind-archive
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/thesis-studio/wind-figures/historical-control
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Archive SHA-verified historical OpenFAST control, thrust coefficient and structural response figures'
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: historical-control-aero-36
+          path: historical-control-figures/
+          retention-days: 30
