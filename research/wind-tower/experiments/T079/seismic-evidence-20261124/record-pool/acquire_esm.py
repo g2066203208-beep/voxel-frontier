@@ -7,7 +7,7 @@ from scipy.signal import lfilter, cont2discrete
 from scipy.integrate import cumulative_trapezoid
 
 ROOT=pathlib.Path(__file__).resolve().parent
-OUT=ROOT/"acquired"; OUT.mkdir(exist_ok=True)
+OUT=ROOT/"acquired_v2"; OUT.mkdir(exist_ok=True)
 BASE="https://esm-db.eu/esmws/"
 DAYS=[
 ("P01","1999-09-20","1999-09-21",7.0,"ILA004"),
@@ -101,18 +101,22 @@ def spectra(a,b,dt):
             c1=float((-Cd@Ad@b1).item())
             corr=lfilter([c0,c1+d[1]*c0],d,np.r_[1.,np.zeros(len(a)-1)])
             u+=corr*a[0];v+=corr*b[0]
-        peaks=np.max(np.abs(u[:,None]*cs+v[:,None]*ss),axis=0)
+        peaks=np.array([np.max(np.abs(u*c+v*s)) for c,s in zip(cs,ss)])
         result.append([T,np.median(peaks),np.max(np.hypot(u,v)),np.max(abs(u)),np.max(abs(v))])
     return result
 def acquire(task):
     label,event,net,station,loc,ins,meta=task
     params={"eventid":event,"station":station,"format":"ascii","processing-type":"MP","data-type":"ACC","quality-class":"BEST,GOOD"}
     if net:params["network"]=net
-    if loc is not None:params["location"]=loc or "--"
-    if ins:params["channel"]=ins+"?"
+    if loc:params["location"]=loc
+    if ins:params["channel"]=ins+"*"
     rct={"label":label,"event":event,"station":station,"network_requested":net,"metadata":meta,"status":"HOLD"}
     try:
-        r=request("eventdata",params);rct.update(url=r.url,http=r.status_code,source_sha256=digest(r.content),bytes=len(r.content))
+        r=request("eventdata",params)
+        if r.status_code==400:
+            params.pop("location",None);params.pop("channel",None);r=request("eventdata",params)
+        rct.update(url=r.url,http=r.status_code,source_sha256=digest(r.content),bytes=len(r.content))
+        if not r.ok:rct["response_excerpt"]=r.text[:300]
         if not r.ok or not zipfile.is_zipfile(io.BytesIO(r.content)):raise ValueError("not a public processed ZIP")
         with zipfile.ZipFile(io.BytesIO(r.content)) as z:
             if z.testzip():raise ValueError("CRC error")
@@ -126,7 +130,8 @@ def acquire(task):
             if len(eligible)!=1:raise ValueError("ambiguous or missing synchronized E/N pair")
             k,v=eligible[0];h,a,dt,*_=v["E"];g,b,dt2,*_=v["N"]
             if len(a)!=len(b) or dt!=dt2 or h["DATE_TIME_FIRST_SAMPLE_YYYYMMDD_HHMMSS"]!=g["DATE_TIME_FIRST_SAMPLE_YYYYMMDD_HHMMSS"]:raise ValueError("pair grid mismatch")
-            if not all("CC-BY" in x[0].get("DATA_LICENSE","").upper() and "NC" not in x[0].get("DATA_LICENSE","").upper() and "ND" not in x[0].get("DATA_LICENSE","").upper() for x in v.values()):raise ValueError("redistribution license not verified")
+            rct["licenses"]=[x[0].get("DATA_LICENSE","") for x in v.values()]
+            if not all(re.search(r"CC[-_ ]?BY(?:[-_ ]|[0-9])",x,re.I) and not re.search(r"\b(?:NC|ND)\b|NONCOMMERCIAL|NODERIVATIVES",x,re.I) for x in rct["licenses"]):raise ValueError("redistribution license not verified")
             fc=[num(x[0].get("LOW_CUT_FREQUENCY_HZ")) for x in [v["E"],v["N"]]]
             d=OUT/(event+"__"+k[0]+"_"+station+"_"+(k[1] or "blank")+"_"+k[2]);d.mkdir(exist_ok=True)
             (d/"original_MP_ACC.zip").write_bytes(r.content)
@@ -145,23 +150,31 @@ def acquire(task):
     print("PAIR",json.dumps({k:v for k,v in rct.items() if k not in ("headers","metadata","files")},ensure_ascii=False),flush=True)
     return rct
 def main():
-    with cf.ThreadPoolExecutor(max_workers=5) as ex: queries=list(ex.map(query,DAYS))
+    # Reuse already archived official metadata; no duplicate first-round requests.
+    queries=[]
+    for row in DAYS:
+        label=row[0]; p=ROOT/"acquired"/(label+"_metadata.json")
+        if p.exists():
+            b=p.read_bytes();j=json.loads(b);queries.append(({"label":label,"metadata_source":str(p.relative_to(ROOT)),"sha256":digest(b),"count":len(j)},j))
+    # Additional independent historical Italian records, selected from official event dates.
+    extra=[("R13","2009-04-07","2009-04-08",5.3,None),("R14","2012-05-29","2012-05-30",5.6,None),("R15","2016-10-26","2016-10-27",5.8,None),("R16","2017-01-18","2017-01-19",5.4,None),("R17","2011-10-23","2011-10-24",7.0,None)]
+    with cf.ThreadPoolExecutor(max_workers=5) as ex: queries+=list(ex.map(query,extra))
     tasks=[]; seen=set()
     for rec,rows in queries:
         print("QUERY",json.dumps(rec),flush=True)
         # exact requested station, otherwise choose three records per distinct event
         rows=[r for r in rows if r.get("event_id") and r.get("station_code") and "MP" in r.get("processing_avail",[])]
-        rows.sort(key=lambda r:(0 if r.get("class")=="BEST" else 1,abs(num(r.get("corr_hz_PGA"),100)-40),num(r.get("epi_dist"),100)))
+        rows.sort(key=lambda r:(0 if r.get("net_name") in ("IT","IV","8P") else 1,0 if r.get("class")=="BEST" else 1,abs(num(r.get("corr_hz_PGA"),100)-40),num(r.get("epi_dist"),100)))
         per={}
         for r in rows:
             e=r["event_id"];st=r["station_code"];nt=r.get("net_name");loc=r.get("location_code","");ins=r.get("instr_code","").replace("*","")
             key=(e,nt,st,loc,ins)
-            if key in seen or per.get(e,0)>=3:continue
+            if key in seen or per.get(e,0)>=2:continue
             seen.add(key);per[e]=per.get(e,0)+1
             tasks.append((rec["label"],e,nt,st,loc,ins,r))
-            if sum(per.values())>=6:break
+            if sum(per.values())>=4:break
     for label,event,station in SPECIAL:
-        tasks.append((label,event,None,station,None,None,{"special_reference":"Yang et al 2025 DOI 10.1111/mice.13408; 4615 also DOI 10.1177/87552930251329113 not independently verified"}))
+        tasks.append((label,event,None,station,None,None,{"special_reference":"Yang et al 2025 DOI 10.1111/mice.13408"}))
     # explicit Chi-Chi record ID from Yang et al; source station availability may differ.
     tasks.append(("P01_EXACT","INT-UT19990920_174715",None,"ILA004",None,None,{}))
     print("TASKS",len(tasks),flush=True)
