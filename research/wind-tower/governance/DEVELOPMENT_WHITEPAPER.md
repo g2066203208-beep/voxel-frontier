@@ -1,3 +1,75 @@
+### 2026-11-24｜v0.32.151 PATCH — REV09 C65/C70规范本构重建及原文原图证据
+
+**SOURCE / RUN / TEST.** REV08 SHA256 `5d0a1d61ffe24b5d28b2a0b6e34f1a95e46ac4f206a3400d40ba5c6f35cbe052`；唯一新版 HE_REV09_HE_CHECK.inp SHA256 `cbe996780eb772a7fdb8f33d436c76b0936631ef835f3606d11ab7d90b4af1ef`，34225851 bytes，会话交付，未上传仓库。独立Python实际重新生成C65、C70四类CDP表，每等级26个压缩点/24个拉伸点；103 Part/103 End Part；除标题与两材料CDP表外其他内容相同。未改密度/弹性模量、截面、配筋、PT、法兰、接触或分析步；整机质量沿用REV08 2584628.544636 kg。原生Data Check/四单元试件/平衡/模态/地震 NOT_RUN。
+
+#### 1. 何2024直接来源：材料分区、单元与几何
+
+何泽瑜《大型混塔式风力机的建模与可靠度分析》，PDF第33–35页（正文22–24页）及第45页。第33页说明C70用于前两节、其余C65，塔身采用三维单元、普通钢筋网和PT用桁架，混凝土CDP，钢筋与钢塔双线性S345；第78页表7-1给E和密度。以下为仓库既有原页，不是自绘图。
+
+![何2024 PDF33 原页：原型与材料建模](../references/evidence-screenshots/He2024_PDF_page_33.png)
+
+![何2024 PDF34 原页：31节几何和纵筋数量](../references/evidence-screenshots/He2024_PDF_page_34.png)
+
+![何2024 PDF35 原页：钢塔几何和图3-5有限元模型](../references/evidence-screenshots/He2024_PDF_page_35.png)
+
+![何2024 PDF45 原页：静力验证](../references/evidence-screenshots/He2024_PDF_page_45.png)
+
+[第78页表7-1原页在线工作室](https://g2066203208-beep.github.io/voxel-frontier/thesis-studio/he-thesis-comparison/#p=78)；[原型全文](https://g2066203208-beep.github.io/voxel-frontier/thesis-studio/documents/He_Zeyu_2024_hybrid_tower_thesis.pdf)。第78页本轮未定位到研究分支独立PNG，不把文本索引称为原图。原型未公开完整CDP表、膨胀角、黏性参数或法兰尺寸。
+
+#### 2. 现行规范原图与计算采用值
+
+[GB/T 50010—2010（2024年版）附录C.2，建研院规范网站](https://gf.cabr-fire.com/m/article-12646.htm)。C.2.3、C.2.4明确允许选取设计/标准/平均强度代表值。本文保持既有同谱系标准强度代表值41.5/44.5 MPa及2.93/2.99 MPa，并非实测平均值；峰值应变及下降段系数按相邻表格数值线性插值。原站原始图像直接嵌入（外部URL，未声称原字节已复制入仓库）。
+
+![规范C.2.3单轴受拉公式、表与图原图](https://gf.cabr-fire.com/Web/uploads/allimg/161214/4-161214162U5C0.png)
+
+![规范C.2.4单轴受压公式及表原图](https://gf.cabr-fire.com/Web/uploads/allimg/161214/4-16121416293EV.png)
+
+![规范C.2.5重复受压卸载与再加载原图](https://gf.cabr-fire.com/Web/uploads/allimg/161214/4-1612141630305X.png)
+
+C.2.5为滞回验证参照，不声称CDP默认滞回自动等同该规范路径。
+
+| 参数 | C65 | C70 |
+|---|---:|---:|
+| E MPa |36500|37000|
+| 密度 kg/m³ |2400|2400|
+| 泊松比 |0.2|0.2|
+| fc,r MPa |41.5|44.5|
+| ft,r MPa |2.93|2.99|
+| eps_c,r |0.001808|0.001844|
+| alpha_c |2.021|2.183|
+| n |2.694430834558|2.875421443021|
+| eps_t,r |0.00011646|0.00011778|
+| alpha_t |2.6896|2.7928|
+| peak dc |0.206990476261|0.192395583837|
+| peak dt |0.169768924310|0.171678456059|
+
+计算：x=eps/eps_peak；压缩上升段sigma/fc=n*x/(n−1+x^n)，下降段x/[alpha_c*(x−1)^2+x]；拉伸上升段x*(1.2−0.2*x^5)，下降段x/[alpha_t*(x−1)^1.7+x]。按Li 2020能量等价法 d=1−sqrt(sigma/(E*eps))，非弹性/开裂应变eps−sigma/E，塑性应变=eps_in−[d/(1−d)]*sigma/E。规范中的损伤变量与CDP卸载损伤不是直接等价，不能直接照抄。首行依Li表3的处理思路，取压缩x=.5、拉伸x=.6处应力，但首行eps=sigma/E，d=0，非弹性应变0；这是线性化近似，不是规范强制起点。截断xc=3.2、xt=10为研究数值假设，未校准残余承载，不冒称Li的试验梁截断值适用于本塔。
+
+#### 3. 期刊原文和原图
+
+- [Li Qingfu, Guo Wei, Kuang Yihang (2020), DOI 10.1088/1757-899X/794/1/012036，仓库原PDF](../references/open-access/Li_2020_IOP_CDP_012036.pdf)，§3.3、式(6)–(12)、表3；公开全文核读，原PDF下载接口本轮403。本文只采用换算方法及首行思路，非40MPa试验梁表值，不迁移论文校准结论。原图页待从已有PDF渲染，不伪造。
+- [Wang等2025，DOI 10.1186/s40069-025-00800-5](https://link.springer.com/article/10.1186/s40069-025-00800-5)，§2.2、2.3，C70取44.5/2.99MPa及30°，Sidoroff损伤。该刊参数列举的Kc与双轴比文字顺序疑似互换，本模型参数身份按Abaqus官方定义而非盲抄。对象为104m混凝土塔局部灌浆修复研究，非本文158m整塔。
+ 
+![Wang等2025原刊Fig.5，混凝土塔及钢筋网有限元模型](https://media.springernature.com/lw685/springer-static/image/art%3A10.1186%2Fs40069-025-00800-5/MediaObjects/40069_2025_800_Fig5_HTML.png)
+
+- [徐等2026同研究谱系原PDF](../references/open-access/Xu_2026_ActaEnergiaeSolarisSinica_Nonlinear_Hybrid_Tower.pdf)，[Dong等2025原PDF](../references/open-access/Dong_2025_Buildings_15_3786.pdf)。前者5MW不同对象，后者同类法兰/锚固，不能作为何全部参数直接值。既有[T046来源账本](../experiments/T046/SOURCE_LEDGER.md)记录差异。
+
+#### 4. Abaqus官方原图与剩余验证
+
+[官方CDP手册2025](https://docs.software.vt.edu/abaqusv2025/English/SIMACAEMATRefMap/simamat-c-concretedamaged.htm)。保留psi=30°（同类论文补充）、偏心率0.1、双轴比1.16、Kc=0.666667（后三项软件默认近似）；粘性1e−5 s为REV08数值假设，尚未验证，不能当材料速率参数。四类表正值、首行、损伤单调、非弹性与塑性应变严格递增断言通过。拉伸峰后积分C65=778.520906、C70=787.277460 J/m³；这是应力-开裂应变积分，不是单位裂缝面积断裂能，现仍采用TYPE=STRAIN，存在网格依赖，不能直接称破坏能量客观。待以实测/有来源Gf及特征长度进行正则化和网格对比，不凭经验指定。压缩软化及默认循环恢复同样需校核。
+
+![Abaqus 2025官方Fig.4：应力-开裂位移](https://docs.software.vt.edu/abaqusv2025/English/SIMA3DXRefImages/cconcretedamaged-dep.png)
+
+![Abaqus 2025官方Fig.5：断裂能线性软化](https://docs.software.vt.edu/abaqusv2025/English/SIMA3DXRefImages/cconcretedamaged-gfi.png)
+
+#### 5. 已完成预应力阶段原文证据补登记
+
+[NB/T 10907—2021附录A原页证据索引](../experiments/T078/T078_NBT10907_APPENDIX_A_SOURCE_LEDGER.md)（PDF16、17、18、42–45页原图哈希）；[REV08 BF1损失计算报告](../experiments/T078/REV08_BF1_PRESTRESS_LOSS_20261124.md)；[既有T078完整计算](../experiments/T078/T078_PRESTRESS_DESIGN_REPORT.md)。仓库现存第18页图像在下方。第16、17、42–45页未在本轮树中定位到原图文件，原件已过期/不可直接获取，需恢复原PDF后补齐，不把公式转录或哈希冒充原图。
+
+![NB/T 10907 PDF18，既有原页](../experiments/T061/audit_evidence_20261007/NBT10907_pdf_18.jpg)
+
+**状态**：静态数学检查PASS，原生试件/求解NOT_RUN；峰后截断、网格客观性、循环卸载、黏性敏感性仍待验证。未修改历史结果、冻结母本或PR#42；INP未上传仓库，公开工作室未发布。原文链接及原图直接进入本白皮书；外链不等于本地归档，缺失原页已明示。
+
 ### 2026-11-24｜v0.32.150 PATCH — REV08 BF1 专项规范损失重算（不改物理输入）
 - SOURCE=REV08 SHA256 5d0a1d61ffe24b5d28b2a0b6e34f1a95e46ac4f206a3400d40ba5c6f35cbe052；实际Python解析36×140mm²、112.1m、195GPa、1280MPa与31段真实48边形截面，12点Gauss积分。STANDARD=现行NB/T10907—2021（官方登记已核），附录A.1.2–A.1.6依据T078原页证据索引（原PDF本轮未重新取得）；REF=何2024 PDF33–35/78索引与徐等2026 DOI10.19912/j.0254-0096.tynxb.2024-1794，不把同团队其他对象参数冒称何直接值。
 - RUN=登记T078保守假设：6mm活动锚回缩、30×2mm接缝压密、36批、0.75倍等级张拉龄期、rho=0筛查；自由段摩阻0（未知锚固管道摩阻未计）、回缩压密114.808207、弹性压缩2.826317、松弛30.107527、收缩徐变63.959959 MPa（CSEG_26），总损失211.702010MPa（16.5392%）；服役目标1068.297990MPa/5.384221868MN。四个假设工况见[计算报告](../experiments/T078/REV08_BF1_PRESTRESS_LOSS_20261124.md)，报告commit 3b407de421876be95b7dd31a85f51c6a507357ca；实际独立计算脚本和31段JSON留会话。法兰变形未计入解析弹性损失。
