@@ -1,0 +1,42 @@
+{
+  "event": "2010 Darfield",
+  "publicID": 3366146,
+  "station": "DSLC",
+  "component": [
+    "N63E",
+    "N27W",
+    "UP"
+  ],
+  "source_sha256": "178b7b329e641188cb9758774a7bd57a7563a2ceab058d06d5e288272f01f463",
+  "npts": 7386,
+  "dt_s": 0.02,
+  "first_time_s": -5,
+  "last_time_s": 142.7,
+  "duration_s": 147.7,
+  "time_step_roundoff_s": 1.81903103690928e-14,
+  "PGA_m_s2": [
+    2.3528000000000002,
+    2.4837,
+    2.8921
+  ],
+  "PGV_m_s": [
+    0.65998,
+    0.39111,
+    0.15194
+  ],
+  "filter_transition_Hz": [
+    [
+      0.01,
+      0.1
+    ],
+    [
+      24.5,
+      25.5
+    ]
+  ],
+  "RotD50_7_3937s_5pct_m_s2": 1.1585938235103241,
+  "RotD100_7_3937s_5pct_m_s2": 1.5677587607832173,
+  "D5_95_pair_s_discrete": 19.06,
+  "status": "source acquired; long-period and target-spectrum admission not complete",
+  "method": "Newmark average acceleration, original time axis, 180 angles at 1 degree; 5% damping, no resampling"
+}
