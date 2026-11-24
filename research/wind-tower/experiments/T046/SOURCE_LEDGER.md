@@ -208,3 +208,26 @@ REF141（Applied Sciences 2021, 11, 8683）同样给出36个预应力孔道/位�
 
 在这三项关闭前，T045/T046可用于几何/方法审计，但PT总预压力相关的最终非线性结论不得冻结。
 
+
+
+## H. 2026-11-24 钢材牌号与循环强化来源纠偏（REV09后，材料决策，不是新版INP）
+
+### H1 原型复现的直接与同对象证据
+- 何2024 PDF33/35（正文22/24）原页回读：钢筋网和钢塔统一S345、双线性塑性；表3-3四段顶端壁厚38/37/36/35 mm。原文没有说明S345钢筋产品标准、强化率、钢法兰钢号。 [PDF33原图](../../references/evidence-screenshots/He2024_PDF_page_33.png)，[PDF35原图](../../references/evidence-screenshots/He2024_PDF_page_35.png)。
+- Xu, He, Wang et al., Renewable Energy 243 (2025) 122475, [DOI](https://doi.org/10.1016/j.renene.2025.122475)，[作者公开全文](https://www.researchgate.net/publication/388434459_Nonlinear_dynamic_response_analyses_of_Onshore_Wind_Turbines_with_Steel-Concrete_Hybrid_Tower_using_a_co-simulation_approach)，§2.2.2/表2：同DTU10MW、158m/112m、C70/C65模型，钢筋HRB335（fy335、fu455、E200000 MPa），钢塔Q345（345、470、206000 MPa），PT（1320、1860、195000 MPa），初应力1280MPa。§3.3采用Steel01，Abaqus推覆验证段采用双线性金属；没有取得同对象强化率、各部件真实材质证明书。不能证明何原文为笔误，也不能断定两个模型几何/原件完全相同。
+- Xu等，太阳能学报47(2):508–516 (2026)，[DOI](https://doi.org/10.19912/j.0254-0096.tynxb.2024-1794)，[网络首发全文镜像](https://www.scribd.com/document/939945250/) 表2 Q345 Steel01: E210GPa、fy345MPa、b=.01。对象为5MW、157.3m，非同对象；仅支持b=.01作为有文献背景的敏感性候选，不替换同对象E206GPa，不冒称HRB335的b已标定。
+- [OpenSees Steel01官方](https://opensees.github.io/OpenSeesDocumentation/user/manual/material/uniaxialMaterials/Steel01.html)：双线性随动强化，可选等向强化；REV09继承的等向强化不等价。 [Abaqus2025循环金属模型](https://docs.software.vt.edu/abaqusv2025/English/SIMACAEMATRefMap/simamat-c-hardening.htm)：线性随动/组合强化需按适用应变域及数据校准。
+
+### H2 规范设计与原型复现分开
+- [住建部2024局部修订公告](https://www.mohurd.gov.cn/gongkai/zc/wjk/art/2024/art_17339_778180.html)，[修订说明](https://gf.cabr-fire.com/article-67379.htm)：2024-08-01实施，删除HRB335相关规定。[GB1499.2-2024](https://www.gb-gbt.com/PDF/Chinese.aspx/GB1499.2-2024) 现行带肋钢筋400/500/600级；[GB1499.1-2024表6](https://oss.ydd17.com/images/file/20240816/1723801176385974.pdf) HPB300（300/420MPa）。新设计候选纵筋/环筋HRB400（如需E级按规范选），6mm拉筋HPB300为构造候选；必须再核NB/T10907材料条文及配筋，不能把历史原型HRB335冒称现行设计合规。
+- [GB/T1591-2018表7原PDF](https://www.bsteel.com.cn/ywsj/upload/2020120810224394548644826.pdf#page=15) 热轧Q355：16<t≤40mm取345MPa，80<t≤100mm取315MPa；交货状态/产品标准必须独立核。现钢塔35–39mm候选位于前一档；100mm实体法兰若采用普通热轧Q355位于后一档，独立定义。法兰钢号、厚度均无原型直接依据，不称合规；若为锻件不能用此钢板表替代产品标准。
+- [NB/T10907—2021官方登记](https://hbba.sacinfo.org.cn/stdDetail/95e0a39923ba033c47f917f3691d2f6f940f1e0488ca5b0a4e50e0ae665afcf5) 现行，覆盖混凝土段及钢混连接。材料章原文未恢复，保留HOLD，不伪造具体条款。
+- [GB/T50010附录C.1](https://gf.cabr-fire.com/article-12645.htm) 单调有屈服点钢筋为弹性—平台—强化；反复加载另有再加载规则。 [原图C.1.1/2](https://gf.cabr-fire.com/Web/uploads/allimg/161214/4-16121416200I22.png)，[原图C.1.2/3](https://gf.cabr-fire.com/Web/uploads/allimg/161214/4-161214162022355.png)。fy代表值可为设计/标准/平均值，弹塑性分析平均值宜实测。平台终点、峰值应变及循环参数无同对象数据，不能从fy/fu唯一反演。 [张耀庭等2016 HRB400单调及低周试验](https://doi.org/10.6052/j.issn.1000-4750.2014.09.0744) 提供新设计HRB400实验研究路径，不用于冒称HRB335标定。
+
+### H3 有限数学候选及执行范围
+保持REV09原件及S345严格原文对照，另拟同对象期刊修正：普通纵筋HRB335、环筋HRB335（补建钢筋，非何直接直径/牌号），拉筋另设HPB300候选（原型未披露），钢塔Q345；RNA等效骨架材料不全局替换，PT保持原模型线弹性对照；法兰单独待定。b=.01仅敏感性，线性随动模型与Steel01基本形式对应；小应变双线性换算H=bE/(1-b)，单位MPa，非实测曲线。
+|候选|fy/E|H MPa|总应变1%应力MPa|同一应力口径假设达到fu的塑性应变|
+|---|---:|---:|---:|---:|
+|HRB335|0.001675000|2020.202020|351.650000|0.059400000|
+|Q345|0.001674757|2080.808081|362.150000|0.060072816|
+最后一列只作外推警示，工程极限强度与真实应力不可直接等同；不是破坏应变、截断或损伤参数。若使用工程拉伸数据，均匀变形至颈缩前需转换真实应力/对数应变并扣除弹性应变。既有0.1塑性应变长外推不能据此称材料破坏已验。未取得REV09文件，未检查真实section绑定、未修改INP、未进行单元试验/原生求解。静态解析算术完成；原生及物理验证HOLD。不得升级模型版本或旧结果。
