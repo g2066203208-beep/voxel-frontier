@@ -27,6 +27,10 @@ jobs:
         run: |
           mkdir -p output
           python research/wind-tower/experiments/T048/RNA_PORT_REDUCTION_20261124/six_port_reduce.py --demo --out output/rna_demo
+      - name: Verify cyclic three-blade reconstruction with actual rigid mass blocks
+        env:
+          OPENBLAS_NUM_THREADS: '1'
+        run: python research/wind-tower/experiments/T048/RNA_PORT_REDUCTION_20261124/assemble_one_blade.py --demo --out output/rna_cyclic_demo
       - uses: actions/upload-artifact@v4
         with:
           name: rna_port_synthetic_test
