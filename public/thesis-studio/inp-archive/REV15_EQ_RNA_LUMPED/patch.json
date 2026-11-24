@@ -1,0 +1,201 @@
+{
+  "schema": 2,
+  "base": "REV14_EQ_RAYLEIGH_1PCT",
+  "sourceSha256": "70c88e645da2e2195fbc089c4af3432d9a37eb38c66296fd23a8b7e1437d5faa",
+  "targetSha256": "ab66bc21c4ba9d642c60dd217f7219c01111a0695c9d2f14f9e11132cbaf83d7",
+  "targetSize": 23300318,
+  "edits": [
+    {
+      "offset": 9,
+      "oldLength": 77,
+      "oldSha256": "c1f37da5dc99b213939f09933031d1691696acfe79a01da18841164fa393a798",
+      "new": "** Job name: HE_REV15_EQ_RNA_LUMPED Model name: CONTACT_REV15_RNA_LUMPED\n** REV15: display meshes removed; inherited rigid RNA analytical mass/inertia at CG; native verification pending.\n"
+    },
+    {
+      "offset": 596928,
+      "oldLength": 5314598,
+      "oldSha256": "0e912095414d1169ecf398cad57f06032b5af3b1a55db29eeb86d84d6ffecd9a",
+      "new": ""
+    },
+    {
+      "offset": 5911531,
+      "oldLength": 2098809,
+      "oldSha256": "3c0caf8787593ce53cd89a020f6451a7b4cdcb6c6d3b9167c92510ed39ced8df",
+      "new": ""
+    },
+    {
+      "offset": 8010345,
+      "oldLength": 3510619,
+      "oldSha256": "d295d2c3ee12827c47635fb372b5e0b7722b6b96f2c96881c5af78cc07d1c5ef",
+      "new": ""
+    },
+    {
+      "offset": 24137425,
+      "oldLength": 6028,
+      "oldSha256": "d125d70e7d6e68e7a98f720cd06bc50b3d1a9caedb9e0130734cc85156827c88",
+      "new": "*Part, name=RNA_LUMPED_INERTIA\n*Node\n1, 0, 160.296630051916, -0.64857912584276\n*Nset, nset=SET_RNA_CG\n1,\n*Element, type=MASS, elset=SET_RNA_MASS\n1, 1\n*Mass, elset=SET_RNA_MASS, alpha=0.0145230339976\n676604.564999807,\n*Element, type=ROTARYI, elset=SET_RNA_INERTIA\n2, 1\n*Rotary Inertia, elset=SET_RNA_INERTIA, alpha=0.0145230339976\n98550474.6869494, 98519682.6571624, 159738733.119879, 0, 0, -669456.044896966\n*End Part\n"
+    },
+    {
+      "offset": 25099849,
+      "oldLength": 249,
+      "oldSha256": "fc0c2ed7fd43db179f190a71482cced1ba55bca3a8db5ddd03236b8ea8b4a093",
+      "new": ""
+    },
+    {
+      "offset": 25100103,
+      "oldLength": 249,
+      "oldSha256": "5434476cc57205e94397b5818031308e5e73bf3e0e2be818fd2fc5fc094a4ce3",
+      "new": ""
+    },
+    {
+      "offset": 25100357,
+      "oldLength": 249,
+      "oldSha256": "35f9e18b6813f4192e5c134d48c2d8167f9c1c4864f88e99345f837b60a52497",
+      "new": ""
+    },
+    {
+      "offset": 25100611,
+      "oldLength": 246,
+      "oldSha256": "8463cb02b33ef9144b82ba5681b84b687494f21d39b3ac432f2e248cca8fe6e6",
+      "new": ""
+    },
+    {
+      "offset": 25100862,
+      "oldLength": 246,
+      "oldSha256": "d66fcc2fc73af3a08c6d87aa9bda621860d10f1d91a595328749655aadbaf4f5",
+      "new": ""
+    },
+    {
+      "offset": 25101113,
+      "oldLength": 257,
+      "oldSha256": "4415459e38366a7db43bad2fa90c6412a09b34bd0bd1658980ebeeab79f1e5e4",
+      "new": ""
+    },
+    {
+      "offset": 25101375,
+      "oldLength": 257,
+      "oldSha256": "70bcccceb1c3516334cac2abc2db22e56be8bd141fa627fbc21a7b126fc8c9ba",
+      "new": ""
+    },
+    {
+      "offset": 25101637,
+      "oldLength": 256,
+      "oldSha256": "81582b13057e107138ac5cae997f1046b57877d8d6b7e26f4b391e7b84b5bd50",
+      "new": ""
+    },
+    {
+      "offset": 25101898,
+      "oldLength": 256,
+      "oldSha256": "a1f792e2566c40a9ebd580a4274ab07c4f0de640e3c54a6bed24ea3b2cd1b1af",
+      "new": ""
+    },
+    {
+      "offset": 25102224,
+      "oldLength": 92,
+      "oldSha256": "51340a9cddce34263ea3570b7d01b4aabaf31446644e2b2e2f58c3d224dc973f",
+      "new": "*Instance, name=RNA_LUMPED_INERTIA-1, part=RNA_LUMPED_INERTIA\n*End Instance\n"
+    },
+    {
+      "offset": 25137004,
+      "oldLength": 78,
+      "oldSha256": "670e3d2fecf3b03ad87cafcc38e8995c6331e530785bbf81688255d322042e42",
+      "new": ""
+    },
+    {
+      "offset": 25137082,
+      "oldLength": 78,
+      "oldSha256": "428ba761be049717b0bae4fec50232436719bc900c063e8eeccc7fd6d265f62c",
+      "new": ""
+    },
+    {
+      "offset": 25137160,
+      "oldLength": 78,
+      "oldSha256": "406eecd8e71c538f95d2bc5282c76bbe1d5dc5089a0e5188faa968391bedbb4f",
+      "new": ""
+    },
+    {
+      "offset": 25137238,
+      "oldLength": 79,
+      "oldSha256": "40ef94b919844227d79fff6aa5358bee16bb44712de7137256dbc865c49968d0",
+      "new": ""
+    },
+    {
+      "offset": 25137317,
+      "oldLength": 79,
+      "oldSha256": "2094857de3a0915219b1a13096ba5f2e8d0f4b3f346c7313dc569596ce0ded32",
+      "new": ""
+    },
+    {
+      "offset": 25137396,
+      "oldLength": 79,
+      "oldSha256": "7646ab118cb401d1ad2ac7de1282936fd30e78114d0a163d5671d0c3f4ffc867",
+      "new": ""
+    },
+    {
+      "offset": 25137475,
+      "oldLength": 79,
+      "oldSha256": "e405fad9bfca09f62f839d3f5e0a0c343e8da9e4a88bb6c01fe9d59b5cd64eb4",
+      "new": ""
+    },
+    {
+      "offset": 25137554,
+      "oldLength": 79,
+      "oldSha256": "cd2180be3d2c82679e63284c8c3fb7f98e50ea05c4746716f6ed0d94ce7e1479",
+      "new": ""
+    },
+    {
+      "offset": 25137633,
+      "oldLength": 79,
+      "oldSha256": "73d90539abc0c58866b62f1f8eddcce39e049b92b9ab1504dd99e9ad6f8b689c",
+      "new": ""
+    },
+    {
+      "offset": 25143571,
+      "oldLength": 126,
+      "oldSha256": "a33eed045f15d572a07bb6d0a03db8f7db8337470b2a319bb48fcbd25b3f2d87",
+      "new": "** Constraint: RB_RNA_LUMPED_OFFSET\n*Rigid Body, ref node=SET_RNA_RP, tie nset=RNA_LUMPED_INERTIA-1.SET_RNA_CG\n"
+    },
+    {
+      "offset": 34214368,
+      "oldLength": 117,
+      "oldSha256": "0a89ed8aa7b9502f3e2450ed76d71ab66e9e3a170c159f0f5f65565a0900d528",
+      "new": ""
+    },
+    {
+      "offset": 34214485,
+      "oldLength": 118,
+      "oldSha256": "4d89567b25c8ac097c326e687bb06e60c5e277ca51cbdfe6db8fd33c23f8e85d",
+      "new": ""
+    },
+    {
+      "offset": 34214603,
+      "oldLength": 118,
+      "oldSha256": "6f4b4a1d391f7322cf5385556279e3dfaa4ada6aa3ff514d78d31fea759f2c57",
+      "new": ""
+    },
+    {
+      "offset": 34214721,
+      "oldLength": 118,
+      "oldSha256": "753e6d05f2ae103c523476d2dfc07cd4a75523ba8ef30a877da7f8ac0d7765de",
+      "new": ""
+    },
+    {
+      "offset": 34214839,
+      "oldLength": 118,
+      "oldSha256": "9535b1f41e293e0e9a453d124cb5066a87fbd234e0e1bb9f2ede3b420eaf452e",
+      "new": ""
+    },
+    {
+      "offset": 34214957,
+      "oldLength": 117,
+      "oldSha256": "c8ba9eb9db4ea73ee3b7e7e59c72b9be5bc118768cc1ec95f41b339348714cf2",
+      "new": ""
+    },
+    {
+      "offset": 34215074,
+      "oldLength": 118,
+      "oldSha256": "f599431b1e805675989697aaffd7ccbf47f3cb4cbf067627468557d86a7947b2",
+      "new": ""
+    }
+  ]
+}

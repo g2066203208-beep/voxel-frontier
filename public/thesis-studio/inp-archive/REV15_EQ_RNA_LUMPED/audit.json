@@ -1,0 +1,180 @@
+{
+  "sourceSha256": "70c88e645da2e2195fbc089c4af3432d9a37eb38c66296fd23a8b7e1437d5faa",
+  "targetSha256": "ab66bc21c4ba9d642c60dd217f7219c01111a0695c9d2f14f9e11132cbaf83d7",
+  "sourceBytes": 34233672,
+  "targetBytes": 23300318,
+  "editCount": 32,
+  "RNA_mass_kg": 676604.5649998067,
+  "CG_global_m": [
+    0.0,
+    160.2966300519159,
+    -0.6485791258427599
+  ],
+  "RP_global_m": [
+    0.0,
+    160.0,
+    0.0
+  ],
+  "tower_top_global_m": [
+    0.0,
+    158.0,
+    0.0
+  ],
+  "J_CG_kgm2": [
+    [
+      98550474.68694942,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      98519682.6571624,
+      -669456.0448969663
+    ],
+    [
+      0.0,
+      -669456.0448969663,
+      159738733.11987907
+    ]
+  ],
+  "J_RP_kgm2": [
+    [
+      98894625.72211325,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      98804299.67093712,
+      -539285.4054049158
+    ],
+    [
+      0.0,
+      -539285.4054049158,
+      159798267.1412682
+    ]
+  ],
+  "J_tower_top_kgm2": [
+    [
+      102403848.97108223,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      98804299.67093712,
+      338377.7892126752
+    ],
+    [
+      0.0,
+      338377.7892126752,
+      163307490.39023715
+    ]
+  ],
+  "principal_inertia_kgm2": [
+    98512362.74919894,
+    98550474.68694942,
+    159746053.02784252
+  ],
+  "mass_by_old_material_kg": {
+    "MAT_RNA_HUB_EQ": 105519.99999995486,
+    "MAT_RNA_BLD_Z5": 4489.78708489597,
+    "MAT_RNA_BLD_Z4": 12216.429950952652,
+    "MAT_RNA_BLD_Z3": 21109.204144842122,
+    "MAT_RNA_BLD_Z2": 32051.381260600967,
+    "MAT_RNA_BLD_Z1": 55211.76255865764,
+    "MAT_RNA_NAC_EQ": 446005.99999990256
+  },
+  "rigid_mass6_RP": [
+    [
+      676604.5649998067,
+      0.0,
+      0.0,
+      -0.0,
+      -438831.59730879543,
+      -200701.2472424357
+    ],
+    [
+      0.0,
+      676604.5649998067,
+      0.0,
+      438831.59730879543,
+      -0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      676604.5649998067,
+      200701.2472424357,
+      -0.0,
+      -0.0
+    ],
+    [
+      0.0,
+      438831.59730879543,
+      200701.2472424357,
+      98894625.72211325,
+      0.0,
+      0.0
+    ],
+    [
+      -438831.59730879543,
+      0.0,
+      -0.0,
+      0.0,
+      98804299.67093712,
+      -539285.4054049158
+    ],
+    [
+      -200701.2472424357,
+      0.0,
+      0.0,
+      0.0,
+      -539285.4054049158,
+      159798267.1412682
+    ]
+  ],
+  "mass6_max_abs_difference": 2.9802322387695312e-08,
+  "DTU_report_mass_kg": 673998.0,
+  "mass_difference_kg": 2606.5649998066947,
+  "alpha": 0.0145230339976,
+  "source_counts": {
+    "Part": 103,
+    "Instance": 109,
+    "Display Body": 9,
+    "Rigid Body": 1,
+    "Material": 14
+  },
+  "target_counts": {
+    "Part": 100,
+    "Instance": 100,
+    "Display Body": 0,
+    "Rigid Body": 1,
+    "Material": 7
+  },
+  "source_element_counts": {
+    "C3D8R": 2976,
+    "S3": 207601,
+    "T3D2": 203812,
+    "B31": 28,
+    "C3D8I": 7296
+  },
+  "target_element_counts": {
+    "C3D8R": 2976,
+    "T3D2": 203812,
+    "MASS": 1,
+    "ROTARYI": 1,
+    "C3D8I": 7296
+  },
+  "checks": [
+    "source hash",
+    "all 5 steps byte identical",
+    "contact/tie/embedded/equation/NSM/solid section/coupling keywords identical",
+    "positive physical inertia",
+    "analytical 6x6 rigid mass matrix equivalence",
+    "no display or RNA carrier definitions remain"
+  ],
+  "scope": "Analytical cylinder inertia of inherited RNA skeleton; old native low-order rigid mass lumping may differ; not complete DTU prototype identification. Fixed rotor, no flexible blades. Other setup unchanged.",
+  "native_solver": "NOT_RUN"
+}

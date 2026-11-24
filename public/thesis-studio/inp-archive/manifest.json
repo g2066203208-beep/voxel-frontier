@@ -3,6 +3,16 @@
   "latest": "REV11",
   "versions": [
     {
+      "version": "REV15_EQ_RNA_LUMPED",
+      "file": "HE_REV15_EQ_RNA_LUMPED.inp",
+      "date": "2026-11-24",
+      "size": 23300318,
+      "sha256": "ab66bc21c4ba9d642c60dd217f7219c01111a0695c9d2f14f9e11132cbaf83d7",
+      "base": "REV14_EQ_RAYLEIGH_1PCT",
+      "patch": "REV15_EQ_RNA_LUMPED/patch.json",
+      "state": "偏心集中RNA惯量；无展示网格；解析等效试算、原生未验；继承REV14阻尼和地震"
+    },
+    {
       "version": "REV14_EQ_RAYLEIGH_1PCT",
       "file": "HE_REV14_EQ_RAYLEIGH_1PCT.inp",
       "date": "2026-11-24",
