@@ -1,0 +1,94 @@
+name: Publish revised seismic candidates V2
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/publish-seismic-v2-20261124.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: seismic-studio-publish
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: public/thesis-studio
+      - uses: actions/checkout@v4
+        with:
+          ref: ae6a7a514abc89e51b3209a32803d5edde283d8b
+          path: source-tree
+          persist-credentials: false
+          sparse-checkout: research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool
+      - name: Build verified replacement archive
+        run: |
+          python - <<'PY'
+          import pathlib,json,hashlib,zipfile,html,shutil,csv,io
+          root=pathlib.Path('source-tree/research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool')
+          old=pathlib.Path('public/thesis-studio/seismic-archive')
+          dst=old/'v2';dst.mkdir(exist_ok=True)
+          info=json.loads((root/'REVISED_CANDIDATES_V2.json').read_text())
+          assert len(info['rows'])==8 and info['formal_design']==0 and info['priority_distinct_events']==2
+          sha=lambda b:hashlib.sha256(b).hexdigest()
+          files={};links=[]
+          for r in info['rows']:
+              src=root/r['directory'];rc=json.loads((src/'receipt.json').read_text())
+              assert rc['event']==r['event'] and rc['station']==r['station']
+              raw=(src/'original_MP_ACC.zip').read_bytes()
+              assert sha(raw)==r['original_sha256']
+              with zipfile.ZipFile(io.BytesIO(raw)) as z:assert z.testzip() is None
+              for n,m in rc['files'].items():
+                  b=(src/n).read_bytes();assert sha(b)==m['sha256'] and len(b)==m['bytes'],n
+              name=r['event']+'_'+r['station']+'.zip'
+              with zipfile.ZipFile(dst/name,'w',zipfile.ZIP_DEFLATED) as z:
+                  for n in ('original_MP_ACC.zip','acceleration_SI.csv','spectra_5pct.csv','receipt.json'):
+                      z.write(src/n,n)
+                  z.writestr('replacement_QC.json',json.dumps(r,indent=2,ensure_ascii=False)+'\n')
+              links.append((r,name));files[name]=(dst/name).read_bytes()
+          for n in ('SP01_T1201.zip','SP02_DSLC.zip'):
+              src=old/'records'/n;b=src.read_bytes()
+              orig=json.loads((old/'download-manifest.json').read_text())['files']['records/'+n]
+              assert sha(b)==orig['sha256'];(dst/n).write_bytes(b);files[n]=b
+          for n,src in [('REVISED_CANDIDATES_V2.json',root/'REVISED_CANDIDATES_V2.json'),('REPLACEMENT_PROTOCOL_20261124.md',root/'REPLACEMENT_PROTOCOL_20261124.md'),('all_51_screen.json',root/'replacement_v4/screen.json'),('official_flatfile_receipt.json',root/'replacement_v4/acquisition_receipt.json')]:
+              b=src.read_bytes();(dst/n).write_bytes(b);files[n]=b
+          with zipfile.ZipFile(dst/'T079_REVISED_CANDIDATES_V2.zip','w',zipfile.ZIP_DEFLATED) as z:
+              for n,b in files.items():z.writestr(n,b)
+          files['T079_REVISED_CANDIDATES_V2.zip']=(dst/'T079_REVISED_CANDIDATES_V2.zip').read_bytes()
+          manifest={n:{'bytes':len(b),'sha256':sha(b)} for n,b in files.items()}
+          (dst/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
+          rows=[]
+          roles={'PRIORITY_DURATION_AND_BAND':'优先谱匹配','SAME_EVENT_BACKUP':'同事件备选','BAND_PASS_DURATION_HOLD':'持续时间待复核'}
+          for r,n in links:
+              t=r['duration_10pct_components_s']
+              rows.append(f'<tr><td>{html.escape(r["station"])}</td><td>{r["date"]}</td><td>{r["fc"]:.3f}</td><td>{r["T1_sa"]:.6f}</td><td>{r["hp008_4_12_pct"]:.2f}%</td><td>{t[0]:.3f} / {t[1]:.3f}</td><td>{roles[r["role"]]}</td><td><a class="download" data-record="{r["station"]}" href="{n}" download>下载原始包</a></td></tr>')
+          page='''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>地震动档案 V2 · 风机工作室</title><style>
+          :root{color-scheme:light dark;--accent:#157b70}*{box-sizing:border-box}body{margin:0;background:light-dark(#f4f6f5,#142020);color:light-dark(#1d2d2c,#e1eae9);font:15px/1.65 system-ui,sans-serif}header{background:#112c33;padding:15px max(16px,calc((100% - 1100px)/2))}header a{color:#b9e4d8;margin-right:20px}main{max-width:1100px;margin:auto;padding:24px 16px}h1{font-size:26px}h2{font-size:18px}section{border:1px solid light-dark(#d4e0dd,#3d5553);background:light-dark(white,#1e3030);padding:18px;border-radius:10px;margin:16px 0}.metrics{display:flex;gap:26px;flex-wrap:wrap}.metrics strong{display:block;font-size:25px}.scroll{overflow:auto}table{border-collapse:collapse;width:100%;min-width:830px;font-variant-numeric:tabular-nums}th,td{padding:10px 8px;text-align:left;border-bottom:1px solid light-dark(#e0e8e5,#405454)}th{font-size:12px}a{color:light-dark(#136e66,#99dbce)}.download{display:inline-block;background:var(--accent);color:#fff!important;padding:7px 12px;border-radius:6px;text-decoration:none;white-space:nowrap}.muted{color:light-dark(#526663,#acc5bf)}@media(max-width:700px){section{padding:12px}}
+          </style></head><body><header><a href="../../">工作室</a><a href="../">V1 原始九组</a><a href="../../inp-archive/">INP档案</a></header><main><h1>地震动档案 · V2</h1><p class="muted">2026-11-24 · 真实原始数据，未调幅</p><section><div class="metrics"><div><strong>51</strong>复算原波组</div><div><strong>8</strong>通过频带等诊断</div><div><strong>2</strong>不同事件优先匹配</div><div><strong>0/7</strong>正式设计准入</div></div><p><a id="full-download" class="download" href="T079_REVISED_CANDIDATES_V2.zip" download>下载V2全部候选原始数据及检测包</a></p><p><a href="all_51_screen.json" download>51组检测数据</a> · <a href="official_flatfile_receipt.json" download>官方查询收据</a> · <a href="REPLACEMENT_PROTOCOL_20261124.md" download>规范与论文依据</a> · <a href="manifest.json" download>哈希清单</a></p></section><section><h2>替换候选</h2><div class="scroll"><table><thead><tr><th>台站</th><th>日期</th><th>高通 Hz</th><th>T₁ Sa m/s²</th><th>4–12s滤波敏感性</th><th>10%PGA有效持续时间 H1/H2(s)</th><th>结论</th><th>下载</th></tr></thead><tbody>'''+''.join(rows)+'''</tbody></table></div><p class="muted">历史T₁=7.3937s，最小持续时间诊断5T₁=36.9685s。VLN与SBT同事件，不重复计数。MNTP、TERO仅源级替换。原COR1、MESG、ZOVE、CLN、T1215退出优先名单。正式场址长周期目标谱仍未锁定。</p></section><section><h2>特殊地震动对照</h2><p><a class="download" data-record="SP01" href="SP01_T1201.zip" download>T1201 原件</a> <a class="download" data-record="SP02" href="SP02_DSLC.zip" download>DSLC 原件</a></p><p class="muted">仅敏感性工况；SBT与T1201属于同一事件。</p></section><section><h2>依据与适用范围</h2><p>GB/T 50011—2010（2024年版）5.1.2及条文说明、5.1.4、5.1.5；NB/T 11600—2024（全文待核）；戴靠山等2021；Akkar &amp; Bommer 2006；Jayaram等2011。各条文及论文对应判据见上方完整协议。频带裕度、附加滤波阈值属于研究筛查，不冒充规范强制值；未使用大于6秒的虚构规范谱。</p></section></main></body></html>'''
+          (dst/'index.html').write_text(page)
+          p=old/'index.html';s=p.read_text()
+          anchor='<h1>地震动档案</h1>'
+          assert anchor in s
+          s=s.replace(anchor,anchor+'<p><a class="download big" href="v2/">最新版 V2 · 替换候选及51组检测</a></p>',1) if 'href="v2/"' not in s else s
+          p.write_text(s)
+          print('V2_FILES',len(manifest),'SOURCE_CANDIDATES',len(links),'PRIORITY_EVENTS',info['priority_distinct_events'])
+          PY
+      - name: Archive permanent V2 downloads
+        run: |
+          git config user.name paper-studio-bot
+          git config user.email paper-studio-bot@users.noreply.github.com
+          git add public/thesis-studio/seismic-archive/index.html public/thesis-studio/seismic-archive/v2
+          git commit -m 'Publish V2 real seismic replacements and strict duration diagnostics'
+          for i in 1 2 3 4 5; do
+            git pull --rebase origin main
+            if git push origin HEAD:main; then break; fi
+            test "$i" != 5
+            sleep 3
+          done
+      - name: Deploy V2
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run pages.yml --ref main
