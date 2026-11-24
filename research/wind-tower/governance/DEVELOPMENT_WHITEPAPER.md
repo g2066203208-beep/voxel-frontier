@@ -1,3 +1,7 @@
+### 2026-11-24｜v0.32.187 — DSLC连续原始时程论文制图样稿
+
+源CSV Git blob 0bf889d61a073e209afdd79173eaa02780cd285a，核对7386点、原始时间-5–142.70s、dt=.02s，N63E PGA2.3528 m/s²。直接逐点连线生成SVG，单位mm/s²→m/s²，不重采样、不调幅、不删尾段；165mm宽、黑色细实线、内向刻度、矢量文本；仅DSLC样稿，不代表其余六条已取得或新版波组完成。原图[SVG](../experiments/T079/seismic-evidence-20261124/record-pool/geonet-dslc/DSLC_N63E_time_history_journal.svg)。
+
 ### 2026-11-24｜v0.32.186 — 七组研究地震波冻结及工作室主分支归档
 
 RUN45362848065：实际计算、ZIP CRC、artifact14904563776及研究分支原件归档成功（a272dbd94f6124e1ee9b6dd239fe8e4c481301ef），发布步骤因 sparse-checkout 缺主站index失败，未重跑计算；直接复用16个已计算blob原样提交main 7a869391ffe38ea0916d9d7a77889c109c512367，逐blob回读16/16一致，新增V7网页及入口。整包7700125 bytes SHA256 bc8d225408afe5f79f425f02ddb5beef6de217c0b4bcb2d1485956728f93be57。76组候选，29组通过数值基础审查，七事件MODE/FDCS/CIMA/PFAS/CACS/CTS/NNZ，dt均0.005s，倍率1.13538356/1.54559229/0.64458334/1.51299724/0.83829437/1.13823463/1.11140796，0.1–10s计算网格最大偏差15.9459%，1.47874–10s重点网格6.3899%，T1偏差-5.5630%，加权RMS3.6888%，研究目标20%通过。原件、时程、谱和参数详见[summary](../experiments/T079/seismic-evidence-20261124/record-pool/research_seven_v7/summary.json)、[平均谱CSV](../experiments/T079/seismic-evidence-20261124/record-pool/research_seven_v7/suite_spectrum.csv)。PFAS/CACS有效持续时间不足5T1，研究诊断保留；非场址正式设计认证，不宣称不同事件序列统计独立。研究输入冻结，不再扩库。主站文件已入库，Pages新部署状态以实时run为准。不改INP、不合并PR。
