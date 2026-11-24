@@ -1,0 +1,403 @@
+[
+  {
+    "id": "GB_A017_JIAYU",
+    "kind": "image",
+    "url": "https://gf.cabr-fire.com/Web/uploads/allimg/230914/153403I32-34.jpg",
+    "needle": "附录A.0.17 湖北原表，嘉鱼行",
+    "scope": "unmodified original source table image; visual content requires review",
+    "checked_utc": "2026-11-24T08:14:02.997904+00:00",
+    "status": "CAPTURED",
+    "http_status": 200,
+    "final_url": "https://gf.cabr-fire.com/Web/uploads/allimg/230914/153403I32-34.jpg",
+    "source_bytes": 608735,
+    "source_sha256": "e9e698c5e9dc0f36af6561a132c0150950985e0729941799190327bf56e3a67a",
+    "content_type": "image/jpeg",
+    "pixel_size": [
+      1362,
+      1583
+    ],
+    "file": "original/GB_A017_JIAYU.jpg",
+    "bytes": 608735,
+    "sha256": "e9e698c5e9dc0f36af6561a132c0150950985e0729941799190327bf56e3a67a"
+  },
+  {
+    "id": "GB_5122_PGA",
+    "kind": "image",
+    "url": "https://gf.cabr-fire.com/Web/uploads/allimg/230518/14192U142-1.jpg",
+    "needle": "表5.1.2-2",
+    "scope": "unmodified original source table image; visual content requires review",
+    "checked_utc": "2026-11-24T08:14:03.049783+00:00",
+    "status": "CAPTURED",
+    "http_status": 200,
+    "final_url": "https://gf.cabr-fire.com/Web/uploads/allimg/230518/14192U142-1.jpg",
+    "source_bytes": 72540,
+    "source_sha256": "37e8e81d3bfa5707f62a0ca9bf88e065fbb8b0906459d60923691f81f48e5581",
+    "content_type": "image/jpeg",
+    "pixel_size": [
+      1302,
+      237
+    ],
+    "file": "original/GB_5122_PGA.jpg",
+    "bytes": 72540,
+    "sha256": "37e8e81d3bfa5707f62a0ca9bf88e065fbb8b0906459d60923691f81f48e5581"
+  },
+  {
+    "id": "GB_5141_ALPHA",
+    "kind": "image",
+    "url": "https://gf.cabr-fire.com/Web/uploads/allimg/230518/14192Q427-3.jpg",
+    "needle": "表5.1.4-1",
+    "scope": "unmodified original source table image; visual content requires review",
+    "checked_utc": "2026-11-24T08:14:03.050367+00:00",
+    "status": "CAPTURED",
+    "http_status": 200,
+    "final_url": "https://gf.cabr-fire.com/Web/uploads/allimg/230518/14192Q427-3.jpg",
+    "source_bytes": 80247,
+    "source_sha256": "98abe4e5a457d5d7948c8258388d389e380cb0605d13959717ee8b831ac627e5",
+    "content_type": "image/jpeg",
+    "pixel_size": [
+      1277,
+      195
+    ],
+    "file": "original/GB_5141_ALPHA.jpg",
+    "bytes": 80247,
+    "sha256": "98abe4e5a457d5d7948c8258388d389e380cb0605d13959717ee8b831ac627e5"
+  },
+  {
+    "id": "GB_5142_TG",
+    "kind": "image",
+    "url": "https://gf.cabr-fire.com/Web/uploads/allimg/230518/14192VM3-4.jpg",
+    "needle": "表5.1.4-2",
+    "scope": "unmodified original source table image; visual content requires review",
+    "checked_utc": "2026-11-24T08:14:03.050806+00:00",
+    "status": "CAPTURED",
+    "http_status": 200,
+    "final_url": "https://gf.cabr-fire.com/Web/uploads/allimg/230518/14192VM3-4.jpg",
+    "source_bytes": 97402,
+    "source_sha256": "2df9176531765f1bd7c4a791175b422bf044e9d29059edee63beb77613c8a6eb",
+    "content_type": "image/jpeg",
+    "pixel_size": [
+      1277,
+      331
+    ],
+    "file": "original/GB_5142_TG.jpg",
+    "bytes": 97402,
+    "sha256": "2df9176531765f1bd7c4a791175b422bf044e9d29059edee63beb77613c8a6eb"
+  },
+  {
+    "id": "GB_514_OVER6S",
+    "kind": "page",
+    "url": "https://gf.cabr-fire.com/article-15665.htm",
+    "needle": "周期大于6.0s",
+    "scope": "clause excerpt",
+    "checked_utc": "2026-11-24T08:14:03.051200+00:00",
+    "status": "CAPTURED",
+    "http_status": 200,
+    "final_url": "https://gf.cabr-fire.com/article-15665.htm",
+    "pixel_size": [
+      491,
+      26
+    ],
+    "matched_needle": "周期大于6.0s",
+    "page_title": "5.1 一般规定 - 建筑抗震设计标准 GB/T50011-2010（2024年版） - 消防规范大全 - 中国建筑科学研究院建筑防火研究所--消防规范网！",
+    "rendered_excerpt_text_sha256": "92d3439d7c618b618fe49da15b7fec90b372b01cf0e6692c66bacd54bea3814c",
+    "file": "original/GB_514_OVER6S.png",
+    "bytes": 1536,
+    "sha256": "bf824ce4680eb6cd8ab53c230814643641e115104ea285af5947ecab35ceac17"
+  },
+  {
+    "id": "NBT11600",
+    "kind": "page",
+    "url": "https://std.samr.gov.cn/hb/search/stdHBDetailed?id=27F4946613AA0758E06397BE0A0A01BA",
+    "needle": "NB/T 11600-2024",
+    "scope": "registration only",
+    "checked_utc": "2026-11-24T08:14:04.624744+00:00",
+    "status": "CAPTURED",
+    "http_status": 200,
+    "final_url": "https://std.samr.gov.cn/hb/search/stdHBDetailed?id=27F4946613AA0758E06397BE0A0A01BA",
+    "pixel_size": [
+      420,
+      41
+    ],
+    "matched_needle": "NB/T 11600-2024",
+    "page_title": "行业标准 - 全国标准信息公共服务平台",
+    "rendered_excerpt_text_sha256": "4ca49abf5687802e9c1d41a9a1dcb0a67cc66752f866992c8d7598adf11077ce",
+    "file": "original/NBT11600.png",
+    "bytes": 2571,
+    "sha256": "a0254cf46824ddb22d1457a69c048514e7d10135d05bee0dc37e39a65054dd43"
+  },
+  {
+    "id": "NBT10907",
+    "kind": "page",
+    "url": "https://hbba.sacinfo.org.cn/stdDetail/95e0a39923ba033c47f917f3691d2f6f940f1e0488ca5b0a4e50e0ae665afcf5",
+    "needle": "10907",
+    "scope": "registration only",
+    "checked_utc": "2026-11-24T08:14:04.909704+00:00",
+    "status": "CAPTURED",
+    "http_status": 200,
+    "final_url": "https://hbba.sacinfo.org.cn/stdDetail/95e0a39923ba033c47f917f3691d2f6f940f1e0488ca5b0a4e50e0ae665afcf5",
+    "pixel_size": [
+      207,
+      27
+    ],
+    "matched_needle": "10907",
+    "page_title": "全国标准信息公共服务平台",
+    "rendered_excerpt_text_sha256": "ba1a4d18484cf851fce5fbbb5f515912991331240b7844d60ffd9366f9c0dddd",
+    "file": "original/NBT10907.png",
+    "bytes": 3206,
+    "sha256": "a70f962158e5ecdaef640ee37a7ea891c9f42ed43220f17d62d48b6a514e572f"
+  },
+  {
+    "id": "GB18306",
+    "kind": "page",
+    "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=EC0585F90CA21ABE02826394F266B623",
+    "needle": "GB 18306",
+    "scope": "registration only",
+    "checked_utc": "2026-11-24T08:14:05.003398+00:00",
+    "status": "CAPTURED",
+    "http_status": 200,
+    "final_url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=EC0585F90CA21ABE02826394F266B623",
+    "pixel_size": [
+      275,
+      30
+    ],
+    "matched_needle": "GB 18306",
+    "page_title": "国家标准|GB 18306-2015",
+    "rendered_excerpt_text_sha256": "d521495a4f5fc44d9b7470738c8919e5139ce350666737b0c4532ea8322723d8",
+    "file": "original/GB18306.png",
+    "bytes": 4362,
+    "sha256": "f9ba412a06fff50d61a835e32dc7f4838f331a19a20ba3300ea4462e7aed3239"
+  },
+  {
+    "id": "GB18306_AMD2026",
+    "kind": "page",
+    "url": "https://dzj.baoji.gov.cn/col3813/col3811/202604/t20260407_1261239.html",
+    "needle": "地震动参数区划图",
+    "scope": "official notice",
+    "checked_utc": "2026-11-24T08:14:06.035264+00:00",
+    "status": "HOLD",
+    "error": "Page.goto: Timeout 32000ms exceeded.\nCall log:\n  - navigating to \"https://dzj.baoji.gov.cn/col3813/col3811/202604/t20260407_1261239.html\", waiting until \"domcontentloaded\"\n"
+  },
+  {
+    "id": "IEC61400_2025",
+    "kind": "page",
+    "url": "https://webstore.iec.ch/en/publication/111042",
+    "needle": "IEC 61400-1:2019+AMD1:2025",
+    "scope": "registration only",
+    "checked_utc": "2026-11-24T08:14:08.480195+00:00",
+    "status": "CAPTURED",
+    "http_status": 200,
+    "final_url": "https://webstore.iec.ch/en/publication/111042",
+    "pixel_size": [
+      339,
+      30
+    ],
+    "matched_needle": "IEC 61400-1:2019+AMD1:2025",
+    "page_title": "IEC 61400-1:2019+AMD1:2025 CSV | IEC",
+    "rendered_excerpt_text_sha256": "b9374c2a23b7ae54b4825fc6195c86109f91b3894a0de2695dad853e811db67a",
+    "file": "original/IEC61400_2025.png",
+    "bytes": 10514,
+    "sha256": "f183a25fd815b4eb18a5407ae588c110839dd1d0e433f682526808fe16513c4f"
+  },
+  {
+    "id": "IEC61400_COR2026",
+    "kind": "page",
+    "url": "https://webstore.iec.ch/en/publication/116398",
+    "needle": "IEC 61400-1:2019/AMD1:2025/COR1:2026",
+    "scope": "registration only",
+    "checked_utc": "2026-11-24T08:14:09.115944+00:00",
+    "status": "CAPTURED",
+    "http_status": 200,
+    "final_url": "https://webstore.iec.ch/en/publication/116398",
+    "pixel_size": [
+      407,
+      30
+    ],
+    "matched_needle": "IEC 61400-1:2019/AMD1:2025/COR1:2026",
+    "page_title": "IEC 61400-1:2019/AMD1:2025/COR1:2026 | IEC",
+    "rendered_excerpt_text_sha256": "a2de413ef13f6afae9861669df1f5ce0b351f040610773f28d2849fe11d2cc17",
+    "file": "original/IEC61400_COR2026.png",
+    "bytes": 13836,
+    "sha256": "6214bcce9a2c0abcc4522e2bb41ccde7e3e8708aa5bccb04ec018933828532c4"
+  },
+  {
+    "id": "DNV0585",
+    "kind": "page",
+    "url": "https://www.dnv.com/energy/standards-guidelines/dnv-rp-0585-seismic-design-of-wind-power-plants/",
+    "needle": "DNV-RP-0585",
+    "scope": "registration only",
+    "checked_utc": "2026-11-24T08:14:09.231523+00:00",
+    "status": "CAPTURED",
+    "http_status": 200,
+    "final_url": "https://www.dnv.com/energy/standards-guidelines/dnv-rp-0585-seismic-design-of-wind-power-plants/",
+    "pixel_size": [
+      569,
+      36
+    ],
+    "matched_needle": "DNV-RP-0585",
+    "page_title": "DNV-RP-0585 Seismic design of wind power plants",
+    "rendered_excerpt_text_sha256": "f9ee678f2b5f028460a91679e463db422e9cb10de27e66a72cfe68bba4914f4b",
+    "file": "original/DNV0585.png",
+    "bytes": 7579,
+    "sha256": "d59eeca65409f0de7dafd5590011fcdbb51e731c0c8d97a457d5b9bd84309de4"
+  },
+  {
+    "id": "DAI2021_TABLE2",
+    "kind": "pdf",
+    "url": "https://pubs.cstam.org.cn/data/article/em/preview/pdf/2021-0121.pdf",
+    "needle": "地震动信息",
+    "scope": "table crop only; no full paper redistribution",
+    "checked_utc": "2026-11-24T08:14:10.591466+00:00",
+    "status": "CAPTURED",
+    "http_status": 200,
+    "final_url": "https://pubs.cstam.org.cn/data/article/em/preview/pdf/2021-0121.pdf",
+    "source_bytes": 7533559,
+    "source_sha256": "91241ce60fdcc255feab389d0ae80d5e5c2fdccb30bbe44c54c6356b68b224d4",
+    "content_type": "application/pdf",
+    "pdf_page_1based": 6,
+    "clip_points": [
+      0.0,
+      70.70126342773438,
+      595.2999877929688,
+      559.6058349609375
+    ],
+    "pixel_size": [
+      1489,
+      1224
+    ],
+    "file": "original/DAI2021_TABLE2.png",
+    "bytes": 273888,
+    "sha256": "20a5027c9d090630348e4b93f3932dd47292f3efd4bb0d3e8110965074de3362"
+  },
+  {
+    "id": "ENERGIES2021",
+    "kind": "page",
+    "url": "https://www.mdpi.com/1996-1073/14/12/3496",
+    "needle": "seven earthquake events",
+    "scope": "short method excerpt, open access",
+    "checked_utc": "2026-11-24T08:14:11.468299+00:00",
+    "status": "HOLD",
+    "http_status": 403,
+    "final_url": "https://www.mdpi.com/1996-1073/14/12/3496",
+    "error": "source HTTP unavailable"
+  },
+  {
+    "id": "CHINA_RE2024",
+    "kind": "page",
+    "url": "https://castjournals.cast.org.cn/joweb/kzsny/CN/1154430577907327838",
+    "needle": "刘嘉琳",
+    "scope": "metadata only",
+    "checked_utc": "2026-11-24T08:14:11.704235+00:00",
+    "status": "HOLD",
+    "http_status": 200,
+    "final_url": "https://castjournals.cast.org.cn/joweb/kzsny/CN/1154430577907327838",
+    "error": "Locator.wait_for: Timeout 10000ms exceeded.\nCall log:\n  - waiting for get_by_text(\"刘嘉琳\").first to be visible\n    22 × locator resolved to hidden <p>…</p>\n"
+  },
+  {
+    "id": "DISASTER2025",
+    "kind": "page",
+    "url": "https://ddyj.cbpt.cnki.net/portal/journal/portal/client/paper/acfb3e65a76cba1f749899361584aad4",
+    "needle": "混塔风机在地震作用下的抗灾性能分析",
+    "scope": "metadata only",
+    "checked_utc": "2026-11-24T08:14:11.909273+00:00",
+    "status": "CAPTURED",
+    "http_status": 200,
+    "final_url": "https://ddyj.cbpt.cnki.net/portal/journal/portal/client/paper/acfb3e65a76cba1f749899361584aad4",
+    "pixel_size": [
+      1380,
+      51
+    ],
+    "matched_needle": "混塔风机在地震作用下的抗灾性能分析",
+    "page_title": "防灾减灾学报",
+    "rendered_excerpt_text_sha256": "23817fd2763d7a2214a01120653251ed8d77321c1d29bbcfd405e3e4c36effad",
+    "file": "original/DISASTER2025.png",
+    "bytes": 681,
+    "sha256": "dd002d915da1087463de70088663f8f74b28c65529ddd8aec9d63edc84f0277e"
+  },
+  {
+    "id": "RCNS2026",
+    "kind": "page",
+    "url": "https://journal.hep.com.cn/rcs/EN/2026/5/2",
+    "needle": "Research on the dynamic response and disaster-resistance performance enhancement of hybrid tower under strong wind and earthquake",
+    "scope": "metadata only",
+    "checked_utc": "2026-11-24T08:14:16.951161+00:00",
+    "status": "CAPTURED",
+    "http_status": 200,
+    "final_url": "https://journal.hep.com.cn/rcs/EN/2026/5/2",
+    "pixel_size": [
+      852,
+      77
+    ],
+    "matched_needle": "Research on the dynamic response and disaster-resistance performance enhancement of hybrid tower under strong wind and earthquake",
+    "page_title": "Resilient Cities and Structures",
+    "rendered_excerpt_text_sha256": "66f6dc64331732705cd8f5ab777b8c7e377ea2b4707e18220c6863c26313c8a3",
+    "file": "original/RCNS2026.png",
+    "bytes": 22134,
+    "sha256": "b207f831fa4af4ccc5ec86de2f759fe545c713e35ee633c75c62cff02bdaf0d9"
+  },
+  {
+    "id": "SDEE2026",
+    "kind": "page",
+    "url": "https://www.sciencedirect.com/science/article/abs/pii/S0267726125008577",
+    "needle": "Probabilistic seismic performance and damage mechanisms",
+    "scope": "metadata only",
+    "checked_utc": "2026-11-24T08:14:20.327979+00:00",
+    "status": "HOLD",
+    "http_status": 403,
+    "final_url": "https://www.sciencedirect.com/science/article/abs/pii/S0267726125008577",
+    "error": "source HTTP unavailable"
+  },
+  {
+    "id": "OCEAN2026_VERIFIED",
+    "kind": "page",
+    "url": "https://www.sciencedirect.com/science/article/abs/pii/S0029801826017415",
+    "needle": "Seismic analysis of a monopile-supported offshore wind turbine",
+    "scope": "metadata only; corrected DOI 10.1016/j.oceaneng.2026.125907",
+    "checked_utc": "2026-11-24T08:14:20.726299+00:00",
+    "status": "HOLD",
+    "http_status": 403,
+    "final_url": "https://www.sciencedirect.com/science/article/abs/pii/S0029801826017415",
+    "error": "source HTTP unavailable"
+  },
+  {
+    "id": "PEER",
+    "kind": "page",
+    "url": "https://ngawest2.berkeley.edu/",
+    "needle": "PEER",
+    "scope": "database identity only",
+    "checked_utc": "2026-11-24T08:14:21.084438+00:00",
+    "status": "CAPTURED",
+    "http_status": 200,
+    "final_url": "https://ngawest2.berkeley.edu/",
+    "pixel_size": [
+      222,
+      23
+    ],
+    "matched_needle": "PEER",
+    "page_title": "PEER Ground Motion Database - PEER Center",
+    "rendered_excerpt_text_sha256": "6d2e896e1f68260c85d33a821f03c80f2ad1150567c7a8da0d8d18f79fc17c01",
+    "file": "original/PEER.png",
+    "bytes": 3760,
+    "sha256": "df9af1e19d413465709056871f3aae46e8ac5b9f6276269932f7e14e124dfc26"
+  },
+  {
+    "id": "ESM",
+    "kind": "page",
+    "url": "https://esm-db.eu/",
+    "needle": "Engineering Strong-Motion",
+    "scope": "database identity only",
+    "checked_utc": "2026-11-24T08:14:21.359527+00:00",
+    "status": "CAPTURED",
+    "http_status": 200,
+    "final_url": "https://esm-db.eu/#/home",
+    "pixel_size": [
+      1379,
+      243
+    ],
+    "matched_needle": "Engineering Strong-Motion",
+    "page_title": "ESM - Engineering Strong Motion database",
+    "rendered_excerpt_text_sha256": "d165003b592dc946df78fc27742a0c92a276262ee9a914679935fb4bf706181d",
+    "file": "original/ESM.png",
+    "bytes": 50392,
+    "sha256": "3063cf8d848540f15bde7365ead74d76537fe2e4afba36fb924c463545b5d8c5"
+  }
+]
