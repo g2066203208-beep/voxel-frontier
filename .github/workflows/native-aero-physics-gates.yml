@@ -1,4 +1,4 @@
-name: Native aerodynamic physics gates
+name: Native aero UA polar repair and DBEMT long cases
 on:
   pull_request:
     types: [opened, synchronize, reopened]
@@ -16,10 +16,15 @@ jobs:
       fail-fast: false
       max-parallel: 4
       matrix:
-        turbulence: [NTM, 1ETM]
-        physics: [baseline, dbemt, ua, dbemt_ua]
+        include:
+          - {turbulence: NTM, physics: dbemt, duration: 700}
+          - {turbulence: 1ETM, physics: dbemt, duration: 700}
+          - {turbulence: NTM, physics: ua, duration: 10}
+          - {turbulence: 1ETM, physics: ua, duration: 10}
+          - {turbulence: NTM, physics: dbemt_ua, duration: 10}
+          - {turbulence: 1ETM, physics: dbemt_ua, duration: 10}
     runs-on: windows-latest
-    timeout-minutes: 35
+    timeout-minutes: 100
     defaults:
       run:
         shell: pwsh
@@ -87,7 +92,7 @@ jobs:
           $hash=(Get-FileHash bin/libdiscon.dll -Algorithm SHA256).Hash
           @{source=$source;sha256=$hash;original_binary_identity='unverified'} | ConvertTo-Json | Out-File -Encoding utf8 native-aero/controller_receipt.json
           Write-Host "ROSCO_SOURCE $source SHA256 $hash"
-      - name: Execute isolated native 10-second physics pilot and validate all channels
+      - name: Execute isolated native physics case and validate all channels
         run: |
           $env:PATH="$pwd\bin;$env:PATH"
           python -m pip install numpy==1.26.4 matplotlib==3.9.2
@@ -96,6 +101,34 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'Pinned baseline script unavailable' }
           $env:AERO_PROFILE='${{ matrix.physics }}'
           $env:NATIVE_SCRIPT=$p
+          @'
+          import os,pathlib,re,json,hashlib,shutil
+          root=pathlib.Path('native-aero')
+          original=root/'case'/'Rotor'/'Airfoils'
+          archive=root/'airfoils-original'
+          shutil.copytree(original,archive)
+          rows=[]
+          if os.environ['AERO_PROFILE'] in ('ua','dbemt_ua'):
+              for p in sorted(original.glob('FFA_W3_*_AeroDyn15.dat')):
+                  raw=p.read_bytes()
+                  lines=raw.decode('utf-8-sig').splitlines(keepends=True)
+                  tabs=[i for i,l in enumerate(lines) if re.match(r'^\s*\S+\s+NumTabs\b',l,re.I)]
+                  inc=[i for i,l in enumerate(lines) if re.match(r'^\s*\S+\s+InclUAdata\b',l,re.I)]
+                  num=[i for i,l in enumerate(lines) if re.match(r'^\s*\S+\s+NumAlf\b',l,re.I)]
+                  assert len(tabs)==len(inc)==len(num)==1,(p,tabs,inc,num)
+                  assert int(lines[tabs[0]].split()[0])==1
+                  i,j=inc[0],num[0]
+                  assert i<j and lines[i].split()[0].lower()=='true',(p,lines[i])
+                  old=lines[i:j]
+                  new=re.sub(r'^([ \t]*)\S+',r'\g<1>False',lines[i],count=1)
+                  rebuilt=''.join(lines[:i]+[new]+lines[j:]).encode('utf-8')
+                  p.write_bytes(rebuilt)
+                  assert p.read_text().splitlines()[i+1:]==''.join(lines[j:]).splitlines()
+                  rows.append(dict(file=p.name,original_sha256=hashlib.sha256(raw).hexdigest(),modified_sha256=hashlib.sha256(rebuilt).hexdigest(),old_ua_block=old,method='InclUAdata=False; derive UA parameters from unchanged polar using OpenFAST v3.5.3',num_alf=int(lines[j].split()[0])))
+              assert len(rows)==5,len(rows)
+          (root/'ua_polar_receipt.json').write_text(json.dumps(dict(profile=os.environ['AERO_PROFILE'],changes=rows,source='https://openfast.readthedocs.io/en/v3.5.3/source/user/aerodyn/input.html',scope='code-derived coefficients, not measured dynamic-stall validation'),indent=2))
+          '@ | python -
+          if ($LASTEXITCODE -ne 0) { throw 'UA polar-preservation gate failed' }
           @'
           import os,pathlib
           p=pathlib.Path(os.environ['NATIVE_SCRIPT'])
@@ -112,6 +145,7 @@ jobs:
               "    if profile in ('dbemt','dbemt_ua'): edits.append((ad,'WakeMod',2))",
               "    if profile in ('ua','dbemt_ua'): edits.append((ad,'AFAeroMod',2))",
               "    assert profile in ('baseline','dbemt','ua','dbemt_ua')",
+              "    edits.append((ad,'SumPrint','True'))",
           ])+'\n'
           p.write_text(s.replace(marker,insert+marker),encoding='utf-8')
           compile(p.read_text(encoding='utf-8'),str(p),'exec')
@@ -120,14 +154,14 @@ jobs:
           $reader='research/wind-tower/experiments/BLADE_AERO_NATIVE_20261125/outb_reader.py'
           curl.exe -fLsS --retry 2 https://raw.githubusercontent.com/g2066203208-beep/voxel-frontier/5ce9b969cbbbf6a4e921d432eb43b596696458be/research/wind-tower/experiments/T062/s06_historical_outb_source_gate.py -o $reader
           if ($LASTEXITCODE -ne 0) { throw 'Pinned reader not available' }
-          python $p --stage run --type "${{ matrix.turbulence }}" --duration 10 --exe bin/openfast_x64.exe --dll bin/libdiscon.dll
+          python $p --stage run --type "${{ matrix.turbulence }}" --duration ${{ matrix.duration }} --exe bin/openfast_x64.exe --dll bin/libdiscon.dll
           if ($LASTEXITCODE -ne 0) { throw 'Native pilot failed' }
-          python $p --stage post --type "${{ matrix.turbulence }}" --duration 10
+          python $p --stage post --type "${{ matrix.turbulence }}" --duration ${{ matrix.duration }}
           if ($LASTEXITCODE -ne 0) { throw 'Native output audit failed' }
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: physics-${{ matrix.turbulence }}-${{ matrix.physics }}
+          name: physics-v2-${{ matrix.turbulence }}-${{ matrix.physics }}-${{ matrix.duration }}s
           path: |
             native-aero/*.json
             native-aero/*.log
@@ -141,5 +175,7 @@ jobs:
             native-aero/case/*.fst
             native-aero/case/*.dat
             native-aero/case/Rotor/*.dat
+            native-aero/case/Rotor/Airfoils/*.dat
+            native-aero/airfoils-original/*.dat
             research/wind-tower/experiments/BLADE_AERO_NATIVE_20261125/native_blade.py
           retention-days: 30
