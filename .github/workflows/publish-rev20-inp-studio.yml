@@ -1,0 +1,77 @@
+name: Publish frozen REV20 INP download to Studio
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-rev20-inp-studio.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: publish-rev20-inp
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            public/thesis-studio/inp-archive
+          persist-credentials: true
+      - name: Archive exact verified REV20 package
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p public/thesis-studio/inp-archive/REV20_NATIVE_RNA
+          gh api repos/${GITHUB_REPOSITORY}/actions/artifacts/14900571562/zip > /tmp/rev20.zip
+          echo '58f8afead62781ea80f3d01fc81055e97fb6ab5e85b04ce53d3ae9c65951e83f  /tmp/rev20.zip' | sha256sum -c
+          python - <<'PY'
+          import hashlib, json, zipfile
+          from pathlib import Path
+          root=Path('public/thesis-studio/inp-archive/REV20_NATIVE_RNA')
+          src=Path('/tmp/rev20.zip')
+          with zipfile.ZipFile(src) as z:
+              assert z.testzip() is None
+              names=z.namelist()
+              assert len(names)==len(set(names))
+              assert all('/' not in n and '\\' not in n and n not in ('.','..') for n in names)
+              manifest=json.loads(z.read('REV20_MANIFEST.json'))
+              expected={
+                  'HE_REV20_FLAT_REFERENCE_PRECHECK.inp':'d752f07d3165c34dc1e48c23ff18e0b9a48a7bd68d53dd9955c0d7a2a9c6c8ff',
+                  'HE_REV20_ROM10_PRECHECK.inp':'f012a830830471858dd9feb4175cf2634318f4e54c3907593a295fa278c61554',
+                  'HE_REV20_ROM10_EQ_LEAN010.inp':'87fc6e78ce7e0eb7a0eb8defbc001276ada110d030cd294f89acffd23b64cf15',
+                  'RNA_REV20_10HZ_GENERATE.inp':'785e777aa47e1775882941fc27c74f5fe67d422d2abdff143bb9a5eecd0514b4'}
+              for n,h in expected.items():
+                  assert manifest[n]['sha256']==h, n
+              for n,v in manifest.items():
+                  b=z.read(n)
+                  assert len(b)==v['bytes'] and hashlib.sha256(b).hexdigest()==v['sha256'],n
+              assert 'README.md' in names
+              manifest['README.md']={'bytes':len(z.read('README.md')),'sha256':hashlib.sha256(z.read('README.md')).hexdigest()}
+              data=src.read_bytes()
+              (root/'REV20_RNA_FULL_PACKAGE.zip').write_bytes(data)
+              for name in expected:
+                  if name.startswith('RNA_'):
+                      (root/name).write_bytes(z.read(name))
+              (root/'verified-download.json').write_text(json.dumps({'source_run':45351782526,'artifact_id':14900571562,'native':'NOT_RUN','zip':{'file':'REV20_RNA_FULL_PACKAGE.zip','bytes':len(data),'sha256':hashlib.sha256(data).hexdigest()},'files':manifest},indent=2)+'\n')
+              print('Verified archive bytes',len(data),'members',len(names))
+          PY
+      - name: Commit permanent Studio download
+        run: |
+          git config user.name 'paper-studio-bot'
+          git config user.email 'paper-studio-bot@users.noreply.github.com'
+          git add public/thesis-studio/inp-archive/REV20_NATIVE_RNA
+          if ! git diff --cached --quiet; then
+            git commit -m 'Archive verified REV20 INP package for direct Studio download'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
+      - name: Deploy existing Studio
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run pages.yml --ref main
