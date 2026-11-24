@@ -1,0 +1,44 @@
+name: Verify and package nine real seismic candidates
+on:
+  push:
+    branches:
+      - research/t080-seismic-integration-gates-20261022
+    paths:
+      - '.github/workflows/package-nine-seismic-20261124.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: research/wind-tower/experiments/T079/seismic-evidence-20261124
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install --quiet numpy scipy requests matplotlib
+      - name: Independently verify source and package records
+        env:
+          OPENBLAS_NUM_THREADS: '1'
+          OMP_NUM_THREADS: '1'
+        run: python research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool/package_nine.py
+      - name: Permanently archive package and derived figures
+        run: |
+          ROOT=research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool
+          git config user.name paper-studio-bot
+          git config user.email paper-studio-bot@users.noreply.github.com
+          git add "$ROOT/T079_NINE_REAL_SOURCE_CANDIDATES.zip" "$ROOT/nine-package-receipt.json" "$ROOT/nine-package/summary.csv" "$ROOT/nine-package/NINE_SOURCE_CANDIDATES.json" "$ROOT/nine-package/nine_actual_waveforms.png" "$ROOT/nine-package/nine_actual_spectra.png" "$ROOT/nine-package/MANIFEST.json"
+          git commit -m 'Archive nine real source candidate package and verified actual acceleration/spectrum figures'
+          git pull --rebase origin ${GITHUB_REF_NAME}
+          git push origin HEAD:${GITHUB_REF_NAME}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: T079-nine-real-source-candidates
+          path: |
+            research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool/T079_NINE_REAL_SOURCE_CANDIDATES.zip
+            research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool/nine-package-receipt.json
+            research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool/nine-package/nine_actual_waveforms.png
+            research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool/nine-package/nine_actual_spectra.png
