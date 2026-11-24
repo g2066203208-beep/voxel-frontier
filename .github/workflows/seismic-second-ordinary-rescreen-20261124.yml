@@ -1,0 +1,247 @@
+name: T079 second ordinary pool rescreen
+on:
+  push:
+    branches: [research/t080-seismic-integration-gates-20261022]
+    paths: ['.github/workflows/seismic-second-ordinary-rescreen-20261124.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  rescreen:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install --quiet numpy scipy matplotlib
+      - name: Verify archived source bytes and screen independent events
+        env:
+          OPENBLAS_NUM_THREADS: '1'
+          OMP_NUM_THREADS: '1'
+        run: |
+          python - <<'PY'
+          import json, pathlib, hashlib, urllib.request, time, io, re, zipfile, concurrent.futures, itertools
+          import numpy as np
+          from scipy.signal import cont2discrete,ss2tf,lfilter,butter,sosfiltfilt
+          from scipy.linalg import expm
+          from scipy.integrate import cumulative_trapezoid
+          from scipy.optimize import lsq_linear
+          import matplotlib
+          matplotlib.use('Agg')
+          import matplotlib.pyplot as plt
+          ROOT='https://raw.githubusercontent.com/g2066203208-beep/voxel-frontier/bc34f83061b15cd35f1c833731cd4fcda6d7fd7a/research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool/'
+          OUT=pathlib.Path('output');OUT.mkdir(exist_ok=True)
+          T1=7.3937
+          T=np.unique(np.r_[np.geomspace(.1,10,81),.35,1.48,2,4,6,T1,8,10])
+          target=1.22625*np.where(T<=.35,1,np.where(T<=6.56,.35/T,.35*6.56/T**2))
+          focus=T>=.2*T1
+          def sha(b):return hashlib.sha256(b).hexdigest()
+          def get(p,h=None):
+              for i in range(3):
+                  try:
+                      with urllib.request.urlopen(urllib.request.Request(ROOT+p,headers={'User-Agent':'T079 academic verification'}),timeout=35) as f:b=f.read()
+                      if h:assert sha(b)==h,p
+                      return b
+                  except Exception:
+                      if i==2:raise
+                      time.sleep(2)
+          def js(p):return json.loads(get(p))
+          def parse_v2(p):
+              # GeoNet standard corrected accelerogram: 16 text + 10 numeric header rows,
+              # followed by acceleration, velocity, displacement arrays. Verify declared PGA.
+              s=p.read_text(encoding="ascii",errors="strict").splitlines()
+              starts=[i for i,l in enumerate(s) if l.startswith("Corrected accelerogram")]
+              assert len(starts)>=2, ("components",len(starts))
+              rows=[]
+              for i in starts:
+                  header="\n".join(s[i:i+16])
+                  cm=re.search(r"Component\s+(\S+)\s+([^\n]+)",header)
+                  nn=re.search(r"Number of points\s+(\d+)",header)
+                  dd=re.search(r"at\s+([0-9.]+)\s+sec intervals",header)
+                  pp=re.search(r"Acceleration:\s+peak\s+([-+0-9.]+)\s+mm/s/s",header)
+                  assert cm and nn and dd and pp,header
+                  n=int(nn.group(1));dt=float(dd.group(1));peak=abs(float(pp.group(1)))
+                  a=[];j=i+26
+                  while len(a)<n:
+                      line=s[j];j+=1
+                      try:nums=[float(x) for x in line.split()]
+                      except ValueError:nums=[float(line[k:k+8]) for k in range(0,len(line),8) if line[k:k+8].strip()]
+                      a.extend(nums)
+                  assert len(a)==n and np.isfinite(a).all()
+                  assert abs(max(abs(np.array(a)))-peak)<=max(.2,peak*.002),("peak",p.name,cm.group(1),max(abs(np.array(a))),peak)
+                  rows.append((cm.group(1),cm.group(2).strip(),dt,np.array(a)*.001))
+              horizontal=[r for r in rows if re.match(r"^[NS]\d+[EW]$",r[0],re.I)]
+              assert len(horizontal)==2,[(r[0],r[1]) for r in rows]
+              def azi(s):
+                  a=int(s[1:-1]);return (a if s[0]=="N" and s[-1]=="E" else -a if s[0]=="N" else 180-a if s[-1]=="E" else 180+a)%360
+              assert abs((azi(horizontal[0][0])-azi(horizontal[1][0]))%180-90)<=2
+              d1,d2=horizontal;assert d1[2]==d2[2] and len(d1[3])==len(d2[3])
+              return np.column_stack([d1[3],d2[3]]),d1[2],[d1[0],d2[0]]
+          def duration(a,dt):
+              return [float((i[-1]-i[0])*dt) for x in a.T for i in [np.flatnonzero(abs(x)>=.1*np.max(abs(x)))]]
+          
+          def rot(a,dt,periods,step=5):
+              angles=np.deg2rad(np.arange(0,180,step));c=np.cos(angles);s=np.sin(angles);res=[]
+              for t in periods:
+                  w=2*np.pi/t;A=np.array([[0.,1.],[-w*w,-.1*w]]);B=np.array([[0.],[-1.]]);C=np.array([[w*w,0.]])
+                  ad,bd,cd,dd,_=cont2discrete((A,B,C,np.zeros((1,1))),dt,method='foh')
+                  n,d=ss2tf(ad,bd,cd,dd)
+                  K=np.zeros((4,4));K[:2,:2]=A;K[:2,2:3]=B;K[2,3]=1
+                  b1=expm(K*dt)[:2,3]/dt
+                  c0=float((-cd@b1).item());c1=float((-cd@ad@b1).item())
+                  a0=np.vstack([a,np.zeros((int(np.ceil(5*t/dt)),2))])
+                  imp=np.zeros(len(a0));imp[0]=1
+                  y=lfilter(n[0],d,a0,axis=0)+lfilter([c0,c1+d[1]*c0],d,imp)[:,None]*a0[0]
+                  peaks=np.concatenate([np.max(np.abs(y[:,0,None]*c[j:j+12]+y[:,1,None]*s[j:j+12]),axis=0) for j in range(0,len(c),12)])
+                  res.append(np.median(peaks))
+              return np.array(res)
+          # Independently verify source samples against archived SHA256 and official record header.
+          screen=js('replacement_v5/screen.json')
+          geo=js('geonet_v6/summary.json')['actual_downloaded_records']
+          v7=js('research_seven_v7/summary.json')['selected']
+          excluded={r['station'] for r in v7}
+          assert len(screen)==56 and len(geo)==20
+          jobs=[('ESM',r) for r in screen if r['source_screen_pass'] and r['station'] not in excluded]+[('GeoNet',r) for r in geo if r['record'].split('_')[2] not in excluded]
+          def read(job):
+              src,r=job
+              if src=='ESM':
+                  d=r['directory'];rc=js(d+'/receipt.json');raw=get(d+'/original_MP_ACC.zip',r['original_sha256'])
+                  H={};v={}
+                  with zipfile.ZipFile(io.BytesIO(raw)) as z:
+                      assert z.testzip() is None
+                      for m in rc['headers']:
+                          b=z.read(m['member']);assert sha(b)==m['sha256']
+                          h={};x=[]
+                          for line in b.decode('utf-8-sig').splitlines():
+                              line=line.strip()
+                              if not line:continue
+                              if ':' in line and not x:
+                                  k,y=line.split(':',1);h[k.strip()]=y.strip()
+                              else:x.extend(float(y) for y in line.split())
+                          assert h['EVENT_ID']==r['event'] and h['STATION_CODE']==r['station'] and h['UNITS']=='cm/s^2' and h['DATA_TYPE']=='ACCELERATION'
+                          k=h['STREAM'][-1];H[k]=h;v[k]=np.array(x)*.01
+                          assert len(x)==int(h['NDATA']) and np.isclose(np.max(abs(v[k])),abs(float(h['PGA_CM/S^2']))*.01,rtol=.002)
+                  assert {'E','N'}<=set(v) and len(v['E'])==len(v['N'])==r['npts']
+                  assert H['E']['DATE_TIME_FIRST_SAMPLE_YYYYMMDD_HHMMSS']==H['N']['DATE_TIME_FIRST_SAMPLE_YYYYMMDD_HHMMSS']
+                  dt=float(H['E']['SAMPLING_INTERVAL_S']);assert dt==float(H['N']['SAMPLING_INTERVAL_S'])==r['dt']
+                  a=np.column_stack([v['E'],v['N']]);fmax=max(float(H[k]['LOW_CUT_FREQUENCY_HZ']) for k in ['E','N'])
+                  depth=float(H['E']['EVENT_DEPTH_KM'])
+                  meta={'source':src,'event':r['event'],'station':r['station'],'directory':d,'source_sha256':sha(raw),'depth_km':depth,'mw':r['mw'],'vs30':r['vs30'],'site':r['site'],'distance':r['distance'],'frequency_margin_s':1/(2*fmax),'frequency_basis':'2x maximum low-cut corner, research screen','historical_source_pass':True,'dirs':['E','N'],'source_url':rc['url'],'license':rc['licenses']}
+              else:
+                  d='geonet_v6/'+r['record'];rc=js(d+'/receipt.json');m=rc['metadata'];f=rc['files'][0]
+                  raw=get(d+'/'+f['file'],f['sha256'])
+                  import tempfile
+                  with tempfile.TemporaryDirectory() as tmp:
+                      p=pathlib.Path(tmp)/f['file'];p.write_bytes(raw);a,dt,dirs=parse_v2(p)
+                  assert m['fmin']<=1/15
+                  depth=None
+                  for key in ['Depth','Depth_km','Depth_km_','HypocentreDepth','HypocentralDepth','HypocentreDepth_km']:
+                      if m['row'].get(key):
+                          try:depth=float(m['row'][key]);break
+                          except ValueError:pass
+                  meta={'source':src,'event':m['event'],'station':m['row']['SiteCode'],'directory':d,'source_sha256':sha(raw),'depth_km':depth,'mw':m['mw'],'vs30':m['row']['Vs30'],'site':m['row']['SiteClass1170'],'distance':m['rrup'],'frequency_margin_s':1/m['fmin'],'frequency_basis':'provider flatfile fmin','tectonic_class':m['row'].get('TectClass'),'dirs':dirs,'source_url':rc['source']['url'],'license':rc['license']}
+              assert np.isfinite(a).all() and 0<dt<=.02
+              v=cumulative_trapezoid(a,dx=dt,axis=0,initial=0)
+              end=float(np.linalg.norm(v[-1])/max(np.max(np.linalg.norm(v,axis=1)),1e-15))
+              tail=float(np.linalg.norm(a[-max(1,round(5/dt)):].mean(axis=0))/np.max(abs(a)))
+              dur=duration(a,dt)
+              flags=[]
+              if src=='ESM' and depth>70:flags.append('DEEP_EVENT_NOT_SHALLOW_CRUSTAL_ANALOGUE')
+              if meta['frequency_margin_s']<15:flags.append('15S_MARGIN')
+              if end>.05:flags.append('TERMINAL_VELOCITY')
+              if tail>.01:flags.append('TAIL_MEAN')
+              if min(dur)<5*T1:flags.append('DURATION_5T1_RESEARCH')
+              meta.update(dt=dt,npts=len(a),pga=float(np.max(abs(a))),duration_10pct_s=dur,end_velocity_ratio=end,tail_acceleration_ratio=tail,flags=flags)
+              return meta,a
+          def run(job):
+              try:return read(job),None
+              except Exception as e:return None,{'job':job[1].get('station',job[1].get('record')),'error':repr(e)}
+          pool=[];fail=[]
+          with concurrent.futures.ThreadPoolExecutor(max_workers=5) as ex:
+              for result,error in ex.map(run,jobs):
+                  if error:fail.append(error);print('SOURCE_FAIL',error,flush=True);continue
+                  m,a=result
+                  if not any(x!='DURATION_5T1_RESEARCH' for x in m['flags']):
+                      checkT=np.array([4.,6.,T1,8.,10.,12.])
+                      orig=rot(a,m['dt'],checkT)
+                      alt=rot(sosfiltfilt(butter(4,.08,fs=1/m['dt'],btype='highpass',output='sos'),a,axis=0,padlen=min(len(a)-1,round(3/.08/m['dt']))),m['dt'],checkT)
+                      sens=float(np.max(abs(alt/orig-1)))
+                      m['additional_hp008_4_12_max_relative']=sens
+                      if sens>.2:m['flags'].append('HP_SENS_20PCT_RESEARCH')
+                  if not any(x!='DURATION_5T1_RESEARCH' for x in m['flags']):
+                      m['spec']=rot(a,m['dt'],T);m['T1_RotD50']=float(m['spec'][np.where(T==T1)[0][0]])
+                  m['strict_screen']=not m['flags']
+                  m['diagnostic_screen']=not any(x!='DURATION_5T1_RESEARCH' for x in m['flags'])
+                  pool.append((m,a));print('SCREEN',m['station'],m['flags'],flush=True)
+          weights=np.where(focus,1.,.1);weights/=weights.sum()
+          def select(strict):
+              eligible=[i for i,(m,a) in enumerate(pool) if m['strict_screen' if strict else 'diagnostic_screen']]
+              groups={}
+              for i in eligible:groups.setdefault(pool[i][0]['event'],[]).append(i)
+              if len(groups)<7:return {'status':'INSUFFICIENT_DISTINCT_EVENTS','records':len(eligible),'events':len(groups),'needed':7-len(groups),'station_candidates':[pool[i][0]['station'] for i in eligible]}
+              rng=np.random.default_rng(79196);keys=list(groups)
+              def fit(ids,exact=False):
+                  s=np.array([pool[i][0]['spec'] for i in ids]);A=s.T/target[:,None]/7;W=np.sqrt(weights)
+                  f=lsq_linear(np.vstack([A*W[:,None],np.eye(7)*.012]),np.r_[W,np.ones(7)*.012],bounds=(.5,2),tol=1e-10)
+                  rel=A@f.x-1
+                  return float(np.sqrt(np.sum(weights*rel**2))),f.x,rel
+              best=None
+              for _ in range(300):
+                  ids=[int(rng.choice(groups[k])) for k in rng.choice(keys,7,replace=False)]
+                  score,k,rel=fit(ids)
+                  if best is None or score<best[0]:best=(score,ids,k,rel)
+              for _ in range(5):
+                  improved=False
+                  for j in range(7):
+                      for i in eligible:
+                          ids=best[1].copy()
+                          if pool[i][0]['event'] in {pool[l][0]['event'] for n,l in enumerate(ids) if n!=j}:continue
+                          ids[j]=i;score,k,rel=fit(ids)
+                          if score<best[0]-1e-8:best=(score,ids,k,rel);improved=True
+                  if not improved:break
+              # Recalculate selected records at 1 degree; refit with same bounds; verify rotation resolution.
+              ids=best[1];diff=[]
+              for i in ids:
+                  m,a=pool[i];exact=rot(a,m['dt'],T,1)
+                  diff.append(float(np.max(abs(exact/m['spec']-1))));m['spec']=exact
+              score,k,rel=fit(ids)
+              scaled=np.array([pool[i][0]['spec']*q for i,q in zip(ids,k)])
+              name='strict' if strict else 'diagnostic'
+              plt.rcParams.update({'font.family':'STIXGeneral','font.size':10,'axes.linewidth':.7,'xtick.direction':'in','ytick.direction':'in'})
+              fig,axs=plt.subplots(1,2,figsize=(10,4.4),layout='constrained')
+              for i,curve in zip(ids,scaled):axs[0].loglog(T,curve,lw=.8,label=pool[i][0]['station'])
+              axs[0].loglog(T,scaled.mean(axis=0),'k',lw=2,label='Seven-record mean')
+              axs[0].loglog(T,target,'--',color='#b33f35',lw=1.5,label='Research target')
+              axs[0].set(xlabel='Period (s)',ylabel='5% RotD50 PSA (m/s²)',title='(a) Research target fit');axs[0].legend(fontsize=7,ncol=2)
+              axs[1].semilogx(T,100*rel,'k',lw=1.4);axs[1].axhspan(-20,20,color='#3b7c70',alpha=.15);axs[1].set(xlabel='Period (s)',ylabel='Mean relative error (%)',title='(b) Mean spectrum mismatch')
+              for ax in axs:ax.axvline(T1,color='.4',ls=':');ax.axvspan(.2*T1,10,color='.4',alpha=.05);ax.grid(alpha=.15)
+              fig.suptitle('Second-suite replacement trial | '+name+' | not design approved')
+              fig.savefig(OUT/(name+'_fit.png'),dpi=300);fig.savefig(OUT/(name+'_fit.svg'));plt.close(fig)
+              np.savetxt(OUT/(name+'_fit.csv'),np.column_stack([T,target,scaled.T,scaled.mean(axis=0),rel]),delimiter=',',header='T_s,research_target,'+','.join(pool[i][0]['station'] for i in ids)+',mean,relative_error',comments='')
+              return {'status':'RESEARCH_FIT_ONLY','records':len(eligible),'events':len(groups),'selected':[{'station':pool[i][0]['station'],'event':pool[i][0]['event'],'scale':float(q),'flags':pool[i][0]['flags']} for i,q in zip(ids,k)],'weighted_rms':score,'focus_max_error':float(np.max(abs(rel[focus]))),'all_max_error':float(np.max(abs(rel))),'T1_error':float(rel[np.where(T==T1)[0][0]]),'focus_20pct_met':bool(np.max(abs(rel[focus]))<=.2),'rotation_resolution_difference_max':max(diff)}
+          strict=select(True);diagnostic=select(False)
+          # Pool figure of actual status, not synthetic data.
+          fig,ax=plt.subplots(figsize=(9,4.4),layout='constrained')
+          for state,color,marker in [('strict','#28786b','o'),('diagnostic','#b87a38','s'),('rejected','#a2a2a2','x')]:
+              rr=[m for m,a in pool if ('strict' if m['strict_screen'] else 'diagnostic' if m['diagnostic_screen'] else 'rejected')==state]
+              if rr:ax.scatter([m['frequency_margin_s'] for m in rr],[min(m['duration_10pct_s']) for m in rr],c=color,marker=marker,label=state)
+              for m in rr:
+                  if state!='rejected':ax.annotate(m['station'],(m['frequency_margin_s'],min(m['duration_10pct_s'])),fontsize=7,xytext=(3,3),textcoords='offset points')
+          ax.axvline(15,color='.35',ls='--');ax.axhline(5*T1,color='.35',ls='--');ax.set(xlabel='Source frequency-margin period (s)',ylabel='Minimum 10%-PGA duration (s)',title='Ordinary-record replacement screening | research thresholds');ax.legend();ax.grid(alpha=.15)
+          fig.savefig(OUT/'pool_screen.png',dpi=300);fig.savefig(OUT/'pool_screen.svg');plt.close(fig)
+          for m,a in pool:
+              if 'spec' in m:
+                  np.savetxt(OUT/('spec_'+m['event']+'_'+m['station']+'.csv'),np.c_[T,m.pop('spec')],delimiter=',',header='T_s,RotD50_PSA',comments='')
+          report={'version':'0.32.197','scope':'second suite ordinary alternatives only; V7 files unchanged, exclude V7 station names; E02/E03 excluded from ordinary pool','archived_pool':76,'jobs':len(jobs),'verified_records':len(pool),'failed_sources':fail,'excluded_v7_stations':sorted(excluded),'records':[m for m,a in pool],'strict':strict,'duration_relaxed_diagnostic':diagnostic,'target':'0.1–10s previously frozen parametric research target, not Jiayu site spectrum','formal_design_admitted':0,'limits':'shallow crustal analogue screen depth <=70 km for ESM; 15s margin, terminal velocity, tail mean, 20% extra high-pass sensitivity, 5T1 duration are research screens not formal code requirements; no new recordings downloaded from provider, source bytes read from immutable archive; GeoNet tectonic class prefiltered in prior flatfile; unknown ESM mechanism/site/pulse not certified'}
+          (OUT/'rescreen.json').write_text(json.dumps(report,indent=2,ensure_ascii=False))
+          (OUT/'manifest.json').write_text(json.dumps({p.name:sha(p.read_bytes()) for p in OUT.iterdir()},indent=2))
+          print('RESULT',json.dumps({k:report[k] for k in ['jobs','verified_records','failed_sources','strict','duration_relaxed_diagnostic','formal_design_admitted']},ensure_ascii=False),flush=True)
+          
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: second-ordinary-rescreen
+          path: output/
+          retention-days: 90
