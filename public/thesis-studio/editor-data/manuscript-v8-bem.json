@@ -7679,6 +7679,95 @@
           "word_body_index": 666
         },
         {
+          "id": "wind-r13-001",
+          "kind": "text",
+          "style": "Normal",
+          "text": "为分析风机运行状态与塔架响应之间的关系，对历史36组OpenFAST原始二进制输出进行统一解码。各工况的输出时段均为100～700 s，输出间隔为0.05 s，含首末时刻共12001个采样点。图3.5-2选取额定风速下NTM与ETM的S01工况，给出同一工况内轮毂纵向风速、转子转速、叶片1桨距角、发电机功率与塔底弯矩My的同步时程。",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true
+        },
+        {
+          "id": "wind-r13-002",
+          "kind": "caption",
+          "style": "Caption",
+          "text": "图3.5-2  额定风速下运行状态与塔底弯矩同步时程",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true,
+          "figure_asset": "./wind-figures/historical-control/01_synchronous_control_response.svg",
+          "figure_caption_match": "图3.5-2  额定风速下运行状态与塔底弯矩同步时程"
+        },
+        {
+          "id": "wind-r13-003",
+          "kind": "text",
+          "style": "Normal",
+          "text": "图3.5-3给出上述两工况的发电机功率及转子推力通道时程。按六个随机实现的时间均值再取组均值，11.4 m/s下NTM与ETM的发电机功率分别为9.123和8.805 MW，转子推力分别为1.364和1.250 MN；19.202 m/s下两组平均发电机功率分别为9.986和9.952 MW，而平均桨距角分别为16.60°和16.68°。运行控制状态与推力水平的变化表明，高风速下的结构荷载不宜仅依据平均风速平方关系进行外推。",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true
+        },
+        {
+          "id": "wind-r13-004",
+          "kind": "caption",
+          "style": "Caption",
+          "text": "图3.5-3  额定风速下发电机功率与转子推力通道时程",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true,
+          "figure_asset": "./wind-figures/historical-control/02_power_rotor_thrust.svg",
+          "figure_caption_match": "图3.5-3  额定风速下发电机功率与转子推力通道时程"
+        },
+        {
+          "id": "wind-r13-005",
+          "kind": "text",
+          "style": "Normal",
+          "text": "图3.5-4给出AeroDyn气动推力系数RtAeroCt的工况时间均值分布，其中空心点表示单个随机实现，实心点和误差棒分别表示六个随机实现的均值和样本标准差。NTM三风速组的均值依次为0.798、0.609和0.117，ETM分别为0.776、0.578和0.117。上述离散结果反映该历史模型及其控制策略下的气动系数变化，不作为连续稳态推力系数曲线。",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true
+        },
+        {
+          "id": "wind-r13-006",
+          "kind": "caption",
+          "style": "Caption",
+          "text": "图3.5-4  不同参考风速下气动推力系数的六种子统计",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true,
+          "figure_asset": "./wind-figures/historical-control/03_aerodynamic_ct.svg",
+          "figure_caption_match": "图3.5-4  不同参考风速下气动推力系数的六种子统计"
+        },
+        {
+          "id": "wind-r13-007",
+          "kind": "text",
+          "style": "Normal",
+          "text": "为区分不同方向的结构响应，对塔底及叶片1根部双向弯矩分别取时程绝对峰值，如图3.5-5所示。11.4 m/s下，NTM与ETM的塔底Mx绝对峰值组均值分别为27.435和36.559 MN·m，My分别为290.198和322.191 MN·m。19.202 m/s下Mx绝对峰值组均值进一步增至55.213和64.427 MN·m，而My分别降至217.362和253.844 MN·m，表明不同弯矩分量的控制风速并不一致。各分量均采用原生输出的坐标系和单位，不将异时峰值组合为同刻矢量载荷。",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true
+        },
+        {
+          "id": "wind-r13-008",
+          "kind": "caption",
+          "style": "Caption",
+          "text": "图3.5-5  塔底及叶根双向弯矩绝对峰值统计",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true,
+          "figure_asset": "./wind-figures/historical-control/04_structural_peak_loads.svg",
+          "figure_caption_match": "图3.5-5  塔底及叶根双向弯矩绝对峰值统计"
+        },
+        {
+          "id": "wind-r13-009",
+          "kind": "text",
+          "style": "Normal",
+          "text": "上述结果均属于历史分区阻尼整机筛选模型。原AeroDyn输入中TwrAero为False，且未输出叶片展向分布气动力和完整塔身独立气动力。转子推力、塔底弯矩及叶根弯矩通道不能直接等同于精细混塔有限元模型的外部气动力；新风场与当前结构模型的载荷映射须另行建立。",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true
+        },
+        {
           "id": "b0524",
           "kind": "h3",
           "style": "论文二级标题",
@@ -12092,11 +12181,12 @@
     }
   ],
   "online_revision": {
-    "version": "V8-R12-WIND-CORE",
+    "version": "V8-R13-HISTORICAL-AERO",
     "date": "2026-11-24",
-    "scope": "Three core wind figures use two new full-grid native TurbSim cases; theoretical-only plots retained in archive, not in body; original Word/PDF unchanged.",
+    "scope": "V8-R12 plus 36 original historical OUTB SHA-verified operating histories, aerodynamic Ct and structural peak figures in 3.5.3; no current REV22 external force admission; Word/PDF unchanged.",
     "source_gate": "74fb3aee9dfef058b972a3f0e03aa571319c2fe2",
     "source_inp": "cdb719b95b8ce4301011489b4ab8ffc9e73c18bf",
-    "wind_manifest": "./wind-figures/core/manifest.json"
+    "wind_manifest": "./wind-figures/core/manifest.json",
+    "historical_control_receipt": "./wind-figures/historical-control/receipt.json"
   }
 }
