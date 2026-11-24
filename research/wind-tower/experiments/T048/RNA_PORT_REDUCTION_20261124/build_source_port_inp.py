@@ -92,6 +92,18 @@ def reconstruct(path,source):
     B=R.T@M@F@phi
     alpha=source["mass_alpha"]
     M3,K3,C3,P,report=assemble(lam,mb,B,alpha,source)
+    # Congruence products at large SI inertia scales leave harmless asymmetric
+    # cancellation roundoff in nominally zero entries. Guard in mass-scaled
+    # coordinates before explicitly restoring mathematical symmetry.
+    scale=np.diag(M3)**(-.5)
+    symmetry={}
+    for name,A in (("M",M3),("K",K3),("C",C3)):
+        As=scale[:,None]*A*scale
+        defect=norm(As-As.T)/max(norm(As),1e-30)
+        if defect>1e-12: raise ValueError("Unexpected scaled skew "+name+" "+str(defect))
+        symmetry[name]=defect
+        A[:]=(A+A.T)/2
+    report["mass_scaled_skew_roundoff"]=symmetry
     report.update(blade_first_12_fixed_hub_Hz=(np.sqrt(lam[:12])/(2*np.pi)).tolist(),blade_internal_dofs=len(lam),rigid_stiffness_normalized_defect=norm(kr),source_model="Independent linear exact-static Timoshenko element, not native Abaqus B31 matrices")
     return M3,K3,C3,report
 
