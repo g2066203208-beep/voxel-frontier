@@ -30,7 +30,7 @@ jobs:
         run: |
           git config user.name paper-studio-bot
           git config user.email paper-studio-bot@users.noreply.github.com
-          git add research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool/acquired
+          git add research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool/acquired_v2
           if ! git diff --cached --quiet; then
             git commit -m 'Archive official ESM actual ground-motion record acquisition and screening'
             git pull --rebase origin ${GITHUB_REF_NAME}
@@ -39,4 +39,4 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: T079-ESM-source-pool
-          path: research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool/acquired
+          path: research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool/acquired_v2
