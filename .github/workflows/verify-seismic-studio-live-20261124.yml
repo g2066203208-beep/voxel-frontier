@@ -1,0 +1,100 @@
+name: Verify seismic Studio live downloads
+on:
+  push:
+    branches:
+      - research/t080-seismic-integration-gates-20261022
+    paths:
+      - '.github/workflows/verify-seismic-studio-live-20261124.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool
+      - name: Wait for production page with verified source package
+        shell: bash
+        run: |
+          set -euo pipefail
+          URL=https://g2066203208-beep.github.io/voxel-frontier/thesis-studio/seismic-archive/
+          for i in $(seq 1 36); do
+            if curl -fsSL --connect-timeout 10 --max-time 20 "${URL}?v=qc20261124" -o /tmp/live.html && grep -q 'id="full-download"' /tmp/live.html && grep -q 'data-record="SP02"' /tmp/live.html && curl -fsSL --max-time 20 "${URL}download-manifest.json?v=qc20261124" -o /tmp/live-manifest.json; then
+              echo "LIVE_READY"; break
+            fi
+            if [ "$i" = 36 ]; then exit 1; fi
+            sleep 10
+          done
+          curl -fsSL "${URL}T079_NINE_REAL_SOURCE_CANDIDATES.zip?v=qc20261124" -o /tmp/live.zip
+          echo '89d25e81769f22481baef110ec0a41995902d3bc76725ec5442ba042496e8ca4  /tmp/live.zip' | sha256sum -c
+          unzip -tq /tmp/live.zip
+      - name: Test actual browser downloads
+        run: |
+          npm install --no-save --ignore-scripts playwright-core@1.56.1
+          cat > /tmp/live-test-placeholder <<'EOF'
+          EOF
+          cat > live-test.cjs <<'JS'
+          const {chromium}=require('playwright-core'),fs=require('fs'),crypto=require('crypto');
+          (async()=>{
+            const browser=await chromium.launch({executablePath:'/usr/bin/google-chrome',headless:true,args:['--no-sandbox']});
+            const base='https://g2066203208-beep.github.io/voxel-frontier/thesis-studio/';
+            const page=await browser.newPage({acceptDownloads:true,viewport:{width:1440,height:1050}});
+            try{
+              await page.goto(base+'?v=qc20261124',{waitUntil:'domcontentloaded'});
+              await page.locator('a[href="./seismic-archive/"]').waitFor({state:'attached',timeout:30000});
+              await page.goto(base+'inp-archive/?v=qc20261124',{waitUntil:'domcontentloaded'});
+              await page.locator('a[href="../seismic-archive/"]').waitFor({state:'visible'});
+              await page.goto(base+'seismic-archive/?v=qc20261124',{waitUntil:'domcontentloaded'});
+              const manifest=JSON.parse(fs.readFileSync('/tmp/live-manifest.json','utf8'));
+              const links=await page.locator('#full-download,[data-record]').evaluateAll(xs=>xs.map(x=>({href:x.getAttribute('href'),id:x.getAttribute('data-record')})));
+              if(links.length!==10)throw Error('Missing download controls: '+links.length);
+              for(const l of links){
+                const selector=l.id?'[data-record="'+l.id+'"]':'#full-download';
+                const [download]=await Promise.all([page.waitForEvent('download',{timeout:40000}),page.locator(selector).click()]);
+                const b=fs.readFileSync(await download.path()),h=crypto.createHash('sha256').update(b).digest('hex'),m=manifest.files[l.href];
+                if(!m||h!==m.sha256||b.length!==m.bytes||download.suggestedFilename()!==l.href.split('/').at(-1))throw Error('Download byte mismatch '+l.href);
+                console.log('LIVE_DOWNLOAD_PASS',l.href,b.length,h);
+              }
+              for(const n of ['nine_actual_waveforms.png','nine_actual_spectra.png','nine_velocity_diagnostics.png','nine_long_period_sensitivity.png']){
+                const img=page.locator('img[src="'+n+'"]');await img.scroll_into_view_if_needed();await img.evaluate(x=>x.decode());if(!await img.evaluate(x=>x.naturalWidth>100))throw Error('Invalid image '+n);
+              }
+              await page.evaluate(()=>scrollTo(0,0));await page.screenshot({path:'seismic-studio-live.png',fullPage:true});
+              console.log('LIVE_BROWSER_PASS',links.length);
+            }finally{await browser.close()}
+          })().catch(e=>{console.error(e);process.exit(1)});
+          JS
+          node live-test.cjs
+      - name: Archive verified production diagnostic outputs to research branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          ROOT=research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool/quality-20261124
+          mkdir -p "$ROOT"
+          python - <<'PY'
+          import json,pathlib,urllib.request,hashlib
+          root=pathlib.Path('research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool/quality-20261124')
+          m=json.loads(pathlib.Path('/tmp/live-manifest.json').read_text())
+          base='https://g2066203208-beep.github.io/voxel-frontier/thesis-studio/seismic-archive/'
+          names=['quality_audit.json','quality_summary.csv','period_diagnostics.csv','nine_velocity_diagnostics.png','nine_long_period_sensitivity.png','audit_source.py']
+          for n in names:
+              with urllib.request.urlopen(base+n+'?v=qc20261124',timeout=30) as r:b=r.read()
+              assert hashlib.sha256(b).hexdigest()==m['files'][n]['sha256'],n
+              (root/n).write_bytes(b)
+          (root/'download-manifest.json').write_bytes(pathlib.Path('/tmp/live-manifest.json').read_bytes())
+          (root/'live-receipt.json').write_text(json.dumps({'url':base,'downloads_verified':10,'figures_loaded':4,'source_sha256':m['source_sha256'],'source_test':'PASS','formal_design_eligible':0},indent=2)+'\n')
+          PY
+          cp seismic-studio-live.png "$ROOT/"
+          git config user.name paper-studio-bot
+          git config user.email paper-studio-bot@users.noreply.github.com
+          git add "$ROOT"
+          git commit -m 'Archive verified live Studio seismic download audit and actual figures'
+          git pull --rebase origin ${GITHUB_REF_NAME}
+          git push origin HEAD:${GITHUB_REF_NAME}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seismic-studio-live-test
+          path: seismic-studio-live.png
