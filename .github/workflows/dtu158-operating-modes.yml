@@ -1,0 +1,163 @@
+name: Native DTU158 operating modes and MBC3
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths: ['.github/workflows/dtu158-operating-modes.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: dtu158-operating-modes-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  linearize:
+    runs-on: windows-latest
+    timeout-minutes: 100
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        wind: [0, 7, 10, 14]
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          sparse-checkout: |
+            public/thesis-studio/wind-figures/blade-aero
+            research/wind-tower/references/baselines-and-site-20261004/openfast-v330-adaptation/0Linearization
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Restore exact inputs and build isolated linearization deck
+        env:
+          WS: ${{ matrix.wind }}
+        run: |
+          @'
+          import csv,hashlib,json,os,pathlib,re,zipfile
+          base=pathlib.Path('public/thesis-studio/wind-figures/blade-aero')
+          root=pathlib.Path('operating-modes'); root.mkdir()
+          case=root/'case'; case.mkdir()
+          receipt=json.loads((base/'source_receipt.json').read_text())
+          with zipfile.ZipFile(base/'original-inputs.zip') as z:
+              assert z.testzip() is None
+              z.extractall(case)
+          assert len(receipt['inputs'])==17
+          for row in receipt['inputs']:
+              assert hashlib.sha256((case/row['name']).read_bytes()).hexdigest()==row['sha256'],row['name']
+          (root/'source_receipt.json').write_text(json.dumps(receipt,indent=2))
+          ref=pathlib.Path('research/wind-tower/references/baselines-and-site-20261004/openfast-v330-adaptation/0Linearization')
+          ws=float(os.environ['WS'])
+          with (ref/'LinearizationPoints_Servo.csv').open() as f:
+              points=list(csv.reader(f,delimiter=';'))[1:]
+          _,rpm,pitch,tq=map(float,next(r for r in points if float(r[0])==ws))
+          fst=case/'DTU_10MW_RWT.fst'; ed=case/'DTU_10MW_RWT_ElastoDyn.dat'
+          ad=case/'Rotor/DTU_10MW_RWT_AeroDyn15.dat'; ifw=case/'DTU_10MW_InflowWind.dat'
+          srv=case/'Control/DTU_10MW_RWT_ServoDyn.dat'
+          edits=[]
+          def setv(p,k,v):
+              t=p.read_text(encoding='utf-8-sig')
+              pat=r'(?m)^([ \t]*)(.*?)([ \t]+'+re.escape(k)+r'(?=[ \t]|$)[^\r\n]*)$'
+              m=list(re.finditer(pat,t))
+              assert len(m)==1,(str(p),k,len(m))
+              old=m[0][2]; new=str(v)
+              t,n=re.subn(pat,lambda m:m[1]+new+m[3],t)
+              assert n==1
+              p.write_text(t,encoding='utf-8')
+              edits.append(dict(file=str(p.relative_to(case)),field=k,old=old,new=new))
+          def get(p,k):
+              t=p.read_text(encoding='utf-8-sig')
+              m=re.search(r'(?m)^[ \t]*(.*?)[ \t]+'+re.escape(k)+r'(?=[ \t]|$)',t)
+              assert m,(p,k)
+              return m[1].strip()
+          assert get(ed,'NumBl')=='3'
+          assert all(get(ed,k).lower()=='true' for k in ('FlapDOF1','FlapDOF2','EdgeDOF','TwFADOF1','TwFADOF2','TwSSDOF1','TwSSDOF2'))
+          for k in ['BldFile(1)','BldFile(2)','BldFile(3)']:
+              old=get(ed,k).strip('"').replace(chr(92),'/')
+              if old.startswith('../Rotor/'): setv(ed,k,'"'+old[3:]+'"')
+              else: assert (case/old).is_file(),old
+          nlin=1 if ws==0 else 36
+          for k,v in dict(AeroFile='"Rotor/DTU_10MW_RWT_AeroDyn15.dat"',TMax=1000,Linearize='True',CalcSteady='True',TrimCase=2 if ws<14 else 3,TrimTol=0.001,TrimGain=200 if ws<14 else 1e-7,NLinTimes=nlin,LinTimes=', '.join(['9999']*nlin),LinInputs=1,LinOutputs=1,TStart=0,DT_Out=0.05,OutFileFmt=2,CompAero=0 if ws==0 else 2,CompInflow=0 if ws==0 else 1,CompServo=0 if ws==0 else 1).items(): setv(fst,k,v)
+          for k,v in [('RotSpeed',rpm),('GenDOF','False' if ws==0 else 'True'),('BlPitch(1)',pitch),('BlPitch(2)',pitch),('BlPitch(3)',pitch)]: setv(ed,k,v)
+          # Uniform operating-point inflow. No turbulent snapshot or ROSCO DLL linearization.
+          for k,v in dict(WindType=1,HWindSpeed=ws,RefHt=161.368806,PLexp=0.0).items(): setv(ifw,k,v)
+          for k,v in dict(WakeMod=1,AFAeroMod=1,FrozenWake='True',TwrAero='False').items(): setv(ad,k,v)
+          for k,v in dict(PCMode=0,VSContrl=1,VS_RtGnSp=480,VS_RtTq=200000,VS_Rgn2K=0.212 if ws<14 else 1e-5,VS_SlPc=1 if ws<14 else 1e-5).items(): setv(srv,k,v)
+          (root/'config.json').write_text(json.dumps(dict(wind_m_s=ws,reference_rpm=rpm,reference_pitch_deg=pitch,reference_generator_torque_Nm=tq,expected_lin_files=nlin,control='reference simple VS surrogate, NOT closed-loop ROSCO',aero='BEM frozen wake; not dynamic UA or DBEMT',scope='historical 158 m R2 tower; not REV22 validated',edits=edits),indent=2))
+          print('INPUT_GATE_PASS',ws,rpm,pitch,nlin)
+          '@ | python -
+          if ($LASTEXITCODE -ne 0) { throw 'Linearization deck rejected' }
+      - name: Run version-pinned native OpenFAST and validate linearization files
+        run: |
+          New-Item -ItemType Directory -Force bin | Out-Null
+          curl.exe -fLsS --retry 3 https://github.com/OpenFAST/openfast/releases/download/v3.5.3/openfast_x64.exe -o bin/openfast_x64.exe
+          if ($LASTEXITCODE -ne 0) { throw 'Download failed' }
+          if ((Get-FileHash bin/openfast_x64.exe -Algorithm SHA256).Hash.ToLower() -ne '0cc8147fdda188365b8eacda8a831e74fafef59440d71185d66c3272af9e176a') { throw 'Binary mismatch' }
+          $exe=(Resolve-Path bin/openfast_x64.exe).Path
+          $env:PATH="$pwd\bin;$env:PATH"
+          @'
+          import pathlib,subprocess,json,sys,os,re
+          root=pathlib.Path('operating-modes');case=root/'case'
+          with (root/'native.log').open('w',encoding='utf-8') as log:
+              r=subprocess.run([os.environ['FAST_EXE'],'DTU_10MW_RWT.fst'],cwd=case,stdout=log,stderr=subprocess.STDOUT,timeout=5400)
+          txt=(root/'native.log').read_text(errors='replace')
+          print(txt[-10000:])
+          assert r.returncode==0 and 'OpenFAST terminated normally' in txt,r.returncode
+          cfg=json.loads((root/'config.json').read_text())
+          files=sorted(case.glob('*.lin'))
+          assert len(files)==cfg['expected_lin_files'],len(files)
+          assert all(f.stat().st_size>1000 for f in files)
+          print('NATIVE_LINEARIZATION_PASS',len(files))
+          '@ | ForEach-Object { $env:FAST_EXE=$exe; $_ | python - }
+          if ($LASTEXITCODE -ne 0) { throw 'Native linearization failed' }
+      - name: Official toolbox MBC3 and untracked modal results
+        run: |
+          git clone https://github.com/OpenFAST/python-toolbox.git toolbox
+          if ($LASTEXITCODE -ne 0) { throw 'Toolbox clone failed' }
+          git -C toolbox checkout 09596209e4160c44d43ec1b702994ca1820ebae1
+          if ($LASTEXITCODE -ne 0) { throw 'Toolbox pin failed' }
+          python -m pip install numpy==1.26.4 scipy==1.13.1 pandas==2.2.3 matplotlib==3.9.2
+          if ($LASTEXITCODE -ne 0) { throw 'Dependencies failed' }
+          $env:PYTHONPATH="$pwd\toolbox"
+          @'
+          import pathlib,json,csv,numpy as np,re
+          from pyFAST.linearization.mbc import fx_mbc3
+          root=pathlib.Path('operating-modes')
+          files=sorted((root/'case').glob('*.lin'),key=lambda p:int(p.name.split('.')[-2]))
+          cfg=json.loads((root/'config.json').read_text())
+          assert len(files)==cfg['expected_lin_files']
+          mbc,mat=fx_mbc3([str(p) for p in files],verbose=True)
+          a=np.asarray(mbc['AvgA']); assert np.isfinite(a).all() and a.shape[0]==a.shape[1]
+          rpm=float(mbc['RotSpeed_rpm'])
+          if cfg['wind_m_s']>0:
+              assert abs(rpm-cfg['reference_rpm'])/cfg['reference_rpm']<0.01,(rpm,cfg['reference_rpm'])
+          eig=mbc['eigSol']
+          f=np.asarray(eig['NaturalFreqs_Hz']).ravel();d=np.asarray(eig['DampRatios']).ravel()
+          assert f.shape==d.shape and np.isfinite(f).all() and np.isfinite(d).all()
+          np.savez_compressed(root/'mbc_matrix.npz',A=a,raw_eigenvalues=np.linalg.eigvals(a))
+          with (root/'modal_untracked.csv').open('w',newline='') as stream:
+              wr=csv.writer(stream);wr.writerow(['wind_m_s','rotor_rpm','untracked_mode','frequency_Hz','damping_ratio'])
+              for i,(fi,di) in enumerate(zip(f,d),1): wr.writerow([cfg['wind_m_s'],rpm,i,fi,di])
+          (root/'mbc_receipt.json').write_text(json.dumps(dict(status='MBC_NUMERIC_PASS_UNTRACKED',rpm=rpm,wind_m_s=cfg['wind_m_s'],num_files=len(files),state_count=a.shape[0],toolbox='09596209e4160c44d43ec1b702994ca1820ebae1',states=list(map(str,mbc['DescStates'])),scope='total modal damping of surrogate control model; not isolated aero damping, not tracked Campbell'),indent=2))
+          print('MBC_NUMERIC_PASS_UNTRACKED',len(f))
+          '@ | python -
+          if ($LASTEXITCODE -ne 0) { throw 'MBC postprocessor failed; preserve raw lin' }
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: dtu158-modes-${{ matrix.wind }}ms
+          path: |
+            operating-modes/*.json
+            operating-modes/*.log
+            operating-modes/*.csv
+            operating-modes/*.npz
+            operating-modes/case/*.lin
+            operating-modes/case/*.fst
+            operating-modes/case/*.dat
+            operating-modes/case/*.sum
+            operating-modes/case/*.outb
+            operating-modes/case/Control/*.dat
+            operating-modes/case/Rotor/*.dat
+          retention-days: 30
