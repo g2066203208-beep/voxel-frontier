@@ -1,0 +1,266 @@
+{
+  "version": "0.32.196",
+  "records": {
+    "E01": {
+      "source_status": "Research copy; PGA matches literature; g",
+      "npts": 33750,
+      "dt_s": 0.004,
+      "PGA_m_s2": [
+        0.6274667322699999,
+        0.717341737525
+      ],
+      "PGA_geomean_m_s2": 0.6709009434824904,
+      "PGV_m_s": [
+        0.25704983489309824,
+        0.2963705727971804
+      ],
+      "PGD_m": [
+        0.20022946192192154,
+        0.23130796702783035
+      ],
+      "PGV_PGD_status": "direct integration diagnostic only",
+      "Arias_m_s": [
+        0.38471814365217305,
+        0.3835070011104596
+      ],
+      "D5_75_s": [
+        34.24437549637236,
+        27.914663501614363
+      ],
+      "D5_95_s": [
+        53.849506963452605,
+        40.9884680917233
+      ],
+      "frequency_resolution_Hz": 0.007407407407407408,
+      "acceleration_energy_fraction_4_to_15s": [
+        0.32562141926631766,
+        0.3965359913656535
+      ],
+      "RotD50_at_T1": 0.4335477452767882,
+      "research_scale_unconstrained": 0.2921978210517632,
+      "research_scale_bounded": 0.5,
+      "scale_clipped": true,
+      "reliable_period_status": "HOLD: source processing and usable band not independently established for this version"
+    },
+    "E02": {
+      "source_status": "GeoNet corrected; unscaled",
+      "npts": 7386,
+      "dt_s": 0.02,
+      "PGA_m_s2": [
+        2.3528000000000002,
+        2.4837
+      ],
+      "PGA_geomean_m_s2": 2.417364134755043,
+      "PGV_m_s": [
+        0.65998,
+        0.39111
+      ],
+      "PGD_m": [
+        0.6718,
+        0.3317
+      ],
+      "PGV_PGD_status": "provider corrected",
+      "Arias_m_s": [
+        1.6578656361612039,
+        2.064976664445278
+      ],
+      "D5_75_s": [
+        12.98290802415113,
+        10.516305831464791
+      ],
+      "D5_95_s": [
+        19.58323046068441,
+        18.208565820644193
+      ],
+      "frequency_resolution_Hz": 0.006769564040075819,
+      "acceleration_energy_fraction_4_to_15s": [
+        0.11528107304571472,
+        0.022478275076446366
+      ],
+      "RotD50_at_T1": 1.1586903111526767,
+      "research_scale_unconstrained": 0.13653661610933032,
+      "research_scale_bounded": 0.5,
+      "scale_clipped": true,
+      "reliable_period_status": "HOLD: source processing and usable band not independently established for this version"
+    },
+    "E03": {
+      "source_status": "Research AT2; PGA matches literature; g",
+      "npts": 7000,
+      "dt_s": 0.005,
+      "PGA_m_s2": [
+        2.22369515277,
+        3.1558280225849997
+      ],
+      "PGA_geomean_m_s2": 2.6490752116159326,
+      "PGV_m_s": [
+        0.6969348412916637,
+        0.7186461005416632
+      ],
+      "PGD_m": [
+        0.6230530248456743,
+        0.47311121409724305
+      ],
+      "PGV_PGD_status": "direct integration diagnostic only",
+      "Arias_m_s": [
+        1.3291693242214409,
+        1.3229109946713853
+      ],
+      "D5_75_s": [
+        7.023542363632615,
+        5.970571548417908
+      ],
+      "D5_95_s": [
+        15.102442269003419,
+        15.082268605481557
+      ],
+      "frequency_resolution_Hz": 0.02857142857142857,
+      "acceleration_energy_fraction_4_to_15s": [
+        0.10168810838300509,
+        0.06017312058671642
+      ],
+      "RotD50_at_T1": 0.8766040306816381,
+      "research_scale_unconstrained": 0.10730591747328447,
+      "research_scale_bounded": 0.5,
+      "scale_clipped": true,
+      "reliable_period_status": "HOLD: source processing and usable band not independently established for this version"
+    },
+    "E05": {
+      "source_status": "GeoNet corrected; unscaled",
+      "npts": 2409,
+      "dt_s": 0.02,
+      "PGA_m_s2": [
+        0.4652,
+        0.6854
+      ],
+      "PGA_geomean_m_s2": 0.5646663439589791,
+      "PGV_m_s": [
+        0.04614,
+        0.05205
+      ],
+      "PGD_m": [
+        0.027833,
+        0.03073
+      ],
+      "PGV_PGD_status": "provider corrected",
+      "Arias_m_s": [
+        0.04694500336989676,
+        0.048407976978186724
+      ],
+      "D5_75_s": [
+        6.575341315337067,
+        5.751728144801682
+      ],
+      "D5_95_s": [
+        12.374977851938695,
+        13.936194879969438
+      ],
+      "frequency_resolution_Hz": 0.020755500207555,
+      "acceleration_energy_fraction_4_to_15s": [
+        0.015555324960260943,
+        0.03520999673400818
+      ],
+      "RotD50_at_T1": 0.04852504756511724,
+      "research_scale_unconstrained": 0.8531827369258754,
+      "research_scale_bounded": 0.8531827369258754,
+      "scale_clipped": false,
+      "reliable_period_status": "HOLD: source processing and usable band not independently established for this version"
+    },
+    "E06": {
+      "source_status": "Scaled copy; SF 0.778 (rounded); g assumed",
+      "npts": 16769,
+      "dt_s": 0.01,
+      "PGA_m_s2": [
+        0.50699399835,
+        0.6143866225
+      ],
+      "PGA_geomean_m_s2": 0.5581131876904784,
+      "PGV_m_s": [
+        0.04044193130139299,
+        0.02759863865988091
+      ],
+      "PGD_m": [
+        0.01811630155365354,
+        0.012897608946292915
+      ],
+      "PGV_PGD_status": "direct integration diagnostic only",
+      "Arias_m_s": [
+        0.03883172905205474,
+        0.039759289563059276
+      ],
+      "D5_75_s": [
+        12.734796014285777,
+        12.365715452978947
+      ],
+      "D5_95_s": [
+        38.51599142101684,
+        39.38600469132704
+      ],
+      "frequency_resolution_Hz": 0.0059633848172222555,
+      "acceleration_energy_fraction_4_to_15s": [
+        0.004195948608712623,
+        0.0047459421890519
+      ],
+      "RotD50_at_T1": 0.034185321369176035,
+      "research_scale_unconstrained": 1.1509644320687142,
+      "research_scale_bounded": 1.1509644320687142,
+      "scale_clipped": false,
+      "reliable_period_status": "HOLD: source processing and usable band not independently established for this version"
+    },
+    "E07": {
+      "source_status": "Scaled copy; SF 0.892 (rounded); g assumed",
+      "npts": 19963,
+      "dt_s": 0.005,
+      "PGA_m_s2": [
+        1.1041307235,
+        1.1510065105
+      ],
+      "PGA_geomean_m_s2": 1.1273249980336528,
+      "PGV_m_s": [
+        0.060664658518662706,
+        0.1304280879163375
+      ],
+      "PGD_m": [
+        0.01893841555170433,
+        0.10192034168015549
+      ],
+      "PGV_PGD_status": "direct integration diagnostic only",
+      "Arias_m_s": [
+        0.2893716244082573,
+        0.2183807275854314
+      ],
+      "D5_75_s": [
+        23.239578868587948,
+        30.511253637842522
+      ],
+      "D5_95_s": [
+        35.722333893907795,
+        40.77929540883122
+      ],
+      "frequency_resolution_Hz": 0.010018534288433602,
+      "acceleration_energy_fraction_4_to_15s": [
+        0.0011895050838671962,
+        0.038846976753212935
+      ],
+      "RotD50_at_T1": 0.11392383038201559,
+      "research_scale_unconstrained": 0.4466025300512858,
+      "research_scale_bounded": 0.5,
+      "scale_clipped": true,
+      "reliable_period_status": "HOLD: source processing and usable band not independently established for this version"
+    }
+  },
+  "target_scope": "PARAMETRIC_RESEARCH_ONLY_0_TO_10S_NOT_SITE_HAZARD",
+  "target_source": "https://raw.githubusercontent.com/g2066203208-beep/voxel-frontier/79cedc0fcdfcd8b52d25b72b50f8105db0d713fe/research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool/PARAMETRIC_TARGET_V1.json",
+  "fit_scope": "0.1–10 s logarithmic-period least squares, common multiplier per pair; clip to 0.5–2 as research bound; applied to already scaled E06/E07 as supplied, not original SF",
+  "research_mean_error_4_10s_max_abs": 4.646121871813937,
+  "research_mean_error_4_10s_within_20pct": false,
+  "target_validity": "HOLD site-specific spectrum and >10 s target; no extrapolation",
+  "classification": "HOLD E02/E03 pulse candidates, quantitative pulse extraction not yet validated; other groups not assigned",
+  "modal_status": "only historical T1 confirmed in project decision; further modes HOLD",
+  "E04": "missing",
+  "formal_design_admitted": 0,
+  "solver_validation": {
+    "sinusoidal_resonance_PSA": 9.995935586752127,
+    "RotD_integer_rotation_relative_error": 3.9968028886505635e-15,
+    "free_response_tail": "5 natural periods; source ends followed by zero forcing, one sample transition"
+  }
+}

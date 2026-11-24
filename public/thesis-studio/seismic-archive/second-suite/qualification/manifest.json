@@ -1,0 +1,25 @@
+{
+  "version": "0.32.196",
+  "scope": "second suite only",
+  "files": {
+    "03_intensity_duration_statistics.svg": "865859bdb1c05adcba7b00848f82bc269e582c92bbc6d152458581f0a0e6f881",
+    "E03_spectra.csv": "318d205f1abb3ec303b4afff39092ae420c382da4a6781074562ba06ce5b58e9",
+    "E01_spectra.csv": "2f76d37887cd0c07c08ae928cd048312ea6b913156be5fdd830ba50baaf156b1",
+    "03_intensity_duration_statistics.png": "b771379566eda033f4194f95daf7a6112ef9f0f9cf471f178503a31a2af196e4",
+    "05_pulse_candidate_velocity_screening.svg": "d4a09e3872f984730587d265c9bcc1bbb261c2893706744d2917b24cb777bdac",
+    "02_research_target_fit_and_error.png": "660e89d2fca1c8623e9386383a78d93faa8089b169aaa52004943e2a7a08c767",
+    "E06_spectra.csv": "0fe1f9f1471711ba2383035679c624f447bafd9dcf38e39c974f6f0e7df435ba",
+    "E02_spectra.csv": "66254445ff6cdee3fd9602f18f48d4780f9a4e9e6dbac5f4d47d4c3318eb572d",
+    "04_long_period_energy_and_damping.png": "539b555e2309e5d7810a40d9ca1c5063939f1f61c41fd556589b5f7b6d8d4a75",
+    "02_research_target_fit_and_error.svg": "59f10f85062e882e7700281ab03d438f49294162c633770a5599aefcbea9d7fc",
+    "01_normalized_velocity_displacement_spectra.svg": "e97f63c1a6c62f98a136b3bf89cef7d6444bac5451c096f0f127d9f3ef79993c",
+    "qualification.json": "dec2a80bf44ec36f0c1f97327913c1e3a1ebd91b6cb838804f517dece6d988b4",
+    "E05_spectra.csv": "5da85c6e2ce1b5d99650befc05a1c7f0a23a5075ac9e559d0a3208242e3fe71d",
+    "04_long_period_energy_and_damping.svg": "e14220957798c9e1b2c394e4981626da254ba900d4e3aa70fe2c9eea9a5d55a5",
+    "E07_spectra.csv": "2e87f8099bc6a0b920967bb3cf636ae91f5963f56a53dc9b9b3ede5a79d5eac6",
+    "05_pulse_candidate_velocity_screening.png": "4cde14abb73fa48dee2ec484fdfde3e00a90e0fc2f704507fd26282d82d5d5f2",
+    "01_normalized_velocity_displacement_spectra.png": "f1f04a0a1f11f1a6f1aeff752809d453b03d733ad43f02f84e0929c0cf208d73",
+    "research_target_fit.csv": "7ed0075267716de87a78408ff34bdc9d7bfa706fb21387627cacc9f969352320"
+  },
+  "formal_design": 0
+}
