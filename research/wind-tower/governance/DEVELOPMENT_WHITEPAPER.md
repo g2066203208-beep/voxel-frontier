@@ -1,3 +1,10 @@
+### 2026-11-24｜v0.32.195 — 第二套六组七联图实际完成并托管
+
+- RUN45399438541成功计算E01/E02/E03/E05/E06/E07六组；原始文件Git blob/SHA256锁定，采样数33750/7386/7000/2409/16769/19963，全部数值有限、时间间隔通过核验。E01初次RUN45399395056误按单列解析失败，修正双列时间/加速度后通过；未将首轮失败计为完整成果。
+- 每组加速度、速度、位移、Fourier幅值、Welch PSD、5%阻尼FOH PSA、归一化Arias及D5–95共7项，另有六组加速度及反应谱组合图。PNG 300 dpi及SVG各8件，共16件；图件和数值manifest归档主分支commit 8d1c5c62e9f017c1bcd1905588797c6373282c1e，独立展示页commit 851caf245e0ca6712802de25b20c95b3edc73883。artifact14922113393，14218613 bytes，ZIP SHA256 9ed0a0f230018fcb77426f876d97809f1b3d1934497a1a65546e27258d5d37be。
+- E02/E05速度位移取官方校正列；E01/E03/E06/E07直接积分仅诊断、未追加基线校正。E06/E07保留复现版调幅幅值与g单位假设，非原波；组合谱为分量PSA几何平均非RotD50、非设计目标谱均值。E04无数值不制图，第一套V7不变。正式设计输入仍HOLD。主分支图件和manifest回读通过；线上部署须另查。
+- [第二套独立图件展示](https://g2066203208-beep.github.io/voxel-frontier/thesis-studio/seismic-archive/second-suite/)；[计算manifest](https://github.com/g2066203208-beep/voxel-frontier/blob/8d1c5c62e9f017c1bcd1905588797c6373282c1e/public/thesis-studio/seismic-archive/second-suite/manifest.json)。
+
 ### 2026-11-24｜v0.32.194 — E07官方三分量实际提取与E04事件档案排除
 
 - [真实获取审计](../experiments/T079/seismic-evidence-20261124/record-pool/literature_exact_20261124/acquisition_audit_v0.32.194.json)，commit 2c90bec81e31ec607c7691d931a2d913ccc1b7ac。RUN45395196795实际完成，artifact14920677251（三分量ACC及获取收据，30天保留）。官方XLSX sheet2 row25：编号24，RSN880，Landers 1992，Mission Creek Fault，精确SF=2.309816509105592，文件名与三分量一一匹配。
