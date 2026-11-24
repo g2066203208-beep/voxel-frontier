@@ -1,0 +1,65 @@
+name: Archive seismic original evidence 20261124
+on:
+  push:
+    branches:
+      - research/t080-seismic-integration-gates-20261022
+    paths:
+      - '.github/workflows/archive-seismic-evidence-20261124.yml'
+      - 'research/wind-tower/experiments/T079/seismic-evidence-20261124/capture_evidence.py'
+      - 'research/wind-tower/experiments/T079/seismic-evidence-20261124/sources.json'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: seismic-evidence-20261124
+  cancel-in-progress: false
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            research/wind-tower/experiments/T079/seismic-evidence-20261124
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install --quiet httpx pymupdf pillow playwright
+      - name: Capture original tables and source excerpts
+        run: python research/wind-tower/experiments/T079/seismic-evidence-20261124/capture_evidence.py
+      - name: Verify images and archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=research/wind-tower/experiments/T079/seismic-evidence-20261124
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,json
+          p=Path('research/wind-tower/experiments/T079/seismic-evidence-20261124')
+          rows=json.loads((p/'capture-receipt.json').read_text())
+          assert len(rows)==len(json.loads((p/'sources.json').read_text()))
+          for r in rows:
+              if r['status']=='CAPTURED':
+                  b=(p/r['file']).read_bytes()
+                  assert len(b)==r['bytes'] and hashlib.sha256(b).hexdigest()==r['sha256']
+              else:
+                  assert r['error']
+          print('ARCHIVE_COUNT',sum(r['status']=='CAPTURED' for r in rows),len(rows))
+          PY
+          git config user.name 'paper-studio-bot'
+          git config user.email 'paper-studio-bot@users.noreply.github.com'
+          git add "$ROOT/original" "$ROOT/capture-receipt.json" "$ROOT/EVIDENCE_ATLAS.md"
+          if ! git diff --cached --quiet; then
+            git commit -m 'Archive original seismic evidence images with exact hash receipts'
+            git pull --rebase origin ${GITHUB_REF_NAME}
+            git push origin HEAD:${GITHUB_REF_NAME}
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seismic-original-evidence-20261124
+          path: |
+            research/wind-tower/experiments/T079/seismic-evidence-20261124/original
+            research/wind-tower/experiments/T079/seismic-evidence-20261124/capture-receipt.json
+            research/wind-tower/experiments/T079/seismic-evidence-20261124/EVIDENCE_ATLAS.md
