@@ -1,3 +1,117 @@
+### 2026-11-24｜v0.32.176 PATCH — 地震选波规范、论文原图及真实地震数据永久归档
+
+本轮证据归档run [45354266889](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/45354266889) SUCCESS：21项来源尝试，16项实际取得图片（4张规范源图、1张论文原PDF表格裁图、11张网页来源片段），5项未取得；本地逐一复算16张SHA256全部一致。嘉鱼原表和戴靠山等2021表2已经实际打开视觉核查，11条候选分量的论文表值与转录相符。其余网页登记标题及片段不是授权规范全文或论文方法验证，不能据此宣称条文齐全。图册及逐项来源、原始URL、取得日期、HTTP状态、源/图片哈希、像素尺寸、错误记录见 [EVIDENCE_ATLAS.md](../experiments/T079/seismic-evidence-20261124/EVIDENCE_ATLAS.md)、[capture-receipt.json](../experiments/T079/seismic-evidence-20261124/capture-receipt.json)、[候选数据表](../experiments/T079/seismic-evidence-20261124/candidate_table2_factual_transcription.csv)。
+
+ESM原始三分量数据永久归档run [45354450127](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/45354450127) SUCCESS：[源ZIP、SI CSV、原始头及授权收据](../experiments/T079/seismic-evidence-20261124/ESM_NVL/README.md)，事件IT-2012-0008、IT.NVL、MP、CC BY 3.0 IT、dt=0.005s、32040点、160.195s、HNE/HNN/HNZ峰值0.47522846/0.51205727/0.28926626 m/s²；原ZIP SHA256 ad370abe14e308856754456e5bf172bb327ca59cb002344e2937726c14fec2b7；SI CSV SHA256 a353c1216b80cf2739b9cedfbd09b68bab3d3ffe49f1d6f3b537366c3559db34；原ASC三分量哈希与头信息完整保存在 [SOURCE_ARCHIVE_RECEIPT.json](../experiments/T079/seismic-evidence-20261124/ESM_NVL/SOURCE_ARCHIVE_RECEIPT.json)，blob 0bb2b904e20595b70c8e2c152adb1f002151e9d9。源文件未经重新调幅，不属于嘉鱼正式设计波。
+
+研究决策保持v0.32.175：嘉鱼6度、0.05g、第一组、II类假定；多遇/设防/罕遇三水准参考，7组真实双水平+2组独立脉冲对照；目标长周期谱及实际场址未定、候选7组原始数据未取得，HOLD。历史T1约7.39s超过建筑谱6s适用边界，禁止机械外推。不修改INP、不运行Abaqus、不合并PR#42。
+
+#### 未取得原图的来源（HOLD）
+
+- GB18306_AMD2026：Page.goto: Timeout 32000ms exceeded.；未取得原图。
+- ENERGIES2021：source HTTP unavailable；未取得原图。
+- CHINA_RE2024：Locator.wait_for: Timeout 10000ms exceeded.；未取得原图。
+- SDEE2026：source HTTP unavailable；未取得原图。
+- OCEAN2026_VERIFIED：source HTTP unavailable；未取得原图。
+
+#### 已保存的真实原文图（仓库内嵌，不依赖外部图片URL）
+
+#### GB_A017_JIAYU
+
+![GB_A017_JIAYU 原始来源图](../experiments/T079/seismic-evidence-20261124/original/GB_A017_JIAYU.jpg)
+
+来源：https://gf.cabr-fire.com/Web/uploads/allimg/230914/153403I32-34.jpg；范围：unmodified original source table image; visual content requires review；原件/截图 608735 bytes；SHA256 `e9e698c5e9dc0f36af6561a132c0150950985e0729941799190327bf56e3a67a`。
+
+#### GB_5122_PGA
+
+![GB_5122_PGA 原始来源图](../experiments/T079/seismic-evidence-20261124/original/GB_5122_PGA.jpg)
+
+来源：https://gf.cabr-fire.com/Web/uploads/allimg/230518/14192U142-1.jpg；范围：unmodified original source table image; visual content requires review；原件/截图 72540 bytes；SHA256 `37e8e81d3bfa5707f62a0ca9bf88e065fbb8b0906459d60923691f81f48e5581`。
+
+#### GB_5141_ALPHA
+
+![GB_5141_ALPHA 原始来源图](../experiments/T079/seismic-evidence-20261124/original/GB_5141_ALPHA.jpg)
+
+来源：https://gf.cabr-fire.com/Web/uploads/allimg/230518/14192Q427-3.jpg；范围：unmodified original source table image; visual content requires review；原件/截图 80247 bytes；SHA256 `98abe4e5a457d5d7948c8258388d389e380cb0605d13959717ee8b831ac627e5`。
+
+#### GB_5142_TG
+
+![GB_5142_TG 原始来源图](../experiments/T079/seismic-evidence-20261124/original/GB_5142_TG.jpg)
+
+来源：https://gf.cabr-fire.com/Web/uploads/allimg/230518/14192VM3-4.jpg；范围：unmodified original source table image; visual content requires review；原件/截图 97402 bytes；SHA256 `2df9176531765f1bd7c4a791175b422bf044e9d29059edee63beb77613c8a6eb`。
+
+#### GB_514_OVER6S
+
+![GB_514_OVER6S 原始来源图](../experiments/T079/seismic-evidence-20261124/original/GB_514_OVER6S.png)
+
+来源：https://gf.cabr-fire.com/article-15665.htm；范围：clause excerpt；原件/截图 1536 bytes；SHA256 `bf824ce4680eb6cd8ab53c230814643641e115104ea285af5947ecab35ceac17`。
+
+#### NBT11600
+
+![NBT11600 原始来源图](../experiments/T079/seismic-evidence-20261124/original/NBT11600.png)
+
+来源：https://std.samr.gov.cn/hb/search/stdHBDetailed?id=27F4946613AA0758E06397BE0A0A01BA；范围：registration only；原件/截图 2571 bytes；SHA256 `a0254cf46824ddb22d1457a69c048514e7d10135d05bee0dc37e39a65054dd43`。
+
+#### NBT10907
+
+![NBT10907 原始来源图](../experiments/T079/seismic-evidence-20261124/original/NBT10907.png)
+
+来源：https://hbba.sacinfo.org.cn/stdDetail/95e0a39923ba033c47f917f3691d2f6f940f1e0488ca5b0a4e50e0ae665afcf5；范围：registration only；原件/截图 3206 bytes；SHA256 `a70f962158e5ecdaef640ee37a7ea891c9f42ed43220f17d62d48b6a514e572f`。
+
+#### GB18306
+
+![GB18306 原始来源图](../experiments/T079/seismic-evidence-20261124/original/GB18306.png)
+
+来源：https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=EC0585F90CA21ABE02826394F266B623；范围：registration only；原件/截图 4362 bytes；SHA256 `f9ba412a06fff50d61a835e32dc7f4838f331a19a20ba3300ea4462e7aed3239`。
+
+#### IEC61400_2025
+
+![IEC61400_2025 原始来源图](../experiments/T079/seismic-evidence-20261124/original/IEC61400_2025.png)
+
+来源：https://webstore.iec.ch/en/publication/111042；范围：registration only；原件/截图 10514 bytes；SHA256 `f183a25fd815b4eb18a5407ae588c110839dd1d0e433f682526808fe16513c4f`。
+
+#### IEC61400_COR2026
+
+![IEC61400_COR2026 原始来源图](../experiments/T079/seismic-evidence-20261124/original/IEC61400_COR2026.png)
+
+来源：https://webstore.iec.ch/en/publication/116398；范围：registration only；原件/截图 13836 bytes；SHA256 `6214bcce9a2c0abcc4522e2bb41ccde7e3e8708aa5bccb04ec018933828532c4`。
+
+#### DNV0585
+
+![DNV0585 原始来源图](../experiments/T079/seismic-evidence-20261124/original/DNV0585.png)
+
+来源：https://www.dnv.com/energy/standards-guidelines/dnv-rp-0585-seismic-design-of-wind-power-plants/；范围：registration only；原件/截图 7579 bytes；SHA256 `d59eeca65409f0de7dafd5590011fcdbb51e731c0c8d97a457d5b9bd84309de4`。
+
+#### DAI2021_TABLE2
+
+![DAI2021_TABLE2 原始来源图](../experiments/T079/seismic-evidence-20261124/original/DAI2021_TABLE2.png)
+
+来源：https://pubs.cstam.org.cn/data/article/em/preview/pdf/2021-0121.pdf；范围：table crop only; no full paper redistribution；PDF第6页裁切；原件/截图 273888 bytes；SHA256 `20a5027c9d090630348e4b93f3932dd47292f3efd4bb0d3e8110965074de3362`。
+
+#### DISASTER2025
+
+![DISASTER2025 原始来源图](../experiments/T079/seismic-evidence-20261124/original/DISASTER2025.png)
+
+来源：https://ddyj.cbpt.cnki.net/portal/journal/portal/client/paper/acfb3e65a76cba1f749899361584aad4；范围：metadata only；原件/截图 681 bytes；SHA256 `dd002d915da1087463de70088663f8f74b28c65529ddd8aec9d63edc84f0277e`。
+
+#### RCNS2026
+
+![RCNS2026 原始来源图](../experiments/T079/seismic-evidence-20261124/original/RCNS2026.png)
+
+来源：https://journal.hep.com.cn/rcs/EN/2026/5/2；范围：metadata only；原件/截图 22134 bytes；SHA256 `b207f831fa4af4ccc5ec86de2f759fe545c713e35ee633c75c62cff02bdaf0d9`。
+
+#### PEER
+
+![PEER 原始来源图](../experiments/T079/seismic-evidence-20261124/original/PEER.png)
+
+来源：https://ngawest2.berkeley.edu/；范围：database identity only；原件/截图 3760 bytes；SHA256 `df9af1e19d413465709056871f3aae46e8ac5b9f6276269932f7e14e124dfc26`。
+
+#### ESM
+
+![ESM 原始来源图](../experiments/T079/seismic-evidence-20261124/original/ESM.png)
+
+来源：https://esm-db.eu/；范围：database identity only；原件/截图 50392 bytes；SHA256 `3063cf8d848540f15bde7365ead74d76537fe2e4afba36fb924c463545b5d8c5`。
+
 ### 2026-11-24｜v0.32.175 PATCH — 嘉鱼参考地震条件与长周期选波决策
 
 新增[SEISMIC_SELECTION_DECISION_20261124](../experiments/T079/SEISMIC_SELECTION_DECISION_20261124.md)，commit 19195dac2b8c7ca9c604a3ae8177ade1039d17ed。实际视觉复核GB/T50011(2024)附录A.0.17嘉鱼6度/0.05g/第一组、5.1.2-2多遇18/罕遇125cm/s²、5.1.4-1 αmax 0.04/0.28、5.1.4-2 第一组II类0.35s，罕遇+0.05s；5.1.4 T>6s专门研究，历史T1=7.394s不能外推建筑谱。NB/T11600-2024现行适用6–9度陆海风电，NB/T10907-2021、IEC61400-1 2025修订及2026勘误、DNV-RP0585 2026更新官方登记核实，完整授权条款未核。嘉鱼实际工址和场地类别未定，II类仅参考假设。决定7组真实双水平不同事件优先、三水准21组、2组独立脉冲敏感性；50–100组初筛，15s可靠周期初选、dt≤0.01s优先，RotD50共同尺度、保留RotD100及1/2/5%谱，最终需长周期目标及原始波元数据准入。列7候选台站与2脉冲台站据工程力学2021表2，非最终目标匹配结果。NVL IT-2012-0008保留调试基准，CI.CLC低频基线未过、IT-2012-0009高通0.08Hz不优先。源级归档及规范核查完成，原波扩充/目标谱/正式7组HOLD，不改INP、不运行Abaqus、不合并PR#42。
