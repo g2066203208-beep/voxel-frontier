@@ -3,6 +3,16 @@
   "latest": "REV11",
   "versions": [
     {
+      "version": "REV16_EQ_FLEX_RNA",
+      "file": "HE_REV16_EQ_FLEX_RNA.inp",
+      "date": "2026-11-24",
+      "size": 23447305,
+      "sha256": "f87528658941289b1bf5a86f2b295123ff569cfd62be6057f6737c8d1e84f1e1",
+      "base": "REV15_EQ_RNA_LUMPED",
+      "patch": "REV16_EQ_FLEX_RNA/patch.json",
+      "state": "三片柔性RNA，GitHub原字节重建及静态检查PASS（run 45344668964）；Abaqus原生未验"
+    },
+    {
       "version": "REV15_EQ_RNA_LUMPED",
       "file": "HE_REV15_EQ_RNA_LUMPED.inp",
       "date": "2026-11-24",
