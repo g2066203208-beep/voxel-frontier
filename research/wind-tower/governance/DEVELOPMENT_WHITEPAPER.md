@@ -1,3 +1,9 @@
+### 2026-11-24｜v0.32.168 PATCH — REV16 柔性RNA输入候选与整塔哈希锁定重建
+
+按用户要求停止扩展创新理论，转为INP交付。SOURCE=REV15 SHA256 ab66bc21c4ba9d642c60dd217f7219c01111a0695c9d2f14f9e11132cbaf83d7、23300318字节；HAWC2 v9冻结结构表 blob eae9b1e338b72323662efe772553efa39ffce753、HTC blob c1fab5676e8ff9432696daf04b50f798f5b00abb。实际生成三片柔性叶片：各51结构站、27 c2几何站插值，150 B31、155 MASS、155 ROTARYI、150 BEAM MPC、8刚体tie节点；三叶片根部、轮毂及机舱连接既有塔顶RP，保留原塔顶耦合（物理塔顶158m、历史RP160m）。质量676727.2338445095kg（每片41722.41128150313kg、轮毂105520kg、机舱446040kg），质心(0,160.789070924,-0.940250758)m；Jcg六分量(100131417.6275,100571556.8664,156447361.5176,0,0,-5144294.6553) kg·m²。源HTC机舱三轴惯量，轮毂仅源轴向惯量，未捏造横向惯量；名义0度固定桨距/固定叶轮，非运行气弹。c2采用弧长线性插值非原HAWC2样条；B31刚度与偏置点质量分离，无重复梁密度；质心惯量主轴近似，最小中心惯量线密度0.0810399181>0，未以max掩盖负值。沿用RNA alpha=0.0145230339976，无beta；待原生验证。几何/参数正值/节点编号、150梁定向检查已执行PASS。官方 [HAWC2结构表](https://hawc2.pages.windenergy.dtu.dk/documentation/hawc2-manual/08-structural_input.html)、[Abaqus BEAM GENERAL SECTION](https://docs.software.vt.edu/abaqusv2025/English/SIMACAEKEYRefMap/simakey-r-beamgeneralsection.htm)、[GRAV](https://docs.software.vt.edu/abaqusv2025/English/SIMACAEPRCRefMap/simaprc-c-loaddistributed.htm)。
+
+交付：main commit d2e05cfc1b1b037565ef723192a571bd7a1351af 独立RNA_INP；90db85c2cf5f33f43ca61eafed8d9195f48cf46d 完整重建脚本（四块精确替换，检查母本SHA、全部分析步字节一致及非RNA关键字计数）；33900b0915ab8730101e653e0e120b6c211f0520 新建整塔重建Actions，仅Python不跑Abaqus。当前接口无法取回REV09全部大块二进制，Drive检索无结果，整塔原字节重建/Actions产物尚未核验，不能宣称完整REV16已生成或求解通过。脚本可使用本地REV15直接生成，或从完整归档重建。独立RNA先Data Check、30阶模态，再全塔重力/PT/模态/双水平地震；五步保持不变为脚本验收条件而非已验证结果。原生NOT_RUN，PR#42不合并。
+
 ### 2026-11-24｜v0.32.167 PATCH — T048 接缝消压裕度与RNA模型选择的数学判据
 
 - REF=新增核查干缝组合荷载实验、开缝承载及误差估计、目标导向降阶：DOI 10.1002/suco.202300873、10.1002/suco.202400194、10.1002/tal.70169；既有CB误差控制、HCB摩擦接触降阶、非线性DWR均非本研究原创。公开出版页/摘要/部分全文，非系统查新；未新增原PDF原图。
