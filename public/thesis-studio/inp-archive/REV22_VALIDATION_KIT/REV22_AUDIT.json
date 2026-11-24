@@ -1,0 +1,30 @@
+{
+  "version": "REV22_VALIDATION_KIT",
+  "native": "NOT_RUN",
+  "source21": "f389e927a4b42f0c26bf22f1f9ef24202255b8dd03a8d0e7585edfae83a6af91",
+  "source20": "58f8afead62781ea80f3d01fc81055e97fb6ab5e85b04ce53d3ae9c65951e83f",
+  "outputs": {
+    "HE_REV22_FULL_ASSEMBLY_PRECHECK.inp": "1c5d011d022a8955a40bd872844a1d7e702839487b8c8327143b58eaa0bb8f32",
+    "HE_REV22_FULL_ASSEMBLY_EQ005.inp": "e84851887735305c6387ca38a972bebd97ba9cdff7baa7735c0ed89cecf925b5",
+    "HE_REV22_ROM10_NATIVE_PRECHECK.inp": "9e51200ecc1f5f7daf227c0a0694382e5cbaa90a7acb9330135e941fb4c18823",
+    "HE_REV22_ROM10_NATIVE_EQ005.inp": "11c999e380b84836c19c2696d3bc704ed327a962cd45f40451b9c263e498538d"
+  },
+  "matrix_recheck": {
+    "fixed_port_modes": 51,
+    "min_Hz": 0.6152482832215255,
+    "max_Hz": 39.509971342793946,
+    "max_frequency_diff_Hz": 1.4988010832439613e-13,
+    "relative_C_minus_alpha_M": 0,
+    "translation_mass_kg": 676727.2338445095
+  },
+  "local_bundle": {
+    "bytes": 29795243,
+    "members": 21,
+    "sha256": "b4c3cc79b57d147a04776f863fe5b0f195c603756e33f79f6cfbe3bc0e24cfc2",
+    "crc": "PASS",
+    "hashes": "PASS",
+    "tamper_rejections": 2,
+    "published_binary": false
+  },
+  "scope": "local exact-source build and independent expected matrix eigenanalysis; GitHub builder is equivalent implementation not yet native/remote executed; no physical change"
+}
