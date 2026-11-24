@@ -1,0 +1,225 @@
+{
+  "version": "0.32.192",
+  "date": "2026-11-24",
+  "scope": "第二套文献候选波；V7冻结",
+  "new_waveform_records_read": 4,
+  "groups_with_numeric_access": 6,
+  "official_archived_groups": 2,
+  "public_republication": "HOLD: external original files retained at pinned source, no local/public mirror until original data rights cleared; repository code license is not necessarily original data license",
+  "records": [
+    {
+      "id": "E01",
+      "rsn": 1310,
+      "status": "COMPLETE_PUBLIC_RESEARCH_NUMERIC_PAIR_PGA_MATCH",
+      "npts": 33750,
+      "dt_s": 0.004,
+      "pga_g": [
+        0.0639838,
+        0.0731485
+      ],
+      "files": [
+        {
+          "component": "N",
+          "url": "https://github.com/YouTian-Lab/Paper-IMTongjiBldLoss/blob/87735e2927038e0ccccf8051d842cf70fd6a6aee/Data/EQ%20Records/Chi-Chi19990920/RSN1310_CHICHI_ILA004-N.txt",
+          "blob": "79062a7b5a753deb2eefbc36f1ce885b0bbb167c"
+        },
+        {
+          "component": "W",
+          "url": "https://github.com/YouTian-Lab/Paper-IMTongjiBldLoss/blob/87735e2927038e0ccccf8051d842cf70fd6a6aee/Data/EQ%20Records/Chi-Chi19990920/RSN1310_CHICHI_ILA004-W.txt",
+          "blob": "ddde08113a61961d43b91581aea4b67e9c7e5b03"
+        }
+      ],
+      "time_step_max_error_s": 1.91e-14,
+      "metadata": "https://github.com/YouTian-Lab/Paper-IMTongjiBldLoss/blob/87735e2927038e0ccccf8051d842cf70fd6a6aee/Data/EQ%20Records/Chi-Chi19990920/MetaData.txt",
+      "alternate": {
+        "url": "https://github.com/OpenSees/OpenSees/blob/1290bd61eecbf235bb7481cca0878721ee128279/Workshops/SimWorkshop/SmallMP/GM/ILA004-N.AT2",
+        "blob": "ae31cf79de7b4ae22cf4cea969680fd2607d0d3b",
+        "npts": 33750,
+        "dt_s": 0.004,
+        "pga_g": 0.06600218,
+        "status": "different processing; not selected"
+      },
+      "paper_pga_g": [
+        0.064,
+        0.073
+      ]
+    },
+    {
+      "id": "E02",
+      "status": "EXISTING_GEONET_OFFICIAL"
+    },
+    {
+      "id": "E03",
+      "rsn": 1176,
+      "status": "COMPLETE_PUBLIC_AT2_PAIR_HEADER_AND_PGA_MATCH",
+      "npts": 7000,
+      "dt_s": 0.005,
+      "pga_g": [
+        0.2267538,
+        0.3218049
+      ],
+      "files": [
+        {
+          "component": "060",
+          "url": "https://github.com/ArtetaResearchGroup/RC-Fiap/blob/f6b1593ddd95c4b19079d8ab90a5a5c7f207ceeb/CSS_Gmotions/Hazard_Level_1/gmotions/RSN1176_KOCAELI_YPT060.AT2",
+          "blob": "491c9b7d747eb735a93bba6e74c174f8a63972a2"
+        },
+        {
+          "component": "150",
+          "url": "https://github.com/ArtetaResearchGroup/RC-Fiap/blob/f6b1593ddd95c4b19079d8ab90a5a5c7f207ceeb/CSS_Gmotions/Hazard_Level_1/gmotions/RSN1176_KOCAELI_YPT150.AT2",
+          "blob": "5fb8ada336f63e79d36d2e53c7d93f1bf5ecc4c9"
+        }
+      ],
+      "paper_pga_g": 0.322,
+      "header": "PEER NGA STRONG MOTION DATABASE RECORD; KOCAELI TURKEY, 08/17/1999, Yarimca; ACCELERATION TIME HISTORY IN UNITS OF G"
+    },
+    {
+      "id": "E04",
+      "status": "METADATA_ONLY",
+      "source": "https://www.strongmotioncenter.org/vdc/scripts/stnpage.plx?stations=4560",
+      "filter_90_Hz": [
+        0.07,
+        40
+      ],
+      "pga_cm_s2": 57.28,
+      "blocker": "CESMD dataset needs registered email; local runtime external DNS unavailable"
+    },
+    {
+      "id": "E05",
+      "status": "EXISTING_GEONET_OFFICIAL"
+    },
+    {
+      "id": "E06",
+      "rsn": 4205,
+      "status": "COMPLETE_PUBLIC_SCALED_PAIR_ORIGINAL_HOLD",
+      "npts": 16769,
+      "dt_s": 0.01,
+      "duration_s": 167.68,
+      "source_paper": "10.1016/j.soildyn.2022.107253",
+      "versions": [
+        {
+          "sf_rounded": 0.778,
+          "pga_values": [
+            0.051699,
+            0.06265
+          ],
+          "files": [
+            {
+              "component": "NS",
+              "url": "https://github.com/gerardjoreilly/Infilled-RC-Building-Database/blob/266229a864ab330a013a4b91ef122fd91df13162/analysis/gmRecords/Milano/AvgSa/0.5s/72/RSN4205_NIIGATA_NIG015NS_SF_0.778.txt",
+              "blob": "0f3c1277f001a830149ffea5e592eeec8e105939"
+            },
+            {
+              "component": "EW",
+              "url": "https://github.com/gerardjoreilly/Infilled-RC-Building-Database/blob/266229a864ab330a013a4b91ef122fd91df13162/analysis/gmRecords/Milano/AvgSa/0.5s/72/RSN4205_NIIGATA_NIG015EW_SF_0.778.txt",
+              "blob": "fe3d4b87829dd5174ab0e183352ad7175079590e"
+            }
+          ]
+        },
+        {
+          "sf_rounded": 0.51,
+          "pga_values": [
+            0.033933,
+            0.041121
+          ],
+          "files": [
+            {
+              "component": "NS",
+              "url": "https://github.com/gerardjoreilly/Infilled-RC-Building-Database/blob/266229a864ab330a013a4b91ef122fd91df13162/analysis/gmRecords/Napoli/AvgSa/0.5s/22/RSN4205_NIIGATA_NIG015NS_SF_0.510.txt",
+              "blob": "2095beebf08e685f97f6806027921533f11296b9"
+            },
+            {
+              "component": "EW",
+              "url": "https://github.com/gerardjoreilly/Infilled-RC-Building-Database/blob/266229a864ab330a013a4b91ef122fd91df13162/analysis/gmRecords/Napoli/AvgSa/0.5s/22/RSN4205_NIIGATA_NIG015EW_SF_0.510.txt",
+              "blob": "d8535186753b362126e0441d7a318d24383a9da1"
+            }
+          ]
+        }
+      ],
+      "cross_version_fit": {
+        "ratio": [
+          0.6563546562129607,
+          0.6563546061538664
+        ],
+        "nominal": 0.6555269922879178,
+        "relative_rms": [
+          0.00002170064612953302,
+          0.00002134163621801771
+        ],
+        "correlation": [
+          0.9999999997645512,
+          0.9999999997722788
+        ]
+      }
+    },
+    {
+      "id": "E07",
+      "rsn": 880,
+      "status": "COMPLETE_PUBLIC_SCALED_PAIR_ORIGINAL_HOLD",
+      "npts": 19963,
+      "dt_s": 0.005,
+      "duration_s": 99.81,
+      "source_paper": "10.1016/j.soildyn.2022.107253",
+      "versions": [
+        {
+          "sf_rounded": 0.892,
+          "pga_values": [
+            0.11259,
+            0.11737
+          ],
+          "files": [
+            {
+              "component": "000",
+              "url": "https://github.com/gerardjoreilly/Infilled-RC-Building-Database/blob/266229a864ab330a013a4b91ef122fd91df13162/analysis/gmRecords/L%27Aquila/SaT/0.5s/72/RSN880_LANDERS_MCF000_SF_0.892.txt",
+              "blob": "80641e03af3da9618eed95965407fdc9a5e86594"
+            },
+            {
+              "component": "090",
+              "url": "https://github.com/gerardjoreilly/Infilled-RC-Building-Database/blob/266229a864ab330a013a4b91ef122fd91df13162/analysis/gmRecords/L%27Aquila/SaT/0.5s/72/RSN880_LANDERS_MCF090_SF_0.892.txt",
+              "blob": "a7ef57cf3a0324f0191886fa7ccc509b95d955c6"
+            }
+          ]
+        },
+        {
+          "sf_rounded": 0.258,
+          "pga_values": [
+            0.032505,
+            0.033883
+          ],
+          "files": [
+            {
+              "component": "000",
+              "url": "https://github.com/gerardjoreilly/Infilled-RC-Building-Database/blob/266229a864ab330a013a4b91ef122fd91df13162/analysis/gmRecords/Milano/AvgSa/0.5s/42/RSN880_LANDERS_MCF000_SF_0.258.txt",
+              "blob": "052c44125db717723670ac506d2058518e5afedb"
+            },
+            {
+              "component": "090",
+              "url": "https://github.com/gerardjoreilly/Infilled-RC-Building-Database/blob/266229a864ab330a013a4b91ef122fd91df13162/analysis/gmRecords/Milano/AvgSa/0.5s/42/RSN880_LANDERS_MCF090_SF_0.258.txt",
+              "blob": "13d86aa470c75474459b795515629882b0d7d09d"
+            }
+          ]
+        }
+      ],
+      "cross_version_fit": {
+        "ratio": [
+          0.2886919799744674,
+          0.28869172372902097
+        ],
+        "nominal": 0.289237668161435,
+        "relative_rms": [
+          0.00001916220544623591,
+          0.00001776605379817665
+        ],
+        "correlation": [
+          0.9999999998163946,
+          0.9999999998421868
+        ]
+      }
+    }
+  ],
+  "limits": [
+    "E01/E03 original portal version comparison not completed; E06/E07 scaled copies cannot claim exact inverse scaling; units for scaled text not independently established this round.",
+    "No public rehosting of third-party waveform bytes; links to pinned source files, actual data read and numerical checks completed.",
+    "E04 no waveform; site spectrum and Abaqus remain HOLD."
+  ]
+}
