@@ -1,0 +1,72 @@
+{
+  "version": "0.32.193",
+  "date": "2026-11-24",
+  "scope": "second literature candidate set only",
+  "backup": "V7 frozen",
+  "counts": {
+    "groups_with_numeric_series": 6,
+    "groups_official_geoNet_archived": 2,
+    "new_verified_waveform_groups": 0
+  },
+  "E04": {
+    "RSN": 5835,
+    "event": "2010 El Mayor-Cucapah",
+    "event_id": "ci14607652",
+    "station": "CE.00022 Winterhaven Sheriff Substation",
+    "Mw": 7.2,
+    "Rrup_km": 73.31,
+    "Vs30_m_s": 229.92,
+    "target_component_deg": 90,
+    "PGA_cm_s2": {
+      "90": 57.28,
+      "360": 64.47,
+      "UP": -31.21
+    },
+    "PGV_90_cm_s": 6.26,
+    "source": "https://www.strongmotioncenter.org/vdc/scripts/stnpage.plx?stations=4560",
+    "stationxml": {
+      "bytes": 8705,
+      "sha256": "0f514ea9e34ba03c8ad0d2ac7b8187823608c0292634b004860068b5237fd0a9",
+      "run": 45394714938,
+      "artifact": 14920127360
+    },
+    "continuous_status": "HTTP 204, no waveform",
+    "cesmd_metadata": "HTTP 404; registered data download not completed",
+    "triggered": {
+      "run": 45394895912,
+      "http": 200,
+      "bytes_read": 100000001,
+      "limit_bytes": 100000000,
+      "partial_sha256": "4e2712aba01bad69be954888c9bad5e0d0d2714f69e964f04a7ccff4e52e6d98",
+      "status": "SIZE_LIMIT_NOT_ACQUIRED"
+    },
+    "status": "HOLD"
+  },
+  "E07": {
+    "RSN": 880,
+    "source_report": "PEER 2011/03, Table A.7, Oakland 50% in 50 years, index 24",
+    "source_page": "https://peer.berkeley.edu/research/transportation-systems/ground-motion-studies-transporation-systems",
+    "zip": {
+      "url": "https://apps.peer.berkeley.edu/transportation/wp-content/uploads/2010/09/Oak-50-50-gms-July-14.zip",
+      "bytes": 3369435,
+      "sha256": "89537d51f547084869924f65c1999d91a7bc4594928b870ff7bcf6279e88c264",
+      "members": 120,
+      "status": "ARCHIVE_READ; filenames indexed, first station-name matcher missed target"
+    },
+    "xlsx": {
+      "url": "https://peer.berkeley.edu/sites/default/files/oak-50-50-gms-july-14.xlsx",
+      "bytes": 272118,
+      "sha256": "63f00fa86a23b2d8c88966592a38d919d6e8fccd64fab4d2d4ff75559e8d2422"
+    },
+    "run": 45394895912,
+    "artifact": 14920018328,
+    "status": "Prior scaled sensor-axis data accessible; PEER indexed FN FP UP variant not yet validated; exact unscaled sensor-axis original HOLD"
+  },
+  "followup": {
+    "commit": "7ab3077dc637fff631cb20fe7bbbf91b487b6277",
+    "workflow": ".github/workflows/seismic-e04-e07-indexed-extraction-20261124.yml",
+    "status": "created; no result claimed in this receipt"
+  },
+  "admission": "HOLD: site spectrum, exact processing, permissions, Abaqus",
+  "figures_added": 0
+}
