@@ -3,6 +3,16 @@
   "latest": "REV11",
   "versions": [
     {
+      "version": "REV12_CYCLIC_SENS",
+      "file": "HE_REV12_CYCLIC_SENS.inp",
+      "date": "2026-11-24",
+      "size": 34227427,
+      "sha256": "b2ad06256505ca556b2db7a19a5270be9481e8ecab0967bd23206255fdb7c686",
+      "base": "REV11",
+      "patch": "REV12_CYCLIC_SENS/patch.json",
+      "state": "独立钢材循环混合强化敏感性候选，非正式替换；原生求解/材料标定未验"
+    },
+    {
       "version": "REV11",
       "file": "HE_REV11_HE_CHECK.inp",
       "date": "2026-11-24",

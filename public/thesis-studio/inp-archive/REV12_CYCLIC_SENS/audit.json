@@ -1,0 +1,1320 @@
+{
+  "sourceSha256": "fa27040f66b1c6d85fe1c4d863fb62d1423960972a1cdf08fc9dbb0871b1e5fd",
+  "targetSha256": "b2ad06256505ca556b2db7a19a5270be9481e8ecab0967bd23206255fdb7c686",
+  "targetSize": 34227427,
+  "editCount": 3,
+  "parameters_MPa": {
+    "HRB400": {
+      "E": 200000.0,
+      "fy": 400.8,
+      "Q": 21.0,
+      "b": 1.2,
+      "C": [
+        7993.0,
+        6773.0,
+        2854.0,
+        1450.0
+      ],
+      "g": [
+        175.0,
+        116.0,
+        34.0,
+        29.0
+      ]
+    },
+    "Q355_TOWER_T16_40": {
+      "E": 206000.0,
+      "fy": 345.0,
+      "Q": 21.0,
+      "b": 10.0,
+      "C": [
+        1800.0,
+        1800.0,
+        1800.0,
+        1800.0
+      ],
+      "g": [
+        245.0,
+        155.0,
+        50.0,
+        30.0
+      ]
+    }
+  },
+  "checks": [
+    "103/103 parts",
+    "all section assignments unchanged",
+    "all steps unchanged",
+    "exact inverse reconstruction",
+    "density unchanged",
+    "single-axis yield consistency and 200/400 step comparison"
+  ],
+  "native_solver": "NOT_RUN",
+  "scope": "Independent uniaxial sensitivity only, source parameters not tower-specific; HRB400 nominal initial true yield retained, HPB300 and flange unchanged; no damage or fracture",
+  "results": [
+    {
+      "material": "HRB400",
+      "amplitude": 0.001,
+      "kind": "base",
+      "peak_step_difference_MPa": 0.0,
+      "rows": [
+        {
+          "cycle": 1,
+          "tension_MPa": 199.90006661670662,
+          "compression_MPa": -200.1000667167067,
+          "accum_plastic": 0.0,
+          "path_work_MJ_m3": 0.10010009175007617
+        },
+        {
+          "cycle": 2,
+          "tension_MPa": 199.90006661670662,
+          "compression_MPa": -200.1000667167067,
+          "accum_plastic": 0.0,
+          "path_work_MJ_m3": -5.898059818321144e-17
+        },
+        {
+          "cycle": 3,
+          "tension_MPa": 199.90006661670662,
+          "compression_MPa": -200.1000667167067,
+          "accum_plastic": 0.0,
+          "path_work_MJ_m3": -5.898059818321144e-17
+        },
+        {
+          "cycle": 4,
+          "tension_MPa": 199.90006661670662,
+          "compression_MPa": -200.1000667167067,
+          "accum_plastic": 0.0,
+          "path_work_MJ_m3": -5.898059818321144e-17
+        },
+        {
+          "cycle": 5,
+          "tension_MPa": 199.90006661670662,
+          "compression_MPa": -200.1000667167067,
+          "accum_plastic": 0.0,
+          "path_work_MJ_m3": -5.898059818321144e-17
+        },
+        {
+          "cycle": 6,
+          "tension_MPa": 199.90006661670662,
+          "compression_MPa": -200.1000667167067,
+          "accum_plastic": 0.0,
+          "path_work_MJ_m3": -5.898059818321144e-17
+        },
+        {
+          "cycle": 7,
+          "tension_MPa": 199.90006661670662,
+          "compression_MPa": -200.1000667167067,
+          "accum_plastic": 0.0,
+          "path_work_MJ_m3": -5.898059818321144e-17
+        },
+        {
+          "cycle": 8,
+          "tension_MPa": 199.90006661670662,
+          "compression_MPa": -200.1000667167067,
+          "accum_plastic": 0.0,
+          "path_work_MJ_m3": -5.898059818321144e-17
+        },
+        {
+          "cycle": 9,
+          "tension_MPa": 199.90006661670662,
+          "compression_MPa": -200.1000667167067,
+          "accum_plastic": 0.0,
+          "path_work_MJ_m3": -5.898059818321144e-17
+        },
+        {
+          "cycle": 10,
+          "tension_MPa": 199.90006661670662,
+          "compression_MPa": -200.1000667167067,
+          "accum_plastic": 0.0,
+          "path_work_MJ_m3": -5.898059818321144e-17
+        }
+      ],
+      "max_yield_residual_MPa": 0.0
+    },
+    {
+      "material": "HRB400",
+      "amplitude": 0.001,
+      "kind": "combined",
+      "peak_step_difference_MPa": 0.0,
+      "rows": [
+        {
+          "cycle": 1,
+          "tension_MPa": 199.90006661670662,
+          "compression_MPa": -200.1000667167067,
+          "accum_plastic": 0.0,
+          "path_work_MJ_m3": 0.10010009175007617
+        },
+        {
+          "cycle": 2,
+          "tension_MPa": 199.90006661670662,
+          "compression_MPa": -200.1000667167067,
+          "accum_plastic": 0.0,
+          "path_work_MJ_m3": -5.898059818321144e-17
+        },
+        {
+          "cycle": 3,
+          "tension_MPa": 199.90006661670662,
+          "compression_MPa": -200.1000667167067,
+          "accum_plastic": 0.0,
+          "path_work_MJ_m3": -5.898059818321144e-17
+        },
+        {
+          "cycle": 4,
+          "tension_MPa": 199.90006661670662,
+          "compression_MPa": -200.1000667167067,
+          "accum_plastic": 0.0,
+          "path_work_MJ_m3": -5.898059818321144e-17
+        },
+        {
+          "cycle": 5,
+          "tension_MPa": 199.90006661670662,
+          "compression_MPa": -200.1000667167067,
+          "accum_plastic": 0.0,
+          "path_work_MJ_m3": -5.898059818321144e-17
+        },
+        {
+          "cycle": 6,
+          "tension_MPa": 199.90006661670662,
+          "compression_MPa": -200.1000667167067,
+          "accum_plastic": 0.0,
+          "path_work_MJ_m3": -5.898059818321144e-17
+        },
+        {
+          "cycle": 7,
+          "tension_MPa": 199.90006661670662,
+          "compression_MPa": -200.1000667167067,
+          "accum_plastic": 0.0,
+          "path_work_MJ_m3": -5.898059818321144e-17
+        },
+        {
+          "cycle": 8,
+          "tension_MPa": 199.90006661670662,
+          "compression_MPa": -200.1000667167067,
+          "accum_plastic": 0.0,
+          "path_work_MJ_m3": -5.898059818321144e-17
+        },
+        {
+          "cycle": 9,
+          "tension_MPa": 199.90006661670662,
+          "compression_MPa": -200.1000667167067,
+          "accum_plastic": 0.0,
+          "path_work_MJ_m3": -5.898059818321144e-17
+        },
+        {
+          "cycle": 10,
+          "tension_MPa": 199.90006661670662,
+          "compression_MPa": -200.1000667167067,
+          "accum_plastic": 0.0,
+          "path_work_MJ_m3": -5.898059818321144e-17
+        }
+      ],
+      "max_yield_residual_MPa": 0.0
+    },
+    {
+      "material": "HRB400",
+      "amplitude": 0.005,
+      "kind": "base",
+      "peak_step_difference_MPa": 1.233502189279534e-11,
+      "rows": [
+        {
+          "cycle": 1,
+          "tension_MPa": 402.0014768843284,
+          "compression_MPa": -404.41228155290753,
+          "accum_plastic": 0.00894554866901461,
+          "path_work_MJ_m3": 4.010321480121496
+        },
+        {
+          "cycle": 2,
+          "tension_MPa": 407.64814097219005,
+          "compression_MPa": -417.4649735880688,
+          "accum_plastic": 0.020759847652754553,
+          "path_work_MJ_m3": 4.859854987505683
+        },
+        {
+          "cycle": 3,
+          "tension_MPa": 427.23169256747315,
+          "compression_MPa": -436.9527888881226,
+          "accum_plastic": 0.03221560858386559,
+          "path_work_MJ_m3": 4.934993120173025
+        },
+        {
+          "cycle": 4,
+          "tension_MPa": 446.6979877929239,
+          "compression_MPa": -456.34519265753005,
+          "accum_plastic": 0.04328230546737481,
+          "path_work_MJ_m3": 4.98575584430959
+        },
+        {
+          "cycle": 5,
+          "tension_MPa": 466.0139911063411,
+          "compression_MPa": -475.6043321038796,
+          "accum_plastic": 0.053962584601671096,
+          "path_work_MJ_m3": 5.02112531480089
+        },
+        {
+          "cycle": 6,
+          "tension_MPa": 485.1472909092391,
+          "compression_MPa": -494.65954690892175,
+          "accum_plastic": 0.0642599589666814,
+          "path_work_MJ_m3": 5.041275359750463
+        },
+        {
+          "cycle": 7,
+          "tension_MPa": 504.066855330125,
+          "compression_MPa": -513.4800486122424,
+          "accum_plastic": 0.07417875910494102,
+          "path_work_MJ_m3": 5.046629897687057
+        },
+        {
+          "cycle": 8,
+          "tension_MPa": 522.7461143871891,
+          "compression_MPa": -532.0358762201482,
+          "accum_plastic": 0.08372388500607396,
+          "path_work_MJ_m3": 5.0376821832966865
+        },
+        {
+          "cycle": 9,
+          "tension_MPa": 541.1686749567945,
+          "compression_MPa": -550.2978190683889,
+          "accum_plastic": 0.0929006964492301,
+          "path_work_MJ_m3": 5.015038263589661
+        },
+        {
+          "cycle": 10,
+          "tension_MPa": 559.2773291968138,
+          "compression_MPa": -568.238353195641,
+          "accum_plastic": 0.10171540896510851,
+          "path_work_MJ_m3": 4.979489021913711
+        }
+      ],
+      "max_yield_residual_MPa": 8.071765478234738e-12
+    },
+    {
+      "material": "HRB400",
+      "amplitude": 0.005,
+      "kind": "combined",
+      "peak_step_difference_MPa": 9.038103598868474e-12,
+      "rows": [
+        {
+          "cycle": 1,
+          "tension_MPa": 445.7129111646093,
+          "compression_MPa": -453.85083849529826,
+          "accum_plastic": 0.00826124154149984,
+          "path_work_MJ_m3": 3.943178679598257
+        },
+        {
+          "cycle": 2,
+          "tension_MPa": 449.8312793873179,
+          "compression_MPa": -452.26637021575533,
+          "accum_plastic": 0.019232509373238105,
+          "path_work_MJ_m3": 4.452391621484125
+        },
+        {
+          "cycle": 3,
+          "tension_MPa": 450.99734571574965,
+          "compression_MPa": -452.0298936781274,
+          "accum_plastic": 0.030201221265777917,
+          "path_work_MJ_m3": 4.460823915378537
+        },
+        {
+          "cycle": 4,
+          "tension_MPa": 451.5161216520936,
+          "compression_MPa": -452.1089318174067,
+          "accum_plastic": 0.04116553259094606,
+          "path_work_MJ_m3": 4.463448452811987
+        },
+        {
+          "cycle": 5,
+          "tension_MPa": 451.86598476832904,
+          "compression_MPa": -452.2753475213313,
+          "accum_plastic": 0.052125118015735786,
+          "path_work_MJ_m3": 4.464788780910077
+        },
+        {
+          "cycle": 6,
+          "tension_MPa": 452.1598313654525,
+          "compression_MPa": -452.4712187887257,
+          "accum_plastic": 0.06307995353969763,
+          "path_work_MJ_m3": 4.465797248810446
+        },
+        {
+          "cycle": 7,
+          "tension_MPa": 452.428815435798,
+          "compression_MPa": -452.6790661330533,
+          "accum_plastic": 0.0740300806298974,
+          "path_work_MJ_m3": 4.466698800145375
+        },
+        {
+          "cycle": 8,
+          "tension_MPa": 452.6834135233425,
+          "compression_MPa": -452.89235382913404,
+          "accum_plastic": 0.08497555606401964,
+          "path_work_MJ_m3": 4.46755392266286
+        },
+        {
+          "cycle": 9,
+          "tension_MPa": 452.92807681613243,
+          "compression_MPa": -453.10801176014144,
+          "accum_plastic": 0.09591644013707866,
+          "path_work_MJ_m3": 4.468381659828979
+        },
+        {
+          "cycle": 10,
+          "tension_MPa": 453.1651589365266,
+          "compression_MPa": -453.32430815256544,
+          "accum_plastic": 0.10685279361731662,
+          "path_work_MJ_m3": 4.469189352629188
+        }
+      ],
+      "max_yield_residual_MPa": 6.59383658785373e-12
+    },
+    {
+      "material": "HRB400",
+      "amplitude": 0.01,
+      "kind": "base",
+      "peak_step_difference_MPa": 1.0459189070388675e-11,
+      "rows": [
+        {
+          "cycle": 1,
+          "tension_MPa": 403.999999999995,
+          "compression_MPa": -422.5447237054623,
+          "accum_plastic": 0.023798273941310368,
+          "path_work_MJ_m3": 10.156868739651948
+        },
+        {
+          "cycle": 2,
+          "tension_MPa": 449.57420560754537,
+          "compression_MPa": -477.15211290533887,
+          "accum_plastic": 0.05480538111551994,
+          "path_work_MJ_m3": 14.060329997853362
+        },
+        {
+          "cycle": 3,
+          "tension_MPa": 505.2462252327148,
+          "compression_MPa": -533.9520336330125,
+          "accum_plastic": 0.08469873154384007,
+          "path_work_MJ_m3": 15.244855541322508
+        },
+        {
+          "cycle": 4,
+          "tension_MPa": 563.1004861700438,
+          "compression_MPa": -592.6765866780181,
+          "accum_plastic": 0.11343591699392352,
+          "path_work_MJ_m3": 16.343055532140667
+        },
+        {
+          "cycle": 5,
+          "tension_MPa": 612.3059999999973,
+          "compression_MPa": -612.3060000000024,
+          "accum_plastic": 0.1412892774738727,
+          "path_work_MJ_m3": 17.023470709099417
+        },
+        {
+          "cycle": 6,
+          "tension_MPa": 612.3059999999975,
+          "compression_MPa": -612.3060000000024,
+          "accum_plastic": 0.16904449088721207,
+          "path_work_MJ_m3": 16.994331041270662
+        },
+        {
+          "cycle": 7,
+          "tension_MPa": 612.3059999999975,
+          "compression_MPa": -612.3060000000024,
+          "accum_plastic": 0.19679970430055144,
+          "path_work_MJ_m3": 16.994331041270662
+        },
+        {
+          "cycle": 8,
+          "tension_MPa": 612.3059999999975,
+          "compression_MPa": -612.3060000000024,
+          "accum_plastic": 0.2245549177138908,
+          "path_work_MJ_m3": 16.994331041270662
+        },
+        {
+          "cycle": 9,
+          "tension_MPa": 612.3059999999975,
+          "compression_MPa": -612.3060000000024,
+          "accum_plastic": 0.2523101311272301,
+          "path_work_MJ_m3": 16.994331041270662
+        },
+        {
+          "cycle": 10,
+          "tension_MPa": 612.3059999999975,
+          "compression_MPa": -612.3060000000024,
+          "accum_plastic": 0.2800653445405691,
+          "path_work_MJ_m3": 16.994331041270662
+        }
+      ],
+      "max_yield_residual_MPa": 8.981260180007666e-12
+    },
+    {
+      "material": "HRB400",
+      "amplitude": 0.01,
+      "kind": "combined",
+      "peak_step_difference_MPa": 6.707523425575346e-12,
+      "rows": [
+        {
+          "cycle": 1,
+          "tension_MPa": 496.6848161112002,
+          "compression_MPa": -516.6755719381437,
+          "accum_plastic": 0.022400771539034893,
+          "path_work_MJ_m3": 10.611923871583617
+        },
+        {
+          "cycle": 2,
+          "tension_MPa": 511.650060461437,
+          "compression_MPa": -514.3944752988763,
+          "accum_plastic": 0.05213025411157448,
+          "path_work_MJ_m3": 12.781993047171028
+        },
+        {
+          "cycle": 3,
+          "tension_MPa": 513.3742981074532,
+          "compression_MPa": -514.5223217278193,
+          "accum_plastic": 0.0818532605587056,
+          "path_work_MJ_m3": 12.820957325099128
+        },
+        {
+          "cycle": 4,
+          "tension_MPa": 514.3326371113765,
+          "compression_MPa": -514.9677141440849,
+          "accum_plastic": 0.11156381742157137,
+          "path_work_MJ_m3": 12.838429657405278
+        },
+        {
+          "cycle": 5,
+          "tension_MPa": 515.0760769206743,
+          "compression_MPa": -515.5067540815008,
+          "accum_plastic": 0.1412620177245758,
+          "path_work_MJ_m3": 12.853087311730896
+        },
+        {
+          "cycle": 6,
+          "tension_MPa": 515.7253640359323,
+          "compression_MPa": -516.0690738205949,
+          "accum_plastic": 0.17094821835804494,
+          "path_work_MJ_m3": 12.866529084825387
+        },
+        {
+          "cycle": 7,
+          "tension_MPa": 516.3251062743628,
+          "compression_MPa": -516.6281802346563,
+          "accum_plastic": 0.20062281443836438,
+          "path_work_MJ_m3": 12.879227801851801
+        },
+        {
+          "cycle": 8,
+          "tension_MPa": 516.893139338411,
+          "compression_MPa": -517.1741304249294,
+          "accum_plastic": 0.2302862049050211,
+          "path_work_MJ_m3": 12.891372267463058
+        },
+        {
+          "cycle": 9,
+          "tension_MPa": 517.4369245048156,
+          "compression_MPa": -517.7034265223762,
+          "accum_plastic": 0.2599387812885756,
+          "path_work_MJ_m3": 12.90304572646606
+        },
+        {
+          "cycle": 10,
+          "tension_MPa": 517.9598373049716,
+          "compression_MPa": -518.215090913789,
+          "accum_plastic": 0.2895809237416841,
+          "path_work_MJ_m3": 12.914290056233042
+        }
+      ],
+      "max_yield_residual_MPa": 6.934897101018578e-12
+    },
+    {
+      "material": "HRB400",
+      "amplitude": 0.022,
+      "kind": "base",
+      "peak_step_difference_MPa": 9.663381206337363e-12,
+      "rows": [
+        {
+          "cycle": 1,
+          "tension_MPa": 415.66573957031727,
+          "compression_MPa": -485.1969503826367,
+          "accum_plastic": 0.05918595036272873,
+          "path_work_MJ_m3": 26.344136967150988
+        },
+        {
+          "cycle": 2,
+          "tension_MPa": 560.5334020354874,
+          "compression_MPa": -612.3060000000055,
+          "accum_plastic": 0.13610730304812535,
+          "path_work_MJ_m3": 43.31108457673908
+        },
+        {
+          "cycle": 3,
+          "tension_MPa": 612.3059999999992,
+          "compression_MPa": -612.3060000000006,
+          "accum_plastic": 0.2118753845057888,
+          "path_work_MJ_m3": 46.391869314386994
+        },
+        {
+          "cycle": 4,
+          "tension_MPa": 612.3059999999992,
+          "compression_MPa": -612.3060000000006,
+          "accum_plastic": 0.2876434659634513,
+          "path_work_MJ_m3": 46.39186931438704
+        },
+        {
+          "cycle": 5,
+          "tension_MPa": 612.3059999999992,
+          "compression_MPa": -612.3060000000006,
+          "accum_plastic": 0.36341154742111265,
+          "path_work_MJ_m3": 46.39186931438704
+        },
+        {
+          "cycle": 6,
+          "tension_MPa": 612.3059999999992,
+          "compression_MPa": -612.3060000000006,
+          "accum_plastic": 0.439179628878774,
+          "path_work_MJ_m3": 46.39186931438704
+        },
+        {
+          "cycle": 7,
+          "tension_MPa": 612.3059999999992,
+          "compression_MPa": -612.3060000000006,
+          "accum_plastic": 0.5149477103364354,
+          "path_work_MJ_m3": 46.39186931438704
+        },
+        {
+          "cycle": 8,
+          "tension_MPa": 612.3059999999992,
+          "compression_MPa": -612.3060000000006,
+          "accum_plastic": 0.5907157917940967,
+          "path_work_MJ_m3": 46.39186931438704
+        },
+        {
+          "cycle": 9,
+          "tension_MPa": 612.3059999999992,
+          "compression_MPa": -612.3060000000006,
+          "accum_plastic": 0.6664838732517581,
+          "path_work_MJ_m3": 46.39186931438704
+        },
+        {
+          "cycle": 10,
+          "tension_MPa": 612.3059999999992,
+          "compression_MPa": -612.3060000000006,
+          "accum_plastic": 0.7422519547094194,
+          "path_work_MJ_m3": 46.39186931438704
+        }
+      ],
+      "max_yield_residual_MPa": 9.663381206337363e-12
+    },
+    {
+      "material": "HRB400",
+      "amplitude": 0.022,
+      "kind": "combined",
+      "peak_step_difference_MPa": 1.0345502232667059e-11,
+      "rows": [
+        {
+          "cycle": 1,
+          "tension_MPa": 558.2731809097776,
+          "compression_MPa": -581.6948595470259,
+          "accum_plastic": 0.05727738640351219,
+          "path_work_MJ_m3": 29.122361948235998
+        },
+        {
+          "cycle": 2,
+          "tension_MPa": 577.6987137602295,
+          "compression_MPa": -579.9715873587025,
+          "accum_plastic": 0.1337062684890461,
+          "path_work_MJ_m3": 36.807815271894285
+        },
+        {
+          "cycle": 3,
+          "tension_MPa": 580.3195481918156,
+          "compression_MPa": -581.2073292704625,
+          "accum_plastic": 0.21011137988164702,
+          "path_work_MJ_m3": 36.98091577234905
+        },
+        {
+          "cycle": 4,
+          "tension_MPa": 581.884335619702,
+          "compression_MPa": -582.5838768345748,
+          "accum_plastic": 0.2864877819525898,
+          "path_work_MJ_m3": 37.0846451627046
+        },
+        {
+          "cycle": 5,
+          "tension_MPa": 583.2354076810694,
+          "compression_MPa": -583.8628761020536,
+          "accum_plastic": 0.36283739556876154,
+          "path_work_MJ_m3": 37.17441384307831
+        },
+        {
+          "cycle": 6,
+          "tension_MPa": 584.4605004837202,
+          "compression_MPa": -585.031813189115,
+          "accum_plastic": 0.4391625185751339,
+          "path_work_MJ_m3": 37.25583578498396
+        },
+        {
+          "cycle": 7,
+          "tension_MPa": 585.5773053743379,
+          "compression_MPa": -586.0983676996515,
+          "accum_plastic": 0.5154652960746114,
+          "path_work_MJ_m3": 37.33005912129873
+        },
+        {
+          "cycle": 8,
+          "tension_MPa": 586.596030433182,
+          "compression_MPa": -587.0713728845415,
+          "accum_plastic": 0.5917476885250234,
+          "path_work_MJ_m3": 37.39776003983971
+        },
+        {
+          "cycle": 9,
+          "tension_MPa": 587.5253939306525,
+          "compression_MPa": -587.9590571375569,
+          "accum_plastic": 0.6680114838932723,
+          "path_work_MJ_m3": 37.45951865740183
+        },
+        {
+          "cycle": 10,
+          "tension_MPa": 588.3732788851438,
+          "compression_MPa": -588.7689349819002,
+          "accum_plastic": 0.7442583126014889,
+          "path_work_MJ_m3": 37.51585974136896
+        }
+      ],
+      "max_yield_residual_MPa": 7.617018127348274e-12
+    },
+    {
+      "material": "Q355_TOWER_T16_40",
+      "amplitude": 0.001,
+      "kind": "base",
+      "peak_step_difference_MPa": 0.0,
+      "rows": [
+        {
+          "cycle": 1,
+          "tension_MPa": 205.89706861520781,
+          "compression_MPa": -206.1030687182079,
+          "accum_plastic": 0.0,
+          "path_work_MJ_m3": 0.10310309450257839
+        },
+        {
+          "cycle": 2,
+          "tension_MPa": 205.89706861520781,
+          "compression_MPa": -206.1030687182079,
+          "accum_plastic": 0.0,
+          "path_work_MJ_m3": -2.7321894746634712e-17
+        },
+        {
+          "cycle": 3,
+          "tension_MPa": 205.89706861520781,
+          "compression_MPa": -206.1030687182079,
+          "accum_plastic": 0.0,
+          "path_work_MJ_m3": -2.7321894746634712e-17
+        },
+        {
+          "cycle": 4,
+          "tension_MPa": 205.89706861520781,
+          "compression_MPa": -206.1030687182079,
+          "accum_plastic": 0.0,
+          "path_work_MJ_m3": -2.7321894746634712e-17
+        },
+        {
+          "cycle": 5,
+          "tension_MPa": 205.89706861520781,
+          "compression_MPa": -206.1030687182079,
+          "accum_plastic": 0.0,
+          "path_work_MJ_m3": -2.7321894746634712e-17
+        },
+        {
+          "cycle": 6,
+          "tension_MPa": 205.89706861520781,
+          "compression_MPa": -206.1030687182079,
+          "accum_plastic": 0.0,
+          "path_work_MJ_m3": -2.7321894746634712e-17
+        },
+        {
+          "cycle": 7,
+          "tension_MPa": 205.89706861520781,
+          "compression_MPa": -206.1030687182079,
+          "accum_plastic": 0.0,
+          "path_work_MJ_m3": -2.7321894746634712e-17
+        },
+        {
+          "cycle": 8,
+          "tension_MPa": 205.89706861520781,
+          "compression_MPa": -206.1030687182079,
+          "accum_plastic": 0.0,
+          "path_work_MJ_m3": -2.7321894746634712e-17
+        },
+        {
+          "cycle": 9,
+          "tension_MPa": 205.89706861520781,
+          "compression_MPa": -206.1030687182079,
+          "accum_plastic": 0.0,
+          "path_work_MJ_m3": -2.7321894746634712e-17
+        },
+        {
+          "cycle": 10,
+          "tension_MPa": 205.89706861520781,
+          "compression_MPa": -206.1030687182079,
+          "accum_plastic": 0.0,
+          "path_work_MJ_m3": -2.7321894746634712e-17
+        }
+      ],
+      "max_yield_residual_MPa": 0.0
+    },
+    {
+      "material": "Q355_TOWER_T16_40",
+      "amplitude": 0.001,
+      "kind": "combined",
+      "peak_step_difference_MPa": 0.0,
+      "rows": [
+        {
+          "cycle": 1,
+          "tension_MPa": 205.89706861520781,
+          "compression_MPa": -206.1030687182079,
+          "accum_plastic": 0.0,
+          "path_work_MJ_m3": 0.10310309450257839
+        },
+        {
+          "cycle": 2,
+          "tension_MPa": 205.89706861520781,
+          "compression_MPa": -206.1030687182079,
+          "accum_plastic": 0.0,
+          "path_work_MJ_m3": -2.7321894746634712e-17
+        },
+        {
+          "cycle": 3,
+          "tension_MPa": 205.89706861520781,
+          "compression_MPa": -206.1030687182079,
+          "accum_plastic": 0.0,
+          "path_work_MJ_m3": -2.7321894746634712e-17
+        },
+        {
+          "cycle": 4,
+          "tension_MPa": 205.89706861520781,
+          "compression_MPa": -206.1030687182079,
+          "accum_plastic": 0.0,
+          "path_work_MJ_m3": -2.7321894746634712e-17
+        },
+        {
+          "cycle": 5,
+          "tension_MPa": 205.89706861520781,
+          "compression_MPa": -206.1030687182079,
+          "accum_plastic": 0.0,
+          "path_work_MJ_m3": -2.7321894746634712e-17
+        },
+        {
+          "cycle": 6,
+          "tension_MPa": 205.89706861520781,
+          "compression_MPa": -206.1030687182079,
+          "accum_plastic": 0.0,
+          "path_work_MJ_m3": -2.7321894746634712e-17
+        },
+        {
+          "cycle": 7,
+          "tension_MPa": 205.89706861520781,
+          "compression_MPa": -206.1030687182079,
+          "accum_plastic": 0.0,
+          "path_work_MJ_m3": -2.7321894746634712e-17
+        },
+        {
+          "cycle": 8,
+          "tension_MPa": 205.89706861520781,
+          "compression_MPa": -206.1030687182079,
+          "accum_plastic": 0.0,
+          "path_work_MJ_m3": -2.7321894746634712e-17
+        },
+        {
+          "cycle": 9,
+          "tension_MPa": 205.89706861520781,
+          "compression_MPa": -206.1030687182079,
+          "accum_plastic": 0.0,
+          "path_work_MJ_m3": -2.7321894746634712e-17
+        },
+        {
+          "cycle": 10,
+          "tension_MPa": 205.89706861520781,
+          "compression_MPa": -206.1030687182079,
+          "accum_plastic": 0.0,
+          "path_work_MJ_m3": -2.7321894746634712e-17
+        }
+      ],
+      "max_yield_residual_MPa": 0.0
+    },
+    {
+      "material": "Q355_TOWER_T16_40",
+      "amplitude": 0.005,
+      "kind": "base",
+      "peak_step_difference_MPa": 4.376943252282217e-12,
+      "rows": [
+        {
+          "cycle": 1,
+          "tension_MPa": 351.8243355127412,
+          "compression_MPa": -351.87583615649896,
+          "accum_plastic": 0.009863719470952626,
+          "path_work_MJ_m3": 3.7148582243528927
+        },
+        {
+          "cycle": 2,
+          "tension_MPa": 351.824335512741,
+          "compression_MPa": -351.87583615649896,
+          "accum_plastic": 0.023031845638476146,
+          "path_work_MJ_m3": 4.542998346826279
+        },
+        {
+          "cycle": 3,
+          "tension_MPa": 351.824335512741,
+          "compression_MPa": -351.87583615649896,
+          "accum_plastic": 0.03619997180599957,
+          "path_work_MJ_m3": 4.542998346826279
+        },
+        {
+          "cycle": 4,
+          "tension_MPa": 351.824335512741,
+          "compression_MPa": -351.87583615649896,
+          "accum_plastic": 0.049368097973522984,
+          "path_work_MJ_m3": 4.542998346826279
+        },
+        {
+          "cycle": 5,
+          "tension_MPa": 351.824335512741,
+          "compression_MPa": -351.87583615649896,
+          "accum_plastic": 0.0625362241410464,
+          "path_work_MJ_m3": 4.542998346826279
+        },
+        {
+          "cycle": 6,
+          "tension_MPa": 351.824335512741,
+          "compression_MPa": -351.87583615649896,
+          "accum_plastic": 0.07570435030856963,
+          "path_work_MJ_m3": 4.542998346826279
+        },
+        {
+          "cycle": 7,
+          "tension_MPa": 351.824335512741,
+          "compression_MPa": -351.87583615649896,
+          "accum_plastic": 0.08887247647609287,
+          "path_work_MJ_m3": 4.542998346826279
+        },
+        {
+          "cycle": 8,
+          "tension_MPa": 351.824335512741,
+          "compression_MPa": -351.87583615649896,
+          "accum_plastic": 0.1020406026436161,
+          "path_work_MJ_m3": 4.542998346826279
+        },
+        {
+          "cycle": 9,
+          "tension_MPa": 351.824335512741,
+          "compression_MPa": -351.87583615649896,
+          "accum_plastic": 0.11520872881113933,
+          "path_work_MJ_m3": 4.542998346826279
+        },
+        {
+          "cycle": 10,
+          "tension_MPa": 351.824335512741,
+          "compression_MPa": -351.87583615649896,
+          "accum_plastic": 0.12837685497866247,
+          "path_work_MJ_m3": 4.542998346826279
+        }
+      ],
+      "max_yield_residual_MPa": 5.115907697472721e-12
+    },
+    {
+      "material": "Q355_TOWER_T16_40",
+      "amplitude": 0.005,
+      "kind": "combined",
+      "peak_step_difference_MPa": 6.821210263296962e-12,
+      "rows": [
+        {
+          "cycle": 1,
+          "tension_MPa": 365.09059619287865,
+          "compression_MPa": -369.58888850707456,
+          "accum_plastic": 0.009648935132550428,
+          "path_work_MJ_m3": 3.72912738056969
+        },
+        {
+          "cycle": 2,
+          "tension_MPa": 369.19322670517727,
+          "compression_MPa": -371.191416855977,
+          "accum_plastic": 0.022468680642622953,
+          "path_work_MJ_m3": 4.496256628415552
+        },
+        {
+          "cycle": 3,
+          "tension_MPa": 371.57156603664805,
+          "compression_MPa": -372.97976621953495,
+          "accum_plastic": 0.03524887490815464,
+          "path_work_MJ_m3": 4.511478215014073
+        },
+        {
+          "cycle": 4,
+          "tension_MPa": 373.5130808852721,
+          "compression_MPa": -374.6169675935375,
+          "accum_plastic": 0.047993590627886315,
+          "path_work_MJ_m3": 4.522824442608954
+        },
+        {
+          "cycle": 5,
+          "tension_MPa": 375.1799612474264,
+          "compression_MPa": -376.0791019960464,
+          "accum_plastic": 0.060707077723827635,
+          "path_work_MJ_m3": 4.532473691995657
+        },
+        {
+          "cycle": 6,
+          "tension_MPa": 376.6275942367049,
+          "compression_MPa": -377.37633518339715,
+          "accum_plastic": 0.07339311514225229,
+          "path_work_MJ_m3": 4.5408916119474245
+        },
+        {
+          "cycle": 7,
+          "tension_MPa": 377.89092238299423,
+          "compression_MPa": -378.5239747557354,
+          "accum_plastic": 0.08605501892450088,
+          "path_work_MJ_m3": 4.548099330871852
+        },
+        {
+          "cycle": 8,
+          "tension_MPa": 378.9965901142126,
+          "compression_MPa": -379.53770636786487,
+          "accum_plastic": 0.0986956959754539,
+          "path_work_MJ_m3": 4.554351063837928
+        },
+        {
+          "cycle": 9,
+          "tension_MPa": 379.9661543538991,
+          "compression_MPa": -380.4323687676847,
+          "accum_plastic": 0.11131769573275976,
+          "path_work_MJ_m3": 4.559844905634691
+        },
+        {
+          "cycle": 10,
+          "tension_MPa": 380.81754101822656,
+          "compression_MPa": -381.22155749457704,
+          "accum_plastic": 0.1239232555655249,
+          "path_work_MJ_m3": 4.564676810893696
+        }
+      ],
+      "max_yield_residual_MPa": 5.5138116294983774e-12
+    },
+    {
+      "material": "Q355_TOWER_T16_40",
+      "amplitude": 0.01,
+      "kind": "base",
+      "peak_step_difference_MPa": 5.343281372915953e-12,
+      "rows": [
+        {
+          "cycle": 1,
+          "tension_MPa": 362.04768155752214,
+          "compression_MPa": -362.2536918582125,
+          "accum_plastic": 0.02467745845802568,
+          "path_work_MJ_m3": 8.903458017787628
+        },
+        {
+          "cycle": 2,
+          "tension_MPa": 362.0476815575239,
+          "compression_MPa": -362.2536918582125,
+          "accum_plastic": 0.05764673970228003,
+          "path_work_MJ_m3": 11.373892217987994
+        },
+        {
+          "cycle": 3,
+          "tension_MPa": 362.0476815575239,
+          "compression_MPa": -362.2536918582125,
+          "accum_plastic": 0.0906160209465331,
+          "path_work_MJ_m3": 11.373892217987994
+        },
+        {
+          "cycle": 4,
+          "tension_MPa": 362.0476815575239,
+          "compression_MPa": -362.2536918582125,
+          "accum_plastic": 0.12358530219078594,
+          "path_work_MJ_m3": 11.373892217987994
+        },
+        {
+          "cycle": 5,
+          "tension_MPa": 362.0476815575239,
+          "compression_MPa": -362.2536918582125,
+          "accum_plastic": 0.1565545834350388,
+          "path_work_MJ_m3": 11.373892217987994
+        },
+        {
+          "cycle": 6,
+          "tension_MPa": 362.0476815575239,
+          "compression_MPa": -362.2536918582125,
+          "accum_plastic": 0.18952386467929166,
+          "path_work_MJ_m3": 11.373892217987994
+        },
+        {
+          "cycle": 7,
+          "tension_MPa": 362.0476815575239,
+          "compression_MPa": -362.2536918582125,
+          "accum_plastic": 0.22249314592354452,
+          "path_work_MJ_m3": 11.373892217987994
+        },
+        {
+          "cycle": 8,
+          "tension_MPa": 362.0476815575239,
+          "compression_MPa": -362.2536918582125,
+          "accum_plastic": 0.25546242716779893,
+          "path_work_MJ_m3": 11.373892217987994
+        },
+        {
+          "cycle": 9,
+          "tension_MPa": 362.0476815575239,
+          "compression_MPa": -362.2536918582125,
+          "accum_plastic": 0.28843170841206095,
+          "path_work_MJ_m3": 11.373892217987994
+        },
+        {
+          "cycle": 10,
+          "tension_MPa": 362.0476815575239,
+          "compression_MPa": -362.2536918582125,
+          "accum_plastic": 0.32140098965632297,
+          "path_work_MJ_m3": 11.373892217987994
+        }
+      ],
+      "max_yield_residual_MPa": 5.286437954055145e-12
+    },
+    {
+      "material": "Q355_TOWER_T16_40",
+      "amplitude": 0.01,
+      "kind": "combined",
+      "peak_step_difference_MPa": 7.844391802791506e-12,
+      "rows": [
+        {
+          "cycle": 1,
+          "tension_MPa": 386.12175765982494,
+          "compression_MPa": -396.4362695266167,
+          "accum_plastic": 0.02427779472077807,
+          "path_work_MJ_m3": 9.21543898519808
+        },
+        {
+          "cycle": 2,
+          "tension_MPa": 396.0174489337814,
+          "compression_MPa": -399.53037731093826,
+          "accum_plastic": 0.05657038277147092,
+          "path_work_MJ_m3": 11.698108060924422
+        },
+        {
+          "cycle": 3,
+          "tension_MPa": 400.4636855839124,
+          "compression_MPa": -402.4037566085196,
+          "accum_plastic": 0.08879083509215326,
+          "path_work_MJ_m3": 11.803141503298303
+        },
+        {
+          "cycle": 4,
+          "tension_MPa": 403.3977007995662,
+          "compression_MPa": -404.6260465590501,
+          "accum_plastic": 0.12095806556973174,
+          "path_work_MJ_m3": 11.874099623202248
+        },
+        {
+          "cycle": 5,
+          "tension_MPa": 405.4449543334418,
+          "compression_MPa": -406.2775087487274,
+          "accum_plastic": 0.15308661517736868,
+          "path_work_MJ_m3": 11.924408783213206
+        },
+        {
+          "cycle": 6,
+          "tension_MPa": 406.90437758613245,
+          "compression_MPa": -407.4878954942787,
+          "accum_plastic": 0.18518710315665313,
+          "path_work_MJ_m3": 11.960133698089535
+        },
+        {
+          "cycle": 7,
+          "tension_MPa": 407.9542989056524,
+          "compression_MPa": -408.370174187898,
+          "accum_plastic": 0.21726723915497526,
+          "path_work_MJ_m3": 11.985834824551294
+        },
+        {
+          "cycle": 8,
+          "tension_MPa": 408.71283459180444,
+          "compression_MPa": -409.0117843936505,
+          "accum_plastic": 0.24933261321023076,
+          "path_work_MJ_m3": 12.004443292099861
+        },
+        {
+          "cycle": 9,
+          "tension_MPa": 409.26202066563343,
+          "compression_MPa": -409.4778882945982,
+          "accum_plastic": 0.28138727810891156,
+          "path_work_MJ_m3": 12.017931480938081
+        },
+        {
+          "cycle": 10,
+          "tension_MPa": 409.66008528465676,
+          "compression_MPa": -409.8163349720447,
+          "accum_plastic": 0.31343417271722146,
+          "path_work_MJ_m3": 12.027714142075844
+        }
+      ],
+      "max_yield_residual_MPa": 5.7411853049416095e-12
+    },
+    {
+      "material": "Q355_TOWER_T16_40",
+      "amplitude": 0.022,
+      "kind": "base",
+      "peak_step_difference_MPa": 2.1600499167107046e-12,
+      "rows": [
+        {
+          "cycle": 1,
+          "tension_MPa": 386.37867306991797,
+          "compression_MPa": -387.3759544314786,
+          "accum_plastic": 0.060136877459028334,
+          "path_work_MJ_m3": 21.541800459864817
+        },
+        {
+          "cycle": 2,
+          "tension_MPa": 386.3786730699158,
+          "compression_MPa": -387.3759544314786,
+          "accum_plastic": 0.14063889806716498,
+          "path_work_MJ_m3": 27.771488389595426
+        },
+        {
+          "cycle": 3,
+          "tension_MPa": 386.3786730699158,
+          "compression_MPa": -387.3759544314786,
+          "accum_plastic": 0.22114091867529753,
+          "path_work_MJ_m3": 27.771488389595426
+        },
+        {
+          "cycle": 4,
+          "tension_MPa": 386.3786730699158,
+          "compression_MPa": -387.3759544314786,
+          "accum_plastic": 0.3016429392834366,
+          "path_work_MJ_m3": 27.771488389595426
+        },
+        {
+          "cycle": 5,
+          "tension_MPa": 386.3786730699158,
+          "compression_MPa": -387.3759544314786,
+          "accum_plastic": 0.3821449598915793,
+          "path_work_MJ_m3": 27.771488389595426
+        },
+        {
+          "cycle": 6,
+          "tension_MPa": 386.3786730699158,
+          "compression_MPa": -387.3759544314786,
+          "accum_plastic": 0.462646980499722,
+          "path_work_MJ_m3": 27.771488389595426
+        },
+        {
+          "cycle": 7,
+          "tension_MPa": 386.3786730699158,
+          "compression_MPa": -387.3759544314786,
+          "accum_plastic": 0.5431490011078648,
+          "path_work_MJ_m3": 27.771488389595426
+        },
+        {
+          "cycle": 8,
+          "tension_MPa": 386.3786730699158,
+          "compression_MPa": -387.3759544314786,
+          "accum_plastic": 0.6236510217160076,
+          "path_work_MJ_m3": 27.771488389595426
+        },
+        {
+          "cycle": 9,
+          "tension_MPa": 386.3786730699158,
+          "compression_MPa": -387.3759544314786,
+          "accum_plastic": 0.7041530423241504,
+          "path_work_MJ_m3": 27.771488389595426
+        },
+        {
+          "cycle": 10,
+          "tension_MPa": 386.3786730699158,
+          "compression_MPa": -387.3759544314786,
+          "accum_plastic": 0.7846550629322933,
+          "path_work_MJ_m3": 27.771488389595426
+        }
+      ],
+      "max_yield_residual_MPa": 5.286437954055145e-12
+    },
+    {
+      "material": "Q355_TOWER_T16_40",
+      "amplitude": 0.022,
+      "kind": "combined",
+      "peak_step_difference_MPa": 6.423306331271306e-12,
+      "rows": [
+        {
+          "cycle": 1,
+          "tension_MPa": 416.5144443931488,
+          "compression_MPa": -435.1160266926811,
+          "accum_plastic": 0.059612549231320956,
+          "path_work_MJ_m3": 23.503031921282165
+        },
+        {
+          "cycle": 2,
+          "tension_MPa": 435.95099438650027,
+          "compression_MPa": -439.24288901590864,
+          "accum_plastic": 0.13914975600703608,
+          "path_work_MJ_m3": 30.707275730971425
+        },
+        {
+          "cycle": 3,
+          "tension_MPa": 440.71701002901716,
+          "compression_MPa": -441.91949788330356,
+          "accum_plastic": 0.21860766422704436,
+          "path_work_MJ_m3": 31.055030908877246
+        },
+        {
+          "cycle": 4,
+          "tension_MPa": 442.6645543764844,
+          "compression_MPa": -443.18442882481946,
+          "accum_plastic": 0.2980275305611117,
+          "path_work_MJ_m3": 31.195556585786
+        },
+        {
+          "cycle": 5,
+          "tension_MPa": 443.52809005109185,
+          "compression_MPa": -443.76090379383965,
+          "accum_plastic": 0.37743007419003466,
+          "path_work_MJ_m3": 31.257617534444428
+        },
+        {
+          "cycle": 6,
+          "tension_MPa": 443.91688171718397,
+          "compression_MPa": -444.0219173688367,
+          "accum_plastic": 0.45682477766421914,
+          "path_work_MJ_m3": 31.285574355925114
+        },
+        {
+          "cycle": 7,
+          "tension_MPa": 444.0924862544571,
+          "compression_MPa": -444.13994923127257,
+          "accum_plastic": 0.5362159362135874,
+          "path_work_MJ_m3": 31.29820318007298
+        },
+        {
+          "cycle": 8,
+          "tension_MPa": 444.17185663191316,
+          "compression_MPa": -444.1933115196551,
+          "accum_plastic": 0.6156054921663271,
+          "path_work_MJ_m3": 31.303911389995683
+        },
+        {
+          "cycle": 9,
+          "tension_MPa": 444.207736636835,
+          "compression_MPa": -444.2174357856025,
+          "accum_plastic": 0.6949943236211812,
+          "path_work_MJ_m3": 31.306491855666863
+        },
+        {
+          "cycle": 10,
+          "tension_MPa": 444.22395716795495,
+          "compression_MPa": -444.22834197438783,
+          "accum_plastic": 0.7743828275443995,
+          "path_work_MJ_m3": 31.307658428938367
+        }
+      ],
+      "max_yield_residual_MPa": 6.366462912410498e-12
+    }
+  ]
+}

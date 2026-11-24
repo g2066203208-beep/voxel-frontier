@@ -1,0 +1,23 @@
+{
+  "base": "REV11",
+  "sourceSha256": "fa27040f66b1c6d85fe1c4d863fb62d1423960972a1cdf08fc9dbb0871b1e5fd",
+  "targetSha256": "b2ad06256505ca556b2db7a19a5270be9481e8ecab0967bd23206255fdb7c686",
+  "targetSize": 34227427,
+  "edits": [
+    {
+      "offset": 9,
+      "old": "** Job name: HE_REV11_HE_CHECK Model name: CONTACT_REV11\n",
+      "new": "** Job name: HE_REV12_CYCLIC_SENS Model name: CONTACT_REV12_CYCLIC_SENS\n** REV12_CYCLIC_SENS: literature-transferred Voce-Chaboche coefficients only; NOT validated; parent REV11 retained.\n"
+    },
+    {
+      "offset": 34214246,
+      "old": "*Plastic, hardening=KINEMATIC\n345000000, 0\n365808080.808, 0.01\n",
+      "new": "** Cross-study sensitivity only; retain parent initial yield and elasticity.\n*Plastic, hardening=COMBINED, data type=PARAMETERS, number backstresses=4\n345000000, 1800000000, 245, 1800000000, 155, 1800000000, 50, 1800000000,\n30\n*Cyclic Hardening, parameters\n345000000, 21000000, 10\n"
+    },
+    {
+      "offset": 34214479,
+      "old": "*Plastic\n400800000, 0\n404000000, 0.00793033085317\n406560000, 0.0142341724639\n422448902.778, 0.0237422944046\n438566277.778, 0.0331582248029\n454912125, 0.0424836767168\n471486444.444, 0.0517203153084\n488289236.111, 0.0608697596136\n505320500, 0.0699335842293\n522580236.111, 0.0789133209257\n540068444.444, 0.0878104601853\n557785125, 0.0966264526732\n575730277.778, 0.105362710643\n593903902.778, 0.114020609282\n612306000, 0.122601487996\n",
+      "new": "** Cross-study sensitivity only; retain parent initial yield and elasticity.\n*Plastic, hardening=COMBINED, data type=PARAMETERS, number backstresses=4\n400800000, 7993000000, 175, 6773000000, 116, 2854000000, 34, 1450000000,\n29\n*Cyclic Hardening, parameters\n400800000, 21000000, 1.2\n"
+    }
+  ]
+}
