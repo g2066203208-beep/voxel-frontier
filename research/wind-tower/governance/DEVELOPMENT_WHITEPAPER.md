@@ -1,3 +1,7 @@
+### 2026-11-24｜v0.32.184 — V5真实新增及5事件全谱离散匹配，转GeoNet扩库
+
+RUN45361733825 SUCCESS，48请求实际新增5组，56组复算，13组源级通过、7个事件，8组持续时间和频带通过、5事件；43次失败不绕过授权。对8组真实5%谱CSV实际计算0.1–10s的10个周期点（MODE对非原有周期对数插值），枚举8种5事件组合并以0.5≤k≤2加权相对均值谱误差最小化，最佳SBT/CIMA/CSA/MAME/MODE，倍率0.54561/0.50000/0.50000/0.50000/1.95530，相对RMS 32.90%，全点最大59.26%，4–10s最大33.08%；仅离散研究谱试配，非正式7组。实际数值[JSON](../experiments/T079/seismic-evidence-20261124/record-pool/FIVE_EVENT_SPECTRAL_FIT_V1.json)。GeoNet NZSMDB官方[756组结构时域候选原件](https://www.geonet.org.nz/data/supplementary/nzsmdb)，TimeDomain_README p1、Flatfiles_ColumnExplanation p1–2实际视觉核读，fmin为提供方最小可用频率，fmin≤1/15s；CC BY 3.0 NZ。新增GeoNet V6原件获取脚本，未确认新波下载/格式/数值，不能提前宣布7组完成。正式目标及工程准入仍HOLD。不改INP/不合并PR。
+
 ### 2026-11-24｜v0.32.183 PATCH — V2工作室发布核实及V5不同事件扩库脚本
 
 核实main实际V2发布run45360746053 SUCCESS、Pages run45361068761 SUCCESS（head 0df7c1ba6c6d3a0692c6ad6036ba4b195355b8b7）；V2整包5887635 bytes，manifest登记SHA256 5e51250a1d0b6abd93ba56d50824e79b81e42eb02911dd523b9b5afaf1521a60，10个单组ZIP、完整包及工作室/INP入口已在GitHub读回；本轮未独立浏览器下载V2。工作室 https://g2066203208-beep.github.io/voxel-frontier/thesis-studio/seismic-archive/v2/ 。新增V5脚本修正ESM flatfile实际字段u_t90/v_t90大小写，排除已尝试台站及已有优先事件，按事件轮转最多48次实际原波请求，继续既有授权/频带/持续时间门禁；不重算旧51组，不绕过授权。不宣称新波已取得，V5运行待核，正式0/7、优先2/7不变。不修改INP、不合并PR#42。

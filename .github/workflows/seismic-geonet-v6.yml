@@ -1,0 +1,40 @@
+name: GeoNet V6 verified source acquisition
+on:
+  push:
+    branches: [research/t080-seismic-integration-gates-20261022]
+    paths: ['.github/workflows/seismic-geonet-v6.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  acquire:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install --quiet requests pandas openpyxl xlrd
+      - run: python research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool/geonet_v6.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GeoNet-V6-source-evidence
+          path: research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool/geonet_v6
+      - name: Preserve actual source records and receipts
+        if: always()
+        run: |
+          git config user.name paper-studio-bot
+          git config user.email paper-studio-bot@users.noreply.github.com
+          git add research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool/geonet_v6
+          git diff --cached --quiet && exit 0
+          git commit -m 'Archive official GeoNet V6 source inventory and candidate originals'
+          for i in 1 2 3 4 5; do
+            git pull --rebase origin ${GITHUB_REF_NAME}
+            if git push origin HEAD:${GITHUB_REF_NAME}; then exit 0; fi
+            sleep 4
+          done
+          exit 1
