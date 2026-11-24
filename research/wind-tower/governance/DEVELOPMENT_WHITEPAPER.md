@@ -1,3 +1,7 @@
+### 2026-11-24｜v0.32.189 — 期刊地震图件托管工作室直读
+
+按用户再次明确的全程GitHub托管要求，main b14bed9314f7f99d712fdd0e7f57ece62ab1974e 新增地震期刊图件站内阅读页及主页、地震档案、V7入口，复用研究分支31个已验证原始blob（7图×3格式、9个数值CSV及manifest），31/31逐blob一致，不重复计算、不要求用户下载。研究输入状态不变，V7标明备用，DSLC为文献同源样稿。站内入口：https://g2066203208-beep.github.io/voxel-frontier/thesis-studio/seismic-archive/journal-figures/ 。主分支已核验，Pages部署另以实际运行状态为准。
+
 ### 2026-11-24｜v0.32.188 — 地震期刊制图真实输出
 
 RUN45381499918：绘图、上传artifact14913772027、研究分支归档9e9d942e0783c9640b711106678901c597876682已回读manifest。7张图各PNG 600dpi、PDF/SVG，V7仅备用，DSLC为文献匹配原波样稿。V7七个scaled CSV逐一核对SHA256和采样数（40000/20600/37864/16000/17000/36000/49800），DSLC 7386点、源SHA256 178b7b329e641188cb9758774a7bd57a7563a2ceab058d06d5e288272f01f463。PSD Welch Hann 40s、50%重叠、去均值、单边密度、df=.025Hz、图示0–2Hz，f1=1/7.3937Hz；反应谱5% PSA，V7已计算RotD50，DSLC原始双水平FOH新算，官方速度位移直接取源列。仅绘图不改变波组和工程准入；未宣称六条新文献波已取得。详见[manifest](../experiments/T079/seismic-evidence-20261124/record-pool/journal_figures_20261124/manifest.json)。
