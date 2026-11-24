@@ -1,0 +1,35 @@
+{
+  "event": "IT-2012-0008",
+  "station": "MODE",
+  "source": "ESM",
+  "directory": "acquired_v2/IT-2012-0008__IV_MODE_blank_HN",
+  "dt": 0.005,
+  "dirs": [
+    "E",
+    "N"
+  ],
+  "mw": "6.1",
+  "site": "C",
+  "vs30": "204",
+  "distance": "38.6",
+  "source_hash": "788095e883cc6990d450b72b7a3d41c9f2a6b96336657b1b2a01817aedd8bd8d",
+  "duration": [
+    76.765,
+    53.32000000000001
+  ],
+  "diagnostics": [],
+  "pga": 0.41873976,
+  "id": "EQ01",
+  "scale": 1.135383557607063,
+  "npts": 40000,
+  "record_duration": 199.995,
+  "scaled_pga": 0.4754302384203278,
+  "T1_scaled": 0.0512273013507801,
+  "files": {
+    "receipt.json": "773b5c4792bc91ccb3237f19127e791cd4d2585ee275ea267113900d64d6c65b",
+    "original_horizontal_SI.csv": "ccd82e81d4440391afa0ef9e519a82392416fb3ba60bee05c8108cf813346482",
+    "original_MP_ACC.zip": "788095e883cc6990d450b72b7a3d41c9f2a6b96336657b1b2a01817aedd8bd8d",
+    "spectra.csv": "3c7d683b209f2e3a5ffd5dacbc7aba73a7de44664d020f228963ca99f72cbeb5",
+    "scaled_reference_SI.csv": "640096c940f3c6d54cbe697fd2da9def7ab2428a3850316f228d451b791d1b67"
+  }
+}

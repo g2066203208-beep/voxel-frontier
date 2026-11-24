@@ -1,0 +1,22 @@
+{
+  "eligible": 29,
+  "errors": [
+    {
+      "record": "20110221_235142_LBZ",
+      "error": "[('E', 'Longitudinal Accelerometer Axis'), ('N', 'Transverse Accelerometer Axis'), ('UP', 'Vertical Accelerometer Axis')]"
+    },
+    {
+      "record": "20110613_022049_LTZ",
+      "error": "[('E', 'Longitudinal Accelerometer Axis'), ('N', 'Transverse Accelerometer Axis'), ('UP', 'Vertical Accelerometer Axis')]"
+    },
+    {
+      "record": "20111223_021803_OXZ",
+      "error": "[('E', 'Longitudinal Accelerometer Axis'), ('N', 'Transverse Accelerometer Axis'), ('UP', 'Vertical Accelerometer Axis')]"
+    },
+    {
+      "record": "20110222_015029_OXZ",
+      "error": "[('E', 'Longitudinal Accelerometer Axis'), ('N', 'Transverse Accelerometer Axis'), ('UP', 'Vertical Accelerometer Axis')]"
+    }
+  ],
+  "events": 15
+}

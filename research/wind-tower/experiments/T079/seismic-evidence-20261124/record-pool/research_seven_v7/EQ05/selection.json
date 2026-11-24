@@ -1,0 +1,37 @@
+{
+  "event": "3468635",
+  "station": "CACS",
+  "source": "GeoNet",
+  "directory": "geonet_v6/20110222_015029_CACS",
+  "dt": 0.005,
+  "dirs": [
+    "N40E",
+    "N50W"
+  ],
+  "mw": 5.63,
+  "site": "D",
+  "vs30": "435",
+  "distance": 15.17,
+  "source_hash": "47b73289dad6ba0af8dd5c96fa11b0c40d1090a8b78fa671049f4e10b37eb6c2",
+  "duration": [
+    12.955,
+    9.795
+  ],
+  "diagnostics": [],
+  "fmin": 0.051,
+  "end_velocity_ratio": 0.0047236170554382905,
+  "pga": 1.927,
+  "id": "EQ05",
+  "scale": 0.8382943720061922,
+  "npts": 17000,
+  "record_duration": 84.995,
+  "scaled_pga": 1.6153932548559324,
+  "T1_scaled": 0.030558129039976827,
+  "files": {
+    "receipt.json": "acf9c79cb86cee8c95848bf713012f6d8aca22eb7ca017e54997befe33049a29",
+    "original_horizontal_SI.csv": "77741c547c8be02d617c7ad3a4dc2d00266334923c7633d3d4612653be0cd601",
+    "20110222_015029_CACS.V2A": "47b73289dad6ba0af8dd5c96fa11b0c40d1090a8b78fa671049f4e10b37eb6c2",
+    "spectra.csv": "231bee9a2a99e7e2522c05e53cb555fff637001404468c5bfa5c9972d56d94f2",
+    "scaled_reference_SI.csv": "cb2319b37f52061985613d8254b17abf52212d01133ea6d360c136cc475338cd"
+  }
+}

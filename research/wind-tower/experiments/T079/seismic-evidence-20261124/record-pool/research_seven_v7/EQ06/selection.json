@@ -1,0 +1,35 @@
+{
+  "event": "EMSC-20161026_0000095",
+  "station": "CTS",
+  "source": "ESM",
+  "directory": "replacement_v5/EMSC-20161026_0000095__IT_CTS_blank_HG",
+  "dt": 0.005,
+  "dirs": [
+    "E",
+    "N"
+  ],
+  "mw": "5.9",
+  "site": "C (inferred from geology)",
+  "vs30": "",
+  "distance": "98.7",
+  "source_hash": "d91236c208bbbd7c8d06cb579020e6e20569781ae9213c0971db2bece5331a5b",
+  "duration": [
+    91.79499999999999,
+    69.28
+  ],
+  "diagnostics": [],
+  "pga": 0.13112959,
+  "id": "EQ06",
+  "scale": 1.1382346327137838,
+  "npts": 36000,
+  "record_duration": 179.995,
+  "scaled_pga": 0.14925624071155905,
+  "T1_scaled": 0.015174999755765623,
+  "files": {
+    "receipt.json": "d09d01313993c53514b2b9f6a6fc9d223e00ca97cea560bba46927afaaa908a5",
+    "original_horizontal_SI.csv": "7db79400cbc8c09b69929cad199d96fc17f41214c34d36d3a28a91f2e6cfa432",
+    "original_MP_ACC.zip": "d91236c208bbbd7c8d06cb579020e6e20569781ae9213c0971db2bece5331a5b",
+    "spectra.csv": "0e95a26d23a524e0f4a0b9770e31bb5a2440ee47fc529475081cea5665f0da69",
+    "scaled_reference_SI.csv": "0672bc48d3a505fdd8fe0048c3f63631bc6a5daac8aed8c165f5e5991051c17e"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "event": "EMSC-20160824_0000006",
+  "station": "CIMA",
+  "source": "ESM",
+  "directory": "replacement_v5/EMSC-20160824_0000006__IV_CIMA_blank_HN",
+  "dt": 0.005,
+  "dirs": [
+    "E",
+    "N"
+  ],
+  "mw": "6.0",
+  "site": "B",
+  "vs30": "443",
+  "distance": "76.3",
+  "source_hash": "bedb1c8410e7a02bf61b651b1d6c48a43ad664a4bf3bf7fdefb4856201873226",
+  "duration": [
+    80.875,
+    84.83500000000001
+  ],
+  "diagnostics": [],
+  "pga": 0.21745331,
+  "id": "EQ03",
+  "scale": 0.6445833449647742,
+  "npts": 37864,
+  "record_duration": 189.315,
+  "scaled_pga": 0.140166781933462,
+  "T1_scaled": 0.04688260892216264,
+  "files": {
+    "receipt.json": "8909548d7fc3afa09ccc2753e0c9c0f761a25aef063f8d6689f73836604f1f3c",
+    "original_horizontal_SI.csv": "72f9bf9f5085c48ef06b9ddc4e10b2fa04af25d5eac0d95789b6732daf47c8a1",
+    "original_MP_ACC.zip": "bedb1c8410e7a02bf61b651b1d6c48a43ad664a4bf3bf7fdefb4856201873226",
+    "spectra.csv": "e8fee55c322bbee5605e874a4117fd8f4502909f4ba8118cacf1a2c716fb2118",
+    "scaled_reference_SI.csv": "f14cd94c2fb26aeb00ae7cd9107f1416c35709b4f9382b99bd848cbac0f5754f"
+  }
+}
