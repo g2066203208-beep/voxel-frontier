@@ -1,0 +1,83 @@
+[
+  {
+    "label": "S05_ALT",
+    "event": "IT-2012-0011",
+    "station": "SAN0",
+    "network_requested": null,
+    "metadata": {
+      "reference": "10.1111/mice.13408",
+      "table_row": "83",
+      "pulse_component": "NS",
+      "reported_Tp_s": 2.5,
+      "reported_Rrup_km": 6.1
+    },
+    "status": "HOLD",
+    "url": "https://esm-db.eu/esmws/eventdata/1/query?eventid=IT-2012-0011&station=SAN0&format=ascii&processing-type=MP&data-type=ACC&quality-class=BEST%2CGOOD",
+    "http": 204,
+    "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0,
+    "error": "not a public processed ZIP"
+  },
+  {
+    "label": "S06_ALT",
+    "event": "EMSC-20161026_0000095",
+    "station": "T1245",
+    "network_requested": null,
+    "metadata": {
+      "reference": "10.1111/mice.13408",
+      "table_row": "86",
+      "pulse_component": "NS",
+      "reported_Tp_s": 0.9,
+      "reported_Rrup_km": 2.0
+    },
+    "status": "HOLD",
+    "url": "https://esm-db.eu/esmws/eventdata/1/query?eventid=EMSC-20161026_0000095&station=T1245&format=ascii&processing-type=MP&data-type=ACC&quality-class=BEST%2CGOOD",
+    "http": 200,
+    "source_sha256": "bc0c38c302157371b58048982c1ff9e061e8705da19f9c18472c3e94b8467ae9",
+    "bytes": 120208,
+    "licenses": [
+      "D (network default license)",
+      "D (network default license)",
+      "D (network default license)"
+    ],
+    "error": "redistribution license not verified"
+  },
+  {
+    "label": "S07_ALT",
+    "event": "IS-2000-0048",
+    "station": "103",
+    "network_requested": null,
+    "metadata": {
+      "reference": "10.1111/mice.13408",
+      "table_row": "FS1",
+      "pulse_component": "3",
+      "reported_Tp_s": 5.0,
+      "reported_Rrup_km": 6.6
+    },
+    "status": "HOLD",
+    "url": "https://esm-db.eu/esmws/eventdata/1/query?eventid=IS-2000-0048&station=103&format=ascii&processing-type=MP&data-type=ACC&quality-class=BEST%2CGOOD",
+    "http": 200,
+    "source_sha256": "fe0c666acc35e9259c87f7b6eb44356dc9eb5b00cb60881590d510a18ec66d2a",
+    "bytes": 231195,
+    "error": "ambiguous or missing synchronized E/N pair"
+  },
+  {
+    "label": "S08_ALT",
+    "event": "IS-2000-0053",
+    "station": "107",
+    "network_requested": null,
+    "metadata": {
+      "reference": "10.1111/mice.13408",
+      "table_row": "FS3",
+      "pulse_component": "3",
+      "reported_Tp_s": 2.4,
+      "reported_Rrup_km": 2.9
+    },
+    "status": "HOLD",
+    "url": "https://esm-db.eu/esmws/eventdata/1/query?eventid=IS-2000-0053&station=107&format=ascii&processing-type=MP&data-type=ACC&quality-class=BEST%2CGOOD",
+    "http": 200,
+    "source_sha256": "56245d0c81646aa285fbd9254921be6d82e265b5ab16bc83524448730708eb3c",
+    "bytes": 97782,
+    "error": "ambiguous or missing synchronized E/N pair"
+  }
+]
