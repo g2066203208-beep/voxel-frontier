@@ -1,3 +1,9 @@
+### 2026-11-24｜v0.32.169 PATCH — 论文工作室内直接生成 REV16 完整 INP
+
+- 用户明确要求全程GitHub及工作室在线修改，不要求用户重新上传母本。main提交 9228b408015e9177bdb622c0f573ea356875b1aa 新增REV16四处精确文本替换配方，7dfa251277ea922c7e28b517e8e5a9ec36db411e 更新工作室INP档案页面，顶部增加“在线生成并下载完整 INP”。配方由已归档REV15补丁偏移推导，原文位置9/13213509/14170433/14211056，原长187/418/76/111；预测目标23447305字节。浏览器从原REV09分块至REV15逐级重建并校验原SHA-256，核对RNA独立INP的Git blob SHA-1及长度，四处文本逐字节匹配后替换，检查全部原分析步和主要连接关键字计数，计算目标实际SHA-256并触发下载；任何失败均中止。
+- TEST=GitHub回读新页面脚本语法PASS；独立RNA文件Git blob SHA-1实际复算8d3de6a2dfb51b3ffea734665e0f71d2858baedc与配方一致，147891字节PASS。完整母本浏览器重建、目标最终SHA-256、Pages部署实际访问、Abaqus原生验证均尚未取得回执，不冒称完整整塔已求解或页面已经上线。研究分支重建CI提交c7c5c5f1116af81518119f15f6d09369293c0473，尚无运行记录。不改历史版本，不合并PR#42。
+- 工作室入口：https://g2066203208-beep.github.io/voxel-frontier/thesis-studio/inp-archive/#rev16
+
 ### 2026-11-24｜v0.32.168 PATCH — REV16 柔性RNA输入候选与整塔哈希锁定重建
 
 按用户要求停止扩展创新理论，转为INP交付。SOURCE=REV15 SHA256 ab66bc21c4ba9d642c60dd217f7219c01111a0695c9d2f14f9e11132cbaf83d7、23300318字节；HAWC2 v9冻结结构表 blob eae9b1e338b72323662efe772553efa39ffce753、HTC blob c1fab5676e8ff9432696daf04b50f798f5b00abb。实际生成三片柔性叶片：各51结构站、27 c2几何站插值，150 B31、155 MASS、155 ROTARYI、150 BEAM MPC、8刚体tie节点；三叶片根部、轮毂及机舱连接既有塔顶RP，保留原塔顶耦合（物理塔顶158m、历史RP160m）。质量676727.2338445095kg（每片41722.41128150313kg、轮毂105520kg、机舱446040kg），质心(0,160.789070924,-0.940250758)m；Jcg六分量(100131417.6275,100571556.8664,156447361.5176,0,0,-5144294.6553) kg·m²。源HTC机舱三轴惯量，轮毂仅源轴向惯量，未捏造横向惯量；名义0度固定桨距/固定叶轮，非运行气弹。c2采用弧长线性插值非原HAWC2样条；B31刚度与偏置点质量分离，无重复梁密度；质心惯量主轴近似，最小中心惯量线密度0.0810399181>0，未以max掩盖负值。沿用RNA alpha=0.0145230339976，无beta；待原生验证。几何/参数正值/节点编号、150梁定向检查已执行PASS。官方 [HAWC2结构表](https://hawc2.pages.windenergy.dtu.dk/documentation/hawc2-manual/08-structural_input.html)、[Abaqus BEAM GENERAL SECTION](https://docs.software.vt.edu/abaqusv2025/English/SIMACAEKEYRefMap/simakey-r-beamgeneralsection.htm)、[GRAV](https://docs.software.vt.edu/abaqusv2025/English/SIMACAEPRCRefMap/simaprc-c-loaddistributed.htm)。
