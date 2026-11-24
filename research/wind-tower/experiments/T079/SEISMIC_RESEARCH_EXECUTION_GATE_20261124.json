@@ -1,0 +1,287 @@
+{
+  "version": "0.32.198",
+  "scope": "academic fixed-base parametric response study, not project-specific engineering design",
+  "decision": "freeze acquisition; retain V7 unchanged as research baseline; retain E02/E03 separate special cases; no compulsory second ordinary seven-record suite; E01/E05/E06/E07 and E04 remain candidate archive, not counted as passed cases",
+  "site": {
+    "region": "Jiayu County, Hubei; Paizhouwan reference project",
+    "regional_intensity": 6,
+    "pga_g": 0.05,
+    "group": 1,
+    "reference_site_class": "II (assumed, not geotechnically confirmed)",
+    "Tg_s": 0.35,
+    "rare_Tg_s": 0.4,
+    "project_site_class_verified": false,
+    "official_site_specific_spectrum": false,
+    "reference": "GB18306-2015 C.17 p126, existing archived eight-town transcription; GB/T50011-2010 (2024) A.0.17; NB/T11600-2024 applicable scope official registry, full text not obtained"
+  },
+  "historical_T1_s": 7.3937,
+  "target": {
+    "source_blob": "33c6fe69a488adc5dfca9a7a33a3abd5e1ccd715",
+    "scope": "PARAMETRIC_RESEARCH_ONLY_0_TO_10S_NOT_SITE_HAZARD",
+    "reference_PGA_m_s2": 0.4905,
+    "plateau_m_s2": 1.22625,
+    "Tg_s": 0.35,
+    "TD_s": [
+      6.14,
+      6.56,
+      7.12
+    ],
+    "max_target_period_s": 10,
+    "formula": "existing frozen parametric research model; not a code-certified hazard spectrum",
+    "reference": "Nie et al. 2022 DOI 10.13197/j.eeed.2022.0215, p158 table 6, actual screenshot visually checked; Tcut=10s, II class assumed",
+    "v7_sensitivity": [
+      {
+        "TD_s": 6.14,
+        "T1_research_target_m_s2": 0.04820496654173172,
+        "T1_mean_m_s2": 0.04863731888,
+        "T1_relative_error": 0.008969041351662321,
+        "focus_max_abs_error": 0.10809368129405206,
+        "worst_T_s": 10,
+        "all_max_abs_error": 0.15945881753312952,
+        "focus_20pct_met": true
+      },
+      {
+        "TD_s": 6.56,
+        "T1_research_target_m_s2": 0.05150237467650816,
+        "T1_mean_m_s2": 0.04863731888,
+        "T1_relative_error": -0.055629586295852795,
+        "focus_max_abs_error": 0.0638987847228385,
+        "worst_T_s": 2.712272579,
+        "all_max_abs_error": 0.15945881753312952,
+        "focus_20pct_met": true
+      },
+      {
+        "TD_s": 7.12,
+        "T1_research_target_m_s2": 0.055898918856210074,
+        "T1_mean_m_s2": 0.04863731888,
+        "T1_relative_error": -0.12990591096921267,
+        "focus_max_abs_error": 0.12990591096921267,
+        "worst_T_s": 7.3937,
+        "all_max_abs_error": 0.15945881753312952,
+        "focus_20pct_met": true
+      }
+    ],
+    "source_spectrum_blob": "75460c052108d160410ad40872bb29ac663cdc44",
+    "source_summary_blob": "d22ee28d53467ff41b93fd778308d656404d4315"
+  },
+  "baseline": [
+    {
+      "case": "EQ01",
+      "role": "frozen parametric research baseline",
+      "station": "MODE",
+      "event": "IT-2012-0008",
+      "source": "ESM",
+      "dt_s": 0.005,
+      "npts": 40000,
+      "duration_s": 199.995,
+      "component_labels": [
+        "E",
+        "N"
+      ],
+      "scale_already_applied": 1.135383557607063,
+      "pga_m_s2": 0.4754302384203278,
+      "source_sha256": "788095e883cc6990d450b72b7a3d41c9f2a6b96336657b1b2a01817aedd8bd8d",
+      "original_pair_sha256": "ccd82e81d4440391afa0ef9e519a82392416fb3ba60bee05c8108cf813346482",
+      "input_pair_sha256": "640096c940f3c6d54cbe697fd2da9def7ab2428a3850316f228d451b791d1b67",
+      "archive_filename": "EQ01_MODE.zip",
+      "inside_zip": "scaled_reference_SI.csv",
+      "input_multiplier": 1,
+      "analysis_status": "NOT_RUN_REV20_NATIVE_GATE"
+    },
+    {
+      "case": "EQ02",
+      "role": "frozen parametric research baseline",
+      "station": "FDCS",
+      "event": "3468575",
+      "source": "GeoNet",
+      "dt_s": 0.005,
+      "npts": 20600,
+      "duration_s": 102.995,
+      "component_labels": [
+        "N09W",
+        "S81W"
+      ],
+      "scale_already_applied": 1.5455922891190816,
+      "pga_m_s2": 0.2935079757037136,
+      "source_sha256": "8ef2929d91a959d39778d8f5f9500615d18ce104004004bbe26cdfafbe8c8e6d",
+      "original_pair_sha256": "206412c7ab5f9a2e99a95022bd9264b2d86496429fcf9b58c7ea5ad0327c81be",
+      "input_pair_sha256": "446f0cae834a6b139e2fa0cd29b8d677a4806890952559e66d09ee6f0fd505d2",
+      "archive_filename": "EQ02_FDCS.zip",
+      "inside_zip": "scaled_reference_SI.csv",
+      "input_multiplier": 1,
+      "analysis_status": "NOT_RUN_REV20_NATIVE_GATE"
+    },
+    {
+      "case": "EQ03",
+      "role": "frozen parametric research baseline",
+      "station": "CIMA",
+      "event": "EMSC-20160824_0000006",
+      "source": "ESM",
+      "dt_s": 0.005,
+      "npts": 37864,
+      "duration_s": 189.315,
+      "component_labels": [
+        "E",
+        "N"
+      ],
+      "scale_already_applied": 0.6445833449647742,
+      "pga_m_s2": 0.140166781933462,
+      "source_sha256": "bedb1c8410e7a02bf61b651b1d6c48a43ad664a4bf3bf7fdefb4856201873226",
+      "original_pair_sha256": "72f9bf9f5085c48ef06b9ddc4e10b2fa04af25d5eac0d95789b6732daf47c8a1",
+      "input_pair_sha256": "f14cd94c2fb26aeb00ae7cd9107f1416c35709b4f9382b99bd848cbac0f5754f",
+      "archive_filename": "EQ03_CIMA.zip",
+      "inside_zip": "scaled_reference_SI.csv",
+      "input_multiplier": 1,
+      "analysis_status": "NOT_RUN_REV20_NATIVE_GATE"
+    },
+    {
+      "case": "EQ04",
+      "role": "frozen parametric research baseline",
+      "station": "PFAS",
+      "event": "2013p543824",
+      "source": "GeoNet",
+      "dt_s": 0.005,
+      "npts": 16000,
+      "duration_s": 79.995,
+      "component_labels": [
+        "N00E",
+        "N90W"
+      ],
+      "scale_already_applied": 1.5129972376637082,
+      "pga_m_s2": 1.3261420788122402,
+      "source_sha256": "281baa717c7334d3a6f5ccdcc77c46cac0dfa90b54d0272eb2b8fbdd2286392e",
+      "original_pair_sha256": "f745f1445fe9afce3f7da2cc321ccb520250b0d65ac617b87506cc9b8e841644",
+      "input_pair_sha256": "7104c360d8bd04600c5af70fe7869d1ea3d8f4188cee4c5805cf4dae9e34bff0",
+      "archive_filename": "EQ04_PFAS.zip",
+      "inside_zip": "scaled_reference_SI.csv",
+      "input_multiplier": 1,
+      "analysis_status": "NOT_RUN_REV20_NATIVE_GATE"
+    },
+    {
+      "case": "EQ05",
+      "role": "frozen parametric research baseline",
+      "station": "CACS",
+      "event": "3468635",
+      "source": "GeoNet",
+      "dt_s": 0.005,
+      "npts": 17000,
+      "duration_s": 84.995,
+      "component_labels": [
+        "N40E",
+        "N50W"
+      ],
+      "scale_already_applied": 0.8382943720061922,
+      "pga_m_s2": 1.6153932548559324,
+      "source_sha256": "47b73289dad6ba0af8dd5c96fa11b0c40d1090a8b78fa671049f4e10b37eb6c2",
+      "original_pair_sha256": "77741c547c8be02d617c7ad3a4dc2d00266334923c7633d3d4612653be0cd601",
+      "input_pair_sha256": "cb2319b37f52061985613d8254b17abf52212d01133ea6d360c136cc475338cd",
+      "archive_filename": "EQ05_CACS.zip",
+      "inside_zip": "scaled_reference_SI.csv",
+      "input_multiplier": 1,
+      "analysis_status": "NOT_RUN_REV20_NATIVE_GATE"
+    },
+    {
+      "case": "EQ06",
+      "role": "frozen parametric research baseline",
+      "station": "CTS",
+      "event": "EMSC-20161026_0000095",
+      "source": "ESM",
+      "dt_s": 0.005,
+      "npts": 36000,
+      "duration_s": 179.995,
+      "component_labels": [
+        "E",
+        "N"
+      ],
+      "scale_already_applied": 1.1382346327137838,
+      "pga_m_s2": 0.14925624071155905,
+      "source_sha256": "d91236c208bbbd7c8d06cb579020e6e20569781ae9213c0971db2bece5331a5b",
+      "original_pair_sha256": "7db79400cbc8c09b69929cad199d96fc17f41214c34d36d3a28a91f2e6cfa432",
+      "input_pair_sha256": "0672bc48d3a505fdd8fe0048c3f63631bc6a5daac8aed8c165f5e5991051c17e",
+      "archive_filename": "EQ06_CTS.zip",
+      "inside_zip": "scaled_reference_SI.csv",
+      "input_multiplier": 1,
+      "analysis_status": "NOT_RUN_REV20_NATIVE_GATE"
+    },
+    {
+      "case": "EQ07",
+      "role": "frozen parametric research baseline",
+      "station": "NNZ",
+      "event": "2016p858000",
+      "source": "GeoNet",
+      "dt_s": 0.005,
+      "npts": 49800,
+      "duration_s": 248.995,
+      "component_labels": [
+        "N00E",
+        "N90W"
+      ],
+      "scale_already_applied": 1.1114079631824236,
+      "pga_m_s2": 0.2465102862338616,
+      "source_sha256": "7bd0e4382c8a39b4f08110e4aef4f90c88dd806f0cb1728cc1567c544954b008",
+      "original_pair_sha256": "9e4df3726bed0a5754e72869334985099c1814f80bec1fa551751e8d9331f3e7",
+      "input_pair_sha256": "627be0d90725d52a985e9e6b5bb998137a0e7e631e8f7cd85e72131a173c544d",
+      "archive_filename": "EQ07_NNZ.zip",
+      "inside_zip": "scaled_reference_SI.csv",
+      "input_multiplier": 1,
+      "analysis_status": "NOT_RUN_REV20_NATIVE_GATE"
+    }
+  ],
+  "special_cases": [
+    {
+      "id": "E02",
+      "station": "DSLC",
+      "rsn": 6897,
+      "Tp_s": 7.83,
+      "dt_s": 0.02,
+      "npts": 7386,
+      "source": "GeoNet corrected V2A CSV",
+      "source_sha256": "178b7b329e641188cb9758774a7bd57a7563a2ceab058d06d5e288272f01f463",
+      "source_path": "research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool/geonet-dslc/682ed668_20100903_163541_DSLC_V2A.csv",
+      "component_labels": [
+        "N63E",
+        "N27W"
+      ],
+      "pulse_reference": "Shahi & Baker 2014",
+      "status": "research sensitivity only, actual source band and intensity comparison still need gate"
+    },
+    {
+      "id": "E03",
+      "station": "Yarimca",
+      "rsn": 1176,
+      "Tp_s": 4.95,
+      "dt_s": 0.005,
+      "npts": 7000,
+      "source": "research copy of PEER AT2",
+      "immutable_repo_commit": "f6b1593ddd95c4b19079d8ab90a5a5c7f207ceeb",
+      "component_blobs": [
+        "491c9b7d747eb735a93bba6e74c174f8a63972a2",
+        "5fb8ada336f63e79d36d2e53c7d93f1bf5ecc4c9"
+      ],
+      "status": "research sensitivity only; exact PEER version not independently confirmed"
+    }
+  ],
+  "native_gate": {
+    "state": "REV20 NOT_RUN",
+    "readme": "research/wind-tower/experiments/T048/RNA_NATIVE_ROM_20261124/README.md",
+    "actions": [
+      "RNA_ROM10_GEN: generate native RNA database using RNA_REV20_10HZ_GENERATE.inp",
+      "RNA standalone gravity and unit acceleration vs full reference, gravity-preloaded modal comparison",
+      "REV18 versus HE_REV20_FLAT_REFERENCE_PRECHECK and HE_REV20_ROM10_PRECHECK native Data Check, gravity/PT/contact and modal",
+      "export first 30 modes and directional effective masses, cumulative participation, verify sufficient frequency range and RNA truncation",
+      "choose damping from documented assumptions and actual modes; do not reuse historical frequencies as final",
+      "only then use MODE EQ01 as first parametric benchmark, compare full and ROM model, complete time step sensitivity, then other six; fixed-base horizontal motion, no SSI; E02/E03 separate later"
+    ],
+    "outputs": [
+      "native job status and .dat/.msg/.sta",
+      "ODB-derived modes/participation and gravity reactions/PT forces",
+      "base shear, overturning moment, top displacement/acceleration, contact opening/slip, PT increment and energy, runtime, convergence"
+    ]
+  },
+  "formal_design_admitted": 0,
+  "limitations": [
+    "No authorized NB/T11600 full-text clauses verified; no site-specific geotechnical or long-period hazard spectrum; no final REV20 native modal or verified damping; no Abaqus runs or INP modification this turn.",
+    "5T1 duration, 0.5–2 amplitude factor, 20% mismatch and extra filtering sensitivity are research diagnostics, not universal mandatory rejection rules.",
+    "V7 has distinct events, not certified ordinary/nonpulse classification or site compatibility; not a formal rare/frequent suite."
+  ]
+}
