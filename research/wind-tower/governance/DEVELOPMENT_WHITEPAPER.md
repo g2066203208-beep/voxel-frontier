@@ -1,3 +1,11 @@
+### 2026-11-24｜v0.32.191 — 第二套文献候选地震动定向获取审计
+
+- 过程提交：97597cdcbe5fd93f7b930965fcffb9bf3d24ef1b；审计文件 `research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool/literature_exact_20261124/acquisition_audit_v0.32.191.json`。V7备用波组冻结，本轮无新增图件、无新增波形；不得将元数据或下载失败计为波形获取。
+- SBRC：独立读取2409行官方SI数据（blob 82138d81abb9842de15d1c1a372ee4554ccc5162），时间范围-5至43.16 s，dt=0.02 s，最大步长误差3.98e-15 s；S59W/S31E/UP 的PGA为0.4652/0.6854/0.1945 m/s²，PGV为0.04614/0.05205/0.01718 m/s，PGD为0.027833/0.03073/0.008794 m；梯形积分a²及线性插值获得D5-95=12.375/13.936/16.712 s。PEER处理版本HOLD。
+- 戴等《长周期地震下风力发电塔架结构地震反应分析》表2（DOI:10.6052/j.issn.1000-4750.2021.02.0121）列出ILA004N和ILA004W（0.064g/0.073g）、YPT-150（0.322g）、00022-90（0.058g）。表2共60条，不能称项目七条均为同一篇论文的七条原波；2024论文表4获取超时。
+- E04 CESMD CSMIP台站00022，90° PGA=57.28 cm/s²、PGV=6.26 cm/s，PGA与论文舍入一致，但尚无时程。E07 USGS GEOS MCF原始档案索引已定位，目录403。E01 Figshare DOI:10.6084/m9.figshare.19919375（CC BY 4.0，能量基线校正）下载失败且尚不知是否包含ILA004；不得当作PEER版本。E06 NIED台站村松，数据引用DOI:10.17598/NIED.0004，注册下载未通过。E03 ESM ZIP为用户提供的此前获取报告，本轮未读ZIP，许可待核。
+- TEST=SBRC真实CSV源级数值检查PASS；新增波形获取0；场址谱、PEER处理版本、Abaqus地震计算HOLD。容器DNS不可用，Figshare二进制下载失败，未伪造或替换目标记录。
+
 ### 2026-11-24｜v0.32.190 — 文献同源定向获取：SBRC官方原件
 
 实际RUN45391764497与commit 5c8458d3a45163091ce5b9a47018eb94789059ec。GeoNet 2011-02-21 23:51:42 UTC Christchurch、SBRC扩展频带校正CSV SHA256 07e4c2a11cbcc7faf8fe9b28cb5f615ef841b3372e182120b243b7edf385ff35，315937 bytes，2409点 dt .02s；S59W/S31E/UP PGA .4652/.6854/.1945 m/s²。低频过渡.05–.10Hz、上频24.50–25.50Hz。原始a/v/u数值及SI转换已归档，未调幅；PEER RSN8127的具体处理版本、分量及论文表4仍待核。修复常规和扩展文件重名（CSV无冲突），旧记录保留。ESM YPT metadata返回200，TK-1999-0077, net A, loc00, MP/CV, quality UNDEF computation failure；不可直接认定通过。CESMD第一次查询缺groupby返回400，重新修正，不伪称数据获取。日本NIED官方需要注册。文献同源记录现有DSLC及SBRC事件台站两组，均不等于正式工程输入。参见[获取收据](../experiments/T079/seismic-evidence-20261124/record-pool/literature_exact_20261124/receipt.json)。
