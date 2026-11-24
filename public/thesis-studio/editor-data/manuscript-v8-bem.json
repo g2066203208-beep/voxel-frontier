@@ -4318,6 +4318,26 @@
           "word_body_index": 388
         },
         {
+          "id": "wind-r11-001",
+          "kind": "text",
+          "style": "Normal",
+          "text": "以额定风速11.4 m/s和A类参考湍流强度0.16为例，按式（3.2-3）计算纵向脉动风速标准差为2.264 m/s，横向及竖向分别为1.8112和1.132 m/s。由式（3.2-5）计算三分量目标谱，如图3.2-1所示。低频谱值与积分尺度及方差有关，高频段随频率增大而衰减。该图为理论目标谱，不能代替实际生成风场的自谱核验。",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true
+        },
+        {
+          "id": "wind-r11-002",
+          "kind": "caption",
+          "style": "Caption",
+          "text": "图3.2-1  额定风速NTM三分量Kaimal目标功率谱",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true,
+          "figure_asset": "./wind-figures/02_kaimal_target.svg",
+          "figure_caption_match": "图3.2-1  额定风速NTM三分量Kaimal目标功率谱"
+        },
+        {
           "id": "v7-0352-21",
           "kind": "text",
           "style": "Normal",
@@ -4378,6 +4398,26 @@
           "word_body_index": 394
         },
         {
+          "id": "wind-r11-003",
+          "kind": "text",
+          "style": "Normal",
+          "text": "以11.4 m/s为参考平均风速，分别计算间距4、20和80 m的纵向风速相干函数，如图3.2-2所示。空间间距增大时，同频率下的目标相干程度降低；同一间距下，高频脉动的空间相干程度低于低频脉动。图中曲线由式（3.2-11）直接计算，不是模拟风场的估计相干函数。",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true
+        },
+        {
+          "id": "wind-r11-004",
+          "kind": "caption",
+          "style": "Caption",
+          "text": "图3.2-2  不同网格点间距的纵向风速目标相干函数",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true,
+          "figure_asset": "./wind-figures/03_coherence_target.svg",
+          "figure_caption_match": "图3.2-2  不同网格点间距的纵向风速目标相干函数"
+        },
+        {
           "id": "v7-0352-27",
           "kind": "h3",
           "style": "论文二级标题",
@@ -4434,6 +4474,26 @@
           "has_media": false,
           "has_math": false,
           "word_body_index": 400
+        },
+        {
+          "id": "wind-r11-005",
+          "kind": "text",
+          "style": "Normal",
+          "text": "根据轮毂高度161.368806 m、叶轮直径178.3 m及200 m×200 m风场尺寸绘制扫掠面网格，如图3.2-3所示。51×51网格覆盖转子扫掠区域，但网格下边界高程为61.368806 m，未覆盖塔底至该高程的塔段。计算塔身分布气动力时，须另行构建并核验覆盖完整塔高的入流。图3.2-3仅表示几何离散与覆盖关系。",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true
+        },
+        {
+          "id": "wind-r11-006",
+          "kind": "caption",
+          "style": "Caption",
+          "text": "图3.2-3  随机风场网格、转子扫掠面与塔架高度覆盖关系",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true,
+          "figure_asset": "./wind-figures/01_grid.svg",
+          "figure_caption_match": "图3.2-3  随机风场网格、转子扫掠面与塔架高度覆盖关系"
         },
         {
           "id": "b0358",
@@ -7570,6 +7630,26 @@
           "has_media": false,
           "has_math": false,
           "word_body_index": 665
+        },
+        {
+          "id": "wind-r11-007",
+          "kind": "text",
+          "style": "Normal",
+          "text": "图3.5-1以三组参考风速下的最大合位移与最大合弯矩为指标，比较NTM和ETM六个随机实现的均值与样本标准差。两种指标的ETM均值均高于同风速NTM，且19.202 m/s工况的平均峰值低于11.4 m/s工况。图中结果来自表3-16所列历史OpenFAST分区阻尼工况统计，不属于当前REV22精细混塔的实际风致响应。",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true
+        },
+        {
+          "id": "wind-r11-008",
+          "kind": "caption",
+          "style": "Caption",
+          "text": "图3.5-1  三组参考风速下NTM与ETM整机峰值响应比较",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true,
+          "figure_asset": "./wind-figures/04_archived_response.svg",
+          "figure_caption_match": "图3.5-1  三组参考风速下NTM与ETM整机峰值响应比较"
         },
         {
           "id": "b0523",
@@ -11994,10 +12074,11 @@
     }
   ],
   "online_revision": {
-    "version": "V8-R10-SEISMIC",
+    "version": "V8-R11-WIND",
     "date": "2026-11-24",
-    "scope": "Online manuscript only; existing Word/PDF unchanged. 3.10 and 4.10 inserted; figures linked to archived original PNG; results pending.",
+    "scope": "V8-R10 plus four wind figures and eight associated editable blocks; raw BTS unavailable; theoretical plots and archived response statistics distinguished; Word/PDF unchanged.",
     "source_gate": "74fb3aee9dfef058b972a3f0e03aa571319c2fe2",
-    "source_inp": "cdb719b95b8ce4301011489b4ab8ffc9e73c18bf"
+    "source_inp": "cdb719b95b8ce4301011489b4ab8ffc9e73c18bf",
+    "wind_manifest": "./wind-figures/manifest.json"
   }
 }
