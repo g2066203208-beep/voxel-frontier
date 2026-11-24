@@ -1,3 +1,7 @@
+### 2026-11-24｜v0.32.185 — 停止扩库，七组研究输入收尾脚本
+
+GeoNet V6 RUN45362359701 SUCCESS：官方ForStructuralAnalyses.zip 280633109 bytes SHA256 a0ec9c00a1e649a46c8e8da00cb819d98c13499bd24d63e6d5fff4dfe780627f；实际20组原件、9事件，和ESM56组共76候选。按用户要求停止扩库，新增冻结脚本校验原件SHA、V2A分量/点数/单位/PGA并实际重算5% RotD50，七事件均值谱匹配以.2T1–10s为重点、共同调幅0.2–5（研究假设），报告全谱误差及持续时间；工作室独立发布脚本仅在实际成功后执行。不把候选或程序提交当已完成，不认证工程场址谱、不修改INP、不合并PR#42。
+
 ### 2026-11-24｜v0.32.184 — V5真实新增及5事件全谱离散匹配，转GeoNet扩库
 
 RUN45361733825 SUCCESS，48请求实际新增5组，56组复算，13组源级通过、7个事件，8组持续时间和频带通过、5事件；43次失败不绕过授权。对8组真实5%谱CSV实际计算0.1–10s的10个周期点（MODE对非原有周期对数插值），枚举8种5事件组合并以0.5≤k≤2加权相对均值谱误差最小化，最佳SBT/CIMA/CSA/MAME/MODE，倍率0.54561/0.50000/0.50000/0.50000/1.95530，相对RMS 32.90%，全点最大59.26%，4–10s最大33.08%；仅离散研究谱试配，非正式7组。实际数值[JSON](../experiments/T079/seismic-evidence-20261124/record-pool/FIVE_EVENT_SPECTRAL_FIT_V1.json)。GeoNet NZSMDB官方[756组结构时域候选原件](https://www.geonet.org.nz/data/supplementary/nzsmdb)，TimeDomain_README p1、Flatfiles_ColumnExplanation p1–2实际视觉核读，fmin为提供方最小可用频率，fmin≤1/15s；CC BY 3.0 NZ。新增GeoNet V6原件获取脚本，未确认新波下载/格式/数值，不能提前宣布7组完成。正式目标及工程准入仍HOLD。不改INP/不合并PR。

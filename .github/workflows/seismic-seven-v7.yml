@@ -1,0 +1,60 @@
+name: Freeze seven natural research waves and publish Studio
+on:
+  push:
+    branches: [research/t080-seismic-integration-gates-20261022]
+    paths: ['.github/workflows/seismic-seven-v7.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  freeze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          sparse-checkout: research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install --quiet numpy scipy matplotlib
+      - name: Calculate actual spectra and freeze seven distinct records
+        env:
+          OPENBLAS_NUM_THREADS: '1'
+          OMP_NUM_THREADS: '1'
+        run: python research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool/freeze_seven_v7.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: T079-seven-research-waves-v7
+          path: research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool/research_seven_v7
+      - name: Archive verified suite
+        run: |
+          git config user.name paper-studio-bot
+          git config user.email paper-studio-bot@users.noreply.github.com
+          git add research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool/research_seven_v7
+          git commit -m 'Freeze seven natural research motions with spectra, original and scaled samples'
+          for i in 1 2 3 4 5; do
+            git pull --rebase origin ${GITHUB_REF_NAME}
+            if git push origin HEAD:${GITHUB_REF_NAME}; then exit 0; fi
+            sleep 4
+          done
+          exit 1
+      - name: Publish actual seven-motion package to Studio main
+        run: |
+          cp research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool/publish_seven_v7.py /tmp/publish_seven_v7.py
+          git fetch origin main
+          git worktree add --detach /tmp/studio-main origin/main
+          cd /tmp/studio-main
+          mkdir -p research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool
+          cp -r "$GITHUB_WORKSPACE/research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool/research_seven_v7" research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool/
+          python /tmp/publish_seven_v7.py
+          git add public/thesis-studio/seismic-archive
+          git commit -m 'Publish seven natural research waves in thesis Studio'
+          for i in 1 2 3 4 5; do
+            git pull --rebase origin main
+            if git push origin HEAD:main; then exit 0; fi
+            sleep 4
+          done
+          exit 1

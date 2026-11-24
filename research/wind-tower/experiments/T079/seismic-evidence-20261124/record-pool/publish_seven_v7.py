@@ -1,0 +1,11 @@
+import pathlib,json,html,shutil
+src=pathlib.Path("research/wind-tower/experiments/T079/seismic-evidence-20261124/record-pool/research_seven_v7")
+dest=pathlib.Path("public/thesis-studio/seismic-archive/v7");dest.mkdir(parents=True,exist_ok=True)
+s=json.loads((src/"summary.json").read_text());assert len(s["selected"])==7 and len({r["event"] for r in s["selected"]})==7
+for f in src.iterdir():
+    if f.is_file():shutil.copy2(f,dest/f.name)
+rows="".join(f'<tr><td>{r["id"]}</td><td>{html.escape(r["station"])}</td><td>{html.escape(r["source"])}</td><td>{r["mw"]}</td><td>{r["dt"]}</td><td>{r["scale"]:.4f}</td><td>{r["scaled_pga"]:.4f}</td><td><a download href="{r["id"]}_{html.escape(r["station"])}.zip">下载完整原件与时程</a></td></tr>' for r in s["selected"])
+(dest/"index.html").write_text(f'''<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>地震波研究输入 V7</title><style>body{{font:16px/1.6 system-ui,sans-serif;max-width:1100px;margin:auto;padding:24px;color:#203030}}a{{color:#086d62}}table{{border-collapse:collapse;width:100%}}td,th{{padding:9px;border-bottom:1px solid #ddd;text-align:left}}img{{width:100%}}.download{{display:inline-block;background:#16766d;color:white;padding:12px 20px;border-radius:6px}}section{{margin:24px 0}}.scroll{{overflow:auto}}</style><a href="../">地震动档案</a> · <a href="../../inp-archive/">INP档案</a><h1>七组天然地震波 · 研究输入 V7</h1><p>不同地震事件 7/7。参数化研究目标谱，不是场址工程设计认证。重点周期最大偏差 {s["focus_max_relative_error"]*100:.2f}%，T1偏差 {s["T1_relative_error"]*100:.2f}%。</p><p><a class="download" download href="T079_SEVEN_RESEARCH_WAVES.zip">下载完整七组地震波 ZIP</a></p><p><a download href="selection.csv">参数表</a> · <a download href="suite_spectrum.csv">平均谱</a> · <a download href="summary.json">数值证据</a> · <a download href="manifest.json">哈希清单</a></p><div class="scroll"><table><tr><th>编号</th><th>台站</th><th>来源</th><th>Mw</th><th>dt/s</th><th>调幅</th><th>PGA m/s²</th><th>下载</th></tr>{rows}</table></div><section><h2>反应谱对比</h2><img src="spectra.png"></section><section><h2>双水平时程</h2><img src="waveforms.png"></section></html>''',encoding="utf-8")
+p=dest.parent/"index.html";t=p.read_text();needle="<h1>地震动档案</h1>";assert needle in t
+link='<p><a class="download big" href="v7/">V7 · 七组天然地震研究输入 · 直接下载</a></p>'
+if 'href="v7/"' not in t:p.write_text(t.replace(needle,needle+link,1))
