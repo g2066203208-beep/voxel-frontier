@@ -1,0 +1,152 @@
+{
+  "run": 45350001907,
+  "artifact": 14899048987,
+  "source_commit": "9d1c4333ff9c8aa317111ea403920dec57cf6277",
+  "reference": {
+    "blade_mass_normalized_error": 4.018070468077715e-15,
+    "full_mass_normalized_error": 7.025061256153076e-14,
+    "original_reconstructed_internal": 900,
+    "mass_scaled_skew_roundoff": {
+      "M": 2.268243363401614e-17,
+      "K": 0,
+      "C": 2.1845651467709565e-17
+    },
+    "blade_first_12_fixed_hub_Hz": [
+      0.6152482832216885,
+      0.9362348218829233,
+      1.7489930598562584,
+      2.7774195733610743,
+      3.5768947824226722,
+      5.687990088573893,
+      6.085413600154688,
+      6.6727479554691715,
+      8.821020011211683,
+      9.8180203558461,
+      11.33552323453048,
+      12.269947346748562
+    ],
+    "blade_internal_dofs": 300,
+    "rigid_stiffness_normalized_defect": 6.180062307961361e-11,
+    "source_model": "Independent linear exact-static Timoshenko element, not native Abaqus B31 matrices",
+    "abaqus_native": "NOT_RUN",
+    "scope": "Actual source properties and independent linear beam assembly; no preload, no large rotation; standalone only"
+  },
+  "bands": [
+    {
+      "band_hz": 2,
+      "choice": {
+        "order": 2,
+        "exact_modes": 12,
+        "tail_modes": 12,
+        "total_internal": 24,
+        "max_sample_error": 6.343081063330653e-7,
+        "max_sample_bound": 8.621052345208869e-7,
+        "uniform_bound": 0.00021478544753413873,
+        "mass_scaled_min_eigenvalue": 0.005349888958878382,
+        "residual_identity_roundoff": 5.454545018718382e-19,
+        "omitted_min_hz": 3.5768947824226722
+      },
+      "total_dofs": 30,
+      "actual_reference_sample_error": 6.343081065118412e-7,
+      "equal_order_CB_sample_error": 0.0018763683268456697,
+      "rigid_mass_error": 7.024787058107269e-14,
+      "fixed": {
+        "file": "RNA_REV19_PORT_02HZ_FIXED.inp",
+        "bytes": 21362,
+        "sha256": "5b84f1a9d45e35318126beb4791f894d97bb1b114cd18c1363e99007e8a20439"
+      },
+      "free": {
+        "file": "RNA_REV19_PORT_02HZ_FREE.inp",
+        "bytes": 21337,
+        "sha256": "37c6a02546645927bf60433f6287a996ca7e6fb6db02f05a67bae9239f19aa16"
+      }
+    },
+    {
+      "band_hz": 5,
+      "choice": {
+        "order": 1,
+        "exact_modes": 24,
+        "tail_modes": 6,
+        "total_internal": 30,
+        "max_sample_error": 0.00016546953117794813,
+        "max_sample_bound": 0.00019801724441070891,
+        "uniform_bound": 0.0006972187519050942,
+        "mass_scaled_min_eigenvalue": 0.005537647748328746,
+        "residual_identity_roundoff": 4.33009728356028e-20,
+        "omitted_min_hz": 8.821020011211683
+      },
+      "total_dofs": 36,
+      "actual_reference_sample_error": 0.0001654695311779527,
+      "equal_order_CB_sample_error": 0.008085946005453324,
+      "rigid_mass_error": 7.024787058107269e-14,
+      "fixed": {
+        "file": "RNA_REV19_PORT_05HZ_FIXED.inp",
+        "bytes": 21326,
+        "sha256": "292a35bf13b0d2b243191db915aa673b15e04a4a8613e6753127e6b1ab886407"
+      },
+      "free": {
+        "file": "RNA_REV19_PORT_05HZ_FREE.inp",
+        "bytes": 21301,
+        "sha256": "ead250df254c586c3a76229fc688bffc90e59d9f5ec8059ca125341f9e9edbf1"
+      }
+    },
+    {
+      "band_hz": 10,
+      "choice": {
+        "order": 2,
+        "exact_modes": 39,
+        "tail_modes": 12,
+        "total_internal": 51,
+        "max_sample_error": 0.00000422286175654494,
+        "max_sample_bound": 0.0000055956546390649225,
+        "uniform_bound": 0.0002945269007019561,
+        "mass_scaled_min_eigenvalue": 0.0028190012674009566,
+        "residual_identity_roundoff": 3.297538349774647e-20,
+        "omitted_min_hz": 15.76554984893288
+      },
+      "total_dofs": 57,
+      "actual_reference_sample_error": 0.000004222861756392923,
+      "equal_order_CB_sample_error": 0.0038812318548662943,
+      "rigid_mass_error": 7.024787058107269e-14,
+      "fixed": {
+        "file": "RNA_REV19_PORT_10HZ_FIXED.inp",
+        "bytes": 38260,
+        "sha256": "ee72626c566ed216eaf4157deb7b1a3ec8b765f4a3bedf9439d7bdddab69445e"
+      },
+      "free": {
+        "file": "RNA_REV19_PORT_10HZ_FREE.inp",
+        "bytes": 38235,
+        "sha256": "e7ec64fb32ae03451d992a8750083cdfd31c89a4406b6339a787ac7400f42a94"
+      }
+    },
+    {
+      "band_hz": 15,
+      "choice": {
+        "order": 1,
+        "exact_modes": 57,
+        "tail_modes": 6,
+        "total_internal": 63,
+        "max_sample_error": 0.00016224546378986525,
+        "max_sample_bound": 0.00019928651880888004,
+        "uniform_bound": 0.0006774807921242234,
+        "mass_scaled_min_eigenvalue": 0.002948482718647616,
+        "residual_identity_roundoff": 4.0709960970430724e-21,
+        "omitted_min_hz": 23.93775899784143
+      },
+      "total_dofs": 69,
+      "actual_reference_sample_error": 0.00016224546378991694,
+      "equal_order_CB_sample_error": 0.005699308567793294,
+      "rigid_mass_error": 7.024787058107269e-14,
+      "fixed": {
+        "file": "RNA_REV19_PORT_15HZ_FIXED.inp",
+        "bytes": 41936,
+        "sha256": "4e19909a77970c9a450e19f80b5a54f34390520c451942ce66a4c8731388d11c"
+      },
+      "free": {
+        "file": "RNA_REV19_PORT_15HZ_FREE.inp",
+        "bytes": 41911,
+        "sha256": "b7a787eb0222a90f67d4f258f5e60e84fb71e237b277c3ec5e57c61c3f6da7b2"
+      }
+    }
+  ]
+}
