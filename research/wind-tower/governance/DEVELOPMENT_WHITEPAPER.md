@@ -1,3 +1,45 @@
+### 2026-11-24｜v0.32.163 PATCH — 导师RNA创新要求：柔性分布参数与接缝响应导向降阶研究设计
+
+**决策变更：** 根据用户本轮明确转述导师要求，REV15偏心刚体质量与惯量仅为对照，不作为唯一正式RNA或创新点。继承T048既有柔性分布参数模型（DPM），作为停机结构地震研究的主候选；不恢复展示壳网格。研究目标：以相同RNA质量、质心、惯量和塔架状态为基础，隔离叶片柔性对塔顶六分量传力及预应力节段接缝响应的影响，并研究满足响应误差限制的最小RNA模型。该目标是拟验证的创新假说，不是已证明首创，不将CB模态综合或普通B31梁本身称为创新。尚未完成任何新增原生求解或新INP；REV15字节保持。
+
+#### 1. 文献对照和研究边界
+
+- 史士刚、翟恩地、徐成顺、杜修力、孙一龙，《工程力学》2023,40(6):19–27,36，[DOI 10.6052/j.issn.1000-4750.2021.11.0887](https://doi.org/10.6052/j.issn.1000-4750.2021.11.0887)。NREL5MW，RNA_M/ME/MEJ/RB/FB五级比较，摘要、表2及图5/8/9索引已核：低阶简化可用，但MEJ/RB多项峰值最大相对偏差仍超过10%，高阶宜保留柔性。不是本塔误差。原图未获得可归档字节。
+- Ali、De Risi、Sextos，SDEE 2021,141:106483，[DOI](https://doi.org/10.1016/j.soildyn.2020.106483)，研究偏心、转动惯量、柔性叶片对塔架失效位置及地震易损性影响；不是新的柔性RNA概念。
+- Alkhoury等，《Wind Energy》2021，[DOI 10.1002/we.2598](https://doi.org/10.1002/we.2598)，§3.2.1/图2/表4：同DTU10MW叶片分51站点广义截面，保留分布质量、弯剪轴扭刚度、质量和剪切中心，Abaqus与HAWC2模态验证；固定基础原型钢塔不同于158m混塔。表4 HAWC2/该文Abaqus频率（Hz）：塔一阶侧向0.249/0.250、前后0.251/0.251；一阶叶片非对称挥舞0.547/0.549、0.590/0.594，集体挥舞0.634/0.626；一阶非对称摆振0.922/0.933、0.936/0.945；二阶叶片挥舞0.547组之外的1.376/1.391、1.550/1.579、1.763/1.740；二阶塔侧向1.969/2.108、前后2.247/2.301。上述为整机模态，不是固定根单叶片目标值，不直接作为本文混塔固有频率。
+- Gözcü、Verelst，WES2020,5:503–517，[DOI 10.5194/wes-5-503-2020](https://doi.org/10.5194/wes-5-503-2020)，DTU10MW/IEA10MW结构叶片模型精度和计算耗时，两个模型版本不同须分别冻结。
+- Wang等，JMSE2026,14(10):956，[DOI](https://doi.org/10.3390/jmse14100956)，15MW DPM、MPM、CPM，第二塔模态误差、不同频谱地震影响，说明DPM已有直接先例。
+- JMSE2026,14(11):1001，[DOI](https://doi.org/10.3390/jmse14111001)，14DOF气动伺服弹性RNA超单元，保留柔性、转动、控制，OpenFAST校核；与其相比本文不宣称首创RNA超单元。JPCS [10.1088/1742-6596/3224/7/072022](https://doi.org/10.1088/1742-6596/3224/7/072022) 已有空转RNA超单元地震比较，仅核摘要、全文访问失败。
+- 混塔特定竞争研究：[Intelligent analysis of dynamic characteristics of steel-concrete hybrid wind turbine tower based on adaptive vibration mode](https://www.sciencedirect.com/science/article/pii/S2352012424013870) 摘要已比较RNA简化与混塔模态；[10.1016/j.rcns.2026.03.002](https://doi.org/10.1016/j.rcns.2026.03.002) 摘要已有精细风震混塔；[10.1016/j.engstruct.2026.123195](https://doi.org/10.1016/j.engstruct.2026.123195) 水平接缝多轴承载；[10.1002/suco.202300873](https://doi.org/10.1002/suco.202300873) 干接缝试验及组合加载。不可将“混塔+柔性RNA+地震”三者机械组合宣称全球首创；全文查新及竞争方法差异仍需落实。
+- Craig/Bampton 1968 [10.2514/3.4741](https://doi.org/10.2514/3.4741)，经典固定界面模态综合；[Abaqus2026 Using Substructures](https://docs.software.vt.edu/abaqusv2026/English/SIMACAEANLRefMap/simaanl-c-superelements.htm) 与 [Generating Substructures](https://docs.software.vt.edu/abaqusv2026/English/SIMACAEANLRefMap/simaanl-c-superelementdef.htm) 支持约束模态和固定界面模态，使用级可处理子结构刚体大转动但内部相对变形线性，不能把CDP、接触和塑性混塔整体凝聚为线性子结构。停机RNA在小弹性相对变形范围才使用该方法。
+- 原图：何2024已有用户原件PDF36直接显示（其§3.4忽略偏心）。本轮新期刊原图字节未归档，以上来源为实际核读网页/摘要，不声称全部原图完成。
+
+![何2024 PDF36正文25原页](../references/evidence-screenshots/he-zeyu-tower-original/he-36.png)
+
+#### 2. 继承已有T048与原始输入（本轮真实回读及复算）
+
+T048 [README](../experiments/T048/README.md)、[生成器](../experiments/T048/build_dpm_rna.py)、[审计](../experiments/T048/generated/RNA_DPM_AUDIT.json)，状态 INPUT_GENERATED_SOLVER_VALIDATION_PENDING。生成器blob c5ab40ded5a8f21bffc5a615b2dcfd43c91a7a64；结构源 [DTU HAWC2 Blade_st.dat](../references/baselines-and-site-20261004/dtu-hawc2-reference/data/DTU_10MW_RWT_Blade_st.dat) blob eae9b1e338b72323662efe772553efa39ffce753。原文件有$1/$2各51行，不可跨数据集积分；本轮实际选$1，51×19数值列，r严格递增，长度86.366m，线质量梯形积分41722.411281503126kg/片，沿r一阶矩梯形积分/质量26.105099398956206m，沿r二阶质量矩梯形积分45592714.644665815kg·m²（仅径向矩，不是三维质心惯量）。现有T048用OpenFAST R2同一质量链调整系数1.0002381364332718，单片41732.3469077132kg，三片125197.040723kg，hub105520kg、nacelle446036.25kg、总676753.290723kg。REV15母本676604.565kg、DTU2013报告673998kg、历史R2 676753.290723kg三者不可混为同一基准。
+
+源几何：T048 O=(0,158,0)m、rotor apex=(0,161.36880577350837,-7.072982356451393)m、nacelle CG=(0,160.45,2.687)m；源HubRad2.8m、OverHang−7.1m、ShftTilt−5°、Twr2Shft2.75m、PreCone−2.5°；待按冻结ElastoDyn坐标及转轴符号再次核对，禁止继承REV15旧160m连接RP作为接口。当前源有150 B31、153 blade stiffness nodes、153 mass nodes，加轮毂/机舱质量及转动惯量单元，远少于旧展示壳。
+
+[HAWC2官方结构输入表1](https://hawc2.pages.windenergy.dtu.dk/documentation/hawc2-manual/08-structural_input.html) 证明19列的r为曲线长度、ri_x/ri_y基于弹性中心、I_p列对应扭转常数K而非一般极惯性矩、theta_s是结构主轴角而非运行变桨角。转换EA、EI_x、EI_y、G K、k_x G A、k_y G A并保持局部坐标；刚度及质心/剪切中心/回转半径必须一致转换，不用均匀假钢材代替复材。旧T048 station_geometry为直线参考轴，未读c2_def预弯曲线；仅轴向HubIner及仅偏航NacYIner，不是完整部件惯量；azimuth固定0/120/240°，没有真实停机pitch和转轴运行自由度、阻尼或原生模态验证。生成器用max截断中心惯量负值也需改为数据与正定性核查，不掩盖错误。优先按同一版本原始几何、质量、刚度及可用惯量重建；缺失机舱/轮毂惯量分量列明假设与敏感性，不能编造全张量。Abaqus [BEAM GENERAL SECTION](https://docs.software.vt.edu/abaqusv2025/English/SIMACAEKEYRefMap/simakey-r-beamgeneralsection.htm)、[SECTION INERTIA](https://docs.software.vt.edu/abaqusv2025/English/SIMACAEKEYRefMap/simakey-r-sectioninertia.htm)、[SECTION STIFFNESS](https://docs.software.vt.edu/abaqusv2026/English/SIMACAEKEYRefMap/simakey-r-sectionstiffness.htm) 为截面变换实现参考；若原始源提供完整耦合矩阵，先验证轴序/符号和正定性，再引入完全耦合截面，不能冒称旧19列已含全部复材弯扭耦合。
+
+#### 3. 拟研究创新：接缝响应约束的RNA保真度选择与低阶模型
+
+同一修正柔性RNA生成对照，统一总质量、CG和刚体6×6质量矩阵、相同塔网格/PT/接触/材料/输入及输出口径。A=标量点质量（何方法对照）；B=完整偏心刚体惯性（REV15方案，按统一源重建）；C=三柔性变截面梁DPM（主参考）；D=固定界面模态综合RNA（可选效率模型）。A的偏心/惯量缺失就是被控制的物理变量，不强制A具有惯量；B/C/D刚体惯性一致。首先在停机锁定、指定桨距/方位的结构地震工况比较，禁止称为运行气弹耦合或陀螺效应。运行/空转用真实旋转状态及控制，作为单独扩展。
+
+设塔顶六DOF为u_b，RNA内部自由度u_i。对某一预平衡停机状态RNA线性化 K、M、C；约束模态Psi=−K_ii^{-1}K_ib，固定界面模态Phi_r满足K_ii Phi=M_ii Phi Omega²；T=[[I,0],[Psi,Phi_r]]，Mr=T^T M T、Kr=T^T K T、Cr=T^T C T。输入力、重力及基底加速度等效惯性力同时作T^T变换，不能遗漏内部质量参与。完整RNA六DOF动态刚度Zb(ω)=D_bb−D_bi D_ii^{-1}D_ib，D=K+iωC−ω²M。用六分量界面传递函数及单位统一的能量/参考力矩归一化比较；防止将N与N·m直接做未归一化范数。六DOF界面响应不能只保留塔顶位移。优先按固定界面频率及耦合残量增补模态，逐步测试6/12/18个内部模态（总12/18/24自由度），不是预定最终个数。独立DPM做收敛，频段由真实输入谱、塔模态、叶片模态和关注输出共同确定，0–5Hz仅初步筛查，必要时扩展。不声称固定接口模态频率可直接等于整机频率。
+
+拟验收指标（本研究精度目标，非规范阈值）：匹配关键模态频率误差≤2%，MAC≥0.95；同工况塔顶六分量及塔底弯矩主要峰值误差≤5%；接缝最大张开、滑移、张开面积比、PT力增量、局部损伤及摩擦耗能分别比较；峰值非零且稳定时目标≤10%，近零量用绝对误差/物理尺度且报告是否漏判开缝、滑移、关键接缝位置及损伤起点。不同记录按同一准则检验，保留未通过者，不只用一条弱震记录。结合输入谱及PT压紧状态，识别RNA阶数对开缝阈值、接缝损伤及薄弱区判定的影响；结果不预设。若150梁DPM与降阶整塔总耗时差异很小，不强制超单元，直接使用DPM并报告效率；不把自由度减少百分比冒充实测加速。试验矩阵先少量代表性记录与强度分级，再选控制工况扩大，PT假定两档、方向及停机方位作必要敏感性，保持荷载一致。建议先做小型RNA组件及线性整机，再整塔非线性，不同时大改接触、网格及阻尼。
+
+#### 4. 阻尼及载荷所有权
+
+叶片自身阻尼从冻结OpenFAST Blade/HAWC2源读取，和塔架目标1%附加黏性分开；REV14历史αβ不可直接赋给新增叶片所有频率。分别检查塔/叶片模态与能量、RNA刚体质量比例阻尼、基底惯性输入，避免重复耗能。停机地震采用一致相对坐标及质量惯性；OpenFAST风载仍HOLD：若使用完整YawBr界面反力，不同时让Abaqus RNA重复产生同样惯性、重力和气弹作用；若施加独立外部气动力，可保留RNA物理动力并做自由体对账。风震联合作用必须同一载荷所有权及时间状态，未完成不能声称已实现。
+
+#### 5. 下一执行顺序及论文边界
+
+P1 冻结T048真实源版本，修正c2曲线/坐标/结构截面/质量账本/部件惯量/停机桨距、阻尼；独立固定根叶片、停机RNA及原型钢塔的模态对照。P2 对REV15母本制作等质量A/B/C对照，按DPM完成重力与模态及代表性地震，记录关键接口和接缝。P3 在C基础上生成D并测试截断误差、实际CPU内存和耗时；达到误差和效率要求才推广，未达到保留C。P4 明确运行扩展和风载边界，不拖延停机地震主线。论文创新点写为“接缝非线性响应约束下的RNA柔性建模与保真度选择/降阶方法”研究目标，是否形成方法创新取决于真实结果和查新；不把既有DPM/CMS称为首次提出。此次只完成研究设计、源文件核查与积分，原生NOT_RUN，未改REV15、未合并PR#42。
+
 ### 2026-11-24｜v0.32.162 PATCH — REV15 RNA偏心集中质量与完整惯量等效
 
 **实际源/目标：** REV14 SHA256 70c88e645da2e2195fbc089c4af3432d9a37eb38c66296fd23a8b7e1437d5faa；REV15 HE_REV15_EQ_RNA_LUMPED.inp SHA256 ab66bc21c4ba9d642c60dd217f7219c01111a0695c9d2f14f9e11132cbaf83d7，23300318 bytes（原34233672），32处按原字节区间长度与SHA256校验的精确差异。原模型作为展示及历史对照完整保留。main d21681f6f3735eeadc03659bddb64a2aea9a2c27，补丁blob 5e6f89e65daefa07ba0c393768515d2dec4d673f已回读一致。完整INP、审计、脚本、补丁Google Drive备份成功。工作室增加schema2的哈希区间差异重建支持；Pages部署未验。原生NOT_RUN。
