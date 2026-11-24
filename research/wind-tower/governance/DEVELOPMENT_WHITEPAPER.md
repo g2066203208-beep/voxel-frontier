@@ -1,3 +1,46 @@
+### 2026-11-24｜v0.32.161 PATCH — REV14 1% Rayleigh阻尼及相对坐标地震试算
+
+用户同意按1%研究假设继续，不因阻尼文献原页截图暂缺而暂停。继承v0.32.160所述Buildings 2026 §3.1、Shock and Vibration 2024及BF1历史模态依据；非原型实测或当前模型标定。母本REV13 SHA256 7a56d8f7bfc059434f57dc4ddb99961e2ea1f41176b6aff27e587ad4fcd1f8d2。实际生成HE_REV14_EQ_RAYLEIGH_1PCT.inp，34233672 bytes，SHA256 70c88e645da2e2195fbc089c4af3432d9a37eb38c66296fd23a8b7e1437d5faa。
+
+#### 1. 实际阻尼赋值
+
+历史BF1 f1=0.13525 Hz、f5=0.79428 Hz，ξ=.01；α=4πξf1f5/(f1+f5)=0.014523033997560875 s⁻¹，β=ξ/[π(f1+f5)]=0.003424417567843864 s。实际7种可变形材料C65、C70、HPB300_TIE、Q355_TOWER_T16_40、Q355_FLANGE_PLATE_T100、HRB400、STRAND_1860下均新增：
+
+```inp
+*Damping, alpha=0.0145230339976, beta=0.00342441756784
+```
+
+RNA刚体质量骨架的7种材料MAT_RNA_BLD_Z1–Z5、MAT_RNA_HUB_EQ、MAT_RNA_NAC_EQ新增同α，β=0，不引入骨架人为弹性刚度耗能。RNA刚体质量比例阻尼实际参与、非结构质量与约束消元后的整体阻尼须由原生求解验证。Abaqus β基于材料弹性刚度及应变率，不是整个非线性切线刚度。前四步原字节保留；未改变CDP、塑性、接触、配筋、PT或质量。
+
+#### 2. 地震输入改为相对坐标
+
+REV13直接给基底加速度，若简单加α可能产生基底绝对平移的虚假阻尼。对统一平移基底、无SSI、无多点差动输入，令绝对位移 x=u+r u_g，速度和加速度同理；相对方程为 M u¨+C u˙+R(u)=P_gravity−M r a_g。将塔底及PT下锚固定，以负方向全模型GRAV等效地震惯性力代替原加速度边界，保留原自重及初始预应力平衡状态。依据[Abaqus Material Damping 2025](https://docs.software.vt.edu/abaqusv2025/English/SIMACAEMATRefMap/simamat-c-dampingopt.htm)、[Distributed Loads](https://docs.software.vt.edu/abaqusv2026/English/SIMACAEPRCRefMap/simaprc-c-loaddistributed.htm)、[About Loads](https://docs.software.vt.edu/abaqusv2026/English/SIMACAEPRCRefMap/simaprc-c-loading.htm)、[Nonstructural Mass](https://docs.software.vt.edu/abaqusv2026/English/SIMACAEMODRefMap/simamod-c-nonstructuralmass.htm)。官方说明支持全质量GRAV、方向及幅值定义、同一步荷载叠加、OP=NEW后重列原荷载，NSM参与质量比例荷载与阻尼；刚体骨架载荷参与及等效关系尚待原生检查。实际最后一步修改为：
+
+```inp
+*Step, name=EQ_2H_RAYLEIGH_REL, nlgeom=YES, inc=2000000, unsymm=YES
+Unscaled ESM horizontal record, fixed-base relative coordinates; provisional Rayleigh 1%.
+*Dynamic, application=TRANSIENT FIDELITY
+0.005, 160.195, 1.e-7, 0.005
+*Contact Controls, reset
+** Uniform support translation: -M r a_g; no simultaneous prescribed support motion.
+*Boundary, op=NEW, type=DISPLACEMENT
+CSEG_01-1.FACE_BOTTOM, 1, 3, 0.
+PT_36x15p2-1.SET_PT_BOTTOM_GEOM, 1, 3, 0.
+** Reassert self-weight when replacing distributed loads. All directions use the same whole-model mass selection.
+*Dload, op=NEW
+, GRAV, 9.81, 0., -1., 0.
+*Dload, op=NEW, amplitude=EQ_X_EAST_SI
+, GRAV, 1., -1., 0., 0.
+*Dload, op=NEW, amplitude=EQ_Z_MINUS_NORTH_SI
+, GRAV, 1., 0., 0., -1.
+```
+
+原始ESM X/Z各32040样点逐值不变，首值0，终时160.195s，PGA分别0.47522846/0.51205727 m/s²。地震载荷为−a_g方向；静力重力−Y、9.81 m/s²。输出U/V/A相对于固定地基，绝对加速度应加回同方向地震加速度；绝对位移及速度需要一致的基线校正及积分，不能直接把相对输出当绝对运动。底部探针应为零运动而非输入波复现，需用载荷幅值/整体惯性平衡核验输入。ALLVD、ALLFD、ALLPD、ALLDMD等输出保留。不是多点、竖向、SSI或风震联合作用。
+
+#### 3. 实际验证、归档与论文表述
+
+16处精确差异、逆向恢复原件逐字节一致、103/103 Part闭合、前四步逐字一致、接触/截面/锚固/刚体/NSM关键词不变、两地震幅值逐值一致。完整INP、补丁、审计与生成脚本均备份Google Drive；main 24c14a3d561ed919b022a4a6f6376ec54b629c0d，补丁blob 2fbc5e20aafee8ae04eecab878ad791a2499c567，远端回读一致，manifest新增REV14独立试算项，基础latest仍REV11。Pages实际部署未验。原生Data Check及全塔求解NOT_RUN；不能保证收敛。当前模态参与质量及RNA/NSM惯性与阻尼、ALLVD能量及高频阻尼需核验，原始记录未做场址设计谱调幅，风荷载仍HOLD。论文应将1%附加黏性阻尼、控制频率、相对运动方程和后处理口径写入方法节；2%/5%仅已算系数，尚未生成对应动力输入或结果。待当前模态结果更新α、β，不冒称历史参数为正式标定。阻尼原文截图仍未补档，本轮用户同意先计算，保留既有源定位和缺项；不伪造原图。不合并PR#42。
+
 ### 2026-11-24｜v0.32.160 PATCH — Rayleigh目标阻尼确定与历史模态系数预估
 
 **研究决定：** 非线性混塔地震诊断模型附加黏性结构阻尼基准ξ=1%，ξ=2%、5%为敏感性工况；这是本研究假定，不是本塔实测值、规范强制值或已包含气动/土体耗能的总阻尼。当前REV11/13原生模态尚未确认，不把预估系数直接冒充正式模型标定。
