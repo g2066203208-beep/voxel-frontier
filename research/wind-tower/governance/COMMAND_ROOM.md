@@ -1,3 +1,6 @@
+## 2026-11-24｜RNA轻量等效 · START
+- READ_BASE_SHA=501392f4728931410f7c2ee352abf03cc3090d4c；读取根/研究AGENTS、指挥室、白皮书v0.32.161、REV14实际RNA部件/约束/材料；核查IEC61400-1:2019附录D、DTU报告I-0092 §6.2.1、Frontiers 2025表7、Soil Dynamics and Earthquake Engineering 2021 RNA建模研究、Abaqus MASS/ROTARYI/RIGID BODY。用户授权计算模型减负；保留原模型，去除展示网格，解析积分现有刚体骨架质量/质心/惯量，建立偏心集中质量和惯量候选，不改变其他物理模型、不执行原生求解。原型数据差异另列，不冒称完全标定。
+
 ## 2026-11-24｜REV14阻尼方法规范复核 · START
 - READ_BASE_SHA=54cadfebeca8307e05105ded3fe413c5a85d47af；已读根/研究AGENTS、指挥室、白皮书v0.32.161、REV14真实审计。核读GB50135—2019 §4.4.6及表注、T/CEC5008—2018 §5.4.1、NIST非线性抗震指南§6.3/§3.7、Hall/Charney、Qu2026 §3.1、Zhang2024及Abaqus2025 Material Damping。任务为区分规范反应谱等效阻尼、非线性附加黏性及材料赋值，补白皮书；不修改INP、不冒称新求解。原页截图请求失败，明确缺证。
 
