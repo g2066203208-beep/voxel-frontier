@@ -1,0 +1,136 @@
+name: Native blade 700s paired cases
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths: ['.github/workflows/native-blade-full-11m4.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: native-blade-full-paired-20261125
+  cancel-in-progress: false
+jobs:
+  verify-pilot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          sparse-checkout: |
+            research/wind-tower/experiments/BLADE_AERO_NATIVE_20261125
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: 45439098884
+          name: observable-blade-pilot
+          path: native-aero
+      - name: Check actual pilot and run corrected channel parser
+        run: |
+          set -euo pipefail
+          python -m pip install numpy==1.26.4 matplotlib==3.9.2
+          p=research/wind-tower/experiments/BLADE_AERO_NATIVE_20261125
+          curl -fLsS --retry 3 "https://raw.githubusercontent.com/$GITHUB_REPOSITORY/5ce9b969cbbbf6a4e921d432eb43b596696458be/research/wind-tower/experiments/T062/s06_historical_outb_source_gate.py" -o "$p/outb_reader.py"
+          echo 'e49564cf45b330a5e40f779ca39cc2a899ed7b2b85f2a03084437bd56210b3c7  native-aero/case/DTU_10MW_RWT.outb' | sha256sum -c
+          grep -F 'OpenFAST terminated normally.' native-aero/native.log
+          grep -F 'Running ROSCO-v2.6.0' native-aero/native.log
+          python "$p/native_blade.py" --stage post --type NTM --duration 10
+          cat native-aero/result_receipt.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: native-blade-pilot-corrected
+          path: |
+            native-aero/*.json
+            native-aero/*.csv
+            native-aero/*.npz
+            native-aero/*.png
+            native-aero/*.svg
+            native-aero/*.pdf
+            native-aero/native.log
+          retention-days: 30
+  full:
+    needs: verify-pilot
+    runs-on: windows-latest
+    timeout-minutes: 100
+    strategy:
+      fail-fast: false
+      matrix:
+        turbulence: [NTM, 1ETM]
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          sparse-checkout: |
+            research/wind-tower/experiments/BLADE_AERO_NATIVE_20261125
+            public/thesis-studio/wind-figures/blade-aero
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Restore 17 original inputs and check all hashes
+        run: |
+          @'
+          import zipfile,hashlib,json,pathlib
+          base=pathlib.Path("public/thesis-studio/wind-figures/blade-aero")
+          out=pathlib.Path("native-aero");out.mkdir(exist_ok=True)
+          receipt=json.loads((base/"source_receipt.json").read_text())
+          with zipfile.ZipFile(base/"original-inputs.zip") as z:
+              assert z.testzip() is None
+              z.extractall(out/"case")
+          assert len(receipt["inputs"])==17
+          for row in receipt["inputs"]:
+              assert hashlib.sha256((out/"case"/row["name"]).read_bytes()).hexdigest()==row["sha256"]
+          (out/"source_receipt.json").write_text(json.dumps(receipt,indent=2))
+          '@ | python -
+          if ($LASTEXITCODE -ne 0) { throw 'Source input SHA failure' }
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: 45422889134
+          name: native-full-11.4-${{ matrix.turbulence }}-bts
+          path: incoming
+      - name: Restore exact pilot binaries
+        run: |
+          New-Item -ItemType Directory -Force bin | Out-Null
+          curl.exe -fLsS --retry 3 https://github.com/OpenFAST/openfast/releases/download/v3.5.3/openfast_x64.exe -o bin/openfast_x64.exe
+          if ($LASTEXITCODE -ne 0) { throw 'OpenFAST download failed' }
+          curl.exe -fLsS --retry 3 https://github.com/NatLabRockies/ROSCO/releases/download/v2.6.0/libdiscon.dll -o bin/libdiscon.dll
+          if ($LASTEXITCODE -ne 0) { throw 'ROSCO download failed' }
+          if ((Get-FileHash bin/openfast_x64.exe).Hash.ToLower() -ne '0cc8147fdda188365b8eacda8a831e74fafef59440d71185d66c3272af9e176a') { throw 'Executable mismatch' }
+          if ((Get-FileHash bin/libdiscon.dll).Hash.ToLower() -ne '7aebb0d2166c0cc095d11c2b7bc13da136547c557b0f331dcdce84fe181802aa') { throw 'Controller mismatch' }
+      - name: Actual 700 s run and 100-700 s output verification
+        run: |
+          $env:PATH="$pwd\bin;$env:PATH"
+          python -m pip install numpy==1.26.4 matplotlib==3.9.2
+          $p='research/wind-tower/experiments/BLADE_AERO_NATIVE_20261125/native_blade.py'
+          $reader='research/wind-tower/experiments/BLADE_AERO_NATIVE_20261125/outb_reader.py'
+          curl.exe -fLsS --retry 3 https://raw.githubusercontent.com/g2066203208-beep/voxel-frontier/5ce9b969cbbbf6a4e921d432eb43b596696458be/research/wind-tower/experiments/T062/s06_historical_outb_source_gate.py -o $reader
+          if ($LASTEXITCODE -ne 0) { throw 'Pinned reader unavailable' }
+          python $p --stage run --type "${{ matrix.turbulence }}" --duration 700 --exe bin/openfast_x64.exe --dll bin/libdiscon.dll
+          if ($LASTEXITCODE -ne 0) { throw 'Native solve failed' }
+          python $p --stage post --type "${{ matrix.turbulence }}" --duration 700
+          if ($LASTEXITCODE -ne 0) { throw 'Native output audit failed' }
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: verified-blade-full-11m4-${{ matrix.turbulence }}
+          path: |
+            native-aero/*.json
+            native-aero/*.log
+            native-aero/*.csv
+            native-aero/*.npz
+            native-aero/*.png
+            native-aero/*.svg
+            native-aero/*.pdf
+            native-aero/case/*.outb
+            native-aero/case/*.sum
+            native-aero/case/*.fst
+            native-aero/case/*.dat
+            native-aero/case/Rotor/*.dat
+          retention-days: 30
