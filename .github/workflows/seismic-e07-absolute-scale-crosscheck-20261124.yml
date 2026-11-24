@@ -6,6 +6,7 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+  actions: read
 jobs:
   crosscheck:
     runs-on: ubuntu-latest
@@ -15,6 +16,12 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install --quiet numpy scipy
+      - uses: actions/download-artifact@v4
+        with:
+          name: T079-indexed-source-extraction
+          run-id: 45395196795
+          github-token: ${{ github.token }}
+          path: official-source
       - name: Read PEER bytes and compare full-duration research copy against rotated official record
         run: |
           mkdir -p evidence
@@ -24,11 +31,8 @@ jobs:
           root=pathlib.Path('evidence')
           def read(url):
             with urllib.request.urlopen(url,timeout=45) as f:return f.read()
-          zbytes=read('https://apps.peer.berkeley.edu/transportation/wp-content/uploads/2010/09/Oak-50-50-gms-July-14.zip')
-          assert hashlib.sha256(zbytes).hexdigest()=='89537d51f547084869924f65c1999d91a7bc4594928b870ff7bcf6279e88c264'
           scale=2.309816509105592
-          with zipfile.ZipFile(io.BytesIO(zbytes)) as z:
-            raw=[z.read('Oak_50_50_24_'+c+'.acc') for c in ['FN','FP','UP']]
+          raw=[(pathlib.Path('official-source')/('Oak_50_50_24_'+c+'.acc')).read_bytes() for c in ['FN','FP','UP']]
           expected=['7e392c66ab9e9981ca072b8de87845fe367a1f08ac22a75c0a4cd4c3f771ee5a','fa1c4a145a3f5244cc5043de32db137d8cff2c6f42e7e80468b1fc96ca03de88','d50ccbef2303e4077556cb99e5c5a44bd618c58feb8d30b6250d705b12163387']
           assert [hashlib.sha256(v).hexdigest() for v in raw]==expected
           def acc(raw,skip):
