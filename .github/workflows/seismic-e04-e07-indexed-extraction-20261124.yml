@@ -1,0 +1,101 @@
+name: T079 exact station stream and PEER indexed records
+on:
+  push:
+    branches: [research/t080-seismic-integration-gates-20261022]
+    paths: ['.github/workflows/seismic-e04-e07-indexed-extraction-20261124.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Decode indexed PEER files and stream SCEDC event archive
+        run: |
+          mkdir -p evidence
+          python - <<'PY'
+          import urllib.request, urllib.parse, hashlib, json, pathlib, zipfile, tarfile, io, re, math, concurrent.futures, xml.etree.ElementTree as ET
+          root=pathlib.Path('evidence')
+          def get(url):
+            return urllib.request.urlopen(urllib.request.Request(url,headers={'User-Agent':'T079 academic source verification'}),timeout=90)
+          def sha(raw):return hashlib.sha256(raw).hexdigest()
+          def peer():
+            rec={'id':'E07','rsn':880,'set_index':24,'source':'PEER transportation Oakland 50%/50yr, report 2011/03 Table A.7'}
+            try:
+              u='https://peer.berkeley.edu/sites/default/files/oak-50-50-gms-july-14.xlsx'
+              with get(u) as f: raw=f.read()
+              rec['table_sha256']=sha(raw)
+              ns={'m':'http://schemas.openxmlformats.org/spreadsheetml/2006/main'}
+              with zipfile.ZipFile(io.BytesIO(raw)) as z:
+                strings=[]
+                if 'xl/sharedStrings.xml' in z.namelist():
+                  strings=[''.join(si.itertext()) for si in ET.fromstring(z.read('xl/sharedStrings.xml'))]
+                rows=[]
+                for name in z.namelist():
+                  if not re.fullmatch(r'xl/worksheets/sheet\d+\.xml',name):continue
+                  for row in ET.fromstring(z.read(name)).findall('.//m:row',ns):
+                    vals=[]
+                    for c in row.findall('m:c',ns):
+                      v=c.find('m:v',ns)
+                      if v is None:continue
+                      val=v.text
+                      if c.get('t')=='s':val=strings[int(val)]
+                      vals.append([c.get('r'),val])
+                    if any('Mission Creek' in str(v) or v=='880' for _,v in vals):
+                      rows.append({'sheet':name,'row':row.get('r'),'cells':vals[:45]})
+                rec['matching_rows']=rows[:12]
+              u='https://apps.peer.berkeley.edu/transportation/wp-content/uploads/2010/09/Oak-50-50-gms-July-14.zip'
+              with get(u) as f: raw=f.read()
+              rec['zip_sha256']=sha(raw);rec['files']=[]
+              with zipfile.ZipFile(io.BytesIO(raw)) as z:
+                for comp in ['FN','FP','UP']:
+                  n=f'Oak_50_50_24_{comp}.acc'
+                  data=z.read(n)
+                  (root/n).write_bytes(data)
+                  lines=data.decode('ascii','replace').splitlines()
+                  numbers=[]
+                  for line in lines:
+                    parts=line.split()
+                    if parts and all(re.fullmatch(r'[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[EeDd][+-]?\d+)?',p) for p in parts):
+                      numbers.extend(float(p.replace('D','E').replace('d','e')) for p in parts)
+                  rec['files'].append({'name':n,'bytes':len(data),'sha256':sha(data),'header':lines[:8],'numeric_token_count_including_numeric_header':len(numbers),'max_abs_numeric_token_including_header':max(map(abs,numbers),default=None)})
+              rec['status']='INDEXED_FILES_RECEIVED_ROTATED_SCALE_UNVERIFIED'
+            except Exception as e:rec.update(status='ERROR',error=repr(e))
+            return rec
+          def e04():
+            u='https://service.scedc.caltech.edu/webstp/query?'+urllib.parse.urlencode({'outputformat':'cosmos-v1','requesttype':'triggered','eventselection':'14607652','Submit':'Submit'})
+            rec={'id':'E04','url':u,'selected':[],'members':0,'first_names':[],'near_matches':[]}
+            try:
+              with get(u) as f:
+                rec['http']=f.status
+                with tarfile.open(fileobj=f,mode='r|gz') as z:
+                  for m in z:
+                    if not m.isfile():continue
+                    rec['members']+=1
+                    if len(rec['first_names'])<30:rec['first_names'].append(m.name)
+                    if re.search(r'(?i)00022|winterhaven',m.name):
+                      raw=z.extractfile(m).read()
+                      n=f"E04_{len(rec['selected'])}_"+pathlib.PurePosixPath(m.name).name
+                      (root/n).write_bytes(raw)
+                      rec['selected'].append({'name':m.name,'bytes':len(raw),'sha256':sha(raw),'header':raw[:1600].decode('ascii','replace')})
+                    elif re.search(r'(?i)(?:^|[._/-])CE(?:[._/-]|$)',m.name) and len(rec['near_matches'])<20:rec['near_matches'].append(m.name)
+                    if rec['members']>20000:raise ValueError('member limit')
+              rec['status']='TARGET_BYTES_RECEIVED_PENDING_VALIDATION' if rec['selected'] else 'ARCHIVE_COMPLETE_TARGET_ABSENT'
+            except Exception as e:rec.update(status='ERROR_PARTIAL_ARCHIVE',error=repr(e))
+            return rec
+          with concurrent.futures.ThreadPoolExecutor(max_workers=2) as ex:
+            a,b=ex.submit(peer),ex.submit(e04)
+            out={'records':[a.result(),b.result()]}
+          (root/'receipt.json').write_text(json.dumps(out,indent=2))
+          print(json.dumps(out,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: T079-indexed-source-extraction
+          path: evidence/
+          retention-days: 30
