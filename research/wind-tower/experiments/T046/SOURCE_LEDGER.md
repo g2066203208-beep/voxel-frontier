@@ -231,3 +231,13 @@ REF141（Applied Sciences 2021, 11, 8683）同样给出36个预应力孔道/位�
 |HRB335|0.001675000|2020.202020|351.650000|0.059400000|
 |Q345|0.001674757|2080.808081|362.150000|0.060072816|
 最后一列只作外推警示，工程极限强度与真实应力不可直接等同；不是破坏应变、截断或损伤参数。若使用工程拉伸数据，均匀变形至颈缩前需转换真实应力/对数应变并扣除弹性应变。既有0.1塑性应变长外推不能据此称材料破坏已验。未取得REV09文件，未检查真实section绑定、未修改INP、未进行单元试验/原生求解。静态解析算术完成；原生及物理验证HOLD。不得升级模型版本或旧结果。
+
+## I. 2026-11-24 用户决定与实际REV10
+
+### 2026-11-24｜v0.32.154 PATCH — REV10 HRB400纵筋与环筋实际材料赋值
+
+- 用户明确选HRB400；原型几何、配筋数量、接触、PT及分析步保持，材料修正非何2024原型完全复现。SOURCE=实际REV09 SHA256 cbe996780eb772a7fdb8f33d436c76b0936631ef835f3606d11ab7d90b4af1ef；唯一REV10 HE_REV10_HE_CHECK.inp 34226331 bytes，SHA256 5ec5518edbe6f0fb038f24fafe402b72c0dbc2e0a51c72af44fe069c104d1507。
+- STANDARD=[GB1499.2—2024原PDF表2、表6](https://www.fzsec.com/upload/content/file/2025/20250909092612_4638.pdf#page=11)，fy标准值400MPa、抗拉强度下限540MPa、理论密度7850kg/m³；[GB/T50010—2010（2024版）表4.2.3-1原图](https://gf.cabr-fire.com/Web/uploads/allimg/240621/10-240621103302c2.png) 设计值360MPa；[表4.2.5原图](https://gf.cabr-fire.com/Web/uploads/allimg/240621/10-240621103F4563.png) E=200GPa。[GB50135—2019 §6.5.5](https://gf.cabr-fire.com/m/article-56526.htm) 附加受拉环筋最小率C65/C70为0.26125/0.2675%，小于REV03登记最小单层名义0.3451063%，仅该项筛查，非全塔承载力合规。
+- RUN=实际Python对31 RBLONG、31 RHOOP的SET_HOOP赋值独立HRB400，保留31 SET_TIE+4 SSEG+1 FLANGE的S345待后续；保留原双线性等向强化形式b=.01、nu=.3，新增400MPa/0、602.020202MPa/0.1塑性应变两点仅继承敏感性假设，非规范或HRB400实测曲线，未标定极限应变、屈服平台、循环滞回；540MPa工程抗拉下限不能直接作真实应力截断。未改C65/C70、RNA、PT、接触、几何或分析步。按已登记纵筋73890.210488143kg、环筋57029.503760787kg及原密度7800kg/m³，质量增839.228937kg，整机2585467.773573kg（解析核算非ODB）。
+- TEST=源级64处精确差异、62个HRB400赋值、36个保留S345赋值、103/103 Part闭合、分析步逐字一致、差异反向重建字节一致。完整REV10另存Google Drive私有目录；GitHub main [35290ad](https://github.com/g2066203208-beep/voxel-frontier/commit/35290ad24abf5486784f93fd730181af31118244) [REV10差异](https://github.com/g2066203208-beep/voxel-frontier/blob/main/public/thesis-studio/inp-archive/REV10/patch.json) blob 9f08c467230c029dbece310e72e383a4b9fce8d4；工作室manifest.latest=REV10，按原件+64处差异重建及SHA256校验下载，原件不覆盖。Pages实际部署/浏览器下载未验，原生Data Check/平衡/模态/地震NOT_RUN。无新物理结果，不合并PR#42。
+
