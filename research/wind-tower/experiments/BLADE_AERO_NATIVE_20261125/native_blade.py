@@ -50,11 +50,21 @@ def run():
     wind=next((ROOT/'incoming').rglob('case.bts'))
     expected={'NTM':'548695c6f8f4241643291624eef4ced091b1b4186d43faad4ea9cb98df3121e1','1ETM':'235d1224cc3f0d0b282e9fb94647ca5b507c8c37b6256bf056f02dbabfb3b04e'}[a.type]
     assert sha(wind.read_bytes())==expected
+    assert sha(a.exe.read_bytes())=='0cc8147fdda188365b8eacda8a831e74fafef59440d71185d66c3272af9e176a'
+    assert sha(a.dll.read_bytes())=='7aebb0d2166c0cc095d11c2b7bc13da136547c557b0f331dcdce84fe181802aa'
     dst=CASE/'new_wind.bts';shutil.copyfile(wind,dst)
     fst=CASE/'DTU_10MW_RWT.fst';ifw=CASE/'DTU_10MW_InflowWind.dat';ad=CASE/'Rotor/DTU_10MW_RWT_AeroDyn15.dat';srv=CASE/'Control/DTU_10MW_RWT_ServoDyn.dat'
     # Preserve physical model and original control parameters; only input wind and output configuration change.
     assert getval(ad,'TwrAero').lower()=='false'
-    edits=[(fst,'TMax',a.duration),(fst,'TStart',0 if a.duration<100 else 100),(fst,'DT_Out',0.05),(fst,'OutFileFmt',2),(ifw,'WindType',3),(ifw,'FileName_BTS','"new_wind.bts"'),(srv,'DLL_FileName','"libdiscon.dll"')]
+    ed=CASE/'DTU_10MW_RWT_ElastoDyn.dat'
+    edits=[(fst,'AeroFile','"Rotor/DTU_10MW_RWT_AeroDyn15.dat"'),(fst,'TMax',a.duration),(fst,'TStart',0 if a.duration<100 else 100),(fst,'DT_Out',0.05),(fst,'OutFileFmt',2),(ifw,'WindType',3),(ifw,'FileName_BTS','"new_wind.bts"'),(srv,'DLL_FileName','"libdiscon.dll"')]
+    # ED references historically point to shared ../Rotor; relocate only those active paths.
+    for key in ['BldFile(1)','BldFile(2)','BldFile(3)']:
+        old=getval(ed,key).strip('"').replace('\\','/')
+        if old.startswith('../Rotor/'):
+            edits.append((ed,key,'"'+old[3:]+'"'))
+        else:
+            assert (CASE/old).is_file(),(key,old)
     audit=[]
     for path,k,v in edits:
         old=getval(path,k);change(path,k,v);audit.append({'file':str(path.relative_to(CASE)),'field':k,'old':old,'new':str(v)})
@@ -84,10 +94,14 @@ def post():
     v=(np.frombuffer(raw,dtype='<i2',offset=h['data_offset_bytes']).reshape(nt,n).astype(np.float64)-np.asarray(h['column_offsets']))/np.asarray(h['column_scales'])
     assert np.isfinite(v).all()
     groups=['Fx','Fy','Mm','Fn','Ft','Fl','Fd','VRel','Alpha']
-    pat=re.compile(r'^B([123])N(\d{3})('+ '|'.join(groups)+r')$')
+    pat=re.compile(r'^AB([123])N(\d{3})('+ '|'.join(groups)+r')$')
     nd={(int(m[1]),int(m[2]),m[3]):k for k in names if (m:=pat.fullmatch(k))}
-    nodeids=sorted({k[1] for k in nd});assert nodeids==list(range(1,len(nodeids)+1)) and len(nodeids)>9
-    assert len(nd)==3*len(nodeids)*len(groups),(len(nd),len(nodeids))
+    nodeids=sorted({k[1] for k in nd});assert nodeids==list(range(1,41))
+    assert set(nd)=={(b,j,g) for b in range(1,4) for j in range(1,41) for g in groups}
+    unit_gate={'Fx':'(N/m)','Fy':'(N/m)','Mm':'(N-m/m)','Fn':'(N/m)','Ft':'(N/m)','Fl':'(N/m)','Fd':'(N/m)','VRel':'(m/s)','Alpha':'(deg)'}
+    assert all(units[k]==unit_gate[g] for (b,j,g),k in nd.items())
+    assert nt==(201 if a.duration==10 else 12001)
+    assert abs(t[0]-(0 if a.duration==10 else 100))<1e-9
     blade=CASE/'Rotor/DTU_10MW_AeroDyn15_blade.dat';lines=blade.read_text().splitlines()
     ix=next(i for i,l in enumerate(lines) if 'BlSpn' in l)
     radii=[]
@@ -97,10 +111,11 @@ def post():
             if len(vals)!=7:break
             radii.append(vals[0])
         except ValueError:break
-    assert len(radii)==len(nodeids),(len(radii),nodeids)
+    assert len(radii)==len(nodeids)==40,(len(radii),nodeids)
     C=lambda k:v[:,names.index(k)-1]
     rotor=['RtAero'+k+'h' for k in ['Fx','Fy','Fz','Mx','My','Mz']]
     assert all(k in names for k in rotor),rotor
+    assert all(units[k]==('(N)' if i<3 else '(N-m)') for i,k in enumerate(rotor))
     np.savez_compressed(OUT/'blade_node_aero.npz',time_s=t,span_m=radii,blade=np.arange(1,4),node=nodeids,**{g:np.stack([np.stack([C(nd[b,j,g]) for j in nodeids],1) for b in range(1,4)],1) for g in groups})
     np.savetxt(OUT/'rotor_aero_wrench.csv',np.column_stack([t]+[C(k) for k in rotor]),delimiter=',',header='time_s,'+','.join(rotor),comments='')
     stats=[]
