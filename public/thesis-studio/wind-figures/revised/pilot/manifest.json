@@ -1,0 +1,32 @@
+{
+  "scope": "native new cases; pilot if grid 11; no measurement or structural validation",
+  "source_BTS": [
+    "638d59a37edf620403a4ab4b1f71657c701395137f726a2f7e6ff363d16623fd",
+    "352d39300c19681ff355aa9698d50b22647d9d3089ba3ef80ac7d0315490851a"
+  ],
+  "grid": 11,
+  "speed": 11.4,
+  "window": [
+    20,
+    120
+  ],
+  "heights": [
+    81.36880493164062,
+    161.36880493164062,
+    241.36880493164062
+  ],
+  "nperseg": 512,
+  "overlap": 256,
+  "df_Hz": 0.0390625,
+  "coherence": "pair-averaged signed real cross spectrum normalized by autospectra; pairs not independent",
+  "target": "IEC hub-reference spectra at all heights for comparison, not height-specific measured spectra",
+  "files": [
+    "01_rotor_snapshots",
+    "02_spatiotemporal",
+    "03_wind_field_3d",
+    "04_height_component_timeseries",
+    "05_nine_component_spectra",
+    "06_full_height_profiles",
+    "07_spatial_cocoherence"
+  ]
+}
