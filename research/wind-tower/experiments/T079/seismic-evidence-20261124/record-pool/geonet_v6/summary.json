@@ -1,0 +1,137 @@
+{
+  "archive": {
+    "url": "https://static.geonet.org.nz/info/resources/applications_data/earthquake/strong_motion/ForStructuralAnalyses.zip",
+    "bytes": 280633109,
+    "sha256": "a0ec9c00a1e649a46c8e8da00cb819d98c13499bd24d63e6d5fff4dfe780627f"
+  },
+  "metadata": {
+    "url": "https://static.geonet.org.nz/info/resources/applications_data/earthquake/strong_motion/Flatfiles.zip",
+    "bytes": 25603124,
+    "sha256": "121f2965b60eb4504a223522e97bb22a654bed1f7372dcdc02a599eb6eeae589"
+  },
+  "eligible": 2592,
+  "matched_events": 9,
+  "actual_downloaded_records": [
+    {
+      "record": "20161113_110323_NLMS_20",
+      "event": "2016p858000",
+      "fmin": 0.034,
+      "files": 1
+    },
+    {
+      "record": "20161113_110322_NELS_20",
+      "event": "2016p858000",
+      "fmin": 0.034,
+      "files": 1
+    },
+    {
+      "record": "20161113_110324_NNZ_20",
+      "event": "2016p858000",
+      "fmin": 0.034,
+      "files": 1
+    },
+    {
+      "record": "20130816_023124_ARKS_20",
+      "event": "2013p613797",
+      "fmin": 0.034,
+      "files": 1
+    },
+    {
+      "record": "20130816_023122_WANS_20",
+      "event": "2013p613797",
+      "fmin": 0.034,
+      "files": 1
+    },
+    {
+      "record": "20130816_023124_TOTS_20",
+      "event": "2013p613797",
+      "fmin": 0.034,
+      "files": 1
+    },
+    {
+      "record": "20130721_050944_PFAS_20",
+      "event": "2013p543824",
+      "fmin": 0.034,
+      "files": 1
+    },
+    {
+      "record": "20130721_050942_INSS_20",
+      "event": "2013p543824",
+      "fmin": 0.034,
+      "files": 1
+    },
+    {
+      "record": "20130721_050943_LHUS_20",
+      "event": "2013p543824",
+      "fmin": 0.034,
+      "files": 1
+    },
+    {
+      "record": "20110221_235142_CSTC",
+      "event": "3468575",
+      "fmin": 0.034,
+      "files": 1
+    },
+    {
+      "record": "20110221_235142_FDCS",
+      "event": "3468575",
+      "fmin": 0.034,
+      "files": 1
+    },
+    {
+      "record": "20110221_235142_LBZ",
+      "event": "3468575",
+      "fmin": 0.034,
+      "files": 1
+    },
+    {
+      "record": "20110613_022049_LTZ",
+      "event": "3528839",
+      "fmin": 0.051,
+      "files": 1
+    },
+    {
+      "record": "20130816_053120_RCS2_20",
+      "event": "2013p614135",
+      "fmin": 0.051,
+      "files": 1
+    },
+    {
+      "record": "20111223_021803_OXZ",
+      "event": "3631380",
+      "fmin": 0.051,
+      "files": 1
+    },
+    {
+      "record": "20111223_021803_STKS",
+      "event": "3631380",
+      "fmin": 0.051,
+      "files": 1
+    },
+    {
+      "record": "20130720_191721_KEKS_20",
+      "event": "2013p542711",
+      "fmin": 0.051,
+      "files": 1
+    },
+    {
+      "record": "20130720_191719_MKBS_20",
+      "event": "2013p542711",
+      "fmin": 0.051,
+      "files": 1
+    },
+    {
+      "record": "20110222_015029_OXZ",
+      "event": "3468635",
+      "fmin": 0.051,
+      "files": 1
+    },
+    {
+      "record": "20110222_015029_CACS",
+      "event": "3468635",
+      "fmin": 0.051,
+      "files": 1
+    }
+  ],
+  "formal_design": 0
+}
