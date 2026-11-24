@@ -1,0 +1,80 @@
+{
+  "version": "V8-R11-wind-figures",
+  "source_manuscript_blob": "ef6e9da140da80cd03d02edc2df573b6121008bb",
+  "source_blocks": [
+    "v7-0352-09",
+    "v7-0352-14",
+    "v7-0352-17",
+    "v7-0352-18",
+    "v7-0352-24",
+    "b0494",
+    "b0521"
+  ],
+  "source_rows": [
+    [
+      "9.343881",
+      "塔顶最大合位移/m",
+      "1.7081 ± 0.0532",
+      "1.9371 ± 0.1530",
+      "13.40"
+    ],
+    [
+      "9.343881",
+      "塔底最大合弯矩/(MN·m)",
+      "271.73 ± 10.74",
+      "310.51 ± 23.48",
+      "14.27"
+    ],
+    [
+      "11.400000",
+      "塔顶最大合位移/m",
+      "1.8221 ± 0.0561",
+      "1.9808 ± 0.0635",
+      "8.71"
+    ],
+    [
+      "11.400000",
+      "塔底最大合弯矩/(MN·m)",
+      "290.48 ± 6.42",
+      "322.56 ± 5.17",
+      "11.04"
+    ],
+    [
+      "19.202140",
+      "塔顶最大合位移/m",
+      "1.3498 ± 0.0340",
+      "1.5537 ± 0.0957",
+      "15.11"
+    ],
+    [
+      "19.202140",
+      "塔底最大合弯矩/(MN·m)",
+      "219.17 ± 9.12",
+      "254.73 ± 17.90",
+      "16.23"
+    ]
+  ],
+  "parameters": {
+    "Uref": 11.4,
+    "Iref": 0.16,
+    "sigma_u": 2.2640000000000002,
+    "L": [
+      340.2,
+      113.4,
+      27.72
+    ],
+    "hub": 161.368806,
+    "grid": 51,
+    "spacing": 4,
+    "rotor": 178.3
+  },
+  "classification": {
+    "01_grid.svg": "geometry schematic from manuscript parameters",
+    "02_kaimal_target.svg": "computed theoretical PSD only",
+    "03_coherence_target.svg": "computed theoretical coherence only",
+    "04_archived_response.svg": "historical OpenFAST statistical data transcribed from table 3-16, not new solver runs"
+  },
+  "raw_bts": "NOT_RECOVERED",
+  "raw_simulated_psd": "NOT_COMPUTED",
+  "source_reference": "https://www.nrel.gov/wind/nwtc/assets/downloads/TurbSim/TurbSim_v2.00.pdf"
+}
