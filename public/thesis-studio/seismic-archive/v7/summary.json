@@ -1,0 +1,277 @@
+{
+  "status": "FROZEN_SEVEN_NATURAL_RESEARCH_SCENARIO_NOT_ENGINEERING_DESIGN",
+  "source_pool_acquired": 76,
+  "numerically_eligible": 29,
+  "distinct_events": 7,
+  "T1_s": 7.3937,
+  "target_scope_s": [
+    0.1,
+    10
+  ],
+  "focus_s": [
+    1.4787400000000002,
+    10
+  ],
+  "weighted_rms": 0.036887963195437856,
+  "focus_max_relative_error": 0.0638987846271526,
+  "all_max_relative_error": 0.15945881793884598,
+  "T1_relative_error": -0.05562958639088045,
+  "research_20pct_focus_met": true,
+  "selected": [
+    {
+      "event": "IT-2012-0008",
+      "station": "MODE",
+      "source": "ESM",
+      "directory": "acquired_v2/IT-2012-0008__IV_MODE_blank_HN",
+      "dt": 0.005,
+      "dirs": [
+        "E",
+        "N"
+      ],
+      "mw": "6.1",
+      "site": "C",
+      "vs30": "204",
+      "distance": "38.6",
+      "source_hash": "788095e883cc6990d450b72b7a3d41c9f2a6b96336657b1b2a01817aedd8bd8d",
+      "duration": [
+        76.765,
+        53.32000000000001
+      ],
+      "diagnostics": [],
+      "pga": 0.41873976,
+      "id": "EQ01",
+      "scale": 1.135383557607063,
+      "npts": 40000,
+      "record_duration": 199.995,
+      "scaled_pga": 0.4754302384203278,
+      "T1_scaled": 0.0512273013507801,
+      "files": {
+        "receipt.json": "773b5c4792bc91ccb3237f19127e791cd4d2585ee275ea267113900d64d6c65b",
+        "original_horizontal_SI.csv": "ccd82e81d4440391afa0ef9e519a82392416fb3ba60bee05c8108cf813346482",
+        "original_MP_ACC.zip": "788095e883cc6990d450b72b7a3d41c9f2a6b96336657b1b2a01817aedd8bd8d",
+        "spectra.csv": "3c7d683b209f2e3a5ffd5dacbc7aba73a7de44664d020f228963ca99f72cbeb5",
+        "scaled_reference_SI.csv": "640096c940f3c6d54cbe697fd2da9def7ab2428a3850316f228d451b791d1b67"
+      }
+    },
+    {
+      "event": "3468575",
+      "station": "FDCS",
+      "source": "GeoNet",
+      "directory": "geonet_v6/20110221_235142_FDCS",
+      "dt": 0.005,
+      "dirs": [
+        "N09W",
+        "S81W"
+      ],
+      "mw": 6.19,
+      "site": "D",
+      "vs30": "301",
+      "distance": 161.4,
+      "source_hash": "8ef2929d91a959d39778d8f5f9500615d18ce104004004bbe26cdfafbe8c8e6d",
+      "duration": [
+        68.53,
+        67.955
+      ],
+      "diagnostics": [],
+      "fmin": 0.034,
+      "end_velocity_ratio": 0.022259564896691238,
+      "pga": 0.1899,
+      "id": "EQ02",
+      "scale": 1.5455922891190816,
+      "npts": 20600,
+      "record_duration": 102.995,
+      "scaled_pga": 0.2935079757037136,
+      "T1_scaled": 0.010345943807024591,
+      "files": {
+        "receipt.json": "956fd0db15ab273ec269cf5cd9c9375f579fe834f2d27860825c4913318ea813",
+        "original_horizontal_SI.csv": "206412c7ab5f9a2e99a95022bd9264b2d86496429fcf9b58c7ea5ad0327c81be",
+        "spectra.csv": "214b9c26c93f022bf4f40da1b449e12a1d103b4f912d63a97b371743d6aefb51",
+        "scaled_reference_SI.csv": "446f0cae834a6b139e2fa0cd29b8d677a4806890952559e66d09ee6f0fd505d2",
+        "20110221_235142_FDCS.V2A": "8ef2929d91a959d39778d8f5f9500615d18ce104004004bbe26cdfafbe8c8e6d"
+      }
+    },
+    {
+      "event": "EMSC-20160824_0000006",
+      "station": "CIMA",
+      "source": "ESM",
+      "directory": "replacement_v5/EMSC-20160824_0000006__IV_CIMA_blank_HN",
+      "dt": 0.005,
+      "dirs": [
+        "E",
+        "N"
+      ],
+      "mw": "6.0",
+      "site": "B",
+      "vs30": "443",
+      "distance": "76.3",
+      "source_hash": "bedb1c8410e7a02bf61b651b1d6c48a43ad664a4bf3bf7fdefb4856201873226",
+      "duration": [
+        80.875,
+        84.83500000000001
+      ],
+      "diagnostics": [],
+      "pga": 0.21745331,
+      "id": "EQ03",
+      "scale": 0.6445833449647742,
+      "npts": 37864,
+      "record_duration": 189.315,
+      "scaled_pga": 0.140166781933462,
+      "T1_scaled": 0.04688260892216264,
+      "files": {
+        "receipt.json": "8909548d7fc3afa09ccc2753e0c9c0f761a25aef063f8d6689f73836604f1f3c",
+        "original_horizontal_SI.csv": "72f9bf9f5085c48ef06b9ddc4e10b2fa04af25d5eac0d95789b6732daf47c8a1",
+        "original_MP_ACC.zip": "bedb1c8410e7a02bf61b651b1d6c48a43ad664a4bf3bf7fdefb4856201873226",
+        "spectra.csv": "e8fee55c322bbee5605e874a4117fd8f4502909f4ba8118cacf1a2c716fb2118",
+        "scaled_reference_SI.csv": "f14cd94c2fb26aeb00ae7cd9107f1416c35709b4f9382b99bd848cbac0f5754f"
+      }
+    },
+    {
+      "event": "2013p543824",
+      "station": "PFAS",
+      "source": "GeoNet",
+      "directory": "geonet_v6/20130721_050944_PFAS_20",
+      "dt": 0.005,
+      "dirs": [
+        "N00E",
+        "N90W"
+      ],
+      "mw": 6.58,
+      "site": "B",
+      "vs30": "1000",
+      "distance": 65.84,
+      "source_hash": "281baa717c7334d3a6f5ccdcc77c46cac0dfa90b54d0272eb2b8fbdd2286392e",
+      "duration": [
+        18.835,
+        25.575
+      ],
+      "diagnostics": [],
+      "fmin": 0.034,
+      "end_velocity_ratio": 0.010061451321911481,
+      "pga": 0.8765000000000001,
+      "id": "EQ04",
+      "scale": 1.5129972376637082,
+      "npts": 16000,
+      "record_duration": 79.995,
+      "scaled_pga": 1.3261420788122402,
+      "T1_scaled": 0.032561261893438546,
+      "files": {
+        "receipt.json": "5588e1a682266fb397aa25bd5c2bd56244cccbd88c3f35ebf11c727e57955eeb",
+        "original_horizontal_SI.csv": "f745f1445fe9afce3f7da2cc321ccb520250b0d65ac617b87506cc9b8e841644",
+        "20130721_050944_PFAS_20.V2A": "281baa717c7334d3a6f5ccdcc77c46cac0dfa90b54d0272eb2b8fbdd2286392e",
+        "spectra.csv": "b95f1acf42def6090f3b022afa06668cb30d6f64c85ca352fb790a33bc133798",
+        "scaled_reference_SI.csv": "7104c360d8bd04600c5af70fe7869d1ea3d8f4188cee4c5805cf4dae9e34bff0"
+      }
+    },
+    {
+      "event": "3468635",
+      "station": "CACS",
+      "source": "GeoNet",
+      "directory": "geonet_v6/20110222_015029_CACS",
+      "dt": 0.005,
+      "dirs": [
+        "N40E",
+        "N50W"
+      ],
+      "mw": 5.63,
+      "site": "D",
+      "vs30": "435",
+      "distance": 15.17,
+      "source_hash": "47b73289dad6ba0af8dd5c96fa11b0c40d1090a8b78fa671049f4e10b37eb6c2",
+      "duration": [
+        12.955,
+        9.795
+      ],
+      "diagnostics": [],
+      "fmin": 0.051,
+      "end_velocity_ratio": 0.0047236170554382905,
+      "pga": 1.927,
+      "id": "EQ05",
+      "scale": 0.8382943720061922,
+      "npts": 17000,
+      "record_duration": 84.995,
+      "scaled_pga": 1.6153932548559324,
+      "T1_scaled": 0.030558129039976827,
+      "files": {
+        "receipt.json": "acf9c79cb86cee8c95848bf713012f6d8aca22eb7ca017e54997befe33049a29",
+        "original_horizontal_SI.csv": "77741c547c8be02d617c7ad3a4dc2d00266334923c7633d3d4612653be0cd601",
+        "20110222_015029_CACS.V2A": "47b73289dad6ba0af8dd5c96fa11b0c40d1090a8b78fa671049f4e10b37eb6c2",
+        "spectra.csv": "231bee9a2a99e7e2522c05e53cb555fff637001404468c5bfa5c9972d56d94f2",
+        "scaled_reference_SI.csv": "cb2319b37f52061985613d8254b17abf52212d01133ea6d360c136cc475338cd"
+      }
+    },
+    {
+      "event": "EMSC-20161026_0000095",
+      "station": "CTS",
+      "source": "ESM",
+      "directory": "replacement_v5/EMSC-20161026_0000095__IT_CTS_blank_HG",
+      "dt": 0.005,
+      "dirs": [
+        "E",
+        "N"
+      ],
+      "mw": "5.9",
+      "site": "C (inferred from geology)",
+      "vs30": "",
+      "distance": "98.7",
+      "source_hash": "d91236c208bbbd7c8d06cb579020e6e20569781ae9213c0971db2bece5331a5b",
+      "duration": [
+        91.79499999999999,
+        69.28
+      ],
+      "diagnostics": [],
+      "pga": 0.13112959,
+      "id": "EQ06",
+      "scale": 1.1382346327137838,
+      "npts": 36000,
+      "record_duration": 179.995,
+      "scaled_pga": 0.14925624071155905,
+      "T1_scaled": 0.015174999755765623,
+      "files": {
+        "receipt.json": "d09d01313993c53514b2b9f6a6fc9d223e00ca97cea560bba46927afaaa908a5",
+        "original_horizontal_SI.csv": "7db79400cbc8c09b69929cad199d96fc17f41214c34d36d3a28a91f2e6cfa432",
+        "original_MP_ACC.zip": "d91236c208bbbd7c8d06cb579020e6e20569781ae9213c0971db2bece5331a5b",
+        "spectra.csv": "0e95a26d23a524e0f4a0b9770e31bb5a2440ee47fc529475081cea5665f0da69",
+        "scaled_reference_SI.csv": "0672bc48d3a505fdd8fe0048c3f63631bc6a5daac8aed8c165f5e5991051c17e"
+      }
+    },
+    {
+      "event": "2016p858000",
+      "station": "NNZ",
+      "source": "GeoNet",
+      "directory": "geonet_v6/20161113_110324_NNZ_20",
+      "dt": 0.005,
+      "dirs": [
+        "N00E",
+        "N90W"
+      ],
+      "mw": 7.85,
+      "site": "B",
+      "vs30": "1200",
+      "distance": 82.27,
+      "source_hash": "7bd0e4382c8a39b4f08110e4aef4f90c88dd806f0cb1728cc1567c544954b008",
+      "duration": [
+        126.41,
+        129.135
+      ],
+      "diagnostics": [],
+      "fmin": 0.034,
+      "end_velocity_ratio": 0.007944893317424989,
+      "pga": 0.22180000000000002,
+      "id": "EQ07",
+      "scale": 1.1114079631824236,
+      "npts": 49800,
+      "record_duration": 248.995,
+      "scaled_pga": 0.2465102862338616,
+      "T1_scaled": 0.15371098735659264,
+      "files": {
+        "receipt.json": "f934b7664709f219bcfc34f7bb70d010e45f438a23a911c5c21090232f2c6fa4",
+        "original_horizontal_SI.csv": "9e4df3726bed0a5754e72869334985099c1814f80bec1fa551751e8d9331f3e7",
+        "20161113_110324_NNZ_20.V2A": "7bd0e4382c8a39b4f08110e4aef4f90c88dd806f0cb1728cc1567c544954b008",
+        "spectra.csv": "400d4eed4b1c140e1fa5c7c2c544451def0601d0df475b98ad824e63e18b6f3b",
+        "scaled_reference_SI.csv": "627be0d90725d52a985e9e6b5bb998137a0e7e631e8f7cd85e72131a173c544d"
+      }
+    }
+  ],
+  "engineering_design_approved": false,
+  "diagnostic_note": "Duration and additional filter sensitivity are not blanket code requirements. No site-specific hazard certification. Scaling bounds 0.2–5 are research-only; common scalar per horizontal pair. No time scaling/filtering. Original provider processed data retained."
+}
