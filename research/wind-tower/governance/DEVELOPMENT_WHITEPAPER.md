@@ -1,3 +1,17 @@
+### 2026-11-24｜v0.32.178 PATCH — 九组真实数据独立数值核验、下载原件与实际波形图
+
+实际构建 [run45356602621](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/45356602621) 的独立源校验及永久归档步骤均PASS；完整ZIP [T079_NINE_REAL_SOURCE_CANDIDATES.zip](../experiments/T079/seismic-evidence-20261124/record-pool/T079_NINE_REAL_SOURCE_CANDIDATES.zip)，6,515,160 bytes，49个成员，SHA256 `89d25e81769f22481baef110ec0a41995902d3bc76725ec5442ba042496e8ca4`；九组原始官方处理文件、单位转换时程、原始头与授权、5% RotD50/100反应谱、计算程序、清单完整保留。源字节、时间网格与PGA复核通过；历史T1=7.3937s独立FOH/Newmark RotD50最大相对差8.327302036126522e-05（0.0083273%）。该差异仅为同一离散处理波的算法数值复核，不是仪器可靠频带或场址匹配认证。未缩放、未改变时间轴，不称为正式嘉鱼设计波。数据汇总[summary.csv](../experiments/T079/seismic-evidence-20261124/record-pool/nine-package/summary.csv)，[完整成员哈希](../experiments/T079/seismic-evidence-20261124/record-pool/nine-package/MANIFEST.json)。
+
+#### 真实记录派生时程图（非文献原图）
+
+![九组官方来源处理加速度原时轴绘图](../experiments/T079/seismic-evidence-20261124/record-pool/nine-package/nine_actual_waveforms.png)
+
+#### 真实记录派生反应谱（非目标谱）
+
+![九组实测记录5% RotD50反应谱](../experiments/T079/seismic-evidence-20261124/record-pool/nine-package/nine_actual_spectra.png)
+
+原始论文、规范图片仍在v0.32.176原图章节；本节为真实数据复算图而非原文截图。正式波组0/7准入，特殊波2/2已取得原始数据，仍需目标谱与可信周期核验。
+
 ### 2026-11-24｜v0.32.177 PATCH — 七组基础候选与两组特殊脉冲的真实原始记录归档
 
 SOURCE：ESM v3官方dataset-selection/eventdata实际请求；初轮run45355966321保留204/400及授权拒绝，实际T1201取得；修复空位置参数、独立保存第二轮run45356142859 SUCCESS，18组实际原始MP双水平记录，其中11组报告高通≤0.05Hz；逐项原始ZIP、SI CSV、5%谱、台站/数据授权/原始成员SHA和请求日志永久入库。原七组PEER候选未取得，不谎称原名单全部下载；从已取得来源中重新选7个不同事件ID，尚未确认各地震序列独立性或非脉冲性质。GeoNet run45356185552 SUCCESS，实际DSLC官方Vol2/Vol3四原件与元数据；CSV SHA256 178b7b329e641188cb9758774a7bd57a7563a2ceab058d06d5e288272f01f463，7386点、0.02s、原时轴−5至142.7s、N63E/N27W/UP、PGA2.3528/2.4837/2.8921m/s²，PGV0.65998/0.39111/0.15194m/s，0.01–0.10Hz低频滤波过渡带，不插值冒充更高采样率。T1201替代未取得的YPT；Yang等2025 DOI10.1111/mice.13408识别该事件/台站为脉冲候选，DSLC据戴靠山等2021原表；尚未对本次实际处理版本独立复验脉冲分类。
