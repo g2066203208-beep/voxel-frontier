@@ -1,3 +1,6 @@
+## 2026-11-24｜RNA轻量等效 · END
+- REV15 SHA256 ab66bc21c4ba9d642c60dd217f7219c01111a0695c9d2f14f9e11132cbaf83d7，23300318 bytes；main d21681f6f3735eeadc03659bddb64a2aea9a2c27、哈希区间补丁已回读一致，完整INP云备份成功。移除9个展示实例及28刚体梁载体，改1 MASS+1 ROTARYI，保留原RNA RP、塔顶耦合和五步；解析6×6质量矩阵核查通过。DTU原报告RNA673998kg与母本676604.565kg差2606.565kg，明确保留母本、不称原型精确标定。白皮书v0.32.162嵌入何PDF36原页，DTU报告已截图核读但未归档新图字节，原生NOT_RUN；钢筋网格未改，风HOLD，PR#42不合并。
+
 ## 2026-11-24｜RNA轻量等效 · START
 - READ_BASE_SHA=501392f4728931410f7c2ee352abf03cc3090d4c；读取根/研究AGENTS、指挥室、白皮书v0.32.161、REV14实际RNA部件/约束/材料；核查IEC61400-1:2019附录D、DTU报告I-0092 §6.2.1、Frontiers 2025表7、Soil Dynamics and Earthquake Engineering 2021 RNA建模研究、Abaqus MASS/ROTARYI/RIGID BODY。用户授权计算模型减负；保留原模型，去除展示网格，解析积分现有刚体骨架质量/质心/惯量，建立偏心集中质量和惯量候选，不改变其他物理模型、不执行原生求解。原型数据差异另列，不冒称完全标定。
 

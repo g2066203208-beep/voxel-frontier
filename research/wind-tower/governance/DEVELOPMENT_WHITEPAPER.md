@@ -1,3 +1,34 @@
+### 2026-11-24｜v0.32.162 PATCH — REV15 RNA偏心集中质量与完整惯量等效
+
+**实际源/目标：** REV14 SHA256 70c88e645da2e2195fbc089c4af3432d9a37eb38c66296fd23a8b7e1437d5faa；REV15 HE_REV15_EQ_RNA_LUMPED.inp SHA256 ab66bc21c4ba9d642c60dd217f7219c01111a0695c9d2f14f9e11132cbaf83d7，23300318 bytes（原34233672），32处按原字节区间长度与SHA256校验的精确差异。原模型作为展示及历史对照完整保留。main d21681f6f3735eeadc03659bddb64a2aea9a2c27，补丁blob 5e6f89e65daefa07ba0c393768515d2dec4d673f已回读一致。完整INP、审计、脚本、补丁Google Drive备份成功。工作室增加schema2的哈希区间差异重建支持；Pages部署未验。原生NOT_RUN。
+
+#### 1. 原型及权威方法证据
+
+何泽瑜2024论文PDF36正文25页§3.4明确在动力学验证时忽略叶片、机舱在塔顶部产生的偏心荷载，表3-4 Abaqus自由衰减固有频率0.1361 Hz；不将何的无偏心验证口径冒充本文偏心RNA。原页直接嵌入：
+
+![何2024 PDF36正文25 原图](../references/evidence-screenshots/he-zeyu-tower-original/he-36.png)
+
+IEC 61400-1:2019附录D图D.1/正文108页的反应谱简化模型支持塔顶集中RNA质量及惯量；它不等于对非线性时程、柔性叶片或风震耦合的全面认证。[公开规范文本定位](https://studylib.net/doc/28019299/iec61400-1-2019-pdf-free)。Frontiers in Built Environment 2025, [10.3389/fbuil.2025.1728006](https://doi.org/10.3389/fbuil.2025.1728006) 表7，实测模态与混塔有限元研究采用偏心点质量和转动惯量，RNA 235t，质心坐标(3.41,0,2.22)m（不同对象，仅方法参考）。[Soil Dynamics and Earthquake Engineering 2021,106483](https://doi.org/10.1016/j.soildyn.2020.106483) 说明RNA偏心、转动惯量及叶片柔性影响高阶模态及抗震易损性；刚体简化不能替代柔性对照。[Earthquake Engineering & Structural Dynamics 10.1002/eqe.4095](https://doi.org/10.1002/eqe.4095) 讨论偏心机舱与叶轮分离质量及旋转惯量。Abaqus2025 [Rigid Body Definition](https://docs.software.vt.edu/abaqusv2025/English/SIMACAEMODRefMap/simamod-c-rigidoverview.htm) “Defining Mass and Inertia Properties Directly”明确允许质心tie node直接赋质量及惯量，参考点位于连接所需位置；[MASS](https://docs.software.vt.edu/abaqusv2025/English/SIMACAEKEYRefMap/simakey-r-mass.htm)、[ROTARY INERTIA](https://docs.software.vt.edu/abaqusv2026/English/SIMACAEKEYRefMap/simakey-r-rotaryinertia.htm) 支持ALPHA质量比例阻尼、六惯量张量分量，惯量积采用负积分定义。2025版ROTARY INERTIA关键词访问超时，2026版已核读。官方手册指出低阶刚体离散的质量集中形式可能使惯量偏离解析值，因此必须核对原生DAT，不能称原求解质量矩阵已逐项等效。
+
+DTU Wind Energy Report-I-0092，表2.1正文11页（PDF10）、§6.2.1正文63页（PDF62）及表6.1正文64页（PDF63），[原报告](https://www.innwind.eu/-/media/Sites/innwind/Publications/Deliverables/DeliverableD1-21ReferenceWindTurbinereport_INNWIND-EU.ashx?hash=44EA87C7C608DA773A59FCB234082D8D79D42371&la=da)，已实际截图核读三页，来源报告带DRAFT水印。报告数据：叶轮227962kg（含轮毂105520kg），机舱446036kg，RNA673998kg；机舱CM下风2.687m、偏航轴承以上2.45m，轮毂轴向惯量325671kg·m²，机舱偏航轴惯量7326346kg·m²。此报告只提供部分惯量参数，不能将其当作完整三维惯量矩阵。原骨架机舱446006kg、轮毂105520kg、三叶片125078.565kg，合计676604.565kg，比报告大2606.565kg（0.3867%）；本轮仅减少计算负担，保持原模型质量与质心，不混入未经核验的新版DTU/OpenFAST参数，也不称已解决原型质量差异。报告及期刊新截图尚未获得可归档图像字节及公开转载许可，旧何原图直接展示；其余出处仅定位，不冒称全部原图已入库。
+
+#### 2. RNA解析等效与实际输入
+
+源28个B31圆截面载体，r=0.01m，按真实节点坐标、每段密度及长度L计算m=ρπr²L、质心c=(x1+x2)/2、圆柱自身惯量J=m[(L²/12+r²/4)(I−nnᵀ)+(r²/2)nnᵀ]；n为轴向单位向量。总质量M=Σm，总质心G=Σmc/M；J_G=Σ[J+m((dᵀd)I−ddᵀ)]，d=c−G。输入位置为G，不将塔顶惯量重复叠加。真实塔顶T=(0,158,0)m，原连接参考点P=(0,160,0)m保留，G=[0,160.2966300519159,-0.6485791258427599]m；M=676604.5649998067kg。质心相对塔顶偏置(0,2.296630052,−0.648579126)m。惯量矩阵单位kg·m²：
+- J_G=[[98550474.68694942,0,0],[0,98519682.6571624,-669456.0448969663],[0,-669456.0448969663,159738733.11987907]]
+- J_P=[[98894625.72211325,0,0],[0,98804299.67093712,-539285.4054049158],[0,-539285.4054049158,159798267.1412682]]
+- J_T=[[102403848.97108223,0,0],[0,98804299.67093712,338377.7892126752],[0,338377.7892126752,163307490.39023715]]
+- 主惯量=[98512362.74919894,98550474.68694942,159746053.02784252]，正值且满足三角不等式。
+- 设S(d)为叉乘矩阵，d=G−P，参考点刚体6×6质量矩阵 [[MI,−MS(d)],[MS(d),J_G+M((dᵀd)I−ddᵀ)]]。实际独立计算原28段矩阵与集中模型矩阵最大绝对数值差2.9802322387695312e-8（混合单位，逐分量相对/绝对容差检查通过），仅证明解析刚体质量矩阵等效，不证明Abaqus低阶质量集中结果相同。
+
+实际材料不再使用7种虚拟超高密度RNA载体，改为一节点两单元MASS及ROTARYI，ALPHA=0.0145230339976（继承REV14，惯性阻尼实际参与待核），无beta。保留原塔顶Kinematic Coupling和输出SET_RNA_RP、另定义质心tie node，*Rigid Body, ref node=SET_RNA_RP, tie nset=RNA_LUMPED_INERTIA-1.SET_RNA_CG。五步字节一致，所有非RNA接触、Tie、Embedded、PT Equation、NSM、截面及塔顶耦合保持。完整输入/审计/脚本在main版本档案。
+
+#### 3. 减负结果及门禁
+
+原103部件/109实例 → 100/100，9 Display Body→0，207601个S3展示部件定义单元→0，28 B31→1 MASS+1 ROTARYI；部件定义单元421713→214086。INP缩小约31.94%，不把展示网格删除等同于原物理求解自由度减半；原28个梁已刚体约束，主要收益为导入、存储及模型清晰度。203812个T3D2仍保持，钢筋网格优化另立任务，不能声称已解决整塔计算成本。
+
+原生验收：DAT中RNA质量/质心/完整惯量、重力合力及偏心矩（M×9.81及相对塔顶力矩）、与REV14实际模态及同荷载时程对比、能量及惯性参与。刚体RNA不模拟叶片弹性、独立转子旋转或控制；外部风载仍HOLD。REV15是独立轻量试算，REV11仍基础，未执行求解、不晋级/不合并PR#42。上一轮阻尼规范复核START未闭合，不冒称其原图及白皮书已全部完成。
+
 ### 2026-11-24｜v0.32.161 PATCH — REV14 1% Rayleigh阻尼及相对坐标地震试算
 
 用户同意按1%研究假设继续，不因阻尼文献原页截图暂缺而暂停。继承v0.32.160所述Buildings 2026 §3.1、Shock and Vibration 2024及BF1历史模态依据；非原型实测或当前模型标定。母本REV13 SHA256 7a56d8f7bfc059434f57dc4ddb99961e2ea1f41176b6aff27e587ad4fcd1f8d2。实际生成HE_REV14_EQ_RAYLEIGH_1PCT.inp，34233672 bytes，SHA256 70c88e645da2e2195fbc089c4af3432d9a37eb38c66296fd23a8b7e1437d5faa。
