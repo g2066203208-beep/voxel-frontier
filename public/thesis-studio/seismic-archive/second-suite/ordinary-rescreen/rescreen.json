@@ -1,0 +1,1090 @@
+{
+  "version": "0.32.197",
+  "scope": "second suite ordinary alternatives only; V7 files unchanged, exclude V7 station names; E02/E03 excluded from ordinary pool",
+  "archived_pool": 76,
+  "jobs": 26,
+  "verified_records": 26,
+  "failed_sources": [],
+  "excluded_v7_stations": [
+    "CACS",
+    "CIMA",
+    "CTS",
+    "FDCS",
+    "MODE",
+    "NNZ",
+    "PFAS"
+  ],
+  "records": [
+    {
+      "source": "ESM",
+      "event": "EMSC-20161030_0000029",
+      "station": "SBT",
+      "directory": "replacement_v4/EMSC-20161030_0000029__IT_SBT_blank_HG",
+      "source_sha256": "18f069a85e042eb439a686d5aba2ef2d02862534ab113c2d0e826731742f4f20",
+      "depth_km": 6.2,
+      "mw": "6.6",
+      "vs30": "",
+      "site": "C (inferred from geology)",
+      "distance": "61.2",
+      "frequency_margin_s": 16.666666666666668,
+      "frequency_basis": "2x maximum low-cut corner, research screen",
+      "historical_source_pass": true,
+      "dirs": [
+        "E",
+        "N"
+      ],
+      "source_url": "https://esm-db.eu/esmws/eventdata/1/query?eventid=EMSC-20161030_0000029&station=SBT&format=ascii&processing-type=MP&data-type=ACC&quality-class=BEST%2CGOOD&network=IT&channel=HG%2A",
+      "license": [
+        "CC-BY3_0-IT (http://creativecommons.org/licenses/by/3.0/deed.en)",
+        "CC-BY3_0-IT (http://creativecommons.org/licenses/by/3.0/deed.en)",
+        "CC-BY3_0-IT (http://creativecommons.org/licenses/by/3.0/deed.en)"
+      ],
+      "dt": 0.005,
+      "npts": 24000,
+      "pga": 0.55200191,
+      "duration_10pct_s": [
+        47.205,
+        75.235
+      ],
+      "end_velocity_ratio": 1.1368139455235151e-05,
+      "tail_acceleration_ratio": 0.00029078336034760914,
+      "flags": [],
+      "additional_hp008_4_12_max_relative": 0.13074190360400306,
+      "T1_RotD50": 0.12592383581640032,
+      "strict_screen": true,
+      "diagnostic_screen": true
+    },
+    {
+      "source": "ESM",
+      "event": "EMSC-20160824_0000006",
+      "station": "CADA",
+      "directory": "replacement_v5/EMSC-20160824_0000006__IV_CADA_blank_HN",
+      "source_sha256": "3bbe38eaf789be8a7f7df30af4c3b4dd622bd260bd619795eb18b0521521bdf2",
+      "depth_km": 8.1,
+      "mw": "6.0",
+      "vs30": "",
+      "site": "B (inferred from geology)",
+      "distance": "69.9",
+      "frequency_margin_s": 16.666666666666668,
+      "frequency_basis": "2x maximum low-cut corner, research screen",
+      "historical_source_pass": true,
+      "dirs": [
+        "E",
+        "N"
+      ],
+      "source_url": "https://esm-db.eu/esmws/eventdata/1/query?eventid=EMSC-20160824_0000006&station=CADA&format=ascii&processing-type=MP&data-type=ACC&quality-class=BEST%2CGOOD&network=IV&channel=HN%2A",
+      "license": [
+        "CC-BY4_0 (http://creativecommons.org/licenses/by/4.0/)",
+        "CC-BY4_0 (http://creativecommons.org/licenses/by/4.0/)",
+        "CC-BY4_0 (http://creativecommons.org/licenses/by/4.0/)"
+      ],
+      "dt": 0.005,
+      "npts": 37817,
+      "pga": 0.33974265000000003,
+      "duration_10pct_s": [
+        68.855,
+        66.19500000000001
+      ],
+      "end_velocity_ratio": 4.3856416364199977e-07,
+      "tail_acceleration_ratio": 8.390095146731628e-05,
+      "flags": [],
+      "additional_hp008_4_12_max_relative": 0.10757998047056216,
+      "T1_RotD50": 0.0568907422493036,
+      "strict_screen": true,
+      "diagnostic_screen": true
+    },
+    {
+      "source": "ESM",
+      "event": "EMSC-20161026_0000095",
+      "station": "CSA",
+      "directory": "replacement_v5/EMSC-20161026_0000095__IT_CSA_blank_HG",
+      "source_sha256": "ea7a0793af30dc2a35370f72b7eac4d7ef491d8406ec3c72886ca476ac31ce74",
+      "depth_km": 2.1,
+      "mw": "5.9",
+      "vs30": "200",
+      "site": "C",
+      "distance": "46.2",
+      "frequency_margin_s": 16.666666666666668,
+      "frequency_basis": "2x maximum low-cut corner, research screen",
+      "historical_source_pass": true,
+      "dirs": [
+        "E",
+        "N"
+      ],
+      "source_url": "https://esm-db.eu/esmws/eventdata/1/query?eventid=EMSC-20161026_0000095&station=CSA&format=ascii&processing-type=MP&data-type=ACC&quality-class=BEST%2CGOOD&network=IT&channel=HG%2A",
+      "license": [
+        "CC-BY3_0-IT (http://creativecommons.org/licenses/by/3.0/deed.en)",
+        "CC-BY3_0-IT (http://creativecommons.org/licenses/by/3.0/deed.en)",
+        "CC-BY3_0-IT (http://creativecommons.org/licenses/by/3.0/deed.en)"
+      ],
+      "dt": 0.005,
+      "npts": 36000,
+      "pga": 0.45384886,
+      "duration_10pct_s": [
+        64.875,
+        83.275
+      ],
+      "end_velocity_ratio": 9.425826235870917e-07,
+      "tail_acceleration_ratio": 0.00015006632456109355,
+      "flags": [],
+      "additional_hp008_4_12_max_relative": 0.07704247586491797,
+      "T1_RotD50": 0.030411657389852575,
+      "strict_screen": true,
+      "diagnostic_screen": true
+    },
+    {
+      "source": "ESM",
+      "event": "EMSC-20071129_0000090",
+      "station": "MAME",
+      "directory": "replacement_v5/EMSC-20071129_0000090__RA_MAME_00_HN",
+      "source_sha256": "9fbcaa2f9f4b4df5718b9488d672f093d1a7219aed53644e6fa7cb31688e16d7",
+      "depth_km": 156.0,
+      "mw": "7.4",
+      "vs30": "",
+      "site": "A (inferred from geology)",
+      "distance": "42.6",
+      "frequency_margin_s": 16.666666666666668,
+      "frequency_basis": "2x maximum low-cut corner, research screen",
+      "historical_source_pass": true,
+      "dirs": [
+        "E",
+        "N"
+      ],
+      "source_url": "https://esm-db.eu/esmws/eventdata/1/query?eventid=EMSC-20071129_0000090&station=MAME&format=ascii&processing-type=MP&data-type=ACC&quality-class=BEST%2CGOOD&network=RA&location=00&channel=HN%2A",
+      "license": [
+        "CC-BY4_0 (http://creativecommons.org/licenses/by/4.0/)",
+        "CC-BY4_0 (http://creativecommons.org/licenses/by/4.0/)",
+        "CC-BY4_0 (http://creativecommons.org/licenses/by/4.0/)"
+      ],
+      "dt": 0.005,
+      "npts": 21612,
+      "pga": 0.50280307,
+      "duration_10pct_s": [
+        70.865,
+        66.365
+      ],
+      "end_velocity_ratio": 7.371324009544515e-06,
+      "tail_acceleration_ratio": 0.003268820132707361,
+      "flags": [
+        "DEEP_EVENT_NOT_SHALLOW_CRUSTAL_ANALOGUE"
+      ],
+      "strict_screen": false,
+      "diagnostic_screen": false
+    },
+    {
+      "source": "ESM",
+      "event": "EMSC-20161030_0000029",
+      "station": "VLN",
+      "directory": "replacement_v4/EMSC-20161030_0000029__IT_VLN_blank_HG",
+      "source_sha256": "e7f3963f587f6b0452ca01efa0df6912164f05f9f6d9f69aea9adf8f1d6e5c71",
+      "depth_km": 6.2,
+      "mw": "6.6",
+      "vs30": "",
+      "site": "C (inferred from geology)",
+      "distance": "105.8",
+      "frequency_margin_s": 16.666666666666668,
+      "frequency_basis": "2x maximum low-cut corner, research screen",
+      "historical_source_pass": true,
+      "dirs": [
+        "E",
+        "N"
+      ],
+      "source_url": "https://esm-db.eu/esmws/eventdata/1/query?eventid=EMSC-20161030_0000029&station=VLN&format=ascii&processing-type=MP&data-type=ACC&quality-class=BEST%2CGOOD&network=IT&channel=HG%2A",
+      "license": [
+        "CC-BY3_0-IT (http://creativecommons.org/licenses/by/3.0/deed.en)",
+        "CC-BY3_0-IT (http://creativecommons.org/licenses/by/3.0/deed.en)",
+        "CC-BY3_0-IT (http://creativecommons.org/licenses/by/3.0/deed.en)"
+      ],
+      "dt": 0.005,
+      "npts": 34329,
+      "pga": 0.15879826,
+      "duration_10pct_s": [
+        105.83500000000001,
+        95.76
+      ],
+      "end_velocity_ratio": 8.776676691090657e-07,
+      "tail_acceleration_ratio": 0.00042869901113568276,
+      "flags": [],
+      "additional_hp008_4_12_max_relative": 0.1904740733530329,
+      "T1_RotD50": 0.037813950769425876,
+      "strict_screen": true,
+      "diagnostic_screen": true
+    },
+    {
+      "source": "ESM",
+      "event": "EMSC-20161026_0000095",
+      "station": "MNTP",
+      "directory": "replacement_v3/EMSC-20161026_0000095__IV_MNTP_blank_HN",
+      "source_sha256": "1d3b1f2a7619e3de282457bc5058f046607d5751d0cdff5502cfb1d71f76671e",
+      "depth_km": 2.1,
+      "mw": "5.9",
+      "vs30": "",
+      "site": "C (inferred from geology)",
+      "distance": "36.8",
+      "frequency_margin_s": 16.666666666666668,
+      "frequency_basis": "2x maximum low-cut corner, research screen",
+      "historical_source_pass": true,
+      "dirs": [
+        "E",
+        "N"
+      ],
+      "source_url": "https://esm-db.eu/esmws/eventdata/1/query?eventid=EMSC-20161026_0000095&station=MNTP&format=ascii&processing-type=MP&data-type=ACC&quality-class=BEST%2CGOOD&network=IV&channel=HN%2A",
+      "license": [
+        "CC-BY4_0 (http://creativecommons.org/licenses/by/4.0/)",
+        "CC-BY4_0 (http://creativecommons.org/licenses/by/4.0/)",
+        "CC-BY4_0 (http://creativecommons.org/licenses/by/4.0/)"
+      ],
+      "dt": 0.005,
+      "npts": 36643,
+      "pga": 0.63007882,
+      "duration_10pct_s": [
+        40.815,
+        36.155
+      ],
+      "end_velocity_ratio": 3.477280309761398e-07,
+      "tail_acceleration_ratio": 2.5156700356827682e-05,
+      "flags": [
+        "DURATION_5T1_RESEARCH"
+      ],
+      "additional_hp008_4_12_max_relative": 0.027289997930471377,
+      "T1_RotD50": 0.04219433442562194,
+      "strict_screen": false,
+      "diagnostic_screen": true
+    },
+    {
+      "source": "ESM",
+      "event": "EMSC-20160824_0000006",
+      "station": "TERO",
+      "directory": "replacement_v3/EMSC-20160824_0000006__IV_TERO_blank_HN",
+      "source_sha256": "a55bacbc0594de9babd73b4fd80d47e23c22a4b2581b5fe469d3d9854b0d9c00",
+      "depth_km": 8.1,
+      "mw": "6.0",
+      "vs30": "912",
+      "site": "A",
+      "distance": "31.5",
+      "frequency_margin_s": 16.666666666666668,
+      "frequency_basis": "2x maximum low-cut corner, research screen",
+      "historical_source_pass": true,
+      "dirs": [
+        "E",
+        "N"
+      ],
+      "source_url": "https://esm-db.eu/esmws/eventdata/1/query?eventid=EMSC-20160824_0000006&station=TERO&format=ascii&processing-type=MP&data-type=ACC&quality-class=BEST%2CGOOD&network=IV&channel=HN%2A",
+      "license": [
+        "CC-BY4_0 (http://creativecommons.org/licenses/by/4.0/)",
+        "CC-BY4_0 (http://creativecommons.org/licenses/by/4.0/)",
+        "CC-BY4_0 (http://creativecommons.org/licenses/by/4.0/)"
+      ],
+      "dt": 0.005,
+      "npts": 15722,
+      "pga": 0.8466819700000001,
+      "duration_10pct_s": [
+        28.1,
+        22.11
+      ],
+      "end_velocity_ratio": 7.656157971724702e-06,
+      "tail_acceleration_ratio": 0.00020399734190683374,
+      "flags": [
+        "DURATION_5T1_RESEARCH"
+      ],
+      "additional_hp008_4_12_max_relative": 0.09653377636264959,
+      "T1_RotD50": 0.02280876763320053,
+      "strict_screen": false,
+      "diagnostic_screen": true
+    },
+    {
+      "source": "ESM",
+      "event": "EMSC-20160824_0000006",
+      "station": "RM33",
+      "directory": "replacement_v3/EMSC-20160824_0000006__IV_RM33_blank_HN",
+      "source_sha256": "b84ba98dfad24515a37df72d205a1532c19e72c966be43176ad4da462495f25e",
+      "depth_km": 8.1,
+      "mw": "6.0",
+      "vs30": "",
+      "site": "B (inferred from geology)",
+      "distance": "21.1",
+      "frequency_margin_s": 16.666666666666668,
+      "frequency_basis": "2x maximum low-cut corner, research screen",
+      "historical_source_pass": true,
+      "dirs": [
+        "E",
+        "N"
+      ],
+      "source_url": "https://esm-db.eu/esmws/eventdata/1/query?eventid=EMSC-20160824_0000006&station=RM33&format=ascii&processing-type=MP&data-type=ACC&quality-class=BEST%2CGOOD&network=IV&channel=HN%2A",
+      "license": [
+        "CC-BY4_0 (http://creativecommons.org/licenses/by/4.0/)",
+        "CC-BY4_0 (http://creativecommons.org/licenses/by/4.0/)",
+        "CC-BY4_0 (http://creativecommons.org/licenses/by/4.0/)"
+      ],
+      "dt": 0.005,
+      "npts": 15023,
+      "pga": 1.0036010899999999,
+      "duration_10pct_s": [
+        16.36,
+        13.32
+      ],
+      "end_velocity_ratio": 9.43400073402858e-07,
+      "tail_acceleration_ratio": 0.00019609241451824054,
+      "flags": [
+        "DURATION_5T1_RESEARCH"
+      ],
+      "additional_hp008_4_12_max_relative": 0.07765152371328687,
+      "T1_RotD50": 0.023748246871482935,
+      "strict_screen": false,
+      "diagnostic_screen": true
+    },
+    {
+      "source": "ESM",
+      "event": "EMSC-20170118_0000034",
+      "station": "FEMA",
+      "directory": "acquired_v2/EMSC-20170118_0000034__IV_FEMA_blank_HN",
+      "source_sha256": "615a657b4c65cc00b4913ded36fe181fe040b86b074e62bc33305ef0adf7fe74",
+      "depth_km": 9.3,
+      "mw": "5.5",
+      "vs30": "",
+      "site": "A (inferred from geology)",
+      "distance": "48.9",
+      "frequency_margin_s": 16.666666666666668,
+      "frequency_basis": "2x maximum low-cut corner, research screen",
+      "historical_source_pass": true,
+      "dirs": [
+        "E",
+        "N"
+      ],
+      "source_url": "https://esm-db.eu/esmws/eventdata/1/query?eventid=EMSC-20170118_0000034&station=FEMA&format=ascii&processing-type=MP&data-type=ACC&quality-class=BEST%2CGOOD&network=IV&channel=HN%2A",
+      "license": [
+        "CC-BY4_0 (http://creativecommons.org/licenses/by/4.0/)",
+        "CC-BY4_0 (http://creativecommons.org/licenses/by/4.0/)",
+        "CC-BY4_0 (http://creativecommons.org/licenses/by/4.0/)"
+      ],
+      "dt": 0.005,
+      "npts": 15568,
+      "pga": 0.27930833,
+      "duration_10pct_s": [
+        28.285,
+        22.06
+      ],
+      "end_velocity_ratio": 8.177279393812098e-06,
+      "tail_acceleration_ratio": 0.0005290178967116019,
+      "flags": [
+        "DURATION_5T1_RESEARCH"
+      ],
+      "additional_hp008_4_12_max_relative": 0.1202639100179631,
+      "T1_RotD50": 0.0033977380420244898,
+      "strict_screen": false,
+      "diagnostic_screen": true
+    },
+    {
+      "source": "ESM",
+      "event": "EMSC-20170118_0000119",
+      "station": "T1214",
+      "directory": "replacement_v3/EMSC-20170118_0000119__8P_T1214_blank_HN",
+      "source_sha256": "494f6c5615c28d5152e1ab4d698082b98c52b993db9162919ea19c3d10c4b327",
+      "depth_km": 10.6,
+      "mw": "5.0",
+      "vs30": "",
+      "site": "B (inferred from geology)",
+      "distance": "30.0",
+      "frequency_margin_s": 16.666666666666668,
+      "frequency_basis": "2x maximum low-cut corner, research screen",
+      "historical_source_pass": true,
+      "dirs": [
+        "E",
+        "N"
+      ],
+      "source_url": "https://esm-db.eu/esmws/eventdata/1/query?eventid=EMSC-20170118_0000119&station=T1214&format=ascii&processing-type=MP&data-type=ACC&quality-class=BEST%2CGOOD&network=8P&channel=HN%2A",
+      "license": [
+        "CC-BY4_0 (http://creativecommons.org/licenses/by/4.0/)",
+        "CC-BY4_0 (http://creativecommons.org/licenses/by/4.0/)",
+        "CC-BY4_0 (http://creativecommons.org/licenses/by/4.0/)"
+      ],
+      "dt": 0.005,
+      "npts": 16997,
+      "pga": 0.21573294,
+      "duration_10pct_s": [
+        20.825,
+        25.145
+      ],
+      "end_velocity_ratio": 4.9506949104103005e-06,
+      "tail_acceleration_ratio": 9.735104392624431e-05,
+      "flags": [
+        "DURATION_5T1_RESEARCH"
+      ],
+      "additional_hp008_4_12_max_relative": 0.06155467056791286,
+      "T1_RotD50": 0.0012883959893370965,
+      "strict_screen": false,
+      "diagnostic_screen": true
+    },
+    {
+      "source": "GeoNet",
+      "event": "2016p858000",
+      "station": "NLMS",
+      "directory": "geonet_v6/20161113_110323_NLMS_20",
+      "source_sha256": "cc0a196ebc6078dfced6f04ddd93565ea40411795b5125d6816a59eeafbf4c6a",
+      "depth_km": 15.0,
+      "mw": 7.85,
+      "vs30": "460",
+      "site": "C",
+      "distance": 79.79,
+      "frequency_margin_s": 29.41176470588235,
+      "frequency_basis": "provider flatfile fmin",
+      "tectonic_class": "Crustal",
+      "dirs": [
+        "N00E",
+        "N90W"
+      ],
+      "source_url": "https://static.geonet.org.nz/info/resources/applications_data/earthquake/strong_motion/ForStructuralAnalyses.zip",
+      "license": "GeoNet CC BY 3.0 NZ",
+      "dt": 0.005,
+      "npts": 43186,
+      "pga": 1.0860999999999998,
+      "duration_10pct_s": [
+        124.25,
+        120.435
+      ],
+      "end_velocity_ratio": 0.008323335391704776,
+      "tail_acceleration_ratio": 0.00018258365702223777,
+      "flags": [
+        "HP_SENS_20PCT_RESEARCH"
+      ],
+      "additional_hp008_4_12_max_relative": 0.44081272345210065,
+      "strict_screen": false,
+      "diagnostic_screen": false
+    },
+    {
+      "source": "GeoNet",
+      "event": "2016p858000",
+      "station": "NELS",
+      "directory": "geonet_v6/20161113_110322_NELS_20",
+      "source_sha256": "f7ed590b4f12a681884e8ef338a4f50fd5e0f08e64829b6b2c03b736e504d2bc",
+      "depth_km": 15.0,
+      "mw": 7.85,
+      "vs30": "1000",
+      "site": "B",
+      "distance": 77.78,
+      "frequency_margin_s": 29.41176470588235,
+      "frequency_basis": "provider flatfile fmin",
+      "tectonic_class": "Crustal",
+      "dirs": [
+        "N00E",
+        "N90W"
+      ],
+      "source_url": "https://static.geonet.org.nz/info/resources/applications_data/earthquake/strong_motion/ForStructuralAnalyses.zip",
+      "license": "GeoNet CC BY 3.0 NZ",
+      "dt": 0.005,
+      "npts": 56878,
+      "pga": 1.4092,
+      "duration_10pct_s": [
+        128.91,
+        86.96000000000001
+      ],
+      "end_velocity_ratio": 0.004782093611030274,
+      "tail_acceleration_ratio": 0.0003308194933477515,
+      "flags": [
+        "HP_SENS_20PCT_RESEARCH"
+      ],
+      "additional_hp008_4_12_max_relative": 0.4393612593167413,
+      "strict_screen": false,
+      "diagnostic_screen": false
+    },
+    {
+      "source": "GeoNet",
+      "event": "2013p613797",
+      "station": "ARKS",
+      "directory": "geonet_v6/20130816_023124_ARKS_20",
+      "source_sha256": "1b9394c61fd8bc1850e78256e79afd67ed499589d1d9c3a841258122e6269eb2",
+      "depth_km": 8.16,
+      "mw": 6.6,
+      "vs30": "270",
+      "site": "C",
+      "distance": 72.49,
+      "frequency_margin_s": 29.41176470588235,
+      "frequency_basis": "provider flatfile fmin",
+      "tectonic_class": "Crustal",
+      "dirs": [
+        "N00E",
+        "N90W"
+      ],
+      "source_url": "https://static.geonet.org.nz/info/resources/applications_data/earthquake/strong_motion/ForStructuralAnalyses.zip",
+      "license": "GeoNet CC BY 3.0 NZ",
+      "dt": 0.005,
+      "npts": 20000,
+      "pga": 0.9175,
+      "duration_10pct_s": [
+        20.505,
+        23.07
+      ],
+      "end_velocity_ratio": 0.007690638960900342,
+      "tail_acceleration_ratio": 4.16457180916464e-06,
+      "flags": [
+        "DURATION_5T1_RESEARCH",
+        "HP_SENS_20PCT_RESEARCH"
+      ],
+      "additional_hp008_4_12_max_relative": 0.3590365723892157,
+      "strict_screen": false,
+      "diagnostic_screen": false
+    },
+    {
+      "source": "GeoNet",
+      "event": "2013p613797",
+      "station": "WANS",
+      "directory": "geonet_v6/20130816_023122_WANS_20",
+      "source_sha256": "dfa388f05b63cfaa9ef5527c557fab96b0401624c11916ca42d41baed2459e63",
+      "depth_km": 8.16,
+      "mw": 6.6,
+      "vs30": "1000",
+      "site": "B",
+      "distance": 72.44,
+      "frequency_margin_s": 29.41176470588235,
+      "frequency_basis": "provider flatfile fmin",
+      "tectonic_class": "Crustal",
+      "dirs": [
+        "N00E",
+        "N90W"
+      ],
+      "source_url": "https://static.geonet.org.nz/info/resources/applications_data/earthquake/strong_motion/ForStructuralAnalyses.zip",
+      "license": "GeoNet CC BY 3.0 NZ",
+      "dt": 0.005,
+      "npts": 21000,
+      "pga": 0.3738,
+      "duration_10pct_s": [
+        36.910000000000004,
+        38.505
+      ],
+      "end_velocity_ratio": 0.010672547523876154,
+      "tail_acceleration_ratio": 0.000272663554212334,
+      "flags": [
+        "DURATION_5T1_RESEARCH",
+        "HP_SENS_20PCT_RESEARCH"
+      ],
+      "additional_hp008_4_12_max_relative": 0.3375479035815092,
+      "strict_screen": false,
+      "diagnostic_screen": false
+    },
+    {
+      "source": "GeoNet",
+      "event": "2013p613797",
+      "station": "TOTS",
+      "directory": "geonet_v6/20130816_023124_TOTS_20",
+      "source_sha256": "eca0cc3ec8024b3b60e1cd0aecddbf4e743d236330dfa624fdc9682d8bdc2fb8",
+      "depth_km": 8.16,
+      "mw": 6.6,
+      "vs30": "210",
+      "site": "D",
+      "distance": 91.26,
+      "frequency_margin_s": 29.41176470588235,
+      "frequency_basis": "provider flatfile fmin",
+      "tectonic_class": "Crustal",
+      "dirs": [
+        "N00E",
+        "N90W"
+      ],
+      "source_url": "https://static.geonet.org.nz/info/resources/applications_data/earthquake/strong_motion/ForStructuralAnalyses.zip",
+      "license": "GeoNet CC BY 3.0 NZ",
+      "dt": 0.005,
+      "npts": 22600,
+      "pga": 0.5242000000000001,
+      "duration_10pct_s": [
+        48.08,
+        27.62
+      ],
+      "end_velocity_ratio": 0.004576137361284055,
+      "tail_acceleration_ratio": 0.0001921336956480382,
+      "flags": [
+        "DURATION_5T1_RESEARCH",
+        "HP_SENS_20PCT_RESEARCH"
+      ],
+      "additional_hp008_4_12_max_relative": 0.318476924133163,
+      "strict_screen": false,
+      "diagnostic_screen": false
+    },
+    {
+      "source": "GeoNet",
+      "event": "2013p543824",
+      "station": "INSS",
+      "directory": "geonet_v6/20130721_050942_INSS_20",
+      "source_sha256": "aaa75f8e7f06cb032f8664f9fe137d80cc21d2e58065c471b85b77ca7e153bfc",
+      "depth_km": 12.85,
+      "mw": 6.58,
+      "vs30": "800",
+      "site": "B",
+      "distance": 62.57,
+      "frequency_margin_s": 29.41176470588235,
+      "frequency_basis": "provider flatfile fmin",
+      "tectonic_class": "Crustal",
+      "dirs": [
+        "N00E",
+        "N90W"
+      ],
+      "source_url": "https://static.geonet.org.nz/info/resources/applications_data/earthquake/strong_motion/ForStructuralAnalyses.zip",
+      "license": "GeoNet CC BY 3.0 NZ",
+      "dt": 0.005,
+      "npts": 20000,
+      "pga": 0.5067,
+      "duration_10pct_s": [
+        22.86,
+        22.68
+      ],
+      "end_velocity_ratio": 0.011311811731112977,
+      "tail_acceleration_ratio": 0.00012966252220248834,
+      "flags": [
+        "DURATION_5T1_RESEARCH",
+        "HP_SENS_20PCT_RESEARCH"
+      ],
+      "additional_hp008_4_12_max_relative": 0.3809145303339262,
+      "strict_screen": false,
+      "diagnostic_screen": false
+    },
+    {
+      "source": "GeoNet",
+      "event": "2013p543824",
+      "station": "LHUS",
+      "directory": "geonet_v6/20130721_050943_LHUS_20",
+      "source_sha256": "b044fdb6df642ab15fbee794a89f41bcecb0c2fbba70930041527272f1217dc3",
+      "depth_km": 12.85,
+      "mw": 6.58,
+      "vs30": "212",
+      "site": "D",
+      "distance": 61.07,
+      "frequency_margin_s": 29.41176470588235,
+      "frequency_basis": "provider flatfile fmin",
+      "tectonic_class": "Crustal",
+      "dirs": [
+        "N00E",
+        "N90W"
+      ],
+      "source_url": "https://static.geonet.org.nz/info/resources/applications_data/earthquake/strong_motion/ForStructuralAnalyses.zip",
+      "license": "GeoNet CC BY 3.0 NZ",
+      "dt": 0.005,
+      "npts": 22000,
+      "pga": 0.7327,
+      "duration_10pct_s": [
+        35.11,
+        33.705
+      ],
+      "end_velocity_ratio": 0.0038542760526070587,
+      "tail_acceleration_ratio": 6.959218661925459e-07,
+      "flags": [
+        "DURATION_5T1_RESEARCH",
+        "HP_SENS_20PCT_RESEARCH"
+      ],
+      "additional_hp008_4_12_max_relative": 0.27682050931074653,
+      "strict_screen": false,
+      "diagnostic_screen": false
+    },
+    {
+      "source": "GeoNet",
+      "event": "3468575",
+      "station": "CSTC",
+      "directory": "geonet_v6/20110221_235142_CSTC",
+      "source_sha256": "271cdd3fdb3f8b2d861fc3287b0bd4384f94e50602130da6d2f452034a7842a3",
+      "depth_km": 5.41,
+      "mw": 6.19,
+      "vs30": "425",
+      "site": "D",
+      "distance": 35.89,
+      "frequency_margin_s": 29.41176470588235,
+      "frequency_basis": "provider flatfile fmin",
+      "tectonic_class": "Crustal",
+      "dirs": [
+        "S88W",
+        "S02E"
+      ],
+      "source_url": "https://static.geonet.org.nz/info/resources/applications_data/earthquake/strong_motion/ForStructuralAnalyses.zip",
+      "license": "GeoNet CC BY 3.0 NZ",
+      "dt": 0.005,
+      "npts": 20954,
+      "pga": 0.8083,
+      "duration_10pct_s": [
+        23.42,
+        24.155
+      ],
+      "end_velocity_ratio": 0.024109855985564616,
+      "tail_acceleration_ratio": 0.0002908025167092925,
+      "flags": [
+        "DURATION_5T1_RESEARCH",
+        "HP_SENS_20PCT_RESEARCH"
+      ],
+      "additional_hp008_4_12_max_relative": 0.21369922603100266,
+      "strict_screen": false,
+      "diagnostic_screen": false
+    },
+    {
+      "source": "GeoNet",
+      "event": "3468575",
+      "station": "LBZ",
+      "directory": "geonet_v6/20110221_235142_LBZ",
+      "source_sha256": "5dd7d80d2003be60d94511e98361b3f5b71ab4bc478c6c88066a948cb69ddd8f",
+      "depth_km": 5.41,
+      "mw": 6.19,
+      "vs30": "1000",
+      "site": "B",
+      "distance": 221.17,
+      "frequency_margin_s": 29.41176470588235,
+      "frequency_basis": "provider flatfile fmin",
+      "tectonic_class": "Crustal",
+      "dirs": [
+        "E",
+        "N"
+      ],
+      "source_url": "https://static.geonet.org.nz/info/resources/applications_data/earthquake/strong_motion/ForStructuralAnalyses.zip",
+      "license": "GeoNet CC BY 3.0 NZ",
+      "dt": 0.02,
+      "npts": 8000,
+      "pga": 0.024198,
+      "duration_10pct_s": [
+        86.12,
+        76.62
+      ],
+      "end_velocity_ratio": 0.004370337824566932,
+      "tail_acceleration_ratio": 0.00015944389723780586,
+      "flags": [
+        "HP_SENS_20PCT_RESEARCH"
+      ],
+      "additional_hp008_4_12_max_relative": 0.33466812750220076,
+      "strict_screen": false,
+      "diagnostic_screen": false
+    },
+    {
+      "source": "GeoNet",
+      "event": "3528839",
+      "station": "LTZ",
+      "directory": "geonet_v6/20110613_022049_LTZ",
+      "source_sha256": "2cc9a8590223e4bc7f72244fd73592d24eccf798335dd68c6119110a98b5e844",
+      "depth_km": 6.47,
+      "mw": 5.99,
+      "vs30": "1000",
+      "site": "B",
+      "distance": 93.49,
+      "frequency_margin_s": 19.607843137254903,
+      "frequency_basis": "provider flatfile fmin",
+      "tectonic_class": "Crustal",
+      "dirs": [
+        "E",
+        "N"
+      ],
+      "source_url": "https://static.geonet.org.nz/info/resources/applications_data/earthquake/strong_motion/ForStructuralAnalyses.zip",
+      "license": "GeoNet CC BY 3.0 NZ",
+      "dt": 0.005,
+      "npts": 18417,
+      "pga": 0.2149,
+      "duration_10pct_s": [
+        15.125,
+        26.330000000000002
+      ],
+      "end_velocity_ratio": 0.006616878106566019,
+      "tail_acceleration_ratio": 0.0004653327128897247,
+      "flags": [
+        "DURATION_5T1_RESEARCH",
+        "HP_SENS_20PCT_RESEARCH"
+      ],
+      "additional_hp008_4_12_max_relative": 0.33345745078609923,
+      "strict_screen": false,
+      "diagnostic_screen": false
+    },
+    {
+      "source": "GeoNet",
+      "event": "2013p614135",
+      "station": "SEDS",
+      "directory": "geonet_v6/20130816_053120_RCS2_20",
+      "source_sha256": "c68ca58027bcdf3f2b13b1b426b3308d9347dfd905bbb26cf84ea82933651645",
+      "depth_km": 14.26,
+      "mw": 5.9,
+      "vs30": "270",
+      "site": "D",
+      "distance": 17.65,
+      "frequency_margin_s": 19.607843137254903,
+      "frequency_basis": "provider flatfile fmin",
+      "tectonic_class": "Crustal",
+      "dirs": [
+        "N00E",
+        "N90W"
+      ],
+      "source_url": "https://static.geonet.org.nz/info/resources/applications_data/earthquake/strong_motion/ForStructuralAnalyses.zip",
+      "license": "GeoNet CC BY 3.0 NZ",
+      "dt": 0.005,
+      "npts": 24200,
+      "pga": 2.2506999999999997,
+      "duration_10pct_s": [
+        11.68,
+        16.055
+      ],
+      "end_velocity_ratio": 0.0020560651668371935,
+      "tail_acceleration_ratio": 6.464350068220466e-05,
+      "flags": [
+        "DURATION_5T1_RESEARCH"
+      ],
+      "additional_hp008_4_12_max_relative": 0.04345038895532394,
+      "T1_RotD50": 0.029923031178389868,
+      "strict_screen": false,
+      "diagnostic_screen": true
+    },
+    {
+      "source": "GeoNet",
+      "event": "3631380",
+      "station": "OXZ",
+      "directory": "geonet_v6/20111223_021803_OXZ",
+      "source_sha256": "f5762ec5d5cb14a8a9be6a36c9582e10ff2c39eceff74910daab01113ec2592b",
+      "depth_km": 11.21,
+      "mw": 5.85,
+      "vs30": "1000",
+      "site": "B",
+      "distance": 59.29,
+      "frequency_margin_s": 19.607843137254903,
+      "frequency_basis": "provider flatfile fmin",
+      "tectonic_class": "Crustal",
+      "dirs": [
+        "E",
+        "N"
+      ],
+      "source_url": "https://static.geonet.org.nz/info/resources/applications_data/earthquake/strong_motion/ForStructuralAnalyses.zip",
+      "license": "GeoNet CC BY 3.0 NZ",
+      "dt": 0.02,
+      "npts": 5250,
+      "pga": 0.3097,
+      "duration_10pct_s": [
+        23.28,
+        25.1
+      ],
+      "end_velocity_ratio": 0.01185001361787522,
+      "tail_acceleration_ratio": 0.0003281229678164258,
+      "flags": [
+        "DURATION_5T1_RESEARCH"
+      ],
+      "additional_hp008_4_12_max_relative": 0.19310592784388947,
+      "T1_RotD50": 0.008925107009733126,
+      "strict_screen": false,
+      "diagnostic_screen": true
+    },
+    {
+      "source": "GeoNet",
+      "event": "3631380",
+      "station": "STKS",
+      "directory": "geonet_v6/20111223_021803_STKS",
+      "source_sha256": "c9ed745d16380949a97d3787dca72d2b903a3afaf0178712c7125ed7b4bbe592",
+      "depth_km": 11.21,
+      "mw": 5.85,
+      "vs30": "1000",
+      "site": "B",
+      "distance": 16.14,
+      "frequency_margin_s": 19.607843137254903,
+      "frequency_basis": "provider flatfile fmin",
+      "tectonic_class": "Crustal",
+      "dirs": [
+        "S79E",
+        "N11E"
+      ],
+      "source_url": "https://static.geonet.org.nz/info/resources/applications_data/earthquake/strong_motion/ForStructuralAnalyses.zip",
+      "license": "GeoNet CC BY 3.0 NZ",
+      "dt": 0.005,
+      "npts": 18200,
+      "pga": 1.0266,
+      "duration_10pct_s": [
+        19.895,
+        19.145
+      ],
+      "end_velocity_ratio": 0.0012954443717785806,
+      "tail_acceleration_ratio": 8.085034468130393e-05,
+      "flags": [
+        "DURATION_5T1_RESEARCH"
+      ],
+      "additional_hp008_4_12_max_relative": 0.12029717053090927,
+      "T1_RotD50": 0.027294897676131486,
+      "strict_screen": false,
+      "diagnostic_screen": true
+    },
+    {
+      "source": "GeoNet",
+      "event": "2013p542711",
+      "station": "KEKS",
+      "directory": "geonet_v6/20130720_191721_KEKS_20",
+      "source_sha256": "f4b40af922b8dabf031cf6b42a8fbddb0177e72d0eaa6bd06f662247bee582e2",
+      "depth_km": 19.82,
+      "mw": 5.74,
+      "vs30": "1000",
+      "site": "B",
+      "distance": 56.87,
+      "frequency_margin_s": 19.607843137254903,
+      "frequency_basis": "provider flatfile fmin",
+      "tectonic_class": "Crustal",
+      "dirs": [
+        "N00E",
+        "N90W"
+      ],
+      "source_url": "https://static.geonet.org.nz/info/resources/applications_data/earthquake/strong_motion/ForStructuralAnalyses.zip",
+      "license": "GeoNet CC BY 3.0 NZ",
+      "dt": 0.005,
+      "npts": 29200,
+      "pga": 0.18580000000000002,
+      "duration_10pct_s": [
+        32.075,
+        34.685
+      ],
+      "end_velocity_ratio": 0.003311393863146055,
+      "tail_acceleration_ratio": 1.9405550459978416e-06,
+      "flags": [
+        "DURATION_5T1_RESEARCH",
+        "HP_SENS_20PCT_RESEARCH"
+      ],
+      "additional_hp008_4_12_max_relative": 0.303239618826049,
+      "strict_screen": false,
+      "diagnostic_screen": false
+    },
+    {
+      "source": "GeoNet",
+      "event": "2013p542711",
+      "station": "MKBS",
+      "directory": "geonet_v6/20130720_191719_MKBS_20",
+      "source_sha256": "a048fffbd09ab3280f8787934af98aa24ee055ea02bb950ced8e8ae245cdd326",
+      "depth_km": 19.82,
+      "mw": 5.74,
+      "vs30": "1000",
+      "site": "B",
+      "distance": 45.83,
+      "frequency_margin_s": 19.607843137254903,
+      "frequency_basis": "provider flatfile fmin",
+      "tectonic_class": "Crustal",
+      "dirs": [
+        "N00E",
+        "N90W"
+      ],
+      "source_url": "https://static.geonet.org.nz/info/resources/applications_data/earthquake/strong_motion/ForStructuralAnalyses.zip",
+      "license": "GeoNet CC BY 3.0 NZ",
+      "dt": 0.005,
+      "npts": 29000,
+      "pga": 0.18409999999999999,
+      "duration_10pct_s": [
+        31.830000000000002,
+        31.555
+      ],
+      "end_velocity_ratio": 0.003674268435860759,
+      "tail_acceleration_ratio": 5.431830526887562e-07,
+      "flags": [
+        "DURATION_5T1_RESEARCH",
+        "HP_SENS_20PCT_RESEARCH"
+      ],
+      "additional_hp008_4_12_max_relative": 0.2670048184151943,
+      "strict_screen": false,
+      "diagnostic_screen": false
+    },
+    {
+      "source": "GeoNet",
+      "event": "3468635",
+      "station": "OXZ",
+      "directory": "geonet_v6/20110222_015029_OXZ",
+      "source_sha256": "c1578a6db07b75bf9bc09521853ba2a7d4d90e704e51376582b349569b40aa64",
+      "depth_km": 8.22,
+      "mw": 5.63,
+      "vs30": "1000",
+      "site": "B",
+      "distance": 54.79,
+      "frequency_margin_s": 19.607843137254903,
+      "frequency_basis": "provider flatfile fmin",
+      "tectonic_class": "Crustal",
+      "dirs": [
+        "E",
+        "N"
+      ],
+      "source_url": "https://static.geonet.org.nz/info/resources/applications_data/earthquake/strong_motion/ForStructuralAnalyses.zip",
+      "license": "GeoNet CC BY 3.0 NZ",
+      "dt": 0.02,
+      "npts": 4495,
+      "pga": 0.3158,
+      "duration_10pct_s": [
+        23.26,
+        20.12
+      ],
+      "end_velocity_ratio": 0.008001235438468344,
+      "tail_acceleration_ratio": 8.010836377880632e-06,
+      "flags": [
+        "DURATION_5T1_RESEARCH"
+      ],
+      "additional_hp008_4_12_max_relative": 0.07310530043629171,
+      "T1_RotD50": 0.00315907960031759,
+      "strict_screen": false,
+      "diagnostic_screen": true
+    }
+  ],
+  "strict": {
+    "status": "INSUFFICIENT_DISTINCT_EVENTS",
+    "records": 4,
+    "events": 3,
+    "needed": 4,
+    "station_candidates": [
+      "SBT",
+      "CADA",
+      "CSA",
+      "VLN"
+    ]
+  },
+  "duration_relaxed_diagnostic": {
+    "status": "RESEARCH_FIT_ONLY",
+    "records": 13,
+    "events": 8,
+    "selected": [
+      {
+        "station": "TERO",
+        "event": "EMSC-20160824_0000006",
+        "scale": 0.5000000040153515,
+        "flags": [
+          "DURATION_5T1_RESEARCH"
+        ]
+      },
+      {
+        "station": "MNTP",
+        "event": "EMSC-20161026_0000095",
+        "scale": 0.5249477860175435,
+        "flags": [
+          "DURATION_5T1_RESEARCH"
+        ]
+      },
+      {
+        "station": "T1214",
+        "event": "EMSC-20170118_0000119",
+        "scale": 0.5000001199491293,
+        "flags": [
+          "DURATION_5T1_RESEARCH"
+        ]
+      },
+      {
+        "station": "OXZ",
+        "event": "3631380",
+        "scale": 1.9999999999999747,
+        "flags": [
+          "DURATION_5T1_RESEARCH"
+        ]
+      },
+      {
+        "station": "OXZ",
+        "event": "3468635",
+        "scale": 0.5000000000005678,
+        "flags": [
+          "DURATION_5T1_RESEARCH"
+        ]
+      },
+      {
+        "station": "SEDS",
+        "event": "2013p614135",
+        "scale": 0.7472749131831168,
+        "flags": [
+          "DURATION_5T1_RESEARCH"
+        ]
+      },
+      {
+        "station": "SBT",
+        "event": "EMSC-20161030_0000029",
+        "scale": 1.80893342256754,
+        "flags": []
+      }
+    ],
+    "weighted_rms": 0.14541514144549403,
+    "focus_max_error": 0.324793168486354,
+    "all_max_error": 0.324793168486354,
+    "T1_error": -0.15923871315407923,
+    "focus_20pct_met": false,
+    "rotation_resolution_difference_max": 0.012845552791551307
+  },
+  "target": "0.1–10s previously frozen parametric research target, not Jiayu site spectrum",
+  "formal_design_admitted": 0,
+  "limits": "shallow crustal analogue screen depth <=70 km for ESM; 15s margin, terminal velocity, tail mean, 20% extra high-pass sensitivity, 5T1 duration are research screens not formal code requirements; no new recordings downloaded from provider, source bytes read from immutable archive; GeoNet tectonic class prefiltered in prior flatfile; unknown ESM mechanism/site/pulse not certified"
+}
