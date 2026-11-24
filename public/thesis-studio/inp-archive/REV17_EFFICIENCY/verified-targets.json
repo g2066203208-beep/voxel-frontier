@@ -1,0 +1,38 @@
+{
+  "sourceSha256": "f87528658941289b1bf5a86f2b295123ff569cfd62be6057f6737c8d1e84f1e1",
+  "run": 45346626474,
+  "artifact": 14898556792,
+  "native": "NOT_RUN",
+  "targets": [
+    {
+      "mode": "precheck",
+      "file": "HE_REV17_PRECHECK.inp",
+      "bytes": 23442557,
+      "sha256": "79c43fe113204dddccd7470c7bc5813dde424197f63df2ae329605b3860efec9"
+    },
+    {
+      "mode": "lean005",
+      "file": "HE_REV17_EQ_LEAN005.inp",
+      "bytes": 23447359,
+      "sha256": "6aac25291a9f027554590e947de276359d2e3e5fff42e35a83680d098824d16f"
+    },
+    {
+      "mode": "lean010",
+      "file": "HE_REV17_EQ_LEAN010.inp",
+      "bytes": 23447358,
+      "sha256": "f8fbf621503d821445a92ef655797033f182cefd056e4da9033fd30ec24bfc68"
+    },
+    {
+      "mode": "lean020",
+      "file": "HE_REV17_EQ_LEAN020.inp",
+      "bytes": 23447358,
+      "sha256": "7993767f52fcd0ed578a9af23c34bacded29f02e6f219952b1c34bd3d8854ca2"
+    },
+    {
+      "mode": "trial40",
+      "file": "HE_REV17_EQ_TRIAL40.inp",
+      "bytes": 23447353,
+      "sha256": "2ca69432574307436088c95d8ee58b2bf92b5355bc10be2feb0a9c8c388d66bf"
+    }
+  ]
+}
