@@ -1,3 +1,21 @@
+### 2026-11-24｜v0.32.179 PATCH — 9组真实地震动逐点复核、长周期诊断与工作室直接下载
+
+SOURCE：冻结T079九组ZIP SHA256 89d25e81769f22481baef110ec0a41995902d3bc76725ec5442ba042496e8ca4，49成员；[可执行检测源码](../experiments/T079/seismic-evidence-20261124/record-pool/audit_nine.py) 本地实际运行PASS，Git blob 1091475e27c4ceeaf256b380ea91effdeeb78cbf与本地git hash-object一致，commit 0d5133e8d6c941f424d3d72260da76e9922d5046。逐项源ZIP CRC/全部成员SHA、原ASC身份/同步/单位/采样/原数据与SI逐点重算、DSLC官方CSV重读，9/9通过，最大绝对数据转换差8.881784197001252e-16m/s²，非仪器误差。ESM积分速度v0=0，GeoNet使用官方V/D，9组最大末端速度模长/峰值速度模长0.0621868%（DSLC），5s尾段加速度均值/PGA最大0.1092763%（MESG）；DSLC由官方初始V/D积分与官方时程最大速度/位移差0.00342531356m/s /0.00535279662m。保留真实原时轴、不做重新基线修正、不调幅。5%原谱T1复现、1/2/5% FOH诊断谱及RotD50/100，T=0.1/0.25/0.5/1/2/4/6/7.3937/8/10/12/15s。额外4阶Butterworth零相位0.06/0.08Hz滤波，odd padding min(N-1,ceil(3/(fc*dt)))，仅敏感性，非原始仪器误差界。ESM按2倍角频率的频率裕度 1/(2fc)，GeoNet按0.10Hz通带端点10s，均只作15s频带筛查，不能认证可靠周期。末速5%、尾段均值1%、4–12s额外0.08Hz谱变化20%、参考0.4905m/s²峰值调幅0.5–2均为预设研究门槛非规范强制；速度4s和T1窗口能量集中度只作脉冲诊断，不冒充Baker/Shahi分类。
+
+|ID|台站|参考PGA系数|T1 5% PSA (m/s²)|附加0.08Hz 4–12s最大绝对变化(%)|初筛|
+|---|---|---:|---:|---:|---|
+|EQ01|CLN|0.554|0.03572953|12.32|频带待复核|
+|EQ02|MODE|1.171|0.04511894|15.53|优先匹配|
+|EQ03|COR1|2.262|0.01691278|3.72|优先替换|
+|EQ04|MESG|12.146|0.00290467|42.45|优先替换|
+|EQ05|ZOVE|3.824|0.00550351|24.96|优先替换|
+|EQ06|T1215|1.809|0.00950986|28.16|滤波敏感待复核|
+|EQ07|FEMA|1.756|0.00341757|11.96|优先匹配，长周期强度仍弱|
+|SP01|T1201|0.104|0.14242307|1.70|特殊对照|
+|SP02|DSLC|0.197|1.15869031|14.13|特殊对照，dt0.02s|
+
+REF：USGS官方[强震数据处理](https://escweb.wr.usgs.gov/nsmp-data/processing.html)；[2024瑞士设计相容波库与处理](https://doi.org/10.1007/s10518-024-01970-5)；[GeoNet官方产品](https://www.geonet.org.nz/data/types/strong_motion)；[Baker/Shahi脉冲分类](https://www.jackwbaker.com/pulse-classification.html)。本轮正式场址谱未获、0/7设计准入，2组特殊仅来源确认，三组建议替换非实际替换已完成。主分支发布工作流commit 015445f5841e95c8833ad20a86e6fb847b07d11d run45357730078；公开生产页面及10个下载控制测试run45357822643，当前未确认最终部署/浏览器结果，不预宣称上线。工作室入口设定为thesis-studio/seismic-archive/，主站和INP页互链。不改INP、不运行Abaqus、不合并PR#42。
+
 ### 2026-11-24｜v0.32.178 PATCH — 九组真实数据独立数值核验、下载原件与实际波形图
 
 实际构建 [run45356602621](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/45356602621) 的独立源校验及永久归档步骤均PASS；完整ZIP [T079_NINE_REAL_SOURCE_CANDIDATES.zip](../experiments/T079/seismic-evidence-20261124/record-pool/T079_NINE_REAL_SOURCE_CANDIDATES.zip)，6,515,160 bytes，49个成员，SHA256 `89d25e81769f22481baef110ec0a41995902d3bc76725ec5442ba042496e8ca4`；九组原始官方处理文件、单位转换时程、原始头与授权、5% RotD50/100反应谱、计算程序、清单完整保留。源字节、时间网格与PGA复核通过；历史T1=7.3937s独立FOH/Newmark RotD50最大相对差8.327302036126522e-05（0.0083273%）。该差异仅为同一离散处理波的算法数值复核，不是仪器可靠频带或场址匹配认证。未缩放、未改变时间轴，不称为正式嘉鱼设计波。数据汇总[summary.csv](../experiments/T079/seismic-evidence-20261124/record-pool/nine-package/summary.csv)，[完整成员哈希](../experiments/T079/seismic-evidence-20261124/record-pool/nine-package/MANIFEST.json)。
