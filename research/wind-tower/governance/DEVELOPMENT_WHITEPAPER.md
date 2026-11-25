@@ -1,3 +1,13 @@
+### 2026-11-25｜v0.32.215 — 两组700 s原生叶片气动力计算及第三章原图对照页修复
+
+- RUN=PR#48修复6f113a16ebc80236cbfb9bfbdc48781ba92634ad；原45439724792 verify-pilot失败、full skipped。新[45444014505](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/45444014505)实际回读全部三job success。NTM job138622908102、1ETM job138622908130日志均明示“OpenFAST terminated normally.”及“NATIVE_OUTPUT_PASS 12001 40 1080”。17份原输入哈希恢复、同pilot求解器/控制器二进制、原BTS工件14935124067/14937347879校验及700s正式求解步骤均成功。原输出工件14947071978（129431299 bytes，ZIP SHA256 11f04f687268e0cd3683558f03c81b38b1798070a8b3e99acbfbce2eeca73ba4）、14946269358（129731356 bytes，ZIP SHA256 dc3285a501b37ad4ad04fd5ddb37e533e1aa32a9f576ce4173a08dd73b1041f9）实际回读未过期。100–700 s含端点12001时刻、三叶片×40节点×9量=1080通道。工件字节本轮未重新下载独立复算，不将CI核验等同物理验证；新展向图、坐标映射、守恒验证及永久原始归档尚待完成。
+- 正文V8-R25-BLADE-AERO main e2f29b396545f1078920d731721bf771eacbaf06，JSON blob db8b60f60b8be5d50a1629ac6d4d0603a1c2e2f6；第三章3.5.3末追加2段真实工况方法与载荷作用点移置边界，保留历史36工况和原图。未加入未经独立读取的分布统计值及新图，不改变正式DLC1.2/12阶段。
+- FIG=main 79cab3ef743ef7ec6291897b1f1c14f59535b148 修复既有journal-comparison.html，补展示两组已归档拼图与Brown本地原图、R23自谱及R24剖面；8bcdabf41f49c138af8264871ea0357eb5693217 更新何图对照R24原件；452b97382693b3c838294db8db7da00750fa2fa5 同步风图导航。Genov and Angelov 2020 Fig.13 DOI10.1088/1757-899X/1002/1/012009 为5MW CFD与本文10MW准定常不同方法；Quick et al. 2026 Fig.1 DOI10.5194/wes-11-493-2026 同DTU原型不同统计口径，仅图形参照。源收据 main blob a41c3b031ffd3f7effeda2c36206b6ff1d8622c2，原PNG与现存拼图不重绘。原图和拼图见下，路径通过固定main提交定位。两篇MDPI原图仍由出版商外链，未永久入库；空间相干及其余外载/响应尚缺严格同类图。网页源码远端回读，不声称浏览器视觉或Pages部署通过；Word/PDF未重排，不改INP、不合并PR。
+
+![Genov and Angelov Fig.13 左与本研究右的原图拼图](https://raw.githubusercontent.com/g2066203208-beep/voxel-frontier/452b97382693b3c838294db8db7da00750fa2fa5/public/thesis-studio/wind-figures/load-comparison/07_tower_drag-comparison.png)
+
+![Quick等Fig.1左与本研究右的原图拼图](https://raw.githubusercontent.com/g2066203208-beep/voxel-frontier/452b97382693b3c838294db8db7da00750fa2fa5/public/thesis-studio/wind-figures/load-comparison/08_thrust_coefficient-comparison.png)
+
 ### 2026-11-25｜v0.32.214 — 原生10秒叶片气动力成功、后处理AB前缀修正及双工况正式计算启动
 
 - RUN=PR#48 Actions45439098884 job138604909328原生OpenFAST v3.5.3正常终止，日志明确Running ROSCO-v2.6.0，读取51×51新11.4 NTM BTS（SHA548695c6f8f4241643291624eef4ced091b1b4186d43faad4ea9cb98df3121e1），20Hz/14000步/700s源风场，10s实算，CPU约26s。官方求解器SHA0cc8147fdda188365b8eacda8a831e74fafef59440d71185d66c3272af9e176a；官方ROSCO release v2.6.0 libdiscon.dll SHA7aebb0d2166c0cc095d11c2b7bc13da136547c557b0f331dcdce84fe181802aa；历史原DLL同字节仍未证明。原作业overall FAILURE源于post正则误按手册示例B前缀，实际AB1N001Fx等；绝非原生计算失败。原始输入AeroFile、BldFile(1..3)由共享../Rotor改为工况内Rotor，保留物理控制参数、TwrAero=False。
