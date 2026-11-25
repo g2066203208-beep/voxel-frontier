@@ -1,10 +1,10 @@
 {
   "version": "V8-R22-WIND-FOCUS",
-  "scope": "正式正文图件逐项登记；未核查不等于无参考文献，已归档不等于托管显示已验收。",
+  "scope": "登记在线正文中明确标记的图件（包括旧版figure块及新图题）；无显式图件标记的历史文本需另核查。ARCHIVED只表示仓库有对应拼图，未代表网页实际显示验收。",
   "rule": "每幅正文图必须具有独立同类型文献真实原图对照拼图及来源，未通过不定稿；不强行匹配不同物理量。原创图如无完全对应图，注明最接近的参考、差异及理由，经审阅后决定。",
   "counts": {
     "ARCHIVED": 4,
-    "UNREVIEWED": 21,
+    "UNREVIEWED": 32,
     "SOURCE_INSPECTED_PAIR_PENDING": 1
   },
   "figures": [
@@ -43,6 +43,62 @@
       "id": "b0240",
       "caption": "图2-4  前30阶模态累计有效质量参与率",
       "asset": "./editor-data/manuscript-figures-v6/FIG_2_4.png",
+      "status": "UNREVIEWED"
+    },
+    {
+      "chapter": "03",
+      "id": "b0332",
+      "caption": "图3-1(a)  2005—2025年ERA5年平均风速变化",
+      "asset": null,
+      "status": "UNREVIEWED"
+    },
+    {
+      "chapter": "03",
+      "id": "b0335",
+      "caption": "图3-1(b)  2005—2025年ERA5 100 m逐小时风速经验超越曲线",
+      "asset": null,
+      "status": "UNREVIEWED"
+    },
+    {
+      "chapter": "03",
+      "id": "b0341",
+      "caption": "图3-2  2005—2025年ERA5月平均风速气候态",
+      "asset": null,
+      "status": "UNREVIEWED"
+    },
+    {
+      "chapter": "03",
+      "id": "b0344",
+      "caption": "图3-3(a)  2005—2025年ERA5 100 m风速—风向联合频率玫瑰图",
+      "asset": null,
+      "status": "UNREVIEWED"
+    },
+    {
+      "chapter": "03",
+      "id": "b0346",
+      "caption": "图3-3(b)  ERA5高风样本（V100≥P95=8.385 m/s）方向玫瑰图",
+      "asset": null,
+      "status": "UNREVIEWED"
+    },
+    {
+      "chapter": "03",
+      "id": "b0349",
+      "caption": "图3-4(a)  ERA5 10—100 m逐时风切变指数分布",
+      "asset": null,
+      "status": "UNREVIEWED"
+    },
+    {
+      "chapter": "03",
+      "id": "b0351",
+      "caption": "图3-4(b)  160 m风速外推与项目公开值交叉核查",
+      "asset": null,
+      "status": "UNREVIEWED"
+    },
+    {
+      "chapter": "03",
+      "id": "b0354",
+      "caption": "图3-5  ERA5年最大风速GEV返回水平敏感性",
+      "asset": null,
       "status": "UNREVIEWED"
     },
     {
@@ -118,6 +174,20 @@
     },
     {
       "chapter": "03",
+      "id": "b0384",
+      "caption": "图3-6  Abaqus ODB提取的低阶弯曲模态候选结果",
+      "asset": null,
+      "status": "UNREVIEWED"
+    },
+    {
+      "chapter": "03",
+      "id": "b0401",
+      "caption": "图3-7  Abaqus与OpenFAST RNA双6×6空间动力身份验证流程",
+      "asset": null,
+      "status": "UNREVIEWED"
+    },
+    {
+      "chapter": "03",
       "id": "b0462",
       "caption": "图3-9  五个代表ROSCO工作点的OpenFAST运行Campbell阶段结果",
       "asset": null,
@@ -156,6 +226,13 @@
       "id": "wind-r13-008",
       "caption": "图3.5-5  塔底及叶根双向弯矩绝对峰值统计",
       "asset": "./wind-figures/historical-control/04_structural_peak_loads.svg",
+      "status": "UNREVIEWED"
+    },
+    {
+      "chapter": "03",
+      "id": "b0541",
+      "caption": "图3-10 多体柔性RNA与混合塔架分区动力学模型示意",
+      "asset": null,
       "status": "UNREVIEWED"
     },
     {
