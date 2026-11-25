@@ -1,0 +1,219 @@
+{
+  "status": "RESEARCH_DIAGNOSTIC_STATIC_ONLY",
+  "native": "NOT_RUN",
+  "production_release": "HOLD",
+  "r44_blob": "a31b591c5d7abd900011a3188c67557c52d1b963",
+  "r44_sha256": "97438ac785f5d6ccb9a6b0737cd7115d6b7de6ae47c111d62bb7912b4908fa58",
+  "rev25_sha256": "b76fd0f8964f07e110fb1653ab75a75dc45c047ceb58cb84afeac11b52c40193",
+  "case": "EQ01",
+  "deck": "HE_R45_EQ01_INHERITED_DAMPING_DIAGNOSTIC.inp",
+  "deck_sha256": "d4553c651c104b41ee8c28d7a1938e0a494bcf4b05429ef98d56b8a9a66f1091",
+  "deck_bytes": 10203573,
+  "steps": [
+    "PT_BALANCE",
+    "Gravity",
+    "GRAVITY_CHECK",
+    "MODAL_30",
+    "EQ_2H_RAYLEIGH_REL"
+  ],
+  "parts": 100,
+  "instances": 100,
+  "contacts": 30,
+  "records": [
+    {
+      "id": "EQ01",
+      "station": "MODE",
+      "directions": [
+        "E",
+        "N"
+      ],
+      "azimuth_deg": [
+        90,
+        0
+      ],
+      "npts": 40000,
+      "dt": 0.005,
+      "duration": 199.995,
+      "zip_sha256": "1c02637c46cdab14a8b95655ff951130cd17814bc5bae715e1d8fdcf4ea965e9",
+      "member_hash_count": 5,
+      "scale_from_source": 1.135383557607063,
+      "applied_multiplier": 1,
+      "pga_components_source": 0.4754302384,
+      "pga_X": 0.3062418524,
+      "pga_Z": 0.4754302384,
+      "time_max_error": 2.842170943040401e-14,
+      "scale_max_error": 4.9948600810978405e-11,
+      "rotation_norm_max_error": 0.0,
+      "amplitude_roundtrip_max_error": 0,
+      "amplitude_sha256": "875b6db2820df8b06108ade1457209b9f3e1cbe1b6b9b64b0520dad5d426ebaa"
+    },
+    {
+      "id": "EQ02",
+      "station": "FDCS",
+      "directions": [
+        "N09W",
+        "S81W"
+      ],
+      "azimuth_deg": [
+        351,
+        261
+      ],
+      "npts": 20600,
+      "dt": 0.005,
+      "duration": 102.995,
+      "zip_sha256": "5eec460f5b701875ca877be35d823eed5258ff8da26ebf9390d5c51b2098ee03",
+      "member_hash_count": 5,
+      "scale_from_source": 1.5455922891190816,
+      "applied_multiplier": 1,
+      "pga_components_source": 0.2935079757,
+      "pga_X": 0.2635322778257097,
+      "pga_Z": 0.2955710977358921,
+      "time_max_error": 1.4210854715202004e-14,
+      "scale_max_error": 4.994088476095726e-11,
+      "rotation_norm_max_error": 5.551115123125783e-17,
+      "amplitude_roundtrip_max_error": 5.551115123125783e-17,
+      "amplitude_sha256": "913e8c9067ee0ddd274d0a40b3d545ee09161175f42bf1e3e8301f268ee50709"
+    },
+    {
+      "id": "EQ03",
+      "station": "CIMA",
+      "directions": [
+        "E",
+        "N"
+      ],
+      "azimuth_deg": [
+        90,
+        0
+      ],
+      "npts": 37864,
+      "dt": 0.005,
+      "duration": 189.315,
+      "zip_sha256": "b79178a503137c49d66a6cfdd8eb3be4bfd0b2dd066dd99311203888f7303f09",
+      "member_hash_count": 5,
+      "scale_from_source": 0.6445833449647742,
+      "applied_multiplier": 1,
+      "pga_components_source": 0.1401667819,
+      "pga_X": 0.1401667819,
+      "pga_Z": 0.1167135847,
+      "time_max_error": 2.842170943040401e-14,
+      "scale_max_error": 4.662464858640192e-11,
+      "rotation_norm_max_error": 0.0,
+      "amplitude_roundtrip_max_error": 0,
+      "amplitude_sha256": "0b04ffec38e90ed710a3d50d4b1cb13b6310400bd5796db3b7b9885e6048a014"
+    },
+    {
+      "id": "EQ04",
+      "station": "PFAS",
+      "directions": [
+        "N00E",
+        "N90W"
+      ],
+      "azimuth_deg": [
+        0,
+        270
+      ],
+      "npts": 16000,
+      "dt": 0.005,
+      "duration": 79.995,
+      "zip_sha256": "655395a24dca8dd232fe0eacfc60c3cf655184f5f758dce40bd14570abd61235",
+      "member_hash_count": 5,
+      "scale_from_source": 1.5129972376637082,
+      "applied_multiplier": 1,
+      "pga_components_source": 1.326142079,
+      "pga_X": 1.031561517,
+      "pga_Z": 1.326142079,
+      "time_max_error": 1.4210854715202004e-14,
+      "scale_max_error": 4.3973646945971723e-10,
+      "rotation_norm_max_error": 0.0,
+      "amplitude_roundtrip_max_error": 0,
+      "amplitude_sha256": "54863ec58ab4f6188df3bbd016a6d834c5ece077758816419fb90032100267a1"
+    },
+    {
+      "id": "EQ05",
+      "station": "CACS",
+      "directions": [
+        "N40E",
+        "N50W"
+      ],
+      "azimuth_deg": [
+        40,
+        310
+      ],
+      "npts": 17000,
+      "dt": 0.005,
+      "duration": 84.995,
+      "zip_sha256": "11c99a4b80cd8f854c212464aa415a0b774ca5477cccbcf0e1503feb06930481",
+      "member_hash_count": 5,
+      "scale_from_source": 0.8382943720061922,
+      "applied_multiplier": 1,
+      "pga_components_source": 1.615393255,
+      "pga_X": 1.421687923733275,
+      "pga_Z": 1.4404925275715112,
+      "time_max_error": 1.4210854715202004e-14,
+      "scale_max_error": 4.813218712484968e-10,
+      "rotation_norm_max_error": 2.220446049250313e-16,
+      "amplitude_roundtrip_max_error": 4.440892098500626e-16,
+      "amplitude_sha256": "8a0441fec66c2abada1180062b565acf37dd545c563d979f6442026e81ab184a"
+    },
+    {
+      "id": "EQ06",
+      "station": "CTS",
+      "directions": [
+        "E",
+        "N"
+      ],
+      "azimuth_deg": [
+        90,
+        0
+      ],
+      "npts": 36000,
+      "dt": 0.005,
+      "duration": 179.995,
+      "zip_sha256": "64d28141f2ea10ee336079027e4ee0c518bdf47d7ce736cbed4e1e344ff5b584",
+      "member_hash_count": 5,
+      "scale_from_source": 1.1382346327137838,
+      "applied_multiplier": 1,
+      "pga_components_source": 0.1492562407,
+      "pga_X": 0.08497522521,
+      "pga_Z": 0.1492562407,
+      "time_max_error": 2.842170943040401e-14,
+      "scale_max_error": 4.857252100531895e-11,
+      "rotation_norm_max_error": 0.0,
+      "amplitude_roundtrip_max_error": 0,
+      "amplitude_sha256": "d63f095393fb686afc718d3dc6b7ac2973079294723e4d5e25c80efc93fa2684"
+    },
+    {
+      "id": "EQ07",
+      "station": "NNZ",
+      "directions": [
+        "N00E",
+        "N90W"
+      ],
+      "azimuth_deg": [
+        0,
+        270
+      ],
+      "npts": 49800,
+      "dt": 0.005,
+      "duration": 248.995,
+      "zip_sha256": "9156fdf56143c39ce0baddeeeee3f91b81907e1dc7d9d844e60c22ec8bd81306",
+      "member_hash_count": 5,
+      "scale_from_source": 1.1114079631824236,
+      "applied_multiplier": 1,
+      "pga_components_source": 0.2465102862,
+      "pga_X": 0.2465102862,
+      "pga_Z": 0.2301725892,
+      "time_max_error": 2.842170943040401e-14,
+      "scale_max_error": 4.994007984926441e-11,
+      "rotation_norm_max_error": 0.0,
+      "amplitude_roundtrip_max_error": 0,
+      "amplitude_sha256": "af056651feafc120ddd8ac90e1571068979eab955045368c5c26c7f9c342e05e"
+    }
+  ],
+  "limits": [
+    "X east Y up Z minus north: assumed fixed geographic tower orientation as REV22; site orientation not independently surveyed.",
+    "Inherited damping not calibrated; use only after native precheck and user approval for diagnostic. No production release.",
+    "Existing OP=NEW DLOAD template preserved; native whole-mass inertia/reaction coverage not demonstrated.",
+    "No wind step. No native verification, no design acceptance."
+  ]
+}
