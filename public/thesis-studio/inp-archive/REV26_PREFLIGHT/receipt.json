@@ -1,0 +1,271 @@
+{
+  "scope": "REV25 exact-prefix pilot; no material or design changes; not native checked",
+  "source_sha256": "b76fd0f8964f07e110fb1653ab75a75dc45c047ceb58cb84afeac11b52c40193",
+  "output_sha256": "681169fe6d799d035b35497377d03e90e69cbeb7923e7388e152d40b3fa0f98f",
+  "bytes": 16187507,
+  "parts": 100,
+  "instances": 100,
+  "steps": [
+    "PT_BALANCE",
+    "Gravity",
+    "GRAVITY_CHECK",
+    "MODAL_30"
+  ],
+  "removed_step": "EQ_2H_RAYLEIGH_REL",
+  "longitudinal": [
+    {
+      "material": "HRB400",
+      "area_m2": 0.000490874,
+      "segment": 1,
+      "equivalent_d_mm": 25.000003765646284,
+      "design_d_mm": 50,
+      "design_material": "HRB500"
+    },
+    {
+      "material": "HRB400",
+      "area_m2": 0.000490874,
+      "segment": 2,
+      "equivalent_d_mm": 25.000003765646284,
+      "design_d_mm": 50,
+      "design_material": "HRB500"
+    },
+    {
+      "material": "HRB400",
+      "area_m2": 0.000490874,
+      "segment": 3,
+      "equivalent_d_mm": 25.000003765646284,
+      "design_d_mm": 50,
+      "design_material": "HRB500"
+    },
+    {
+      "material": "HRB400",
+      "area_m2": 0.000490874,
+      "segment": 4,
+      "equivalent_d_mm": 25.000003765646284,
+      "design_d_mm": 50,
+      "design_material": "HRB500"
+    },
+    {
+      "material": "HRB400",
+      "area_m2": 0.000490874,
+      "segment": 5,
+      "equivalent_d_mm": 25.000003765646284,
+      "design_d_mm": 50,
+      "design_material": "HRB500"
+    },
+    {
+      "material": "HRB400",
+      "area_m2": 0.000490874,
+      "segment": 6,
+      "equivalent_d_mm": 25.000003765646284,
+      "design_d_mm": 50,
+      "design_material": "HRB500"
+    },
+    {
+      "material": "HRB400",
+      "area_m2": 0.000490874,
+      "segment": 7,
+      "equivalent_d_mm": 25.000003765646284,
+      "design_d_mm": 50,
+      "design_material": "HRB500"
+    },
+    {
+      "material": "HRB400",
+      "area_m2": 0.000490874,
+      "segment": 8,
+      "equivalent_d_mm": 25.000003765646284,
+      "design_d_mm": 50,
+      "design_material": "HRB500"
+    },
+    {
+      "material": "HRB400",
+      "area_m2": 0.000490874,
+      "segment": 9,
+      "equivalent_d_mm": 25.000003765646284,
+      "design_d_mm": 50,
+      "design_material": "HRB500"
+    },
+    {
+      "material": "HRB400",
+      "area_m2": 0.000490874,
+      "segment": 10,
+      "equivalent_d_mm": 25.000003765646284,
+      "design_d_mm": 50,
+      "design_material": "HRB500"
+    },
+    {
+      "material": "HRB400",
+      "area_m2": 0.000490874,
+      "segment": 11,
+      "equivalent_d_mm": 25.000003765646284,
+      "design_d_mm": 50,
+      "design_material": "HRB500"
+    },
+    {
+      "material": "HRB400",
+      "area_m2": 0.000490874,
+      "segment": 12,
+      "equivalent_d_mm": 25.000003765646284,
+      "design_d_mm": 50,
+      "design_material": "HRB500"
+    },
+    {
+      "material": "HRB400",
+      "area_m2": 0.000490874,
+      "segment": 13,
+      "equivalent_d_mm": 25.000003765646284,
+      "design_d_mm": 50,
+      "design_material": "HRB500"
+    },
+    {
+      "material": "HRB400",
+      "area_m2": 0.000490874,
+      "segment": 14,
+      "equivalent_d_mm": 25.000003765646284,
+      "design_d_mm": 50,
+      "design_material": "HRB500"
+    },
+    {
+      "material": "HRB400",
+      "area_m2": 0.000490874,
+      "segment": 15,
+      "equivalent_d_mm": 25.000003765646284,
+      "design_d_mm": 50,
+      "design_material": "HRB500"
+    },
+    {
+      "material": "HRB400",
+      "area_m2": 0.000490874,
+      "segment": 16,
+      "equivalent_d_mm": 25.000003765646284,
+      "design_d_mm": 50,
+      "design_material": "HRB500"
+    },
+    {
+      "material": "HRB400",
+      "area_m2": 0.000490874,
+      "segment": 17,
+      "equivalent_d_mm": 25.000003765646284,
+      "design_d_mm": 50,
+      "design_material": "HRB500"
+    },
+    {
+      "material": "HRB400",
+      "area_m2": 0.000490874,
+      "segment": 18,
+      "equivalent_d_mm": 25.000003765646284,
+      "design_d_mm": 50,
+      "design_material": "HRB500"
+    },
+    {
+      "material": "HRB400",
+      "area_m2": 0.000490874,
+      "segment": 19,
+      "equivalent_d_mm": 25.000003765646284,
+      "design_d_mm": 50,
+      "design_material": "HRB500"
+    },
+    {
+      "material": "HRB400",
+      "area_m2": 0.000490874,
+      "segment": 20,
+      "equivalent_d_mm": 25.000003765646284,
+      "design_d_mm": 50,
+      "design_material": "HRB500"
+    },
+    {
+      "material": "HRB400",
+      "area_m2": 0.000490874,
+      "segment": 21,
+      "equivalent_d_mm": 25.000003765646284,
+      "design_d_mm": 50,
+      "design_material": "HRB500"
+    },
+    {
+      "material": "HRB400",
+      "area_m2": 0.000490874,
+      "segment": 22,
+      "equivalent_d_mm": 25.000003765646284,
+      "design_d_mm": 50,
+      "design_material": "HRB500"
+    },
+    {
+      "material": "HRB400",
+      "area_m2": 0.000490874,
+      "segment": 23,
+      "equivalent_d_mm": 25.000003765646284,
+      "design_d_mm": 50,
+      "design_material": "HRB500"
+    },
+    {
+      "material": "HRB400",
+      "area_m2": 0.000490874,
+      "segment": 24,
+      "equivalent_d_mm": 25.000003765646284,
+      "design_d_mm": 50,
+      "design_material": "HRB500"
+    },
+    {
+      "material": "HRB400",
+      "area_m2": 0.000490874,
+      "segment": 25,
+      "equivalent_d_mm": 25.000003765646284,
+      "design_d_mm": 50,
+      "design_material": "HRB500"
+    },
+    {
+      "material": "HRB400",
+      "area_m2": 0.000490874,
+      "segment": 26,
+      "equivalent_d_mm": 25.000003765646284,
+      "design_d_mm": 40,
+      "design_material": "HRB500"
+    },
+    {
+      "material": "HRB400",
+      "area_m2": 0.000490874,
+      "segment": 27,
+      "equivalent_d_mm": 25.000003765646284,
+      "design_d_mm": 40,
+      "design_material": "HRB500"
+    },
+    {
+      "material": "HRB400",
+      "area_m2": 0.000490874,
+      "segment": 28,
+      "equivalent_d_mm": 25.000003765646284,
+      "design_d_mm": 40,
+      "design_material": "HRB500"
+    },
+    {
+      "material": "HRB400",
+      "area_m2": 0.000490874,
+      "segment": 29,
+      "equivalent_d_mm": 25.000003765646284,
+      "design_d_mm": 36,
+      "design_material": "HRB500"
+    },
+    {
+      "material": "HRB400",
+      "area_m2": 0.000490874,
+      "segment": 30,
+      "equivalent_d_mm": 25.000003765646284,
+      "design_d_mm": 36,
+      "design_material": "HRB500"
+    },
+    {
+      "material": "HRB400",
+      "area_m2": 0.000490874,
+      "segment": 31,
+      "equivalent_d_mm": 25.000003765646284,
+      "design_d_mm": 36,
+      "design_material": "HRB500"
+    }
+  ],
+  "pt": {
+    "material": "STRAND_1860",
+    "area_m2": 0.00014
+  },
+  "native": "NOT_RUN",
+  "design_gate": "HOLD: original HRB400 phi25 is not R37 design HRB500 schedule; full load combinations, strut and construction checks outstanding"
+}
