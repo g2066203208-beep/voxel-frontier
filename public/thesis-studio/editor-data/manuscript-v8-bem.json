@@ -3812,6 +3812,30 @@
           "has_math": false
         },
         {
+          "id": "r39-cage-1",
+          "kind": "text",
+          "style": "Normal",
+          "text": "依据GB 50135—2019第6.5.7及6.5.8条，在原有限元混凝土塔节实际坐标基础上重新确定内外层环筋与纵筋相对位置，保持原纵筋根数不变。两端锚固区按不超过100 mm布置环筋，双层实体环筋候选共2320道；Φ6拉筋采用交错布置，候选位置共11032个，环向和轴向最大间距分别为491.06 mm和491.74 mm。实体构造数量与有限元等效积分数量分别确定。",
+          "has_media": false,
+          "has_math": false
+        },
+        {
+          "id": "r39-cage-2",
+          "kind": "text",
+          "style": "Normal",
+          "text": "采用实际48边形混凝土侧面与候选钢筋直线、环筋弦段进行几何核查。局部最近五弦段共2039680个配对，最小纵筋与环筋净距0.999 mm，纵筋侧面保护层相对公称直径的最小余量11.26 mm，环筋侧面保护层最小39.23 mm。上述结果尚未涵盖弯钩、端部钢板及施工公差。采用修正后的纵筋中截面半径重新计算620个历史控制状态，均满足前述条件，最大混凝土压应变比和钢筋拉应变比分别为0.8065和0.5743。",
+          "has_media": false,
+          "has_math": false
+        },
+        {
+          "id": "r39-cage-3",
+          "kind": "text",
+          "style": "Normal",
+          "text": "根据EN 1992-1-1:2023第8.3节及附录G开展独立斜压敏感性分析，取45°斜压场、强度折减系数0.4，并采用明确假设的圆柱体强度等级。完整壁厚及环筋中心线核心厚度口径下的最大斜压需求比分别为0.7060和1.1314，后者第26～28节大于1。该比较用于识别有效厚度假设的影响，不作为NB/T 10907专项承载力验收结论。",
+          "has_media": false,
+          "has_math": false
+        },
+        {
           "id": "r34-membrane-3",
           "kind": "text",
           "style": "Normal",
@@ -13947,9 +13971,9 @@
     }
   ],
   "online_revision": {
-    "version": "V8-R38-COVER-ANCHOR",
+    "version": "V8-R39-CAGE",
     "date": "2026-11-25",
-    "scope": "Midsection cover and anchor-zone screening, conditional recalculation; production INP HOLD",
+    "scope": "Actual source-based candidate cage geometry and conditional section/strut sensitivity; production INP HOLD",
     "source_gate": "74fb3aee9dfef058b972a3f0e03aa571319c2fe2",
     "source_inp": "cdb719b95b8ce4301011489b4ab8ffc9e73c18bf",
     "wind_manifest": "./wind-figures/core/manifest.json",
@@ -13973,6 +13997,7 @@
     "membrane_coupling": "./rebar-verification/r35-membrane-coupling.json",
     "section_reserve": "./rebar-verification/r36-section-reserve.json",
     "reserved_section": "./rebar-verification/r37-design-candidate.json",
-    "cover_anchor": "./rebar-verification/r38-cover-anchor.json"
+    "cover_anchor": "./rebar-verification/r38-cover-anchor.json",
+    "cage": "./rebar-verification/r39-cage-layout.json"
   }
 }
