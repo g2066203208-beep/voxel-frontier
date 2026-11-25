@@ -97,3 +97,9 @@ Codex先对原始TXT运行比较器，再对独立CAE导出运行并保存JSON�
 
 ### V2.1 原始文件直接核验补记
 GitHub Actions 已完成独立核验并提交 e8fdfbb8ca98011bf9445797c401c78392ce4973。cdp-direct-source-verification.json 证实直接读取完整归档 HE_REV22_FULL_ASSEMBLY_EQ005.txt（15,693,508字节，SHA256 e84851887735305c6387ca38a972bebd97ba9cdff7baa7735c0ed89cecf925b5），CSV SHA256 313f64f2662faebb355605538330f036274da1a404f9611e51451018d6d66e9c，C65/C70各26压缩、24拉伸点，四项最大差异均为0。关闭“归档原始材料卡到绘图数据”一致性检查；未关闭当前本地CAE导出一致性、材料物理验证及网格/循环敏感性检查。
+
+## V2.2 钢筋、钢绞线及钢塔材料核查启动
+- 2.3.1现有正文仍区分历史BF1 S345及T057 HRB335，不能将其视为REV22当前材料。REV11材料整改证据已回读（5183ea999031245c1de384164997e0ee083c0ce5），其中HRB400、HPB300、Q355塔筒/法兰及STRAND_1860均须以REV22原件重新核实；REV11候选值不自动移植。
+- 原件材料卡/截面分配提取程序 extract_rev22_material_inventory.py 已提交da3fdcaf67b321b89e6fdfd13f436864b759e4f4，工作流5aa2055db0afba1a4f44aefde1840702ba52886a，执行输入限定为15,693,508字节归档REV22原文件及固定SHA256。提交时结果JSON尚未返回。
+- 同类文献筛选：Buildings 2025,15(20),3786（https://doi.org/10.3390/buildings15203786）§3.3、表2采用理想弹塑性钢材与1860级钢绞线；其Q355屈服参数400MPa不能代替本工程板厚对应标准值。Buildings 2026,16(13),2594（https://doi.org/10.3390/buildings16132594）图6为普通筋/预应力筋单轴本构示意，预应力钢丝等级不同，仅作同类型图表达对照；未归档原图。Abaqus官方塑性输入转换 https://docs.software.vt.edu/abaqusv2026/English/SIMACAEMATRefMap/simamat-c-plastic.htm 规定真实应力及对数塑性应变转换。规范及原始材质证明仍须区分标准值、设计值、实测值和计算候选。
+- 未更改原始INP；未将未核实钢材参数插入正式论文；混凝土整页拼图按用户要求暂停止。
