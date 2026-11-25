@@ -1,0 +1,37 @@
+name: R51 original seismic figure comparisons
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/r51-seismic-figure-pairs.yml','public/thesis-studio/figure-audit/R51/build_r51.py']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  pairs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          sparse-checkout: |
+            public/thesis-studio/figure-audit/R51
+            public/thesis-studio/seismic-archive/journal-figures
+            public/thesis-studio/seismic-archive/second-suite/qualification
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install pillow==10.4.0 pymupdf==1.24.11
+      - run: python public/thesis-studio/figure-audit/R51/build_r51.py
+      - name: Archive original reference images and actual pairs
+        if: always()
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add -f public/thesis-studio/figure-audit/R51/
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Archive R51 source images, figure comparisons and actual receipts"
+          git fetch origin main
+          git rebase FETCH_HEAD
+          git push origin HEAD:main
