@@ -3772,6 +3772,30 @@
           "has_math": false
         },
         {
+          "id": "r37-reserved-1",
+          "kind": "text",
+          "style": "Normal",
+          "text": "为避免纵筋抗拉能力在轴弯与剪扭验算中重复计入，按圆周同态剪流及45°斜压场计算纵筋等效附加拉应力，将其从轴弯平衡可用抗拉强度中扣除，并重新求解轴力及双向弯矩平衡。采用原BF1设计配筋时，620个条件状态中619个收敛，613个满足平衡、极限应变及环筋同态需求条件，第25、28节为控制塔节。",
+          "has_media": false,
+          "has_math": false
+        },
+        {
+          "id": "r37-reserved-2",
+          "kind": "text",
+          "style": "Normal",
+          "text": "保持纵筋根数不变，按既有设计直径系列将第25节纵筋由Φ40调整为Φ50，第28节由Φ36调整为Φ40，其余塔节不变。全塔620个条件状态重新求解均满足所设条件，最大混凝土压应变比和纵筋拉应变比分别为0.8019和0.5731。该结果为固定同心预压力及剪扭抗拉能力预留假定下的候选配筋，未涵盖混凝土斜压强度折减、钢筋空间构造及完整风震组合，不作为最终规范验收结论。",
+          "has_media": false,
+          "has_math": false
+        },
+        {
+          "id": "r37-reserved-3",
+          "kind": "text",
+          "style": "Normal",
+          "text": "实际REV25有限元输入文件31段纵筋均采用HRB400、单根截面积490.874 mm²，故与上述HRB500设计支路存在材料及配筋面积差异。保留原模型，待材料本构、钢筋空间构造及完整设计工况统一后再开展生产模型同步。",
+          "has_media": false,
+          "has_math": false
+        },
+        {
           "id": "r34-membrane-3",
           "kind": "text",
           "style": "Normal",
@@ -13907,9 +13931,9 @@
     }
   ],
   "online_revision": {
-    "version": "V8-R36-SECTION-RESERVE",
+    "version": "V8-R37-RESERVED-SECTION",
     "date": "2026-11-25",
-    "scope": "Conditional cracked section equilibrium and longitudinal stress reserve diagnostic; no combined design certification.",
+    "scope": "Conditional biaxial section capacity reservation and local diameter candidate; production INP HOLD",
     "source_gate": "74fb3aee9dfef058b972a3f0e03aa571319c2fe2",
     "source_inp": "cdb719b95b8ce4301011489b4ab8ffc9e73c18bf",
     "wind_manifest": "./wind-figures/core/manifest.json",
@@ -13931,6 +13955,7 @@
     "torsion_sensitivity": "./rebar-verification/r33-torsion-sensitivity.json",
     "hoop_sizing": "./rebar-verification/r34-hoop-sizing.json",
     "membrane_coupling": "./rebar-verification/r35-membrane-coupling.json",
-    "section_reserve": "./rebar-verification/r36-section-reserve.json"
+    "section_reserve": "./rebar-verification/r36-section-reserve.json",
+    "reserved_section": "./rebar-verification/r37-design-candidate.json"
   }
 }
