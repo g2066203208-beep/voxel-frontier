@@ -1,0 +1,10 @@
+export function calculate(G,L,B,tops,diam){
+ const A=Math.PI*16**2/4,fyv=360,fy=435,c=32;
+ return G.map((g,i)=>{const long=B[i],segment=g.segment;if(long.segment!==segment||+g.wall_mm!==tops[i]||+g.bars_each_row!==+long.He_bars_each_layer_LOCKED)throw Error("source lock "+segment);const D=+g.D_m*1000,di=+g.di_m*1000,t=(D-di)/2,tm=i===0?tops[0]:(tops[i-1]+tops[i])/2,dm=i===0?null:(diam[i-1]+diam[i])/2;
+ const ro=D/2-c-8,ri=di/2+c+8,Ac=Math.PI/4*(D*D-di*di),Acor=Math.PI*(ro*ro-ri*ri),ucor=2*Math.PI*(ro+ri),Wt=2*Math.PI/3*((D/2)**3-(di/2)**3),b=2*t,h0=D-c-16-(+long.bar_d_mm)/2,ft=i<2?2.14:2.09,fc=i<2?31.8:29.7,Astl=+long.As_total_two_layers_mm2;
+ const rr=L.filter(x=>x.segment===segment);if(rr.length!==10)throw Error("control row count");
+ function calc(s,legs,torsionLegs){const Asv=legs*A,Ast1=torsionLegs*A,zeta=fy*Astl*s/(fyv*Ast1*ucor);
+ const rows=rr.map(x=>{const V=+x.V_kN*1000,T=+x.T_abs_kNm*1e6,M=+x.M_kNm*1e6,N=+x.N_comp_kN*1000,lambda=M/(V*h0),beta=Math.max(.5,Math.min(1,1.5/(1+0.2*(lambda+1)*V*Wt/(T*b*h0)))),vc=1.75*ft*b*h0/(lambda+1),vs=fyv*Asv*h0/s,vr1=vc+vs+0.07*Math.min(N,0.3*fc*Ac),vr2=(1.5-beta)*vc+vs,tr=beta*0.35*ft*Wt+1.2*Math.sqrt(zeta)*fyv*Ast1*Acor/s,ratios=[V/vr1,V/vr2,T/tr],eta=Math.max(...ratios);return {eta,ratios,control:x.control_metric,time_s:+x.time_s,combo:x.combo,V_kN:V/1000,T_kNm:T/1e6,M_kNm:M/1e6,N_kN:N/1000,lambda,beta,V_Rd_631_kN:vr1/1000,V_Rd_632_kN:vr2/1000,T_Rd_kNm:tr/1e6,zeta}});return rows.reduce((a,b)=>a.eta>b.eta?a:b)}
+ const p=calc(120,4,1),alt=calc(120,2,1),two=calc(120,4,2);const scan=[120,110,100,90,80,70,60].map(s=>({s,eta:calc(s,4,1).eta}));return {segment,top_t_mm:tops[i],mid_t_from_He_mm:tm,mid_t_actual_mm:t,mid_t_difference_mm:t-tm,top_D_m:diam[i],mid_D_from_He_m:dm,mid_D_actual_m:D/1000,mid_D_difference_m:dm===null?null:D/1000-dm,top_bars_each:+long.He_bars_each_layer_LOCKED,long_d_BF1_mm:+long.bar_d_mm,As_total_mm2:Astl,b_mm:b,h0_mm:h0,Acor_mm2:Acor,ucor_mm:ucor,Wt_mm3:Wt,A_mm2:Ac,Asv_mm2:4*A,Ast1_mm2:A,ft,fc,rho_top_pct:100*A/(120*tops[i]),rho_mid_pct:100*A/(120*t),rho_required_pct:Math.max(.2,45*ft/fyv),primary:p,two_shear_legs_eta:alt.eta,two_torsion_legs_eta:two.eta,scan};
+ })
+}
