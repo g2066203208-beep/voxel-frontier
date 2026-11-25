@@ -1,0 +1,26 @@
+name: Batch thesis figure quality R24
+on:
+  push:
+    paths:
+      - '.github/workflows/figure-quality-r24.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  redraw:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          set -eu
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-noto-cjk fonts-liberation
+          python -m pip install -q numpy matplotlib pillow
+          python public/thesis-studio/figure-quality-r24/redraw_batch.py
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/thesis-studio/figure-quality-r24/
+          git diff --cached --quiet && exit 0
+          git commit -m 'Archive rendered batch scientific figures and individual source receipts'
+          git pull --rebase origin main
+          git push origin HEAD:main
