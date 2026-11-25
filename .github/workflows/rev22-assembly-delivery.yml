@@ -1,0 +1,44 @@
+name: REV22 assembly delivery
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/rev22-assembly-delivery.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  deliver:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          sparse-checkout: |
+            public/thesis-studio/inp-archive/REV22_VALIDATION_KIT
+      - name: Verify source and deliver standard INP suffix
+        run: |
+          python - <<'PY'
+          import pathlib as P,hashlib,json,ast,re
+          d=P.Path('public/thesis-studio/inp-archive/REV22_VALIDATION_KIT/')
+          src=d/'HE_REV22_FULL_ASSEMBLY_EQ005.txt'
+          dst=d/'HE_REV22_FULL_ASSEMBLY_EQ005.inp'
+          raw=src.read_bytes();h=hashlib.sha256(raw).hexdigest()
+          assert h=='e84851887735305c6387ca38a972bebd97ba9cdff7baa7735c0ed89cecf925b5'
+          inventory=json.loads((d/'assembly-inventory.json').read_text())
+          assert inventory['sha256']==h and inventory['part_count']==100 and inventory['instance_count']==100
+          ast.parse((d/'import_rev22_assembly.py').read_text())
+          dst.write_bytes(raw)
+          assert dst.read_bytes()==raw
+          receipt={'source_sha256':h,'output_sha256':hashlib.sha256(dst.read_bytes()).hexdigest(),'bytes':len(raw),'parts':100,'instances':100,'change':'file extension only, byte-identical solver deck','import_script_syntax':'PASS','native_CAE_import':'NOT_RUN','solver':'NOT_RUN','geometry':'orphan mesh, not native CAD'}
+          (d/'assembly-delivery.json').write_text(json.dumps(receipt,indent=2)+'\n')
+          print(json.dumps(receipt,indent=2))
+          PY
+      - name: Publish verified standard extension
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add -f public/thesis-studio/inp-archive/REV22_VALIDATION_KIT/HE_REV22_FULL_ASSEMBLY_EQ005.inp public/thesis-studio/inp-archive/REV22_VALIDATION_KIT/assembly-delivery.json
+          git commit -m "Deliver exact multi-part REV22 INP with standard extension"
+          git fetch --depth=20 origin main
+          git rebase FETCH_HEAD
+          git push origin HEAD:main
