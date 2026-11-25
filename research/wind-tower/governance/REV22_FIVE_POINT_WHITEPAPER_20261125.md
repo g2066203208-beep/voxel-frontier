@@ -156,3 +156,12 @@ GitHub Actions 已完成独立核验并提交 e8fdfbb8ca98011bf9445797c401c78392
 - R45首条完整候选HE_R45_EQ01_INHERITED_DAMPING_DIAGNOSTIC.inp，10203573字节，SHA256 d4553c651c104b41ee8c28d7a1938e0a494bcf4b05429ef98d56b8a9a66f1091。四步R44原始输入保持，增加双向惯性幅值与独立地震步（199.995s、0.005s最大增量），100零件/100实例/30接触。其余六组幅值独立归档，按需生成完整候选，不增加批量计算负担。沿用REV22 X东/Y上/Z负北的研究假设；不宣称实测安装方位。原继承阻尼未用新版模态校准、全质量GRAV反力覆盖仍待原生验证；仅静检诊断候选，正式放行HOLD。
 - 风侧实际读取11.4m/s NTM及1ETM run_config与tower-drag receipt，两个BTS SHA256分别548695c6f8f4241643291624eef4ced091b1b4186d43faad4ea9cb98df3121e1、235d1224cc3f0d0b282e9fb94647ca5b507c8c37b6256bf056f02dbabfb3b04e，均一致；两组TwrAero=False。既有端部等效数学守恒残差4.5474735e-13 N、1.1641532e-10 N·m；塔身600秒窗口12000点(100–699.95s)，叶片12001点(100–700s)，交集待原CSV逐点回读。塔身端部NPZ已在库，非FE节点映射；叶片局部轴到全局坐标、随动轮毂姿态/载荷作用点、柔性RNA分布载荷与合力矩复核尚待完成，不把整机截面响应当外载，不将同BTS等同全物理同态。
 - 未修改R44或旧母本。正式钢筋斜压、锚固、本构与实际预应力平衡仍需闭合；未生成风或风震最终INP。工作室、托管部署与本地下载需另核实。
+
+
+## V3.2 · R46真实塔身节点风荷载映射（2026-11-25）
+
+- 生成器提交89882e9f7eb636e84f49ddfd2d3cbe121c501f68，工作流8d1539eb0979a00e5bd55c2b0b1cefde21fc0ca6，实际运行45615165920 SUCCESS。实际收据Git blob 0ffd74ceec9211cf3dd84d740571f4cf136cd9f7；原生Abaqus NOT_RUN。
+- R44原字节SHA256 97438ac785f5d6ccb9a6b0737cd7115d6b7de6ae47c111d62bb7912b4908fa58。读取归档11.4m/s NTM及1ETM真实端部等效力NPZ、全塔合力及一阶矩CSV、叶片轮毂六分量CSV，逐文件Git blob锁定。逐时刻核对12,000个共同采样点100–699.95s，叶片末端700s多1点，不进行外推。两个工况BTS同源且TwrAero=False。塔身风阻为静止塔身准定常假设，叶片为历史降阶塔的OpenFAST，不能称完全同态物理耦合。
+- 36实体零件（31混凝土、4钢塔、1法兰），各上下端真实外圈节点均匀分配，72 assembly Nset、144幅值/工况、3264节点映射记录。X=u、Y竖直、Z=-v，按r×F核对实际网格节点；环心最大偏差1.10000002e-7 m。NTM/1ETM最大总合力残差3.15048965e-9/3.31056071e-9 N，最大总合力矩残差0.001530711/0.002118570 N·m。节点集合、幅值序列化及逐段/全塔守恒、ZIP CRC与成员回读均通过。不是表面压力分布或局部接缝应力等效。
+- R46_NTM_tower_fragments.zip 18784520 bytes SHA256 b43833eeb24e0d6929f176441be4b6826be02428708428d4bb237a477cdf1ce2；R46_1ETM_tower_fragments.zip 18917085 bytes SHA256 e4871cdfb3b409ef96ae547cc70a20484d8647fd0baf754b006bfece991cffd7。含assembly_sets.inc、amplitudes.inc、cload.inc、node_map.csv及说明。输出目录public/thesis-studio/inp-archive/R46_WIND_MAPPING/。已验证GitHub生成与归档，不等于浏览器下载验收。
+- 两组叶片轮毂CSV确认仅time_s及RtAeroF/M六通道，缺姿态/作用点动态信息；不得从该CSV直接推断完整全局柔性叶片载荷。原始OUTB工件与研究分支OPENFAST_AERO_PHYSICS_GATE_20261125.md已有路径，下一步读取真实姿态/结构运动及完整通道清单，核对坐标和载荷所有权，按已归档Berg 2011及Rappe 2025映射依据实施。保持R44/R45不变，风完整分析步与风震最终放行HOLD。等效环面节点加载需原生反力覆盖、初始载荷过渡与局部应力敏感性；未运行Abaqus。
