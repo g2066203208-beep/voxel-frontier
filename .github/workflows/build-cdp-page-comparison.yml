@@ -15,10 +15,9 @@ jobs:
         run: |
           set -euo pipefail
           dir=public/thesis-studio/inp-archive/REV22_REVIEW
-          curl --fail --location --retry 2 --max-time 60 'https://mdpi-res.com/d_attachment/energies/energies-13-00533/article_deploy/energies-13-00533-v2.pdf' -o "$dir/original-literature/chen-2020-original.pdf"
+          curl --fail --location --retry 2 --max-time 60 --user-agent 'Mozilla/5.0' 'https://mdpi-res.com/d_attachment/energies/energies-13-00533/article_deploy/energies-13-00533.pdf' -o "$dir/original-literature/chen-2020-original.pdf"
           python -m pip install --quiet pymupdf pillow
-          sudo apt-get -qq update
-          sudo apt-get -qq install -y fonts-noto-cjk
+          sudo apt-get -qq install -y fonts-noto-cjk || true
           python "$dir/build_cdp_page_comparison.py"
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
