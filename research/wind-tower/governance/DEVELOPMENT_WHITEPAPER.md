@@ -1,3 +1,11 @@
+### 2026-11-25｜v0.32.221 — REV23源锁定混凝土网格细化候选
+
+- 实际回读何泽瑜2024印刷22–24页（PDF33–35页）、表3-2/3-3及图3-5：31混凝土节112m+4钢节46m，钢节间焊接，钢混法兰，预应力15.2mm、端部约束；未公开束数、网格尺寸、螺栓/锚具详图。继承HE_ZEYU_TOWER_SOURCE_LEDGER、T072源锁定、T077固定根数设计、T078附录A.1.2–A.1.6计算及连接试件V1，区分BF1复现候选与BF8 CODE-DESIGN（Ap=40320mm²、P0=51.6096MN、Pe=39.753559MN，设计假设非何文原值）。此次保持BF1、材料、钢筋、钢塔、法兰、所有步骤和荷载不变。
+- 原始REV22 SHA256 e84851887735305c6387ca38a972bebd97ba9cdff7baa7735c0ed89cecf925b5；脚本main 2ca00fe1a8dab6e80fa84196ea3f3ac258ca0e86，工作流2832102388213915901f66d92d3180c54b0542be，RUN45577666659 success。对31节原C3D8R使用等参嵌套细分，保留原节点及分片外形，周向48→96，轴向2→6，径向1→3，每节96→1728，总混凝土2976→53568，总零件单元96464→147056，100 Part/100 Instance不变。315项节点/单元集合按父单元和外表面子单元映射，原接触面S4/S6保持，原几何体积相对差最大5.55e-16，8点Jacobian均正、内部面成对、外部子面属于原外表面、生成INP独立回读节点/单元通过。AUDIT集合扩展至父单元所有子单元，需注意输出比较口径。
+- 新文件 SHA256 7fe134bd2cf21052d773c05ddd5143ad00d12415830466f9a800544383b30c33，23,739,358 bytes，main 2904d9ab3b879de79e8dfa0cf50d764a0b778035；图件已实际打开核对，工作室入口eb051a88edb749fc2621ac3f4c59509bdf10ea0f。Abaqus官方三维实体单元与面编号：https://docs.software.vt.edu/abaqusv2026/English/SIMACAEELMRefMap/simaelm-r-3delem.htm；CDP网格敏感性：https://docs.software.vt.edu/abaqusv2025/English/SIMACAEMATRefMap/simamat-c-concretedamaged.htm。仍保留原分片几何，非原生CAD；未调CDP软化断裂能，未通过原生Data Check、接触/嵌入、静力模态或网格收敛，不宣称高保真或正式替换REV22；钢塔、PT设计支路、连接构造仍待证据支持及验证。Pages最终部署未验。
+
+![REV22左与REV23右实际网格](https://raw.githubusercontent.com/g2066203208-beep/voxel-frontier/2904d9ab3b879de79e8dfa0cf50d764a0b778035/public/thesis-studio/inp-archive/REV23_MESH_CANDIDATE/mesh-comparison.jpg)
+
 ### 2026-11-25｜v0.32.220 — REV22期刊模型质量对照
 
 - RUN45576585492 success，main 4898218935f95abaf64e3a6d5ae830fa0e5e16af，三篇Buildings原图及实际网格拼图已回读。DOI 10.3390/buildings15203786 Fig3：31节/112.28m、约11万C3D8R、常规500mm/局部100mm、厚度3层以上、36束每束8根140mm²；10.3390/buildings14061740 Fig2：120m不同塔型、914571单元、螺栓及预紧、主体100mm/法兰20mm；10.3390/buildings16193854 Fig2：4.55MW 35段、底部开门区域、16束×18根，塔节Tie；不能直接移植到本原型。其他关键参照：Engineering Structures 2023 S0141029623000366 双尺度与缩尺试验；何泽瑜等太阳能学报2026 DOI10.19912/j.0254-0096.tynxb.2024-1794 已联合仿真材料非线性与P-Δ，不能把这些常规方法宣称首创。
