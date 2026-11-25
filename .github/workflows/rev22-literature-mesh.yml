@@ -15,7 +15,10 @@ jobs:
           ref: main
           sparse-checkout: |
             public/thesis-studio/inp-archive/REV22_VALIDATION_KIT
-      - run: pip install pillow==10.4.0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install pillow==10.4.0
       - name: Actual mesh radial audit and publisher-original comparisons
         run: |
           cat > /tmp/compare.py <<'PY'
