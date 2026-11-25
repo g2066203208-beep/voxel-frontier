@@ -89,7 +89,7 @@ def build(wind,mode):
     step=re.sub(rb"(?mi)^(\*Step,\s*name=)[^,\r\n]+",lambda m:m[1]+name.encode(),step,count=1)
     step=re.sub(rb"(?mi)^(\*Dynamic[^\r\n]*\r?\n)[^\r\n]+",lambda m:m[1]+("%.6g, %.3f, 1.e-7, %.6g"%(dt,dur,dt)).encode(),step,count=1)
     step=re.sub(rb"(?mi)^MODE EQ01 research-scaled horizontal record;[^\r\n]*",("R56 "+name+" diagnostic; inherited provisional damping.").encode(),step)
-    step=re.sub(rb"(?mi)^(\*Step,[^\r\n]*\binc=)\d+",lambda m:m[1]+str(2*math.ceil(dur/dt+1e-8)+1000).encode(),step,count=1)
+    # Preserve original generous increment cap; a low cap is not a runtime optimization.
     if mode=="PILOT":
         # Preserve all output variables and history frequency; change only field snapshot counts in final step.
         step=step.replace(b"number interval=80,",b"number interval=10,").replace(b"number interval=10, time marks=NO\n*Element Output, elset=REV04_ALL_REBAR",b"number interval=2, time marks=NO\n*Element Output, elset=REV04_ALL_REBAR")
