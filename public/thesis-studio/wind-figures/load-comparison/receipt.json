@@ -1,0 +1,30 @@
+[
+  {
+    "id": "07_tower_drag",
+    "status": "OK",
+    "reference": "Genov and Angelov (2020), Fig. 13",
+    "doi": "10.1088/1757-899X/1002/1/012009",
+    "source_url": "https://e-university.tu-sofia.bg/e-publ/files/7402_Genov_2020_IOP_Conf._Ser.__Mater._Sci._Eng._1002_0.pdf",
+    "pdf_page": 10,
+    "source_sha256": "fed5e2d348bad1e9b77e465ed5243f82174479628d1c804849f53fef49216dac",
+    "original_sha256": "95d08125dfe184ac2fb3234cb6d2655f997f9859efdb82a8b3b4122c2c05a793",
+    "our_asset": "tower-drag/01_heightwise_drag.png",
+    "our_sha256": "924f444627bc373ac4d8f54130c4e1bbea7df29e8c75ac50c755905e15b9b51e",
+    "comparison_sha256": "310e1a485e3ae304158f687d6269807f04bdc334a4fd73fc4264953a9a49fba2",
+    "note": "5 MW CFD without shading vs 10 MW quasi-steady drag statistics; different geometry and method."
+  },
+  {
+    "id": "08_thrust_coefficient",
+    "status": "OK",
+    "reference": "Quick et al. (2026), Fig. 1",
+    "doi": "10.5194/wes-11-493-2026",
+    "source_url": "https://wes.copernicus.org/articles/11/493/2026/wes-11-493-2026-f01-high-res.pdf",
+    "pdf_page": 1,
+    "source_sha256": "0f015ad13a249e1d9dcd06ac2749f0780c5005494bdf2b5a480b95c48a454506",
+    "original_sha256": "74644df1c4377728a3a593b3bdd1da427a66239f54a0265b6b04dbbd1aa6512f",
+    "our_asset": "historical-control/03_aerodynamic_ct.png",
+    "our_sha256": "4a6072770a64eba9bcd5970aefe2db7be2b5f89d3d5b0df6c6392af5e79e3dee",
+    "comparison_sha256": "c1d9cb9d1b9e86c7996a3ed0fc8bb38cfa426426836f7fbadeaff8e2fc0a0874",
+    "note": "Same DTU 10 MW rotor; reference operating curve vs historical turbulent 6-seed time means."
+  }
+]
