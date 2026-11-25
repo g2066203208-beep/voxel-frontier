@@ -1,0 +1,78 @@
+{
+  "date": "2026-11-25",
+  "source_commit": "c2e11a8dafffc344709cf0fb5f434894d3085d32",
+  "files": {
+    "geometry.csv": {
+      "source_path": "research/wind-tower/experiments/T071/T071_input_geometry_31_segments.csv",
+      "source_ref": "research/t080-seismic-integration-gates-20261022",
+      "git_blob_sha": "0e187f4eb9d5a66f7c99fb7efa908afe7dae8a8f",
+      "bytes": 10722
+    },
+    "control-rows.csv": {
+      "source_path": "research/wind-tower/experiments/T075/T075_S06_31SEG_GQ_CONTROL_ROWS.csv",
+      "source_ref": "research/t080-seismic-integration-gates-20261022",
+      "git_blob_sha": "2a5135f45adcb4cb08399a7bc996b716d777fdf8",
+      "bytes": 141566
+    },
+    "envelopes.csv": {
+      "source_path": "research/wind-tower/experiments/T075/T075_S06_31SEG_GQ_COMBINATION_SUMMARY.csv",
+      "source_ref": "research/t080-seismic-integration-gates-20261022",
+      "git_blob_sha": "0956edbcf3e319ae948d66c51f10baad638378e6",
+      "bytes": 10831
+    },
+    "screen.csv": {
+      "source_path": "research/wind-tower/experiments/T077/T077_REV25_PHI16_HOOP_SCREEN_20261125.csv",
+      "source_ref": "research/t080-seismic-integration-gates-20261022",
+      "git_blob_sha": "4f90dcd1b13379a0c6427ec69ee551bb08a064bd",
+      "bytes": 7640
+    },
+    "calculation.md": {
+      "source_path": "research/wind-tower/experiments/T077/T077_REV25_PHI16_HOOP_SCREEN_20261125.md",
+      "source_ref": "research/t080-seismic-integration-gates-20261022",
+      "git_blob_sha": "91aad324ce68e64a21993983d6d82c33a72cb3d2",
+      "bytes": 3334
+    },
+    "historical-shear-torsion.csv": {
+      "source_path": "research/wind-tower/experiments/T072/T072_STEP2_CORRECTED_SHEAR_TORSION_PHI14_80.csv",
+      "source_ref": "research/t080-seismic-integration-gates-20261022",
+      "git_blob_sha": "e6042d72ba7efd37b265b58a34c6117f2c350b19",
+      "bytes": 11260
+    },
+    "historical-shear-torsion.md": {
+      "source_path": "research/wind-tower/experiments/T072/T072_STEP2_CORRECTED_SHEAR_TORSION_REPORT.md",
+      "source_ref": "research/t080-seismic-integration-gates-20261022",
+      "git_blob_sha": "04f62faf68f1274876c0bd3c10397cc1d3d04b9b",
+      "bytes": 3060
+    },
+    "longitudinal-bf1.csv": {
+      "source_path": "research/wind-tower/experiments/T077/T077_FORMAL_31SEG_REBAR_BF1.csv",
+      "source_ref": "research/t080-seismic-integration-gates-20261022",
+      "git_blob_sha": "cb9b8a476f07b5392ff18b0c4b9f6a7f5e4880cd",
+      "bytes": 6888
+    },
+    "longitudinal-report.md": {
+      "source_path": "research/wind-tower/experiments/T077/T077_FORMAL_REBAR_REPORT.md",
+      "source_ref": "research/t080-seismic-integration-gates-20261022",
+      "git_blob_sha": "6bf9f1041ce8f51a91aa25a5348a50e60d68d570",
+      "bytes": 4686
+    },
+    "prestress-report.md": {
+      "source_path": "research/wind-tower/experiments/T078/T078_PRESTRESS_DESIGN_REPORT.md",
+      "source_ref": "research/t080-seismic-integration-gates-20261022",
+      "git_blob_sha": "fd0e4ab75dc51d3db65c2658a1c7f26ede8a5b05",
+      "bytes": 10201
+    },
+    "prestress-loss.csv": {
+      "source_path": "research/wind-tower/experiments/T078/T078_BF8_SEGMENT_LOSS_AND_GRAVITY_CHECK.csv",
+      "source_ref": "research/t080-seismic-integration-gates-20261022",
+      "git_blob_sha": "c2f3117c858327520c22ee0474fb549a6482b0f9",
+      "bytes": 8484
+    },
+    "prestress-source-ledger.md": {
+      "source_path": "research/wind-tower/experiments/T078/T078_NBT10907_APPENDIX_A_SOURCE_LEDGER.md",
+      "source_ref": "research/t080-seismic-integration-gates-20261022",
+      "git_blob_sha": "11a99893dca01ddfa71d1b23afbd66ce21b762ad",
+      "bytes": 3166
+    }
+  }
+}
