@@ -1,10 +1,10 @@
 {
-  "version": "V8-R24-FIGURE-BATCH",
+  "version": "V8-R43-REBAR-FIGURES",
   "scope": "登记在线正文中明确标记的图件（包括旧版figure块及新图题）；无显式图件标记的历史文本需另核查。ARCHIVED只表示仓库有对应拼图，未代表网页实际显示验收。",
   "rule": "每幅正文图必须具有独立同类型文献真实原图对照拼图及来源，未通过不定稿；不强行匹配不同物理量。原创图如无完全对应图，注明最接近的参考、差异及理由，经审阅后决定。",
   "counts": {
-    "ARCHIVED": 10,
-    "UNREVIEWED": 27
+    "ARCHIVED": 11,
+    "UNREVIEWED": 30
   },
   "figures": [
     {
@@ -330,6 +330,50 @@
       "asset": null,
       "status": "UNREVIEWED",
       "quality": "MISSING_EXPLICIT_ASSET"
+    },
+    {
+      "chapter": "02",
+      "id": "r43-fig-cage",
+      "caption": "图2.3-1 钢筋截面及轴向布置",
+      "asset": "./rebar-verification/r43-fig-cage.svg",
+      "reference": "Wu等（2022）图4；何泽瑜（2024）图3-3",
+      "pair": "rebar-verification/r43-wu-fig4-cage-pair.png",
+      "status": "ARCHIVED",
+      "note": "同类构造图；本研究为候选构造，非相同塔型验证。",
+      "quality": "R43_SOURCE_REDRAW_RENDERED_VISUAL_REVIEW_PENDING"
+    },
+    {
+      "chapter": "02",
+      "id": "r43-fig-strut",
+      "caption": "图2.3-2 有效厚度与斜压折减敏感性",
+      "asset": "./rebar-verification/r43-fig-strut.svg",
+      "reference": "Wu等（2022）图13",
+      "pair": "rebar-verification/r43-wu-fig13-strut-method.png",
+      "status": "UNREVIEWED",
+      "note": "仅方法参照，物理量不同；不算同类匹配。",
+      "quality": "R43_SOURCE_REDRAW_RENDERED_VISUAL_REVIEW_PENDING"
+    },
+    {
+      "chapter": "02",
+      "id": "r43-fig-section",
+      "caption": "图2.3-3 S06逐段需求比",
+      "asset": "./rebar-verification/r43-fig-section.svg",
+      "reference": "何泽瑜（2024）图4-6",
+      "pair": "rebar-verification/r43-he-fig46-section-method.png",
+      "status": "UNREVIEWED",
+      "note": "仅纤维截面方法参照，物理量不同。",
+      "quality": "R43_SOURCE_REDRAW_RENDERED_VISUAL_REVIEW_PENDING"
+    },
+    {
+      "chapter": "02",
+      "id": "r43-fig-pt",
+      "caption": "图2.3-4 预应力敏感性",
+      "asset": "./rebar-verification/r43-fig-pt.svg",
+      "reference": "Wu等（2022）表3",
+      "pair": "rebar-verification/r43-wu-table3-pt-method.png",
+      "status": "UNREVIEWED",
+      "note": "预应力输入组织参照，非同输出指标。",
+      "quality": "R43_SOURCE_REDRAW_RENDERED_VISUAL_REVIEW_PENDING"
     }
   ],
   "quality_counts": {
@@ -338,6 +382,7 @@
     "EXISTING_FIGURE_REQUIRES_REVIEW": 9,
     "MISSING_EXPLICIT_ASSET": 13,
     "R23_SOURCE_REDRAW_UNRENDERED": 1,
-    "R24_SOURCE_REDRAW_UNRENDERED": 3
+    "R24_SOURCE_REDRAW_UNRENDERED": 3,
+    "R43_SOURCE_REDRAW_RENDERED_VISUAL_REVIEW_PENDING": 4
   }
 }
