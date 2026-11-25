@@ -1,0 +1,112 @@
+{
+  "status": "TOWER_ONLY_WIND_EQ_DIAGNOSTIC_STATIC_PASS",
+  "native": "NOT_RUN",
+  "production": "HOLD",
+  "R44_sha256": "97438ac785f5d6ccb9a6b0737cd7115d6b7de6ae47c111d62bb7912b4908fa58",
+  "R45_sha256": "d4553c651c104b41ee8c28d7a1938e0a494bcf4b05429ef98d56b8a9a66f1091",
+  "wind_ramp_s": 10.0,
+  "eq_offset_s": 30.0,
+  "eq_source_points": 40000,
+  "eq_initial_values": {
+    "EQ_X_EAST_SI": 0.0,
+    "EQ_Z_MINUS_NORTH_SI": -0.0
+  },
+  "cases": [
+    {
+      "case": "NTM",
+      "archive": "R49_NTM_TOWER_ONLY_DIAGNOSTICS.zip",
+      "bytes": 24338657,
+      "sha256": "7bef46c4d0171e949edb2e8a57b4653fa63f83be25079247d4ac31d843e10c13",
+      "files": {
+        "assembly_sets.inc": "abc1656ef53102db21626bef9bbda82f9b25733cffa3575a515c9e71fdb06662",
+        "wind_amplitudes.inc": "82aeae2f5c4d883b80fe044457ef86a2f2ce827175771637b0dfb29fbfea0699",
+        "cload_aligned.inc": "c4d7f2381665c3257b65db7dc49a002b398f9f92f0b4a8bc646436cd42aad276",
+        "eq01_offset_amplitudes.inc": "028e628fcc75702eba7b9a64d1b3d118fc5d80570bd4cd40147deaa578a3f385",
+        "node_map.csv": "5b35a8aff55116ff058ed25e0cedd5f8599ad7425da3ecac82a71283c96b25d0",
+        "WIND_TOWER_PILOT.inp": "06fbc2e9c11f28b1c283435d63ee04cc42715b073e8acd7ef093b2121768fb66",
+        "WIND_TOWER_FULL.inp": "2aecfa940e43775136345ebdba37faced93b29f5b45e85257a6560e0ea0c6c94",
+        "WIND_TOWER_EQ01.inp": "c514a63147ea1952d2449b9a7898a7f00d3e0489a6444d5854de59cdce39ca21",
+        "README.txt": "56a6e7ba14ed58b8989fd5e9c722aab2d2bf5bb85f8b802a6e2e577f9fc1034c"
+      },
+      "max_wind_force_error_N": 3.154127625748515e-09,
+      "max_wind_moment_error_Nm": 0.0015307101421058178,
+      "post_ramp_source_difference_N": 0,
+      "amplitude_serialization_error": 4.547473508864641e-13,
+      "eq_serialization_error": 2.842170943040401e-14,
+      "entry_decks": [
+        {
+          "name": "WIND_TOWER_PILOT.inp",
+          "duration_s": 20.0,
+          "max_increment_s": 0.025,
+          "minimum_increment_count": 800,
+          "EQ": false
+        },
+        {
+          "name": "WIND_TOWER_FULL.inp",
+          "duration_s": 599.95,
+          "max_increment_s": 0.025,
+          "minimum_increment_count": 23998,
+          "EQ": false
+        },
+        {
+          "name": "WIND_TOWER_EQ01.inp",
+          "duration_s": 229.995,
+          "max_increment_s": 0.005,
+          "minimum_increment_count": 45999,
+          "EQ": true
+        }
+      ]
+    },
+    {
+      "case": "1ETM",
+      "archive": "R49_1ETM_TOWER_ONLY_DIAGNOSTICS.zip",
+      "bytes": 24511787,
+      "sha256": "b4251c457aaa41ed961a717bacad0cb853ab59f54085173cee7cc5f4ee336eb9",
+      "files": {
+        "assembly_sets.inc": "abc1656ef53102db21626bef9bbda82f9b25733cffa3575a515c9e71fdb06662",
+        "wind_amplitudes.inc": "e733a58324f8de410a0d8332158ea2b1bf454dca8e7938392579515888e90d41",
+        "cload_aligned.inc": "c4d7f2381665c3257b65db7dc49a002b398f9f92f0b4a8bc646436cd42aad276",
+        "eq01_offset_amplitudes.inc": "028e628fcc75702eba7b9a64d1b3d118fc5d80570bd4cd40147deaa578a3f385",
+        "node_map.csv": "5b35a8aff55116ff058ed25e0cedd5f8599ad7425da3ecac82a71283c96b25d0",
+        "WIND_TOWER_PILOT.inp": "06fbc2e9c11f28b1c283435d63ee04cc42715b073e8acd7ef093b2121768fb66",
+        "WIND_TOWER_FULL.inp": "2aecfa940e43775136345ebdba37faced93b29f5b45e85257a6560e0ea0c6c94",
+        "WIND_TOWER_EQ01.inp": "c514a63147ea1952d2449b9a7898a7f00d3e0489a6444d5854de59cdce39ca21",
+        "README.txt": "56a6e7ba14ed58b8989fd5e9c722aab2d2bf5bb85f8b802a6e2e577f9fc1034c"
+      },
+      "max_wind_force_error_N": 3.3251126296818256e-09,
+      "max_wind_moment_error_Nm": 0.0021185693331062794,
+      "post_ramp_source_difference_N": 0,
+      "amplitude_serialization_error": 4.547473508864641e-13,
+      "eq_serialization_error": 2.842170943040401e-14,
+      "entry_decks": [
+        {
+          "name": "WIND_TOWER_PILOT.inp",
+          "duration_s": 20.0,
+          "max_increment_s": 0.025,
+          "minimum_increment_count": 800,
+          "EQ": false
+        },
+        {
+          "name": "WIND_TOWER_FULL.inp",
+          "duration_s": 599.95,
+          "max_increment_s": 0.025,
+          "minimum_increment_count": 23998,
+          "EQ": false
+        },
+        {
+          "name": "WIND_TOWER_EQ01.inp",
+          "duration_s": 229.995,
+          "max_increment_s": 0.005,
+          "minimum_increment_count": 45999,
+          "EQ": true
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "No rotor wind load or final physical wind-earthquake input.",
+    "Ramp and 30 s onset are explicitly chosen diagnostic assumptions, not code combination or probability model.",
+    "Inherited material damping uncalibrated; source output controls preserved; estimated increments are lower bounds, not measured runtime.",
+    "Abaqus Data Check and native reaction coverage not run."
+  ]
+}
