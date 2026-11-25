@@ -90,11 +90,11 @@
   ],
   "high_samples": 9204,
   "alpha_quantiles": [
-    0.0775693319926134,
-    0.1182537405830009,
-    0.1992608265031674,
-    0.2965072532116168,
-    0.38354332353233656
+    0.07756933199261339,
+    0.11825374058300088,
+    0.19926082650316737,
+    0.29650725321161675,
+    0.3835433235323365
   ],
   "GEV": {
     "shape_scipy": 0.18243125003001803,
@@ -112,56 +112,56 @@
       "asset": "./figure-audit/R53/b0332.svg",
       "description": "21 annual means, 100 m and extrapolated 160 m",
       "png_sha256": "c94f7228425c709232cbfb27b4044a6d61d292e2f1d456e60cc785ffa63e51e2",
-      "svg_sha256": "ab5458044d91e7b0fb10ffaff35b7f72146e0455f5b355d29d5825bc1b92376d"
+      "svg_sha256": "4044d754dadff6c7de3bcefcf48f6bbd83d70478f5548aa0d8ed1814752386fc"
     },
     {
       "id": "b0335",
       "asset": "./figure-audit/R53/b0335.svg",
       "description": "184080-hour empirical exceedance",
       "png_sha256": "26c48523c1f42e2c4184ba246f0f57b1d7641037f4f5d0f17d84e7cb9f35fa37",
-      "svg_sha256": "ecfd7f4e945cabf9fb1ed3d896a7f8ce74118dcce56cab68d5fb08c620b6e65b"
+      "svg_sha256": "5dbb8232cdbc549b0c8e998b851549e4700d8481bea894803bc26582d265d6f4"
     },
     {
       "id": "b0341",
       "asset": "./figure-audit/R53/b0341.svg",
       "description": "12 monthly climatological means",
       "png_sha256": "3937a63e4f0609017f2aa91e5c854674fb06a7e864fdd146eef34a06bcddddc6",
-      "svg_sha256": "24b46a84bb6819e1f7296e8c558563386839b5594396745ad562fa77de039001"
+      "svg_sha256": "d0a5f214972d59e5e02dd1ebe354b84fc7df5ec6026098ace5714f0ca6cced1b"
     },
     {
       "id": "b0344",
       "asset": "./figure-audit/R53/b0344.svg",
       "description": "joint wind direction/speed frequency, all hours",
-      "png_sha256": "d510861f6d6ca836ebca85d116b6eb28c501c7e2435a6700e3a1f66aae751b0b",
-      "svg_sha256": "686f2e8e50957d2f15d970c09accf4d4907981ea15a55975535c8f756aa1d9e5"
+      "png_sha256": "8fb7c1f82acd7abd57c881772f8f194c27e43c8f21525a1004e04e3f18cbb0b3",
+      "svg_sha256": "a824210adccd3317132e37380362d3254b32a93509411e0046ddb2e38cac9c30"
     },
     {
       "id": "b0346",
       "asset": "./figure-audit/R53/b0346.svg",
       "description": "conditional direction frequency among upper 5% wind speed",
-      "png_sha256": "18bc45c958f30eedc8e13bca7f4717c06e51aba0ca7974abd1020580d493bf18",
-      "svg_sha256": "4cbbff5533a44e53d349cce19ac8904152e75d528034fcdec783958474956903"
+      "png_sha256": "803193a4e2628e1539b0cbbaf66da5814236b04f3abae586996331555d12c612",
+      "svg_sha256": "6efddd4b120e8c4767a3adb9b0bd24914a0a4214bf50c71ab3faf1d541a0477d"
     },
     {
       "id": "b0349",
       "asset": "./figure-audit/R53/b0349.svg",
-      "description": "180768 valid hourly exponents; displayed range -0.6 to 1.3",
-      "png_sha256": "f1450ba1e603a737614a5b05ad35ff7797521c07aeb9d609edb4fee44930a099",
-      "svg_sha256": "f7589b0dbb1a5c158976d0c3fc399451204bf769d974fae99adbef5ffe558b9b"
+      "description": "180768 valid hourly exponents; bins cover full observed range",
+      "png_sha256": "13411e0029d36c3e0232c4605a7bc4ebce468e5c2e6cd9e1ec4ebd7644e02225",
+      "svg_sha256": "c5aa8340ec1f4fad5983b9d4b2470d6333bcb4b34ec853782fba14ea090943eb"
     },
     {
       "id": "b0351",
       "asset": "./figure-audit/R53/b0351.svg",
       "description": "observed reanalysis levels, hourly extrapolation, public EIA crosscheck",
       "png_sha256": "c09a1fd95d6ed0c93aa345253013d1be8d2f11913240a5068b531aaacb57c213",
-      "svg_sha256": "c6e47e0d160949c2c137bd2f1de915bd6df8a0452f9bc092ed918d5c6f0b272e"
+      "svg_sha256": "a91173096d7a3a8f6f06f6fc4869059968b0deaf9240555f09599efbb433ccf4"
     },
     {
       "id": "b0354",
       "asset": "./figure-audit/R53/b0354.svg",
       "description": "21 annual maxima, GEV and Gumbel sensitivity, not IEC design wind",
       "png_sha256": "c3246186899ebf07ddb310d8a3b695bf0b819fe9c5d8c544603cd94a31f43241",
-      "svg_sha256": "8cf1bde1919968ad2e04cce41dfda682265abe7c2820da4a104db8c0502461db"
+      "svg_sha256": "881182a8e4bc3a84586ae99aaadbb50ff88108bfb3efb029efab5175bd410091"
     }
   ],
   "sources": [
@@ -670,6 +670,6 @@
       "rows": 2208
     }
   ],
-  "hourly_npz_sha256": "dde8017901cf1d31dd3846adb4a447ab2d2a6efb573d80ffd1f93b5572925660",
+  "hourly_npz_sha256": "c230432b2dafc92de4e0c03da3b4359c356393dc323aaf1ce5090bca08478ac1",
   "limitations": "ERA5 reanalysis, extrapolated heights, not site measurements; no new IEC design-wind claim. Source archive verified all 168 members, but only instant wind variables scientifically used."
 }
