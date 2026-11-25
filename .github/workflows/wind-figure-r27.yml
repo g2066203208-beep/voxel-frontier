@@ -56,7 +56,7 @@ jobs:
               for ext in ['svg','png','pdf']:fig.savefig(dest/(stem+'.'+ext),dpi=300)
               plt.close(fig)
           fig,axs=plt.subplots(2,2,figsize=(7.4,6.6),layout=None)
-          fig.subplots_adjust(left=.12,right=.98,bottom=.12,top=.94,wspace=.30,hspace=.51)
+          fig.subplots_adjust(left=.12,right=.98,bottom=.18,top=.94,wspace=.30,hspace=.55)
           for i,ax in enumerate(axs.flat):
               ix=[1,2,3,3][i]
               for (case,v),st in zip(a.items(),styles):
@@ -68,10 +68,10 @@ jobs:
               ax.set_xlabel('Nominal rotor radius r (m)',labelpad=3)
               ax.set_ylabel(['$F_t^*$ (N/m)','$T_t^*$ (N m/m)','$F_n^*$ (N/m)','$F_n^*$ (N/m)'][i])
               ax.set_title('Wind speed 11.4 m/s',fontsize=9,pad=3)
-              ax.text(.5,-.27,'('+chr(97+i)+')',transform=ax.transAxes,ha='center',va='top',fontsize=10)
+              ax.text(.5,-.26,'('+chr(97+i)+')',transform=ax.transAxes,ha='center',va='top',fontsize=10)
               ax.legend(loc=['lower right','upper left','upper left','lower right'][i],fontsize=8,frameon=True,edgecolor='.5',fancybox=False)
               if i==1:ax.ticklabel_format(axis='y',style='sci',scilimits=(0,0),useMathText=True)
-          fig.text(.5,.025,'* Three-blade sums in legacy axes; nominal geometry approximation.',ha='center',fontsize=8)
+          fig.text(.5,.015,'* Three-blade sums in legacy axes; nominal geometry approximation.',ha='center',fontsize=8)
           save(fig,'blade_span_r27')
           def wrench(window,stem):
               fig,axs=plt.subplots(3,2,figsize=(8.4,4.8))
