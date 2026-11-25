@@ -1,0 +1,23 @@
+{
+  "version": "R27",
+  "source": "verified 700 s OpenFAST outputs; same 12001 samples",
+  "span": "Sun et al. Fig 6: Ft*=sum Fy, Fn*=sum Fx in legacy output axes; nominal rotor-apex radius=HubRad 2.8 + BlSpn; Tt*=r Ft*; not exact deflected local-polar coordinates; not validation. Reference summed three blades. Torque density dimension N m/m.",
+  "wrench": "Qiu et al Fig A4: left force XYZ, right moment XYZ, native hub channels. First 40 s of effective interval 100\u2013140 s predetermined, full 100\u2013700 s separate; time origin shifted by 100 s. Different physical case, no error annotation.",
+  "files": {
+    "1ETM_span_nominal.csv": "38a2cdb563c1660184900f25aeca16b7e27ec07e047a1850157dd36c4396e870",
+    "NTM_span_nominal.csv": "08051caeb5bc3edb568dfb941b85206268a041d30f736b107d2601225e9bf0cc",
+    "blade_span_r27.pdf": "817c219a1e2680779d5f2e45b75faf317a8b8fd6ab53477cc25f8c3c198f048e",
+    "blade_span_r27.png": "faab89feffb2f0184de205b75eb9376dae1ec419a06a4a0d6c0aef4b8f780ca4",
+    "blade_span_r27.svg": "5e52c26683f6c2c8a20cb72b93f900016d7594aa281d2ff6703e8be07d49af2e",
+    "rotor_wrench_r27_40s.pdf": "8b3b8af4fa816a9ff8e9798789599c967d81504ef8f9786b8ff035ac81fd025a",
+    "rotor_wrench_r27_40s.png": "02e79043dacc579d6e11d1f1e09771aec978ddc21764c599e127577e9e0b6118",
+    "rotor_wrench_r27_40s.svg": "6a5f939b661200d965213882223e82e9469ddc7ea5d9d46a418c91a53ace1b0f",
+    "rotor_wrench_r27_full.pdf": "ea569c46714aeadb8b1722f444dc3c93ac0b959a1cf49dfc6eb27f690dea9fe6",
+    "rotor_wrench_r27_full.png": "97e19c13ef5d250ba206e5d7f944cfc800f3e0e65f31c89d9503d31cce471615",
+    "rotor_wrench_r27_full.svg": "6546d4041a252d8b0da64b4e97fa588944f65ac38047914fdbacbb1b87206b49",
+    "span-comparison-r27.jpg": "aacf2f6fc2347cae12c9d7d58309a9989b42b995d2caf6d4c3b1072366f3e34c",
+    "span-comparison-r27.png": "3731eea455ba85c5a1ba6b1125061259c4d3cd6bfee1d8763e5e0a341d711c4f",
+    "wrench-comparison-r27.jpg": "178e1c9762546efc5bb6abb153c3ef0787023c52701ef7a69bb3d40f749145d1",
+    "wrench-comparison-r27.png": "ea1e3f6a8f9bb0adb64e40adbcd9e29736b9afe116e1e875b48d8aa6279912ef"
+  }
+}
