@@ -1,0 +1,59 @@
+name: REV22 assembly hierarchy inventory
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/rev22-assembly-inventory.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  inventory:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          sparse-checkout: |
+            public/thesis-studio/inp-archive/REV22_VALIDATION_KIT
+      - name: Inspect exact INP keyword hierarchy
+        run: |
+          python - <<'PY'
+          import pathlib as P, hashlib,json,re,collections
+          root=P.Path('public/thesis-studio/inp-archive/REV22_VALIDATION_KIT')
+          src=root/'HE_REV22_FULL_ASSEMBLY_EQ005.txt'
+          raw=src.read_bytes()
+          sha=hashlib.sha256(raw).hexdigest()
+          print('SOURCE_SHA',sha,'BYTES',len(raw))
+          assert sha=='e84851887735305c6387ca38a972bebd97ba9cdff7baa7735c0ed89cecf925b5'
+          blocks=[]
+          for i,l in enumerate(raw.decode('ascii').splitlines(),1):
+              if not l.strip() or l.startswith('**'):continue
+              if l.startswith('*'):blocks.append([i,l,[]])
+              elif blocks:blocks[-1][2].append(l)
+          parts={};instances=[];assembly=[];part=None;inst=None;in_assembly=False;other=[];keys=collections.Counter()
+          for i,h,d in blocks:
+              k=h.split(',')[0].lower().strip()
+              keys[k]+=1
+              if k=='*part':
+                  part=h;parts[part]=[]
+              elif k=='*end part':part=None
+              elif k=='*assembly':in_assembly=True
+              elif k=='*end assembly':in_assembly=False
+              elif k=='*instance':inst=h;instances.append({'header':h,'line':i,'position':d})
+              elif k=='*end instance':inst=None
+              elif part:parts[part].append({'header':h,'line':i,'rows':len(d),'sample':d[:2]})
+              elif in_assembly:assembly.append({'header':h,'line':i,'rows':len(d),'sample':d[:2],'instance':inst})
+              else:other.append({'header':h,'line':i,'rows':len(d),'sample':d[:2]})
+          report={'sha256':sha,'part_count':len(parts),'instance_count':len(instances),'keyword_counts':dict(keys),'parts':parts,'instances':instances,'assembly':assembly,'outside':other,'native':'NOT_RUN'}
+          (root/'assembly-inventory.json').write_text(json.dumps(report,indent=2))
+          print(json.dumps({'parts':[{ 'name':p,'nodes':sum(x['rows'] for x in v if x['header'].lower().split(',')[0]=='*node'),'element_blocks':[x for x in v if x['header'].lower().startswith('*element,')]} for p,v in parts.items()],'instances':instances,'assembly_blocks':len(assembly),'outside_mesh':[x for x in other if x['header'].lower().startswith(('*node,','*element,'))]},indent=2))
+          PY
+      - name: Publish static inventory only
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add public/thesis-studio/inp-archive/REV22_VALIDATION_KIT/assembly-inventory.json
+          git commit -m "Audit exact REV22 part instance and mesh hierarchy"
+          git fetch --depth=20 origin main
+          git rebase FETCH_HEAD
+          git push origin HEAD:main
