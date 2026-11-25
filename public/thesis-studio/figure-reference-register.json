@@ -3,9 +3,8 @@
   "scope": "登记在线正文中明确标记的图件（包括旧版figure块及新图题）；无显式图件标记的历史文本需另核查。ARCHIVED只表示仓库有对应拼图，未代表网页实际显示验收。",
   "rule": "每幅正文图必须具有独立同类型文献真实原图对照拼图及来源，未通过不定稿；不强行匹配不同物理量。原创图如无完全对应图，注明最接近的参考、差异及理由，经审阅后决定。",
   "counts": {
-    "ARCHIVED": 4,
-    "UNREVIEWED": 32,
-    "SOURCE_INSPECTED_PAIR_PENDING": 1
+    "ARCHIVED": 7,
+    "UNREVIEWED": 30
   },
   "figures": [
     {
@@ -135,21 +134,29 @@
       "asset": "./wind-figures/native/native-full-11.4-NTM/06_profiles.png",
       "reference": "Brown等（2024）图10",
       "doi": "10.5194/wes-9-1791-2024",
-      "status": "SOURCE_INSPECTED_PAIR_PENDING"
+      "status": "ARCHIVED",
+      "pair": "wind-figures/he-comparison-04.png",
+      "note": "平均水平风速与纵向均值定义略异；纵向TI对应，无实测验证。"
     },
     {
       "chapter": "03",
       "id": "v8-012",
       "caption": "图3.3-1  环形流管与叶片展向离散示意图",
       "asset": "./downloads/bem-streamtube-rotor-v9.svg",
-      "status": "UNREVIEWED"
+      "status": "ARCHIVED",
+      "reference": "何泽瑜（2024）图2-4、图2-5(a)",
+      "pair": "wind-figures/he-comparison-05.svg",
+      "note": "动量流管及叶片展向离散示意。"
     },
     {
       "chapter": "03",
       "id": "v8-022",
       "caption": "图3.3-2  叶素相对速度、攻角及气动力分解示意图",
       "asset": "./downloads/bem-airfoil-velocity-force-v9.svg",
-      "status": "UNREVIEWED"
+      "status": "ARCHIVED",
+      "reference": "何泽瑜（2024）图2-5(b)",
+      "pair": "wind-figures/he-comparison-06.svg",
+      "note": "叶素截面速度和气动力分解示意。"
     },
     {
       "chapter": "03",
