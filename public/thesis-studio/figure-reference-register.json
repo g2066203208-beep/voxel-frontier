@@ -1,10 +1,10 @@
 {
-  "version": "V8-R53-ERA5-RESTORED",
+  "version": "V8-R55-WIND-EQ-DIAGNOSTIC",
   "scope": "登记在线正文中明确标记的图件（包括旧版figure块及新图题）；无显式图件标记的历史文本需另核查。ARCHIVED只表示仓库有对应拼图，未代表网页实际显示验收。 R51补录三张此前漏登记的RNA图，保留两张历史图（原登记块ID对应旧图）待核；METHOD_ONLY不计同类完成。",
   "rule": "每幅正文图必须具有独立同类型文献真实原图对照拼图及来源，未通过不定稿；不强行匹配不同物理量。原创图如无完全对应图，注明最接近的参考、差异及理由，经审阅后决定。",
   "counts": {
     "ARCHIVED": 16,
-    "UNREVIEWED": 28
+    "UNREVIEWED": 29
   },
   "figures": [
     {
@@ -443,6 +443,16 @@
       "quality": "R27_SOURCE_RECEIPT_REREAD",
       "note": "同类六分量时程；不同机组和运行工况，不能作为数值误差验证。",
       "receipt": "wind-figures/blade-aero/r27/receipt.json"
+    },
+    {
+      "chapter": "03",
+      "id": "r55-rna-009",
+      "caption": "图3.3-6  额定风速下RNA参考点六分量等效气动荷载时程",
+      "asset": "./inp-archive/R55_FULL_WIND_EQ_DIAGNOSTIC/rna_RP_wrench.svg",
+      "status": "UNREVIEWED",
+      "quality": "R55_SOURCE_VERIFIED_FIGURE",
+      "note": "真实R54时程，按名义RNA几何移置至SET_RNA_RP，原生求解未执行。既有Qiu等图A4轮毂六分量原图是候选参考，参考点不同，尚未完成独立拼图及适用性审查。",
+      "receipt": "inp-archive/R55_FULL_WIND_EQ_DIAGNOSTIC/receipt.json"
     }
   ],
   "quality_counts": {
@@ -456,6 +466,7 @@
     "R51_RENDERED_SOURCE_COMPARISON": 4,
     "R43_SOURCE_REDRAW_RENDERED_VISUAL_REVIEW_PENDING": 4,
     "R27_SOURCE_RECEIPT_REREAD": 2,
-    "FULL_INTERVAL_PAIR_PENDING": 1
+    "FULL_INTERVAL_PAIR_PENDING": 1,
+    "R55_SOURCE_VERIFIED_FIGURE": 1
   }
 }
