@@ -1,0 +1,58 @@
+{
+  "status": "GEOMETRY_AXIS_ALIGNMENT_VERIFIED",
+  "R44_geometry_blob": "7089bf696ab4db729d036c499d416f3e19c2ca0e",
+  "source": {
+    "tower_height_m": 158,
+    "tower_to_shaft_m": 2.75,
+    "overhang_m": -7.1,
+    "shaft_tilt_deg": -5
+  },
+  "actual_hub_node": {
+    "label": 900001,
+    "xyz_m": [
+      0,
+      161.36880577351,
+      -7.0729823564514
+    ]
+  },
+  "actual_nacelle_node": {
+    "label": 900002,
+    "xyz_m": [
+      0,
+      160.44939,
+      2.687
+    ]
+  },
+  "OpenFAST_nominal_hub_xyz_m": [
+    -7.072982356451393,
+    0,
+    161.36880577350837
+  ],
+  "R44_aligned_transform": [
+    [
+      0,
+      1,
+      0
+    ],
+    [
+      0,
+      0,
+      1
+    ],
+    [
+      1,
+      0,
+      0
+    ]
+  ],
+  "aligned_hub_xyz_m": [
+    0,
+    161.36880577350837,
+    -7.072982356451393
+  ],
+  "max_abs_geometry_error_m": 1.6200374375330284e-12,
+  "prior_R46_axis": "X=u, Y=up, Z=-v; valid standalone but not aligned with R44 nominal shaft",
+  "corrected_aligned_axis": "X=v,Y=up,Z=u (positive downwind along +Z)",
+  "required_action": "Rotate R46 force and moment mapping to new aligned direction, retain previous files as diagnostic only. Do not alter earthquake geographic coordinates; wind azimuth is an explicit research assumption, not surveyed site azimuth.",
+  "native": "NOT_RUN"
+}
