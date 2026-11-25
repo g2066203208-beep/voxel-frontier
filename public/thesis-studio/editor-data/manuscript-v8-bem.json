@@ -4686,7 +4686,7 @@
           "has_media": false,
           "has_math": false,
           "online_only": true,
-          "figure_asset": "./wind-figures/native/native-full-11.4-NTM/06_profiles.png",
+          "figure_asset": "./wind-figures/native/native-full-11.4-NTM/06_profiles_r24.svg",
           "figure_caption_match": "图3.2-4  额定风速NTM工况平均风速及纵向湍流强度剖面"
         },
         {
@@ -5803,7 +5803,7 @@
           "has_media": false,
           "has_math": false,
           "online_only": true,
-          "figure_asset": "./wind-figures/tower-drag/03_cd_sensitivity.svg",
+          "figure_asset": "./wind-figures/tower-drag/03_cd_sensitivity_r24.svg",
           "figure_caption_match": "图3.3-5  不同参考风速下塔身风阻峰值及阻力系数敏感性"
         },
         {
@@ -8016,7 +8016,7 @@
           "has_media": false,
           "has_math": false,
           "online_only": true,
-          "figure_asset": "./wind-figures/historical-control/03_aerodynamic_ct.svg",
+          "figure_asset": "./wind-figures/historical-control/03_aerodynamic_ct_r24.svg",
           "figure_caption_match": "图3.5-4  不同参考风速下气动推力系数的六种子统计"
         },
         {
@@ -12497,9 +12497,9 @@
     }
   ],
   "online_revision": {
-    "version": "V8-R23-FIGURE-QUALITY",
+    "version": "V8-R24-FIGURE-BATCH",
     "date": "2026-11-25",
-    "scope": "Exact archived PSD CSV replot; clarify digitized historical pushover and energy plots. No solver changes or new physical results.",
+    "scope": "Three exact-source figures redrawn; further batch figures require render receipt and visual acceptance. No new physical results.",
     "source_gate": "74fb3aee9dfef058b972a3f0e03aa571319c2fe2",
     "source_inp": "cdb719b95b8ce4301011489b4ab8ffc9e73c18bf",
     "wind_manifest": "./wind-figures/core/manifest.json",
