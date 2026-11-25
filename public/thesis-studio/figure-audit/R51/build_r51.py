@@ -15,24 +15,25 @@ def save_png(im,path):
     im.save(path,dpi=(300,300))
 def fit(im,w,h):
     # Preserve source aspect ratio. No rescaling of axes or alteration to traces.
-    im.thumbnail((w,h),Image.Resampling.LANCZOS)
-    return im
+    scale=min(w/im.width,h/im.height)
+    return im.resize((round(im.width*scale),round(im.height*scale)),Image.Resampling.LANCZOS)
 def font(size):
     return ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",size)
 def pair(ours,ref,stem,left,right,note):
-    w,h=1400,1300
-    ours=fit(ours.copy(),w-90,h-170);ref=fit(ref.copy(),w-90,h-170)
-    canvas=Image.new("RGB",(2*w,h+100),"white");d=ImageDraw.Draw(canvas)
+    w=1400
+    ours=fit(ours.copy(),w-90,1700);ref=fit(ref.copy(),w-90,1700)
+    h=max(ours.height,ref.height)+155
+    canvas=Image.new("RGB",(2*w,h+80),"white");d=ImageDraw.Draw(canvas)
     d.line((w,35,w,h),fill=(195,195,195),width=2)
     d.text((45,30),left,font=font(27),fill="black")
     d.text((w+45,30),right,font=font(27),fill="black")
-    canvas.paste(ours,((w-ours.width)//2,100+(h-170-ours.height)//2))
-    canvas.paste(ref,(w+(w-ref.width)//2,100+(h-170-ref.height)//2))
+    canvas.paste(ours,((w-ours.width)//2,100+(h-155-ours.height)//2))
+    canvas.paste(ref,(w+(w-ref.width)//2,100+(h-155-ref.height)//2))
     d.text((45,h+5),note,font=font(23),fill="black")
     p=OUT/(stem+"-pair.png");save_png(canvas,p);return p
 def main():
     OUT.mkdir(parents=True,exist_ok=True)
-    fig8url="https://mdpi-res.com/energies/energies-13-03833/article_deploy/html/images/energies-13-03833-g008-550.jpg"
+    fig8url="https://mdpi-res.com/energies/energies-13-03833/article_deploy/html/images/energies-13-03833-g008.png"
     shahiurl="https://www.jackwbaker.com/Publications/Shahi_Baker_%282014%29_Pulse_Classification%2C_BSSA.pdf"
     # Each reference download verified and saved as original bytes before generating composites.
     records=[]
@@ -61,13 +62,19 @@ def main():
                 row.update(source_url=shahiurl,doi="10.1785/0120130191",pdf_page=2,original_file="shahi-baker-2014-original.pdf")
             else:
                 if "fig8" not in refs:
-                    raw=fetch(fig8url);im=read_image(raw);assert im.width>=500 and im.height>=300
-                    (OUT/"energies-13-03833-fig8-original.jpg").write_bytes(raw)
+                    raw=fetch(fig8url);im=read_image(raw);assert im.width>=1000 and im.height>=700
+                    (OUT/"energies-13-03833-fig8-original.png").write_bytes(raw)
                     refs["fig8"]=(raw,im)
                 raw,im=refs["fig8"];w,h=im.size
                 # Fig. 8 four panels: upper acceleration, lower left response, lower right power.
                 boxes={"acceleration":(0,0,w,int(h*.50)),"response-spectrum":(0,int(h*.50),int(w*.50),h),"power-spectrum":(int(w*.50),int(h*.50),w,h)}
-                reference=im.crop(boxes[stem]);row.update(source_url=fig8url,doi="10.3390/en13153833",original_file="energies-13-03833-fig8-original.jpg")
+                reference=im.crop(boxes[stem]);
+                if stem=="acceleration":
+                    # Stack source panels (a,b) without changing their axes.
+                    top=reference;mid=top.width//2
+                    a=top.crop((0,0,mid,top.height));b=top.crop((mid,0,top.width,top.height))
+                    reference=Image.new("RGB",(max(a.width,b.width),a.height+b.height+14),"white");reference.paste(a,(0,0));reference.paste(b,(0,a.height+14))
+                row.update(source_url=fig8url,doi="10.3390/en13153833",original_file="energies-13-03833-fig8-original.png")
             op=ROOT/asset;oursraw=op.read_bytes();ours=read_image(oursraw)
             assert ours.width>=500 and ours.height>=200
             crop=OUT/(stem+"-reference.png");save_png(reference,crop)
