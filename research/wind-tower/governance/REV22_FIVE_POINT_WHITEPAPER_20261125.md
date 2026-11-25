@@ -31,3 +31,11 @@ Actions run 45528301723，job 138917012464 成功。原始INP 15,693,508 bytes�
 4. 第274654行Dynamic；274658行两处底部固定；274662行自重，274664、274666行两条全模型GRAV惯性载荷分别负X/负Z。40000点、0.005s、199.995s；X幅值=源H1、Z幅值=-源H2，数值和时间误差均0；PGA 0.3062418524/0.4754302384 m/s²。原始INP荷载已引用；CAE导入保持性、全质量反力及实际响应仍需原生核验。
 5. RNA 150 B31、150 Beam General Section、155 MASS及155 ROTARYI单元，显式质量和676727.2338445095 kg。保留。无需实体叶片。
 结论：两项所谓缺失（CDP和地震载荷）在原始INP上被原字节核查排除；不是原生求解验收。暂不创建无实际物理变更的REV23。所有五项证据已归档，待本地Codex导出复查。
+
+
+## V1.2 CAE 导出差异定位（2026-11-25）
+Codex 报告当前模型名 HE_REV22_FULL_ASSEMBLY_EQ005，数据库未命名，导出缺少两种材料的拉伸损伤；尚未取得其导出原字节。原始 C65 第274139行、C70 第274251行均为 `*Concrete Tension Damage, type=STRAIN, compression recovery=1.`，各24行。
+新增只读比较器 [compare_cae_cdp_export.py](../../../../public/thesis-studio/inp-archive/REV22_REVIEW/compare_cae_cdp_export.py)（提交 4a9e1b739bf72e809bafb5422a7b26319f26384e），内嵌原始材料表，比较密度、弹性、阻尼、CDP和四类曲线的数值与选项，默认相对容差1e-6，选项差异需人工复核。
+Codex先对原始TXT运行比较器，再对独立CAE导出运行并保存JSON；若仅拉伸损伤缺失且其他参数一致，在CAE副本按原始24点和恢复系数恢复、重新导出复核。若再次丢失，直接以原始INP独立Data Check区分导入与求解问题。不覆盖REV22。
+官方依据：https://docs.software.vt.edu/abaqusv2025/English/SIMACAEKEYRefMap/simakey-r-concretetensiondamage.htm 。拉伸损伤为可选项，缺失不必然报错，但改变刚度退化和循环响应。不因同一步多个OP=NEW DLOAD卡擅改地震载荷，实际惯性覆盖待原生验证。
+状态：比较器已提交，尚未实际运行于真实CAE导出；未进行原生求解，未发布REV23。
