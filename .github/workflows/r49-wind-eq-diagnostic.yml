@@ -1,0 +1,37 @@
+name: R49 tower wind earthquake diagnostic input assembly
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/r49-wind-eq-diagnostic.yml','public/thesis-studio/inp-archive/R49_WIND_EQ_DIAGNOSTIC/build_r49.py']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          sparse-checkout: |
+            public/thesis-studio/inp-archive/R44_REBAR_RESEARCH_PRECHECK
+            public/thesis-studio/inp-archive/R45_EQ_RESEARCH_CANDIDATE
+            public/thesis-studio/inp-archive/R46_WIND_MAPPING
+            public/thesis-studio/inp-archive/R47_RNA_WIND_GATE
+            public/thesis-studio/inp-archive/R49_WIND_EQ_DIAGNOSTIC
+            public/thesis-studio/wind-figures/tower-drag/timeseries
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install numpy==2.2.6
+      - run: python public/thesis-studio/inp-archive/R49_WIND_EQ_DIAGNOSTIC/build_r49.py
+      - name: Archive diagnostic inputs and verified receipts
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add -f public/thesis-studio/inp-archive/R49_WIND_EQ_DIAGNOSTIC/*.zip public/thesis-studio/inp-archive/R49_WIND_EQ_DIAGNOSTIC/receipt.json
+          git commit -m "Archive R49 statically checked tower-only wind and EQ diagnostics"
+          git fetch origin main
+          git rebase FETCH_HEAD
+          git push origin HEAD:main
