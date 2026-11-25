@@ -3,8 +3,9 @@
   "scope": "登记在线正文中明确标记的图件（包括旧版figure块及新图题）；无显式图件标记的历史文本需另核查。ARCHIVED只表示仓库有对应拼图，未代表网页实际显示验收。",
   "rule": "每幅正文图必须具有独立同类型文献真实原图对照拼图及来源，未通过不定稿；不强行匹配不同物理量。原创图如无完全对应图，注明最接近的参考、差异及理由，经审阅后决定。",
   "counts": {
-    "ARCHIVED": 7,
-    "UNREVIEWED": 30
+    "ARCHIVED": 8,
+    "UNREVIEWED": 27,
+    "SOURCE_INSPECTED_PAIR_PENDING": 2
   },
   "figures": [
     {
@@ -21,7 +22,10 @@
       "id": "b0219",
       "caption": "图2-1  两组推覆算例的塔顶反力—位移曲线",
       "asset": "./editor-data/manuscript-figures-v6/FIG_2_1.png",
-      "status": "UNREVIEWED"
+      "status": "ARCHIVED",
+      "reference": "何泽瑜（2024）图4-8",
+      "pair": "wind-figures/pushover-he-comparison.svg",
+      "note": "同为塔顶反力—位移；文献达到4m，本文历史推覆终止0.901/0.928m。"
     },
     {
       "chapter": "02",
@@ -163,7 +167,9 @@
       "id": "wind-r14-005",
       "caption": "图3.3-3  额定风速下塔身纵向风阻线荷载沿高程分布",
       "asset": "./wind-figures/tower-drag/01_heightwise_drag.svg",
-      "status": "UNREVIEWED"
+      "status": "SOURCE_INSPECTED_PAIR_PENDING",
+      "reference": "Genov与Angelov（2020）图13",
+      "doi": "10.1088/1757-899X/1002/1/012009"
     },
     {
       "chapter": "03",
@@ -226,7 +232,9 @@
       "id": "wind-r13-006",
       "caption": "图3.5-4  不同参考风速下气动推力系数的六种子统计",
       "asset": "./wind-figures/historical-control/03_aerodynamic_ct.svg",
-      "status": "UNREVIEWED"
+      "status": "SOURCE_INSPECTED_PAIR_PENDING",
+      "reference": "Quick等（2026）图1",
+      "doi": "10.5194/wes-11-493-2026"
     },
     {
       "chapter": "03",
