@@ -1,0 +1,42 @@
+name: R46 actual tower wind nodal mapping
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/r46-tower-wind-mapping.yml','public/thesis-studio/inp-archive/R46_WIND_MAPPING/build_r46.py']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  map:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          sparse-checkout: |
+            public/thesis-studio/inp-archive/R44_REBAR_RESEARCH_PRECHECK
+            public/thesis-studio/inp-archive/R46_WIND_MAPPING
+            public/thesis-studio/wind-figures/tower-drag
+            public/thesis-studio/wind-figures/blade-aero/NTM
+            public/thesis-studio/wind-figures/blade-aero/1ETM
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install numpy==2.2.6
+      - name: Read actual source and R44 geometry, verify both cases
+        run: python public/thesis-studio/inp-archive/R46_WIND_MAPPING/build_r46.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: R46-tower-nodal-load-fragments
+          path: public/thesis-studio/inp-archive/R46_WIND_MAPPING/
+      - name: Archive actual outputs
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add -f public/thesis-studio/inp-archive/R46_WIND_MAPPING/*.zip public/thesis-studio/inp-archive/R46_WIND_MAPPING/receipt.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Archive R46 verified tower-only nodal wind load fragments"
+          git fetch origin main
+          git rebase FETCH_HEAD
+          git push origin HEAD:main
