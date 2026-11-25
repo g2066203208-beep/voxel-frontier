@@ -8070,19 +8070,41 @@
           "id": "wind-r26-001",
           "kind": "text",
           "style": "Normal",
-          "text": "对两组原始二进制输出独立解码后，将100～700 s内三片叶片对应展向节点的气动力合并统计。AeroDyn的Fx、Fy为局部旧式坐标系下的面外、面内单位长度气动力，不同于弦向坐标系的Fn、Ft。NTM与1ETM工况的Fx展向均值峰值分别为7217.6 N/m和6389.0 N/m，均位于距叶根77.381 m处；Fy展向均值峰值分别为1090.8 N/m和1142.3 N/m，均位于距叶根23.265 m处。三叶片与同一时段的合并统计用于描述展向载荷分布，其离散程度不代表独立随机种子之间的变异。",
+          "text": "如图3.5-6所示，对两组原始二进制输出独立解码后，将100～700 s内三片叶片对应展向节点的气动力合并统计。AeroDyn的Fx、Fy为局部旧式坐标系下的面外、面内单位长度气动力，不同于弦向坐标系的Fn、Ft[133]。NTM与1ETM工况的Fx展向均值峰值分别为7217.6 N/m和6389.0 N/m，均位于距叶根77.381 m处；Fy展向均值峰值分别为1090.8 N/m和1142.3 N/m，均位于距叶根23.265 m处。三叶片与同一时段的合并统计用于描述展向载荷分布，其离散程度不代表独立随机种子之间的变异。",
           "has_media": false,
           "has_math": false,
           "online_only": true
         },
         {
+          "id": "wind-r26-003",
+          "kind": "caption",
+          "style": "Caption",
+          "text": "图3.5-6  额定风速下叶片展向单位长度气动力统计（均值及标准差）",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true,
+          "figure_asset": "./wind-figures/blade-aero/blade_span.svg",
+          "figure_caption_match": "图3.5-6  额定风速下叶片展向单位长度气动力统计（均值及标准差）"
+        },
+        {
           "id": "wind-r26-002",
           "kind": "text",
           "style": "Normal",
-          "text": "额定风速下，NTM与1ETM的轮毂坐标系轴向气动力均值分别为1.139 MN和1.034 MN，标准差分别为0.169 MN和0.221 MN，最大值分别为1.739 MN和1.954 MN；轴向气动力矩均值分别为9.569 MN·m和9.252 MN·m，最大值分别为16.360 MN·m和19.583 MN·m。在本组随机实现中，极端湍流工况虽具有较低的轴向气动力均值，但波动幅度与极值较大。上述六分量均为AeroDyn原生轮毂旋转坐标系气动合力及合力矩，并非塔顶结构反力；在实施结构荷载传递前，仍需依据方位角及轮毂运动进行坐标转换、作用点移置及合力与合力矩守恒校核。",
+          "text": "图3.5-7给出了有效时段内的轮毂坐标系气动力时程。额定风速下，NTM与1ETM的轮毂坐标系轴向气动力均值分别为1.139 MN和1.034 MN，标准差分别为0.169 MN和0.221 MN，最大值分别为1.739 MN和1.954 MN；轴向气动力矩均值分别为9.569 MN·m和9.252 MN·m，最大值分别为16.360 MN·m和19.583 MN·m。在本组随机实现中，极端湍流工况虽具有较低的轴向气动力均值，但波动幅度与极值较大。上述六分量均为AeroDyn原生轮毂旋转坐标系气动合力及合力矩，并非塔顶结构反力；在实施结构荷载传递前，仍需依据方位角及轮毂运动进行坐标转换、作用点移置及合力与合力矩守恒校核。",
           "has_media": false,
           "has_math": false,
           "online_only": true
+        },
+        {
+          "id": "wind-r26-004",
+          "kind": "caption",
+          "style": "Caption",
+          "text": "图3.5-7  额定风速下轮毂坐标系气动力及气动力矩时程",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true,
+          "figure_asset": "./wind-figures/blade-aero/rotor_wrench.svg",
+          "figure_caption_match": "图3.5-7  额定风速下轮毂坐标系气动力及气动力矩时程"
         },
         {
           "id": "b0524",
@@ -12535,7 +12557,7 @@
   "online_revision": {
     "version": "V8-R26-BLADE-STATISTICS",
     "date": "2026-11-25",
-    "scope": "Chapter 3 adds independently decoded paired 700 s native blade and rotor statistics. Figures and permanent original archive are gated separately.",
+    "scope": "Chapter 3 adds independently decoded paired 700 s blade and rotor statistics and two verified original-data figures; archived OUTB and comparison receipts.",
     "source_gate": "74fb3aee9dfef058b972a3f0e03aa571319c2fe2",
     "source_inp": "cdb719b95b8ce4301011489b4ab8ffc9e73c18bf",
     "wind_manifest": "./wind-figures/core/manifest.json",
