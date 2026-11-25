@@ -1,0 +1,828 @@
+{
+  "version": "REV22-REVIEW-V1",
+  "status": "SOURCE_STATIC_READBACK_COMPLETE",
+  "native": "NOT_RUN",
+  "sha256": "e84851887735305c6387ca38a972bebd97ba9cdff7baa7735c0ed89cecf925b5",
+  "bytes": 15693508,
+  "concrete": {
+    "C65": {
+      "missing": [],
+      "checks": {
+        "*CONCRETE COMPRESSION HARDENING": {
+          "rows": 26,
+          "damage_rows": 26,
+          "zero_first": true,
+          "plastic_strain_nonnegative_monotonic": true,
+          "min_plastic": 0.0
+        },
+        "*CONCRETE TENSION STIFFENING": {
+          "rows": 24,
+          "damage_rows": 24,
+          "zero_first": true,
+          "plastic_strain_nonnegative_monotonic": true,
+          "min_plastic": 0.0
+        }
+      },
+      "cards": [
+        {
+          "line": 274052,
+          "header": "*Material, name=C65",
+          "rows": 0,
+          "data": []
+        },
+        {
+          "line": 274053,
+          "header": "*Density",
+          "rows": 1,
+          "data": [
+            "2400.,"
+          ]
+        },
+        {
+          "line": 274055,
+          "header": "*Elastic",
+          "rows": 1,
+          "data": [
+            "3.65e+10, 0.2"
+          ]
+        },
+        {
+          "line": 274057,
+          "header": "*Damping, alpha=0.0145230339976, beta=0.00342441756784",
+          "rows": 0,
+          "data": []
+        },
+        {
+          "line": 274058,
+          "header": "*Concrete Damaged Plasticity",
+          "rows": 1,
+          "data": [
+            "30.,      0.1,     1.16, 0.666667,    1e-05"
+          ]
+        },
+        {
+          "line": 274060,
+          "header": "*Concrete Compression Hardening",
+          "rows": 26,
+          "data": [
+            "30238986.5579, 0",
+            "32468548.923, 0.000104850714439",
+            "34460226.8761, 0.000140684195174",
+            "36201884.8907, 0.000183367537242",
+            "37687027.9435, 0.000233078686481",
+            "38914812.5467, 0.000289840752144",
+            "39889731.2471, 0.000353530650764",
+            "40621029.125, 0.000423895092467",
+            "41121929.3449, 0.00050057179877",
+            "41408751.2482, 0.000583113664433",
+            "41500000, 0.00067101369863",
+            "41301262.2595, 0.000766858568234",
+            "40751287.705, 0.000872326364247",
+            "38880734.518, 0.00110437439677",
+            "36406210.9873, 0.00135296956199",
+            "33713211.401, 0.00160755037258",
+            "31043510.7842, 0.00186149285523",
+            "28527728.6085, 0.00211121839429",
+            "24147874.2112, 0.00259281440517",
+            "20641631.435, 0.0030504758511",
+            "17866088.4812, 0.0034881181238",
+            "15657521.5841, 0.00391022680591",
+            "13880027.1683, 0.00432052528306",
+            "12430413.2203, 0.00472184073369",
+            "11232407.0733, 0.00511626281991",
+            "10229832.2862, 0.0055053306223"
+          ]
+        },
+        {
+          "line": 274087,
+          "header": "*Concrete Tension Stiffening",
+          "rows": 24,
+          "data": [
+            "2082259.584, 0",
+            "2241204.53009, 1.42961361618e-05",
+            "2392257.686, 1.59806935342e-05",
+            "2532704.58984, 1.7955833155e-05",
+            "2659183.616, 2.03136543562e-05",
+            "2767590.38384, 2.31666059221e-05",
+            "2852975.574, 2.66502856438e-05",
+            "2909436.15209, 3.09264204906e-05",
+            "2930000, 3.61860273973e-05",
+            "2884622.92941, 4.32522348108e-05",
+            "2793706.30703, 5.15661011772e-05",
+            "2558287.77975, 6.96619238424e-05",
+            "2312168.6009, 8.80509150439e-05",
+            "2085953.64491, 0.000105894585071",
+            "1888031.36036, 0.000122963113415",
+            "1508411.95773, 0.000162478644994",
+            "1249573.52439, 0.000198685108921",
+            "932112.309439, 0.000265612676454",
+            "748815.684042, 0.000328864501807",
+            "547412.818776, 0.000450842388527",
+            "438733.254656, 0.000570279910831",
+            "370188.209248, 0.000688617857281",
+            "287567.334733, 0.000923801442884",
+            "238805.903776, 0.0011580573725"
+          ]
+        },
+        {
+          "line": 274112,
+          "header": "*Concrete Compression Damage, tension recovery=0.",
+          "rows": 26,
+          "data": [
+            "0, 0",
+            "0.0541888058789, 0.000104850714439",
+            "0.0670941945128, 0.000140684195174",
+            "0.0813221021758, 0.000183367537242",
+            "0.096763915294, 0.000233078686481",
+            "0.11329084101, 0.000289840752144",
+            "0.13075957322, 0.000353530650764",
+            "0.149018041429, 0.000423895092467",
+            "0.167910884145, 0.00050057179877",
+            "0.187284357173, 0.000583113664433",
+            "0.206990476261, 0.00067101369863",
+            "0.227957216941, 0.000766858568234",
+            "0.250746672379, 0.000872326364247",
+            "0.299301864141, 0.00110437439677",
+            "0.348566003569, 0.00135296956199",
+            "0.395925645092, 0.00160755037258",
+            "0.439992116847, 0.00186149285523",
+            "0.480209951565, 0.00211121839429",
+            "0.549123547301, 0.00259281440517",
+            "0.60453198273, 0.0030504758511",
+            "0.649201478303, 0.0034881181238",
+            "0.685579942075, 0.00391022680591",
+            "0.715578227356, 0.00432052528306",
+            "0.7406309675, 0.00472184073369",
+            "0.761806369169, 0.00511626281991",
+            "0.779903253708, 0.0055053306223"
+          ]
+        },
+        {
+          "line": 274139,
+          "header": "*Concrete Tension Damage, type=STRAIN, compression recovery=1.",
+          "rows": 24,
+          "data": [
+            "0, 0",
+            "0.0993641246527, 1.42961361618e-05",
+            "0.103355819398, 1.59806935342e-05",
+            "0.108694037304, 1.7955833155e-05",
+            "0.115710751914, 2.03136543562e-05",
+            "0.124801391479, 2.31666059221e-05",
+            "0.13643914653, 2.66502856438e-05",
+            "0.151195276424, 3.09264204906e-05",
+            "0.16976892431, 3.61860273973e-05",
+            "0.196075894637, 4.32522348108e-05",
+            "0.227036108814, 5.15661011772e-05",
+            "0.291810880529, 6.96619238424e-05",
+            "0.353150497696, 8.80509150439e-05",
+            "0.407956682399, 0.000105894585071",
+            "0.455843091563, 0.000122963113415",
+            "0.549695658818, 0.000162478644994",
+            "0.616618559795, 0.000198685108921",
+            "0.70383802867, 0.000265612676454",
+            "0.757678463762, 0.000328864501807",
+            "0.820570990065, 0.000450842388527",
+            "0.856325250154, 0.000570279910831",
+            "0.879523916525, 0.000688617857281",
+            "0.908041906767, 0.000923801442884",
+            "0.92504722707, 0.0011580573725"
+          ]
+        }
+      ]
+    },
+    "C70": {
+      "missing": [],
+      "checks": {
+        "*CONCRETE COMPRESSION HARDENING": {
+          "rows": 26,
+          "damage_rows": 26,
+          "zero_first": true,
+          "plastic_strain_nonnegative_monotonic": true,
+          "min_plastic": 0.0
+        },
+        "*CONCRETE TENSION STIFFENING": {
+          "rows": 24,
+          "damage_rows": 24,
+          "zero_first": true,
+          "plastic_strain_nonnegative_monotonic": true,
+          "min_plastic": 0.0
+        }
+      },
+      "cards": [
+        {
+          "line": 274164,
+          "header": "*Material, name=C70",
+          "rows": 0,
+          "data": []
+        },
+        {
+          "line": 274165,
+          "header": "*Density",
+          "rows": 1,
+          "data": [
+            "2400.,"
+          ]
+        },
+        {
+          "line": 274167,
+          "header": "*Elastic",
+          "rows": 1,
+          "data": [
+            "3.7e+10, 0.2"
+          ]
+        },
+        {
+          "line": 274169,
+          "header": "*Damping, alpha=0.0145230339976, beta=0.00342441756784",
+          "rows": 0,
+          "data": []
+        },
+        {
+          "line": 274170,
+          "header": "*Concrete Damaged Plasticity",
+          "rows": 1,
+          "data": [
+            "30.,      0.1,     1.16, 0.666667,    1e-05"
+          ]
+        },
+        {
+          "line": 274172,
+          "header": "*Concrete Compression Hardening",
+          "rows": 26,
+          "data": [
+            "31803093.45, 0",
+            "34251853.5267, 8.84742290089e-05",
+            "36461455.4964, 0.000120955256855",
+            "38413106.0038, 0.000160407945844",
+            "40093615.6521, 0.000207188766159",
+            "41495912.171, 0.000261488860243",
+            "42619158.6317, 0.000323330847791",
+            "43468491.696, 0.000392575900109",
+            "44054433.2452, 0.000468939642022",
+            "44392056.3182, 0.000552014694103",
+            "44500000, 0.000641297297297",
+            "44269901.9146, 0.000739716164471",
+            "43634062.2019, 0.000849101021569",
+            "41481527.5145, 0.00109167763474",
+            "38657640.9818, 0.00135239889238",
+            "35614652.8858, 0.0016190418139",
+            "32628620.3104, 0.00188414539702",
+            "29842238.5032, 0.00214385301343",
+            "25053798.4186, 0.00264207031301",
+            "21276595.7447, 0.00311295687177",
+            "18321256.4003, 0.0035616309081",
+            "15991183.8866, 0.0039934058409",
+            "14129606.4715, 0.00441251874401",
+            "12620379.7863, 0.00482210865442",
+            "11379133.9925, 0.00522445583804",
+            "10344537.0093, 0.00562121791867"
+          ]
+        },
+        {
+          "line": 274199,
+          "header": "*Concrete Tension Stiffening",
+          "rows": 24,
+          "data": [
+            "2124899.712, 0",
+            "2287099.50341, 1.47434999079e-05",
+            "2441245.898, 1.64663811351e-05",
+            "2584568.84766, 1.84817879012e-05",
+            "2713637.888, 2.08824354595e-05",
+            "2824264.58966, 2.37815246039e-05",
+            "2911398.282, 2.73155599459e-05",
+            "2969015.04941, 3.1647350016e-05",
+            "2990000, 3.69691891892e-05",
+            "2941945.48864, 4.41569597665e-05",
+            "2845835.93815, 5.26435151851e-05",
+            "2598029.28234, 7.11189923692e-05",
+            "2340579.47688, 8.98550952195e-05",
+            "2105397.89315, 0.000107989354239",
+            "1900757.94859, 0.000125298163552",
+            "1511168.26873, 0.000165272614359",
+            "1247704.89067, 0.000201838246198",
+            "926947.757589, 0.000269397357903",
+            "742928.884243, 0.000333260840966",
+            "541720.242619, 0.000456478912362",
+            "433572.444821, 0.000577181825816",
+            "365515.958829, 0.000696801190302",
+            "283640.929534, 0.000934574028932",
+            "235399.991406, 0.00117143783807"
+          ]
+        },
+        {
+          "line": 274224,
+          "header": "*Concrete Compression Damage, tension recovery=0.",
+          "rows": 26,
+          "data": [
+            "0, 0",
+            "0.0446128978891, 8.84742290089e-05",
+            "0.056243284421, 0.000120955256855",
+            "0.0693171445276, 0.000160407945844",
+            "0.0837641702972, 0.000207188766159",
+            "0.0994855090881, 0.000261488860243",
+            "0.116358463761, 0.000323330847791",
+            "0.134242022106, 0.000392575900109",
+            "0.152982790875, 0.000468939642022",
+            "0.172420911322, 0.000552014694103",
+            "0.192395583837, 0.000641297297297",
+            "0.213899070224, 0.000739716164471",
+            "0.237508230409, 0.000849101021569",
+            "0.288204190622, 0.00109167763474",
+            "0.339816481956, 0.00135239889238",
+            "0.38938281929, 0.0016190418139",
+            "0.435359006493, 0.00188414539702",
+            "0.477153281335, 0.00214385301343",
+            "0.54833211033, 0.00264207031301",
+            "0.605129442585, 0.00311295687177",
+            "0.650630518387, 0.0035616309081",
+            "0.687497592526, 0.0039934058409",
+            "0.717773988136, 0.00441251874401",
+            "0.742974699176, 0.00482210865442",
+            "0.764216908372, 0.00522445583804",
+            "0.782329678207, 0.00562121791867"
+          ]
+        },
+        {
+          "line": 274251,
+          "header": "*Concrete Tension Damage, type=STRAIN, compression recovery=1.",
+          "rows": 24,
+          "data": [
+            "0, 0",
+            "0.101435587464, 1.47434999079e-05",
+            "0.105418101311, 1.64663811351e-05",
+            "0.110744041314, 1.84817879012e-05",
+            "0.117744617477, 2.08824354595e-05",
+            "0.126814348569, 2.37815246039e-05",
+            "0.138425336779, 2.73155599459e-05",
+            "0.153147527569, 3.1647350016e-05",
+            "0.171678456059, 3.69691891892e-05",
+            "0.198163126161, 4.41569597665e-05",
+            "0.229501229332, 5.26435151851e-05",
+            "0.295153153897, 7.11189923692e-05",
+            "0.357233279146, 8.98550952195e-05",
+            "0.412556047683, 0.000107989354239",
+            "0.46076119065, 0.000125298163552",
+            "0.554855766792, 0.000165272614359",
+            "0.621640795367, 0.000201838246198",
+            "0.708310371249, 0.000269397357903",
+            "0.761616409157, 0.000333260840966",
+            "0.823712751447, 0.000456478912362",
+            "0.858938272699, 0.000577181825816",
+            "0.88176640102, 0.000696801190302",
+            "0.909800772218, 0.000934574028932",
+            "0.926503512456, 0.00117143783807"
+          ]
+        }
+      ]
+    }
+  },
+  "contact_pairs": [
+    {
+      "line": 202922,
+      "header": "*Contact Pair, interaction=CC_DRY_MU050, type=SURFACE TO SURFACE, adjust=1.e-6",
+      "rows": 1,
+      "data": [
+        "CSEG_02-1.SURF_BOTTOM, CSEG_01-1.SURF_TOP"
+      ]
+    },
+    {
+      "line": 202925,
+      "header": "*Contact Pair, interaction=CC_DRY_MU050, type=SURFACE TO SURFACE, adjust=1.e-6",
+      "rows": 1,
+      "data": [
+        "CSEG_03-1.SURF_BOTTOM, CSEG_02-1.SURF_TOP"
+      ]
+    },
+    {
+      "line": 202928,
+      "header": "*Contact Pair, interaction=CC_DRY_MU050, type=SURFACE TO SURFACE, adjust=1.e-6",
+      "rows": 1,
+      "data": [
+        "CSEG_04-1.SURF_BOTTOM, CSEG_03-1.SURF_TOP"
+      ]
+    },
+    {
+      "line": 202931,
+      "header": "*Contact Pair, interaction=CC_DRY_MU050, type=SURFACE TO SURFACE, adjust=1.e-6",
+      "rows": 1,
+      "data": [
+        "CSEG_05-1.SURF_BOTTOM, CSEG_04-1.SURF_TOP"
+      ]
+    },
+    {
+      "line": 202934,
+      "header": "*Contact Pair, interaction=CC_DRY_MU050, type=SURFACE TO SURFACE, adjust=1.e-6",
+      "rows": 1,
+      "data": [
+        "CSEG_06-1.SURF_BOTTOM, CSEG_05-1.SURF_TOP"
+      ]
+    },
+    {
+      "line": 202937,
+      "header": "*Contact Pair, interaction=CC_DRY_MU050, type=SURFACE TO SURFACE, adjust=1.e-6",
+      "rows": 1,
+      "data": [
+        "CSEG_07-1.SURF_BOTTOM, CSEG_06-1.SURF_TOP"
+      ]
+    },
+    {
+      "line": 202940,
+      "header": "*Contact Pair, interaction=CC_DRY_MU050, type=SURFACE TO SURFACE, adjust=1.e-6",
+      "rows": 1,
+      "data": [
+        "CSEG_08-1.SURF_BOTTOM, CSEG_07-1.SURF_TOP"
+      ]
+    },
+    {
+      "line": 202943,
+      "header": "*Contact Pair, interaction=CC_DRY_MU050, type=SURFACE TO SURFACE, adjust=1.e-6",
+      "rows": 1,
+      "data": [
+        "CSEG_09-1.SURF_BOTTOM, CSEG_08-1.SURF_TOP"
+      ]
+    },
+    {
+      "line": 202946,
+      "header": "*Contact Pair, interaction=CC_DRY_MU050, type=SURFACE TO SURFACE, adjust=1.e-6",
+      "rows": 1,
+      "data": [
+        "CSEG_10-1.SURF_BOTTOM, CSEG_09-1.SURF_TOP"
+      ]
+    },
+    {
+      "line": 202949,
+      "header": "*Contact Pair, interaction=CC_DRY_MU050, type=SURFACE TO SURFACE, adjust=1.e-6",
+      "rows": 1,
+      "data": [
+        "CSEG_11-1.SURF_BOTTOM, CSEG_10-1.SURF_TOP"
+      ]
+    },
+    {
+      "line": 202952,
+      "header": "*Contact Pair, interaction=CC_DRY_MU050, type=SURFACE TO SURFACE, adjust=1.e-6",
+      "rows": 1,
+      "data": [
+        "CSEG_12-1.SURF_BOTTOM, CSEG_11-1.SURF_TOP"
+      ]
+    },
+    {
+      "line": 202955,
+      "header": "*Contact Pair, interaction=CC_DRY_MU050, type=SURFACE TO SURFACE, adjust=1.e-6",
+      "rows": 1,
+      "data": [
+        "CSEG_13-1.SURF_BOTTOM, CSEG_12-1.SURF_TOP"
+      ]
+    },
+    {
+      "line": 202958,
+      "header": "*Contact Pair, interaction=CC_DRY_MU050, type=SURFACE TO SURFACE, adjust=1.e-6",
+      "rows": 1,
+      "data": [
+        "CSEG_14-1.SURF_BOTTOM, CSEG_13-1.SURF_TOP"
+      ]
+    },
+    {
+      "line": 202961,
+      "header": "*Contact Pair, interaction=CC_DRY_MU050, type=SURFACE TO SURFACE, adjust=1.e-6",
+      "rows": 1,
+      "data": [
+        "CSEG_15-1.SURF_BOTTOM, CSEG_14-1.SURF_TOP"
+      ]
+    },
+    {
+      "line": 202964,
+      "header": "*Contact Pair, interaction=CC_DRY_MU050, type=SURFACE TO SURFACE, adjust=1.e-6",
+      "rows": 1,
+      "data": [
+        "CSEG_16-1.SURF_BOTTOM, CSEG_15-1.SURF_TOP"
+      ]
+    },
+    {
+      "line": 202967,
+      "header": "*Contact Pair, interaction=CC_DRY_MU050, type=SURFACE TO SURFACE, adjust=1.e-6",
+      "rows": 1,
+      "data": [
+        "CSEG_17-1.SURF_BOTTOM, CSEG_16-1.SURF_TOP"
+      ]
+    },
+    {
+      "line": 202970,
+      "header": "*Contact Pair, interaction=CC_DRY_MU050, type=SURFACE TO SURFACE, adjust=1.e-6",
+      "rows": 1,
+      "data": [
+        "CSEG_18-1.SURF_BOTTOM, CSEG_17-1.SURF_TOP"
+      ]
+    },
+    {
+      "line": 202973,
+      "header": "*Contact Pair, interaction=CC_DRY_MU050, type=SURFACE TO SURFACE, adjust=1.e-6",
+      "rows": 1,
+      "data": [
+        "CSEG_19-1.SURF_BOTTOM, CSEG_18-1.SURF_TOP"
+      ]
+    },
+    {
+      "line": 202976,
+      "header": "*Contact Pair, interaction=CC_DRY_MU050, type=SURFACE TO SURFACE, adjust=1.e-6",
+      "rows": 1,
+      "data": [
+        "CSEG_20-1.SURF_BOTTOM, CSEG_19-1.SURF_TOP"
+      ]
+    },
+    {
+      "line": 202979,
+      "header": "*Contact Pair, interaction=CC_DRY_MU050, type=SURFACE TO SURFACE, adjust=1.e-6",
+      "rows": 1,
+      "data": [
+        "CSEG_21-1.SURF_BOTTOM, CSEG_20-1.SURF_TOP"
+      ]
+    },
+    {
+      "line": 202982,
+      "header": "*Contact Pair, interaction=CC_DRY_MU050, type=SURFACE TO SURFACE, adjust=1.e-6",
+      "rows": 1,
+      "data": [
+        "CSEG_22-1.SURF_BOTTOM, CSEG_21-1.SURF_TOP"
+      ]
+    },
+    {
+      "line": 202985,
+      "header": "*Contact Pair, interaction=CC_DRY_MU050, type=SURFACE TO SURFACE, adjust=1.e-6",
+      "rows": 1,
+      "data": [
+        "CSEG_23-1.SURF_BOTTOM, CSEG_22-1.SURF_TOP"
+      ]
+    },
+    {
+      "line": 202988,
+      "header": "*Contact Pair, interaction=CC_DRY_MU050, type=SURFACE TO SURFACE, adjust=1.e-6",
+      "rows": 1,
+      "data": [
+        "CSEG_24-1.SURF_BOTTOM, CSEG_23-1.SURF_TOP"
+      ]
+    },
+    {
+      "line": 202991,
+      "header": "*Contact Pair, interaction=CC_DRY_MU050, type=SURFACE TO SURFACE, adjust=1.e-6",
+      "rows": 1,
+      "data": [
+        "CSEG_25-1.SURF_BOTTOM, CSEG_24-1.SURF_TOP"
+      ]
+    },
+    {
+      "line": 202994,
+      "header": "*Contact Pair, interaction=CC_DRY_MU050, type=SURFACE TO SURFACE, adjust=1.e-6",
+      "rows": 1,
+      "data": [
+        "CSEG_26-1.SURF_BOTTOM, CSEG_25-1.SURF_TOP"
+      ]
+    },
+    {
+      "line": 202997,
+      "header": "*Contact Pair, interaction=CC_DRY_MU050, type=SURFACE TO SURFACE, adjust=1.e-6",
+      "rows": 1,
+      "data": [
+        "CSEG_27-1.SURF_BOTTOM, CSEG_26-1.SURF_TOP"
+      ]
+    },
+    {
+      "line": 203000,
+      "header": "*Contact Pair, interaction=CC_DRY_MU050, type=SURFACE TO SURFACE, adjust=1.e-6",
+      "rows": 1,
+      "data": [
+        "CSEG_28-1.SURF_BOTTOM, CSEG_27-1.SURF_TOP"
+      ]
+    },
+    {
+      "line": 203003,
+      "header": "*Contact Pair, interaction=CC_DRY_MU050, type=SURFACE TO SURFACE, adjust=1.e-6",
+      "rows": 1,
+      "data": [
+        "CSEG_29-1.SURF_BOTTOM, CSEG_28-1.SURF_TOP"
+      ]
+    },
+    {
+      "line": 203006,
+      "header": "*Contact Pair, interaction=CC_DRY_MU050, type=SURFACE TO SURFACE, adjust=1.e-6",
+      "rows": 1,
+      "data": [
+        "CSEG_30-1.SURF_BOTTOM, CSEG_29-1.SURF_TOP"
+      ]
+    },
+    {
+      "line": 203009,
+      "header": "*Contact Pair, interaction=CC_DRY_MU050, type=SURFACE TO SURFACE, adjust=1.e-6",
+      "rows": 1,
+      "data": [
+        "CSEG_31-1.SURF_BOTTOM, CSEG_30-1.SURF_TOP"
+      ]
+    }
+  ],
+  "interactions": {
+    "CC_DRY_MU050": [
+      {
+        "line": 202916,
+        "header": "*Surface Interaction, name=CC_DRY_MU050",
+        "rows": 1,
+        "data": [
+          "1.,"
+        ]
+      },
+      {
+        "line": 202918,
+        "header": "*Friction",
+        "rows": 1,
+        "data": [
+          "0.5,"
+        ]
+      },
+      {
+        "line": 202920,
+        "header": "*Surface Behavior, pressure-overclosure=HARD",
+        "rows": 0,
+        "data": []
+      }
+    ]
+  },
+  "ties": [
+    {
+      "line": 202141,
+      "header": "*Tie, name=TIE_C31_FLANGE, adjust=NO, position tolerance=0.0001",
+      "rows": 1,
+      "data": [
+        "CSEG_31-1.SURF_TOP, FLANGE_SOLID-1.SURF_BEARING"
+      ]
+    },
+    {
+      "line": 202143,
+      "header": "*Tie, name=TIE_S01_FLANGE, adjust=NO, position tolerance=0.0001",
+      "rows": 1,
+      "data": [
+        "SSEG_01-1.SURF_BOTTOM, FLANGE_SOLID-1.SURF_TOP"
+      ]
+    },
+    {
+      "line": 202767,
+      "header": "*Tie, name=TIE_S01_S02, adjust=yes",
+      "rows": 1,
+      "data": [
+        "SSEG_02-1.SURF_BOTTOM, SSEG_01-1.SURF_TOP"
+      ]
+    },
+    {
+      "line": 202770,
+      "header": "*Tie, name=TIE_S02_S03, adjust=yes",
+      "rows": 1,
+      "data": [
+        "SSEG_03-1.SURF_BOTTOM, SSEG_02-1.SURF_TOP"
+      ]
+    },
+    {
+      "line": 202773,
+      "header": "*Tie, name=TIE_S03_S04, adjust=yes",
+      "rows": 1,
+      "data": [
+        "SSEG_04-1.SURF_BOTTOM, SSEG_03-1.SURF_TOP"
+      ]
+    }
+  ],
+  "step_names": [
+    "PT_BALANCE",
+    "Gravity",
+    "GRAVITY_CHECK",
+    "MODAL_30",
+    "EQ_2H_RAYLEIGH_REL"
+  ],
+  "eq_loads": [
+    {
+      "line": 274654,
+      "header": "*Dynamic, application=TRANSIENT FIDELITY",
+      "rows": 1,
+      "data": [
+        "0.005, 199.995, 1.e-7, 0.005"
+      ]
+    },
+    {
+      "line": 274658,
+      "header": "*Boundary, op=NEW, type=DISPLACEMENT",
+      "rows": 2,
+      "data": [
+        "CSEG_01-1.FACE_BOTTOM, 1, 3, 0.",
+        "PT_36x15p2-1.SET_PT_BOTTOM_GEOM, 1, 3, 0."
+      ]
+    },
+    {
+      "line": 274662,
+      "header": "*Dload, op=NEW",
+      "rows": 1,
+      "data": [
+        ", GRAV, 9.81, 0., -1., 0."
+      ]
+    },
+    {
+      "line": 274664,
+      "header": "*Dload, op=NEW, amplitude=EQ_X_EAST_SI",
+      "rows": 1,
+      "data": [
+        ", GRAV, 1., -1., 0., 0."
+      ]
+    },
+    {
+      "line": 274666,
+      "header": "*Dload, op=NEW, amplitude=EQ_Z_MINUS_NORTH_SI",
+      "rows": 1,
+      "data": [
+        ", GRAV, 1., 0., 0., -1."
+      ]
+    }
+  ],
+  "eq_amplitudes": {
+    "EQ_X_EAST_SI": {
+      "line": 254047,
+      "samples": 40000,
+      "start": 0.0,
+      "end": 199.995,
+      "pga": 0.3062418524,
+      "dt_min": 0.0049999999999954525,
+      "dt_max": 0.005000000000023874,
+      "references": [
+        274664
+      ],
+      "source_matches": [
+        {
+          "column": "H1_m_s2",
+          "sign": 1,
+          "max_absolute_error": 0.0
+        },
+        {
+          "column": "H1_m_s2",
+          "sign": -1,
+          "max_absolute_error": 0.6124837048
+        },
+        {
+          "column": "H2_m_s2",
+          "sign": 1,
+          "max_absolute_error": 0.4717756886
+        },
+        {
+          "column": "H2_m_s2",
+          "sign": -1,
+          "max_absolute_error": 0.6090502821
+        }
+      ],
+      "source_time_max_error": 0.0
+    },
+    "EQ_Z_MINUS_NORTH_SI": {
+      "line": 264048,
+      "samples": 40000,
+      "start": 0.0,
+      "end": 199.995,
+      "pga": 0.4754302384,
+      "dt_min": 0.0049999999999954525,
+      "dt_max": 0.005000000000023874,
+      "references": [
+        274666
+      ],
+      "source_matches": [
+        {
+          "column": "H1_m_s2",
+          "sign": 1,
+          "max_absolute_error": 0.6090502821
+        },
+        {
+          "column": "H1_m_s2",
+          "sign": -1,
+          "max_absolute_error": 0.4717756886
+        },
+        {
+          "column": "H2_m_s2",
+          "sign": 1,
+          "max_absolute_error": 0.9508604768
+        },
+        {
+          "column": "H2_m_s2",
+          "sign": -1,
+          "max_absolute_error": 0.0
+        }
+      ],
+      "source_time_max_error": 0.0
+    }
+  },
+  "rna": {
+    "element_counts": {
+      "B31": 150,
+      "MASS": 155,
+      "ROTARYI": 155
+    },
+    "mass_cards": 155,
+    "sum_explicit_mass_kg": 676727.2338445095,
+    "beam_general_sections": 150
+  },
+  "limits": [
+    "Original archived INP only; CAE in-memory/export must be compared separately",
+    "Static input checks do not establish physical validity or Abaqus execution",
+    "Tie does not establish bolt or local flange behaviour",
+    "Whole-model GRAV coverage/force balance requires native verification",
+    "No physics changed"
+  ]
+}
