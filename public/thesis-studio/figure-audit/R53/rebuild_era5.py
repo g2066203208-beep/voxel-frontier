@@ -8,6 +8,7 @@ from scipy.stats import genextreme,gumbel_r
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+from matplotlib.ticker import PercentFormatter
 R=Path("research/wind-tower")
 ROOT=Path("public/thesis-studio");OUT=ROOT/"figure-audit/R53"
 INV=R/"experiments/T046/inner-inventory"
@@ -98,12 +99,12 @@ def main():
     bottom=np.zeros(16)
     for i,label in enumerate(["0–2","2–4","4–6","6–8","8–10","≥10"]):
         ax.bar(dirs,counts[:,i],width=np.pi/8*.9,bottom=bottom,label=label,color=plt.cm.Blues(.20+i*.13),edgecolor=".35",linewidth=.3);bottom+=counts[:,i]
-    ax.set_theta_zero_location("N");ax.set_theta_direction(-1);ax.set_xticks(dirs,labels,fontsize=8);ax.set_rlabel_position(112.5);ax.legend(title="Speed (m/s)",loc="lower center",bbox_to_anchor=(.5,-.22),ncol=3,fontsize=8);save(fig,"b0344","joint wind direction/speed frequency, all hours")
+    ax.set_theta_zero_location("N");ax.set_theta_direction(-1);ax.set_xticks(dirs,labels,fontsize=8);ax.set_rlabel_position(78.75);ax.set_rticks([4,8,12,16]);ax.yaxis.set_major_formatter(PercentFormatter(xmax=100,decimals=0));ax.legend(title="Speed (m/s)",loc="lower center",bbox_to_anchor=(.5,-.22),ncol=3,fontsize=8);save(fig,"b0344","joint wind direction/speed frequency, all hours")
     fig,ax=plt.subplots(figsize=(5.1,5.1),subplot_kw={"projection":"polar"},layout="constrained")
-    ax.bar(dirs,highpct,width=np.pi/8*.9,color="#547da2",edgecolor=".2",linewidth=.5);ax.set_theta_zero_location("N");ax.set_theta_direction(-1);ax.set_xticks(dirs,labels,fontsize=8);ax.set_rlabel_position(112.5);ax.set_title("V100 ≥ P95 = %.3f m/s"%q95,fontsize=10,pad=15);save(fig,"b0346","conditional direction frequency among upper 5% wind speed")
-    fig,ax=plt.subplots(figsize=(6.1,3.5),layout="constrained");ax.hist(alpha[valid],bins=np.linspace(-.6,1.3,97),density=True,color=".72",edgecolor=".45",linewidth=.3)
+    ax.bar(dirs,highpct,width=np.pi/8*.9,color="#547da2",edgecolor=".2",linewidth=.5);ax.set_theta_zero_location("N");ax.set_theta_direction(-1);ax.set_xticks(dirs,labels,fontsize=8);ax.set_rlabel_position(78.75);ax.set_rticks([10,20,30,40]);ax.yaxis.set_major_formatter(PercentFormatter(xmax=100,decimals=0));ax.set_title("V100 ≥ P95 = %.3f m/s"%q95,fontsize=10,pad=15);save(fig,"b0346","conditional direction frequency among upper 5% wind speed")
+    fig,ax=plt.subplots(figsize=(6.1,3.5),layout="constrained");a=alpha[valid];lo=np.floor(a.min()/.02)*.02;hi=np.ceil(a.max()/.02)*.02;bins=np.arange(lo,hi+.021,.02);req(bins[0]<=a.min() and bins[-1]>=a.max(),"histogram coverage");ax.hist(a,bins=bins,density=True,color=".72",edgecolor=".45",linewidth=.3)
     for q,ls in [(.25,"--"),(.5,"-"),(.75,"--")]:ax.axvline(np.quantile(alpha[valid],q),c="black",ls=ls,lw=.9,label="P%d"%round(100*q))
-    ax.set(xlabel="Hourly power-law shear exponent",ylabel="Probability density");ax.legend(ncol=3);save(fig,"b0349","180768 valid hourly exponents; displayed range -0.6 to 1.3")
+    ax.set(xlabel="Hourly power-law shear exponent",ylabel="Probability density");ax.legend(ncol=3);save(fig,"b0349","180768 valid hourly exponents; bins cover full observed range")
     fig,ax=plt.subplots(figsize=(5.6,3.3),layout="constrained")
     ax.plot([u10.mean(),u100.mean(),u160.mean(),uh.mean()],[10,100,160,161.368806],"o-",label="Hourly ERA5 extrapolation",lw=1.1,ms=4)
     ax.plot([4.79],[160],marker="s",mfc="white",mec="black",ls="none",label="Project EIA");ax.set(xlabel="Long-term mean wind speed (m/s)",ylabel="Height (m)");ax.legend(loc="lower right",fontsize=8);save(fig,"b0351","observed reanalysis levels, hourly extrapolation, public EIA crosscheck")
