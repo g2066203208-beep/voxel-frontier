@@ -1,0 +1,636 @@
+{
+  "source_docx_sha256": "4313b5eca4157f53015377082e7edcfb41b6c68ed8bd459b0efc49589171639f",
+  "source_docx_bytes": 40960498,
+  "rows": [
+    {
+      "id": "b0332",
+      "caption": "图3-1(a)  2005—2025年ERA5年平均风速变化",
+      "word_body_index": 342,
+      "status": "HOLD",
+      "source_caption": "图3-1(a)  2005—2025年ERA5年平均风速变化",
+      "nearby": [
+        {
+          "index": 338,
+          "text": "表3-3  ERA5主要风向频率及高风样本方向迁移",
+          "rels": []
+        },
+        {
+          "index": 339,
+          "text": "16方位全部样本/%V100≥P95样本/%N11.7324.00NNE15.4537.14NE9.723.66ENE8.241.06E9.141.96ESE7.631.22SE4.840.25SSE4.060.28S5.091.55SSW",
+          "rels": []
+        },
+        {
+          "index": 340,
+          "text": "表3-4  风切变、160 m外推与项目公开值交叉核查",
+          "rels": []
+        },
+        {
+          "index": 341,
+          "text": "",
+          "rels": []
+        },
+        {
+          "index": 342,
+          "text": "图3-1(a)  2005—2025年ERA5年平均风速变化",
+          "rels": []
+        },
+        {
+          "index": 343,
+          "text": "图3-1(a)表明，2005—2025年研究点100 m年平均风速在约4.061～4.598 m/s之间变化，2019年最低、2013年最高，年际差约0.537 m/s。160 m外推风速表现出相近的年际变化。",
+          "rels": []
+        },
+        {
+          "index": 344,
+          "text": "",
+          "rels": []
+        }
+      ],
+      "reason": "no unique adjacent image relationship"
+    },
+    {
+      "id": "b0335",
+      "caption": "图3-1(b)  2005—2025年ERA5 100 m逐小时风速经验超越曲线",
+      "word_body_index": 345,
+      "status": "HOLD",
+      "source_caption": "图3-1(b)  2005—2025年ERA5 100 m逐小时风速经验超越曲线",
+      "nearby": [
+        {
+          "index": 341,
+          "text": "",
+          "rels": []
+        },
+        {
+          "index": 342,
+          "text": "图3-1(a)  2005—2025年ERA5年平均风速变化",
+          "rels": []
+        },
+        {
+          "index": 343,
+          "text": "图3-1(a)表明，2005—2025年研究点100 m年平均风速在约4.061～4.598 m/s之间变化，2019年最低、2013年最高，年际差约0.537 m/s。160 m外推风速表现出相近的年际变化。",
+          "rels": []
+        },
+        {
+          "index": 344,
+          "text": "",
+          "rels": []
+        },
+        {
+          "index": 345,
+          "text": "图3-1(b)  2005—2025年ERA5 100 m逐小时风速经验超越曲线",
+          "rels": []
+        },
+        {
+          "index": 346,
+          "text": "图3-1(b)给出100 m逐小时风速的经验超越曲线，P50、P95和P99分别为4.061、8.385和10.429 m/s，样本最大值为17.626 m/s。P95对应约5%的高风样本，本研究采用该阈值比较全年与高风条件下的风向分布。",
+          "rels": []
+        },
+        {
+          "index": 347,
+          "text": "根据184080 h轮毂高度风速序列，将第k个风速区间B_k的经验出现频率定义为P_Jiayu(B_k)=N_k/N，其中N_k为落入该区间的小时数，N=184080。该统计量用于描述场址风速分布；OpenFAST计算的R_NTM(URef",
+          "rels": []
+        }
+      ],
+      "reason": "no unique adjacent image relationship"
+    },
+    {
+      "id": "b0341",
+      "caption": "图3-2  2005—2025年ERA5月平均风速气候态",
+      "word_body_index": 351,
+      "status": "HOLD",
+      "source_caption": "图3-2  2005—2025年ERA5月平均风速气候态",
+      "nearby": [
+        {
+          "index": 347,
+          "text": "根据184080 h轮毂高度风速序列，将第k个风速区间B_k的经验出现频率定义为P_Jiayu(B_k)=N_k/N，其中N_k为落入该区间的小时数，N=184080。该统计量用于描述场址风速分布；OpenFAST计算的R_NTM(URef",
+          "rels": []
+        },
+        {
+          "index": 348,
+          "text": "",
+          "rels": []
+        },
+        {
+          "index": 349,
+          "text": "在2005—2025年ERA5逐小时记录中，外推至轮毂高度的最大风速为19.202 m/s，出现在2006年4月11日19:00 UTC。该时次100 m风速为17.626 m/s，风切变指数为0.179，100 m来流方向约354.11°",
+          "rels": []
+        },
+        {
+          "index": 350,
+          "text": "",
+          "rels": []
+        },
+        {
+          "index": 351,
+          "text": "图3-2  2005—2025年ERA5月平均风速气候态",
+          "rels": []
+        },
+        {
+          "index": 352,
+          "text": "图3-2显示，研究点100 m月平均风速约为3.935～4.696 m/s，6月较低、7月较高。外推至160 m后的序列保持相近的月变化特征。",
+          "rels": []
+        },
+        {
+          "index": 353,
+          "text": "",
+          "rels": []
+        }
+      ],
+      "reason": "no unique adjacent image relationship"
+    },
+    {
+      "id": "b0344",
+      "caption": "图3-3(a)  2005—2025年ERA5 100 m风速—风向联合频率玫瑰图",
+      "word_body_index": 354,
+      "status": "HOLD",
+      "source_caption": "图3-3(a)  2005—2025年ERA5 100 m风速—风向联合频率玫瑰图",
+      "nearby": [
+        {
+          "index": 350,
+          "text": "",
+          "rels": []
+        },
+        {
+          "index": 351,
+          "text": "图3-2  2005—2025年ERA5月平均风速气候态",
+          "rels": []
+        },
+        {
+          "index": 352,
+          "text": "图3-2显示，研究点100 m月平均风速约为3.935～4.696 m/s，6月较低、7月较高。外推至160 m后的序列保持相近的月变化特征。",
+          "rels": []
+        },
+        {
+          "index": 353,
+          "text": "",
+          "rels": []
+        },
+        {
+          "index": 354,
+          "text": "图3-3(a)  2005—2025年ERA5 100 m风速—风向联合频率玫瑰图",
+          "rels": []
+        },
+        {
+          "index": 355,
+          "text": "",
+          "rels": []
+        },
+        {
+          "index": 356,
+          "text": "图3-3(b)  ERA5高风样本（V100≥P95=8.385 m/s）方向玫瑰图",
+          "rels": []
+        }
+      ],
+      "reason": "no unique adjacent image relationship"
+    },
+    {
+      "id": "b0346",
+      "caption": "图3-3(b)  ERA5高风样本（V100≥P95=8.385 m/s）方向玫瑰图",
+      "word_body_index": 356,
+      "status": "HOLD",
+      "source_caption": "图3-3(b)  ERA5高风样本（V100≥P95=8.385 m/s）方向玫瑰图",
+      "nearby": [
+        {
+          "index": 352,
+          "text": "图3-2显示，研究点100 m月平均风速约为3.935～4.696 m/s，6月较低、7月较高。外推至160 m后的序列保持相近的月变化特征。",
+          "rels": []
+        },
+        {
+          "index": 353,
+          "text": "",
+          "rels": []
+        },
+        {
+          "index": 354,
+          "text": "图3-3(a)  2005—2025年ERA5 100 m风速—风向联合频率玫瑰图",
+          "rels": []
+        },
+        {
+          "index": 355,
+          "text": "",
+          "rels": []
+        },
+        {
+          "index": 356,
+          "text": "图3-3(b)  ERA5高风样本（V100≥P95=8.385 m/s）方向玫瑰图",
+          "rels": []
+        },
+        {
+          "index": 357,
+          "text": "图3-3与表3-3显示，全年风向以NNE为主（15.45%），N、NE分别占11.73%和9.72%；当100 m风速达到P95及以上时，NNE、N、SSW的占比分别增至37.14%、24.00%和20.10%。这说明高风样本具有不同于全年",
+          "rels": []
+        },
+        {
+          "index": 358,
+          "text": "",
+          "rels": []
+        }
+      ],
+      "reason": "no unique adjacent image relationship"
+    },
+    {
+      "id": "b0349",
+      "caption": "图3-4(a)  ERA5 10—100 m逐时风切变指数分布",
+      "word_body_index": 359,
+      "status": "HOLD",
+      "source_caption": "图3-4(a)  ERA5 10—100 m逐时风切变指数分布",
+      "nearby": [
+        {
+          "index": 355,
+          "text": "",
+          "rels": []
+        },
+        {
+          "index": 356,
+          "text": "图3-3(b)  ERA5高风样本（V100≥P95=8.385 m/s）方向玫瑰图",
+          "rels": []
+        },
+        {
+          "index": 357,
+          "text": "图3-3与表3-3显示，全年风向以NNE为主（15.45%），N、NE分别占11.73%和9.72%；当100 m风速达到P95及以上时，NNE、N、SSW的占比分别增至37.14%、24.00%和20.10%。这说明高风样本具有不同于全年",
+          "rels": []
+        },
+        {
+          "index": 358,
+          "text": "",
+          "rels": []
+        },
+        {
+          "index": 359,
+          "text": "图3-4(a)  ERA5 10—100 m逐时风切变指数分布",
+          "rels": []
+        },
+        {
+          "index": 360,
+          "text": "",
+          "rels": []
+        },
+        {
+          "index": 361,
+          "text": "图3-4(b)  160 m风速外推与项目公开值交叉核查",
+          "rels": []
+        }
+      ],
+      "reason": "no unique adjacent image relationship"
+    },
+    {
+      "id": "b0351",
+      "caption": "图3-4(b)  160 m风速外推与项目公开值交叉核查",
+      "word_body_index": 361,
+      "status": "HOLD",
+      "source_caption": "图3-4(b)  160 m风速外推与项目公开值交叉核查",
+      "nearby": [
+        {
+          "index": 357,
+          "text": "图3-3与表3-3显示，全年风向以NNE为主（15.45%），N、NE分别占11.73%和9.72%；当100 m风速达到P95及以上时，NNE、N、SSW的占比分别增至37.14%、24.00%和20.10%。这说明高风样本具有不同于全年",
+          "rels": []
+        },
+        {
+          "index": 358,
+          "text": "",
+          "rels": []
+        },
+        {
+          "index": 359,
+          "text": "图3-4(a)  ERA5 10—100 m逐时风切变指数分布",
+          "rels": []
+        },
+        {
+          "index": 360,
+          "text": "",
+          "rels": []
+        },
+        {
+          "index": 361,
+          "text": "图3-4(b)  160 m风速外推与项目公开值交叉核查",
+          "rels": []
+        },
+        {
+          "index": 362,
+          "text": "图3-4与表3-4显示，在U10、U100均不低于0.5 m/s的180768个有效诊断时次中，逐时风切变指数α的P25、P50和P75分别为0.118、0.199和0.297。对全部184080 h逐时外推，160 m长期平均风速为4.7",
+          "rels": []
+        },
+        {
+          "index": 363,
+          "text": "",
+          "rels": []
+        }
+      ],
+      "reason": "no unique adjacent image relationship"
+    },
+    {
+      "id": "b0354",
+      "caption": "图3-5  ERA5年最大风速GEV返回水平敏感性",
+      "word_body_index": 364,
+      "status": "HOLD",
+      "source_caption": "图3-5  ERA5年最大风速GEV返回水平敏感性",
+      "nearby": [
+        {
+          "index": 360,
+          "text": "",
+          "rels": []
+        },
+        {
+          "index": 361,
+          "text": "图3-4(b)  160 m风速外推与项目公开值交叉核查",
+          "rels": []
+        },
+        {
+          "index": 362,
+          "text": "图3-4与表3-4显示，在U10、U100均不低于0.5 m/s的180768个有效诊断时次中，逐时风切变指数α的P25、P50和P75分别为0.118、0.199和0.297。对全部184080 h逐时外推，160 m长期平均风速为4.7",
+          "rels": []
+        },
+        {
+          "index": 363,
+          "text": "",
+          "rels": []
+        },
+        {
+          "index": 364,
+          "text": "图3-5  ERA5年最大风速GEV返回水平敏感性",
+          "rels": []
+        },
+        {
+          "index": 365,
+          "text": "图3-5给出的GEV拟合重现期风速基于21个年度最大值样本；20、50和100年的对应估计分别约为16.91、17.49和17.86 m/s。由于样本期较短且为ERA5逐小时风速，该结果仅用于比较重现期假设的影响，不直接用于IEC风机设计等",
+          "rels": []
+        },
+        {
+          "index": 366,
+          "text": "项目结果解释长期均值比α（仅交叉核查）0.2156按10 m与100 m长期均值比反算；不作为正式URef高度换算逐时α有效样本180768 hV10、V100均≥0.5 m/s；用于展示时变风切变逐时α P05 / P25 / P50 /",
+          "rels": []
+        }
+      ],
+      "reason": "no unique adjacent image relationship"
+    },
+    {
+      "id": "b0384",
+      "caption": "图3-6  Abaqus ODB提取的低阶弯曲模态候选结果",
+      "word_body_index": 529,
+      "status": "HOLD",
+      "source_caption": "图3-6  Abaqus ODB提取的低阶弯曲模态候选结果",
+      "nearby": [
+        {
+          "index": 525,
+          "text": "对每个已识别的全局塔架弯曲模态，以归一化高度x=z/H建立满足固定塔底条件的六阶多项式，常数项与一次项取0，并按塔顶位移归一化。",
+          "rels": []
+        },
+        {
+          "index": 526,
+          "text": "",
+          "rels": []
+        },
+        {
+          "index": 527,
+          "text": "拟合得到TwFAM1Sh(2-6)、TwFAM2Sh(2-6)、TwSSM1Sh(2-6)和TwSSM2Sh(2-6)，同时报告RMSE、最大绝对偏差、R²及拟合曲线与Abaqus采样振型对比。FAST官方[14]给出此类塔架模态多项式输入",
+          "rels": []
+        },
+        {
+          "index": 528,
+          "text": "",
+          "rels": []
+        },
+        {
+          "index": 529,
+          "text": "图3-6  Abaqus ODB提取的低阶弯曲模态候选结果",
+          "rels": []
+        },
+        {
+          "index": 530,
+          "text": "图3-6给出Abaqus结果提取的低阶弯曲模态及其塔高分布。OpenFAST塔架降阶采用与第二章正式空间RNA模型一致的质量、刚度和模态基线，并通过频率、振型及后续动力响应交叉比较评价降阶误差，不通过人为修改EI或模态系数追逐历史频率。",
+          "rels": []
+        },
+        {
+          "index": 531,
+          "text": "3.4.5 DTU 10 MW上部机组参数继承与158 m混塔整机组合",
+          "rels": []
+        }
+      ],
+      "reason": "no unique adjacent image relationship"
+    },
+    {
+      "id": "b0401",
+      "caption": "图3-7  Abaqus与OpenFAST RNA双6×6空间动力身份验证流程",
+      "word_body_index": 546,
+      "status": "HOLD",
+      "source_caption": "图3-7  Abaqus与OpenFAST RNA双6×6空间动力身份验证流程",
+      "nearby": [
+        {
+          "index": 542,
+          "text": "",
+          "rels": []
+        },
+        {
+          "index": 543,
+          "text": "",
+          "rels": []
+        },
+        {
+          "index": 544,
+          "text": "矩阵左上3×3块记录三向平动质量，右下3×3块记录关于参考点T的完整转动惯量，两个平动—转动耦合块则携带质心相对于参考点的空间偏置信息。也就是说，一个M6同时保存总质量、三维质心偏置和完整转动惯量，比单独比较RNA总质量更严格。[23,24",
+          "rels": []
+        },
+        {
+          "index": 545,
+          "text": "",
+          "rels": []
+        },
+        {
+          "index": 546,
+          "text": "图3-7  Abaqus与OpenFAST RNA双6×6空间动力身份验证流程",
+          "rels": []
+        },
+        {
+          "index": 547,
+          "text": "（1）Abaqus侧RNA空间质量属性",
+          "rels": []
+        },
+        {
+          "index": 548,
+          "text": "Abaqus端首先从正式RNA基准模型获得质量属性。基准ODB得到RNA总质量676723.995578 kg，其Abaqus全局坐标质心为(0, 160.296599, -0.649270) m。生产模型拓扑复核表明，CSEG_31-1.",
+          "rels": []
+        }
+      ],
+      "reason": "no unique adjacent image relationship"
+    },
+    {
+      "id": "b0462",
+      "caption": "图3-9  五个代表ROSCO工作点的OpenFAST运行Campbell阶段结果",
+      "word_body_index": 607,
+      "status": "HOLD",
+      "source_caption": "图3-9  五个代表ROSCO工作点的OpenFAST运行Campbell阶段结果",
+      "nearby": [
+        {
+          "index": 603,
+          "text": "动力一致性验证完成后，第三章进入运行状态Campbell频率分离检查。其目的不是再次计算风荷载，而是回答“风机按ROSCO真实工作点旋转时，塔架/整机模态是否接近转子周期激励”。DTU 10 MW的正常转速范围约为6.0～9.6 r/min",
+          "rels": []
+        },
+        {
+          "index": 604,
+          "text": "OpenFAST运行模态的标准处理链为“运行工作点→周期稳态→多方位线性化→MBC→特征值分析”。Johnson等[107]在OpenFAST线性化验证中明确给出：对每个转速或风速工作点，先推进非线性时域解直到启动瞬态衰减并达到周期稳态；随",
+          "rels": []
+        },
+        {
+          "index": 605,
+          "text": "在上述运行工作点与多方位线性化结果基础上，采用OpenFAST官方Toolbox中的多叶片坐标变换（MBC）完成五个代表工况的运行模态识别。8、11、12、14和20 m/s下，FA1频率分别为0.16285、0.16487、0.16446",
+          "rels": []
+        },
+        {
+          "index": 606,
+          "text": "",
+          "rels": []
+        },
+        {
+          "index": 607,
+          "text": "图3-9  五个代表ROSCO工作点的OpenFAST运行Campbell阶段结果",
+          "rels": []
+        },
+        {
+          "index": 608,
+          "text": "ElastoDyn中的TwrFADmp(1/2)和TwrSSDmp(1/2)分别表示塔架前后向与侧向第一、第二弯曲模态的结构阻尼百分比。历史等效连接模型计算所得阻尼为ξSS1=4.6341%、ξFA1=4.6350%、ξSS2=5.5282",
+          "rels": []
+        },
+        {
+          "index": 609,
+          "text": "表3-9  11.4 m/s同风场对象化阻尼代表性回归结果",
+          "rels": []
+        }
+      ],
+      "reason": "no unique adjacent image relationship"
+    },
+    {
+      "id": "b0541",
+      "caption": "图3-10 多体柔性RNA与混合塔架分区动力学模型示意",
+      "word_body_index": 684,
+      "status": "HOLD",
+      "source_caption": "图3-10 多体柔性RNA与混合塔架分区动力学模型示意",
+      "nearby": [
+        {
+          "index": 680,
+          "text": "六seed组统计显示，TwrBsMyt在U_SITE、U_RATED和U_HIST下ETM相对NTM平均DEL分别提高129.17%、47.18%和32.76%；TwrBsMxt分别提高58.05%、64.50%和31.06%。全72条记录",
+          "rels": []
+        },
+        {
+          "index": 681,
+          "text": "ASTM E1049-85(2017)[127]提供循环计数定义；Guma等[125]明确采用rainflow识别循环范围/均值并以统一N_eq开展DEL比较；Huang等[65]针对钢—混混塔钢塔段给出logN_s=13.9−4logΔS",
+          "rels": []
+        },
+        {
+          "index": 682,
+          "text": "3.6 DTU 10 MW柔性RNA多体动力学模型",
+          "rels": []
+        },
+        {
+          "index": 683,
+          "text": "",
+          "rels": []
+        },
+        {
+          "index": 684,
+          "text": "图3-10 多体柔性RNA与混合塔架分区动力学模型示意",
+          "rels": []
+        },
+        {
+          "index": 685,
+          "text": "图3-10表示多体柔性RNA与精细混合塔架的分区建模方式。上部子系统以叶片运动、RNA质量惯量及塔顶连接自由度为主要变量，下部子系统描述塔架变形与连接受力；两者通过塔顶运动和六分量作用建立理论接口。本课题所归档的OpenFAST运行、RNA",
+          "rels": []
+        },
+        {
+          "index": 686,
+          "text": "3.6.1 RNA多体系统拓扑、柔性叶片及结构V&V",
+          "rels": []
+        }
+      ],
+      "reason": "no unique adjacent image relationship"
+    },
+    {
+      "id": "b0718",
+      "caption": "图4-1  TwrBsMyt在三个URef下的六seed平均load-DEL及离散性",
+      "word_body_index": 863,
+      "status": "HOLD",
+      "source_caption": "图4-1  TwrBsMyt在三个URef下的六seed平均load-DEL及离散性",
+      "nearby": [
+        {
+          "index": 859,
+          "text": "表4-2  load-DEL通道控制工况",
+          "rels": []
+        },
+        {
+          "index": 860,
+          "text": "通道控制 caseURef/(m·s⁻¹)风型DEL/(MN·m)最大范围/(MN·m)MxU19.202-ETM-S0219.202ETM9.71543194.909MyU11.4-ETM-S0311.400ETM28.177010367",
+          "rels": []
+        },
+        {
+          "index": 861,
+          "text": "全72条DEL记录中，TwrBsMyt控制case为U11p4_ETM_S03，DEL=28.177010 MN·m；TwrBsMxt控制case为U19p202140_ETM_S02，DEL=9.715431 MN·m。前者与极值控制U0",
+          "rels": []
+        },
+        {
+          "index": 862,
+          "text": "",
+          "rels": []
+        },
+        {
+          "index": 863,
+          "text": "图4-1  TwrBsMyt在三个URef下的六seed平均load-DEL及离散性",
+          "rels": []
+        },
+        {
+          "index": 864,
+          "text": "图4-1进一步表明，主弯矩方向load-DEL在11.4 m/s附近达到最大组均值，随后在19.2 m/s下降；这一规律与控制通道中额定以上桨距升高、转子推力降低相一致。误差棒为6个随机seed的样本标准差，只表示当前固定随机实现的离散性。",
+          "rels": []
+        },
+        {
+          "index": 865,
+          "text": "",
+          "rels": []
+        }
+      ],
+      "reason": "no unique adjacent image relationship"
+    },
+    {
+      "id": "b0721",
+      "caption": "图4-2  11.4 m/s、S03条件下NTM与ETM的TwrBsMyt rainflow范围分布",
+      "word_body_index": 866,
+      "status": "HOLD",
+      "source_caption": "图4-2  11.4 m/s、S03条件下NTM与ETM的TwrBsMyt rainflow范围分布",
+      "nearby": [
+        {
+          "index": 862,
+          "text": "",
+          "rels": []
+        },
+        {
+          "index": 863,
+          "text": "图4-1  TwrBsMyt在三个URef下的六seed平均load-DEL及离散性",
+          "rels": []
+        },
+        {
+          "index": 864,
+          "text": "图4-1进一步表明，主弯矩方向load-DEL在11.4 m/s附近达到最大组均值，随后在19.2 m/s下降；这一规律与控制通道中额定以上桨距升高、转子推力降低相一致。误差棒为6个随机seed的样本标准差，只表示当前固定随机实现的离散性。",
+          "rels": []
+        },
+        {
+          "index": 865,
+          "text": "",
+          "rels": []
+        },
+        {
+          "index": 866,
+          "text": "图4-2  11.4 m/s、S03条件下NTM与ETM的TwrBsMyt rainflow范围分布",
+          "rels": []
+        },
+        {
+          "index": 867,
+          "text": "图4-2采用相同URef和相同seed对比NTM/ETM。ETM不仅在低—中幅循环区改变循环分布，还出现更大的高幅弯矩循环；由于DEL对循环范围按m次方加权，少量高幅循环会对最终load-DEL产生显著贡献。这一机理与Guma等[125]关",
+          "rels": []
+        },
+        {
+          "index": 868,
+          "text": "4.9 薄弱部位及控制机制识别",
+          "rels": []
+        }
+      ],
+      "reason": "no unique adjacent image relationship"
+    }
+  ]
+}
