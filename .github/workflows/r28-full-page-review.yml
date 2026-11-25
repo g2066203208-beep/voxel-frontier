@@ -15,7 +15,8 @@ jobs:
         with:
           ref: main
           sparse-checkout: |
-            public/thesis-studio
+            public/thesis-studio/editor-data
+            public/thesis-studio/wind-figures/blade-aero/r27
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -47,7 +48,7 @@ jobs:
           style='''@page{size:A4;margin:0}*{box-sizing:border-box}body{margin:0;background:#eee;color:#111;font-family:"Noto Serif CJK SC",serif}.sheet{width:210mm;height:297mm;background:white;padding:20mm 22mm 17mm;margin:0 auto;position:relative;overflow:hidden;font-size:12pt;line-height:1.6}.head{font-size:10pt;text-align:center;border-bottom:1px solid #444;padding-bottom:3mm;margin-bottom:5mm}.text{text-indent:2em;text-align:justify;margin:0 0 3mm}.caption,figcaption{font-size:10.5pt;text-align:center;line-height:1.45;margin:2mm 0}figure{margin:3mm 0}img{display:block;max-width:100%;max-height:112mm;margin:auto}table{border-collapse:collapse;width:100%;font-size:9pt;line-height:1.35;border-top:1.5px solid;border-bottom:1.5px solid}th,td{padding:2mm 1mm;text-align:center;font-weight:normal}th{border-bottom:1px solid}footer{position:absolute;bottom:10mm;left:0;right:0;text-align:center;font-size:9pt;color:#555}'''
           for key,ids in groups.items():
               body=''.join(render(blocks[k]) for k in ids)
-              doc='<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>第三章 A4审阅页</title><style>'+style+'</style><article class="sheet"><header class="head">第三章　风荷载与结构动力分析</header><main>'+body+'</main><footer>V8-R28 · 第三章 A4审阅页（未定正式页码）</footer></article></html>'
+              doc='<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>第三章 A4审阅页</title><style>'+style+'</style><article class="sheet"><header class="head">'+esc(next(c['title'] for c in j['chapters'] if c['id']=='03'))+'</header><main>'+body+'</main><footer>V8-R28 · 第三章 A4审阅页（未定正式页码）</footer></article></html>'
               (out/(key+'-ours.html')).write_text(doc)
           with sync_playwright() as p:
               browser=p.chromium.launch(args=['--no-sandbox'])
@@ -65,7 +66,7 @@ jobs:
               return urllib.request.urlopen(req,timeout=25).read()
           refs={
           'span':('Figure 6.','10.3390/en13215753',['https://backend.orbit.dtu.dk/ws/portalfiles/portal/235339219/energies_13_05753.pdf','https://mdpi-res.com/energies/energies-13-05753/article_deploy/energies-13-05753.pdf']),
-          'wrench':('Figure A4.','10.3390/jmse14161489',['https://mdpi-res.com/jmse/jmse-14-01489/article_deploy/jmse-14-01489.pdf','https://www.mdpi.com/2077-1312/14/16/1489/pdf'])}
+          'wrench':('Figure A4.','10.3390/jmse14161489',['https://mdpi-res.com/jmse/jmse-14-01489/article_deploy/jmse-14-01489.pdf','https://mdpi-res.com/d_attachment/jmse/jmse-14-01489/article_deploy/jmse-14-01489.pdf','https://www.mdpi.com/2077-1312/14/16/1489/pdf'])}
           try:
               meta=json.loads(get('https://api.figshare.com/v2/articles/34552773'))
               assert 'A Coupled Aero-Hydro-Elastic-Mooring' in meta['title']
