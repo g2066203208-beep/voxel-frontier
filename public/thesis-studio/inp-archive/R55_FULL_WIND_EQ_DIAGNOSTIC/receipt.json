@@ -1,0 +1,150 @@
+{
+  "status": "NOMINAL_ROTOR_PLUS_TOWER_WIND_EQ_STATIC_INPUT_AUDIT",
+  "native": "NOT_RUN",
+  "production": "HOLD",
+  "reference_point_m": [
+    0.0,
+    160.0,
+    0.0
+  ],
+  "nominal_hub_m": [
+    0.0,
+    161.36880577351,
+    -7.0729823564514
+  ],
+  "lever_m": [
+    0.0,
+    1.3688057735099903,
+    -7.0729823564514
+  ],
+  "cases": [
+    {
+      "case": "NTM",
+      "archive": "R55_NTM_WIND_EQ_DIAGNOSTIC.zip",
+      "bytes": 25166664,
+      "sha256": "461569d8f38f98d66efcd30020b6eae7eaadb519bf0f6457461cfefaf22fc459",
+      "origin_moment_residual_Nm": 5.960464477539063e-08,
+      "peak_abs_wrench_N_Nm": [
+        109846.692388,
+        230128.443537,
+        1729850.052016,
+        17924002.010209788,
+        12829681.204644812,
+        15884852.550091373
+      ],
+      "wind_amplitudes": 150,
+      "wind_cload_blocks": 150,
+      "entry_decks": [
+        {
+          "name": "WIND_RNA_PILOT.inp",
+          "duration_s": 20.0,
+          "max_increment_s": 0.025,
+          "minimum_increment_count": 800,
+          "EQ": false,
+          "single_inp_bytes": 74576309,
+          "single_inp_sha256": "894ab3cc884d1c12fb8b5a718a885d2631b55d297e84025e63fe863ad29c4f58"
+        },
+        {
+          "name": "WIND_RNA_FULL.inp",
+          "duration_s": 599.95,
+          "max_increment_s": 0.025,
+          "minimum_increment_count": 23998,
+          "EQ": false,
+          "single_inp_bytes": 74576309,
+          "single_inp_sha256": "e1687046b10aaf96f9da21e12b8429f9b803180d545f4c25b9d9c96966e4f157"
+        },
+        {
+          "name": "WIND_RNA_EQ01.inp",
+          "duration_s": 229.995,
+          "max_increment_s": 0.005,
+          "minimum_increment_count": 45999,
+          "EQ": true,
+          "single_inp_bytes": 77531074,
+          "single_inp_sha256": "7bd095b325a60b66b8d4f3da3827471c1f3dd797ceb52996c1177e4ff0f2b03d"
+        }
+      ],
+      "files": {
+        "assembly_sets.inc": "abc1656ef53102db21626bef9bbda82f9b25733cffa3575a515c9e71fdb06662",
+        "wind_amplitudes.inc": "c2d6de40b729f8595933ab6bcb36dafd39572857aeb94e791e9415b6228ae39a",
+        "cload_aligned.inc": "cee535750e95ea4612e5971433715ac5a6e3718df3206ba7a1a60f3f20e2f26a",
+        "eq01_offset_amplitudes.inc": "028e628fcc75702eba7b9a64d1b3d118fc5d80570bd4cd40147deaa578a3f385",
+        "node_map.csv": "5b35a8aff55116ff058ed25e0cedd5f8599ad7425da3ecac82a71283c96b25d0",
+        "README.txt": "68c6d2681c5a3ee953652f812ef49cdd8d89bd08343b1e0e2797cad25235d461",
+        "WIND_RNA_PILOT.inp": "08baf1651813b523ccf9fe6bef985a5d09bbb638403ac0b550b59d3578e7b483",
+        "WIND_RNA_FULL.inp": "3a00dabdc7dfdcc8c3f3e3cdffc15a2fa0357919af2145fef4549cdc82762efd",
+        "WIND_RNA_EQ01.inp": "492c705e2bdb0e04a9e21fb6293a2edf98febe2170a08c8590f3773671c1b432",
+        "make_single_inp.py": "a67707d18e7f48b3f73c6655354d570a50fedc06168d0ec05c67354787e97dd3"
+      }
+    },
+    {
+      "case": "1ETM",
+      "archive": "R55_1ETM_WIND_EQ_DIAGNOSTIC.zip",
+      "bytes": 25347482,
+      "sha256": "f074d5dd48b3585910796fca57d7828076668504cc857f3b798f422bc6bb2ede",
+      "origin_moment_residual_Nm": 5.960464477539063e-08,
+      "peak_abs_wrench_N_Nm": [
+        153205.290522,
+        269856.4062229,
+        1945306.667906,
+        24937981.91510681,
+        19082968.339011442,
+        18473724.04474241
+      ],
+      "wind_amplitudes": 150,
+      "wind_cload_blocks": 150,
+      "entry_decks": [
+        {
+          "name": "WIND_RNA_PILOT.inp",
+          "duration_s": 20.0,
+          "max_increment_s": 0.025,
+          "minimum_increment_count": 800,
+          "EQ": false,
+          "single_inp_bytes": 74581283,
+          "single_inp_sha256": "d1100ee3df9bcae16a3e42b946264c24b9d7c2655550f7da4bb714d48805f9d8"
+        },
+        {
+          "name": "WIND_RNA_FULL.inp",
+          "duration_s": 599.95,
+          "max_increment_s": 0.025,
+          "minimum_increment_count": 23998,
+          "EQ": false,
+          "single_inp_bytes": 74581283,
+          "single_inp_sha256": "8e6a2783e47790a3ca585e1d1c8cdf36ab265e25294c767edb13a4c9112b4b0d"
+        },
+        {
+          "name": "WIND_RNA_EQ01.inp",
+          "duration_s": 229.995,
+          "max_increment_s": 0.005,
+          "minimum_increment_count": 45999,
+          "EQ": true,
+          "single_inp_bytes": 77536048,
+          "single_inp_sha256": "d03192c419233d8e898b4814459d2ab9f8b63f59a4aca3ec2b45381ebb180f17"
+        }
+      ],
+      "files": {
+        "assembly_sets.inc": "abc1656ef53102db21626bef9bbda82f9b25733cffa3575a515c9e71fdb06662",
+        "wind_amplitudes.inc": "bfa7c4dd0b9862162243cfd1847c791f1e5e2adfb82fbe78492e8d9f0baa634a",
+        "cload_aligned.inc": "cee535750e95ea4612e5971433715ac5a6e3718df3206ba7a1a60f3f20e2f26a",
+        "eq01_offset_amplitudes.inc": "028e628fcc75702eba7b9a64d1b3d118fc5d80570bd4cd40147deaa578a3f385",
+        "node_map.csv": "5b35a8aff55116ff058ed25e0cedd5f8599ad7425da3ecac82a71283c96b25d0",
+        "README.txt": "68c6d2681c5a3ee953652f812ef49cdd8d89bd08343b1e0e2797cad25235d461",
+        "WIND_RNA_PILOT.inp": "08baf1651813b523ccf9fe6bef985a5d09bbb638403ac0b550b59d3578e7b483",
+        "WIND_RNA_FULL.inp": "3a00dabdc7dfdcc8c3f3e3cdffc15a2fa0357919af2145fef4549cdc82762efd",
+        "WIND_RNA_EQ01.inp": "492c705e2bdb0e04a9e21fb6293a2edf98febe2170a08c8590f3773671c1b432",
+        "make_single_inp.py": "a67707d18e7f48b3f73c6655354d570a50fedc06168d0ec05c67354787e97dd3"
+      }
+    }
+  ],
+  "limitations": [
+    "Nominal rigid-geometry transfer, not exact moving rotor geometry.",
+    "Rotor aerodynamic resultant on RNA RP; no blade-resolved wind loading or rotor inertia redistribution.",
+    "Tower quasi-steady drag and rotor replay are not fully coupled.",
+    "Existing damping, seismic onset and time increments are diagnostic assumptions.",
+    "No native Abaqus validation."
+  ],
+  "figure_sha256": {
+    "png": "642775407ee85a3fbce3854e8e8dac9528977572ae43eb508568c1176557a6ce",
+    "svg": "65ced815193651558a18b5283d4e20fe99b49be05008aeb418eff484181a8ff3",
+    "pdf": "e012a9e42a7fd9328bded8503c279e31a878be717a7ce74dd7dc65beb8f2dd65"
+  }
+}
