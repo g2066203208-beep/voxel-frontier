@@ -1,0 +1,32 @@
+name: R38 exact cage audit
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/r38-cage-audit.yml','public/thesis-studio/rebar-verification/audit_r38_cage.py']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          sparse-checkout: |
+            public/thesis-studio/inp-archive/REV25_HOOP_COST
+            public/thesis-studio/rebar-verification
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install numpy==1.26.4
+      - run: python public/thesis-studio/rebar-verification/audit_r38_cage.py
+      - run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add -f public/thesis-studio/rebar-verification/r38-exact-cage-audit.json
+          git commit -m "R38 source-locked cage coordinate audit"
+          git fetch --depth=20 origin main
+          git rebase FETCH_HEAD
+          git push origin HEAD:main
