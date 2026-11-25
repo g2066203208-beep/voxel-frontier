@@ -1,0 +1,39 @@
+{
+  "status": "SHAFT_ALIGNED_TOWER_CLOAD_STATIC_PASS",
+  "native": "NOT_RUN",
+  "production": "HOLD",
+  "source": "Reuse R46 ZIP assembly_sets.inc and amplitudes.inc; replace only cload.inc with this file",
+  "file": "cload_R44_shaft_aligned.inc",
+  "sha256": "b872b041a1efdb0caa97decd7ba7ee8b5433f0777eadc8803b973c1d302617c5",
+  "axis": "X=v,Y=up,Z=u",
+  "cases": [
+    {
+      "case": "NTM",
+      "original_zip_sha256": "b43833eeb24e0d6929f176441be4b6826be02428708428d4bb237a477cdf1ce2",
+      "source_resultant_sha256": "f8b0fe5f6442780ee3f8aa1b58e0c5b9e622e6022a4ab0b0e6256e62bec96774",
+      "samples": 12000,
+      "node_sets": 72,
+      "amplitudes": 144,
+      "max_force_error_N": 3.154127625748515e-09,
+      "max_moment_error_Nm": 0.0015307101421058178,
+      "rotation_force_error_N": 0.0,
+      "rotation_moment_error_Nm": 1.4788167525305251e-12
+    },
+    {
+      "case": "1ETM",
+      "original_zip_sha256": "e4871cdfb3b409ef96ae547cc70a20484d8647fd0baf754b006bfece991cffd7",
+      "source_resultant_sha256": "4696da8433d65f1e208437be0bc05fa170b3c98d8064c5a2f0c485fdf46a22c8",
+      "samples": 12000,
+      "node_sets": 72,
+      "amplitudes": 144,
+      "max_force_error_N": 3.3251126296818256e-09,
+      "max_moment_error_Nm": 0.0021185693331062794,
+      "rotation_force_error_N": 0.0,
+      "rotation_moment_error_Nm": 2.0309187683372295e-12
+    }
+  ],
+  "limits": [
+    "Fixed nominal wind direction aligned with R44; not site surveyed azimuth.",
+    "No rotor loading, no wind or wind-earthquake production step."
+  ]
+}
