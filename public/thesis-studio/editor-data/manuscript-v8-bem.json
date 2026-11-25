@@ -3796,6 +3796,22 @@
           "has_math": false
         },
         {
+          "id": "r38-cover-1",
+          "kind": "text",
+          "style": "Normal",
+          "text": "依据GB/T 50010—2010（2024年版）第8.2.1条，受力钢筋保护层厚度不得小于其公称直径。第1～25节采用Φ50纵筋时，原中心线对应的中截面保护层约37.5 mm。取保护层不小于公称直径并附加5 mm几何余量的候选条件，将内外层纵筋向壁厚中部移动，最大移动量17.50 mm。调整后620个历史控制截面状态重新计算均满足前述条件，最大压应变比和纵筋拉应变比分别为0.8019和0.5728。上述保护层为中截面计算值，尚需核对全高钢筋及最外层钢筋的实际几何。",
+          "has_media": false,
+          "has_math": false
+        },
+        {
+          "id": "r38-cover-2",
+          "kind": "text",
+          "style": "Normal",
+          "text": "根据第8.3.1及8.3.2条，直径大于25 mm的带肋钢筋采用1.10的锚固长度修正系数，不采用直接承受动力荷载构件的超配筋折减。Φ50、Φ40、Φ36纵筋的受拉锚固长度候选值分别为1642、1314、1182 mm。锚固区横向钢筋直径及间距按相应构造条文核查，原第1～30节环筋候选间距超过100 mm。端部实体锚固、全高保护层和实际环筋构造尚需验证。",
+          "has_media": false,
+          "has_math": false
+        },
+        {
           "id": "r34-membrane-3",
           "kind": "text",
           "style": "Normal",
@@ -13931,9 +13947,9 @@
     }
   ],
   "online_revision": {
-    "version": "V8-R37-RESERVED-SECTION",
+    "version": "V8-R38-COVER-ANCHOR",
     "date": "2026-11-25",
-    "scope": "Conditional biaxial section capacity reservation and local diameter candidate; production INP HOLD",
+    "scope": "Midsection cover and anchor-zone screening, conditional recalculation; production INP HOLD",
     "source_gate": "74fb3aee9dfef058b972a3f0e03aa571319c2fe2",
     "source_inp": "cdb719b95b8ce4301011489b4ab8ffc9e73c18bf",
     "wind_manifest": "./wind-figures/core/manifest.json",
@@ -13956,6 +13972,7 @@
     "hoop_sizing": "./rebar-verification/r34-hoop-sizing.json",
     "membrane_coupling": "./rebar-verification/r35-membrane-coupling.json",
     "section_reserve": "./rebar-verification/r36-section-reserve.json",
-    "reserved_section": "./rebar-verification/r37-design-candidate.json"
+    "reserved_section": "./rebar-verification/r37-design-candidate.json",
+    "cover_anchor": "./rebar-verification/r38-cover-anchor.json"
   }
 }
