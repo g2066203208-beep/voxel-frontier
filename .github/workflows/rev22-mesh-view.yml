@@ -1,0 +1,160 @@
+name: REV22 exact mesh visualization
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/rev22-mesh-view.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  view:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          sparse-checkout: |
+            public/thesis-studio/inp-archive/REV22_VALIDATION_KIT
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install numpy==1.26.4 matplotlib==3.9.2 pillow==10.4.0
+      - name: Render exact assembled input mesh
+        run: |
+          cat > /tmp/rev22view.py <<'PY'
+          import numpy as np, matplotlib
+          matplotlib.use('Agg')
+          import matplotlib.pyplot as plt
+          from matplotlib.collections import PolyCollection,LineCollection
+          from matplotlib.patches import Patch
+          from pathlib import Path
+          import hashlib,json,re,collections
+          root=Path('public/thesis-studio/inp-archive/REV22_VALIDATION_KIT')
+          out=root/'mesh-view';out.mkdir(exist_ok=True)
+          raw=(root/'HE_REV22_FULL_ASSEMBLY_EQ005.inp').read_bytes()
+          h=hashlib.sha256(raw).hexdigest();assert h=='e84851887735305c6387ca38a972bebd97ba9cdff7baa7735c0ed89cecf925b5'
+          parts={};instances=[];part=None;inst=None;mode=None;typ=None
+          for l in raw.decode('ascii').splitlines():
+              s=l.strip()
+              if not s or s.startswith('**'):continue
+              if s.startswith('*'):
+                  k=s.split(',')[0].lower();p=dict((a.strip().lower(),b.strip()) for a,b in re.findall(r'([^,=]+)=([^,]+)',s))
+                  mode=k
+                  if k=='*part':part=p['name'];parts[part]={'nodes':{},'els':[]}
+                  elif k=='*end part':part=None
+                  elif k=='*instance':inst=[p['name'],p['part'],[]];instances.append(inst)
+                  elif k=='*end instance':inst=None
+                  elif k=='*element':typ=p['type'].upper()
+                  continue
+              if inst is not None and mode=='*instance':inst[2].append([float(v) for v in s.split(',') if v.strip()])
+              if part is not None and mode in ('*node','*element'):
+                  v=[x.strip() for x in s.split(',') if x.strip()]
+                  if mode=='*node':
+                      assert len(v)==4
+                      parts[part]['nodes'][int(v[0])]=np.array(list(map(float,v[1:])))
+                  else:parts[part]['els'].append((int(v[0]),typ,list(map(int,v[1:]))))
+          assert len(parts)==len(instances)==100
+          palette={'CSEG':'#9cabb2','SSEG':'#477fa5','FLANGE':'#d69d45','RBLONG':'#bf5b36','RHOOP':'#398c85','PT':'#7359a3','RNA':'#b63a42'}
+          faces_idx=[[0,1,2,3],[4,5,6,7],[0,1,5,4],[1,2,6,5],[2,3,7,6],[3,0,4,7]]
+          objects=[]
+          for name,p,trans in instances:
+              assert len(trans)<=1 and (not trans or len(trans[0])==3),trans
+              shift=np.array(trans[0] if trans else [0,0,0]);nodes={n:q+shift for n,q in parts[p]['nodes'].items()}
+              face={};edges=[];points=[];counts=collections.Counter()
+              for e,t,c in parts[p]['els']:
+                  counts[t]+=1
+                  assert all(n in nodes for n in c)
+                  if t.startswith('C3D8'):
+                      assert len(c)==8
+                      for ix in faces_idx:
+                          f=tuple(c[i] for i in ix);key=tuple(sorted(f))
+                          if key in face:face[key][1]+=1
+                          else:face[key]=[f,1]
+                  elif t in ('B31','T3D2'):
+                      assert len(c)==2
+                      edges.append([nodes[n] for n in c])
+                  elif t in ('MASS','ROTARYI'):
+                      assert len(c)==1
+                      if t=='MASS':points.append(nodes[c[0]])
+                  else:raise ValueError(t)
+              f=np.array([[nodes[n] for n in q] for q,num in face.values() if num==1]).reshape(-1,4,3)
+              objects.append(dict(name=name,part=p,group=p.split('_')[0],faces=f,edges=np.asarray(edges).reshape(-1,2,3),points=np.asarray(points).reshape(-1,3),nodes=len(nodes),elements=sum(counts.values()),types=dict(counts)))
+          plt.rcParams.update({'font.family':'DejaVu Sans','font.size':10,'axes.spines.top':False,'axes.spines.right':False})
+          def view(ax,objs,az=25,el=8,limits=None,mesh=False,alpha=1):
+              # global y is height. Orthographic camera; horizontal x/z, up projected global y.
+              a=np.deg2rad(az);b=np.deg2rad(el)
+              right=np.array([np.cos(a),0,-np.sin(a)])
+              depth=np.array([np.sin(a)*np.cos(b),np.sin(b),np.cos(a)*np.cos(b)])
+              up=np.cross(depth,right)
+              basis=np.stack([right,up,depth],axis=1)
+              f=[];colors=[];ds=[];allxy=[]
+              for o in objs:
+                  c=palette[o['group']]
+                  if len(o['faces']):
+                      F=o['faces']@basis
+                      normal=np.cross(o['faces'][:,1]-o['faces'][:,0],o['faces'][:,2]-o['faces'][:,0])
+                      normal/=np.maximum(1e-20,np.linalg.norm(normal,axis=1)[:,None])
+                      lum=.7+.3*np.abs(normal@depth)
+                      rgb=np.array(matplotlib.colors.to_rgb(c))
+                      f.extend(F[:,:,:2]);ds.extend(F[:,:,2].mean(axis=1))
+                      colors.extend(np.column_stack([lum[:,None]*rgb[None,:],np.full(len(F),alpha)]))
+                      allxy.append(F[:,:,:2].reshape(-1,2))
+              if f:
+                  idx=np.argsort(ds);ax.add_collection(PolyCollection(np.asarray(f)[idx],facecolors=np.asarray(colors)[idx],edgecolors='#34434a' if mesh else 'none',linewidths=.20 if mesh else 0))
+              for o in objs:
+                  c=palette[o['group']]
+                  if len(o['edges']):
+                      q=o['edges']@basis
+                      ax.add_collection(LineCollection(q[:,:,:2],colors=c,linewidths=1.5 if o['group']=='RNA' else .45 if mesh else .35,alpha=.9))
+                      allxy.append(q[:,:,:2].reshape(-1,2))
+                  if len(o['points']):
+                      q=o['points']@basis;ax.scatter(q[:,0],q[:,1],s=7,c=c,linewidths=0,zorder=4);allxy.append(q[:,:2])
+              p=np.concatenate(allxy)
+              if limits:ax.set_xlim(limits[0]);ax.set_ylim(limits[1])
+              else:
+                  lo=p.min(0);hi=p.max(0);pad=np.maximum((hi-lo)*.065,.15);ax.set_xlim(lo[0]-pad[0],hi[0]+pad[0]);ax.set_ylim(lo[1]-pad[1],hi[1]+pad[1])
+              ax.set_aspect('equal');ax.set_xlabel('Projected horizontal (m)');ax.set_ylabel('Projected vertical (m)');ax.grid(alpha=.15)
+          def subset(groups):return [o for o in objects if o['group'] in groups]
+          def named(names):return [o for o in objects if o['part'] in names]
+          def save(fig,stem):
+              fig.savefig(out/(stem+'.jpg'),dpi=170,pil_kwargs={'quality':93},bbox_inches='tight',facecolor='white')
+              plt.close(fig)
+          solid=subset(['CSEG','SSEG','FLANGE','RNA'])
+          fig,axs=plt.subplots(1,2,figsize=(12,8),layout='constrained')
+          view(axs[0],solid,0,0,mesh=True);axs[0].set_title('(a) Full assembly: view along global Z')
+          view(axs[1],solid,65,8,mesh=True);axs[1].set_title('(b) Orthographic oblique view')
+          fig.suptitle('REV22 | Actual INP mesh and RNA beam/mass representation',fontsize=15)
+          fig.legend(handles=[Patch(facecolor=palette[k],label=v) for k,v in [('CSEG','Concrete segments'),('SSEG','Steel segments'),('FLANGE','Flange'),('RNA','RNA beams and mass nodes')]],loc='outside lower center',ncol=4)
+          save(fig,'01-full-assembly')
+          fig,axs=plt.subplots(1,2,figsize=(11,8),layout='constrained')
+          view(axs[0],subset(['RBLONG','RHOOP','PT']),35,0,mesh=False);axs[0].set_title('(a) All reinforcement and prestressing')
+          view(axs[1],subset(['PT']),35,0,mesh=False);axs[1].set_title('(b) 36 prestressing truss elements')
+          fig.suptitle('REV22 | Internal load-bearing mesh (tower solids hidden)',fontsize=15)
+          fig.legend(handles=[Patch(facecolor=palette[k],label=v) for k,v in [('RBLONG','Longitudinal bars'),('RHOOP','Hoop reinforcement'),('PT','Prestressing strands')]],loc='outside lower center',ncol=3)
+          save(fig,'02-internal-reinforcement')
+          fig,axs=plt.subplots(1,3,figsize=(13,5),layout='constrained')
+          for ax,n,t in zip(axs,[['CSEG_01'],['RBLONG_01','RHOOP_01'],['FLANGE_SOLID']],['(a) Concrete segment 01','(b) Segment 01 rebar','(c) Steel transition flange']):
+              view(ax,named(n),35,25,mesh=True);ax.set_title(t)
+          fig.suptitle('REV22 | Actual individual component meshes',fontsize=15)
+          save(fig,'03-part-detail')
+          fig,axs=plt.subplots(1,2,figsize=(12,6),layout='constrained')
+          for ax,az,t in zip(axs,[0,80],['(a) Along global Z','(b) Oblique']):
+              view(ax,subset(['RNA']),az,0,mesh=True);ax.set_title(t)
+          fig.suptitle('REV22 | RNA: 150 B31 beams, 155 mass points and 155 rotary inertia elements',fontsize=13)
+          save(fig,'04-rna-detail')
+          report={'source_sha256':h,'source':'HE_REV22_FULL_ASSEMBLY_EQ005.inp','parts':len(parts),'instances':len(instances),'instance_transform':'all translation-only, applied exactly','nodes_in_parts':sum(o['nodes'] for o in objects),'elements_in_parts':sum(o['elements'] for o in objects),'assembly_reference_node_not_drawn':1,'method':'Actual external C3D8 face extraction; exact B31/T3D2 endpoints; MASS nodes as markers; ROTARYI no separate geometry; no deformation, no geometry invented. Full assembly hides reinforcement for legibility. Orthographic projections, not Abaqus screenshots.','images':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(out.glob('*.jpg'))},'objects':[{k:o[k] for k in ('name','part','nodes','elements','types')} for o in objects]}
+          (out/'receipt.json').write_text(json.dumps(report,indent=2))
+          (out/'index.html').write_text('<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>REV22 实际网格展示</title><style>body{font:16px/1.6 sans-serif;max-width:1250px;margin:32px auto;padding:0 20px}img{width:100%;height:auto;border:1px solid #ddd}a{color:#156080}</style><a href="../../">返回INP档案</a><h1>REV22 实际网格展示</h1><p>读取100个Part/Instance的原始节点与单元连接，应用真实装配平移；不是CAE截图，无变形或虚构实体。<a href="receipt.json">核验收据</a></p>'+''.join('<figure><a href="'+p.name+'"><img src="'+p.name+'"></a></figure>' for p in sorted(out.glob('*.jpg'))))
+          print(json.dumps({k:v for k,v in report.items() if k!='objects'},indent=2))
+          
+          PY
+          python /tmp/rev22view.py
+      - name: Save actual mesh views
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add public/thesis-studio/inp-archive/REV22_VALIDATION_KIT/mesh-view
+          git commit -m "REV22 visualize actual input mesh, assembled positions and internal parts"
+          git fetch --depth=20 origin main
+          git rebase FETCH_HEAD
+          git push origin HEAD:main
