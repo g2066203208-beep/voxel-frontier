@@ -1,0 +1,294 @@
+{
+  "source_blob": "9b26cb72a3a89fafea35d82ebfe4efd795765297",
+  "layout_blob": "a8c44aa8499fc4d605c00762c9d8f13664130c2f",
+  "summary": {
+    "segments": 31,
+    "min_long_cover_margin_mm": 11.25844152558254,
+    "min_hoop_cover_mm": 39.23338115952959,
+    "min_bar_hoop_clearance_mm": 0.9992262917418877,
+    "clearance_negative": [],
+    "max_phase_difference_rad": 5.809951120205881e-8,
+    "pairs": 2039680
+  },
+  "rows": [
+    {
+      "segment": "CSEG_01",
+      "long_cover_3d_mm": 64.07462459338697,
+      "hoop_cover_3d_mm": 47.14683371275723,
+      "min_bar_hoop_clearance_mm": 0.9999654488178038,
+      "phase_difference_rad": 3.782083002334957e-8,
+      "checked_local_segment_pairs": 82080,
+      "scope": "actual source face-plane geometry, 48-sided candidate hoops, nearest five angular chords, physical bar radii; end face covers and tie hooks not included"
+    },
+    {
+      "segment": "CSEG_02",
+      "long_cover_3d_mm": 63.90341952811514,
+      "hoop_cover_3d_mm": 46.9756596285399,
+      "min_bar_hoop_clearance_mm": 0.9999649724731512,
+      "phase_difference_rad": 5.7548187104572435e-8,
+      "checked_local_segment_pairs": 82080,
+      "scope": "actual source face-plane geometry, 48-sided candidate hoops, nearest five angular chords, physical bar radii; end face covers and tie hooks not included"
+    },
+    {
+      "segment": "CSEG_03",
+      "long_cover_3d_mm": 63.732191470612946,
+      "hoop_cover_3d_mm": 46.80432858204139,
+      "min_bar_hoop_clearance_mm": 0.9999656390916769,
+      "phase_difference_rad": 3.591649244683026e-8,
+      "checked_local_segment_pairs": 82080,
+      "scope": "actual source face-plane geometry, 48-sided candidate hoops, nearest five angular chords, physical bar radii; end face covers and tie hooks not included"
+    },
+    {
+      "segment": "CSEG_04",
+      "long_cover_3d_mm": 63.566339332076325,
+      "hoop_cover_3d_mm": 46.63864788991066,
+      "min_bar_hoop_clearance_mm": 0.9999676435814351,
+      "phase_difference_rad": 2.3519973080254886e-8,
+      "checked_local_segment_pairs": 82080,
+      "scope": "actual source face-plane geometry, 48-sided candidate hoops, nearest five angular chords, physical bar radii; end face covers and tie hooks not included"
+    },
+    {
+      "segment": "CSEG_05",
+      "long_cover_3d_mm": 63.384182900995455,
+      "hoop_cover_3d_mm": 46.45650648427702,
+      "min_bar_hoop_clearance_mm": 0.999968241500099,
+      "phase_difference_rad": 4.842492495882311e-8,
+      "checked_local_segment_pairs": 72960,
+      "scope": "actual source face-plane geometry, 48-sided candidate hoops, nearest five angular chords, physical bar radii; end face covers and tie hooks not included"
+    },
+    {
+      "segment": "CSEG_06",
+      "long_cover_3d_mm": 63.17521176196922,
+      "hoop_cover_3d_mm": 46.247463452272,
+      "min_bar_hoop_clearance_mm": 0.9999476731686201,
+      "phase_difference_rad": 3.890054145472277e-8,
+      "checked_local_segment_pairs": 72960,
+      "scope": "actual source face-plane geometry, 48-sided candidate hoops, nearest five angular chords, physical bar radii; end face covers and tie hooks not included"
+    },
+    {
+      "segment": "CSEG_07",
+      "long_cover_3d_mm": 63.009749045247105,
+      "hoop_cover_3d_mm": 46.081946128865255,
+      "min_bar_hoop_clearance_mm": 0.9999673085034502,
+      "phase_difference_rad": 5.343508080457582e-8,
+      "checked_local_segment_pairs": 72960,
+      "scope": "actual source face-plane geometry, 48-sided candidate hoops, nearest five angular chords, physical bar radii; end face covers and tie hooks not included"
+    },
+    {
+      "segment": "CSEG_08",
+      "long_cover_3d_mm": 62.82770856561781,
+      "hoop_cover_3d_mm": 45.90002624973775,
+      "min_bar_hoop_clearance_mm": 0.9999608671757727,
+      "phase_difference_rad": 3.691348204881706e-8,
+      "checked_local_segment_pairs": 72960,
+      "scope": "actual source face-plane geometry, 48-sided candidate hoops, nearest five angular chords, physical bar radii; end face covers and tie hooks not included"
+    },
+    {
+      "segment": "CSEG_09",
+      "long_cover_3d_mm": 62.64574375393008,
+      "hoop_cover_3d_mm": 45.7180553209398,
+      "min_bar_hoop_clearance_mm": 0.9999628542409624,
+      "phase_difference_rad": 3.240332979714822e-8,
+      "checked_local_segment_pairs": 72960,
+      "scope": "actual source face-plane geometry, 48-sided candidate hoops, nearest five angular chords, physical bar radii; end face covers and tie hooks not included"
+    },
+    {
+      "segment": "CSEG_10",
+      "long_cover_3d_mm": 62.458425004876176,
+      "hoop_cover_3d_mm": 45.53074253140169,
+      "min_bar_hoop_clearance_mm": 0.999958699189456,
+      "phase_difference_rad": 3.864884823290282e-8,
+      "checked_local_segment_pairs": 72960,
+      "scope": "actual source face-plane geometry, 48-sided candidate hoops, nearest five angular chords, physical bar radii; end face covers and tie hooks not included"
+    },
+    {
+      "segment": "CSEG_11",
+      "long_cover_3d_mm": 62.271120040677346,
+      "hoop_cover_3d_mm": 45.34333633882332,
+      "min_bar_hoop_clearance_mm": 0.9999587324069097,
+      "phase_difference_rad": 3.980193996611092e-8,
+      "checked_local_segment_pairs": 72960,
+      "scope": "actual source face-plane geometry, 48-sided candidate hoops, nearest five angular chords, physical bar radii; end face covers and tie hooks not included"
+    },
+    {
+      "segment": "CSEG_12",
+      "long_cover_3d_mm": 62.089308505705276,
+      "hoop_cover_3d_mm": 45.161493762104946,
+      "min_bar_hoop_clearance_mm": 0.9999617904116889,
+      "phase_difference_rad": 5.809951120205881e-8,
+      "checked_local_segment_pairs": 68400,
+      "scope": "actual source face-plane geometry, 48-sided candidate hoops, nearest five angular chords, physical bar radii; end face covers and tie hooks not included"
+    },
+    {
+      "segment": "CSEG_13",
+      "long_cover_3d_mm": 61.907326439012024,
+      "hoop_cover_3d_mm": 44.97961052684264,
+      "min_bar_hoop_clearance_mm": 0.9999603091268909,
+      "phase_difference_rad": 3.763503908515986e-8,
+      "checked_local_segment_pairs": 68400,
+      "scope": "actual source face-plane geometry, 48-sided candidate hoops, nearest five angular chords, physical bar radii; end face covers and tie hooks not included"
+    },
+    {
+      "segment": "CSEG_14",
+      "long_cover_3d_mm": 61.72004475742408,
+      "hoop_cover_3d_mm": 44.79232276121219,
+      "min_bar_hoop_clearance_mm": 0.9999585999095615,
+      "phase_difference_rad": 5.1199119166511764e-8,
+      "checked_local_segment_pairs": 68400,
+      "scope": "actual source face-plane geometry, 48-sided candidate hoops, nearest five angular chords, physical bar radii; end face covers and tie hooks not included"
+    },
+    {
+      "segment": "CSEG_15",
+      "long_cover_3d_mm": 61.53269605889534,
+      "hoop_cover_3d_mm": 44.60491063398965,
+      "min_bar_hoop_clearance_mm": 0.9999586328723069,
+      "phase_difference_rad": 4.330524538964653e-8,
+      "checked_local_segment_pairs": 68400,
+      "scope": "actual source face-plane geometry, 48-sided candidate hoops, nearest five angular chords, physical bar radii; end face covers and tie hooks not included"
+    },
+    {
+      "segment": "CSEG_16",
+      "long_cover_3d_mm": 61.35080552724273,
+      "hoop_cover_3d_mm": 44.423059828454015,
+      "min_bar_hoop_clearance_mm": 0.9999621649048436,
+      "phase_difference_rad": 2.8981248956228e-8,
+      "checked_local_segment_pairs": 63840,
+      "scope": "actual source face-plane geometry, 48-sided candidate hoops, nearest five angular chords, physical bar radii; end face covers and tie hooks not included"
+    },
+    {
+      "segment": "CSEG_17",
+      "long_cover_3d_mm": 61.259490735390955,
+      "hoop_cover_3d_mm": 44.331943371471795,
+      "min_bar_hoop_clearance_mm": 0.9999906452014002,
+      "phase_difference_rad": 2.4588248770385235e-8,
+      "checked_local_segment_pairs": 63840,
+      "scope": "actual source face-plane geometry, 48-sided candidate hoops, nearest five angular chords, physical bar radii; end face covers and tie hooks not included"
+    },
+    {
+      "segment": "CSEG_18",
+      "long_cover_3d_mm": 61.25844152558254,
+      "hoop_cover_3d_mm": 44.331163148457904,
+      "min_bar_hoop_clearance_mm": 1.0000000000004547,
+      "phase_difference_rad": 4.650536578054698e-8,
+      "checked_local_segment_pairs": 63840,
+      "scope": "actual source face-plane geometry, 48-sided candidate hoops, nearest five angular chords, physical bar radii; end face covers and tie hooks not included"
+    },
+    {
+      "segment": "CSEG_19",
+      "long_cover_3d_mm": 61.25844152558254,
+      "hoop_cover_3d_mm": 44.331163148457904,
+      "min_bar_hoop_clearance_mm": 1.0000000000004547,
+      "phase_difference_rad": 4.650536578054698e-8,
+      "checked_local_segment_pairs": 63840,
+      "scope": "actual source face-plane geometry, 48-sided candidate hoops, nearest five angular chords, physical bar radii; end face covers and tie hooks not included"
+    },
+    {
+      "segment": "CSEG_20",
+      "long_cover_3d_mm": 61.25904486064347,
+      "hoop_cover_3d_mm": 44.331643165183294,
+      "min_bar_hoop_clearance_mm": 0.9999989921266916,
+      "phase_difference_rad": 4.64070364358804e-8,
+      "checked_local_segment_pairs": 62160,
+      "scope": "actual source face-plane geometry, 48-sided candidate hoops, nearest five angular chords, physical bar radii; end face covers and tie hooks not included"
+    },
+    {
+      "segment": "CSEG_21",
+      "long_cover_3d_mm": 61.301848746518644,
+      "hoop_cover_3d_mm": 44.37447486596329,
+      "min_bar_hoop_clearance_mm": 0.9999979164681605,
+      "phase_difference_rad": 2.3940353255369473e-8,
+      "checked_local_segment_pairs": 57760,
+      "scope": "actual source face-plane geometry, 48-sided candidate hoops, nearest five angular chords, physical bar radii; end face covers and tie hooks not included"
+    },
+    {
+      "segment": "CSEG_22",
+      "long_cover_3d_mm": 61.344118651420104,
+      "hoop_cover_3d_mm": 44.41675943190561,
+      "min_bar_hoop_clearance_mm": 1.0000000000004547,
+      "phase_difference_rad": 2.5485158872129432e-8,
+      "checked_local_segment_pairs": 57760,
+      "scope": "actual source face-plane geometry, 48-sided candidate hoops, nearest five angular chords, physical bar radii; end face covers and tie hooks not included"
+    },
+    {
+      "segment": "CSEG_23",
+      "long_cover_3d_mm": 61.344118651420104,
+      "hoop_cover_3d_mm": 44.41675943190561,
+      "min_bar_hoop_clearance_mm": 1.0000000000004547,
+      "phase_difference_rad": 2.5485158872129432e-8,
+      "checked_local_segment_pairs": 57760,
+      "scope": "actual source face-plane geometry, 48-sided candidate hoops, nearest five angular chords, physical bar radii; end face covers and tie hooks not included"
+    },
+    {
+      "segment": "CSEG_24",
+      "long_cover_3d_mm": 61.344118651420104,
+      "hoop_cover_3d_mm": 44.41675943190561,
+      "min_bar_hoop_clearance_mm": 1.0000000000004547,
+      "phase_difference_rad": 2.5485158872129432e-8,
+      "checked_local_segment_pairs": 57760,
+      "scope": "actual source face-plane geometry, 48-sided candidate hoops, nearest five angular chords, physical bar radii; end face covers and tie hooks not included"
+    },
+    {
+      "segment": "CSEG_25",
+      "long_cover_3d_mm": 61.344914970057644,
+      "hoop_cover_3d_mm": 44.41740962270573,
+      "min_bar_hoop_clearance_mm": 0.9999958375620324,
+      "phase_difference_rad": 2.5473392728514455e-8,
+      "checked_local_segment_pairs": 57760,
+      "scope": "actual source face-plane geometry, 48-sided candidate hoops, nearest five angular chords, physical bar radii; end face covers and tie hooks not included"
+    },
+    {
+      "segment": "CSEG_26",
+      "long_cover_3d_mm": 57.41965911994558,
+      "hoop_cover_3d_mm": 40.481588102780314,
+      "min_bar_hoop_clearance_mm": 0.9999957755284612,
+      "phase_difference_rad": 2.6607336944817206e-8,
+      "checked_local_segment_pairs": 56240,
+      "scope": "actual source face-plane geometry, 48-sided candidate hoops, nearest five angular chords, physical bar radii; end face covers and tie hooks not included"
+    },
+    {
+      "segment": "CSEG_27",
+      "long_cover_3d_mm": 57.4832960181114,
+      "hoop_cover_3d_mm": 40.54519436834428,
+      "min_bar_hoop_clearance_mm": 1.0000000000004547,
+      "phase_difference_rad": 2.996649461906031e-8,
+      "checked_local_segment_pairs": 56240,
+      "scope": "actual source face-plane geometry, 48-sided candidate hoops, nearest five angular chords, physical bar radii; end face covers and tie hooks not included"
+    },
+    {
+      "segment": "CSEG_28",
+      "long_cover_3d_mm": 57.4832960181114,
+      "hoop_cover_3d_mm": 40.54519436834428,
+      "min_bar_hoop_clearance_mm": 1.0000000000004547,
+      "phase_difference_rad": 2.996649461906031e-8,
+      "checked_local_segment_pairs": 56240,
+      "scope": "actual source face-plane geometry, 48-sided candidate hoops, nearest five angular chords, physical bar radii; end face covers and tie hooks not included"
+    },
+    {
+      "segment": "CSEG_29",
+      "long_cover_3d_mm": 57.28693509993589,
+      "hoop_cover_3d_mm": 40.344660079917304,
+      "min_bar_hoop_clearance_mm": 0.9999617954351834,
+      "phase_difference_rad": 3.015872751532811e-8,
+      "checked_local_segment_pairs": 53200,
+      "scope": "actual source face-plane geometry, 48-sided candidate hoops, nearest five angular chords, physical bar radii; end face covers and tie hooks not included"
+    },
+    {
+      "segment": "CSEG_30",
+      "long_cover_3d_mm": 56.88866619340338,
+      "hoop_cover_3d_mm": 39.9463563054308,
+      "min_bar_hoop_clearance_mm": 0.9998525982437485,
+      "phase_difference_rad": 5.003241243528578e-8,
+      "checked_local_segment_pairs": 54720,
+      "scope": "actual source face-plane geometry, 48-sided candidate hoops, nearest five angular chords, physical bar radii; end face covers and tie hooks not included"
+    },
+    {
+      "segment": "CSEG_31",
+      "long_cover_3d_mm": 56.17599467804287,
+      "hoop_cover_3d_mm": 39.23338115952959,
+      "min_bar_hoop_clearance_mm": 0.9992262917418877,
+      "phase_difference_rad": 2.7134834823527854e-8,
+      "checked_local_segment_pairs": 44080,
+      "scope": "actual source face-plane geometry, 48-sided candidate hoops, nearest five angular chords, physical bar radii; end face covers and tie hooks not included"
+    }
+  ]
+}
