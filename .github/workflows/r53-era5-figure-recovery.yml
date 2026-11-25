@@ -1,0 +1,37 @@
+name: R53 regenerate ERA5 manuscript figures from raw quarterly files
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/r53-era5-figure-recovery.yml','public/thesis-studio/figure-audit/R53/rebuild_era5.py']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  redraw:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          sparse-checkout: |
+            public/thesis-studio/figure-audit/R53
+            research/wind-tower/archive/local-assets-20261004/era5-raw-2005-2014
+            research/wind-tower/archive/local-assets-20261004/era5-raw-2015-2025
+            research/wind-tower/experiments/T046/inner-inventory
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install numpy==1.26.4 pandas==2.2.3 scipy==1.14.1 matplotlib==3.9.2 xarray==2024.10.0 h5netcdf==1.4.1 h5py==3.12.1
+      - run: python public/thesis-studio/figure-audit/R53/rebuild_era5.py
+      - name: Archive computed figures, source ledgers and numerical data
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add -f public/thesis-studio/figure-audit/R53/
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Archive source-verified R53 ERA5 statistics and eight manuscript figures"
+          git fetch origin main
+          git rebase FETCH_HEAD
+          git push origin HEAD:main
