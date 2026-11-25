@@ -1,0 +1,33 @@
+name: REV25 hoop cost candidate
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/rev25-hoop-cost.yml','public/thesis-studio/inp-archive/REV25_HOOP_COST/coarsen_rev25.py']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          sparse-checkout: |
+            public/thesis-studio/inp-archive/REV22_VALIDATION_KIT
+            public/thesis-studio/inp-archive/REV24_MEDIUM_CANDIDATE
+            public/thesis-studio/inp-archive/REV25_HOOP_COST
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install numpy==1.26.4
+      - run: python public/thesis-studio/inp-archive/REV25_HOOP_COST/coarsen_rev25.py
+      - name: Archive static candidate
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add -f public/thesis-studio/inp-archive/REV25_HOOP_COST/HE_REV25_HOOP_COST_EQ005.inp public/thesis-studio/inp-archive/REV25_HOOP_COST/receipt.json
+          git commit -m "REV25 actual hoop circumferential coarsening candidate"
+          git fetch --depth=20 origin main
+          git rebase FETCH_HEAD
+          git push origin HEAD:main
