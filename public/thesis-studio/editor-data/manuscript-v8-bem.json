@@ -8070,7 +8070,7 @@
           "id": "wind-r26-001",
           "kind": "text",
           "style": "Normal",
-          "text": "对100～700 s内三片叶片各对应展向节点的气动力进行时均统计。AeroDyn的Fx、Fy为旧式局部输出坐标系下的面外、面内单位长度气动力，区别于弦向坐标系下的Fn、Ft[133]。图3.5-6采用三片叶片同一展向节点的时均合力密度，名义半径r取轮毂半径2.8 m与叶根展向距离之和，名义切向力、轴向力及转矩密度分别取Fy的三叶片合计、Fx的三叶片合计及名义半径与前者的乘积。由于未输出变形后的局部极坐标节点位置和相应气动力分量，该分布为名义几何近似，不能作为精确转矩积分或有限元载荷映射依据。",
+          "text": "对100～700 s内三片叶片各对应展向节点的气动力进行时均统计。AeroDyn的Fx、Fy为旧式局部输出坐标系下的面外、面内单位长度气动力，区别于弦向坐标系下的Fn、Ft[133]。参照Sun等[138]的展向分布表达方式，图3.5-6采用三片叶片同一展向节点的时均合力密度，名义半径r取轮毂半径2.8 m与叶根展向距离之和，名义切向力、轴向力及转矩密度分别取Fy的三叶片合计、Fx的三叶片合计及名义半径与前者的乘积。由于未输出变形后的局部极坐标节点位置和相应气动力分量，该分布为名义几何近似，不能作为精确转矩积分或有限元载荷映射依据。",
           "has_media": false,
           "has_math": false,
           "online_only": true
@@ -8087,10 +8087,65 @@
           "figure_caption_match": "图3.5-6  额定风速下三叶片展向气动力及转矩密度分布（名义几何近似）"
         },
         {
+          "id": "wind-r28-001",
+          "kind": "text",
+          "style": "Normal",
+          "text": "表3.5-1给出了两组工况原生轮毂轴向气动力和力矩的统计结果。两者为求解器直接输出的轮毂气动合力及合力矩，不由图3.5-6的名义几何分布反算。",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true
+        },
+        {
+          "id": "wind-r28-002",
+          "kind": "caption",
+          "style": "Caption",
+          "text": "表3.5-1  额定风速下轮毂轴向气动力及力矩统计（100～700 s）",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true
+        },
+        {
+          "id": "wind-r28-003",
+          "kind": "table",
+          "style": "Normal",
+          "rows": [
+            [
+              "工况",
+              "轴向力均值/MN",
+              "标准差/MN",
+              "最大值/MN",
+              "轴向力矩均值/(MN·m)",
+              "标准差/(MN·m)",
+              "最大值/(MN·m)"
+            ],
+            [
+              "NTM",
+              "1.139",
+              "0.169",
+              "1.739",
+              "9.569",
+              "1.454",
+              "16.360"
+            ],
+            [
+              "1ETM",
+              "1.034",
+              "0.221",
+              "1.954",
+              "9.252",
+              "2.128",
+              "19.583"
+            ]
+          ],
+          "has_media": false,
+          "has_math": false,
+          "online_only": true
+        },
+        {
           "id": "wind-r26-002",
           "kind": "text",
           "style": "Normal",
-          "text": "图3.5-7给出了有效时段内的轮毂坐标系气动力时程。额定风速下，NTM与1ETM的轮毂坐标系轴向气动力均值分别为1.139 MN和1.034 MN，标准差分别为0.169 MN和0.221 MN，最大值分别为1.739 MN和1.954 MN；轴向气动力矩均值分别为9.569 MN·m和9.252 MN·m，最大值分别为16.360 MN·m和19.583 MN·m。在本组随机实现中，极端湍流工况虽具有较低的轴向气动力均值，但波动幅度与极值较大。上述六分量均为AeroDyn原生轮毂旋转坐标系气动合力及合力矩，并非塔顶结构反力；在实施结构荷载传递前，仍需依据方位角及轮毂运动进行坐标转换、作用点移置及合力与合力矩守恒校核。",
+          "text": "图3.5-7给出了有效时段内的轮毂坐标系气动力时程，图3.5-8按Qiu等[139]的六分量表达形式展示有效时段起始40 s的细部变化。表3.5-1列出完整有效时段的轴向气动力及转矩统计值。额定风速下，NTM与1ETM的轮毂坐标系轴向气动力均值分别为1.139 MN和1.034 MN，标准差分别为0.169 MN和0.221 MN，最大值分别为1.739 MN和1.954 MN；轴向气动力矩均值分别为9.569 MN·m和9.252 MN·m，最大值分别为16.360 MN·m和19.583 MN·m。在本组随机实现中，极端湍流工况虽具有较低的轴向气动力均值，但波动幅度与极值较大。上述六分量均为AeroDyn原生轮毂旋转坐标系气动合力及合力矩，并非塔顶结构反力；在实施结构荷载传递前，仍需依据方位角及轮毂运动进行坐标转换、作用点移置及合力与合力矩守恒校核。",
           "has_media": false,
           "has_math": false,
           "online_only": true
@@ -8105,6 +8160,17 @@
           "online_only": true,
           "figure_asset": "./wind-figures/blade-aero/r27/rotor_wrench_r27_full.svg",
           "figure_caption_match": "图3.5-7  额定风速下轮毂坐标系气动力及气动力矩时程"
+        },
+        {
+          "id": "wind-r28-004",
+          "kind": "caption",
+          "style": "Caption",
+          "text": "图3.5-8  轮毂气动力及力矩六分量时程局部（100～140 s）",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true,
+          "figure_asset": "./wind-figures/blade-aero/r27/rotor_wrench_r27_40s.svg",
+          "figure_caption_match": "图3.5-8  轮毂气动力及力矩六分量时程局部（100～140 s）"
         },
         {
           "id": "b0524",
@@ -12550,14 +12616,32 @@
           "has_media": false,
           "has_math": false,
           "online_only": true
+        },
+        {
+          "id": "wind-r28-ref138",
+          "kind": "text",
+          "style": "Normal",
+          "text": "[138] SUN Z, ZHU W J, SHEN W Z, et al. Aerodynamic analysis of coning effects on the DTU 10 MW wind turbine rotor[J]. Energies, 2020, 13(21): 5753. DOI:10.3390/en13215753.",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true
+        },
+        {
+          "id": "wind-r28-ref139",
+          "kind": "text",
+          "style": "Normal",
+          "text": "[139] QIU C, YOSHIDA S, HU Z, et al. A coupled aero-hydro-elastic-mooring simulation framework for floating offshore multi-rotor wind turbines[J]. Journal of Marine Science and Engineering, 2026, 14(16): 1489. DOI:10.3390/jmse14161489.",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true
         }
       ]
     }
   ],
   "online_revision": {
-    "version": "V8-R27-REFERENCE-FIGURES",
+    "version": "V8-R28-PAGE-REVIEW",
     "date": "2026-11-25",
-    "scope": "R27 reference-style layout, nominal legacy-axis span comparison with explicit limitations and native hub-frame full 600 s histories",
+    "scope": "Chapter 3 adds source-cited full and 40 s hub figures, native load statistics table, and A4 page review based on current manuscript blocks.",
     "source_gate": "74fb3aee9dfef058b972a3f0e03aa571319c2fe2",
     "source_inp": "cdb719b95b8ce4301011489b4ab8ffc9e73c18bf",
     "wind_manifest": "./wind-figures/core/manifest.json",
