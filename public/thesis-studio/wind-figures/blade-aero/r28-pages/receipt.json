@@ -1,0 +1,35 @@
+{
+  "span": {
+    "doi": "10.3390/en13215753",
+    "figure": "Figure 6.",
+    "block_ids": [
+      "wind-r26-001",
+      "wind-r26-003",
+      "wind-r28-001",
+      "wind-r28-002",
+      "wind-r28-003"
+    ],
+    "status": "OK",
+    "errors": [],
+    "source_url": "https://backend.orbit.dtu.dk/ws/portalfiles/portal/235339219/energies_13_05753.pdf",
+    "pdf_sha256": "a63a04375b2b49497580fe96f6d0409a0e14330a6b2a16286ac49700d19a1d40",
+    "pdf_page_index": 8,
+    "pdf_pages": 20,
+    "comparison_sha256": "80d21e1a1f5df91c153a389b6b03a4ea42ddec7467ef5a85a9c9a36a0df1c187"
+  },
+  "wrench": {
+    "doi": "10.3390/jmse14161489",
+    "figure": "Figure A4.",
+    "block_ids": [
+      "wind-r26-002",
+      "wind-r28-004"
+    ],
+    "status": "OK",
+    "errors": [],
+    "source_url": "https://mdpi-res.com/jmse/jmse-14-01489/article_deploy/jmse-14-01489.pdf",
+    "pdf_sha256": "211de68e1c90d7ad3a7a252b897453b440fd9ec10170b6897da7bb20cec1c2dc",
+    "pdf_page_index": 28,
+    "pdf_pages": 32,
+    "comparison_sha256": "f53d1b6cabcdbc94f349b893cc6d47873cd5ba7795c7cb99615adbbcfc2d8921"
+  }
+}
