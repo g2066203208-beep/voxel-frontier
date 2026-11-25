@@ -1,0 +1,59 @@
+{
+  "source": "HE_REV22_FULL_ASSEMBLY_EQ005.txt",
+  "source_sha256": "e84851887735305c6387ca38a972bebd97ba9cdff7baa7735c0ed89cecf925b5",
+  "source_bytes": 15693508,
+  "csv_sha256": "313f64f2662faebb355605538330f036274da1a404f9611e51451018d6d66e9c",
+  "check": [
+    {
+      "material": "C65",
+      "branch": "compression",
+      "points": 26,
+      "max_abs_error": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "material": "C65",
+      "branch": "tension",
+      "points": 24,
+      "max_abs_error": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "material": "C70",
+      "branch": "compression",
+      "points": 26,
+      "max_abs_error": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "material": "C70",
+      "branch": "tension",
+      "points": 24,
+      "max_abs_error": [
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "order_of_errors": [
+    "stress_MPa",
+    "input_strain",
+    "total_strain",
+    "damage"
+  ],
+  "scope": "Original archived file only; not current local CAE or physical validation"
+}
