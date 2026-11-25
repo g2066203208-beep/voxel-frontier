@@ -1,0 +1,12 @@
+{
+  "source_sha256": "e84851887735305c6387ca38a972bebd97ba9cdff7baa7735c0ed89cecf925b5",
+  "output_sha256": "e84851887735305c6387ca38a972bebd97ba9cdff7baa7735c0ed89cecf925b5",
+  "bytes": 15693508,
+  "parts": 100,
+  "instances": 100,
+  "change": "file extension only, byte-identical solver deck",
+  "import_script_syntax": "PASS",
+  "native_CAE_import": "NOT_RUN",
+  "solver": "NOT_RUN",
+  "geometry": "orphan mesh, not native CAD"
+}
