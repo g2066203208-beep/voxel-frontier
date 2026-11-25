@@ -103,3 +103,8 @@ GitHub Actions 已完成独立核验并提交 e8fdfbb8ca98011bf9445797c401c78392
 - 原件材料卡/截面分配提取程序 extract_rev22_material_inventory.py 已提交da3fdcaf67b321b89e6fdfd13f436864b759e4f4，工作流5aa2055db0afba1a4f44aefde1840702ba52886a，执行输入限定为15,693,508字节归档REV22原文件及固定SHA256。提交时结果JSON尚未返回。
 - 同类文献筛选：Buildings 2025,15(20),3786（https://doi.org/10.3390/buildings15203786）§3.3、表2采用理想弹塑性钢材与1860级钢绞线；其Q355屈服参数400MPa不能代替本工程板厚对应标准值。Buildings 2026,16(13),2594（https://doi.org/10.3390/buildings16132594）图6为普通筋/预应力筋单轴本构示意，预应力钢丝等级不同，仅作同类型图表达对照；未归档原图。Abaqus官方塑性输入转换 https://docs.software.vt.edu/abaqusv2026/English/SIMACAEMATRefMap/simamat-c-plastic.htm 规定真实应力及对数塑性应变转换。规范及原始材质证明仍须区分标准值、设计值、实测值和计算候选。
 - 未更改原始INP；未将未核实钢材参数插入正式论文；混凝土整页拼图按用户要求暂停止。
+
+## V2.3 风场完整网格图件与第三章正文补充
+- 正式在线稿 V8-R21-WIND-FIELD（a3e892520e3ca9f1374c47ebd6a3755422c402c1），3.2节新增图3.2-4至3.2-7（原生完整网格NTM风场的时空截面、扫掠面瞬时图、平均风速/纵向湍流强度剖面及幅值相干估计），表3.2-1六组轮毂三分量湍流强度，以native/manifest.json的各分量标准差除以纵向均值计算。11.4 m/s纵向TI为18.93%（NTM）及29.25%（1ETM）。数据为run 45422889134原生风场已归档统计；非历史36组整机原始入流、非场址实测。新图使用实际原PNG，不进行生成式重绘。原生相干高频有限样本估计偏差明显，不能宣称全频一致。此轮未执行新风场求解。
+- 期刊原图已实际检视：Zheng等2025 Energies 18:2833图4，Wang等2025 JMSE 13:2137图2，Brown等2024 WES 9:1791–1810图10（出版方单图PDF已打开并截图）。新增参考文献[137,138]，[28]沿用。原文三维时空表示与本文二维截线/瞬时面仅部分对应；Brown还有实测、三分量剖面及风向，本文当前无这些实测。空间相干、塔身风阻与整机功率/推力尚未取得同物理量的合格文献拼图，不强行匹配。
+- 工作室风场对照页 journal-comparison.html（b093c87ad41ebcc3d10e8da242e8b09d7102c2fe），风图入口更新b71a7b16b8109d704040b640f22b2340d89d50b0；出版方图像保留来源直链，原图与实际完整网格图并列。独立PNG拼图程序及工作流7e2762ed04c1f84ec641405da6152a59f8cf869c、2b3446be1cc3f9c14f2049988f5150dff6caaf72已提交，当前尚无receipt.json，不能宣称独立PNG完成。Brown整篇原文PDF已有归档research/wind-tower/references/open-access/Brown_2024_WES_9_1791.pdf。托管渲染及Word/PDF导出未验收，Abaqus节点风载准入及REV22风致响应仍未完成。
