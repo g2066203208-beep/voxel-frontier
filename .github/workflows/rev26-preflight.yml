@@ -1,0 +1,29 @@
+name: REV26 preflight exact source
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/rev26-preflight.yml','public/thesis-studio/inp-archive/REV26_PREFLIGHT/build_preflight.py']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          sparse-checkout: |
+            public/thesis-studio/inp-archive/REV25_HOOP_COST
+            public/thesis-studio/inp-archive/REV26_PREFLIGHT
+      - run: python public/thesis-studio/inp-archive/REV26_PREFLIGHT/build_preflight.py
+      - name: Archive candidate only
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add -f public/thesis-studio/inp-archive/REV26_PREFLIGHT/HE_REV26_PREFLIGHT_PT_GRAVITY_MODAL.inp public/thesis-studio/inp-archive/REV26_PREFLIGHT/receipt.json
+          git commit -m "REV26 exact-prefix preflight and source design identity audit"
+          git fetch --depth=20 origin main
+          git rebase FETCH_HEAD
+          git push origin HEAD:main
