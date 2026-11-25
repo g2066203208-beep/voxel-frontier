@@ -2254,7 +2254,7 @@
           "id": "b0191",
           "kind": "text",
           "style": "Normal",
-          "text": "混凝土塔底第1、2节采用C70，其余29节采用C65。单轴拉压代表强度及弹性模量取值与Xu等[100]的混合塔模型一致，泊松比参考文献[19]取0.20，密度按原型复现模型取2400 kg/m³。历史原型复现算例的钢塔采用S345材料参数。混凝土受拉开裂及受压非线性采用混凝土塑性损伤模型（CDP）描述。",
+          "text": "混凝土塔筒底部第1、2节采用C70，其余29节采用C65。采用Abaqus混凝土塑性损伤模型（CDP）描述混凝土受拉开裂、受压非线性及刚度退化行为。单轴强度及弹性模量取值与Xu等[100]的混合塔模型一致，单轴本构采用文献[19]附录C所述关系。",
           "has_media": false,
           "has_math": false,
           "word_body_index": 198
@@ -2263,7 +2263,7 @@
           "id": "b0192",
           "kind": "text",
           "style": "Normal",
-          "text": "依据文献[19]附录C.2.3、C.2.4建立混凝土单轴拉压应力—应变包络，依据Li等[32]的转换方法确定损伤变量和Abaqus输入应变。令σ、ε分别为单轴应力和总应变的非负幅值，E₀为初始弹性模量，d为相应拉压损伤变量，εⁱⁿ为压缩非弹性应变或拉伸开裂应变。采用能量等效关系及塑性应变转换式：",
+          "text": "依据文献[19]附录C.2.3、C.2.4建立单轴拉压应力—应变包络，采用文献[32]的能量等效损伤及应变转换方法。令σ、ε为单轴应力和总应变的非负幅值，E₀为初始弹性模量，d为相应损伤变量，εⁱⁿ表示压缩非弹性应变或拉伸开裂应变，则有：",
           "has_media": false,
           "has_math": false,
           "word_body_index": 199
@@ -2413,7 +2413,33 @@
           "id": "r16-cdp-param",
           "kind": "text",
           "style": "Normal",
-          "text": "式中，αₜ、α꜀为下降段形状参数，峰值应变和下降段参数按文献[19]附录C相邻表值线性插值确定，计算结果见表2.2-1。",
+          "text": "式中，αₜ、α꜀为下降段形状参数，峰值应变及下降段参数按文献[19]附录C相邻表值线性插值确定。",
+          "has_media": false,
+          "has_math": false
+        },
+        {
+          "id": "r16-cdp-points",
+          "kind": "text",
+          "style": "Normal",
+          "text": "参照Chen等[136]的材料本构图表达方式，将应力和损伤因子统一表示为总应变的函数，如图2.2-1所示。C65、C70各设置26个受压及24个受拉离散点。依据式（2-2）恢复总应变，曲线连接实际材料输入点，原点至首点为弹性段。",
+          "has_media": false,
+          "has_math": false
+        },
+        {
+          "id": "r16-cdp-figure",
+          "kind": "figure",
+          "style": "图题",
+          "text": "图2.2-1  C65与C70混凝土应力—应变及损伤因子—应变曲线",
+          "has_media": false,
+          "has_math": false,
+          "figure_asset": "./inp-archive/REV22_REVIEW/cdp-matched-total-strain.svg",
+          "figure_caption_match": "图2.2-1  C65与C70混凝土应力—应变及损伤因子—应变曲线"
+        },
+        {
+          "id": "r20-cdp-property",
+          "kind": "text",
+          "style": "Normal",
+          "text": "混凝土物理力学参数及单轴本构计算参数见表2.2-1。弹性模量与轴心强度标准值依据文献[19,100]选取，泊松比与密度按原型复现模型取值。",
           "has_media": false,
           "has_math": false
         },
@@ -2421,7 +2447,7 @@
           "id": "r16-cdp-tabcap",
           "kind": "caption",
           "style": "表题",
-          "text": "表2.2-1  C65与C70单轴本构参数",
+          "text": "表2.2-1  C65与C70混凝土物理力学及单轴本构参数",
           "has_media": false,
           "has_math": false
         },
@@ -2436,19 +2462,29 @@
               "C70"
             ],
             [
-              "弹性模量 / MPa",
+              "弹性模量 E₀ / MPa",
               "36500",
               "37000"
             ],
             [
-              "单轴抗压代表峰值 / MPa",
+              "泊松比 ν",
+              "0.20",
+              "0.20"
+            ],
+            [
+              "轴心抗压强度标准值 / MPa",
               "41.5",
               "44.5"
             ],
             [
-              "单轴抗拉代表峰值 / MPa",
+              "轴心抗拉强度标准值 / MPa",
               "2.93",
               "2.99"
+            ],
+            [
+              "密度 / (kg·m⁻³)",
+              "2400",
+              "2400"
             ],
             [
               "受压峰值应变",
@@ -2461,50 +2497,22 @@
               "0.00011778"
             ],
             [
-              "受压下降段参数",
+              "受压下降段参数 αc",
               "2.021",
               "2.183"
             ],
             [
-              "受拉下降段参数",
+              "受拉下降段参数 αt",
               "2.6896",
               "2.7928"
             ]
           ]
         },
         {
-          "id": "r16-cdp-points",
-          "kind": "text",
-          "style": "Normal",
-          "text": "C65及C70分别设置26个受压点和24个受拉点。图2.2-1给出单轴应力—应变关系，曲线为规范本构包络，空心符号为实际材料输入恢复点。图2.2-2给出压缩损伤随非弹性应变及拉伸损伤随开裂应变的演化关系，曲线连接材料输入离散点。首个输入点的非弹性应变或开裂应变取零。",
-          "has_media": false,
-          "has_math": false
-        },
-        {
-          "id": "r16-cdp-figure",
-          "kind": "figure",
-          "style": "图题",
-          "text": "图2.2-1  C65与C70混凝土单轴应力—应变关系",
-          "has_media": false,
-          "has_math": false,
-          "figure_asset": "./inp-archive/REV22_REVIEW/cdp-reference-stress.svg",
-          "figure_caption_match": "图2.2-1  C65与C70混凝土单轴应力—应变关系"
-        },
-        {
-          "id": "r19-cdp-damage",
-          "kind": "figure",
-          "style": "图题",
-          "text": "图2.2-2  C65与C70混凝土损伤演化曲线",
-          "has_media": false,
-          "has_math": false,
-          "figure_asset": "./inp-archive/REV22_REVIEW/cdp-reference-damage.svg",
-          "figure_caption_match": "图2.2-2  C65与C70混凝土损伤演化曲线"
-        },
-        {
           "id": "r16-cdp-limits",
           "kind": "text",
           "style": "Normal",
-          "text": "图2.2-1和图2.2-2为理论本构及材料输入关系，非单轴试验或有限元验证结果。现有受拉输入从低于峰值的应力开始，峰前开裂应变处理及基于断裂能的软化正则化需进一步验证。",
+          "text": "图2.2-1为材料本构输入关系，非试验或有限元求解输出。现有受拉输入从低于峰值的应力开始，峰前开裂应变处理及基于断裂能的软化正则化尚需通过材料试件验证。",
           "has_media": false,
           "has_math": false
         },
@@ -12438,22 +12446,29 @@
           "has_media": false,
           "has_math": false,
           "online_only": true
+        },
+        {
+          "id": "r20-ref136",
+          "kind": "text",
+          "style": "Normal",
+          "text": "[136] CHEN J, XU Y, LI J. Numerical investigation of the strengthening method by circumferential prestressing to improve the fatigue life of embedded-ring concrete foundation for onshore wind turbine tower[J]. Energies, 2020, 13(3): 533. DOI:10.3390/en13030533.",
+          "has_media": false,
+          "has_math": false
         }
       ]
     }
   ],
   "online_revision": {
-    "version": "V8-R19-REV22-CDP-REFERENCE-STYLE",
+    "version": "V8-R20-REV22-CDP-MATCHED",
     "date": "2026-11-25",
-    "scope": "Separate stress and damage figures in Zhang et al. 2024 reference layout; exact REV22 input and GB envelope. No solver result; Word/PDF unchanged.",
+    "scope": "Chapter 2 CDP material prose, GB envelope, actual input dual-axis total-strain figure, mechanical properties table and Chen 2020 reference. Word/PDF unchanged.",
     "source_gate": "74fb3aee9dfef058b972a3f0e03aa571319c2fe2",
     "source_inp": "cdb719b95b8ce4301011489b4ab8ffc9e73c18bf",
     "wind_manifest": "./wind-figures/core/manifest.json",
     "historical_control_receipt": "./wind-figures/historical-control/receipt.json",
     "tower_drag_receipt": "./wind-figures/tower-drag/receipt.json",
     "rev22_review": "./inp-archive/REV22_REVIEW/",
-    "cdp_figure": "./inp-archive/REV22_REVIEW/cdp-reference-stress.svg",
-    "cdp_data": "./inp-archive/REV22_REVIEW/rev22-cdp-curves.csv",
-    "cdp_damage_figure": "./inp-archive/REV22_REVIEW/cdp-reference-damage.svg"
+    "cdp_figure": "./inp-archive/REV22_REVIEW/cdp-matched-total-strain.svg",
+    "cdp_data": "./inp-archive/REV22_REVIEW/rev22-cdp-curves.csv"
   }
 }
