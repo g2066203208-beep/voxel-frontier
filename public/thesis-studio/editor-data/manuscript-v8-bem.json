@@ -10,7 +10,7 @@
     "docx_parts_pattern": "./downloads/10MW-thesis-v8r9-he28-20261123.partNN.bin",
     "docx_parts": 15,
     "figure_recovery": "All four existing Chapter 2 images professionally replotted; raw ODB not available, traces digitized from original archived figures and numerical endpoints kept from logged results.",
-    "editorial_scope": "V8-R9: 37 native BEM/aero formulas preserved, 31 original V7 evidence-boundary corrections retained; five §3.4.1 paragraphs corrected against He PDF27 on verified geometry, frame, six-component tower interface, and prestress/connection assumptions. Physical wind mapping, W/E/WE, Miner and optimization remain unverified."
+    "editorial_scope": "V8-R9: 37 native BEM/aero formulas preserved, 31 original V7 evidence-boundary corrections retained; five §3.4.1 paragraphs corrected against He PDF27 on verified geometry, frame, six-component tower interface, and prestress/connection assumptions. Physical wind mapping, W/E/WE, Miner and optimization remain unverified.；R43：2.3节补充候选钢筋构造、斜压敏感性、620状态及1860状态数据图表；原生模型未验收，图件参考对照待完成。"
   },
   "chapters": [
     {
@@ -2538,7 +2538,7 @@
           "id": "b0200",
           "kind": "text",
           "style": "Normal",
-          "text": "普通钢筋采用T3D2桁架单元，并通过Embedded约束与混凝土实体连接，假定钢筋与混凝土在整体变形过程中协同工作。原型复现算例BF1的钢筋截面实际采用S345材料；另一候选模型T057采用HRB335及不同的配筋方案。以下对两套模型的计算结果分别说明。",
+          "text": "普通钢筋采用T3D2桁架单元，并通过Embedded约束与混凝土实体连接，假定整体变形中的钢筋与混凝土协同工作。历史何原型复现模型曾使用S345，T057独立支路使用HRB335；实际归档REV25采用HRB400纵筋和环筋、HPB300拉筋。本文后续独立截面设计候选按HRB500纵筋和HRB400环筋计算，与REV25实际材料及截面参数分别标识。",
           "has_media": false,
           "has_math": false,
           "word_body_index": 208
@@ -3852,10 +3852,434 @@
           "has_math": false
         },
         {
-          "id": "rev25-rebar-limits",
+          "id": "r43-thesis-method",
           "kind": "text",
-          "style": "Normal",
-          "text": "现阶段应将Φ16@120视为构造候选；尚需采用31段实际间距、截面几何、当前纵筋和预应力输入，复核NB/T 10907第5章作用组合及第6.3条承载力，并覆盖控制风、地震工况。完成上述计算及原生对照之前，不给出当前方案满足全部设计要求的结论。",
+          "style": "正文",
+          "text": "为补充上述模型的配筋构造信息，参考Wu等[142]对160 m后张预应力混塔的描述方式，将钢筋截面布置、逐段钢筋参数与数值离散方法分别列示。该研究的C80塔段、配筋和预应力构造不同于本文对象，不直接采用其参数。何泽瑜[1]图3-3、表3-2给出原型截面及纵筋数量，图4-6展示纤维截面建模；本文在保持原型几何及纵筋根数的基础上，独立提出双层环筋、纵筋直径和拉筋布置候选。",
+          "has_media": false,
+          "has_math": false
+        },
+        {
+          "id": "r43-fig-cage",
+          "kind": "figure",
+          "style": "图题",
+          "text": "图2.3-1  CSEG01混凝土塔节钢筋布置候选",
+          "has_media": false,
+          "has_math": false,
+          "figure_asset": "./rebar-verification/r43-fig-cage.svg",
+          "figure_caption_match": "图2.3-1  CSEG01混凝土塔节钢筋布置候选"
+        },
+        {
+          "id": "r43-thesis-table-caption",
+          "kind": "caption",
+          "style": "表题",
+          "text": "表2.3-1  混凝土塔节逐段钢筋构造候选",
+          "has_media": false,
+          "has_math": false
+        },
+        {
+          "id": "r43-thesis-table",
+          "kind": "table",
+          "rows": [
+            [
+              "塔节",
+              "中截面壁厚/mm",
+              "纵筋根数/每层",
+              "纵筋直径/mm",
+              "实体双层环筋/道",
+              "最大环筋间距/mm",
+              "拉筋位置数"
+            ],
+            [
+              "CSEG_01",
+              "280.00",
+              "108",
+              "50",
+              "76",
+              "97.05",
+              "432"
+            ],
+            [
+              "CSEG_02",
+              "280.00",
+              "108",
+              "50",
+              "76",
+              "97.05",
+              "432"
+            ],
+            [
+              "CSEG_03",
+              "280.00",
+              "108",
+              "50",
+              "76",
+              "97.05",
+              "432"
+            ],
+            [
+              "CSEG_04",
+              "281.25",
+              "108",
+              "50",
+              "76",
+              "97.05",
+              "432"
+            ],
+            [
+              "CSEG_05",
+              "285.00",
+              "96",
+              "50",
+              "76",
+              "97.05",
+              "384"
+            ],
+            [
+              "CSEG_06",
+              "291.25",
+              "96",
+              "50",
+              "76",
+              "97.05",
+              "384"
+            ],
+            [
+              "CSEG_07",
+              "298.75",
+              "96",
+              "50",
+              "76",
+              "97.05",
+              "384"
+            ],
+            [
+              "CSEG_08",
+              "305.00",
+              "96",
+              "50",
+              "76",
+              "97.05",
+              "384"
+            ],
+            [
+              "CSEG_09",
+              "310.00",
+              "96",
+              "50",
+              "76",
+              "97.05",
+              "384"
+            ],
+            [
+              "CSEG_10",
+              "316.25",
+              "96",
+              "50",
+              "76",
+              "97.05",
+              "384"
+            ],
+            [
+              "CSEG_11",
+              "323.75",
+              "96",
+              "50",
+              "76",
+              "97.05",
+              "384"
+            ],
+            [
+              "CSEG_12",
+              "330.00",
+              "90",
+              "50",
+              "76",
+              "97.05",
+              "360"
+            ],
+            [
+              "CSEG_13",
+              "335.00",
+              "90",
+              "50",
+              "76",
+              "97.05",
+              "360"
+            ],
+            [
+              "CSEG_14",
+              "341.25",
+              "90",
+              "50",
+              "76",
+              "97.05",
+              "360"
+            ],
+            [
+              "CSEG_15",
+              "348.75",
+              "90",
+              "50",
+              "76",
+              "97.05",
+              "360"
+            ],
+            [
+              "CSEG_16",
+              "355.00",
+              "84",
+              "50",
+              "76",
+              "97.05",
+              "336"
+            ],
+            [
+              "CSEG_17",
+              "358.75",
+              "84",
+              "50",
+              "76",
+              "97.05",
+              "336"
+            ],
+            [
+              "CSEG_18",
+              "360.00",
+              "84",
+              "50",
+              "76",
+              "97.05",
+              "336"
+            ],
+            [
+              "CSEG_19",
+              "360.00",
+              "84",
+              "50",
+              "76",
+              "97.05",
+              "336"
+            ],
+            [
+              "CSEG_20",
+              "350.00",
+              "84",
+              "50",
+              "74",
+              "113.09",
+              "336"
+            ],
+            [
+              "CSEG_21",
+              "330.00",
+              "76",
+              "50",
+              "76",
+              "97.05",
+              "304"
+            ],
+            [
+              "CSEG_22",
+              "320.00",
+              "76",
+              "50",
+              "76",
+              "97.05",
+              "304"
+            ],
+            [
+              "CSEG_23",
+              "320.00",
+              "76",
+              "50",
+              "76",
+              "97.05",
+              "304"
+            ],
+            [
+              "CSEG_24",
+              "320.00",
+              "76",
+              "50",
+              "76",
+              "97.05",
+              "304"
+            ],
+            [
+              "CSEG_25",
+              "305.00",
+              "76",
+              "50",
+              "76",
+              "97.05",
+              "304"
+            ],
+            [
+              "CSEG_26",
+              "275.00",
+              "76",
+              "40",
+              "74",
+              "115.37",
+              "342"
+            ],
+            [
+              "CSEG_27",
+              "260.00",
+              "76",
+              "40",
+              "74",
+              "115.37",
+              "342"
+            ],
+            [
+              "CSEG_28",
+              "260.00",
+              "76",
+              "40",
+              "74",
+              "115.37",
+              "342"
+            ],
+            [
+              "CSEG_29",
+              "307.00",
+              "76",
+              "36",
+              "70",
+              "119.36",
+              "342"
+            ],
+            [
+              "CSEG_30",
+              "384.00",
+              "76",
+              "36",
+              "72",
+              "108.51",
+              "342"
+            ],
+            [
+              "CSEG_31",
+              "457.00",
+              "76",
+              "36",
+              "58",
+              "98.35",
+              "266"
+            ]
+          ]
+        },
+        {
+          "id": "r43-thesis-equivalence",
+          "kind": "text",
+          "style": "正文",
+          "text": "设第j组实体环筋的半径、轴向位置及截面积分别为rᵢ、yᵢ及Aₕ。对于相同边数的圆周折线，其长度与半径成正比。取等效环轴向位置 yⱼ=Σ(rᵢyᵢ)/Σrᵢ，等效半径 Rⱼ=Σrᵢ/nⱼ，等效面积 Aⱼ=AₕΣrᵢ/Rⱼ，使钢筋体积及轴向一阶矩保持不变。将2320道实体环筋合并为678道等效环，48边离散共32544条单元边，比REV25减少14.01%；等效前后体积及一阶矩的最大相对误差分别为2.53×10⁻¹⁶、2.61×10⁻¹⁶。由于二阶轴向矩不守恒，且最大轴向重分布为230.82 mm，该方案用于整体响应的候选离散，不用于钢筋锚固与局部裂缝应力的直接评价。",
+          "has_media": false,
+          "has_math": false
+        },
+        {
+          "id": "r43-thesis-strut",
+          "kind": "text",
+          "style": "正文",
+          "text": "斜压折减系数按EN 1992-1-1:2023附录G的条件计算取ν=1/(1+110ε₁)，在45°压场及双向钢筋应变上界435/200000的假设下取ε₁=0.00535，得ν=0.629525。完整壁厚与核心厚度两种口径的最大需求比分别为0.4486和0.7189。图2.3-2同时给出ν=0.4的对照结果。该敏感性计算仅适用于所选S06剪流诊断，尚未完成变径环向正力、全部膜应力和专项规范圆环映射验算。",
+          "has_media": false,
+          "has_math": false
+        },
+        {
+          "id": "r43-fig-strut",
+          "kind": "figure",
+          "style": "图题",
+          "text": "图2.3-2  有效厚度及斜压折减系数对需求比的影响",
+          "has_media": false,
+          "has_math": false,
+          "figure_asset": "./rebar-verification/r43-fig-strut.svg",
+          "figure_caption_match": "图2.3-2  有效厚度及斜压折减系数对需求比的影响"
+        },
+        {
+          "id": "r43-thesis-section",
+          "kind": "text",
+          "style": "正文",
+          "text": "采用同步荷载组合轴力N₀=−D_Fz（按源记录单位转换），并在固定预压力假定下求解N=N₀+γₚP的轴力与双向弯矩平衡。采用16×360混凝土纤维积分及逐根纵筋，预留剪扭所需的纵筋抗拉能力，按修正后第25节Φ50、第28节Φ40的实际候选配筋进行620个状态复算。最大平衡残差9.88×10⁻⁹，8×180与16×360积分的最大指标差0.000148，最大压应变比、拉应变比及环筋同态需求比分别为0.8053、0.5726、0.8767。图2.3-3按塔节展示各指标最大值；各指标峰值不必发生在同一时刻，且不构成全工况联合承载力证明。",
+          "has_media": false,
+          "has_math": false
+        },
+        {
+          "id": "r43-fig-section",
+          "kind": "figure",
+          "style": "图题",
+          "text": "图2.3-3  S06选定组合状态的逐段需求比",
+          "has_media": false,
+          "has_math": false,
+          "figure_asset": "./rebar-verification/r43-fig-section.svg",
+          "figure_caption_match": "图2.3-3  S06选定组合状态的逐段需求比"
+        },
+        {
+          "id": "r43-thesis-pt",
+          "kind": "text",
+          "style": "正文",
+          "text": "原REV25预应力筋36根，单股截面积140 mm²，初应力1280 MPa，名义初始力6.4512 MN。将无预应力、历史假定长期有效力5.383869 MN和名义初始力6.4512 MN设为三个离散水平，每组计算620个状态。前一组用于诊断预压影响，后两组仅代表假定力水平；其实际平衡力须由目标模型的预应力筋S11、截面积、支承反力及接触状态核验。",
+          "has_media": false,
+          "has_math": false
+        },
+        {
+          "id": "r43-fig-pt",
+          "kind": "figure",
+          "style": "图题",
+          "text": "图2.3-4  三种假定预应力水平的最大应变比",
+          "has_media": false,
+          "has_math": false,
+          "figure_asset": "./rebar-verification/r43-fig-pt.svg",
+          "figure_caption_match": "图2.3-4  三种假定预应力水平的最大应变比"
+        },
+        {
+          "id": "r43-thesis-pt-caption",
+          "kind": "caption",
+          "style": "表题",
+          "text": "表2.3-2  预应力水平对选定截面状态的影响",
+          "has_media": false,
+          "has_math": false
+        },
+        {
+          "id": "r43-thesis-pt-table",
+          "kind": "table",
+          "rows": [
+            [
+              "预应力/MN",
+              "收敛状态",
+              "满足条件状态",
+              "最大压应变比",
+              "最大拉应变比"
+            ],
+            [
+              "0.000000",
+              "620",
+              "614",
+              "1.7072",
+              "1.6348"
+            ],
+            [
+              "5.383869",
+              "620",
+              "620",
+              "0.8053",
+              "0.5726"
+            ],
+            [
+              "6.451200",
+              "620",
+              "620",
+              "0.7718",
+              "0.5249"
+            ]
+          ]
+        },
+        {
+          "id": "r43-thesis-limits",
+          "kind": "text",
+          "style": "正文",
+          "text": "上述图表为截面计算与有限元构造候选结果。普通钢筋端部锚固、保护层环境等级及施工偏差、实际预应力平衡、完整外荷载映射和风震作用组合尚需核查。未经目标模型原生验证，不将截面条件筛查结果解释为实际整体模型承载能力或完整规范验收结论。",
           "has_media": false,
           "has_math": false
         },
@@ -13964,6 +14388,14 @@
           "kind": "text",
           "style": "Normal",
           "text": "[141] 中华人民共和国住房和城乡建设部. 高耸结构设计标准: GB 50135—2019[S]. 2019.",
+          "has_media": false,
+          "has_math": false
+        },
+        {
+          "id": "r43-ref142",
+          "kind": "text",
+          "style": "正文",
+          "text": "[142] WU X G, ZHANG X S, ZHANG Q T, et al. Design and behavior of 160 m-tall post-tensioned precast concrete-steel hybrid wind turbine tower[J]. Steel and Composite Structures, 2022, 44(3): 407–421. DOI:10.12989/scs.2022.44.3.407.",
           "has_media": false,
           "has_math": false
         }
