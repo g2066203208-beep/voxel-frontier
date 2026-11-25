@@ -1,0 +1,123 @@
+name: R27 reference-matched wind figure correction
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/wind-figure-r27.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          sparse-checkout: |
+            public/thesis-studio/wind-figures/blade-aero
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install numpy==1.26.4 matplotlib==3.9.2 pillow==10.4.0
+      - name: Replot from original archived statistics
+        run: |
+          cat > /tmp/r27.py <<'PY'
+          import pathlib as P, numpy as np, csv, json, hashlib
+          import matplotlib
+          matplotlib.use('Agg')
+          import matplotlib.pyplot as plt
+          from matplotlib.ticker import ScalarFormatter, MaxNLocator
+          from PIL import Image, ImageOps, ImageDraw, ImageFont
+          root=P.Path('public/thesis-studio/wind-figures/blade-aero')
+          dest=root/'r27';dest.mkdir(exist_ok=True)
+          digest=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+          receipt=json.loads((root/'audit.json').read_text())
+          refs=json.loads((root/'comparison_receipt.json').read_text())
+          for name,row in zip(['span','wrench'],refs):
+              assert digest(root/(name+'-reference.jpg'))==row['reference_sha256']
+          a={};w={}
+          for case in ['NTM','1ETM']:
+              p=root/case
+              assert digest(p/'DTU_10MW_RWT.outb')==receipt[case]['outb_sha256']
+              rows=list(csv.DictReader((p/'blade_span_statistics.csv').open()))
+              assert len(rows)==1080
+              fx=np.array([[float(next(q['mean'] for q in rows if int(q['blade'])==b and int(q['node'])==j and q['quantity']==g)) for j in range(1,41)] for g in ['Fy','Fx'] for b in range(1,4)]).reshape(2,3,40)
+              s=np.array([float(next(q['span_m'] for q in rows if int(q['blade'])==1 and int(q['node'])==j)) for j in range(1,41)])
+              r=2.8+s
+              assert np.all(np.diff(r)>0) and abs(r[-1]-89.2)<.001
+              ft,fn=fx.sum(axis=1)
+              a[case]=(r,ft,r*ft,fn)
+              w[case]=np.loadtxt(p/'rotor_aero_wrench.csv',delimiter=',',skiprows=1)
+              assert w[case].shape==(12001,7) and np.allclose(w[case][:,0],100+.05*np.arange(12001))
+              np.savetxt(dest/(case+'_span_nominal.csv'),np.column_stack(a[case]),delimiter=',',header='nominal_apex_radius_m,sum_legacy_Fy_N_per_m,r_times_sum_Fy_Nm_per_m,sum_legacy_Fx_N_per_m',comments='')
+          plt.rcParams.update({'font.family':'DejaVu Sans','font.size':9,'axes.linewidth':.7,'xtick.direction':'in','ytick.direction':'in','xtick.top':True,'ytick.right':True,'svg.fonttype':'none','axes.unicode_minus':False})
+          styles=[dict(color='#174a87',marker='o',markersize=2.6,linewidth=.9,linestyle='-'),dict(color='#c53b2c',marker='s',markersize=2.5,linewidth=.9,linestyle='--')]
+          def save(fig,stem):
+              for ext in ['svg','png','pdf']:fig.savefig(dest/(stem+'.'+ext),dpi=300)
+              plt.close(fig)
+          fig,axs=plt.subplots(2,2,figsize=(7.4,6.6),layout=None)
+          fig.subplots_adjust(left=.12,right=.98,bottom=.12,top=.94,wspace=.30,hspace=.51)
+          for i,ax in enumerate(axs.flat):
+              ix=[1,2,3,3][i]
+              for (case,v),st in zip(a.items(),styles):
+                  x,y=v[0],v[ix]
+                  ax.plot(x,y,label=case,**st)
+              ax.set_xlim((55,85) if i==3 else (0,90))
+              if i==3:
+                  v=np.concatenate([q[3][(q[0]>=55)&(q[0]<=85)] for q in a.values()]);pad=.08*np.ptp(v);ax.set_ylim(v.min()-pad,v.max()+pad)
+              ax.set_xlabel('Nominal rotor radius r (m)',labelpad=3)
+              ax.set_ylabel(['$F_t^*$ (N/m)','$T_t^*$ (N m/m)','$F_n^*$ (N/m)','$F_n^*$ (N/m)'][i])
+              ax.set_title('Wind speed 11.4 m/s',fontsize=9,pad=3)
+              ax.text(.5,-.27,'('+chr(97+i)+')',transform=ax.transAxes,ha='center',va='top',fontsize=10)
+              ax.legend(loc=['lower right','upper left','upper left','lower right'][i],fontsize=8,frameon=True,edgecolor='.5',fancybox=False)
+              if i==1:ax.ticklabel_format(axis='y',style='sci',scilimits=(0,0),useMathText=True)
+          fig.text(.5,.025,'* Three-blade sums in legacy axes; nominal geometry approximation.',ha='center',fontsize=8)
+          save(fig,'blade_span_r27')
+          def wrench(window,stem):
+              fig,axs=plt.subplots(3,2,figsize=(8.4,4.8))
+              fig.subplots_adjust(left=.10,right=.98,bottom=.16,top=.91,wspace=.35,hspace=.55)
+              for k in range(6):
+                  ax=axs[k%3,k//3]
+                  for (case,v),st in zip(w.items(),styles):
+                      sel=v[:,0]<=100+window+1e-8
+                      ax.plot(v[sel,0]-100,v[sel,k+1],color=st['color'],linestyle=st['linestyle'],lw=.7 if window==40 else .42,label=case)
+                  ax.set_xlim(0,window)
+                  ax.set_title('('+chr(97+k)+') Rotor '+('Force ' if k<3 else 'Moment ')+'XYZ'[k%3]+'-axis',fontsize=9,pad=3)
+                  ax.set_ylabel('[N]' if k<3 else '[N m]')
+                  ax.ticklabel_format(axis='y',style='sci',scilimits=(0,0),useMathText=True)
+                  ax.yaxis.set_major_locator(MaxNLocator(4))
+                  if k%3==2:ax.set_xlabel('Time [s]')
+              handles,labels=axs[0,0].get_legend_handles_labels()
+              fig.legend(handles,labels,loc='lower center',ncol=2,frameon=False,bbox_to_anchor=(.5,.015))
+              save(fig,stem)
+          wrench(40,'rotor_wrench_r27_40s')
+          wrench(600,'rotor_wrench_r27_full')
+          for key,stem,refname in [('span','blade_span_r27','span-reference.jpg'),('wrench','rotor_wrench_r27_40s','wrench-reference.jpg')]:
+              ref=Image.open(root/refname).convert('RGB');ours=Image.open(dest/(stem+'.png')).convert('RGB')
+              W,H=2400,1320 if key=='span' else 900
+              canvas=Image.new('RGB',(W,H),'white');draw=ImageDraw.Draw(canvas)
+              font=ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf',34)
+              draw.text((35,20),'LEFT: Reference original',font=font,fill='black')
+              draw.text((1235,20),'RIGHT: This study (R27)',font=font,fill='black')
+              draw.line((1200,75,1200,H-25),fill='#aaa',width=2)
+              for x,im in [(25,ref),(1225,ours)]:
+                  fitted=ImageOps.contain(im,(1150,H-100),Image.Resampling.LANCZOS)
+                  canvas.paste(fitted,(x+(1150-fitted.width)//2,80+(H-100-fitted.height)//2))
+              canvas.save(dest/(key+'-comparison-r27.png'),dpi=(300,300))
+              canvas.save(dest/(key+'-comparison-r27.jpg'),quality=88,subsampling=0)
+              Image.open(dest/(key+'-comparison-r27.jpg')).verify()
+          summary={'version':'R27','source':'verified 700 s OpenFAST outputs; same 12001 samples','span':'Sun et al. Fig 6: Ft*=sum Fy, Fn*=sum Fx in legacy output axes; nominal rotor-apex radius=HubRad 2.8 + BlSpn; Tt*=r Ft*; not exact deflected local-polar coordinates; not validation. Reference summed three blades. Torque density dimension N m/m.','wrench':'Qiu et al Fig A4: left force XYZ, right moment XYZ, native hub channels. First 40 s of effective interval 100–140 s predetermined, full 100–700 s separate; time origin shifted by 100 s. Different physical case, no error annotation.','files':{p.name:digest(p) for p in sorted(dest.iterdir())}}
+          (dest/'receipt.json').write_text(json.dumps(summary,indent=2)+'\n')
+          print(json.dumps(summary,indent=2))
+          
+          PY
+          python /tmp/r27.py
+      - name: Publish without overwriting concurrent changes
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add public/thesis-studio/wind-figures/blade-aero/r27
+          git commit -m "R27 reference-matched figure layouts with honest nominal coordinate limits"
+          git fetch --depth=20 origin main
+          git rebase FETCH_HEAD
+          git push origin HEAD:main
