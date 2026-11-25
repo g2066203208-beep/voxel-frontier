@@ -4604,7 +4604,7 @@
           "id": "v7-0352-32",
           "kind": "text",
           "style": "Normal",
-          "text": "计算得横向、竖向网格间距均为4 m。针对9.344、11.4和19.202 m/s三个轮毂高度平均风速，分别采用NTM与ETM及6个独立随机种子，形成36组随机风场工况。整机模拟时间为700 s，响应统计区间为100～700 s。风场质量评价应包括风速时程、均值、标准差、自谱及典型网格点对空间相干性，不能以整机求解完成替代风场验证。",
+          "text": "计算得横向、竖向网格间距均为4 m。历史整机研究针对9.344、11.4和19.202 m/s三个参考风速，设置NTM与ETM各六个随机种子，形成36组工况。另采用统一随机种子生成六组51×51完整网格研究风场。两批数据分别归档，统计时段均为100～700 s，不将新风场视为历史整机计算的原始入流。",
           "has_media": false,
           "has_math": false,
           "word_body_index": 400
@@ -4668,6 +4668,142 @@
           "online_only": true,
           "figure_asset": "./wind-figures/core/03_hub_autospectrum.svg",
           "figure_caption_match": "图3.2-3  轮毂中心风速自谱与Kaimal目标谱对比"
+        },
+        {
+          "id": "wind-r21-space",
+          "kind": "text",
+          "style": "Normal",
+          "text": "风速在空间上的非均匀性决定了不同叶素位置的瞬时入流差异。参照文献[137,138]的时空风场表达方法，以额定风速NTM工况为例，图3.2-4给出轮毂高度横向截线及塔身中心竖向截线的纵向风速时空分布，图3.2-5给出250、400和550 s时刻的转子扫掠面风速分布。两图均由51×51原生风场数据绘制，白色圆周表示叶轮扫掠边界。",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true
+        },
+        {
+          "id": "wind-r21-fig4",
+          "kind": "caption",
+          "style": "Caption",
+          "text": "图3.2-4  额定风速NTM工况纵向风速时空分布",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true,
+          "figure_asset": "./wind-figures/native/native-full-11.4-NTM/03_spatiotemporal.png",
+          "figure_caption_match": "图3.2-4  额定风速NTM工况纵向风速时空分布"
+        },
+        {
+          "id": "wind-r21-fig5",
+          "kind": "caption",
+          "style": "Caption",
+          "text": "图3.2-5  额定风速NTM工况不同瞬时的转子扫掠面纵向风速",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true,
+          "figure_asset": "./wind-figures/native/native-full-11.4-NTM/04_rotor_snapshots.png",
+          "figure_caption_match": "图3.2-5  额定风速NTM工况不同瞬时的转子扫掠面纵向风速"
+        },
+        {
+          "id": "wind-r21-profile",
+          "kind": "text",
+          "style": "Normal",
+          "text": "为表征垂向风切变及风速波动，参照Brown等[28]的统计方法，以各高度纵向平均风速为分母定义三分量湍流强度Iᵢ=σᵢ/ū。图3.2-6给出额定风速NTM工况的纵向平均风速及纵向湍流强度随高程的变化；虚线为指数0.2的参考风速剖面，水平点线为转子风场下边界。低于该边界的统计量取塔身补充节点。表3.2-1列出六组新生成风场的轮毂中心三分量湍流强度。11.4 m/s工况下，NTM及ETM纵向湍流强度分别为18.93%及29.25%。该结果反映指定湍流模型的样本统计特征，不代表场址实测湍流强度。",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true
+        },
+        {
+          "id": "wind-r21-fig6",
+          "kind": "caption",
+          "style": "Caption",
+          "text": "图3.2-6  额定风速NTM工况平均风速及纵向湍流强度剖面",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true,
+          "figure_asset": "./wind-figures/native/native-full-11.4-NTM/06_profiles.png",
+          "figure_caption_match": "图3.2-6  额定风速NTM工况平均风速及纵向湍流强度剖面"
+        },
+        {
+          "id": "wind-r21-tablecap",
+          "kind": "caption",
+          "style": "表题",
+          "text": "表3.2-1  六组原生风场轮毂中心三分量湍流强度",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true
+        },
+        {
+          "id": "wind-r21-table",
+          "kind": "table",
+          "style": "Table Grid",
+          "rows": [
+            [
+              "参考风速/(m·s⁻¹)",
+              "湍流类型",
+              "Iᵤ/%",
+              "Iᵥ/%",
+              "I𝓌/%"
+            ],
+            [
+              "9.344",
+              "1ETM",
+              "33.36",
+              "27.98",
+              "17.43"
+            ],
+            [
+              "9.344",
+              "NTM",
+              "20.36",
+              "17.08",
+              "10.64"
+            ],
+            [
+              "11.400",
+              "1ETM",
+              "29.25",
+              "24.27",
+              "15.09"
+            ],
+            [
+              "11.400",
+              "NTM",
+              "18.93",
+              "15.71",
+              "9.77"
+            ],
+            [
+              "19.202",
+              "1ETM",
+              "21.44",
+              "17.39",
+              "10.73"
+            ],
+            [
+              "19.202",
+              "NTM",
+              "16.25",
+              "13.17",
+              "8.13"
+            ]
+          ]
+        },
+        {
+          "id": "wind-r21-coherence",
+          "kind": "text",
+          "style": "Normal",
+          "text": "空间相干性采用幅值平方相干系数的平方根表征，即|Sᵢⱼ|/(SᵢᵢSⱼⱼ)¹ᐟ²。图3.2-7给出额定风速NTM工况中间距为4、20和80 m的典型点对相干估计与IEC目标曲线。有限样本估计在高频及大间距处存在明显波动，不能据此认定整个频段均满足目标相干关系；进一步评价需增加独立样本并统一谱估计方法。",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true
+        },
+        {
+          "id": "wind-r21-fig7",
+          "kind": "caption",
+          "style": "Caption",
+          "text": "图3.2-7  额定风速NTM工况纵向风速空间相干性估计",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true,
+          "figure_asset": "./wind-figures/native/native-full-11.4-NTM/07_coherence_validation.png",
+          "figure_caption_match": "图3.2-7  额定风速NTM工况纵向风速空间相干性估计"
         },
         {
           "id": "b0358",
@@ -12454,14 +12590,32 @@
           "text": "[136] CHEN J, XU Y, LI J. Numerical investigation of the strengthening method by circumferential prestressing to improve the fatigue life of embedded-ring concrete foundation for onshore wind turbine tower[J]. Energies, 2020, 13(3): 533. DOI:10.3390/en13030533.",
           "has_media": false,
           "has_math": false
+        },
+        {
+          "id": "wind-r21-ref137",
+          "kind": "text",
+          "style": "Normal",
+          "text": "[137] ZHENG C, WANG Y, WENG J, DING B, ZHONG J. Dynamic characteristics analysis of a multi-pile wind turbine under the action of wind–seismic coupling[J]. Energies, 2025, 18(11): 2833. DOI:10.3390/en18112833.",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true
+        },
+        {
+          "id": "wind-r21-ref138",
+          "kind": "text",
+          "style": "Normal",
+          "text": "[138] WANG G, HUANG J, ZHANG Z, et al. Influence of layout on offshore wind farm efficiency and wake characteristics in turbulent environments[J]. Journal of Marine Science and Engineering, 2025, 13(11): 2137. DOI:10.3390/jmse13112137.",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true
         }
       ]
     }
   ],
   "online_revision": {
-    "version": "V8-R20-REV22-CDP-MATCHED",
+    "version": "V8-R21-WIND-FIELD",
     "date": "2026-11-25",
-    "scope": "Chapter 2 CDP material prose, GB envelope, actual input dual-axis total-strain figure, mechanical properties table and Chen 2020 reference. Word/PDF unchanged.",
+    "scope": "Adds four actual full-grid wind figures and six-case 3-component hub TI table; separates historical and new inflow; no REV22 wind solver results or Word/PDF export.",
     "source_gate": "74fb3aee9dfef058b972a3f0e03aa571319c2fe2",
     "source_inp": "cdb719b95b8ce4301011489b4ab8ffc9e73c18bf",
     "wind_manifest": "./wind-figures/core/manifest.json",
