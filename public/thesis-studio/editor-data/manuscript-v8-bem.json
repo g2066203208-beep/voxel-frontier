@@ -3748,6 +3748,30 @@
           ]
         },
         {
+          "id": "r36-reserve-1",
+          "kind": "text",
+          "style": "Normal",
+          "text": "为检验纵向受力与剪扭需求的相容性，根据GB/T 50010—2010（2024年版）第6.2节及附录E.0.1，采用圆环纤维积分法建立开裂截面轴力与弯矩平衡方程。混凝土受拉贡献忽略，受压采用非线性应力—应变关系；纵筋采用HRB500理想弹塑性本构，内外层半径按原模型端部坐标恢复。BF1支路有效预压力取5.384 MN，暂按固定同心作用处理，尚不考虑体外无黏结筋全长变形引起的应力增量。选取S06历史310条同态控制记录，按预应力作用分项系数1.0和1.2分别求解，计620个截面状态。",
+          "has_media": false,
+          "has_math": false
+        },
+        {
+          "id": "r36-reserve-2",
+          "kind": "text",
+          "style": "Normal",
+          "text": "采用8×180及16×360的径向与周向积分离散进行复算，细网格620个状态均满足轴力、弯矩平衡，最大相对残差为9.63×10⁻⁹，局部应力诊断指标最大离散差为0.000122。上述状态的混凝土正截面极限压应变及纵筋极限拉应变均未超过对应限值。按45°斜压场，将同一圆周位置的纵筋弯曲拉应力与剪扭等效拉应力叠加，26个塔节的局部诊断指标大于1。其中第28节在652.80 s控制状态下的纵筋层平均拉应力为435 MPa，剪扭等效附加拉应力为73.15 MPa，叠加指标为1.1682。",
+          "has_media": false,
+          "has_math": false
+        },
+        {
+          "id": "r36-reserve-3",
+          "kind": "text",
+          "style": "Normal",
+          "text": "上述计算表明，在所设剪扭拉力分配条件下，部分纵筋的弯曲抗拉能力与抗扭需求存在竞争。该指标未包含剪扭作用下截面应力重分布、混凝土斜压强度折减及变径环向膜力，不能作为正式联合承载力利用系数。第30、31节环筋局部加密方案仍为待核候选，尚需结合真实有效预应力状态及完整风震设计组合开展截面联合验算。",
+          "has_media": false,
+          "has_math": false
+        },
+        {
           "id": "r34-membrane-3",
           "kind": "text",
           "style": "Normal",
@@ -13883,9 +13907,9 @@
     }
   ],
   "online_revision": {
-    "version": "V8-R34-HOOP-SIZING",
+    "version": "V8-R36-SECTION-RESERVE",
     "date": "2026-11-25",
-    "scope": "Local two-segment spacing candidate based on S06 shear-flow upper bound; no combined design certification.",
+    "scope": "Conditional cracked section equilibrium and longitudinal stress reserve diagnostic; no combined design certification.",
     "source_gate": "74fb3aee9dfef058b972a3f0e03aa571319c2fe2",
     "source_inp": "cdb719b95b8ce4301011489b4ab8ffc9e73c18bf",
     "wind_manifest": "./wind-figures/core/manifest.json",
@@ -13905,6 +13929,8 @@
     "rebar_verification": "./rebar-verification/",
     "code_equations": "./rebar-verification/r32-code-equations.json",
     "torsion_sensitivity": "./rebar-verification/r33-torsion-sensitivity.json",
-    "hoop_sizing": "./rebar-verification/r34-hoop-sizing.json"
+    "hoop_sizing": "./rebar-verification/r34-hoop-sizing.json",
+    "membrane_coupling": "./rebar-verification/r35-membrane-coupling.json",
+    "section_reserve": "./rebar-verification/r36-section-reserve.json"
   }
 }
