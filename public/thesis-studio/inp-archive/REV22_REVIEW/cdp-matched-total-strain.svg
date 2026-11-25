@@ -1,0 +1,306 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='1050' height='650' viewBox='0 0 1050 650'><rect width='1050' height='650' fill='white'/><style>text{font-family:Times New Roman,Liberation Serif,serif;fill:#111;font-size:15px}.tick{font-size:13px}</style>
+<rect x="76" y="24" width="372" height="225" fill="none" stroke="#111"/>
+<path d="M76 249L76 244" stroke="#111"/>
+<text x="76" y="268" text-anchor="middle" class="tick">0.000</text>
+<path d="M448 249L443 249" stroke="#111"/>
+<text x="456" y="253" class="tick">0.0</text>
+<path d="M138 249L138 244" stroke="#111"/>
+<text x="138" y="268" text-anchor="middle" class="tick">0.001</text>
+<path d="M448 211.5L443 211.5" stroke="#111"/>
+<text x="456" y="215.5" class="tick">0.2</text>
+<path d="M200 249L200 244" stroke="#111"/>
+<text x="200" y="268" text-anchor="middle" class="tick">0.002</text>
+<path d="M448 174L443 174" stroke="#111"/>
+<text x="456" y="178" class="tick">0.4</text>
+<path d="M262 249L262 244" stroke="#111"/>
+<text x="262" y="268" text-anchor="middle" class="tick">0.003</text>
+<path d="M448 136.5L443 136.5" stroke="#111"/>
+<text x="456" y="140.5" class="tick">0.6</text>
+<path d="M324 249L324 244" stroke="#111"/>
+<text x="324" y="268" text-anchor="middle" class="tick">0.004</text>
+<path d="M448 99L443 99" stroke="#111"/>
+<text x="456" y="103" class="tick">0.8</text>
+<path d="M386 249L386 244" stroke="#111"/>
+<text x="386" y="268" text-anchor="middle" class="tick">0.005</text>
+<path d="M448 61.5L443 61.5" stroke="#111"/>
+<text x="456" y="65.5" class="tick">1.0</text>
+<path d="M448 249L448 244" stroke="#111"/>
+<text x="448" y="268" text-anchor="middle" class="tick">0.006</text>
+<path d="M448 24L443 24" stroke="#111"/>
+<text x="456" y="28" class="tick">1.2</text>
+<path d="M76 249L81 249" stroke="#111"/>
+<text x="67" y="253" text-anchor="end" class="tick">0</text>
+<path d="M76 204L81 204" stroke="#111"/>
+<text x="67" y="208" text-anchor="end" class="tick">10</text>
+<path d="M76 159L81 159" stroke="#111"/>
+<text x="67" y="163" text-anchor="end" class="tick">20</text>
+<path d="M76 114L81 114" stroke="#111"/>
+<text x="67" y="118" text-anchor="end" class="tick">30</text>
+<path d="M76 69L81 69" stroke="#111"/>
+<text x="67" y="73" text-anchor="end" class="tick">40</text>
+<path d="M76 24L81 24" stroke="#111"/>
+<text x="67" y="28" text-anchor="end" class="tick">50</text>
+<text x="262" y="289" text-anchor="middle">Compressive total strain</text>
+<text transform="translate(22 136.5) rotate(-90)" text-anchor="middle">Stress (MPa)</text>
+<text transform="translate(500 136.5) rotate(-90)" text-anchor="middle">Damage factor</text>
+<polyline points="76,249 127.365,112.925 137.653,102.892 143.258,93.929 148.862,86.092 154.467,79.408 160.072,73.883 165.677,69.496 171.282,66.205 176.886,63.951 182.491,62.661 188.096,62.25 193.701,63.144 199.306,65.619 210.515,74.037 221.725,85.172 232.934,97.291 244.144,109.304 255.354,120.625 277.773,140.335 300.192,156.113 322.611,168.603 345.03,178.541 367.45,186.54 389.869,193.063 412.288,198.454 434.707,202.966" fill="none" stroke="#111" stroke-width="1.6"/>
+<polyline points="76,249 127.365,249 137.653,238.84 143.258,236.42 148.862,233.752 154.467,230.857 160.072,227.758 165.677,224.483 171.282,221.059 176.886,217.517 182.491,213.884 188.096,210.189 193.701,206.258 199.306,201.985 210.515,192.881 221.725,183.644 232.934,174.764 244.144,166.501 255.354,158.961 277.773,146.039 300.192,135.65 322.611,127.275 345.03,120.454 367.45,114.829 389.869,110.132 412.288,106.161 434.707,102.768" fill="none" stroke="#245aa5" stroke-width="1.6" stroke-dasharray="7 4"/>
+<circle cx="127.365" cy="112.925" r="1.6" fill="#111"/>
+<circle cx="137.653" cy="102.892" r="1.6" fill="#111"/>
+<circle cx="143.258" cy="93.929" r="1.6" fill="#111"/>
+<circle cx="148.862" cy="86.092" r="1.6" fill="#111"/>
+<circle cx="154.467" cy="79.408" r="1.6" fill="#111"/>
+<circle cx="160.072" cy="73.883" r="1.6" fill="#111"/>
+<circle cx="165.677" cy="69.496" r="1.6" fill="#111"/>
+<circle cx="171.282" cy="66.205" r="1.6" fill="#111"/>
+<circle cx="176.886" cy="63.951" r="1.6" fill="#111"/>
+<circle cx="182.491" cy="62.661" r="1.6" fill="#111"/>
+<circle cx="188.096" cy="62.25" r="1.6" fill="#111"/>
+<circle cx="193.701" cy="63.144" r="1.6" fill="#111"/>
+<circle cx="199.306" cy="65.619" r="1.6" fill="#111"/>
+<circle cx="210.515" cy="74.037" r="1.6" fill="#111"/>
+<circle cx="221.725" cy="85.172" r="1.6" fill="#111"/>
+<circle cx="232.934" cy="97.291" r="1.6" fill="#111"/>
+<circle cx="244.144" cy="109.304" r="1.6" fill="#111"/>
+<circle cx="255.354" cy="120.625" r="1.6" fill="#111"/>
+<circle cx="277.773" cy="140.335" r="1.6" fill="#111"/>
+<circle cx="300.192" cy="156.113" r="1.6" fill="#111"/>
+<circle cx="322.611" cy="168.603" r="1.6" fill="#111"/>
+<circle cx="345.03" cy="178.541" r="1.6" fill="#111"/>
+<circle cx="367.45" cy="186.54" r="1.6" fill="#111"/>
+<circle cx="389.869" cy="193.063" r="1.6" fill="#111"/>
+<circle cx="412.288" cy="198.454" r="1.6" fill="#111"/>
+<circle cx="434.707" cy="202.966" r="1.6" fill="#111"/>
+<path d="M266 109L301 109" stroke="#111" stroke-width="1.6"/>
+<text x="308" y="114" >Stress</text>
+<path d="M266 132L301 132" stroke="#245aa5" stroke-width="1.6" stroke-dasharray="7 4"/>
+<text x="308" y="137" >Damage factor</text>
+<text x="262" y="313" text-anchor="middle">(a) C65 — compression</text>
+<rect x="596" y="24" width="372" height="225" fill="none" stroke="#111"/>
+<path d="M596 249L596 244" stroke="#111"/>
+<text x="596" y="268" text-anchor="middle" class="tick">0.0000</text>
+<path d="M968 249L963 249" stroke="#111"/>
+<text x="976" y="253" class="tick">0.0</text>
+<path d="M658 249L658 244" stroke="#111"/>
+<text x="658" y="268" text-anchor="middle" class="tick">0.0002</text>
+<path d="M968 211.5L963 211.5" stroke="#111"/>
+<text x="976" y="215.5" class="tick">0.2</text>
+<path d="M720 249L720 244" stroke="#111"/>
+<text x="720" y="268" text-anchor="middle" class="tick">0.0004</text>
+<path d="M968 174L963 174" stroke="#111"/>
+<text x="976" y="178" class="tick">0.4</text>
+<path d="M782 249L782 244" stroke="#111"/>
+<text x="782" y="268" text-anchor="middle" class="tick">0.0006</text>
+<path d="M968 136.5L963 136.5" stroke="#111"/>
+<text x="976" y="140.5" class="tick">0.6</text>
+<path d="M844 249L844 244" stroke="#111"/>
+<text x="844" y="268" text-anchor="middle" class="tick">0.0008</text>
+<path d="M968 99L963 99" stroke="#111"/>
+<text x="976" y="103" class="tick">0.8</text>
+<path d="M906 249L906 244" stroke="#111"/>
+<text x="906" y="268" text-anchor="middle" class="tick">0.0010</text>
+<path d="M968 61.5L963 61.5" stroke="#111"/>
+<text x="976" y="65.5" class="tick">1.0</text>
+<path d="M968 249L968 244" stroke="#111"/>
+<text x="968" y="268" text-anchor="middle" class="tick">0.0012</text>
+<path d="M968 24L963 24" stroke="#111"/>
+<text x="976" y="28" class="tick">1.2</text>
+<path d="M596 249L601 249" stroke="#111"/>
+<text x="587" y="253" text-anchor="end" class="tick">0</text>
+<path d="M596 204L601 204" stroke="#111"/>
+<text x="587" y="208" text-anchor="end" class="tick">0.7</text>
+<path d="M596 159L601 159" stroke="#111"/>
+<text x="587" y="163" text-anchor="end" class="tick">1.4</text>
+<path d="M596 114L601 114" stroke="#111"/>
+<text x="587" y="118" text-anchor="end" class="tick">2.1</text>
+<path d="M596 69L601 69" stroke="#111"/>
+<text x="587" y="73" text-anchor="end" class="tick">2.8</text>
+<path d="M596 24L601 24" stroke="#111"/>
+<text x="587" y="28" text-anchor="end" class="tick">3.5</text>
+<text x="782" y="289" text-anchor="middle">Tensile total strain</text>
+<text transform="translate(542 136.5) rotate(-90)" text-anchor="middle">Stress (MPa)</text>
+<text transform="translate(1020 136.5) rotate(-90)" text-anchor="middle">Damage factor</text>
+<polyline points="596,249 613.685,115.14 619.467,104.923 621.272,95.212 623.077,86.183 624.882,78.052 626.687,71.083 628.492,65.594 630.297,61.965 632.103,60.643 633.908,63.56 635.713,69.405 639.323,84.539 642.933,100.361 646.544,114.903 650.154,127.627 659.18,152.031 668.205,168.67 686.257,189.078 704.308,200.862 740.41,213.809 776.513,220.796 812.616,225.202 884.821,230.514 957.026,233.648" fill="none" stroke="#111" stroke-width="1.6"/>
+<polyline points="596,249 613.685,249 619.467,230.369 621.272,229.621 623.077,228.62 624.882,227.304 626.687,225.6 628.492,223.418 630.297,220.651 632.103,217.168 633.908,212.236 635.713,206.431 639.323,194.285 642.933,182.784 646.544,172.508 650.154,163.529 659.18,145.932 668.205,133.384 686.257,117.03 704.308,106.935 740.41,95.143 776.513,88.439 812.616,84.089 884.821,78.742 957.026,75.554" fill="none" stroke="#245aa5" stroke-width="1.6" stroke-dasharray="7 4"/>
+<circle cx="613.685" cy="115.14" r="1.6" fill="#111"/>
+<circle cx="619.467" cy="104.923" r="1.6" fill="#111"/>
+<circle cx="621.272" cy="95.212" r="1.6" fill="#111"/>
+<circle cx="623.077" cy="86.183" r="1.6" fill="#111"/>
+<circle cx="624.882" cy="78.052" r="1.6" fill="#111"/>
+<circle cx="626.687" cy="71.083" r="1.6" fill="#111"/>
+<circle cx="628.492" cy="65.594" r="1.6" fill="#111"/>
+<circle cx="630.297" cy="61.965" r="1.6" fill="#111"/>
+<circle cx="632.103" cy="60.643" r="1.6" fill="#111"/>
+<circle cx="633.908" cy="63.56" r="1.6" fill="#111"/>
+<circle cx="635.713" cy="69.405" r="1.6" fill="#111"/>
+<circle cx="639.323" cy="84.539" r="1.6" fill="#111"/>
+<circle cx="642.933" cy="100.361" r="1.6" fill="#111"/>
+<circle cx="646.544" cy="114.903" r="1.6" fill="#111"/>
+<circle cx="650.154" cy="127.627" r="1.6" fill="#111"/>
+<circle cx="659.18" cy="152.031" r="1.6" fill="#111"/>
+<circle cx="668.205" cy="168.67" r="1.6" fill="#111"/>
+<circle cx="686.257" cy="189.078" r="1.6" fill="#111"/>
+<circle cx="704.308" cy="200.862" r="1.6" fill="#111"/>
+<circle cx="740.41" cy="213.809" r="1.6" fill="#111"/>
+<circle cx="776.513" cy="220.796" r="1.6" fill="#111"/>
+<circle cx="812.616" cy="225.202" r="1.6" fill="#111"/>
+<circle cx="884.821" cy="230.514" r="1.6" fill="#111"/>
+<circle cx="957.026" cy="233.648" r="1.6" fill="#111"/>
+<path d="M786 109L821 109" stroke="#111" stroke-width="1.6"/>
+<text x="828" y="114" >Stress</text>
+<path d="M786 132L821 132" stroke="#245aa5" stroke-width="1.6" stroke-dasharray="7 4"/>
+<text x="828" y="137" >Damage factor</text>
+<text x="782" y="313" text-anchor="middle">(b) C65 — tension</text>
+<rect x="76" y="344" width="372" height="225" fill="none" stroke="#111"/>
+<path d="M76 569L76 564" stroke="#111"/>
+<text x="76" y="588" text-anchor="middle" class="tick">0.000</text>
+<path d="M448 569L443 569" stroke="#111"/>
+<text x="456" y="573" class="tick">0.0</text>
+<path d="M138 569L138 564" stroke="#111"/>
+<text x="138" y="588" text-anchor="middle" class="tick">0.001</text>
+<path d="M448 531.5L443 531.5" stroke="#111"/>
+<text x="456" y="535.5" class="tick">0.2</text>
+<path d="M200 569L200 564" stroke="#111"/>
+<text x="200" y="588" text-anchor="middle" class="tick">0.002</text>
+<path d="M448 494L443 494" stroke="#111"/>
+<text x="456" y="498" class="tick">0.4</text>
+<path d="M262 569L262 564" stroke="#111"/>
+<text x="262" y="588" text-anchor="middle" class="tick">0.003</text>
+<path d="M448 456.5L443 456.5" stroke="#111"/>
+<text x="456" y="460.5" class="tick">0.6</text>
+<path d="M324 569L324 564" stroke="#111"/>
+<text x="324" y="588" text-anchor="middle" class="tick">0.004</text>
+<path d="M448 419L443 419" stroke="#111"/>
+<text x="456" y="423" class="tick">0.8</text>
+<path d="M386 569L386 564" stroke="#111"/>
+<text x="386" y="588" text-anchor="middle" class="tick">0.005</text>
+<path d="M448 381.5L443 381.5" stroke="#111"/>
+<text x="456" y="385.5" class="tick">1.0</text>
+<path d="M448 569L448 564" stroke="#111"/>
+<text x="448" y="588" text-anchor="middle" class="tick">0.006</text>
+<path d="M448 344L443 344" stroke="#111"/>
+<text x="456" y="348" class="tick">1.2</text>
+<path d="M76 569L81 569" stroke="#111"/>
+<text x="67" y="573" text-anchor="end" class="tick">0</text>
+<path d="M76 524L81 524" stroke="#111"/>
+<text x="67" y="528" text-anchor="end" class="tick">10</text>
+<path d="M76 479L81 479" stroke="#111"/>
+<text x="67" y="483" text-anchor="end" class="tick">20</text>
+<path d="M76 434L81 434" stroke="#111"/>
+<text x="67" y="438" text-anchor="end" class="tick">30</text>
+<path d="M76 389L81 389" stroke="#111"/>
+<text x="67" y="393" text-anchor="end" class="tick">40</text>
+<path d="M76 344L81 344" stroke="#111"/>
+<text x="67" y="348" text-anchor="end" class="tick">50</text>
+<text x="262" y="609" text-anchor="middle">Compressive total strain</text>
+<text transform="translate(22 456.5) rotate(-90)" text-anchor="middle">Stress (MPa)</text>
+<text transform="translate(500 456.5) rotate(-90)" text-anchor="middle">Damage factor</text>
+<polyline points="76,569 129.292,425.886 138.88,414.867 144.597,404.923 150.313,396.141 156.03,388.579 161.746,382.268 167.462,377.214 173.179,373.392 178.895,370.755 184.612,369.236 190.328,368.75 196.044,369.785 201.761,372.647 213.194,382.333 224.626,395.041 236.059,408.734 247.492,422.171 258.925,434.71 281.79,456.258 304.656,473.255 327.522,486.554 350.387,497.04 373.253,505.417 396.118,512.208 418.984,517.794 441.85,522.45" fill="none" stroke="#111" stroke-width="1.6"/>
+<polyline points="76,569 129.292,569 138.88,560.635 144.597,558.454 150.313,556.003 156.03,553.294 161.746,550.346 167.462,547.183 173.179,543.83 178.895,540.316 184.612,536.671 190.328,532.926 196.044,528.894 201.761,524.467 213.194,514.962 224.626,505.284 236.059,495.991 247.492,487.37 258.925,479.534 281.79,466.188 304.656,455.538 327.522,447.007 350.387,440.094 373.253,434.417 396.118,429.692 418.984,425.709 441.85,422.313" fill="none" stroke="#245aa5" stroke-width="1.6" stroke-dasharray="7 4"/>
+<circle cx="129.292" cy="425.886" r="1.6" fill="#111"/>
+<circle cx="138.88" cy="414.867" r="1.6" fill="#111"/>
+<circle cx="144.597" cy="404.923" r="1.6" fill="#111"/>
+<circle cx="150.313" cy="396.141" r="1.6" fill="#111"/>
+<circle cx="156.03" cy="388.579" r="1.6" fill="#111"/>
+<circle cx="161.746" cy="382.268" r="1.6" fill="#111"/>
+<circle cx="167.462" cy="377.214" r="1.6" fill="#111"/>
+<circle cx="173.179" cy="373.392" r="1.6" fill="#111"/>
+<circle cx="178.895" cy="370.755" r="1.6" fill="#111"/>
+<circle cx="184.612" cy="369.236" r="1.6" fill="#111"/>
+<circle cx="190.328" cy="368.75" r="1.6" fill="#111"/>
+<circle cx="196.044" cy="369.785" r="1.6" fill="#111"/>
+<circle cx="201.761" cy="372.647" r="1.6" fill="#111"/>
+<circle cx="213.194" cy="382.333" r="1.6" fill="#111"/>
+<circle cx="224.626" cy="395.041" r="1.6" fill="#111"/>
+<circle cx="236.059" cy="408.734" r="1.6" fill="#111"/>
+<circle cx="247.492" cy="422.171" r="1.6" fill="#111"/>
+<circle cx="258.925" cy="434.71" r="1.6" fill="#111"/>
+<circle cx="281.79" cy="456.258" r="1.6" fill="#111"/>
+<circle cx="304.656" cy="473.255" r="1.6" fill="#111"/>
+<circle cx="327.522" cy="486.554" r="1.6" fill="#111"/>
+<circle cx="350.387" cy="497.04" r="1.6" fill="#111"/>
+<circle cx="373.253" cy="505.417" r="1.6" fill="#111"/>
+<circle cx="396.118" cy="512.208" r="1.6" fill="#111"/>
+<circle cx="418.984" cy="517.794" r="1.6" fill="#111"/>
+<circle cx="441.85" cy="522.45" r="1.6" fill="#111"/>
+<path d="M266 429L301 429" stroke="#111" stroke-width="1.6"/>
+<text x="308" y="434" >Stress</text>
+<path d="M266 452L301 452" stroke="#245aa5" stroke-width="1.6" stroke-dasharray="7 4"/>
+<text x="308" y="457" >Damage factor</text>
+<text x="262" y="633" text-anchor="middle">(c) C70 — compression</text>
+<rect x="596" y="344" width="372" height="225" fill="none" stroke="#111"/>
+<path d="M596 569L596 564" stroke="#111"/>
+<text x="596" y="588" text-anchor="middle" class="tick">0.0000</text>
+<path d="M968 569L963 569" stroke="#111"/>
+<text x="976" y="573" class="tick">0.0</text>
+<path d="M658 569L658 564" stroke="#111"/>
+<text x="658" y="588" text-anchor="middle" class="tick">0.0002</text>
+<path d="M968 531.5L963 531.5" stroke="#111"/>
+<text x="976" y="535.5" class="tick">0.2</text>
+<path d="M720 569L720 564" stroke="#111"/>
+<text x="720" y="588" text-anchor="middle" class="tick">0.0004</text>
+<path d="M968 494L963 494" stroke="#111"/>
+<text x="976" y="498" class="tick">0.4</text>
+<path d="M782 569L782 564" stroke="#111"/>
+<text x="782" y="588" text-anchor="middle" class="tick">0.0006</text>
+<path d="M968 456.5L963 456.5" stroke="#111"/>
+<text x="976" y="460.5" class="tick">0.6</text>
+<path d="M844 569L844 564" stroke="#111"/>
+<text x="844" y="588" text-anchor="middle" class="tick">0.0008</text>
+<path d="M968 419L963 419" stroke="#111"/>
+<text x="976" y="423" class="tick">0.8</text>
+<path d="M906 569L906 564" stroke="#111"/>
+<text x="906" y="588" text-anchor="middle" class="tick">0.0010</text>
+<path d="M968 381.5L963 381.5" stroke="#111"/>
+<text x="976" y="385.5" class="tick">1.0</text>
+<path d="M968 569L968 564" stroke="#111"/>
+<text x="968" y="588" text-anchor="middle" class="tick">0.0012</text>
+<path d="M968 344L963 344" stroke="#111"/>
+<text x="976" y="348" class="tick">1.2</text>
+<path d="M596 569L601 569" stroke="#111"/>
+<text x="587" y="573" text-anchor="end" class="tick">0</text>
+<path d="M596 524L601 524" stroke="#111"/>
+<text x="587" y="528" text-anchor="end" class="tick">0.7</text>
+<path d="M596 479L601 479" stroke="#111"/>
+<text x="587" y="483" text-anchor="end" class="tick">1.4</text>
+<path d="M596 434L601 434" stroke="#111"/>
+<text x="587" y="438" text-anchor="end" class="tick">2.1</text>
+<path d="M596 389L601 389" stroke="#111"/>
+<text x="587" y="393" text-anchor="end" class="tick">2.8</text>
+<path d="M596 344L601 344" stroke="#111"/>
+<text x="587" y="348" text-anchor="end" class="tick">3.5</text>
+<text x="782" y="609" text-anchor="middle">Tensile total strain</text>
+<text transform="translate(542 456.5) rotate(-90)" text-anchor="middle">Stress (MPa)</text>
+<text transform="translate(1020 456.5) rotate(-90)" text-anchor="middle">Damage factor</text>
+<polyline points="596,569 613.803,432.399 619.733,421.972 621.558,412.063 623.384,402.849 625.209,394.552 627.035,387.44 628.861,381.839 630.686,378.135 632.512,376.786 634.337,379.875 636.163,386.053 639.814,401.984 643.465,418.534 647.117,433.653 650.768,446.808 659.896,471.853 669.024,488.79 687.279,509.411 705.535,521.24 742.047,534.175 778.559,541.127 815.071,545.503 888.094,550.766 961.118,553.867" fill="none" stroke="#111" stroke-width="1.6"/>
+<polyline points="596,569 613.803,569 619.733,549.981 621.558,549.234 623.384,548.235 625.209,546.923 627.035,545.222 628.861,543.045 630.686,540.285 632.512,536.81 634.337,531.844 636.163,525.969 639.814,513.659 643.465,502.019 647.117,491.646 650.768,482.607 659.896,464.965 669.024,452.442 687.279,436.192 705.535,426.197 742.047,414.554 778.559,407.949 815.071,403.669 888.094,398.412 961.118,395.281" fill="none" stroke="#245aa5" stroke-width="1.6" stroke-dasharray="7 4"/>
+<circle cx="613.803" cy="432.399" r="1.6" fill="#111"/>
+<circle cx="619.733" cy="421.972" r="1.6" fill="#111"/>
+<circle cx="621.558" cy="412.063" r="1.6" fill="#111"/>
+<circle cx="623.384" cy="402.849" r="1.6" fill="#111"/>
+<circle cx="625.209" cy="394.552" r="1.6" fill="#111"/>
+<circle cx="627.035" cy="387.44" r="1.6" fill="#111"/>
+<circle cx="628.861" cy="381.839" r="1.6" fill="#111"/>
+<circle cx="630.686" cy="378.135" r="1.6" fill="#111"/>
+<circle cx="632.512" cy="376.786" r="1.6" fill="#111"/>
+<circle cx="634.337" cy="379.875" r="1.6" fill="#111"/>
+<circle cx="636.163" cy="386.053" r="1.6" fill="#111"/>
+<circle cx="639.814" cy="401.984" r="1.6" fill="#111"/>
+<circle cx="643.465" cy="418.534" r="1.6" fill="#111"/>
+<circle cx="647.117" cy="433.653" r="1.6" fill="#111"/>
+<circle cx="650.768" cy="446.808" r="1.6" fill="#111"/>
+<circle cx="659.896" cy="471.853" r="1.6" fill="#111"/>
+<circle cx="669.024" cy="488.79" r="1.6" fill="#111"/>
+<circle cx="687.279" cy="509.411" r="1.6" fill="#111"/>
+<circle cx="705.535" cy="521.24" r="1.6" fill="#111"/>
+<circle cx="742.047" cy="534.175" r="1.6" fill="#111"/>
+<circle cx="778.559" cy="541.127" r="1.6" fill="#111"/>
+<circle cx="815.071" cy="545.503" r="1.6" fill="#111"/>
+<circle cx="888.094" cy="550.766" r="1.6" fill="#111"/>
+<circle cx="961.118" cy="553.867" r="1.6" fill="#111"/>
+<path d="M786 429L821 429" stroke="#111" stroke-width="1.6"/>
+<text x="828" y="434" >Stress</text>
+<path d="M786 452L821 452" stroke="#245aa5" stroke-width="1.6" stroke-dasharray="7 4"/>
+<text x="828" y="457" >Damage factor</text>
+<text x="782" y="633" text-anchor="middle">(d) C70 — tension</text>
+</svg>
