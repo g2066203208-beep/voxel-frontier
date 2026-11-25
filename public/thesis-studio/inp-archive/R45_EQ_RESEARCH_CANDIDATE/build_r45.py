@@ -100,7 +100,7 @@ def main():
     require(keyword_count(deck,"Part")==keyword_count(deck,"End Part")==100,"part closure")
     require(keyword_count(deck,"Instance")==keyword_count(deck,"End Instance")==100,"instance closure")
     require(keyword_count(deck,"Contact Pair")==30,"contact pair count")
-    require(deck.rstrip().lower().endswith("*end step"),"precheck not closed")
+    require(keyword_count(deck,"End Step")==4 and [l.strip().lower() for l in deck.splitlines() if l.strip() and not l.lstrip().startswith("**")][-1]=="*end step","precheck not closed")
     template=get_step(old);audit_step(template)
     # An existing load template is copied without changing OP=NEW or gravity.
     dtline="0.005, 199.995, 1.e-7, 0.005"
