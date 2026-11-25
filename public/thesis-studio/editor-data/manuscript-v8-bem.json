@@ -4670,41 +4670,10 @@
           "figure_caption_match": "图3.2-3  轮毂中心风速自谱与Kaimal目标谱对比"
         },
         {
-          "id": "wind-r21-space",
-          "kind": "text",
-          "style": "Normal",
-          "text": "风速在空间上的非均匀性决定了不同叶素位置的瞬时入流差异。参照文献[137,138]的时空风场表达方法，以额定风速NTM工况为例，图3.2-4给出轮毂高度横向截线及塔身中心竖向截线的纵向风速时空分布，图3.2-5给出250、400和550 s时刻的转子扫掠面风速分布。两图均由51×51原生风场数据绘制，白色圆周表示叶轮扫掠边界。",
-          "has_media": false,
-          "has_math": false,
-          "online_only": true
-        },
-        {
-          "id": "wind-r21-fig4",
-          "kind": "caption",
-          "style": "Caption",
-          "text": "图3.2-4  额定风速NTM工况纵向风速时空分布",
-          "has_media": false,
-          "has_math": false,
-          "online_only": true,
-          "figure_asset": "./wind-figures/native/native-full-11.4-NTM/03_spatiotemporal.png",
-          "figure_caption_match": "图3.2-4  额定风速NTM工况纵向风速时空分布"
-        },
-        {
-          "id": "wind-r21-fig5",
-          "kind": "caption",
-          "style": "Caption",
-          "text": "图3.2-5  额定风速NTM工况不同瞬时的转子扫掠面纵向风速",
-          "has_media": false,
-          "has_math": false,
-          "online_only": true,
-          "figure_asset": "./wind-figures/native/native-full-11.4-NTM/04_rotor_snapshots.png",
-          "figure_caption_match": "图3.2-5  额定风速NTM工况不同瞬时的转子扫掠面纵向风速"
-        },
-        {
           "id": "wind-r21-profile",
           "kind": "text",
           "style": "Normal",
-          "text": "为表征垂向风切变及风速波动，参照Brown等[28]的统计方法，以各高度纵向平均风速为分母定义三分量湍流强度Iᵢ=σᵢ/ū。图3.2-6给出额定风速NTM工况的纵向平均风速及纵向湍流强度随高程的变化；虚线为指数0.2的参考风速剖面，水平点线为转子风场下边界。低于该边界的统计量取塔身补充节点。表3.2-1列出六组新生成风场的轮毂中心三分量湍流强度。11.4 m/s工况下，NTM及ETM纵向湍流强度分别为18.93%及29.25%。该结果反映指定湍流模型的样本统计特征，不代表场址实测湍流强度。",
+          "text": "为确定塔身风阻沿高程的分布，提取额定风速NTM工况的纵向平均风速和纵向湍流强度剖面，如图3.2-4所示。湍流强度按文献[28]定义为风速标准差与纵向平均风速之比。风场下边界以下采用塔身补充节点的风速，指数0.2的幂律曲线作为参考。额定风速下NTM和ETM轮毂中心纵向湍流强度分别为18.93%和29.25%。",
           "has_media": false,
           "has_math": false,
           "online_only": true
@@ -4713,97 +4682,12 @@
           "id": "wind-r21-fig6",
           "kind": "caption",
           "style": "Caption",
-          "text": "图3.2-6  额定风速NTM工况平均风速及纵向湍流强度剖面",
+          "text": "图3.2-4  额定风速NTM工况平均风速及纵向湍流强度剖面",
           "has_media": false,
           "has_math": false,
           "online_only": true,
           "figure_asset": "./wind-figures/native/native-full-11.4-NTM/06_profiles.png",
-          "figure_caption_match": "图3.2-6  额定风速NTM工况平均风速及纵向湍流强度剖面"
-        },
-        {
-          "id": "wind-r21-tablecap",
-          "kind": "caption",
-          "style": "表题",
-          "text": "表3.2-1  六组原生风场轮毂中心三分量湍流强度",
-          "has_media": false,
-          "has_math": false,
-          "online_only": true
-        },
-        {
-          "id": "wind-r21-table",
-          "kind": "table",
-          "style": "Table Grid",
-          "rows": [
-            [
-              "参考风速/(m·s⁻¹)",
-              "湍流类型",
-              "Iᵤ/%",
-              "Iᵥ/%",
-              "I𝓌/%"
-            ],
-            [
-              "9.344",
-              "1ETM",
-              "33.36",
-              "27.98",
-              "17.43"
-            ],
-            [
-              "9.344",
-              "NTM",
-              "20.36",
-              "17.08",
-              "10.64"
-            ],
-            [
-              "11.400",
-              "1ETM",
-              "29.25",
-              "24.27",
-              "15.09"
-            ],
-            [
-              "11.400",
-              "NTM",
-              "18.93",
-              "15.71",
-              "9.77"
-            ],
-            [
-              "19.202",
-              "1ETM",
-              "21.44",
-              "17.39",
-              "10.73"
-            ],
-            [
-              "19.202",
-              "NTM",
-              "16.25",
-              "13.17",
-              "8.13"
-            ]
-          ]
-        },
-        {
-          "id": "wind-r21-coherence",
-          "kind": "text",
-          "style": "Normal",
-          "text": "空间相干性采用幅值平方相干系数的平方根表征，即|Sᵢⱼ|/(SᵢᵢSⱼⱼ)¹ᐟ²。图3.2-7给出额定风速NTM工况中间距为4、20和80 m的典型点对相干估计与IEC目标曲线。有限样本估计在高频及大间距处存在明显波动，不能据此认定整个频段均满足目标相干关系；进一步评价需增加独立样本并统一谱估计方法。",
-          "has_media": false,
-          "has_math": false,
-          "online_only": true
-        },
-        {
-          "id": "wind-r21-fig7",
-          "kind": "caption",
-          "style": "Caption",
-          "text": "图3.2-7  额定风速NTM工况纵向风速空间相干性估计",
-          "has_media": false,
-          "has_math": false,
-          "online_only": true,
-          "figure_asset": "./wind-figures/native/native-full-11.4-NTM/07_coherence_validation.png",
-          "figure_caption_match": "图3.2-7  额定风速NTM工况纵向风速空间相干性估计"
+          "figure_caption_match": "图3.2-4  额定风速NTM工况平均风速及纵向湍流强度剖面"
         },
         {
           "id": "b0358",
@@ -5662,6 +5546,15 @@
           "has_math": false,
           "id": "v8-080",
           "word_body_index": 485
+        },
+        {
+          "id": "wind-r22-load-reference",
+          "kind": "text",
+          "style": "Normal",
+          "text": "Zheng等[137]采用TurbSim生成入流，并通过OpenFAST计算叶片和塔身荷载后等效施加至有限元模型。本文分别计算风轮气动荷载与塔身分布风阻，塔身风阻的计算及离散方法如下。",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true
         },
         {
           "kind": "text",
@@ -12599,23 +12492,14 @@
           "has_media": false,
           "has_math": false,
           "online_only": true
-        },
-        {
-          "id": "wind-r21-ref138",
-          "kind": "text",
-          "style": "Normal",
-          "text": "[138] WANG G, HUANG J, ZHANG Z, et al. Influence of layout on offshore wind farm efficiency and wake characteristics in turbulent environments[J]. Journal of Marine Science and Engineering, 2025, 13(11): 2137. DOI:10.3390/jmse13112137.",
-          "has_media": false,
-          "has_math": false,
-          "online_only": true
         }
       ]
     }
   ],
   "online_revision": {
-    "version": "V8-R21-WIND-FIELD",
+    "version": "V8-R22-WIND-FOCUS",
     "date": "2026-11-25",
-    "scope": "Adds four actual full-grid wind figures and six-case 3-component hub TI table; separates historical and new inflow; no REV22 wind solver results or Word/PDF export.",
+    "scope": "Keep four core inflow figures; relocate diagnostic spatial plots, coherence and six-case TI table to evidence archive. Retain Brown for TI definition and Zheng for wind-load transfer precedent; remove wake-layout citation from manuscript. No new solver results.",
     "source_gate": "74fb3aee9dfef058b972a3f0e03aa571319c2fe2",
     "source_inp": "cdb719b95b8ce4301011489b4ab8ffc9e73c18bf",
     "wind_manifest": "./wind-figures/core/manifest.json",
