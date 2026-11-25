@@ -7867,7 +7867,7 @@
           "id": "wind-r14-010",
           "kind": "text",
           "style": "Normal",
-          "text": "上述六组结果为新生成风场驱动的静止塔架独立准定常风阻，不包含叶片气动力、RNA接口作用和结构运动反馈，亦非历史36组整机响应。在额定风速的NTM与1ETM工况中，塔身风阻与独立叶片气动力计算采用相同BTS入流；其中塔身风荷载已按当前有限元节点进行映射。叶片气动力全局参考点转换及结构运动反馈尚需核验，不将历史塔底反力作为外部气动力叠加。",
+          "text": "上述六组结果为新生成风场驱动的静止塔架独立准定常风阻，不包含叶片气动力、RNA接口作用和结构运动反馈，亦非历史36组整机响应。在额定风速NTM与1ETM工况中，塔身风阻与独立叶片气动力计算采用相同BTS入流；塔身风荷载已按当前有限元节点映射。轮毂气动力的全局分量及基于名义几何的参考点转换见下文。未将历史塔底反力作为外部气动力叠加。",
           "has_media": false,
           "has_math": false,
           "online_only": true
@@ -7938,6 +7938,102 @@
           "kind": "text",
           "style": "正文",
           "text": "表3.3-2表明，在既定端部等效及节点分配条件下，两工况均满足合力与力矩的数值守恒。均匀节点力分配用于塔架整体荷载传递，不等同于实际表面风压分布，不能据此直接评价局部混凝土裂缝或接缝应力。",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true
+        },
+        {
+          "id": "r55-rna-001",
+          "kind": "text",
+          "style": "正文",
+          "text": "采用OpenFAST v3.5.3补充输出惯性坐标下的叶轮气动合力与力矩，两组700 s计算保留100～700 s共12001个采样点，采样间隔0.05 s。补充输出与原轮毂坐标六分量时程逐点一致，坐标旋转前后力及力矩模长差均处于二进制输出量化误差范围内。与塔身外风阻时程的共同采样区间为100～699.95 s。",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true
+        },
+        {
+          "id": "r55-rna-002",
+          "kind": "text",
+          "style": "正文",
+          "text": "有限元输入中SET_RNA_RP的初始坐标为Q₀=(0,160,0) m，名义轮毂节点900001为P₀=(0,161.368806,−7.072982) m。对采用固定RNA名义几何的整体响应诊断，令轮毂合力为F，关于轮毂的合力矩为M_P，关于参考点的等效力矩取",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true
+        },
+        {
+          "id": "r55-rna-003",
+          "kind": "text",
+          "style": "Normal",
+          "text": "\t\t（3.3-38）",
+          "has_media": false,
+          "has_math": true,
+          "equation_label": "3.3-38",
+          "equation_latex": "\\mathbf M_Q=\\mathbf M_P+(\\mathbf r_{P0}-\\mathbf r_{Q0})\\times\\mathbf F",
+          "online_only": true
+        },
+        {
+          "id": "r55-rna-004",
+          "kind": "text",
+          "style": "正文",
+          "text": "式（3.3-38）以有限元名义几何为参考，不将实际旋转风轮的瞬时位置视为已知。两组时程关于统一坐标原点的力矩最大平衡残差均为5.96×10⁻⁸ N·m。表3.3-3给出移置后各分量独立绝对峰值，各峰值不一定在同一时刻出现。",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true
+        },
+        {
+          "id": "r55-rna-005",
+          "kind": "caption",
+          "style": "表题",
+          "text": "表3.3-3  额定风速下RNA参考点等效气动荷载分量峰值",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true
+        },
+        {
+          "id": "r55-rna-006",
+          "kind": "table",
+          "style": "Normal",
+          "rows": [
+            [
+              "工况",
+              "共同采样点数",
+              "|F_X|max/kN",
+              "|F_Y|max/kN",
+              "|F_Z|max/kN",
+              "|M_X|max/(MN·m)",
+              "|M_Y|max/(MN·m)",
+              "|M_Z|max/(MN·m)"
+            ],
+            [
+              "NTM",
+              "12000",
+              "109.847",
+              "230.128",
+              "1729.850",
+              "17.924",
+              "12.830",
+              "15.885"
+            ],
+            [
+              "1ETM",
+              "12000",
+              "153.205",
+              "269.856",
+              "1945.307",
+              "24.938",
+              "19.083",
+              "18.474"
+            ]
+          ],
+          "has_media": false,
+          "has_math": false,
+          "online_only": true
+        },
+        {
+          "id": "r55-rna-007",
+          "kind": "text",
+          "style": "正文",
+          "text": "上述载荷为叶轮外部气动力的整体等效，不包含塔顶截面反力、RNA重力及结构惯性反力。当前有限元模型已有RNA质量和惯量，故不另行叠加相应惯性荷载。固定名义几何下的力系平衡不能代替旋转叶片分布荷载、瞬时姿态及气弹耦合验证，也不能直接用于评价叶片局部应力。",
           "has_media": false,
           "has_math": false,
           "online_only": true
@@ -14855,9 +14951,9 @@
     }
   ],
   "online_revision": {
-    "version": "V8-R53-ERA5-RESTORED",
+    "version": "V8-R55-NOMINAL-RNA-WRENCH",
     "date": "2026-11-25",
-    "scope": "R43–R50 conditional structural and load calculations; R53 eight ERA5 figures rebuilt from verified hourly source data; native structural analysis NOT_RUN",
+    "scope": "R54 native output axis audit and R55 nominal reference-point transfer from actual 12000 common samples per case; native structural analysis NOT_RUN",
     "source_gate": "74fb3aee9dfef058b972a3f0e03aa571319c2fe2",
     "source_inp": "cdb719b95b8ce4301011489b4ab8ffc9e73c18bf",
     "wind_manifest": "./wind-figures/core/manifest.json",
@@ -14888,6 +14984,8 @@
     "rebar_reference_pairs": "./rebar-verification/r43-reference-pairs-receipt.json",
     "era5_recovery_receipt": "./figure-audit/R53/receipt.json",
     "era5_gallery": "./figure-audit/R53/index.html",
-    "seismic_reference_gallery": "./figure-audit/R51/index.html"
+    "seismic_reference_gallery": "./figure-audit/R51/index.html",
+    "r54_receipt": "./inp-archive/R54_GLOBAL_WRENCH/receipt.json",
+    "r55_nominal_transfer": "./inp-archive/R55_FULL_WIND_EQ_DIAGNOSTIC/nominal_transfer_source_audit.json"
   }
 }
