@@ -1,0 +1,675 @@
+{
+  "status": "RAW_ERA5_RECOMPUTED_PASS",
+  "quarter_count": 84,
+  "inner_hash_count": 168,
+  "samples": 184080,
+  "point": {
+    "longitude": 113.925,
+    "latitude": 30.2
+  },
+  "interpolation": "bilinear u/v before magnitude",
+  "source_inventory_sha256": {
+    "INNER_MEMBERS.tsv": "9b57722a87274645e2f6111fdee2e211ea9212f7c3954386da0aff18e776b18f",
+    "QUARTERLY_ARCHIVES.tsv": "ce2ce674ec6e3ddb0f8e7d6f51b8269b867a0e80e0fbb9bc27b58b987f3ff215"
+  },
+  "historical_checks": {
+    "mean10": {
+      "actual": 2.6166995403435975,
+      "old": 2.617,
+      "abs_error": 0.0003004596564024631,
+      "tolerance": 0.0006
+    },
+    "mean100": {
+      "actual": 4.298716004838135,
+      "old": 4.298716,
+      "abs_error": 4.838135225782025e-09,
+      "tolerance": 6e-06
+    },
+    "p50": {
+      "actual": 4.061353400447971,
+      "old": 4.061353,
+      "abs_error": 4.00447970783091e-07,
+      "tolerance": 6e-06
+    },
+    "p95": {
+      "actual": 8.385445157312676,
+      "old": 8.385445,
+      "abs_error": 1.573126748866116e-07,
+      "tolerance": 6e-06
+    },
+    "p99": {
+      "actual": 10.429040479381358,
+      "old": 10.42904,
+      "abs_error": 4.793813577208539e-07,
+      "tolerance": 6e-06
+    },
+    "max100": {
+      "actual": 17.62615629913935,
+      "old": 17.626156,
+      "abs_error": 2.9913934795899877e-07,
+      "tolerance": 6e-06
+    },
+    "mean160": {
+      "actual": 4.786599544016023,
+      "old": 4.7866,
+      "abs_error": 4.5598397679924574e-07,
+      "tolerance": 6e-06
+    },
+    "meanHub": {
+      "actual": 4.796029243895241,
+      "old": 4.796029,
+      "abs_error": 2.438952408923001e-07,
+      "tolerance": 6e-06
+    },
+    "p95Hub": {
+      "actual": 9.343881417727466,
+      "old": 9.343881,
+      "abs_error": 4.177274668393238e-07,
+      "tolerance": 6e-06
+    },
+    "maxHub": {
+      "actual": 19.202140008163312,
+      "old": 19.20214,
+      "abs_error": 8.16331180431007e-09,
+      "tolerance": 6e-06
+    },
+    "validAlpha": {
+      "actual": 180768.0,
+      "old": 180768.0,
+      "abs_error": 0.0,
+      "tolerance": 0
+    }
+  },
+  "annual_100m_min_max": [
+    4.061314308250453,
+    4.598073821725425
+  ],
+  "monthly_100m_min_max": [
+    3.935272037949461,
+    4.696101628761639
+  ],
+  "high_samples": 9204,
+  "alpha_quantiles": [
+    0.0775693319926134,
+    0.1182537405830009,
+    0.1992608265031674,
+    0.2965072532116168,
+    0.38354332353233656
+  ],
+  "GEV": {
+    "shape_scipy": 0.18243125003001803,
+    "loc": 14.24064989277258,
+    "scale": 1.1641573454216836,
+    "return_levels": {
+      "20": 16.91017576539116,
+      "50": 17.49039880035177,
+      "100": 17.864928429946524
+    }
+  },
+  "figures": [
+    {
+      "id": "b0332",
+      "asset": "./figure-audit/R53/b0332.svg",
+      "description": "21 annual means, 100 m and extrapolated 160 m",
+      "png_sha256": "c94f7228425c709232cbfb27b4044a6d61d292e2f1d456e60cc785ffa63e51e2",
+      "svg_sha256": "ab5458044d91e7b0fb10ffaff35b7f72146e0455f5b355d29d5825bc1b92376d"
+    },
+    {
+      "id": "b0335",
+      "asset": "./figure-audit/R53/b0335.svg",
+      "description": "184080-hour empirical exceedance",
+      "png_sha256": "26c48523c1f42e2c4184ba246f0f57b1d7641037f4f5d0f17d84e7cb9f35fa37",
+      "svg_sha256": "ecfd7f4e945cabf9fb1ed3d896a7f8ce74118dcce56cab68d5fb08c620b6e65b"
+    },
+    {
+      "id": "b0341",
+      "asset": "./figure-audit/R53/b0341.svg",
+      "description": "12 monthly climatological means",
+      "png_sha256": "3937a63e4f0609017f2aa91e5c854674fb06a7e864fdd146eef34a06bcddddc6",
+      "svg_sha256": "24b46a84bb6819e1f7296e8c558563386839b5594396745ad562fa77de039001"
+    },
+    {
+      "id": "b0344",
+      "asset": "./figure-audit/R53/b0344.svg",
+      "description": "joint wind direction/speed frequency, all hours",
+      "png_sha256": "d510861f6d6ca836ebca85d116b6eb28c501c7e2435a6700e3a1f66aae751b0b",
+      "svg_sha256": "686f2e8e50957d2f15d970c09accf4d4907981ea15a55975535c8f756aa1d9e5"
+    },
+    {
+      "id": "b0346",
+      "asset": "./figure-audit/R53/b0346.svg",
+      "description": "conditional direction frequency among upper 5% wind speed",
+      "png_sha256": "18bc45c958f30eedc8e13bca7f4717c06e51aba0ca7974abd1020580d493bf18",
+      "svg_sha256": "4cbbff5533a44e53d349cce19ac8904152e75d528034fcdec783958474956903"
+    },
+    {
+      "id": "b0349",
+      "asset": "./figure-audit/R53/b0349.svg",
+      "description": "180768 valid hourly exponents; displayed range -0.6 to 1.3",
+      "png_sha256": "f1450ba1e603a737614a5b05ad35ff7797521c07aeb9d609edb4fee44930a099",
+      "svg_sha256": "f7589b0dbb1a5c158976d0c3fc399451204bf769d974fae99adbef5ffe558b9b"
+    },
+    {
+      "id": "b0351",
+      "asset": "./figure-audit/R53/b0351.svg",
+      "description": "observed reanalysis levels, hourly extrapolation, public EIA crosscheck",
+      "png_sha256": "c09a1fd95d6ed0c93aa345253013d1be8d2f11913240a5068b531aaacb57c213",
+      "svg_sha256": "c6e47e0d160949c2c137bd2f1de915bd6df8a0452f9bc092ed918d5c6f0b272e"
+    },
+    {
+      "id": "b0354",
+      "asset": "./figure-audit/R53/b0354.svg",
+      "description": "21 annual maxima, GEV and Gumbel sensitivity, not IEC design wind",
+      "png_sha256": "c3246186899ebf07ddb310d8a3b695bf0b819fe9c5d8c544603cd94a31f43241",
+      "svg_sha256": "8cf1bde1919968ad2e04cce41dfda682265abe7c2820da4a104db8c0502461db"
+    }
+  ],
+  "sources": [
+    {
+      "quarter": "2005Q1",
+      "quarter_sha256": "5c27f95d4e3a28c6b1a3e0e4e31f36d6d96e7ae61f1ebc850efcdfca532bd498",
+      "instant_sha256": "f26986076bdcb4f78e560229246d8f75963d3415f9e0a356466d8a52eba9ffcf",
+      "rows": 2160
+    },
+    {
+      "quarter": "2005Q2",
+      "quarter_sha256": "d7bff7725b601b024ff666086e984627d2f44e9ce5cfa1947936ae017600834c",
+      "instant_sha256": "564b9aabe3d89f0a8c91b6ffa7a2b29a24bbd0ef33f97c7d083af51569b02b69",
+      "rows": 2184
+    },
+    {
+      "quarter": "2005Q3",
+      "quarter_sha256": "61673faa0105a44681ce6d94fb36ceb7bfec143708ba8ece53b86c8f738d6771",
+      "instant_sha256": "56b30867ab982de08495173e726eba2eb924b458be63da9629e292bf80a6b93e",
+      "rows": 2208
+    },
+    {
+      "quarter": "2005Q4",
+      "quarter_sha256": "8b26ba6806977a9469172f96b92783537dd9885a1558b55ca3561e259d01fc60",
+      "instant_sha256": "d29289c53a7ac6d57ca0bdad49efabbe72c60d47d6ba11e4ac287ffc071a5b28",
+      "rows": 2208
+    },
+    {
+      "quarter": "2006Q1",
+      "quarter_sha256": "5a17c44fc190882fea3b0dc55c1dc8b9c54e107455231014c51b7ce63cdf6cd3",
+      "instant_sha256": "4202192ba14e6c36001f451503258fcf4d30d9a858cab34b68fb11403e4f52ed",
+      "rows": 2160
+    },
+    {
+      "quarter": "2006Q2",
+      "quarter_sha256": "9940117ed0e081bdca3587fb051548451ca54a60674a09f45444c69b262dff5f",
+      "instant_sha256": "b3612118a418b9fb9dcf7c7b1f0723b237a32027c65da9a5e14fc95d384823f3",
+      "rows": 2184
+    },
+    {
+      "quarter": "2006Q3",
+      "quarter_sha256": "cedcecaba7e9d2b81ac64e50daa209322a969421e9b37ce3752231cc7857a0cd",
+      "instant_sha256": "f9ddff94739d334609b0d2240ffbc744996fb32837997e71bbfa316148c82e3f",
+      "rows": 2208
+    },
+    {
+      "quarter": "2006Q4",
+      "quarter_sha256": "7d6c599fd975ffebee36666a5adb3ab3084c37edf7e84d1dadb03992c4d5e3c3",
+      "instant_sha256": "5b3a40c452b2730b06d0a355162e7de0d02c43e7d2e513816d87692c7a2f7155",
+      "rows": 2208
+    },
+    {
+      "quarter": "2007Q1",
+      "quarter_sha256": "224b3c4c4d0c0308f0c8f6d4701d4d5f212b8525390c18df84b2afbee6f93243",
+      "instant_sha256": "d09098cb6c6058d8ee2a5f11bc8d7348ecec2a590e187dc83065cdba457a1811",
+      "rows": 2160
+    },
+    {
+      "quarter": "2007Q2",
+      "quarter_sha256": "5acdefedf847ded4ed091538b14aa59e618cc8f8414dea7e01b9045db8b31054",
+      "instant_sha256": "e6e9ab4d16d81385b901600c2d72990f55da9f70a7ca53c7971371b048764883",
+      "rows": 2184
+    },
+    {
+      "quarter": "2007Q3",
+      "quarter_sha256": "770c4c2bca8e9c9c4b65b40efee93dea9e99be3e90a5b72e776811e83ec9e21f",
+      "instant_sha256": "362813991fb89827482fa68164743cabd37ef6f4ff984e2817f79bdf9bcf024b",
+      "rows": 2208
+    },
+    {
+      "quarter": "2007Q4",
+      "quarter_sha256": "ea89ef36820c081c778dd35f02f05604abd6fddf104eb88ebc49a878fc0a571f",
+      "instant_sha256": "b746246d650b993cf37f4157aa831c0832a45c628bf94ee6074555594713e62b",
+      "rows": 2208
+    },
+    {
+      "quarter": "2008Q1",
+      "quarter_sha256": "e3446873af8057bc2c5c1922ac5da891f13833b7f3f6559abc883f2d3e9c4bbd",
+      "instant_sha256": "fd24995844090af51df29ea5bd9477831ccfdb602b2ee3275a5d1c60551c5bb7",
+      "rows": 2184
+    },
+    {
+      "quarter": "2008Q2",
+      "quarter_sha256": "af3d0a1fcf28cee4c43d99d4e9981620f9d851b7b52a7633a9a6a57a4079e588",
+      "instant_sha256": "9440aa1ca67125c977996ad97f1b965cd4edb196dff13fb42d1f2dedee199f4a",
+      "rows": 2184
+    },
+    {
+      "quarter": "2008Q3",
+      "quarter_sha256": "95bb902c734934fa7429c68ff59d0c96294d350e1c9b0b7baee57b226fed662d",
+      "instant_sha256": "93935746b2ae5dda8f389f6fc694c26cd3d548074f629fbc265e182bc1e0e78f",
+      "rows": 2208
+    },
+    {
+      "quarter": "2008Q4",
+      "quarter_sha256": "67e8e9529ed64ddef2267ba239ca66e337d8080e6efe4e02111623d872344752",
+      "instant_sha256": "e7efc3ccfbd02aac40533cce5e96e69e1d8fd554b847875c50ee7bd92454dbac",
+      "rows": 2208
+    },
+    {
+      "quarter": "2009Q1",
+      "quarter_sha256": "b89e30ef3b9da59b72e88f72432c062ee1c4055a20e34a0b381384447540d36c",
+      "instant_sha256": "fdf5094350ba371e639825dbd3b7850013b4a983982ff040b83d9a62d3e691c7",
+      "rows": 2160
+    },
+    {
+      "quarter": "2009Q2",
+      "quarter_sha256": "6cb12858ec68e6bca1cf2780744813f93c0777df1d9f5efffa9214e9cf7205d6",
+      "instant_sha256": "de840f739557811655c9d0d8400efdb1c442a105073060ec92babec13b9d2146",
+      "rows": 2184
+    },
+    {
+      "quarter": "2009Q3",
+      "quarter_sha256": "7bba2175c447789736feab2aaba6c9c865a76e7fd715662062ece537b30047c7",
+      "instant_sha256": "ad5786020c4f2e65236ef5f73a109e53a143d5f330cea8156e796a896beff17c",
+      "rows": 2208
+    },
+    {
+      "quarter": "2009Q4",
+      "quarter_sha256": "dadf15b86c4f8e088eac285aee9cf4555e76446e300a7f000ff10c70dc91c78a",
+      "instant_sha256": "635ea45c03f7d470c836d858181a59a19ac3d24854457d8547f5a35c779b1b19",
+      "rows": 2208
+    },
+    {
+      "quarter": "2010Q1",
+      "quarter_sha256": "c35cf2ea6a1832fc0c6ffe77cae070f5626ad4aa0e62baf4cb125513c7a6ebf1",
+      "instant_sha256": "8c4bd5b0226062dd4d9e675d18940012f69170364bc4be937be467c8a287a6f5",
+      "rows": 2160
+    },
+    {
+      "quarter": "2010Q2",
+      "quarter_sha256": "29b4216e02cddb94cf3ed35b98e76f75d3fcf2b1e3c4350704f3beb7c39f1f0b",
+      "instant_sha256": "452dd7c60b7437396a19804fa4fb1e2a48ed63bf4215fb507901d0ea928097a9",
+      "rows": 2184
+    },
+    {
+      "quarter": "2010Q3",
+      "quarter_sha256": "ced3c5ee1e09356e805b2f1e9bde6d5a65ab4a0afe5c4c6aa8f8723d66ba489f",
+      "instant_sha256": "e8e05e1e2a298dd67ea94c69df2092b9dafa8c2dd8870b757978723b45f357c6",
+      "rows": 2208
+    },
+    {
+      "quarter": "2010Q4",
+      "quarter_sha256": "9b1903609c7f42882eef7316c0bb506029f9e2d4f6e43cbb16833697ce065362",
+      "instant_sha256": "84708be20329655926adcb9278ea9d9c8adcf75b979cd1d2f918fcaf18ea49f7",
+      "rows": 2208
+    },
+    {
+      "quarter": "2011Q1",
+      "quarter_sha256": "99ffd228adf4403996f776453398d936f9619b4cd104cd2a3b8c3c7f463670ad",
+      "instant_sha256": "ca8bff7eda559a0d4cadc8fff8421661968faa0b3bf7ebd48ddb3be4ad55382a",
+      "rows": 2160
+    },
+    {
+      "quarter": "2011Q2",
+      "quarter_sha256": "983dab60450ca2112ed7b6e55378b4030323147f083a71f5099a24598273ae3f",
+      "instant_sha256": "42dffe5c83d7ebbf24c525ecc137ea76ac3563fe3f519e0fa42deae14c6723ec",
+      "rows": 2184
+    },
+    {
+      "quarter": "2011Q3",
+      "quarter_sha256": "58b89ca0543c93a88f2316574fcd630a612b0cd315b92e6e1c243a43c6569d8a",
+      "instant_sha256": "d0597e9f3882911d2671b750e50f96af4b2c1fb59d645689607cfaa0d2154633",
+      "rows": 2208
+    },
+    {
+      "quarter": "2011Q4",
+      "quarter_sha256": "22b710a34b4aacfb91620a7f21c94a97fd987f156b869a642cdefdc82b00f372",
+      "instant_sha256": "61475376224bd359f70c6d2c23216010aca37604adee5b30a472694e2c450b29",
+      "rows": 2208
+    },
+    {
+      "quarter": "2012Q1",
+      "quarter_sha256": "fd3833532725ebcd8894cf83fdefb8a2e60fe47153761715252eb94a1e2fd4b6",
+      "instant_sha256": "81ef786b055dbb3768a7a6795e6e8c081fad65635794a5150a81584812cffbb9",
+      "rows": 2184
+    },
+    {
+      "quarter": "2012Q2",
+      "quarter_sha256": "e17e6f881e0232a41c72c8d575d9c1b966a43bfaff2345c2212770406e79d071",
+      "instant_sha256": "ca49166ff860bf4f252f267c56465a7817c47e57e04e5b2376910483cb9a6e18",
+      "rows": 2184
+    },
+    {
+      "quarter": "2012Q3",
+      "quarter_sha256": "c6b9a7a690c4f37a3dae80c4d3bcd3c501a4ae3643d9d776813552e725fa830b",
+      "instant_sha256": "9dc350bd2703a5e1f851ef013a1d92c9739fc09bf26be58bf56e240df29624b4",
+      "rows": 2208
+    },
+    {
+      "quarter": "2012Q4",
+      "quarter_sha256": "504534ddfd1b99ed6425e55010e7606ae1771c79d98c8c705e43547eb5ec02c0",
+      "instant_sha256": "e608ebefcc758eb16f4e153d43ac8cb796b8f15846640ccf3dd32d13b45466ef",
+      "rows": 2208
+    },
+    {
+      "quarter": "2013Q1",
+      "quarter_sha256": "4332875fa527a487324fdb6a6b65afa0bb7aca5d0dfc55cd30d71e499c71eef9",
+      "instant_sha256": "fd8bc90fa6648a768dee74c711758db96407d691f180502dd3054672c4d30559",
+      "rows": 2160
+    },
+    {
+      "quarter": "2013Q2",
+      "quarter_sha256": "83161aa5aeca54f4d64207382c85195ede17213c4f3d4e9abb0aba9896fa1ace",
+      "instant_sha256": "24be5fea0d40e8fa7d66617ae16f2e07b6652d1d75ee37ead9a7c7c739bb66cd",
+      "rows": 2184
+    },
+    {
+      "quarter": "2013Q3",
+      "quarter_sha256": "75a0b3c5b9d88625771d5a20175f0e54540e9302ee1843418ccf261195997b36",
+      "instant_sha256": "7c9190c71b53d578f0c83b129e07caac6eb48a35119e0b5ab8e2972cbe35369a",
+      "rows": 2208
+    },
+    {
+      "quarter": "2013Q4",
+      "quarter_sha256": "6651d13d2745f64c73cf3f125cbe82debad9f015b530920609c6258653285ecb",
+      "instant_sha256": "2f46f08a3bebdc3a5dd3bd9dca846d91b6624dfe81c98ef1ac713e28a01e2fa9",
+      "rows": 2208
+    },
+    {
+      "quarter": "2014Q1",
+      "quarter_sha256": "0096ecd42561af71106a1b2fdfe085f9272e55c0eca7e5f4af1af3683278adee",
+      "instant_sha256": "9b453c9f49d1df452284b05cec89b846185812e3f6634bf8e98dade34bdf8072",
+      "rows": 2160
+    },
+    {
+      "quarter": "2014Q2",
+      "quarter_sha256": "6a3d2d73fe38e59c0378419246179b14d22dda4316f201ad1dd35a0348efb571",
+      "instant_sha256": "4720a5d41b771371cfe407022e625f72d46a05907d46498779c1001aaf1e4386",
+      "rows": 2184
+    },
+    {
+      "quarter": "2014Q3",
+      "quarter_sha256": "e32ba503b493a1c25211720bae46fd9953d2d065013641f81dde9e96c5133ca3",
+      "instant_sha256": "9e837ee24207b65a1e0674d5686412b003ef75801bca8ae19743cf4776010fe5",
+      "rows": 2208
+    },
+    {
+      "quarter": "2014Q4",
+      "quarter_sha256": "b41feaac0d6d40406a5e22fbd092be0942c9d1ed1a81ed9c4b1279009a02190d",
+      "instant_sha256": "383c4b36e0895a3e887ccdef6553ba6d5c0f4e6a20ab766c8d91a0abb3b1509b",
+      "rows": 2208
+    },
+    {
+      "quarter": "2015Q1",
+      "quarter_sha256": "2fd3418542135cfd8aa7f89b1bef1970addf7e32c1cf7735892f375be33fe9f3",
+      "instant_sha256": "93f38d8ea42ceb9b736bbe3f7b454b1e8917237e66907376df5937e665c12b59",
+      "rows": 2160
+    },
+    {
+      "quarter": "2015Q2",
+      "quarter_sha256": "af6b685a3f09341c1e9dd4a37d748647e890be0af534a5ce3c5c0a56260aa012",
+      "instant_sha256": "a21f43f4da1d4c8b5ac4ded6387d9d8507ff90b1837d10c1fb1ec7408e471a84",
+      "rows": 2184
+    },
+    {
+      "quarter": "2015Q3",
+      "quarter_sha256": "e66b6e18566b6edb0cae0ea5c7d8e542e59c10e8dc32318a83af6ecc04c25139",
+      "instant_sha256": "81c520d416ecf30d34d99086deb5d353b53ee589a24ae1cd8bf9c73fd9102713",
+      "rows": 2208
+    },
+    {
+      "quarter": "2015Q4",
+      "quarter_sha256": "10a0384ee304fd4b7499a06be926cce0d6144b3d24a17c80b305b3c2502f15ab",
+      "instant_sha256": "2e229efc43f097da475494498efc6a82a97c0227b89b14f3e78c683e07212cde",
+      "rows": 2208
+    },
+    {
+      "quarter": "2016Q1",
+      "quarter_sha256": "a53bb20ff4acce5e138b4467683f886312a1fe779d0c0f7ec806fc11db47519c",
+      "instant_sha256": "d536a061caf1c168eb70c0398a48bb2fed9d1e7181fc64ac2ab7ab42d05ca0ae",
+      "rows": 2184
+    },
+    {
+      "quarter": "2016Q2",
+      "quarter_sha256": "29ea4ce09b68e44cce7b5251ddc69e4054ec52eaf42b8858fa005a75c23aefb7",
+      "instant_sha256": "8214cdda768c22b1d37aa06f412b05356714775a3ed96be4f8e78c859fd76c73",
+      "rows": 2184
+    },
+    {
+      "quarter": "2016Q3",
+      "quarter_sha256": "1244ae4365c3613946d7637300b8d1c9b85a1dcb91777634c1ac3612537bde72",
+      "instant_sha256": "4330562d34adb6f4a2cdbb0a4a8ca6ab116b73526d52ef1786f21964a0ac83c2",
+      "rows": 2208
+    },
+    {
+      "quarter": "2016Q4",
+      "quarter_sha256": "276a90b1fce82148df8cf2f414c498de3c984ae38f7f89e20a960e2c351bedee",
+      "instant_sha256": "e86efba9ec303bca724a9eacc314fed2219d9738e6f8c6f8b56750e576fcdba4",
+      "rows": 2208
+    },
+    {
+      "quarter": "2017Q1",
+      "quarter_sha256": "be1448be70c15c0735a19b3217e428928d9d388173a4e46203926a86abc5fd70",
+      "instant_sha256": "8fd9267db0baa75d2290832529c6a74b4baac94d4413f44bb2976aab32916c37",
+      "rows": 2160
+    },
+    {
+      "quarter": "2017Q2",
+      "quarter_sha256": "58fa5fd9aaa540922d0c970526732eb6bb3be669f13ab1527ac2baf0f506bf17",
+      "instant_sha256": "8281a2e456d96c52ec01dbd28a1c67509664d48edbde9e24d14c63562e6f8d79",
+      "rows": 2184
+    },
+    {
+      "quarter": "2017Q3",
+      "quarter_sha256": "9a92cbd8e41cfba7f23db37d8e6ae962c297d9238c7074a998f5e95e8de36414",
+      "instant_sha256": "4f0f3d4a7c6239582843d0d2b90aa344ce1bade46c5a1a10c19c0bded9f6b73a",
+      "rows": 2208
+    },
+    {
+      "quarter": "2017Q4",
+      "quarter_sha256": "933c3fe1d4687fd16ccfc6d7ab743a6b7d8184ac9b871875970165d57b45125c",
+      "instant_sha256": "7c6902ef0fad4a06d941d18b8ab8ebcf7711d313a46fde1c19d9b4411389dec4",
+      "rows": 2208
+    },
+    {
+      "quarter": "2018Q1",
+      "quarter_sha256": "41bb9988c2d022fa19a06ab2f0c830d9ebe068656b2308fd39499afc974ad0cd",
+      "instant_sha256": "e4c901110331e92af27196e3753c03bddbd0d2b4e5d0198ab20beb5485915a16",
+      "rows": 2160
+    },
+    {
+      "quarter": "2018Q2",
+      "quarter_sha256": "53f697f5c38a11f531056c68cc1e3cce3a0fd599916b667b411816b63ca97c4d",
+      "instant_sha256": "bc48ca9ad0514872abe2f11554d8e71d60db792888554793fa7943e5eff4b578",
+      "rows": 2184
+    },
+    {
+      "quarter": "2018Q3",
+      "quarter_sha256": "42d5860488766bc6560aad7013462c731c6c65dbf59114b97db2c4861e888e29",
+      "instant_sha256": "57892cfc59da8185f4fbcab80995a42d4677ff3b6400cb2c515ce8e45f9f3027",
+      "rows": 2208
+    },
+    {
+      "quarter": "2018Q4",
+      "quarter_sha256": "eead8cba962ceda969e81453c6a968b3fa8f890b3eb52ba74071be470fc68f02",
+      "instant_sha256": "47a12a9129c965a81d6f8b2325db159e04e4415c398b00449a05d8df8416e79e",
+      "rows": 2208
+    },
+    {
+      "quarter": "2019Q1",
+      "quarter_sha256": "96c598a6c2ea986d7179bcf9866149a6db15e7f1c3641c5e095e809c4ebe29df",
+      "instant_sha256": "5ad1e145db0d7588800a5fbde09b8663a311233ee9f530108920cba0228d86db",
+      "rows": 2160
+    },
+    {
+      "quarter": "2019Q2",
+      "quarter_sha256": "e7346cbca525a7f8464ee907cc4545282d095468725582e33d02795f0d08dbc4",
+      "instant_sha256": "9bd5757bdd7e9e6fc7d158b4b29fac22bfcbcfb79f8624973a7fe2e217508364",
+      "rows": 2184
+    },
+    {
+      "quarter": "2019Q3",
+      "quarter_sha256": "6bad86d94161246dfa0222ad6b7447e71dbf99f7e2060c6100b7f86bff47fc4e",
+      "instant_sha256": "5bec1cce0656186170e2d146a88055218096710c15b5a23ab1211cb166e5499a",
+      "rows": 2208
+    },
+    {
+      "quarter": "2019Q4",
+      "quarter_sha256": "ea2ac1d822ce1ebf1405024342896fbc0f3c878f77808375018bc631f3203ae4",
+      "instant_sha256": "6b6473a51c54405e3237224715a2b80734bf319247b4a122856659916cde5547",
+      "rows": 2208
+    },
+    {
+      "quarter": "2020Q1",
+      "quarter_sha256": "4d87c1df8030ce52dfd0a50a968db0008e085ffc2f4061ead3e255a3d79e1424",
+      "instant_sha256": "b8b2e23b2a9e695068e3714753bf073675e8c9c9c69b5b144ca8396a48db6842",
+      "rows": 2184
+    },
+    {
+      "quarter": "2020Q2",
+      "quarter_sha256": "7a2d251ccf20fce9dda3ac89d0f7af399e566cb962b018cb0a4dc506dbd6d08b",
+      "instant_sha256": "410f475df5982426f574848a5c0457572c61852669010d29854b390a7ead83d3",
+      "rows": 2184
+    },
+    {
+      "quarter": "2020Q3",
+      "quarter_sha256": "dfdf2bbfb49f0ea736a4e1d163430e0cd6bd59e81c028b7a1317c3ad73211b58",
+      "instant_sha256": "5979ed1363600effc781a27e2a6e8d5abb50a904625b34bead11c6378de43024",
+      "rows": 2208
+    },
+    {
+      "quarter": "2020Q4",
+      "quarter_sha256": "23c251e726762f336931ef694baef7f94ad1e379dd9ce8ca5fcc6c556c3670f6",
+      "instant_sha256": "e2c005e468b399f783be77f8b0d15adc2ef8d9e4e732b5447b5d8d77328a241f",
+      "rows": 2208
+    },
+    {
+      "quarter": "2021Q1",
+      "quarter_sha256": "2658b71d7d78bba9c6696669943182993cb23abc57bb0d56a286f549a56a4935",
+      "instant_sha256": "e90564f5ae71972f364139cddf7c7b39159dd77137016da7737a8375fe8d0abd",
+      "rows": 2160
+    },
+    {
+      "quarter": "2021Q2",
+      "quarter_sha256": "c6bd601d6ad4c01e000282bd8a068179aa4bd12be57f2ad669084d4b3c16b916",
+      "instant_sha256": "604fa9a8759d07d42a99fa3de12afd85a598acc7bc5079ac60754f6881d46053",
+      "rows": 2184
+    },
+    {
+      "quarter": "2021Q3",
+      "quarter_sha256": "9fd1c95e9184066d63d2d1b79a51fe0aced8179f5a386abd58dabdc99cddfcbf",
+      "instant_sha256": "6da27d3bf289abfc361be3968ff21e5e03a33ae98f59d405eb73ff79e6ac7681",
+      "rows": 2208
+    },
+    {
+      "quarter": "2021Q4",
+      "quarter_sha256": "0157dce72df7f6da9981740ca51b4d4f321c0cd3eab2a1a1b20a83b0ef8f6c0a",
+      "instant_sha256": "cc37c9d7e8ce788c20989d9643855f6ef524c656151966df3cda264a5bd6aef1",
+      "rows": 2208
+    },
+    {
+      "quarter": "2022Q1",
+      "quarter_sha256": "4ca590568c89f9b62c69583cd96f42beba394bc8eba1ea154390b1a80f3ab556",
+      "instant_sha256": "42f55c5122d1acb3d7a94755c8ccf64ba71ecd4571c8f33a3eef3dd592088625",
+      "rows": 2160
+    },
+    {
+      "quarter": "2022Q2",
+      "quarter_sha256": "0268aaac5c25f9283a502d74c9e0a6491ea03459fd3263ce6475cbeb4c95c674",
+      "instant_sha256": "e8e78dddb9efdad89a151555c637b510714298b4acda4f55dc7b7c223451951a",
+      "rows": 2184
+    },
+    {
+      "quarter": "2022Q3",
+      "quarter_sha256": "c966a06a99f750cae2e2bfb1a6a0b63f7758d3da679c3c99f8351fe894feea69",
+      "instant_sha256": "f0e0991898e821712d1ede9b62492d2cd6b4e4da350af48677432fb451cd165a",
+      "rows": 2208
+    },
+    {
+      "quarter": "2022Q4",
+      "quarter_sha256": "8ae53cf07114f4cde2c77a03e9ef288fa527cd50224e51e3cb7262852c718905",
+      "instant_sha256": "c71bec7f698fa7ee7af8b4b472592122fe64bdd5463a307c083d53d97624e489",
+      "rows": 2208
+    },
+    {
+      "quarter": "2023Q1",
+      "quarter_sha256": "86122438f33dcc1e6afc67748cb865ebcecbc87e6524a6bc7ffe2980ede6414e",
+      "instant_sha256": "1adf52de5fb1bfb25479cf8da288d03049c61ba6a2795ad0bc669b969ccd1272",
+      "rows": 2160
+    },
+    {
+      "quarter": "2023Q2",
+      "quarter_sha256": "a1a5e1869015dfac6d642fd897c881edc584a4bba1567e869542341c7efe0dad",
+      "instant_sha256": "7755ea83863518ddb2cb8597fb072d350b83be22b7edfc4970d85bf2094731f8",
+      "rows": 2184
+    },
+    {
+      "quarter": "2023Q3",
+      "quarter_sha256": "e3ddb1f212ff153307579d102494b8d64e0ad7f731507f21f543ac9cc5d2d41e",
+      "instant_sha256": "8d8ae9ce2b25dc7c1dadbcb3ed97409eea58d2cb16859641f422138163f3e930",
+      "rows": 2208
+    },
+    {
+      "quarter": "2023Q4",
+      "quarter_sha256": "a5b17fc61ecf5e5de994b9f340260b74388f33a09acd50515abf1ae155cbe07e",
+      "instant_sha256": "58550e50ea0f66f3a7c4f5da5f155e22fed008af79555a1584268424e6c7078b",
+      "rows": 2208
+    },
+    {
+      "quarter": "2024Q1",
+      "quarter_sha256": "3b095cb7f79291d393d6f7d59f1e92ff7569558f2e31dd83ecd9d5ac3aad3c68",
+      "instant_sha256": "b3085d7bdc3ba0fc80a54df58d3220519882a3b6d83c68c6f70834d9199f95a0",
+      "rows": 2184
+    },
+    {
+      "quarter": "2024Q2",
+      "quarter_sha256": "d60bbfa317c91faeeb44ca02cf23eca0a85142d78df4f10f7ec5cc807ac6b5bc",
+      "instant_sha256": "2841d44c7b1711256b00fa17469fbe09029a7238264eea9c6b8a5565e9e7b4cb",
+      "rows": 2184
+    },
+    {
+      "quarter": "2024Q3",
+      "quarter_sha256": "cdff5cc309522eca7feda8aab55d79ed89e7fbfc1f191de7920c900f2ca29f91",
+      "instant_sha256": "d3cd12e95863e0a8c16cb00f56268f60e90789d58904e7ea26da90164bcc89b9",
+      "rows": 2208
+    },
+    {
+      "quarter": "2024Q4",
+      "quarter_sha256": "2fe242a8456dfb271243ea1d12ddaf83fe96b7c7d47eb4062754cef0f2d41a69",
+      "instant_sha256": "796f06efd09de7cb2f2b979ae861bf4bc8dda5b53c8662238060b6e089d7b53c",
+      "rows": 2208
+    },
+    {
+      "quarter": "2025Q1",
+      "quarter_sha256": "c3dd51691b4a8e0eb72ad59818a6ac151ac69c9e0dbb83e1be8cb8b201cab6fb",
+      "instant_sha256": "2be4023275802ba2f4c0774933004e307d0cf1a818a4af1f4f8ae9d5c2a71750",
+      "rows": 2160
+    },
+    {
+      "quarter": "2025Q2",
+      "quarter_sha256": "b33cbd068129b4b768bda9469ae97ed522cec7dd73d3f725e89fcce4f7b920e9",
+      "instant_sha256": "ce55f9da735b96d0c968f056a3966a7efc13b7f997d72cc51494b715c6d3d374",
+      "rows": 2184
+    },
+    {
+      "quarter": "2025Q3",
+      "quarter_sha256": "f8afb419cb8b59305a1eab08268b9757c23b35001191a2c022b89035e5e1a064",
+      "instant_sha256": "fbf85fc6ff0eb9ee89d6991427fbe5f598a16cfaca13a2129ec6a040cdd23e7c",
+      "rows": 2208
+    },
+    {
+      "quarter": "2025Q4",
+      "quarter_sha256": "47a834216d0bb5294709e2262bc59f506fe94bc3c71350be7c764c24a5b0c768",
+      "instant_sha256": "8347ad06c3ac4bf3c56039615fde4031a6f5c10c6384686953374373df191809",
+      "rows": 2208
+    }
+  ],
+  "hourly_npz_sha256": "dde8017901cf1d31dd3846adb4a447ab2d2a6efb573d80ffd1f93b5572925660",
+  "limitations": "ERA5 reanalysis, extrapolated heights, not site measurements; no new IEC design-wind claim. Source archive verified all 168 members, but only instant wind variables scientifically used."
+}
