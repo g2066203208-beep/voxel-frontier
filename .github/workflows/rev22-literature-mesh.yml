@@ -1,0 +1,85 @@
+name: REV22 literature mesh comparison
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/rev22-literature-mesh.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          sparse-checkout: |
+            public/thesis-studio/inp-archive/REV22_VALIDATION_KIT
+      - run: pip install pillow==10.4.0
+      - name: Actual mesh radial audit and publisher-original comparisons
+        run: |
+          cat > /tmp/compare.py <<'PY'
+          from pathlib import Path
+          from PIL import Image,ImageOps,ImageDraw,ImageFont
+          import urllib.request,io,json,hashlib,collections,re,math
+          d=Path('public/thesis-studio/inp-archive/REV22_VALIDATION_KIT')
+          o=d/'mesh-view'/'literature';o.mkdir(exist_ok=True)
+          raw=(d/'HE_REV22_FULL_ASSEMBLY_EQ005.inp').read_bytes()
+          assert hashlib.sha256(raw).hexdigest()=='e84851887735305c6387ca38a972bebd97ba9cdff7baa7735c0ed89cecf925b5'
+          parts={};part=None;mode=None
+          for l in raw.decode('ascii').splitlines():
+              s=l.strip()
+              if not s or s.startswith('**'):continue
+              if s.startswith('*'):
+                  mode=s.split(',')[0].lower()
+                  if mode=='*part':part=s.split('=',1)[1].strip();parts[part]={'nodes':[],'elements':[],'sections':[]}
+                  elif mode=='*end part':part=None
+                  continue
+              if part and mode in ('*node','*element','*solid section'):
+                  key={'*node':'nodes','*element':'elements','*solid section':'sections'}[mode]
+                  parts[part][key].append(s)
+          rings={}
+          for p,v in parts.items():
+              if p.startswith(('CSEG_','SSEG_')):
+                  q=[list(map(float,x.split(','))) for x in v['nodes']]
+                  ys=collections.defaultdict(list)
+                  for _,x,y,z in q:ys[round(y,5)].append(math.hypot(x,z))
+                  layers=[]
+                  for y,r in sorted(ys.items()):
+                      clusters=[]
+                      for n in sorted(r):
+                          if not clusters or abs(n-clusters[-1])>1e-5:clusters.append(n)
+                      layers.append({'y':y,'nodes':len(r),'radii':clusters})
+                  rings[p]={'axial_planes':len(ys),'radial_node_rings':layers,'element_count':len(v['elements'])}
+          pt=parts['PT_36x15p2']
+          report={'source_sha256':hashlib.sha256(raw).hexdigest(),'rings':rings,'PT_section_rows':pt['sections'],'PT_element_count':len(pt['elements']),'references':[]}
+          refs=[('2025-3786','10.3390/buildings15203786','Figure 3','buildings-15-03786-g003-550.jpg','buildings-15-03786'),('2024-1740','10.3390/buildings14061740','Figure 2','buildings-14-01740-g002-550.jpg','buildings-14-01740'),('2026-3854','10.3390/buildings16193854','Figure 2','buildings-16-03854-g002-550.jpg','buildings-16-03854')]
+          font=ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf',28)
+          for name,doi,fig,file,folder in refs:
+              url='https://mdpi-res.com/buildings/'+folder+'/article_deploy/html/images/'+file
+              b=urllib.request.urlopen(urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0'}),timeout=30).read()
+              im=Image.open(io.BytesIO(b)).convert('RGB');(o/(name+'-original.jpg')).write_bytes(b)
+              canvas=Image.new('RGB',(2400,1600),'white');draw=ImageDraw.Draw(canvas)
+              draw.text((30,20),'LEFT: Published '+fig+' | '+doi,font=font,fill='black')
+              draw.text((1230,20),'RIGHT: REV22 actual INP mesh',font=font,fill='black')
+              draw.line((1200,65,1200,1570),fill='#aaa',width=2)
+              left=ImageOps.contain(im,(1140,1480),Image.Resampling.LANCZOS);canvas.paste(left,(30+(1140-left.width)//2,80+(1480-left.height)//2))
+              for y,file in [(75,'01-full-assembly.jpg'),(900,'03-part-detail.jpg')]:
+                  right=ImageOps.contain(Image.open(d/'mesh-view'/file).convert('RGB'),(1140,810 if y==75 else 650),Image.Resampling.LANCZOS)
+                  canvas.paste(right,(1230+(1140-right.width)//2,y))
+              target=o/(name+'-comparison.jpg');canvas.save(target,quality=90)
+              report['references'].append({'doi':doi,'figure':fig,'source_url':url,'source_sha256':hashlib.sha256(b).hexdigest(),'comparison_sha256':hashlib.sha256(target.read_bytes()).hexdigest()})
+          (o/'audit.json').write_text(json.dumps(report,indent=2))
+          print(json.dumps({'CSEG01':rings['CSEG_01'],'SSEG01':rings['SSEG_01'],'PT_area':pt['sections'],'references':report['references']},indent=2))
+          (o/'index.html').write_text('<!doctype html><meta charset="utf-8"><title>REV22 期刊模型对照</title><style>body{max-width:1400px;margin:30px auto;padding:0 20px;font:16px/1.6 sans-serif}img{width:100%}</style><a href="../">返回实际模型展示</a><h1>REV22 期刊原始模型图对照</h1><p>左为原始出版图，右为同一实际输入网格；不同原型，不作定量验证。<a href="audit.json">网格截面及来源核验</a></p>'+''.join('<h2>'+r['doi']+' · '+r['figure']+'</h2><img src="'+name+'-comparison.jpg">' for (name,*_),r in zip(refs,report['references'])))
+          
+          PY
+          python /tmp/compare.py
+      - run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add public/thesis-studio/inp-archive/REV22_VALIDATION_KIT/mesh-view/literature
+          git commit -m "REV22 compare three actual published model figures and audit radial mesh"
+          git fetch --depth=20 origin main
+          git rebase FETCH_HEAD
+          git push origin HEAD:main
