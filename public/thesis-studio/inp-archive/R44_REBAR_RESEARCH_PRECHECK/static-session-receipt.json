@@ -1,0 +1,34 @@
+{
+  "version": "R44_REBAR_RESEARCH_PRECHECK",
+  "source_git_blob": "9b26cb72a3a89fafea35d82ebfe4efd795765297",
+  "source_bytes": 16192219,
+  "output_bytes": 8256811,
+  "part_element_record_count": 68712,
+  "parts": 100,
+  "instances": 100,
+  "contact_pairs": 30,
+  "changed_rebar_parts": 62,
+  "steps": [
+    "PT_BALANCE",
+    "Gravity",
+    "GRAVITY_CHECK",
+    "MODAL_30"
+  ],
+  "hoop_edges": 32544,
+  "tie_elements": 11032,
+  "long_elements": 5440,
+  "ring_volume_m3": 8.898232431809356,
+  "max_ring_volume_error": 9.43689570931383e-15,
+  "min_long_center_clearance_mm": 74.17599467804287,
+  "min_hoop_center_clearance_mm": 47.23338115952959,
+  "min_tie_center_clearance_mm": 74.17648982752668,
+  "native": "NOT_RUN",
+  "upload": "DIRECT_UPLOAD_FAILED_H2; generator committed, complete INP not yet in tree",
+  "cdp_rev25_direct_readback": {
+    "C65_compression": 26,
+    "C65_tension": 24,
+    "C70_compression": 26,
+    "C70_tension": 24,
+    "max_abs_error": 0
+  }
+}
