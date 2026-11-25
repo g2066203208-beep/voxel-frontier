@@ -1,10 +1,10 @@
 {
-  "version": "V8-R43-REBAR-FIGURES",
-  "scope": "登记在线正文中明确标记的图件（包括旧版figure块及新图题）；无显式图件标记的历史文本需另核查。ARCHIVED只表示仓库有对应拼图，未代表网页实际显示验收。",
+  "version": "V8-R51-FIGURE-RECONCILIATION",
+  "scope": "登记在线正文中明确标记的图件（包括旧版figure块及新图题）；无显式图件标记的历史文本需另核查。ARCHIVED只表示仓库有对应拼图，未代表网页实际显示验收。 R51补录三张此前漏登记的RNA图，保留两张历史图（原登记块ID对应旧图）待核；METHOD_ONLY不计同类完成。",
   "rule": "每幅正文图必须具有独立同类型文献真实原图对照拼图及来源，未通过不定稿；不强行匹配不同物理量。原创图如无完全对应图，注明最接近的参考、差异及理由，经审阅后决定。",
   "counts": {
-    "ARCHIVED": 11,
-    "UNREVIEWED": 30
+    "ARCHIVED": 16,
+    "UNREVIEWED": 28
   },
   "figures": [
     {
@@ -288,8 +288,14 @@
       "id": "eq-r10-010",
       "caption": "图3-12  七组基准地震动双水平加速度时程",
       "asset": "./seismic-archive/journal-figures/V7_backup_01_acceleration.png",
-      "status": "UNREVIEWED",
-      "quality": "EXISTING_FIGURE_REQUIRES_REVIEW"
+      "status": "ARCHIVED",
+      "quality": "R51_RENDERED_SOURCE_COMPARISON",
+      "reference": "Energies (2020), Fig. 8(a,b)",
+      "doi": "10.3390/en13153833",
+      "pair": "figure-audit/R51/acceleration-pair.png",
+      "note": "Acceleration time histories; different ground motions and scales.",
+      "comparison_kind": "SAME_QUANTITY",
+      "receipt": "figure-audit/R51/receipt.json"
     },
     {
       "chapter": "03",
@@ -297,23 +303,41 @@
       "caption": "图3-13  七组基准地震动功率谱密度",
       "asset": "./seismic-archive/journal-figures/V7_backup_02_PSD.png",
       "status": "UNREVIEWED",
-      "quality": "EXISTING_FIGURE_REQUIRES_REVIEW"
+      "quality": "R51_RENDERED_SOURCE_COMPARISON",
+      "reference": "Energies (2020), Fig. 8(d)",
+      "doi": "10.3390/en13153833",
+      "pair": "figure-audit/R51/power-spectrum-pair.png",
+      "note": "Frequency PSD vs period power spectrum; methods and normalization differ.",
+      "comparison_kind": "METHOD_ONLY",
+      "receipt": "figure-audit/R51/receipt.json"
     },
     {
       "chapter": "03",
       "id": "eq-r10-016",
       "caption": "图3-14  七组基准地震动反应谱及参数化研究目标谱",
       "asset": "./seismic-archive/journal-figures/V7_backup_03_response_spectra.png",
-      "status": "UNREVIEWED",
-      "quality": "EXISTING_FIGURE_REQUIRES_REVIEW"
+      "status": "ARCHIVED",
+      "quality": "R51_RENDERED_SOURCE_COMPARISON",
+      "reference": "Energies (2020), Fig. 8(c)",
+      "doi": "10.3390/en13153833",
+      "pair": "figure-audit/R51/response-spectrum-pair.png",
+      "note": "Acceleration response spectra; different components, target and units.",
+      "comparison_kind": "SAME_QUANTITY",
+      "receipt": "figure-audit/R51/receipt.json"
     },
     {
       "chapter": "03",
       "id": "eq-r10-024",
       "caption": "图3-15  两组近断层脉冲候选记录速度时程（研究诊断）",
       "asset": "./seismic-archive/second-suite/qualification/05_pulse_candidate_velocity_screening.png",
-      "status": "UNREVIEWED",
-      "quality": "EXISTING_FIGURE_REQUIRES_REVIEW"
+      "status": "ARCHIVED",
+      "quality": "R51_RENDERED_SOURCE_COMPARISON",
+      "reference": "Shahi & Baker (2014), Fig. 1",
+      "doi": "10.1785/0120130191",
+      "pair": "figure-audit/R51/pulse-velocity-pair.png",
+      "note": "Velocity time histories; candidate traces do not establish pulse classification.",
+      "comparison_kind": "SAME_QUANTITY",
+      "receipt": "figure-audit/R51/receipt.json"
     },
     {
       "chapter": "04",
@@ -374,15 +398,55 @@
       "status": "UNREVIEWED",
       "note": "预应力输入组织参照，非同输出指标。",
       "quality": "R43_SOURCE_REDRAW_RENDERED_VISUAL_REVIEW_PENDING"
+    },
+    {
+      "chapter": "03",
+      "id": "wind-r26-003",
+      "caption": "图3.5-6  额定风速下三叶片展向气动力及转矩密度分布（名义几何近似）",
+      "asset": "./wind-figures/blade-aero/r27/blade_span_r27.svg",
+      "reference": "Sun等（2020）图6",
+      "doi": "10.3390/en13215753",
+      "pair": "wind-figures/blade-aero/r27/span-comparison-r27.png",
+      "status": "ARCHIVED",
+      "quality": "R27_SOURCE_RECEIPT_REREAD",
+      "note": "相同展向气动力类量；本文名义几何近似、参考稳态9m/s，非数值验证。",
+      "receipt": "wind-figures/blade-aero/r27/receipt.json"
+    },
+    {
+      "chapter": "03",
+      "id": "wind-r26-004",
+      "caption": "图3.5-7  额定风速下轮毂坐标系气动力及气动力矩时程",
+      "asset": "./wind-figures/blade-aero/r27/rotor_wrench_r27_full.svg",
+      "reference": "Qiu等图A4",
+      "doi": "10.3390/jmse14161489",
+      "status": "UNREVIEWED",
+      "quality": "FULL_INTERVAL_PAIR_PENDING",
+      "note": "现有对照使用40s局部图，完整600s须独立拼图，不重复计数。"
+    },
+    {
+      "chapter": "03",
+      "id": "wind-r28-004",
+      "caption": "图3.5-8  轮毂气动力及力矩六分量时程局部（100～140 s）",
+      "asset": "./wind-figures/blade-aero/r27/rotor_wrench_r27_40s.svg",
+      "reference": "Qiu等图A4",
+      "doi": "10.3390/jmse14161489",
+      "pair": "wind-figures/blade-aero/r27/wrench-comparison-r27.png",
+      "status": "ARCHIVED",
+      "quality": "R27_SOURCE_RECEIPT_REREAD",
+      "note": "同类六分量时程；不同机组和运行工况，不能作为数值误差验证。",
+      "receipt": "wind-figures/blade-aero/r27/receipt.json"
     }
   ],
   "quality_counts": {
     "BATCH_SOURCE_REDRAW_PENDING": 8,
     "HISTORICAL_DIGITIZED_OR_SOURCE_UNVERIFIED": 3,
-    "EXISTING_FIGURE_REQUIRES_REVIEW": 9,
+    "EXISTING_FIGURE_REQUIRES_REVIEW": 5,
     "MISSING_EXPLICIT_ASSET": 13,
     "R23_SOURCE_REDRAW_UNRENDERED": 1,
     "R24_SOURCE_REDRAW_UNRENDERED": 3,
-    "R43_SOURCE_REDRAW_RENDERED_VISUAL_REVIEW_PENDING": 4
+    "R51_RENDERED_SOURCE_COMPARISON": 4,
+    "R43_SOURCE_REDRAW_RENDERED_VISUAL_REVIEW_PENDING": 4,
+    "R27_SOURCE_RECEIPT_REREAD": 2,
+    "FULL_INTERVAL_PAIR_PENDING": 1
   }
 }
