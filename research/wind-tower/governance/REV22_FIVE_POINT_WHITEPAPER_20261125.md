@@ -191,3 +191,9 @@ GitHub Actions 已完成独立核验并提交 e8fdfbb8ca98011bf9445797c401c78392
 - 逐时刻修正风轴合力/矩最大误差NTM 3.15413e-9N/0.001530710Nm，1ETM 3.32511e-9N/0.002118569Nm；风幅值序列化4.54747e-13、地震2.84217e-14；ZIP CRC、成员回读及全部include文件引用通过。NTM包24338657 bytes SHA256 7bef46c4d0171e949edb2e8a57b4653fa63f83be25079247d4ac31d843e10c13；1ETM包24511787 bytes SHA256 b4251c457aaa41ed961a717bacad0cb853ab59f54085173cee7cc5f4ee336eb9。目录public/thesis-studio/inp-archive/R49_WIND_EQ_DIAGNOSTIC/，须完整解压至同一目录，仅选择一个入口INP；无RNA风载，不是最终完整模型。正式风震HOLD，阻尼待新版模态标定、原生质量反力覆盖待核。
 - R47B原生10s试算job139212386849 SUCCESS，201点；全局与轮毂模长最大差16.2912N/196.1539Nm，压缩量化界17.9449N/355.7330Nm，均满足；两组700s任务截至本次核查仍运行。原输出CSV轴为X=u,Y=up,Z=-v，后续须按R47实际轴转至X=v,Y=up,Z=u；移动轮毂参考点移置及分布载荷仍未完成，不能直接合并。Abaqus原生未执行，工作室网页部署尚未验收。
 - 版本相符的关键字依据：https://docs.software.vt.edu/abaqusv2025/English/SIMACAEKEYRefMap/simakey-r-dynamic.htm 和 https://docs.software.vt.edu/abaqusv2025/English/SIMACAEKEYRefMap/simakey-r-step.htm；OP及加载继承参考官方About Loads（已阅2026版），最终仍需用户本地版本Data Check。
+
+
+## V3.6 · R50在线论文正文同步（2026-11-25）
+
+- 实际工作室编辑器manuscript-workbench.js的SOURCE为editor-data/manuscript-v8-bem.json，不是较早的latest-manuscript.json。读回当前正文，原有七组地震时程、PSD、反应谱及脉冲候选图、塔身风阻三图、叶片展向及轮毂六分量图，第二章已有R43四图二表；不重复插图。
+- 从R48/R47/R49/R45真实收据同步新增表2.3-3（31节条件锚固长度和间距）、表3.3-2（两组实际节点映射守恒）、表3-27（独立动力诊断参数），附计算方法及限制。正文更新01ccadc5565c0b6c0a73337c90e59c686f336c04；原编号3.3-1冲突已修正e2c750d962e6c48d0b5feebb08a2e9234adff77c，最终blob be8272c6ee62c374e0f010301929b563996c9999。初次读回1213块，原1200块无删除，仅更新旧风载总结和地震输入说明，新增13块（3表3表题7段）。明确保留实际未求解状态；不将旧图数字化曲线解释为新模型ODB。完整图件登记仍41项，11项已归档同类参考对照、30项待同类审查；未完成参考拼图和浏览器视觉验收。在线正文源已更新，旧Word/PDF导出未重新生成，工作室部署未验证。OpenFAST R47B两组全长任务尚在运行。
