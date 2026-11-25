@@ -2476,7 +2476,7 @@
           "id": "r16-cdp-points",
           "kind": "text",
           "style": "Normal",
-          "text": "C65及C70分别设置26个受压点和24个受拉点。图2.2-1(a)、(b)中的线为规范单轴包络，空心符号为由实际材料输入恢复的应力与总应变；图(c)、(d)的线连接相应损伤离散点。受拉峰值区间采用局部放大显示。首个输入点的非弹性应变或开裂应变置零，因而该点与规范包络存在偏差。",
+          "text": "C65及C70分别设置26个受压点和24个受拉点。图2.2-1给出单轴应力—应变关系，曲线为规范本构包络，空心符号为实际材料输入恢复点。图2.2-2给出压缩损伤随非弹性应变及拉伸损伤随开裂应变的演化关系，曲线连接材料输入离散点。首个输入点的非弹性应变或开裂应变取零。",
           "has_media": false,
           "has_math": false
         },
@@ -2484,17 +2484,27 @@
           "id": "r16-cdp-figure",
           "kind": "figure",
           "style": "图题",
-          "text": "图2.2-1  C65与C70单轴拉压本构及损伤演化曲线",
+          "text": "图2.2-1  C65与C70混凝土单轴应力—应变关系",
           "has_media": false,
           "has_math": false,
-          "figure_asset": "./inp-archive/REV22_REVIEW/rev22-cdp-curves-v3.svg",
-          "figure_caption_match": "图2.2-1  C65与C70单轴拉压本构及损伤演化曲线"
+          "figure_asset": "./inp-archive/REV22_REVIEW/cdp-reference-stress.svg",
+          "figure_caption_match": "图2.2-1  C65与C70混凝土单轴应力—应变关系"
+        },
+        {
+          "id": "r19-cdp-damage",
+          "kind": "figure",
+          "style": "图题",
+          "text": "图2.2-2  C65与C70混凝土损伤演化曲线",
+          "has_media": false,
+          "has_math": false,
+          "figure_asset": "./inp-archive/REV22_REVIEW/cdp-reference-damage.svg",
+          "figure_caption_match": "图2.2-2  C65与C70混凝土损伤演化曲线"
         },
         {
           "id": "r16-cdp-limits",
           "kind": "text",
           "style": "Normal",
-          "text": "图2.2-1为理论本构及材料输入关系，不代表单轴试验或有限元验证结果。现有受拉输入从低于峰值的应力开始，峰前开裂应变处理及基于断裂能的软化正则化需进一步验证。",
+          "text": "图2.2-1和图2.2-2为理论本构及材料输入关系，非单轴试验或有限元验证结果。现有受拉输入从低于峰值的应力开始，峰前开裂应变处理及基于断裂能的软化正则化需进一步验证。",
           "has_media": false,
           "has_math": false
         },
@@ -12433,16 +12443,17 @@
     }
   ],
   "online_revision": {
-    "version": "V8-R18-REV22-CDP-FIGURE",
+    "version": "V8-R19-REV22-CDP-REFERENCE-STYLE",
     "date": "2026-11-25",
-    "scope": "Refined four-panel CDP input figure with tensile-peak inset, inward ticks, concise labels and explicit first-point difference. No solver results; Word/PDF unchanged.",
+    "scope": "Separate stress and damage figures in Zhang et al. 2024 reference layout; exact REV22 input and GB envelope. No solver result; Word/PDF unchanged.",
     "source_gate": "74fb3aee9dfef058b972a3f0e03aa571319c2fe2",
     "source_inp": "cdb719b95b8ce4301011489b4ab8ffc9e73c18bf",
     "wind_manifest": "./wind-figures/core/manifest.json",
     "historical_control_receipt": "./wind-figures/historical-control/receipt.json",
     "tower_drag_receipt": "./wind-figures/tower-drag/receipt.json",
     "rev22_review": "./inp-archive/REV22_REVIEW/",
-    "cdp_figure": "./inp-archive/REV22_REVIEW/rev22-cdp-curves-v3.svg",
-    "cdp_data": "./inp-archive/REV22_REVIEW/rev22-cdp-curves.csv"
+    "cdp_figure": "./inp-archive/REV22_REVIEW/cdp-reference-stress.svg",
+    "cdp_data": "./inp-archive/REV22_REVIEW/rev22-cdp-curves.csv",
+    "cdp_damage_figure": "./inp-archive/REV22_REVIEW/cdp-reference-damage.svg"
   }
 }
