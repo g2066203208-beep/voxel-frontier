@@ -6,17 +6,17 @@
     "scope": "Acceleration time histories; different ground motions and scales.",
     "kind": "SAME_QUANTITY",
     "status": "ARCHIVED",
-    "source_url": "https://mdpi-res.com/energies/energies-13-03833/article_deploy/html/images/energies-13-03833-g008-550.jpg",
+    "source_url": "https://mdpi-res.com/energies/energies-13-03833/article_deploy/html/images/energies-13-03833-g008.png",
     "doi": "10.3390/en13153833",
-    "original_file": "energies-13-03833-fig8-original.jpg",
+    "original_file": "energies-13-03833-fig8-original.png",
     "our_sha256": "d423b73fd63caec86acbe797f03d8387a5743927b1a60a9be4475973929df81d",
-    "original_sha256": "dceca793b479758d79ed181bdb817b14648d3941e099615a786e301f2a63affc",
-    "crop_sha256": "056509b67e66f850f217be538e52d670acfd048669513fcc73705d9fb0eacbf9",
-    "pair_sha256": "aaafd13e5d945878708c4f8080c29f54a83493c7085b38826ee8f7dd53d14885",
+    "original_sha256": "ca5c546a7a698ad7cd315319d098864ce0ba559f649d555d9f3b26d1967967da",
+    "crop_sha256": "b220442f85536d2a80ff6571c19d4cb60ad2923bd52042fbaf0c3923fa9b5796",
+    "pair_sha256": "a311e7a0024bdb361dfda052e366a4e9690e5b5e27b6bf478f32afaede68bee1",
     "pair": "figure-audit/R51/acceleration-pair.png",
     "pair_pixels": [
       2800,
-      1400
+      1935
     ]
   },
   {
@@ -26,17 +26,17 @@
     "scope": "Frequency PSD vs period power spectrum; methods and normalization differ.",
     "kind": "METHOD_ONLY",
     "status": "ARCHIVED",
-    "source_url": "https://mdpi-res.com/energies/energies-13-03833/article_deploy/html/images/energies-13-03833-g008-550.jpg",
+    "source_url": "https://mdpi-res.com/energies/energies-13-03833/article_deploy/html/images/energies-13-03833-g008.png",
     "doi": "10.3390/en13153833",
-    "original_file": "energies-13-03833-fig8-original.jpg",
+    "original_file": "energies-13-03833-fig8-original.png",
     "our_sha256": "d36e7209921f4cb3004eda20d7986ff4605d9500549614b9a760ed280da52038",
-    "original_sha256": "dceca793b479758d79ed181bdb817b14648d3941e099615a786e301f2a63affc",
-    "crop_sha256": "2cc26c48ac9df1dd54c913878eef2c0de82253608f6d79232c0ee1a06cd68cc0",
-    "pair_sha256": "065851bdb2f950e99c6c139a702f04a53caa339ff08deb93820595da51e00efe",
+    "original_sha256": "ca5c546a7a698ad7cd315319d098864ce0ba559f649d555d9f3b26d1967967da",
+    "crop_sha256": "a9202ccd2311391781f59ff1fd35bf9076a160ba74efbcc852749610579d1537",
+    "pair_sha256": "af0d3bc473242da8f771bcf234fe4968859112e6de2833ca121d148859430822",
     "pair": "figure-audit/R51/power-spectrum-pair.png",
     "pair_pixels": [
       2800,
-      1400
+      1604
     ]
   },
   {
@@ -46,17 +46,17 @@
     "scope": "Acceleration response spectra; different components, target and units.",
     "kind": "SAME_QUANTITY",
     "status": "ARCHIVED",
-    "source_url": "https://mdpi-res.com/energies/energies-13-03833/article_deploy/html/images/energies-13-03833-g008-550.jpg",
+    "source_url": "https://mdpi-res.com/energies/energies-13-03833/article_deploy/html/images/energies-13-03833-g008.png",
     "doi": "10.3390/en13153833",
-    "original_file": "energies-13-03833-fig8-original.jpg",
+    "original_file": "energies-13-03833-fig8-original.png",
     "our_sha256": "c8c91bc908f57c75dbe78f70e705652db356c93ee03925f13217f0b8cce2f305",
-    "original_sha256": "dceca793b479758d79ed181bdb817b14648d3941e099615a786e301f2a63affc",
-    "crop_sha256": "86f96b702ac64510a44743ff4777b93f3a2d6f4f8d294b51e6f20223752a494b",
-    "pair_sha256": "626ea94369775d26d08110725d91d5e7f7a2ed67dc87d53eaa8308fa99458939",
+    "original_sha256": "ca5c546a7a698ad7cd315319d098864ce0ba559f649d555d9f3b26d1967967da",
+    "crop_sha256": "c5421f9abc1a663b7112248d560655747e80711ac293395382689c4360ab30be",
+    "pair_sha256": "9ee35d972dc5b3f0b3ba17ea2dda4fa7fc060878854bec6d1bba6a1d820c896e",
     "pair": "figure-audit/R51/response-spectrum-pair.png",
     "pair_pixels": [
       2800,
-      1400
+      1187
     ]
   },
   {
@@ -73,11 +73,11 @@
     "our_sha256": "4cde14abb73fa48dee2ec484fdfde3e00a90e0fc2f704507fd26282d82d5d5f2",
     "original_sha256": "8df171aa09e856928bd27d7c29e0d44470988b1d65d1852e0eed1948a146f115",
     "crop_sha256": "08b5f61e233c2c409cad7b79e1d986c0523092d51562ed054b73f8475e5776d8",
-    "pair_sha256": "75e255d234a366ebef83eb4709c5f3d827c40da0de935f44a936a081a5b08e21",
+    "pair_sha256": "fb2877a94cdf8b6c0a6646e1965a26e5703876bb6e704fb954d51f0797f5c8ce",
     "pair": "figure-audit/R51/pulse-velocity-pair.png",
     "pair_pixels": [
       2800,
-      1400
+      1098
     ]
   }
 ]
