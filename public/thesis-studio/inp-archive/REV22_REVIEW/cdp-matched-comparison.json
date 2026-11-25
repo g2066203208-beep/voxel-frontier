@@ -1,0 +1,10 @@
+{
+  "source_image_sha256": "4260eb771214c9cd3d950319ee65e5fc16a41e5fa05c887b649931f2e97ff8d4",
+  "model_svg_sha256": "b06601603c9191d844d102297662f6c85b5567a57ef14afe2f498ddf69ace2ad",
+  "comparison_sha256": "60322fd7f37d190e42e6c18988f8788e9d788656dedf20050b4331c776c67db6",
+  "size": [
+    4350,
+    1450
+  ],
+  "scope": "Same physical quantities; different concrete strengths; not validation"
+}
