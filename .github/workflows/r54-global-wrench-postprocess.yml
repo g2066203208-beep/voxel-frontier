@@ -1,0 +1,53 @@
+name: R54 global hub wrench postprocess
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/r54-global-wrench-postprocess.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            public/thesis-studio/inp-archive/R47_RNA_WIND_GATE/global
+            public/thesis-studio/inp-archive/R54_GLOBAL_WRENCH
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: 45616279438
+          name: r47b-global-NTM-700s
+          path: incoming/NTM
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: 45616279438
+          name: r47b-global-1ETM-700s
+          path: incoming/1ETM
+      - name: Source verification, exact axis rotation and plotting
+        run: |
+          python -m pip install numpy==1.26.4 matplotlib==3.9.2
+          python public/thesis-studio/inp-archive/R54_GLOBAL_WRENCH/prepare_r54.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: r54-verified-axis-figures
+          path: public/thesis-studio/inp-archive/R54_GLOBAL_WRENCH/
+      - name: Publish validated diagnostic assets
+        run: |
+          set -euo pipefail
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add -f public/thesis-studio/inp-archive/R54_GLOBAL_WRENCH
+          git commit -m "Archive R54 verified R44-axis hub time histories and six-component figures"
+          git fetch origin main
+          git rebase FETCH_HEAD
+          git push origin HEAD:main
