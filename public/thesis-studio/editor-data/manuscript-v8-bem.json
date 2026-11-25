@@ -2849,7 +2849,7 @@
           "id": "rev25-hoop-screen-2",
           "kind": "text",
           "style": "Normal",
-          "text": "计算表明，CSEG31在622.55 s处控制点η=1.03884，q_V=236.02 kN/m，q_T=1017.20 kN/m；保守上界η=1.18439。CSEG30及CSEG31的上界超过1.0。该结果指出应优先复核顶部混凝土塔段，而不构成承载力不满足的正式判定。CSEG31归档名义直径差对应壁厚约457 mm，与构造表500 mm存在口径差；本次配筋率采用较大名义壁厚，剪流采用名义直径计算中面半径，须进一步统一截面位置及几何。完整同步时程未直接复算，实际REV25截面及纵筋/PT同源性、专项规范抗力和地震组合尚待核实。",
+          "text": "计算表明，CSEG31在622.55 s处控制点η=1.03884，q_V=236.02 kN/m，q_T=1017.20 kN/m；保守上界η=1.18439。CSEG30及CSEG31的上界超过1.0。该结果指出应优先复核顶部混凝土塔段，而不构成承载力不满足的正式判定。对31段几何逐一核查，21段的名义壁厚与内外径反算壁厚绝对差大于0.1 mm，其中CSEG29、CSEG30、CSEG31的反算值分别为307、384、457 mm，与构造表354、414、500 mm不一致；本次配筋率采用较大名义壁厚，剪流采用名义直径计算中面半径，须进一步统一截面位置及几何。完整同步时程未直接复算，实际REV25截面及纵筋/PT同源性、专项规范抗力和地震组合尚待核实。",
           "has_media": false,
           "has_math": false
         },
@@ -13179,9 +13179,9 @@
     }
   ],
   "online_revision": {
-    "version": "V8-R30-HOOP-SCREEN",
+    "version": "V8-R31-REBAR-EVIDENCE",
     "date": "2026-11-25",
-    "scope": "Chapter 2 adds independent 31-segment nominal construction and thin-wall shear-flow screening from 310 historical synchronous control records; not a code capacity certification.",
+    "scope": "Chapter 2 clarifies 21 nominal geometry discrepancies and links independently reproducible evidence archive.",
     "source_gate": "74fb3aee9dfef058b972a3f0e03aa571319c2fe2",
     "source_inp": "cdb719b95b8ce4301011489b4ab8ffc9e73c18bf",
     "wind_manifest": "./wind-figures/core/manifest.json",
@@ -13197,6 +13197,7 @@
     ],
     "blade_aero_independent_audit": "./wind-figures/blade-aero/audit.json",
     "blade_aero_figure_audit": "./wind-figures/blade-aero/r27/receipt.json",
-    "rebar_receipt": "./inp-archive/REV25_HOOP_COST/receipt.json"
+    "rebar_receipt": "./inp-archive/REV25_HOOP_COST/receipt.json",
+    "rebar_verification": "./rebar-verification/"
   }
 }
