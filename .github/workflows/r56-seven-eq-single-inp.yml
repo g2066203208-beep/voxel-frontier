@@ -1,0 +1,42 @@
+name: R56 seven earthquake standalone INP delivery
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/r56-seven-eq-single-inp.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            public/thesis-studio/inp-archive/R44_REBAR_RESEARCH_PRECHECK
+            public/thesis-studio/inp-archive/R45_EQ_RESEARCH_CANDIDATE
+            public/thesis-studio/inp-archive/R55_FULL_WIND_EQ_DIAGNOSTIC
+            public/thesis-studio/inp-archive/R56_SEVEN_EQ_DELIVERY
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Generate and verify all standalone INPs
+        run: python public/thesis-studio/inp-archive/R56_SEVEN_EQ_DELIVERY/package_r56.py
+      - name: Archive delivery and receipt
+        run: |
+          set -euo pipefail
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add -f public/thesis-studio/inp-archive/R56_SEVEN_EQ_DELIVERY/
+          git commit -m "Archive R56 unified delivery and 25 standalone INP verification receipt"
+          git fetch origin main
+          git rebase FETCH_HEAD
+          git push origin HEAD:main
+      - uses: actions/upload-artifact@v4
+        with:
+          name: R56-all-25-standalone-inp
+          path: r56_standalone/*.inp
+          compression-level: 6
+          retention-days: 30
