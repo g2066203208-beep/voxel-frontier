@@ -1,0 +1,24 @@
+name: Build Brown wind profile comparison
+on:
+  push:
+    paths:
+      - '.github/workflows/build-brown-profile-pair.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          set -eu
+          python -m pip install -q pymupdf pillow
+          python public/thesis-studio/wind-figures/build_brown_profile_pair.py
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/thesis-studio/wind-figures/brown-fig10-original.png public/thesis-studio/wind-figures/he-comparison-04.png public/thesis-studio/wind-figures/he-comparison-04.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Archive Brown Fig 10 original and fourth formal wind figure pair'
+          git pull --rebase origin main
+          git push origin HEAD:main
