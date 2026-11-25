@@ -1,0 +1,2928 @@
+{
+  "version": "REV24_MEDIUM_CANDIDATE",
+  "source_sha256": "e84851887735305c6387ca38a972bebd97ba9cdff7baa7735c0ed89cecf925b5",
+  "output_sha256": "64dcd4ea475060fdb99432fca295d2acdfa027cb01ddb380659bb1ef92c5d561",
+  "bytes": 16923740,
+  "scope": "concrete-only nested subdivision of original faceted geometry; no new CAD, no changes to PT, rebar, material, steel, connections, loads or steps",
+  "subdivision": {
+    "circumferential": 48,
+    "axial_per_segment": 4,
+    "radial": 2
+  },
+  "concrete_elements_before": 2976,
+  "concrete_elements_after": 11904,
+  "whole_elements_before": 96464,
+  "whole_elements_after": 105392,
+  "part_count": 100,
+  "instances": 100,
+  "original_nodes_preserved": true,
+  "positive_8_point_jacobians": true,
+  "conforming_boundary_faces": true,
+  "max_relative_volume_error": 4.440892098500626e-16,
+  "unchanged_records_sha256": "9ae6ce8eee3a7436bfe6e87df38940da268bb1797e108efbe617cffb76d86ce5",
+  "sets_remapped": [
+    {
+      "part": "CSEG_01",
+      "scope": "part",
+      "kind": "nset",
+      "name": "SET_ALL",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_01",
+      "scope": "part",
+      "kind": "elset",
+      "name": "SET_ALL",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_01",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_BOTTOM",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_01",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_BOTTOM",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_01",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_TOP",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_01",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_TOP",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_01",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_BOTTOM_S6",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_01",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_TOP_S4",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_02",
+      "scope": "part",
+      "kind": "nset",
+      "name": "SET_ALL",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_02",
+      "scope": "part",
+      "kind": "elset",
+      "name": "SET_ALL",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_02",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_BOTTOM",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_02",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_BOTTOM",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_02",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_TOP",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_02",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_TOP",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_02",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_BOTTOM_S6",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_02",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_TOP_S4",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_03",
+      "scope": "part",
+      "kind": "nset",
+      "name": "SET_ALL",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_03",
+      "scope": "part",
+      "kind": "elset",
+      "name": "SET_ALL",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_03",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_BOTTOM",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_03",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_BOTTOM",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_03",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_TOP",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_03",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_TOP",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_03",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_BOTTOM_S6",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_03",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_TOP_S4",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_04",
+      "scope": "part",
+      "kind": "nset",
+      "name": "SET_ALL",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_04",
+      "scope": "part",
+      "kind": "elset",
+      "name": "SET_ALL",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_04",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_BOTTOM",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_04",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_BOTTOM",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_04",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_TOP",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_04",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_TOP",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_04",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_BOTTOM_S6",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_04",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_TOP_S4",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_05",
+      "scope": "part",
+      "kind": "nset",
+      "name": "SET_ALL",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_05",
+      "scope": "part",
+      "kind": "elset",
+      "name": "SET_ALL",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_05",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_BOTTOM",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_05",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_BOTTOM",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_05",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_TOP",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_05",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_TOP",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_05",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_BOTTOM_S6",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_05",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_TOP_S4",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_06",
+      "scope": "part",
+      "kind": "nset",
+      "name": "SET_ALL",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_06",
+      "scope": "part",
+      "kind": "elset",
+      "name": "SET_ALL",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_06",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_BOTTOM",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_06",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_BOTTOM",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_06",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_TOP",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_06",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_TOP",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_06",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_BOTTOM_S6",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_06",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_TOP_S4",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_07",
+      "scope": "part",
+      "kind": "nset",
+      "name": "SET_ALL",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_07",
+      "scope": "part",
+      "kind": "elset",
+      "name": "SET_ALL",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_07",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_BOTTOM",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_07",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_BOTTOM",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_07",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_TOP",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_07",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_TOP",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_07",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_BOTTOM_S6",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_07",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_TOP_S4",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_08",
+      "scope": "part",
+      "kind": "nset",
+      "name": "SET_ALL",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_08",
+      "scope": "part",
+      "kind": "elset",
+      "name": "SET_ALL",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_08",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_BOTTOM",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_08",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_BOTTOM",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_08",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_TOP",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_08",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_TOP",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_08",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_BOTTOM_S6",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_08",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_TOP_S4",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_09",
+      "scope": "part",
+      "kind": "nset",
+      "name": "SET_ALL",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_09",
+      "scope": "part",
+      "kind": "elset",
+      "name": "SET_ALL",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_09",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_BOTTOM",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_09",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_BOTTOM",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_09",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_TOP",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_09",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_TOP",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_09",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_BOTTOM_S6",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_09",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_TOP_S4",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_10",
+      "scope": "part",
+      "kind": "nset",
+      "name": "SET_ALL",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_10",
+      "scope": "part",
+      "kind": "elset",
+      "name": "SET_ALL",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_10",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_BOTTOM",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_10",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_BOTTOM",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_10",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_TOP",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_10",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_TOP",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_10",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_BOTTOM_S6",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_10",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_TOP_S4",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_11",
+      "scope": "part",
+      "kind": "nset",
+      "name": "SET_ALL",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_11",
+      "scope": "part",
+      "kind": "elset",
+      "name": "SET_ALL",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_11",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_BOTTOM",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_11",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_BOTTOM",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_11",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_TOP",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_11",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_TOP",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_11",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_BOTTOM_S6",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_11",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_TOP_S4",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_12",
+      "scope": "part",
+      "kind": "nset",
+      "name": "SET_ALL",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_12",
+      "scope": "part",
+      "kind": "elset",
+      "name": "SET_ALL",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_12",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_BOTTOM",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_12",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_BOTTOM",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_12",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_TOP",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_12",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_TOP",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_12",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_BOTTOM_S6",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_12",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_TOP_S4",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_13",
+      "scope": "part",
+      "kind": "nset",
+      "name": "SET_ALL",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_13",
+      "scope": "part",
+      "kind": "elset",
+      "name": "SET_ALL",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_13",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_BOTTOM",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_13",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_BOTTOM",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_13",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_TOP",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_13",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_TOP",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_13",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_BOTTOM_S6",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_13",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_TOP_S4",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_14",
+      "scope": "part",
+      "kind": "nset",
+      "name": "SET_ALL",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_14",
+      "scope": "part",
+      "kind": "elset",
+      "name": "SET_ALL",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_14",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_BOTTOM",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_14",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_BOTTOM",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_14",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_TOP",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_14",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_TOP",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_14",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_BOTTOM_S6",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_14",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_TOP_S4",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_15",
+      "scope": "part",
+      "kind": "nset",
+      "name": "SET_ALL",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_15",
+      "scope": "part",
+      "kind": "elset",
+      "name": "SET_ALL",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_15",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_BOTTOM",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_15",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_BOTTOM",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_15",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_TOP",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_15",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_TOP",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_15",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_BOTTOM_S6",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_15",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_TOP_S4",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_16",
+      "scope": "part",
+      "kind": "nset",
+      "name": "SET_ALL",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_16",
+      "scope": "part",
+      "kind": "elset",
+      "name": "SET_ALL",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_16",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_BOTTOM",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_16",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_BOTTOM",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_16",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_TOP",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_16",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_TOP",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_16",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_BOTTOM_S6",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_16",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_TOP_S4",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_17",
+      "scope": "part",
+      "kind": "nset",
+      "name": "SET_ALL",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_17",
+      "scope": "part",
+      "kind": "elset",
+      "name": "SET_ALL",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_17",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_BOTTOM",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_17",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_BOTTOM",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_17",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_TOP",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_17",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_TOP",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_17",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_BOTTOM_S6",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_17",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_TOP_S4",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_18",
+      "scope": "part",
+      "kind": "nset",
+      "name": "SET_ALL",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_18",
+      "scope": "part",
+      "kind": "elset",
+      "name": "SET_ALL",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_18",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_BOTTOM",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_18",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_BOTTOM",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_18",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_TOP",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_18",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_TOP",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_18",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_BOTTOM_S6",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_18",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_TOP_S4",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_19",
+      "scope": "part",
+      "kind": "nset",
+      "name": "SET_ALL",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_19",
+      "scope": "part",
+      "kind": "elset",
+      "name": "SET_ALL",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_19",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_BOTTOM",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_19",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_BOTTOM",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_19",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_TOP",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_19",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_TOP",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_19",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_BOTTOM_S6",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_19",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_TOP_S4",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_20",
+      "scope": "part",
+      "kind": "nset",
+      "name": "SET_ALL",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_20",
+      "scope": "part",
+      "kind": "elset",
+      "name": "SET_ALL",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_20",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_BOTTOM",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_20",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_BOTTOM",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_20",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_TOP",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_20",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_TOP",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_20",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_BOTTOM_S6",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_20",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_TOP_S4",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_21",
+      "scope": "part",
+      "kind": "nset",
+      "name": "SET_ALL",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_21",
+      "scope": "part",
+      "kind": "elset",
+      "name": "SET_ALL",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_21",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_BOTTOM",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_21",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_BOTTOM",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_21",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_TOP",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_21",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_TOP",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_21",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_BOTTOM_S6",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_21",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_TOP_S4",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_22",
+      "scope": "part",
+      "kind": "nset",
+      "name": "SET_ALL",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_22",
+      "scope": "part",
+      "kind": "elset",
+      "name": "SET_ALL",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_22",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_BOTTOM",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_22",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_BOTTOM",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_22",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_TOP",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_22",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_TOP",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_22",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_BOTTOM_S6",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_22",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_TOP_S4",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_23",
+      "scope": "part",
+      "kind": "nset",
+      "name": "SET_ALL",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_23",
+      "scope": "part",
+      "kind": "elset",
+      "name": "SET_ALL",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_23",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_BOTTOM",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_23",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_BOTTOM",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_23",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_TOP",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_23",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_TOP",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_23",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_BOTTOM_S6",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_23",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_TOP_S4",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_24",
+      "scope": "part",
+      "kind": "nset",
+      "name": "SET_ALL",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_24",
+      "scope": "part",
+      "kind": "elset",
+      "name": "SET_ALL",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_24",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_BOTTOM",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_24",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_BOTTOM",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_24",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_TOP",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_24",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_TOP",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_24",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_BOTTOM_S6",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_24",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_TOP_S4",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_25",
+      "scope": "part",
+      "kind": "nset",
+      "name": "SET_ALL",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_25",
+      "scope": "part",
+      "kind": "elset",
+      "name": "SET_ALL",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_25",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_BOTTOM",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_25",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_BOTTOM",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_25",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_TOP",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_25",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_TOP",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_25",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_BOTTOM_S6",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_25",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_TOP_S4",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_26",
+      "scope": "part",
+      "kind": "nset",
+      "name": "SET_ALL",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_26",
+      "scope": "part",
+      "kind": "elset",
+      "name": "SET_ALL",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_26",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_BOTTOM",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_26",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_BOTTOM",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_26",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_TOP",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_26",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_TOP",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_26",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_BOTTOM_S6",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_26",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_TOP_S4",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_27",
+      "scope": "part",
+      "kind": "nset",
+      "name": "SET_ALL",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_27",
+      "scope": "part",
+      "kind": "elset",
+      "name": "SET_ALL",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_27",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_BOTTOM",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_27",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_BOTTOM",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_27",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_TOP",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_27",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_TOP",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_27",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_BOTTOM_S6",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_27",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_TOP_S4",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_28",
+      "scope": "part",
+      "kind": "nset",
+      "name": "SET_ALL",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_28",
+      "scope": "part",
+      "kind": "elset",
+      "name": "SET_ALL",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_28",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_BOTTOM",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_28",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_BOTTOM",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_28",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_TOP",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_28",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_TOP",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_28",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_BOTTOM_S6",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_28",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_TOP_S4",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_29",
+      "scope": "part",
+      "kind": "nset",
+      "name": "SET_ALL",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_29",
+      "scope": "part",
+      "kind": "elset",
+      "name": "SET_ALL",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_29",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_BOTTOM",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_29",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_BOTTOM",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_29",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_TOP",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_29",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_TOP",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_29",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_BOTTOM_S6",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_29",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_TOP_S4",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_30",
+      "scope": "part",
+      "kind": "nset",
+      "name": "SET_ALL",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_30",
+      "scope": "part",
+      "kind": "elset",
+      "name": "SET_ALL",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_30",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_BOTTOM",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_30",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_BOTTOM",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_30",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_TOP",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_30",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_TOP",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_30",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_BOTTOM_S6",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_30",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_TOP_S4",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_31",
+      "scope": "part",
+      "kind": "nset",
+      "name": "SET_ALL",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_31",
+      "scope": "part",
+      "kind": "elset",
+      "name": "SET_ALL",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_31",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_BOTTOM",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_31",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_BOTTOM",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_31",
+      "scope": "part",
+      "kind": "nset",
+      "name": "FACE_TOP",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_31",
+      "scope": "part",
+      "kind": "elset",
+      "name": "FACE_TOP",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_31",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_BOTTOM_S6",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_31",
+      "scope": "part",
+      "kind": "elset",
+      "name": "_SURF_TOP_S4",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_01",
+      "scope": "assembly",
+      "kind": "nset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_02",
+      "scope": "assembly",
+      "kind": "nset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_03",
+      "scope": "assembly",
+      "kind": "nset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_04",
+      "scope": "assembly",
+      "kind": "nset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_05",
+      "scope": "assembly",
+      "kind": "nset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_06",
+      "scope": "assembly",
+      "kind": "nset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_07",
+      "scope": "assembly",
+      "kind": "nset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_08",
+      "scope": "assembly",
+      "kind": "nset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_09",
+      "scope": "assembly",
+      "kind": "nset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_10",
+      "scope": "assembly",
+      "kind": "nset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_11",
+      "scope": "assembly",
+      "kind": "nset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_12",
+      "scope": "assembly",
+      "kind": "nset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_13",
+      "scope": "assembly",
+      "kind": "nset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_14",
+      "scope": "assembly",
+      "kind": "nset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_15",
+      "scope": "assembly",
+      "kind": "nset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_16",
+      "scope": "assembly",
+      "kind": "nset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_17",
+      "scope": "assembly",
+      "kind": "nset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_18",
+      "scope": "assembly",
+      "kind": "nset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_19",
+      "scope": "assembly",
+      "kind": "nset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_20",
+      "scope": "assembly",
+      "kind": "nset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_21",
+      "scope": "assembly",
+      "kind": "nset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_22",
+      "scope": "assembly",
+      "kind": "nset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_23",
+      "scope": "assembly",
+      "kind": "nset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_24",
+      "scope": "assembly",
+      "kind": "nset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_25",
+      "scope": "assembly",
+      "kind": "nset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_26",
+      "scope": "assembly",
+      "kind": "nset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_27",
+      "scope": "assembly",
+      "kind": "nset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_28",
+      "scope": "assembly",
+      "kind": "nset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_29",
+      "scope": "assembly",
+      "kind": "nset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_30",
+      "scope": "assembly",
+      "kind": "nset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_31",
+      "scope": "assembly",
+      "kind": "nset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 288,
+      "new": 720
+    },
+    {
+      "part": "CSEG_01",
+      "scope": "assembly",
+      "kind": "elset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_02",
+      "scope": "assembly",
+      "kind": "elset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_03",
+      "scope": "assembly",
+      "kind": "elset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_04",
+      "scope": "assembly",
+      "kind": "elset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_05",
+      "scope": "assembly",
+      "kind": "elset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_06",
+      "scope": "assembly",
+      "kind": "elset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_07",
+      "scope": "assembly",
+      "kind": "elset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_08",
+      "scope": "assembly",
+      "kind": "elset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_09",
+      "scope": "assembly",
+      "kind": "elset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_10",
+      "scope": "assembly",
+      "kind": "elset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_11",
+      "scope": "assembly",
+      "kind": "elset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_12",
+      "scope": "assembly",
+      "kind": "elset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_13",
+      "scope": "assembly",
+      "kind": "elset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_14",
+      "scope": "assembly",
+      "kind": "elset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_15",
+      "scope": "assembly",
+      "kind": "elset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_16",
+      "scope": "assembly",
+      "kind": "elset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_17",
+      "scope": "assembly",
+      "kind": "elset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_18",
+      "scope": "assembly",
+      "kind": "elset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_19",
+      "scope": "assembly",
+      "kind": "elset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_20",
+      "scope": "assembly",
+      "kind": "elset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_21",
+      "scope": "assembly",
+      "kind": "elset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_22",
+      "scope": "assembly",
+      "kind": "elset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_23",
+      "scope": "assembly",
+      "kind": "elset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_24",
+      "scope": "assembly",
+      "kind": "elset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_25",
+      "scope": "assembly",
+      "kind": "elset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_26",
+      "scope": "assembly",
+      "kind": "elset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_27",
+      "scope": "assembly",
+      "kind": "elset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_28",
+      "scope": "assembly",
+      "kind": "elset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_29",
+      "scope": "assembly",
+      "kind": "elset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_30",
+      "scope": "assembly",
+      "kind": "elset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_31",
+      "scope": "assembly",
+      "kind": "elset",
+      "name": "SET_CSEG_ALL_ACTIVE",
+      "old": 96,
+      "new": 384
+    },
+    {
+      "part": "CSEG_01",
+      "scope": "assembly",
+      "kind": "nset",
+      "name": "SET_TOWER_BASE",
+      "old": 96,
+      "new": 144
+    },
+    {
+      "part": "CSEG_01",
+      "scope": "assembly",
+      "kind": "elset",
+      "name": "SET_TOWER_BASE",
+      "old": 48,
+      "new": 96
+    },
+    {
+      "part": "CSEG_01",
+      "scope": "assembly",
+      "kind": "elset",
+      "name": "AUDIT_C_BASE",
+      "old": 8,
+      "new": 32
+    },
+    {
+      "part": "CSEG_31",
+      "scope": "assembly",
+      "kind": "elset",
+      "name": "AUDIT_C_TOP",
+      "old": 8,
+      "new": 32
+    },
+    {
+      "part": "CSEG_01",
+      "scope": "assembly",
+      "kind": "nset",
+      "name": "REV13_C_BASE_PROBE",
+      "old": 1,
+      "new": 1
+    }
+  ],
+  "segments": [
+    {
+      "part": "CSEG_01",
+      "old_nodes": 288,
+      "new_nodes": 720,
+      "old_elements": 96,
+      "new_elements": 384,
+      "old_volume_m3": 25.44641673686573,
+      "new_volume_m3": 25.446416736865718,
+      "relative_volume_error": -4.440892098500626e-16,
+      "min_detJ_old": 0.2575918864402535,
+      "min_detJ_new": 0.06383570827103695
+    },
+    {
+      "part": "CSEG_02",
+      "old_nodes": 288,
+      "new_nodes": 720,
+      "old_elements": 96,
+      "new_elements": 384,
+      "old_volume_m3": 24.935581493473478,
+      "new_volume_m3": 24.935581493473478,
+      "relative_volume_error": 0.0,
+      "min_detJ_old": 0.25227089348315357,
+      "min_detJ_new": 0.06250546203224401
+    },
+    {
+      "part": "CSEG_03",
+      "old_nodes": 288,
+      "new_nodes": 720,
+      "old_elements": 96,
+      "new_elements": 384,
+      "old_volume_m3": 24.42473684052824,
+      "new_volume_m3": 24.42473684052824,
+      "relative_volume_error": 0.0,
+      "min_detJ_old": 0.24694938367048064,
+      "min_detJ_new": 0.06117508276525925
+    },
+    {
+      "part": "CSEG_04",
+      "old_nodes": 288,
+      "new_nodes": 720,
+      "old_elements": 96,
+      "new_elements": 384,
+      "old_volume_m3": 24.032300016656265,
+      "new_volume_m3": 24.032300016656272,
+      "relative_volume_error": 2.220446049250313e-16,
+      "min_detJ_old": 0.243738946845692,
+      "min_detJ_new": 0.06039471977111585
+    },
+    {
+      "part": "CSEG_05",
+      "old_nodes": 288,
+      "new_nodes": 720,
+      "old_elements": 96,
+      "new_elements": 384,
+      "old_volume_m3": 23.836406993237976,
+      "new_volume_m3": 23.83640699323798,
+      "relative_volume_error": 2.220446049250313e-16,
+      "min_detJ_old": 0.24215649160299443,
+      "min_detJ_new": 0.060001457854333654
+    },
+    {
+      "part": "CSEG_06",
+      "old_nodes": 288,
+      "new_nodes": 720,
+      "old_elements": 96,
+      "new_elements": 384,
+      "old_volume_m3": 23.77327107998812,
+      "new_volume_m3": 23.773271079988117,
+      "relative_volume_error": -1.1102230246251565e-16,
+      "min_detJ_old": 0.24164728303063163,
+      "min_detJ_new": 0.059859888120947474
+    },
+    {
+      "part": "CSEG_07",
+      "old_nodes": 288,
+      "new_nodes": 720,
+      "old_elements": 96,
+      "new_elements": 384,
+      "old_volume_m3": 23.815181948129307,
+      "new_volume_m3": 23.815181948129304,
+      "relative_volume_error": -1.1102230246251565e-16,
+      "min_detJ_old": 0.24167328608009206,
+      "min_detJ_new": 0.05986017919844962
+    },
+    {
+      "part": "CSEG_08",
+      "old_nodes": 288,
+      "new_nodes": 720,
+      "old_elements": 96,
+      "new_elements": 384,
+      "old_volume_m3": 23.770277934445552,
+      "new_volume_m3": 23.77027793444556,
+      "relative_volume_error": 2.220446049250313e-16,
+      "min_detJ_old": 0.2403812872037532,
+      "min_detJ_new": 0.059473766777640526
+    },
+    {
+      "part": "CSEG_09",
+      "old_nodes": 288,
+      "new_nodes": 720,
+      "old_elements": 96,
+      "new_elements": 384,
+      "old_volume_m3": 23.57671629550157,
+      "new_volume_m3": 23.57671629550157,
+      "relative_volume_error": 0.0,
+      "min_detJ_old": 0.23807561704507513,
+      "min_detJ_new": 0.05887527872570077
+    },
+    {
+      "part": "CSEG_10",
+      "old_nodes": 288,
+      "new_nodes": 720,
+      "old_elements": 96,
+      "new_elements": 384,
+      "old_volume_m3": 23.452146064527447,
+      "new_volume_m3": 23.45214606452745,
+      "relative_volume_error": 2.220446049250313e-16,
+      "min_detJ_old": 0.23709835060976406,
+      "min_detJ_new": 0.058621014685045096
+    },
+    {
+      "part": "CSEG_11",
+      "old_nodes": 288,
+      "new_nodes": 720,
+      "old_elements": 96,
+      "new_elements": 384,
+      "old_volume_m3": 23.38999370431869,
+      "new_volume_m3": 23.38999370431869,
+      "relative_volume_error": 0.0,
+      "min_detJ_old": 0.23600103538471398,
+      "min_detJ_new": 0.05831220613463613
+    },
+    {
+      "part": "CSEG_12",
+      "old_nodes": 288,
+      "new_nodes": 720,
+      "old_elements": 96,
+      "new_elements": 384,
+      "old_volume_m3": 23.216389797150537,
+      "new_volume_m3": 23.21638979715054,
+      "relative_volume_error": 2.220446049250313e-16,
+      "min_detJ_old": 0.23316735513357462,
+      "min_detJ_new": 0.05755805254735721
+    },
+    {
+      "part": "CSEG_13",
+      "old_nodes": 288,
+      "new_nodes": 720,
+      "old_elements": 96,
+      "new_elements": 384,
+      "old_volume_m3": 22.937878030277922,
+      "new_volume_m3": 22.937878030277933,
+      "relative_volume_error": 4.440892098500626e-16,
+      "min_detJ_old": 0.22995952934462932,
+      "min_detJ_new": 0.05673245822730505
+    },
+    {
+      "part": "CSEG_14",
+      "old_nodes": 288,
+      "new_nodes": 720,
+      "old_elements": 96,
+      "new_elements": 384,
+      "old_volume_m3": 22.718519811695444,
+      "new_volume_m3": 22.718519811695444,
+      "relative_volume_error": 0.0,
+      "min_detJ_old": 0.2278892792729713,
+      "min_detJ_new": 0.0561998151387025
+    },
+    {
+      "part": "CSEG_15",
+      "old_nodes": 288,
+      "new_nodes": 720,
+      "old_elements": 96,
+      "new_elements": 384,
+      "old_volume_m3": 22.551752569811633,
+      "new_volume_m3": 22.55175256981164,
+      "relative_volume_error": 2.220446049250313e-16,
+      "min_detJ_old": 0.2256765081470393,
+      "min_detJ_new": 0.05560978827472002
+    },
+    {
+      "part": "CSEG_16",
+      "old_nodes": 288,
+      "new_nodes": 720,
+      "old_elements": 96,
+      "new_elements": 384,
+      "old_volume_m3": 22.283362727351943,
+      "new_volume_m3": 22.28336272735195,
+      "relative_volume_error": 2.220446049250313e-16,
+      "min_detJ_old": 0.22191820745056962,
+      "min_detJ_new": 0.05462568824792458
+    },
+    {
+      "part": "CSEG_17",
+      "old_nodes": 288,
+      "new_nodes": 720,
+      "old_elements": 96,
+      "new_elements": 384,
+      "old_volume_m3": 22.01311394012674,
+      "new_volume_m3": 22.013113940126743,
+      "relative_volume_error": 2.220446049250313e-16,
+      "min_detJ_old": 0.21967067536929805,
+      "min_detJ_new": 0.0540777676692641
+    },
+    {
+      "part": "CSEG_18",
+      "old_nodes": 288,
+      "new_nodes": 720,
+      "old_elements": 96,
+      "new_elements": 384,
+      "old_volume_m3": 21.920674742833004,
+      "new_volume_m3": 21.920674742833,
+      "relative_volume_error": -1.1102230246251565e-16,
+      "min_detJ_old": 0.2194527347986673,
+      "min_detJ_new": 0.05404991128990978
+    },
+    {
+      "part": "CSEG_19",
+      "old_nodes": 288,
+      "new_nodes": 720,
+      "old_elements": 96,
+      "new_elements": 384,
+      "old_volume_m3": 21.920674742833004,
+      "new_volume_m3": 21.920674742833,
+      "relative_volume_error": -1.1102230246251565e-16,
+      "min_detJ_old": 0.2194527347986673,
+      "min_detJ_new": 0.05404991128990978
+    },
+    {
+      "part": "CSEG_20",
+      "old_nodes": 288,
+      "new_nodes": 720,
+      "old_elements": 96,
+      "new_elements": 384,
+      "old_volume_m3": 21.23398307765349,
+      "new_volume_m3": 21.23398307765349,
+      "relative_volume_error": 0.0,
+      "min_detJ_old": 0.20854345465772656,
+      "min_detJ_new": 0.05126570241036067
+    },
+    {
+      "part": "CSEG_21",
+      "old_nodes": 288,
+      "new_nodes": 720,
+      "old_elements": 96,
+      "new_elements": 384,
+      "old_volume_m3": 20.31748690970879,
+      "new_volume_m3": 20.31748690970879,
+      "relative_volume_error": 0.0,
+      "min_detJ_old": 0.19973523578594032,
+      "min_detJ_new": 0.04913559579215753
+    },
+    {
+      "part": "CSEG_22",
+      "old_nodes": 288,
+      "new_nodes": 720,
+      "old_elements": 96,
+      "new_elements": 384,
+      "old_volume_m3": 19.631001512502493,
+      "new_volume_m3": 19.631001512502493,
+      "relative_volume_error": 0.0,
+      "min_detJ_old": 0.19746725377751054,
+      "min_detJ_new": 0.048724226854920435
+    },
+    {
+      "part": "CSEG_23",
+      "old_nodes": 288,
+      "new_nodes": 720,
+      "old_elements": 96,
+      "new_elements": 384,
+      "old_volume_m3": 19.631001512502493,
+      "new_volume_m3": 19.631001512502493,
+      "relative_volume_error": 0.0,
+      "min_detJ_old": 0.19746725377751054,
+      "min_detJ_new": 0.048724226854920435
+    },
+    {
+      "part": "CSEG_24",
+      "old_nodes": 288,
+      "new_nodes": 720,
+      "old_elements": 96,
+      "new_elements": 384,
+      "old_volume_m3": 19.631001512502493,
+      "new_volume_m3": 19.631001512502493,
+      "relative_volume_error": 0.0,
+      "min_detJ_old": 0.19746725377751054,
+      "min_detJ_new": 0.048724226854920435
+    },
+    {
+      "part": "CSEG_25",
+      "old_nodes": 288,
+      "new_nodes": 720,
+      "old_elements": 96,
+      "new_elements": 384,
+      "old_volume_m3": 18.762111230365406,
+      "new_volume_m3": 18.762111230365406,
+      "relative_volume_error": 0.0,
+      "min_detJ_old": 0.1823845017744047,
+      "min_detJ_new": 0.04483774064787217
+    },
+    {
+      "part": "CSEG_26",
+      "old_nodes": 288,
+      "new_nodes": 720,
+      "old_elements": 96,
+      "new_elements": 384,
+      "old_volume_m3": 17.010648944350883,
+      "new_volume_m3": 17.010648944350883,
+      "relative_volume_error": 0.0,
+      "min_detJ_old": 0.1652003611401792,
+      "min_detJ_new": 0.040641383109044756
+    },
+    {
+      "part": "CSEG_27",
+      "old_nodes": 288,
+      "new_nodes": 720,
+      "old_elements": 96,
+      "new_elements": 384,
+      "old_volume_m3": 16.128074291008627,
+      "new_volume_m3": 16.12807429100863,
+      "relative_volume_error": 2.220446049250313e-16,
+      "min_detJ_old": 0.1633648922123648,
+      "min_detJ_new": 0.04041701247814915
+    },
+    {
+      "part": "CSEG_28",
+      "old_nodes": 288,
+      "new_nodes": 720,
+      "old_elements": 96,
+      "new_elements": 384,
+      "old_volume_m3": 16.128074291008627,
+      "new_volume_m3": 16.12807429100863,
+      "relative_volume_error": 2.220446049250313e-16,
+      "min_detJ_old": 0.1633648922123648,
+      "min_detJ_new": 0.04041701247814915
+    },
+    {
+      "part": "CSEG_29",
+      "old_nodes": 288,
+      "new_nodes": 720,
+      "old_elements": 96,
+      "new_elements": 384,
+      "old_volume_m3": 18.87060525383766,
+      "new_volume_m3": 18.87060525383766,
+      "relative_volume_error": 0.0,
+      "min_detJ_old": 0.16910333333695995,
+      "min_detJ_new": 0.04111911995394496
+    },
+    {
+      "part": "CSEG_30",
+      "old_nodes": 288,
+      "new_nodes": 720,
+      "old_elements": 96,
+      "new_elements": 384,
+      "old_volume_m3": 22.711960161907758,
+      "new_volume_m3": 22.711960161907754,
+      "relative_volume_error": -1.1102230246251565e-16,
+      "min_detJ_old": 0.21850629076707226,
+      "min_detJ_new": 0.05353860837806758
+    },
+    {
+      "part": "CSEG_31",
+      "old_nodes": 288,
+      "new_nodes": 720,
+      "old_elements": 96,
+      "new_elements": 384,
+      "old_volume_m3": 19.016871802130133,
+      "new_volume_m3": 19.01687180213013,
+      "relative_volume_error": -2.220446049250313e-16,
+      "min_detJ_old": 0.18292075567303745,
+      "min_detJ_new": 0.04470444832480021
+    }
+  ],
+  "native_datacheck": "NOT_RUN",
+  "mesh_convergence": "NOT_RUN",
+  "limitations": [
+    "Original faceted shape retained, not a native parametric geometry model",
+    "AUDIT element sets expanded to all children of their original parent cells",
+    "No CDP fracture-energy regularization change; compare tension softening and energy sensitivity before interpreting damage",
+    "BF1 reproduction branch retained, not BF8 design",
+    "Native contact, embedded region and equilibrium verification pending"
+  ]
+}
