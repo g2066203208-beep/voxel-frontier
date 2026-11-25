@@ -2544,6 +2544,300 @@
           "word_body_index": 208
         },
         {
+          "id": "rev25-rebar-intro",
+          "kind": "text",
+          "style": "Normal",
+          "text": "何泽瑜[1]给出了混凝土塔段纵向钢筋根数及钢筋网建模方式，但未给出环向钢筋直径、间距和拉结筋的具体构造参数。本文将普通钢筋构造补全与截面承载力验算分开。依据NB/T 10907—2021《风电机组混凝土—钢混合塔筒设计规范》[140]第6.3.1、6.3.2条进行抗剪和剪扭验算，并以GB 50135—2019《高耸结构设计标准》[141]第6.5.3、6.5.5～6.5.8条作为构造核查的补充依据。双层钢筋网、拉筋直径和间距、保护层及连接构造应分别核查；高耸结构标准的适用性不能替代风机混塔专项规范验算。",
+          "has_media": false,
+          "has_math": false
+        },
+        {
+          "id": "rev25-rebar-physical",
+          "kind": "text",
+          "style": "Normal",
+          "text": "REV25继承原始构造候选：内外双层HRB400环向钢筋直径16 mm，名义轴向间距不大于120 mm，原始离散最大实测间距118.000003 mm；径向拉筋采用HPB300、直径6 mm，原始周向最大间距499.740519 mm，竖向最大间距约472 mm。原始环筋中心线及半径扣除后的几何净保护层最小值为32 mm。上述参数源于既有构造研究候选，不是原型施工图参数，也不表示所有钢筋搭接、锚固、环境耐久性和抗震构造均已验收。",
+          "has_media": false,
+          "has_math": false
+        },
+        {
+          "id": "rev25-rebar-area",
+          "kind": "text",
+          "style": "Normal",
+          "text": "单根环向钢筋面积 A_h=πd_h²/4，单层单位高度配筋面积 q_h=A_h/s_h。原Φ14@80方案 A_h=153.938 mm²、q_h=1.92423 mm²/mm；当前Φ16@120上限方案 A_h=201.062 mm²、q_h=1.67552 mm²/mm，较前者减少12.925%。按原始最大实测间距118.000003 mm计算，q_h=1.70391 mm²/mm。双层面积指标为2q_h；以单层所对应壁厚口径计算配筋率时应另核规范定义，不能把面积指标直接作为剪扭利用率。",
+          "has_media": false,
+          "has_math": false
+        },
+        {
+          "id": "rev25-rebar-load",
+          "kind": "text",
+          "style": "Normal",
+          "text": "以历史OpenFAST工况U09p343881_ETM_S06的100～700 s分段六分量同步内力为输入，沿该历史输出坐标轴定义 V(t)=√(F_x²+F_y²)、M(t)=√(M_x²+M_y²)、T(t)=|M_z|、N(t)=max(0,−F_z)。各截面在同一时刻组合内力，避免独立峰值拼接；该坐标定义不等同于Abaqus全局Y轴竖直坐标。历史T072修正结果采用b=2t_w、沿直径方向的有效高度h₀、完整圆环抗扭抵抗矩 W_t=2π(R_o³−R_i³)/3，并按环筋中心线定义核心面积与周长。该圆环截面映射仍属工程假设，未取得直接条文支持。定义剪扭利用率 η=max(V/V_Rd,631，V/V_Rd,632，T/T_Rd)，其中抗力应按对应规范条文及正式作用组合计算。",
+          "has_media": false,
+          "has_math": false
+        },
+        {
+          "id": "rev25-rebar-historical",
+          "kind": "text",
+          "style": "Normal",
+          "text": "历史Φ14@80双层方案的31段候选结果中，最大抗剪利用率约0.456，最大抗扭利用率约0.7931，控制塔节CSEG31，时刻622.55 s，对应V=1762.14 kN、T=36096.34 kN·m。下表列出历史逐段结果与REV25实际单元数量，二者不是同一配筋方案下的计算结果。历史程序与修正报告的b、h₀口径尚有冲突，应以规范原页、原始同步时程及独立复算重新确认；不得将历史候选结果作为REV25承载力验收。",
+          "has_media": false,
+          "has_math": false
+        },
+        {
+          "id": "rev25-rebar-table-caption",
+          "kind": "caption",
+          "style": "表题",
+          "text": "表2-5  历史剪扭验算与REV25环筋离散数量对照",
+          "has_media": false,
+          "has_math": false
+        },
+        {
+          "id": "rev25-rebar-table",
+          "kind": "table",
+          "rows": [
+            [
+              "塔节",
+              "历史Φ14@80：V/VRd",
+              "历史Φ14@80：T/TRd",
+              "REV25环筋单元",
+              "REV25拉筋单元"
+            ],
+            [
+              "CSEG_01",
+              "0.3089",
+              "0.3705",
+              "1936",
+              "864"
+            ],
+            [
+              "CSEG_02",
+              "0.3161",
+              "0.3822",
+              "1936",
+              "864"
+            ],
+            [
+              "CSEG_03",
+              "0.3245",
+              "0.3949",
+              "1936",
+              "864"
+            ],
+            [
+              "CSEG_04",
+              "0.3325",
+              "0.4066",
+              "1936",
+              "864"
+            ],
+            [
+              "CSEG_05",
+              "0.3406",
+              "0.4413",
+              "1392",
+              "576"
+            ],
+            [
+              "CSEG_06",
+              "0.3496",
+              "0.4559",
+              "1112",
+              "432"
+            ],
+            [
+              "CSEG_07",
+              "0.3585",
+              "0.4705",
+              "1112",
+              "432"
+            ],
+            [
+              "CSEG_08",
+              "0.3671",
+              "0.4850",
+              "1112",
+              "432"
+            ],
+            [
+              "CSEG_09",
+              "0.3765",
+              "0.5015",
+              "1112",
+              "432"
+            ],
+            [
+              "CSEG_10",
+              "0.3859",
+              "0.5186",
+              "1112",
+              "432"
+            ],
+            [
+              "CSEG_11",
+              "0.3953",
+              "0.5370",
+              "1112",
+              "432"
+            ],
+            [
+              "CSEG_12",
+              "0.4052",
+              "0.5725",
+              "1112",
+              "432"
+            ],
+            [
+              "CSEG_13",
+              "0.4152",
+              "0.5941",
+              "1112",
+              "432"
+            ],
+            [
+              "CSEG_14",
+              "0.4252",
+              "0.6168",
+              "1112",
+              "432"
+            ],
+            [
+              "CSEG_15",
+              "0.4354",
+              "0.6412",
+              "1112",
+              "432"
+            ],
+            [
+              "CSEG_16",
+              "0.4462",
+              "0.6875",
+              "1112",
+              "432"
+            ],
+            [
+              "CSEG_17",
+              "0.4540",
+              "0.7089",
+              "1112",
+              "432"
+            ],
+            [
+              "CSEG_18",
+              "0.4551",
+              "0.7147",
+              "1112",
+              "432"
+            ],
+            [
+              "CSEG_19",
+              "0.4524",
+              "0.7120",
+              "1112",
+              "432"
+            ],
+            [
+              "CSEG_20",
+              "0.4516",
+              "0.7125",
+              "1112",
+              "432"
+            ],
+            [
+              "CSEG_21",
+              "0.4509",
+              "0.7436",
+              "1112",
+              "432"
+            ],
+            [
+              "CSEG_22",
+              "0.4478",
+              "0.7406",
+              "1112",
+              "432"
+            ],
+            [
+              "CSEG_23",
+              "0.4445",
+              "0.7376",
+              "1112",
+              "432"
+            ],
+            [
+              "CSEG_24",
+              "0.4408",
+              "0.7346",
+              "1112",
+              "432"
+            ],
+            [
+              "CSEG_25",
+              "0.4422",
+              "0.7376",
+              "1112",
+              "432"
+            ],
+            [
+              "CSEG_26",
+              "0.4448",
+              "0.7416",
+              "1112",
+              "432"
+            ],
+            [
+              "CSEG_27",
+              "0.4433",
+              "0.7394",
+              "1112",
+              "432"
+            ],
+            [
+              "CSEG_28",
+              "0.4415",
+              "0.7365",
+              "1112",
+              "432"
+            ],
+            [
+              "CSEG_29",
+              "0.4242",
+              "0.7140",
+              "1112",
+              "432"
+            ],
+            [
+              "CSEG_30",
+              "0.4220",
+              "0.7217",
+              "1112",
+              "432"
+            ],
+            [
+              "CSEG_31",
+              "0.4416",
+              "0.7931",
+              "912",
+              "336"
+            ]
+          ]
+        },
+        {
+          "id": "rev25-rebar-equivalence",
+          "kind": "text",
+          "style": "Normal",
+          "text": "为降低整体动力分析的离散成本，原始1908圈环筋（每圈96个T3D2单元，共183168个）先沿高度进行体积及竖向一阶矩守恒的等效，保留678圈；REV25在保留各圈高度、材料、全部拉筋及其连接节点的前提下进行周向合并。设单圈原、新折线长度分别为L₀、L₁，则数值等效截面A₁=A₀L₀/L₁，使A₁L₁=A₀L₀。该面积修正不是施工钢筋直径变更。REV25保留37848个环筋单元及15168个拉筋单元；相对REV24整机单元由105392降至78152。实际静态检查中，各环体积相对误差最大1.33×10⁻¹⁵，截面积相对调整最大0.1967%，对角惯量相对差最大0.4437%。该离散尚未经原生求解、网格收敛和局部裂缝、钢筋应变等效性验证。",
+          "has_media": false,
+          "has_math": false
+        },
+        {
+          "id": "rev25-rebar-limits",
+          "kind": "text",
+          "style": "Normal",
+          "text": "现阶段应将Φ16@120视为构造候选；尚需采用31段实际间距、截面几何、当前纵筋和预应力输入，复核NB/T 10907第5章作用组合及第6.3条承载力，并覆盖控制风、地震工况。完成上述计算及原生对照之前，不给出当前方案满足全部设计要求的结论。",
+          "has_media": false,
+          "has_math": false
+        },
+        {
           "id": "v4_ch2_subheading_02",
           "kind": "h3",
           "style": "论文二级标题",
@@ -12634,14 +12928,30 @@
           "has_media": false,
           "has_math": false,
           "online_only": true
+        },
+        {
+          "id": "rev25-ref140",
+          "kind": "text",
+          "style": "Normal",
+          "text": "[140] 国家能源局. 风电机组混凝土—钢混合塔筒设计规范: NB/T 10907—2021[S]. 北京: 中国水利水电出版社, 2022.",
+          "has_media": false,
+          "has_math": false
+        },
+        {
+          "id": "rev25-ref141",
+          "kind": "text",
+          "style": "Normal",
+          "text": "[141] 中华人民共和国住房和城乡建设部. 高耸结构设计标准: GB 50135—2019[S]. 2019.",
+          "has_media": false,
+          "has_math": false
         }
       ]
     }
   ],
   "online_revision": {
-    "version": "V8-R28-PAGE-REVIEW",
+    "version": "V8-R29-REBAR-RECONCILIATION",
     "date": "2026-11-25",
-    "scope": "Chapter 3 adds source-cited full and 40 s hub figures, native load statistics table, and A4 page review based on current manuscript blocks.",
+    "scope": "Chapter 2 reinforcement construction, historical 31-segment shear/torsion results, and REV25 source-verified mesh reconciliation; preserves historical analysis identities and does not certify current capacity.",
     "source_gate": "74fb3aee9dfef058b972a3f0e03aa571319c2fe2",
     "source_inp": "cdb719b95b8ce4301011489b4ab8ffc9e73c18bf",
     "wind_manifest": "./wind-figures/core/manifest.json",
@@ -12656,6 +12966,7 @@
       14946269358
     ],
     "blade_aero_independent_audit": "./wind-figures/blade-aero/audit.json",
-    "blade_aero_figure_audit": "./wind-figures/blade-aero/r27/receipt.json"
+    "blade_aero_figure_audit": "./wind-figures/blade-aero/r27/receipt.json",
+    "rebar_receipt": "./inp-archive/REV25_HOOP_COST/receipt.json"
   }
 }
