@@ -2476,7 +2476,7 @@
           "id": "r16-cdp-points",
           "kind": "text",
           "style": "Normal",
-          "text": "REV22动力分析输入中，两种混凝土各离散为26个受压点及24个受拉点，首行输入非弹性应变或开裂应变及损伤值均置零，以初始弹性段近似峰前响应。图2.2-1为由实际输入数据恢复的应力—总应变关系及相应损伤关系。",
+          "text": "REV22动力分析输入中，C65和C70分别设置26个受压点及24个受拉点。首个非弹性应变或开裂应变及损伤值取零。图2.2-1给出规范单轴应力—应变包络与实际输入离散点的对比，以及相应的损伤演化关系。",
           "has_media": false,
           "has_math": false
         },
@@ -2487,7 +2487,7 @@
           "text": "图2.2-1  C65与C70单轴拉压本构及损伤演化曲线",
           "has_media": false,
           "has_math": false,
-          "figure_asset": "./inp-archive/REV22_REVIEW/rev22-cdp-curves.svg",
+          "figure_asset": "./inp-archive/REV22_REVIEW/rev22-cdp-curves-academic.svg",
           "figure_caption_match": "图2.2-1  C65与C70单轴拉压本构及损伤演化曲线"
         },
         {
@@ -2538,7 +2538,7 @@
           "id": "b0201",
           "kind": "text",
           "style": "Normal",
-          "text": "BF1模型采用36根预应力T3D2构件，单根面积140 mm²，弹性模量195 GPa，初始应力1280 MPa，相应初始总轴力为6.4512 MN。T057候选模型采用36组、每组8股的布置形式，单股面积同为140 mm²，名义初始总轴力为51.6096 MN。两套构造具有不同的预压水平，本章的既有平衡和推覆结果采用BF1模型。BF1等效连接模型以SPRING2单元模拟水平接缝；接触模型在30道水平干接缝处采用面—面接触，法向采用硬接触并允许分离，切向采用罚函数摩擦，摩擦系数取0.5。钢—混过渡段及钢塔节间采用Tie约束。水平干接缝的接触属性参考Tan等[86]第4.2节。该研究通过预应力混凝土塔水平接缝扭转试验验证有限元模型，四组试件极限扭矩的计算误差均小于5%。本文采用其摩擦参数作为同类接缝分析基准，而非本工程接触面的实测摩擦系数。Tie为整体响应分析的连接理想化，不用于评价螺栓预紧、局部法兰开合或滑移；此类局部响应需结合实际连接构造另行建模验证。",
+          "text": "BF1模型采用36根预应力T3D2构件，单根面积140 mm²，弹性模量195 GPa，初始应力1280 MPa，相应初始总轴力为6.4512 MN。T057候选模型采用36组、每组8股的布置形式，单股面积同为140 mm²，名义初始总轴力为51.6096 MN。两套构造具有不同的预压水平，本章的既有平衡和推覆结果采用BF1模型。BF1等效连接模型以SPRING2单元模拟水平接缝；接触模型在30道水平干接缝处采用面—面接触，法向采用硬接触并允许分离，切向采用罚函数摩擦，摩擦系数取0.5。钢—混过渡段及钢塔节间采用Tie约束。水平干接缝的接触属性参考Tan等[86]第4.2节。该研究通过预应力混凝土塔水平接缝扭转试验验证有限元模型，四组试件极限扭矩的计算误差均小于5%。该文所述工程环缝含环氧树脂找平层。本文取0.5作为干接缝摩擦计算的基准值，其适用性尚需通过接缝试验或参数敏感性分析检验。Tie为整体响应分析的连接理想化，不用于评价螺栓预紧、局部法兰开合或滑移；此类局部响应需结合实际连接构造另行建模验证。",
           "has_media": false,
           "has_math": false,
           "word_body_index": 210
@@ -12433,16 +12433,16 @@
     }
   ],
   "online_revision": {
-    "version": "V8-R16-REV22-CDP",
+    "version": "V8-R17-REV22-FIGURES",
     "date": "2026-11-25",
-    "scope": "Chapter 2 exact REV22 input curves, GB envelope equations, material table, friction source and validation boundary; historical results not relabeled; Word/PDF unchanged.",
+    "scope": "Replace formal CDP figure with journal-style GB envelopes and exact input markers; refine concrete joint literature boundary; no unverified solver plots; Word/PDF unchanged.",
     "source_gate": "74fb3aee9dfef058b972a3f0e03aa571319c2fe2",
     "source_inp": "cdb719b95b8ce4301011489b4ab8ffc9e73c18bf",
     "wind_manifest": "./wind-figures/core/manifest.json",
     "historical_control_receipt": "./wind-figures/historical-control/receipt.json",
     "tower_drag_receipt": "./wind-figures/tower-drag/receipt.json",
     "rev22_review": "./inp-archive/REV22_REVIEW/",
-    "cdp_figure": "./inp-archive/REV22_REVIEW/rev22-cdp-curves.svg",
+    "cdp_figure": "./inp-archive/REV22_REVIEW/rev22-cdp-curves-academic.svg",
     "cdp_data": "./inp-archive/REV22_REVIEW/rev22-cdp-curves.csv"
   }
 }
