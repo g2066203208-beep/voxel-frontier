@@ -1,3 +1,13 @@
+### 2026-11-25｜v0.32.216 — R26原始数据永久归档及R27参考图逐子图纠正
+
+- R26原始两工件独立解码，主分支9358b5ea12aa7a61a5b7795a9d1805f17cd8e9d0，RUN45565774426成功；两OUTB SHA f69a6bf3f8f337fd2190ef6a43d891f6da7f0f4ccd30e5e7fd8e641d4b54570d / 4a3dd4264d4277a13a5baa693f99a28c33856026e6e4170d3e1ff646cdb31292，12001×1080节点数据与NPZ差0。原图/OUTB/CSV永久存main；R26原图排版不足，拒绝早期误用Mm为转矩及BlSpn为转子半径的本地重绘。
+- R27 main程序66fa8355c7a1511f76932b27327c1314e17f25eb、排版修复8f3a0418cafab047e7f195c7b599dee7e772d339，RUN45568325779 success。Sun等2020 DOI10.3390/en13215753 Fig6正文明确Ft切向、Fn轴向、Tt=rFt、三叶片合计；官方OpenFAST v3.5.3 coordsys说明旧式Fx/Fy不同于极坐标。原OUTB无变形后局部极坐标节点通道；故采用三叶片时均合计Fx/Fy及名义r=2.8+BlSpn，Tt*=rFt*，图中星号标近似，不宣称严格等价或FE映射。Qiu等2026 DOI10.3390/jmse14161489 FigA4原图为1.5MW刚性叶片两代码验证；本文按左力XYZ、右力矩XYZ、首40s（100–140s）确定性窗口表达，600s完整原时程另存；不伪造误差。
+- FIG=main 3395cc9923788381b3651a0cb5ec8ebf69361c1b，V8-R27-REFERENCE-FIGURES图3.5-6名义近似及图3.5-7全600s更新；50a3de17edc2acb94a6630a29edbd2eb0ac742f9对照页更新。两原图读取、R27拼图实际打开，叶片编号与注释重叠经第二次运行修正并回读视觉检查。两最终JPEG SHA dc75298969472b0759b249ef66c24d2df4069e0902b5bb717b968ec6cab22f86 / 178e1c9762546efc5bb6abb153c3ef0787023c52701ef7a69bb3d40f749145d1。未核验Pages最终部署，未重排Word/PDF，不改INP及结构分析门禁。
+
+![Sun图6原图左/本文R27右](https://raw.githubusercontent.com/g2066203208-beep/voxel-frontier/3395cc9923788381b3651a0cb5ec8ebf69361c1b/public/thesis-studio/wind-figures/blade-aero/r27/span-comparison-r27.jpg)
+
+![Qiu图A4原图左/本文R27右](https://raw.githubusercontent.com/g2066203208-beep/voxel-frontier/3395cc9923788381b3651a0cb5ec8ebf69361c1b/public/thesis-studio/wind-figures/blade-aero/r27/wrench-comparison-r27.jpg)
+
 ### 2026-11-25｜v0.32.215 — 两组700 s原生叶片气动力计算及第三章原图对照页修复
 
 - RUN=PR#48修复6f113a16ebc80236cbfb9bfbdc48781ba92634ad；原45439724792 verify-pilot失败、full skipped。新[45444014505](https://github.com/g2066203208-beep/voxel-frontier/actions/runs/45444014505)实际回读全部三job success。NTM job138622908102、1ETM job138622908130日志均明示“OpenFAST terminated normally.”及“NATIVE_OUTPUT_PASS 12001 40 1080”。17份原输入哈希恢复、同pilot求解器/控制器二进制、原BTS工件14935124067/14937347879校验及700s正式求解步骤均成功。原输出工件14947071978（129431299 bytes，ZIP SHA256 11f04f687268e0cd3683558f03c81b38b1798070a8b3e99acbfbce2eeca73ba4）、14946269358（129731356 bytes，ZIP SHA256 dc3285a501b37ad4ad04fd5ddb37e533e1aa32a9f576ce4173a08dd73b1041f9）实际回读未过期。100–700 s含端点12001时刻、三叶片×40节点×9量=1080通道。工件字节本轮未重新下载独立复算，不将CI核验等同物理验证；新展向图、坐标映射、守恒验证及永久原始归档尚待完成。
