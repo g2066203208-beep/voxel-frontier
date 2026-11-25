@@ -1,0 +1,14 @@
+{
+  "pinned_driver_commit": "6f113a16ebc80236cbfb9bfbdc48781ba92634ad",
+  "driver_original_sha256": "5e82b9c62b7ada977d8b1e010a01ecac55439983521ad665eae86a3a55db4518",
+  "driver_modified_sha256": "298ab23e4e00b2ddb89d7df4c04b44de6b127d37bcffc4e052d0e251230a8486",
+  "added_channels": [
+    "RtAeroFxi",
+    "RtAeroFyi",
+    "RtAeroFzi",
+    "RtAeroMxi",
+    "RtAeroMyi",
+    "RtAeroMzi"
+  ],
+  "physical_change": "none beyond established archived replay inputs"
+}

@@ -1,0 +1,23 @@
+{
+  "status": "NATIVE_GLOBAL_HUB_WRENCH_PASS",
+  "case": "1ETM",
+  "duration_s": 700,
+  "samples": 12001,
+  "source_sha256": "af6db9d02c6a886689b8ae429b0ac3778d3a27c947f8f58883cbb5566c09d049",
+  "global_csv_sha256": "f11f3b4468e0d079bd280aeb57d40a14aad7b7c507b924e3311623c43712d238",
+  "max_F_norm_diff_N": 23.066775357583538,
+  "max_M_norm_diff_Nm": 694.0397392828017,
+  "F_quantization_bound_N": 23.831900553302248,
+  "M_quantization_bound_Nm": 906.7737551195169,
+  "old_hub_component_max_difference": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "reference_point": "moving rotor apex; OpenFAST v3.5.3 AeroDyn_IO.f90 lines 283-321",
+  "mapping": "axis rotation only; no force moment transport to R44 reference point; no distributed blade mapping",
+  "release": "HOLD"
+}

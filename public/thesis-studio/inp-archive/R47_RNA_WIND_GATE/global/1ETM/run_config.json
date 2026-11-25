@@ -1,0 +1,79 @@
+{
+  "type": "1ETM",
+  "duration_s": 700.0,
+  "wind_sha256": "235d1224cc3f0d0b282e9fb94647ca5b507c8c37b6256bf056f02dbabfb3b04e",
+  "exe_sha256": "0cc8147fdda188365b8eacda8a831e74fafef59440d71185d66c3272af9e176a",
+  "controller_sha256": "7aebb0d2166c0cc095d11c2b7bc13da136547c557b0f331dcdce84fe181802aa",
+  "controller": "ROSCO 2.6.0 version replacement, byte identity to historical DLL unverified",
+  "edits": [
+    {
+      "file": "DTU_10MW_RWT.fst",
+      "field": "AeroFile",
+      "old": "\"..\\Rotor\\DTU_10MW_RWT_AeroDyn15.dat\"",
+      "new": "\"Rotor/DTU_10MW_RWT_AeroDyn15.dat\""
+    },
+    {
+      "file": "DTU_10MW_RWT.fst",
+      "field": "TMax",
+      "old": "700",
+      "new": "700.0"
+    },
+    {
+      "file": "DTU_10MW_RWT.fst",
+      "field": "TStart",
+      "old": "100",
+      "new": "100"
+    },
+    {
+      "file": "DTU_10MW_RWT.fst",
+      "field": "DT_Out",
+      "old": "0.05",
+      "new": "0.05"
+    },
+    {
+      "file": "DTU_10MW_RWT.fst",
+      "field": "OutFileFmt",
+      "old": "2",
+      "new": "2"
+    },
+    {
+      "file": "DTU_10MW_InflowWind.dat",
+      "field": "WindType",
+      "old": "3",
+      "new": "3"
+    },
+    {
+      "file": "DTU_10MW_InflowWind.dat",
+      "field": "FileName_BTS",
+      "old": "\"C:\\Users\\tt\\Documents\\Codex\\2026-08-29\\new-chat\\outputs\\CH3_CDX05_R7_TURBSIM_FINAL_36CASE\\inputs\\U11p4_NTM_S01.bts\"",
+      "new": "\"new_wind.bts\""
+    },
+    {
+      "file": "Control\\DTU_10MW_RWT_ServoDyn.dat",
+      "field": "DLL_FileName",
+      "old": "\"libdiscon.dll\"",
+      "new": "\"libdiscon.dll\""
+    },
+    {
+      "file": "DTU_10MW_RWT_ElastoDyn.dat",
+      "field": "BldFile(1)",
+      "old": "\"..\\Rotor\\DTU_10MW_ElastoDyn_Blades.dat\"",
+      "new": "\"Rotor/DTU_10MW_ElastoDyn_Blades.dat\""
+    },
+    {
+      "file": "DTU_10MW_RWT_ElastoDyn.dat",
+      "field": "BldFile(2)",
+      "old": "\"..\\Rotor\\DTU_10MW_ElastoDyn_Blades.dat\"",
+      "new": "\"Rotor/DTU_10MW_ElastoDyn_Blades.dat\""
+    },
+    {
+      "file": "DTU_10MW_RWT_ElastoDyn.dat",
+      "field": "BldFile(3)",
+      "old": "\"..\\Rotor\\DTU_10MW_ElastoDyn_Blades.dat\"",
+      "new": "\"Rotor/DTU_10MW_ElastoDyn_Blades.dat\""
+    }
+  ],
+  "AeroDyn_outputs": "RtAero six-component hub wrench; all blade nodes legacy local Fx Fy Mm Fn Ft Fl Fd VRel Alpha",
+  "TwrAero": false,
+  "scope": "new inflow, historical reduced structure, not REV22 or mapped FE load"
+}
