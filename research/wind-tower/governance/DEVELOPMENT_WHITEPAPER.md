@@ -3,6 +3,13 @@
 - 正文main 3e213979597a8949ce23e6a5465ac1efcec3d49d，V8-R28-PAGE-REVIEW，第三章增加图3.5-8（真实100–140s细部）、表3.5-1（原生轮毂轴向力/矩100–700s统计）、参考文献[138]Sun 2020及[139]Qiu 2026；保留图3.5-6名义坐标近似与图3.5-7完整600s。真实表值NTM Fx均值/标准差/峰1.139/0.169/1.739 MN，Mx 9.569/1.454/16.360 MNm；1ETM Fx 1.034/0.221/1.954 MN，Mx 9.252/2.128/19.583 MNm。工作台导航a63c47447467f682122e6415b0f1aafd4cc6b598。
 - 整页对照工作流fd78a05696c4d057633feb401f65feb7ce1ecaed、优化a2744438d854a99063cf132e494bfc9fbc426b06；RUN45569797528真实渲染成功，两份原PDF已核对DOI、图题并渲染全页：Sun PDF 20页含封面，index8（印刷第8页），SHA f2178bf6e40a735acd101bf75888ea3f525301014f7adb9b1f8e255502b1a74b；Qiu PDF32页，index28（文件第29页），SHA 211de68e1c90d7ad3a7a252b897453b440fd9ec10170b6897da7bb20cec1c2dc。右页使用当前正文区块排版并验证图件加载及页内内容边界；非整本正式页码。RUN45569797528发布失败（git sparse index），修复cafe57bb9af95e68d1398275977d247430a99ec9，RUN45569921858待回读最终发布与视觉检查。未更改INP、原始OUTB或正式分析门禁。
 
+
+- 最终回读：原RUN45569678040实际success，main 54ec6574d04368623fb53851497fd65500c8ff82 已发布10份整页文件。并发优化RUN45569921858渲染成功但因原RUN先推送发生add/add冲突，未覆盖成功归档。最终收据span SHA80d21e1a1f5df91c153a389b6b03a4ea42ddec7467ef5a85a9c9a36a0df1c187、wrench SHAf53d1b6cabcdbc94f349b893cc6d47873cd5ba7795c7cb99615adbbcfc2d8921。最终Sun原PDF SHA a63a04375b2b49497580fe96f6d0409a0e14330a6b2a16286ac49700d19a1d40 与优化任务所取文件哈希不同，页码及图6、表3相同；按最终receipt保留实际来源。两张实际JPEG回读并视觉检查，图文表均可见；右侧为正文区块A4审阅页，临时页眉与章标题不完全一致，非最终全书排版；Qiu左页上半还有独立的系泊图A3，不能冒充本文已开展系泊分析。Pages最终部署尚未核验。
+
+![Sun第8页与本文整页](https://raw.githubusercontent.com/g2066203208-beep/voxel-frontier/54ec6574d04368623fb53851497fd65500c8ff82/public/thesis-studio/wind-figures/blade-aero/r28-pages/span-page-comparison.jpg)
+
+![Qiu第29页与本文整页](https://raw.githubusercontent.com/g2066203208-beep/voxel-frontier/54ec6574d04368623fb53851497fd65500c8ff82/public/thesis-studio/wind-figures/blade-aero/r28-pages/wrench-page-comparison.jpg)
+
 ### 2026-11-25｜v0.32.216 — R26原始数据永久归档及R27参考图逐子图纠正
 
 - R26原始两工件独立解码，主分支9358b5ea12aa7a61a5b7795a9d1805f17cd8e9d0，RUN45565774426成功；两OUTB SHA f69a6bf3f8f337fd2190ef6a43d891f6da7f0f4ccd30e5e7fd8e641d4b54570d / 4a3dd4264d4277a13a5baa693f99a28c33856026e6e4170d3e1ff646cdb31292，12001×1080节点数据与NPZ差0。原图/OUTB/CSV永久存main；R26原图排版不足，拒绝早期误用Mm为转矩及BlSpn为转子半径的本地重绘。
