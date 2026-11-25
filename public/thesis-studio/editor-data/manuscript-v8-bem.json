@@ -8030,6 +8030,26 @@
           "online_only": true
         },
         {
+          "id": "r55-rna-008",
+          "kind": "text",
+          "style": "正文",
+          "text": "图3.3-6给出两工况关于参考点的六分量等效气动荷载时程。上述时程与塔身节点风载采用相同采样轴，动力诊断输入采用10 s三次平滑启动，之后保留原始幅值。两种工况的风荷载均包含150个独立幅值，其中144个对应塔身、6个对应RNA参考点。联合诊断中EQ01地震于风载时间30 s开始，保留原始双分量地震动。该时序属于研究性假设，不代表规范规定的联合发生概率。",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true
+        },
+        {
+          "id": "r55-rna-009",
+          "kind": "caption",
+          "style": "Caption",
+          "text": "图3.3-6  额定风速下RNA参考点六分量等效气动荷载时程",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true,
+          "figure_asset": "./inp-archive/R55_FULL_WIND_EQ_DIAGNOSTIC/rna_RP_wrench.svg",
+          "figure_caption_match": "图3.3-6  额定风速下RNA参考点六分量等效气动荷载时程"
+        },
+        {
           "id": "r55-rna-007",
           "kind": "text",
           "style": "正文",
@@ -14951,9 +14971,9 @@
     }
   ],
   "online_revision": {
-    "version": "V8-R55-NOMINAL-RNA-WRENCH",
+    "version": "V8-R55-WIND-EQ-DIAGNOSTIC",
     "date": "2026-11-25",
-    "scope": "R54 native output axis audit and R55 nominal reference-point transfer from actual 12000 common samples per case; native structural analysis NOT_RUN",
+    "scope": "R55 source-verified diagnostic deck generation and nominal RNA wrench figure; native analysis NOT_RUN",
     "source_gate": "74fb3aee9dfef058b972a3f0e03aa571319c2fe2",
     "source_inp": "cdb719b95b8ce4301011489b4ab8ffc9e73c18bf",
     "wind_manifest": "./wind-figures/core/manifest.json",
@@ -14986,6 +15006,8 @@
     "era5_gallery": "./figure-audit/R53/index.html",
     "seismic_reference_gallery": "./figure-audit/R51/index.html",
     "r54_receipt": "./inp-archive/R54_GLOBAL_WRENCH/receipt.json",
-    "r55_nominal_transfer": "./inp-archive/R55_FULL_WIND_EQ_DIAGNOSTIC/nominal_transfer_source_audit.json"
+    "r55_nominal_transfer": "./inp-archive/R55_FULL_WIND_EQ_DIAGNOSTIC/nominal_transfer_source_audit.json",
+    "r55_receipt": "./inp-archive/R55_FULL_WIND_EQ_DIAGNOSTIC/receipt.json",
+    "r55_gallery": "./inp-archive/R55_FULL_WIND_EQ_DIAGNOSTIC/index.html"
   }
 }
