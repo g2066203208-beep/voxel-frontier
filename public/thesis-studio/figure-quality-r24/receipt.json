@@ -1,0 +1,118 @@
+[
+  {
+    "id": "r16-cdp-figure",
+    "status": "RENDERED",
+    "sources": [
+      {
+        "path": "inp-archive/REV22_REVIEW/rev22-cdp-curves.csv",
+        "sha256": "313f64f2662faebb355605538330f036274da1a404f9611e51451018d6d66e9c"
+      }
+    ],
+    "svg_sha256": "9e79ab3c6be3b9a70816bf9a467b8dc2e33f89c65ba5918ff52898e234145cc1",
+    "png_sha256": "6c28f85827d0f17a4843c033435ab51e51541e5bcaaa60bbd4150ef8dac105b1"
+  },
+  {
+    "id": "wind-r11-002",
+    "status": "RENDERED",
+    "sources": [
+      {
+        "path": "wind-figures/native/native-full-11.4-NTM/hub_uvw.csv",
+        "sha256": "3372e7a5ef3cc7258ac317792efb52c6a3930e81114f90c7e66c6dc518d648bd"
+      },
+      {
+        "path": "wind-figures/native/native-full-11.4-1ETM/hub_uvw.csv",
+        "sha256": "f6f2bc8d4531f564c81b107af471a95700d3fe224e3cfc28a1578ac1293de5d1"
+      }
+    ],
+    "svg_sha256": "51ccc2119bdfdfc0c40ad7a76ca297e84ce804b2412282f6ca7576df7c70c1f8",
+    "png_sha256": "8cfcbc3f7fca3de646e0f07fd5d50418e73c816747154081cbeea5020dcc2ab9"
+  },
+  {
+    "id": "wind-r14-005",
+    "status": "RENDERED",
+    "sources": [
+      {
+        "path": "wind-figures/tower-drag/timeseries/native-full-11.4-NTM_endpoint_loads.npz",
+        "sha256": "0d70ec9b653df881a7e5c2a56d1cd66ddfebe6acf815b7279743749dd773cec8"
+      },
+      {
+        "path": "wind-figures/tower-drag/timeseries/native-full-11.4-1ETM_endpoint_loads.npz",
+        "sha256": "dc2dc14522d0e7f307e1bc45d076ef4ac0f6e28b0e42526f4cf4756f9d40c624"
+      }
+    ],
+    "svg_sha256": "02ad8a146508b4b9aaf7a20531e88c3498250918253a6c826a61ad67540b5a09",
+    "png_sha256": "870f84cb73a6c86a18020b07865ed5d3919294f22ad34d6b39c8312464684a0f"
+  },
+  {
+    "id": "wind-r14-007",
+    "status": "RENDERED",
+    "sources": [
+      {
+        "path": "wind-figures/tower-drag/timeseries/native-full-11.4-NTM_resultant.csv",
+        "sha256": "f8b0fe5f6442780ee3f8aa1b58e0c5b9e622e6022a4ab0b0e6256e62bec96774"
+      },
+      {
+        "path": "wind-figures/tower-drag/timeseries/native-full-11.4-1ETM_resultant.csv",
+        "sha256": "4696da8433d65f1e208437be0bc05fa170b3c98d8064c5a2f0c485fdf46a22c8"
+      }
+    ],
+    "svg_sha256": "e3ea110fb3865ebb0ccc31832e1c9f7017b723c5dedd216b410a27aae9f8fa0e",
+    "png_sha256": "f4c87c8e821a0dddfce7506d1d4e6a783da5fd71932e2a403e701b1277e9dca7"
+  },
+  {
+    "id": "wind-r13-002",
+    "status": "RENDERED",
+    "sources": [
+      {
+        "path": "wind-figures/historical-control/U11p4_NTM_S01.csv",
+        "sha256": "9a56dbc10856af1e9d828f9e48dcbdf582c3f83ba173fe8af955c5b12aa2e298"
+      },
+      {
+        "path": "wind-figures/historical-control/U11p4_ETM_S01.csv",
+        "sha256": "f3ead3cf2c1b6629ce4d20abab06df88800625d507cf9a4b7640ee4f45a3e795"
+      }
+    ],
+    "svg_sha256": "670f928d93c09a83dd0ff82f12b3db44356cbd967e744396f30e17dd87c994cd",
+    "png_sha256": "a27e2983b61ffc8beaadab3bfcc198dd4c83396412c768eebb07758e24a5d45d"
+  },
+  {
+    "id": "wind-r13-004",
+    "status": "RENDERED",
+    "sources": [
+      {
+        "path": "wind-figures/historical-control/U11p4_NTM_S01.csv",
+        "sha256": "9a56dbc10856af1e9d828f9e48dcbdf582c3f83ba173fe8af955c5b12aa2e298"
+      },
+      {
+        "path": "wind-figures/historical-control/U11p4_ETM_S01.csv",
+        "sha256": "f3ead3cf2c1b6629ce4d20abab06df88800625d507cf9a4b7640ee4f45a3e795"
+      }
+    ],
+    "svg_sha256": "18b2d34c573fb6b85a3d2c00633af863e11b872d79d616a7dafec3e7c238a507",
+    "png_sha256": "c0323f62131b742c2cc9ec9bf0e6f448ad0f223a8be23a6bfee327ee1340e1c3"
+  },
+  {
+    "id": "wind-r13-008",
+    "status": "RENDERED",
+    "sources": [
+      {
+        "path": "wind-figures/historical-control/statistics.csv",
+        "sha256": "299c79352d1f034883ef0e71af8b5881f06edbc3374adc87990300ce0af8b445"
+      }
+    ],
+    "svg_sha256": "16e6c70012cf3750f8e0ef2b670b51a6c9f862efd6eb2b55b3a07ee76f1cd73c",
+    "png_sha256": "8d73c3e1fa6021c01c74783becec8d9f03d472eb7a3ea53450465c977475e302"
+  },
+  {
+    "id": "b0346",
+    "status": "RENDERED",
+    "sources": [
+      {
+        "path": "primary-data/era5-direction.csv",
+        "sha256": "53417a3d0223beb07a24fa372eaa5662067eb5780836ea4106100cc325942b96"
+      }
+    ],
+    "svg_sha256": "14a97a7970589d0a8469b6650589a229302d8238843c0b1b6a17c7ea13378000",
+    "png_sha256": "e028e37bd11083851d1565ed0f5cf422b10cd9db6fafbc3f899b97cefc538de2"
+  }
+]
