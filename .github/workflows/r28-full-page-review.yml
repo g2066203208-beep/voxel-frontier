@@ -70,7 +70,7 @@ jobs:
           try:
               meta=json.loads(get('https://api.figshare.com/v2/articles/34552773'))
               assert 'A Coupled Aero-Hydro-Elastic-Mooring' in meta['title']
-              refs['wrench'][2].extend(x['downloadUrl'] for x in meta['files'] if x['name'].lower().endswith('.pdf'))
+              refs['wrench'][2].extend(x['downloadUrl'] if 'downloadUrl' in x else x['download_url'] for x in meta['files'] if x['name'].lower().endswith('.pdf'))
           except Exception as e: print('figshare lookup',str(e))
           receipt={}
           for key,(needle,doi,urls) in refs.items():
@@ -96,7 +96,7 @@ jobs:
                       for x,im in [(15,ref),(1265,ours)]:
                           pic=ImageOps.contain(im,(1220,1670),Image.Resampling.LANCZOS)
                           canvas.paste(pic,(x+(1220-pic.width)//2,65+(1670-pic.height)//2))
-                      target=out/(key+'-page-comparison.jpg');canvas.save(target,quality=88,subsampling=0)
+                      target=out/(key+'-page-comparison.jpg');canvas.save(target,quality=85,subsampling=0)
                       row.update(status='OK',source_url=url,pdf_sha256=hashlib.sha256(raw).hexdigest(),pdf_page_index=idx,pdf_pages=len(d),comparison_sha256=hashlib.sha256(target.read_bytes()).hexdigest())
                       break
                   except Exception as e:row['errors'].append([url,str(e)])
@@ -115,7 +115,7 @@ jobs:
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git add public/thesis-studio/wind-figures/blade-aero/r28-pages
+          git add --sparse public/thesis-studio/wind-figures/blade-aero/r28-pages
           git commit -m "R28 actual PDF pages and current manuscript A4 review comparisons"
           git fetch --depth=20 origin main
           git rebase FETCH_HEAD
