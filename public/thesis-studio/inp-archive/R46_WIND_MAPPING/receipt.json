@@ -1,0 +1,94 @@
+{
+  "status": "TOWER_ONLY_NODAL_MAPPING_STATIC_PASS",
+  "native": "NOT_RUN",
+  "production": "HOLD",
+  "R44_sha256": "97438ac785f5d6ccb9a6b0737cd7115d6b7de6ae47c111d62bb7912b4908fa58",
+  "cases": [
+    {
+      "case": "NTM",
+      "BTS_sha256": "548695c6f8f4241643291624eef4ced091b1b4186d43faad4ea9cb98df3121e1",
+      "tower_source_sha256": "0d70ec9b653df881a7e5c2a56d1cd66ddfebe6acf815b7279743749dd773cec8",
+      "rotor_source_sha256": "a281033e99bae40aee58b185f16df76c7a37b9e7489d2593e04d1ecf7d82e9b9",
+      "rotor_headers": [
+        "time_s",
+        "RtAeroFxh",
+        "RtAeroFyh",
+        "RtAeroFzh",
+        "RtAeroMxh",
+        "RtAeroMyh",
+        "RtAeroMzh"
+      ],
+      "rotor_time_samples": 12001,
+      "time_intersection": 12000,
+      "tower_first_s": 100.0,
+      "tower_last_s": 699.95,
+      "rotor_extra_endpoint_s": 700.0,
+      "parts": 36,
+      "assembly_sets": 72,
+      "amplitudes": 144,
+      "node_map_rows": 3264,
+      "max_centroid_error_m": 1.1000000199601345e-07,
+      "max_amplitude_serialization_N": 4.999947122996673e-10,
+      "max_segment_force_error_N": 9.863470040727407e-10,
+      "max_segment_moment_error_Nm": 0.00010128930443897843,
+      "max_total_force_error_N": 3.1504896469414234e-09,
+      "max_total_moment_error_Nm": 0.0015307110734283924,
+      "archive": "R46_NTM_tower_fragments.zip",
+      "bytes": 18784520,
+      "sha256": "b43833eeb24e0d6929f176441be4b6826be02428708428d4bb237a477cdf1ce2",
+      "members": {
+        "assembly_sets.inc": "abc1656ef53102db21626bef9bbda82f9b25733cffa3575a515c9e71fdb06662",
+        "amplitudes.inc": "be8815798e8622edd3a35cb3b8214ce571c3d6967805f8476ec11dbbef4db432",
+        "cload.inc": "2cf287a8023fdedc56e761e146f0b383f6477b437c03054c10af67bee657288e",
+        "node_map.csv": "5b35a8aff55116ff058ed25e0cedd5f8599ad7425da3ecac82a71283c96b25d0",
+        "README.txt": "d76e8d9994f48750590dcddb578d7251b361bc16089683d70e8be933d7aa7f2e"
+      }
+    },
+    {
+      "case": "1ETM",
+      "BTS_sha256": "235d1224cc3f0d0b282e9fb94647ca5b507c8c37b6256bf056f02dbabfb3b04e",
+      "tower_source_sha256": "dc2dc14522d0e7f307e1bc45d076ef4ac0f6e28b0e42526f4cf4756f9d40c624",
+      "rotor_source_sha256": "05bcc8c5e234697013eda936b6e0ec0efa2deb72ed3e950536cb0a323b7abe7b",
+      "rotor_headers": [
+        "time_s",
+        "RtAeroFxh",
+        "RtAeroFyh",
+        "RtAeroFzh",
+        "RtAeroMxh",
+        "RtAeroMyh",
+        "RtAeroMzh"
+      ],
+      "rotor_time_samples": 12001,
+      "time_intersection": 12000,
+      "tower_first_s": 100.0,
+      "tower_last_s": 699.95,
+      "rotor_extra_endpoint_s": 700.0,
+      "parts": 36,
+      "assembly_sets": 72,
+      "amplitudes": 144,
+      "node_map_rows": 3264,
+      "max_centroid_error_m": 1.1000000199601345e-07,
+      "max_amplitude_serialization_N": 4.999947122996673e-10,
+      "max_segment_force_error_N": 9.986251825466752e-10,
+      "max_segment_moment_error_Nm": 0.0001535945339128375,
+      "max_total_force_error_N": 3.3105607144534588e-09,
+      "max_total_moment_error_Nm": 0.0021185697987675667,
+      "archive": "R46_1ETM_tower_fragments.zip",
+      "bytes": 18917085,
+      "sha256": "e4871cdfb3b409ef96ae547cc70a20484d8647fd0baf754b006bfece991cffd7",
+      "members": {
+        "assembly_sets.inc": "abc1656ef53102db21626bef9bbda82f9b25733cffa3575a515c9e71fdb06662",
+        "amplitudes.inc": "8afe245c398605634fd3e19de87b9e48845ae13ea7d35aa64cc24ece1ecf3f1e",
+        "cload.inc": "2cf287a8023fdedc56e761e146f0b383f6477b437c03054c10af67bee657288e",
+        "node_map.csv": "5b35a8aff55116ff058ed25e0cedd5f8599ad7425da3ecac82a71283c96b25d0",
+        "README.txt": "d76e8d9994f48750590dcddb578d7251b361bc16089683d70e8be933d7aa7f2e"
+      }
+    }
+  ],
+  "limitations": [
+    "Same BTS and timestamps do not imply identical physics: rotor OpenFAST uses a historical reduced tower; tower drag assumes stationary tower.",
+    "Uniform outer-ring nodal forces conserve resultant and first moment; not physical local pressure, contact stress or deformation feedback.",
+    "Rotor local/rotating coordinate and application-point transfer not performed. No rotor double count; no complete wind step or wind-earthquake deck.",
+    "Time step startup, damping, native force coverage and response remain pending."
+  ]
+}
