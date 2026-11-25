@@ -2691,7 +2691,7 @@
           "id": "b0216",
           "kind": "text",
           "style": "Normal",
-          "text": "为考察求解控制对非线性响应的影响，在相同几何、材料、网格与荷载条件下调整推覆分析步的收敛控制，并与基准算例比较。两组计算的塔顶反力—位移曲线见图2-1。",
+          "text": "为考察求解控制对非线性响应的影响，在相同几何、材料、网格与荷载条件下调整推覆分析步的收敛控制，并与基准算例比较。图2-1为历史归档图的数字化重绘，原始ODB尚未取得；曲线仅用于描述已记录的响应趋势，表2-5所列末端结果沿用历史求解记录。",
           "has_media": false,
           "has_math": false,
           "word_body_index": 225
@@ -2709,7 +2709,7 @@
           "id": "b0219",
           "kind": "figure",
           "style": "图题",
-          "text": "图2-1  两组推覆算例的塔顶反力—位移曲线",
+          "text": "图2-1  两组历史推覆算例塔顶反力—位移曲线（归档图数字化重绘）",
           "has_media": false,
           "has_math": false,
           "word_body_index": 229,
@@ -2802,7 +2802,7 @@
           "id": "b0225",
           "kind": "text",
           "style": "Normal",
-          "text": "图2-2  两组推覆算例的人工能占内能比例",
+          "text": "图2-2  两组历史推覆算例人工能占内能比例（归档图数字化重绘）",
           "has_media": false,
           "has_math": false,
           "word_body_index": 236,
@@ -4666,7 +4666,7 @@
           "has_media": false,
           "has_math": false,
           "online_only": true,
-          "figure_asset": "./wind-figures/core/03_hub_autospectrum.svg",
+          "figure_asset": "./wind-figures/core/03_hub_autospectrum_r23.svg",
           "figure_caption_match": "图3.2-3  轮毂中心风速自谱与Kaimal目标谱对比"
         },
         {
@@ -12497,9 +12497,9 @@
     }
   ],
   "online_revision": {
-    "version": "V8-R22-WIND-FOCUS",
+    "version": "V8-R23-FIGURE-QUALITY",
     "date": "2026-11-25",
-    "scope": "Keep four core inflow figures; relocate diagnostic spatial plots, coherence and six-case TI table to evidence archive. Retain Brown for TI definition and Zheng for wind-load transfer precedent; remove wake-layout citation from manuscript. No new solver results.",
+    "scope": "Exact archived PSD CSV replot; clarify digitized historical pushover and energy plots. No solver changes or new physical results.",
     "source_gate": "74fb3aee9dfef058b972a3f0e03aa571319c2fe2",
     "source_inp": "cdb719b95b8ce4301011489b4ab8ffc9e73c18bf",
     "wind_manifest": "./wind-figures/core/manifest.json",
