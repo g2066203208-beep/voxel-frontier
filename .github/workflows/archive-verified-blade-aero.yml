@@ -151,6 +151,9 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add public/thesis-studio/wind-figures/blade-aero/
+          git add -f public/thesis-studio/wind-figures/blade-aero/{NTM,1ETM}/native.log
           git diff --cached --stat
           git commit -m "Archive independently verified 700 s blade loads and original figure comparisons"
+          git fetch --depth=20 origin main
+          git rebase FETCH_HEAD
           git push origin HEAD:main
