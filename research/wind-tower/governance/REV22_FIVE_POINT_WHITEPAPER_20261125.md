@@ -88,3 +88,9 @@ Codex先对原始TXT运行比较器，再对独立CAE导出运行并保存JSON�
 - 出版方原始PNG已通过GitHub Actions下载及Pillow完整性、尺寸、非空检查，保存于 public/thesis-studio/inp-archive/REV22_REVIEW/original-literature/chen-2020-fig7.png；提交 bd29259616b63cc7f215af0c1d54e4030a391e86。3662×1231像素，755495字节，SHA-256 4260eb771214c9cd3d950319ee65e5fc16a41e5fa05c887b649931f2e97ff8d4；同目录JSON为来源收据。原图不重绘。
 - 对照图物理量一致：横坐标总应变，左纵坐标应力（MPa），右纵坐标损伤变量；C30与C65/C70等级及曲线范围不同，不构成实验验证。REV22 SVG由原始CSV 100行数值恢复，零点代表弹性起始；不将生成式图片用于论文。工作室同类型对照页面已指向站内原图，并保留出版方来源。正式论文R19未改，未进行Abaqus计算或Word/PDF同步。
 - 拼图工作流 build-cdp-matched-comparison.yml 已提交（67e920a9051d93d7d492ac6bf078ab10246f3246），从归档原图和数据SVG生成并写入哈希收据；截至本条记录尚未读取到拼图收据，须以实际文件为准。网站部署及浏览器渲染尚未验收。
+
+## V2.1 正式论文R20与同类文献材料页对照
+- Chen等2020出版方修订PDF（https://mdpi-res.com/d_attachment/energies/energies-13-00533/article_deploy/energies-13-00533-v2.pdf）第8页末为材料建模文字，第9页图7及表3给出C30应力/损伤—总应变和物理力学参数，第9页另列钢材、地基土表4、5，后进入结果分析。原文采用Lubliner及Lee–Fenves模型；仅借鉴同物理量表达，不把文献C30数值或基础模型用于本塔。
+- 在线正文 V8-R20-REV22-CDP-MATCHED，提交1ec7a926912cedbcea65a3e22f1163bdd9f07ee7。2.2节采用实际REV22四个双轴子图 cdp-matched-total-strain.svg，补齐物理力学及单轴参数表、[136]文献条目；保留规范包络及应变转换公式。图中总应变=输入非弹性/开裂应变+σ/E₀；线连接实际输入点，弹性起点补(0,0)。非试验、非ODB。现有峰前拉伸输入及断裂能正则化仍需验证。
+- 重新直接读取归档source-audit.json和CSV，100行配对应力(MPa)、输入应变、恢复总应变和损伤值最大差异均0；损伤公式最大误差1.0744738432322265e-12。该次对照是与归档材料卡提取记录比较，不是重新直接读取完整15,693,508字节原始文件；直接原始TXT校验脚本及工作流已提交5b9f2070a879704f74e795d9cdc9a72d0a1f22d2、b7839829d9f86ac8f710d600be7b7dccb213900b，尚待校验文件确认。
+- 同类型原图拼图已实际生成4350×1450，SHA256 60322fd7f37d190e42e6c18988f8788e9d788656dedf20050b4331c776c67db6，提交86f63457b6cd3c795c60eaeada0de14ce93ce740，已解码检查。工作室图文表并列对照提交1768fa3bb8e6da969ea9c696b42ec7a0f5c57e52。正式原文第8/9页及实际R20正文摘录整页拼图工作流56c33fefd4945cf9f538ba86691a4bfecd28f7d9已提交；本记录时尚未取得整页图片或收据，不能声称整页拼图完成。原文PDF网页文本已核查，截图工具因文件13.4MB限制失败。未验收Pages部署、未同步Word/PDF、未修改原始INP或运行Abaqus。
