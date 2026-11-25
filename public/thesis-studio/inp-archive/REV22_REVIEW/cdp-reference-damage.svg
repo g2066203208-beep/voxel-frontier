@@ -1,0 +1,186 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="740" viewBox="0 0 520 740"><title>C65、C70单轴损伤演化曲线</title><rect width="520" height="740" fill="#fff"/><style>text{font-family:'Times New Roman','Noto Serif CJK SC',SimSun,serif;font-size:16px;fill:#111}.tick{font-size:15px}.zh{font-family:'Noto Serif CJK SC',SimSun,serif;font-size:16px}</style>
+<defs><clipPath id="p0"><rect x="70" y="20" width="420" height="272"/></clipPath></defs>
+<path d="M70,20 L70,292" stroke="#111" stroke-width="1.1" fill="none"/>
+<path d="M70,292 L490,292" stroke="#111" stroke-width="1.1" fill="none"/>
+<path d="M70,292 L70,287" stroke="#111"/>
+<text x="70" y="312" text-anchor="middle" class="tick">0.000</text>
+<path d="M140,292 L140,287" stroke="#111"/>
+<text x="140" y="312" text-anchor="middle" class="tick">0.001</text>
+<path d="M210,292 L210,287" stroke="#111"/>
+<text x="210" y="312" text-anchor="middle" class="tick">0.002</text>
+<path d="M280,292 L280,287" stroke="#111"/>
+<text x="280" y="312" text-anchor="middle" class="tick">0.003</text>
+<path d="M350,292 L350,287" stroke="#111"/>
+<text x="350" y="312" text-anchor="middle" class="tick">0.004</text>
+<path d="M420,292 L420,287" stroke="#111"/>
+<text x="420" y="312" text-anchor="middle" class="tick">0.005</text>
+<path d="M490,292 L490,287" stroke="#111"/>
+<text x="490" y="312" text-anchor="middle" class="tick">0.006</text>
+<path d="M70,292 L75,292" stroke="#111"/>
+<text x="61" y="297" text-anchor="end" class="tick">0</text>
+<path d="M70,237.6 L75,237.6" stroke="#111"/>
+<text x="61" y="242.6" text-anchor="end" class="tick">0.2</text>
+<path d="M70,183.2 L75,183.2" stroke="#111"/>
+<text x="61" y="188.2" text-anchor="end" class="tick">0.4</text>
+<path d="M70,128.8 L75,128.8" stroke="#111"/>
+<text x="61" y="133.8" text-anchor="end" class="tick">0.6</text>
+<path d="M70,74.4 L75,74.4" stroke="#111"/>
+<text x="61" y="79.4" text-anchor="end" class="tick">0.8</text>
+<path d="M70,20 L75,20" stroke="#111"/>
+<text x="61" y="25" text-anchor="end" class="tick">1</text>
+<text x="280" y="337" class="zh" text-anchor="middle">非弹性应变</text>
+<text transform="translate(19 156) rotate(-90)" text-anchor="middle" class="zh">压缩损伤 d<tspan baseline-shift="sub" font-size="12">c</tspan></text>
+<g clip-path="url(#p0)">
+<polyline points="70,292 77.34,277.261 79.848,273.75 82.836,269.88 86.316,265.68 90.289,261.185 94.747,256.433 99.673,251.467 105.04,246.328 110.818,241.059 116.971,235.699 123.68,229.996 131.063,223.797 147.306,210.59 164.708,197.19 182.529,184.308 200.304,172.322 217.785,161.383 251.497,142.638 283.533,127.567 314.168,115.417 343.716,105.522 372.437,97.363 400.529,90.548 428.138,84.789 455.373,79.866" stroke="#245aa5"  stroke-width="1.45" fill="none"/>
+<path d="M67.6,289.6 L72.4,289.6 L70,294.4 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M74.94,274.861 L79.74,274.861 L77.34,279.661 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M77.448,271.35 L82.248,271.35 L79.848,276.15 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M80.436,267.48 L85.236,267.48 L82.836,272.28 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M83.916,263.28 L88.716,263.28 L86.316,268.08 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M87.889,258.785 L92.689,258.785 L90.289,263.585 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M92.347,254.033 L97.147,254.033 L94.747,258.833 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M97.273,249.067 L102.073,249.067 L99.673,253.867 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M102.64,243.928 L107.44,243.928 L105.04,248.728 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M108.418,238.659 L113.218,238.659 L110.818,243.459 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M114.571,233.299 L119.371,233.299 L116.971,238.099 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M121.28,227.596 L126.08,227.596 L123.68,232.396 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M128.663,221.397 L133.463,221.397 L131.063,226.197 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M144.906,208.19 L149.706,208.19 L147.306,212.99 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M162.308,194.79 L167.108,194.79 L164.708,199.59 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M180.129,181.908 L184.929,181.908 L182.529,186.708 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M197.904,169.922 L202.704,169.922 L200.304,174.722 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M215.385,158.983 L220.185,158.983 L217.785,163.783 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M249.097,140.238 L253.897,140.238 L251.497,145.038 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M281.133,125.167 L285.933,125.167 L283.533,129.967 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M311.768,113.017 L316.568,113.017 L314.168,117.817 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M341.316,103.122 L346.116,103.122 L343.716,107.922 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M370.037,94.963 L374.837,94.963 L372.437,99.763 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M398.129,88.148 L402.929,88.148 L400.529,92.948 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M425.738,82.389 L430.538,82.389 L428.138,87.189 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M452.973,77.466 L457.773,77.466 L455.373,82.266 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<polyline points="70,292 76.193,279.865 78.467,276.702 81.229,273.146 84.503,269.216 88.304,264.94 92.633,260.35 97.48,255.486 102.826,250.389 108.641,245.102 114.891,239.668 121.78,233.819 129.437,227.398 146.417,213.608 164.668,199.57 183.333,186.088 201.89,173.582 220.07,162.214 254.945,142.854 287.907,127.405 319.314,115.028 349.538,105.001 378.876,96.765 407.548,89.911 435.712,84.133 463.485,79.206" stroke="#db292b" stroke-dasharray="6 3" stroke-width="1.45" fill="none"/>
+<circle cx="70" cy="292" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="76.193" cy="279.865" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="78.467" cy="276.702" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="81.229" cy="273.146" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="84.503" cy="269.216" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="88.304" cy="264.94" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="92.633" cy="260.35" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="97.48" cy="255.486" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="102.826" cy="250.389" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="108.641" cy="245.102" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="114.891" cy="239.668" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="121.78" cy="233.819" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="129.437" cy="227.398" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="146.417" cy="213.608" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="164.668" cy="199.57" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="183.333" cy="186.088" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="201.89" cy="173.582" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="220.07" cy="162.214" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="254.945" cy="142.854" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="287.907" cy="127.405" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="319.314" cy="115.028" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="349.538" cy="105.001" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="378.876" cy="96.765" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="407.548" cy="89.911" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="435.712" cy="84.133" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="463.485" cy="79.206" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+</g>
+<path d="M330,243 L368,243" stroke="#245aa5" stroke-width="1.45" />
+<path d="M346.6,240.6 L351.4,240.6 L349,245.4 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<text x="374" y="248" >C65</text>
+<path d="M330,265 L368,265" stroke="#db292b" stroke-width="1.45" stroke-dasharray="6 3"/>
+<circle cx="349" cy="265" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<text x="374" y="270" >C70</text>
+<text x="280" y="361" text-anchor="middle" class="zh">(a) 压缩损伤</text>
+<defs><clipPath id="p1"><rect x="70" y="385" width="420" height="272"/></clipPath></defs>
+<path d="M70,385 L70,657" stroke="#111" stroke-width="1.1" fill="none"/>
+<path d="M70,657 L490,657" stroke="#111" stroke-width="1.1" fill="none"/>
+<path d="M70,657 L70,652" stroke="#111"/>
+<text x="70" y="677" text-anchor="middle" class="tick">0.0000</text>
+<path d="M140,657 L140,652" stroke="#111"/>
+<text x="140" y="677" text-anchor="middle" class="tick">0.0002</text>
+<path d="M210,657 L210,652" stroke="#111"/>
+<text x="210" y="677" text-anchor="middle" class="tick">0.0004</text>
+<path d="M280,657 L280,652" stroke="#111"/>
+<text x="280" y="677" text-anchor="middle" class="tick">0.0006</text>
+<path d="M350,657 L350,652" stroke="#111"/>
+<text x="350" y="677" text-anchor="middle" class="tick">0.0008</text>
+<path d="M420,657 L420,652" stroke="#111"/>
+<text x="420" y="677" text-anchor="middle" class="tick">0.0010</text>
+<path d="M490,657 L490,652" stroke="#111"/>
+<text x="490" y="677" text-anchor="middle" class="tick">0.0012</text>
+<path d="M70,657 L75,657" stroke="#111"/>
+<text x="61" y="662" text-anchor="end" class="tick">0</text>
+<path d="M70,602.6 L75,602.6" stroke="#111"/>
+<text x="61" y="607.6" text-anchor="end" class="tick">0.2</text>
+<path d="M70,548.2 L75,548.2" stroke="#111"/>
+<text x="61" y="553.2" text-anchor="end" class="tick">0.4</text>
+<path d="M70,493.8 L75,493.8" stroke="#111"/>
+<text x="61" y="498.8" text-anchor="end" class="tick">0.6</text>
+<path d="M70,439.4 L75,439.4" stroke="#111"/>
+<text x="61" y="444.4" text-anchor="end" class="tick">0.8</text>
+<path d="M70,385 L75,385" stroke="#111"/>
+<text x="61" y="390" text-anchor="end" class="tick">1</text>
+<text x="280" y="702" class="zh" text-anchor="middle">开裂应变</text>
+<text transform="translate(19 521) rotate(-90)" text-anchor="middle" class="zh">拉伸损伤 dₜ</text>
+<g clip-path="url(#p1)">
+<polyline points="70,657 75.004,629.973 75.593,628.887 76.285,627.435 77.11,625.527 78.108,623.054 79.328,619.889 80.824,615.875 82.665,610.823 85.138,603.667 88.048,595.246 94.382,577.627 100.818,560.943 107.063,546.036 113.037,533.011 126.868,507.483 139.54,489.28 162.964,465.556 185.103,450.911 227.795,433.805 269.598,424.08 311.016,417.769 393.331,410.013 475.32,405.387" stroke="#245aa5"  stroke-width="1.45" fill="none"/>
+<path d="M67.6,654.6 L72.4,654.6 L70,659.4 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M72.604,627.573 L77.404,627.573 L75.004,632.373 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M73.193,626.487 L77.993,626.487 L75.593,631.287 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M73.885,625.035 L78.685,625.035 L76.285,629.835 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M74.71,623.127 L79.51,623.127 L77.11,627.927 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M75.708,620.654 L80.508,620.654 L78.108,625.454 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M76.928,617.489 L81.728,617.489 L79.328,622.289 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M78.424,613.475 L83.224,613.475 L80.824,618.275 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M80.265,608.423 L85.065,608.423 L82.665,613.223 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M82.738,601.267 L87.538,601.267 L85.138,606.067 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M85.648,592.846 L90.448,592.846 L88.048,597.646 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M91.982,575.227 L96.782,575.227 L94.382,580.027 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M98.418,558.543 L103.218,558.543 L100.818,563.343 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M104.663,543.636 L109.463,543.636 L107.063,548.436 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M110.637,530.611 L115.437,530.611 L113.037,535.411 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M124.468,505.083 L129.268,505.083 L126.868,509.883 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M137.14,486.88 L141.94,486.88 L139.54,491.68 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M160.564,463.156 L165.364,463.156 L162.964,467.956 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M182.703,448.511 L187.503,448.511 L185.103,453.311 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M225.395,431.405 L230.195,431.405 L227.795,436.205 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M267.198,421.68 L271.998,421.68 L269.598,426.48 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M308.616,415.369 L313.416,415.369 L311.016,420.169 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M390.931,407.613 L395.731,407.613 L393.331,412.413 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<path d="M472.92,402.987 L477.72,402.987 L475.32,407.787 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<polyline points="70,657 75.16,629.41 75.763,628.326 76.469,626.878 77.309,624.973 78.324,622.506 79.56,619.348 81.077,615.344 82.939,610.303 85.455,603.1 88.425,594.576 94.892,576.718 101.449,559.833 107.796,544.785 113.854,531.673 127.845,506.079 140.643,487.914 164.289,464.34 186.641,449.84 229.768,432.95 272.014,423.369 313.88,417.16 397.101,409.534 480.003,404.991" stroke="#db292b" stroke-dasharray="6 3" stroke-width="1.45" fill="none"/>
+<circle cx="70" cy="657" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="75.16" cy="629.41" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="75.763" cy="628.326" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="76.469" cy="626.878" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="77.309" cy="624.973" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="78.324" cy="622.506" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="79.56" cy="619.348" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="81.077" cy="615.344" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="82.939" cy="610.303" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="85.455" cy="603.1" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="88.425" cy="594.576" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="94.892" cy="576.718" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="101.449" cy="559.833" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="107.796" cy="544.785" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="113.854" cy="531.673" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="127.845" cy="506.079" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="140.643" cy="487.914" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="164.289" cy="464.34" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="186.641" cy="449.84" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="229.768" cy="432.95" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="272.014" cy="423.369" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="313.88" cy="417.16" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="397.101" cy="409.534" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<circle cx="480.003" cy="404.991" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+</g>
+<path d="M330,608 L368,608" stroke="#245aa5" stroke-width="1.45" />
+<path d="M346.6,605.6 L351.4,605.6 L349,610.4 Z" fill="white" stroke="#245aa5" stroke-width="1"/>
+<text x="374" y="613" >C65</text>
+<path d="M330,630 L368,630" stroke="#db292b" stroke-width="1.45" stroke-dasharray="6 3"/>
+<circle cx="349" cy="630" r="2.1999999999999997" fill="white" stroke="#db292b" stroke-width="1"/>
+<text x="374" y="635" >C70</text>
+<text x="280" y="726" text-anchor="middle" class="zh">(b) 拉伸损伤</text>
+</svg>
