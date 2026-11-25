@@ -39,3 +39,13 @@ Codex 报告当前模型名 HE_REV22_FULL_ASSEMBLY_EQ005，数据库未命名，
 Codex先对原始TXT运行比较器，再对独立CAE导出运行并保存JSON；若仅拉伸损伤缺失且其他参数一致，在CAE副本按原始24点和恢复系数恢复、重新导出复核。若再次丢失，直接以原始INP独立Data Check区分导入与求解问题。不覆盖REV22。
 官方依据：https://docs.software.vt.edu/abaqusv2025/English/SIMACAEKEYRefMap/simakey-r-concretetensiondamage.htm 。拉伸损伤为可选项，缺失不必然报错，但改变刚度退化和循环响应。不因同一步多个OP=NEW DLOAD卡擅改地震载荷，实际惯性覆盖待原生验证。
 状态：比较器已提交，尚未实际运行于真实CAE导出；未进行原生求解，未发布REV23。
+
+
+## V1.3 材料来源与数值反算（2026-11-25）
+源：固定提交 f10fde15040eb32181350191e761a759e950c22e 的 source-audit.json。以下为实际读取并用独立JS数值计算的结果，未执行Abaqus。
+- Tan等2025 Engineering Structures 336:120443，作者接受稿PDF第13页（PDF索引12），§4.2原文明确Penalty、0.5、Hard Contact；§4.4表2四组试验/FE极限扭矩(kN·m)分别217.44/219.96、171.4/167.7、119.76/121.92、122.4/118.2，原文误差小于5%。同类试验支持基准取值，不是本塔实测或规范强制值。原文 https://pure.manchester.ac.uk/ws/portalfiles/portal/970003646/AAM-Mini.pdf 。
+- GB/T 50010-2010（2024局部修订）C.2.3、C.2.4及表值原图 https://gf.cabr-fire.com/m/article-12646.htm ；拉压代表强度可按分析目的选取。以C65 fc=41.5 MPa、ft=2.93 MPa、E=36500 MPa，C70 fc=44.5 MPa、ft=2.99 MPa、E=37000 MPa；与已归档Xu/He等2025表2一致。规范表线性插值：C65压峰应变0.001808、alpha_c=2.021、拉峰应变0.00011646、alpha_t=2.6896；C70分别0.001844、2.183、0.00011778、2.7928。
+- 反算总应变=输入非弹性/开裂应变+sigma/E。令x=总应变/峰应变，n=1/(1-fc/(E*峰应变))；压上升段sigma=fc*n*x/(n-1+x^n)，下降段sigma=fc*x/(alpha_c*(x-1)^2+x)；拉上升段sigma=ft*x*(1.2-0.2*x^5)，下降段sigma=ft*x/(alpha_t*(x-1)^1.7+x)。除首行外的96点最大应力误差分别为C65压8.5719e-5 Pa、拉6.0159e-6 Pa、C70压8.5950e-5 Pa、拉6.5528e-6 Pa。首行应力对应压x=0.5、拉x=0.6，输入应变置0（实际总应变改为sigma/E），故不能称首行也严格位于原始包络相同总应变处。
+- 对100个损伤数据点反算 d=1-sqrt(sigma/(E*总应变))，最大绝对误差依次C65压8.86e-13、拉9.82e-13、C70压7.12e-13、拉1.07e-12。历史审计15-step09-material-cdp-audit.md文字漏写平方根，不能沿用无根号形式。Li等2020 §3.1–3.3，DOI 10.1088/1757-899X/794/1/012036，为转换方法来源，不是C65/C70直接实验数据。原始输入保持不变。
+- CDP e=0.1、fb0/fc0=1.16、Kc约2/3为Abaqus默认；膨胀角30度有同类文献先例但需适用性检验；粘性1e-5是数值正则化，非官方默认0，非实测材料常数。拉压刚度恢复0/1为默认。Abaqus官方 https://docs.software.vt.edu/abaqusv2025/English/SIMACAEMATRefMap/simamat-c-concretedamaged.htm 。
+- 剩余门禁：真实接缝表面/预压适用性，混凝土代表强度选择（特征值而非平均值的影响），单轴拉压与循环试件、断裂能/网格敏感性、粘性敏感性。参考值来源与逐点算术复核通过不等于原生物理验证；不把这些曲线称为实测。未更改REV22。
