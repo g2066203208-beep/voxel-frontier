@@ -1,0 +1,38 @@
+name: Archive Chen PDF page 9
+on:
+  push:
+    paths:
+      - '.github/workflows/archive-chen-page09-only.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          set -eu
+          dir=public/thesis-studio/inp-archive/REV22_REVIEW/original-literature
+          mkdir -p "$dir"
+          curl -fL --retry 2 --max-time 60 -A 'Mozilla/5.0' 'https://mdpi-res.com/d_attachment/energies/energies-13-00533/article_deploy/energies-13-00533.pdf' -o /tmp/chen.pdf
+          python -m pip install -q pymupdf
+          python - <<'PY'
+          import fitz, hashlib,json
+          from pathlib import Path
+          p=Path('public/thesis-studio/inp-archive/REV22_REVIEW/original-literature')
+          raw=Path('/tmp/chen.pdf').read_bytes()
+          d=fitz.open(stream=raw,filetype='pdf')
+          assert len(d)>=9
+          t=d[8].get_text()
+          assert 'Figure 7' in t and 'Table 3' in t,t
+          out=p/'chen-2020-page09.png'
+          d[8].get_pixmap(matrix=fitz.Matrix(2,2),alpha=False).save(out)
+          (p/'chen-2020-page09.json').write_text(json.dumps({'pdf_sha256':hashlib.sha256(raw).hexdigest(),'page':9,'pdf_pages':len(d),'png_sha256':hashlib.sha256(out.read_bytes()).hexdigest()},indent=2))
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$dir/chen-2020-page09.png" "$dir/chen-2020-page09.json"
+          git commit -m 'Archive original Chen publication page 9 rendered directly from PDF' || exit 0
+          git pull --rebase origin main
+          git push origin HEAD:main
