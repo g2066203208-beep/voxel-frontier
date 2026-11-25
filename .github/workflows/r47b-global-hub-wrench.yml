@@ -1,0 +1,162 @@
+name: R47B native global hub output replay
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/r47b-global-hub-wrench.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  pilot:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          sparse-checkout: |
+            public/thesis-studio/inp-archive/R47_RNA_WIND_GATE
+            public/thesis-studio/wind-figures/blade-aero
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: 45422889134
+          name: native-full-11.4-NTM-bts
+          path: incoming
+      - name: Restore original input and exact native binaries
+        run: |
+          python -m pip install numpy==1.26.4
+          curl.exe -fLsS --retry 3 https://raw.githubusercontent.com/g2066203208-beep/voxel-frontier/6f113a16ebc80236cbfb9bfbdc48781ba92634ad/research/wind-tower/experiments/BLADE_AERO_NATIVE_20261125/native_blade.py -o native_blade.py
+          if ($LASTEXITCODE -ne 0) { throw 'Pinned driver unavailable' }
+          New-Item -ItemType Directory -Force bin | Out-Null
+          curl.exe -fLsS --retry 3 https://github.com/OpenFAST/openfast/releases/download/v3.5.3/openfast_x64.exe -o bin/openfast_x64.exe
+          if ($LASTEXITCODE -ne 0) { throw 'OpenFAST download failed' }
+          curl.exe -fLsS --retry 3 https://github.com/NatLabRockies/ROSCO/releases/download/v2.6.0/libdiscon.dll -o bin/libdiscon.dll
+          if ($LASTEXITCODE -ne 0) { throw 'ROSCO download failed' }
+          if ((Get-FileHash bin/openfast_x64.exe).Hash.ToLower() -ne '0cc8147fdda188365b8eacda8a831e74fafef59440d71185d66c3272af9e176a') { throw 'Executable mismatch' }
+          if ((Get-FileHash bin/libdiscon.dll).Hash.ToLower() -ne '7aebb0d2166c0cc095d11c2b7bc13da136547c557b0f331dcdce84fe181802aa') { throw 'Controller mismatch' }
+          python public/thesis-studio/inp-archive/R47_RNA_WIND_GATE/prepare_global_output.py --stage prepare --kind "NTM" --duration 10
+          if ($LASTEXITCODE -ne 0) { throw 'Output-only input preparation failed' }
+      - name: Native global rotor output replay
+        run: |
+          $env:PATH="$pwd\bin;$env:PATH"
+          python native_blade.py --stage run --type "NTM" --duration 10 --exe bin/openfast_x64.exe --dll bin/libdiscon.dll
+          if ($LASTEXITCODE -ne 0) { throw 'Native replay failed' }
+          python public/thesis-studio/inp-archive/R47_RNA_WIND_GATE/prepare_global_output.py --stage audit --kind "NTM" --duration 10
+          if ($LASTEXITCODE -ne 0) { throw 'Global output audit failed' }
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: r47b-global-NTM-10s
+          path: |
+            native-aero/*.json
+            native-aero/*.log
+            native-aero/global_hub_wrench.csv
+            native-aero/case/*.outb
+            native-aero/case/*.fst
+            native-aero/case/Rotor/*AeroDyn15.dat
+          retention-days: 30
+  full:
+    needs: pilot
+    runs-on: windows-latest
+    timeout-minutes: 100
+    strategy:
+      fail-fast: false
+      matrix:
+        kind: [NTM, 1ETM]
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          sparse-checkout: |
+            public/thesis-studio/inp-archive/R47_RNA_WIND_GATE
+            public/thesis-studio/wind-figures/blade-aero
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: 45422889134
+          name: native-full-11.4-${{ matrix.kind }}-bts
+          path: incoming
+      - name: Restore original input and exact native binaries
+        run: |
+          python -m pip install numpy==1.26.4
+          curl.exe -fLsS --retry 3 https://raw.githubusercontent.com/g2066203208-beep/voxel-frontier/6f113a16ebc80236cbfb9bfbdc48781ba92634ad/research/wind-tower/experiments/BLADE_AERO_NATIVE_20261125/native_blade.py -o native_blade.py
+          if ($LASTEXITCODE -ne 0) { throw 'Pinned driver unavailable' }
+          New-Item -ItemType Directory -Force bin | Out-Null
+          curl.exe -fLsS --retry 3 https://github.com/OpenFAST/openfast/releases/download/v3.5.3/openfast_x64.exe -o bin/openfast_x64.exe
+          if ($LASTEXITCODE -ne 0) { throw 'OpenFAST download failed' }
+          curl.exe -fLsS --retry 3 https://github.com/NatLabRockies/ROSCO/releases/download/v2.6.0/libdiscon.dll -o bin/libdiscon.dll
+          if ($LASTEXITCODE -ne 0) { throw 'ROSCO download failed' }
+          if ((Get-FileHash bin/openfast_x64.exe).Hash.ToLower() -ne '0cc8147fdda188365b8eacda8a831e74fafef59440d71185d66c3272af9e176a') { throw 'Executable mismatch' }
+          if ((Get-FileHash bin/libdiscon.dll).Hash.ToLower() -ne '7aebb0d2166c0cc095d11c2b7bc13da136547c557b0f331dcdce84fe181802aa') { throw 'Controller mismatch' }
+          python public/thesis-studio/inp-archive/R47_RNA_WIND_GATE/prepare_global_output.py --stage prepare --kind "${{ matrix.kind }}" --duration 700
+          if ($LASTEXITCODE -ne 0) { throw 'Output-only input preparation failed' }
+      - name: Native global rotor output replay
+        run: |
+          $env:PATH="$pwd\bin;$env:PATH"
+          python native_blade.py --stage run --type "${{ matrix.kind }}" --duration 700 --exe bin/openfast_x64.exe --dll bin/libdiscon.dll
+          if ($LASTEXITCODE -ne 0) { throw 'Native replay failed' }
+          python public/thesis-studio/inp-archive/R47_RNA_WIND_GATE/prepare_global_output.py --stage audit --kind "${{ matrix.kind }}" --duration 700
+          if ($LASTEXITCODE -ne 0) { throw 'Global output audit failed' }
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: r47b-global-${{ matrix.kind }}-700s
+          path: |
+            native-aero/*.json
+            native-aero/*.log
+            native-aero/global_hub_wrench.csv
+            native-aero/case/*.outb
+            native-aero/case/*.fst
+            native-aero/case/Rotor/*AeroDyn15.dat
+          retention-days: 30
+  publish:
+    needs: full
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          sparse-checkout: |
+            public/thesis-studio/inp-archive/R47_RNA_WIND_GATE
+          sparse-checkout-cone-mode: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: r47b-global-NTM-700s
+          path: results/NTM
+      - uses: actions/download-artifact@v4
+        with:
+          name: r47b-global-1ETM-700s
+          path: results/1ETM
+      - name: Archive validated full native outputs and receipts
+        run: |
+          set -euo pipefail
+          for k in NTM 1ETM; do
+            base=public/thesis-studio/inp-archive/R47_RNA_WIND_GATE/global/$k
+            mkdir -p "$base"
+            cp "results/$k/global_hub_wrench.csv" "results/$k/global_wrench_receipt.json" "results/$k/output_only_patch.json" "results/$k/run_config.json" "$base/"
+          done
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add -f public/thesis-studio/inp-archive/R47_RNA_WIND_GATE/global
+          git commit -m "Archive native global hub wrench output and validation receipts"
+          git fetch origin main
+          git rebase FETCH_HEAD
+          git push origin HEAD:main
