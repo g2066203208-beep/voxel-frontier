@@ -1,0 +1,32 @@
+{
+  "status": "NATIVE_OUTPUT_PASS",
+  "duration_s": 700.0,
+  "classification": "new native coupled OpenFAST historical reduced structural model, not REV22",
+  "samples": 12001,
+  "first_time_s": 100.0,
+  "last_time_s": 700.0,
+  "blade_nodes": 40,
+  "blades": 3,
+  "node_channels": 1080,
+  "outb_sha256": "4a3dd4264d4277a13a5baa693f99a28c33856026e6e4170d3e1ff646cdb31292",
+  "rotor_units": {
+    "RtAeroFxh": "(N)",
+    "RtAeroFyh": "(N)",
+    "RtAeroFzh": "(N)",
+    "RtAeroMxh": "(N-m)",
+    "RtAeroMyh": "(N-m)",
+    "RtAeroMzh": "(N-m)"
+  },
+  "node_units": {
+    "Fx": "(N/m)",
+    "Fy": "(N/m)",
+    "Mm": "(N-m/m)",
+    "Fn": "(N/m)",
+    "Ft": "(N/m)",
+    "Fl": "(N/m)",
+    "Fd": "(N/m)",
+    "VRel": "(m/s)",
+    "Alpha": "(deg)"
+  },
+  "force_mapping": "HOLD: legacy local nodal coordinates, no global distributed-load balance or FE transfer"
+}

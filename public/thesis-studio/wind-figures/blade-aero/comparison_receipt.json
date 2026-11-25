@@ -1,0 +1,24 @@
+[
+  {
+    "id": "span",
+    "url": "https://mdpi-res.com/energies/energies-13-05753/article_deploy/html/images/energies-13-05753-g006-550.jpg",
+    "citation": "10.3390/en13215753, Fig. 6",
+    "our_asset": "blade_span.png",
+    "note": "DTU 10 MW; steady 9 m/s, three-blade sum; our single-blade pooled mean, 11.4 m/s",
+    "status": "OK",
+    "reference_sha256": "50598fda17e6ab466f841b010bb8ec3db8bf437a5e9eecbef52078a106cff2bb",
+    "our_sha256": "591cfc633b3d84c6339e96002c3e0a4095a04fdc75c6f90215d1b3a7135b5677",
+    "comparison_sha256": "1dba7aa8e785361fc2fad01384769ba06d2e70205a474bff1833087cde3bb6ca"
+  },
+  {
+    "id": "wrench",
+    "url": "https://mdpi-res.com/jmse/jmse-14-01489/article_deploy/html/images/jmse-14-01489-g0A4-550.jpg",
+    "citation": "10.3390/jmse14161489, Fig. A4",
+    "our_asset": "rotor_wrench.png",
+    "note": "NREL 1.5 MW rigid rotor, prescribed operation; our DTU 10 MW turbulent cases",
+    "status": "OK",
+    "reference_sha256": "7fca898745ccf5ce65a493eab33ee2eca37f76d6d8726a4e0d9a89fbe171f18f",
+    "our_sha256": "7517ce7f92be31105467791b80fcdbb8123a3411da582021f4eef3f1cbe8eeb4",
+    "comparison_sha256": "c5d54bed9925061af7cf9f76d265d302ba35e962b4d411a16c94bf99275456e2"
+  }
+]
