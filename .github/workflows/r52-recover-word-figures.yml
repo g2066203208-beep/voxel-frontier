@@ -1,0 +1,37 @@
+name: R52 restore original manuscript figure assets
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/r52-recover-word-figures.yml','public/thesis-studio/figure-audit/R52/recover_word_figures.py']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          sparse-checkout: |
+            public/thesis-studio/figure-audit/R52
+            public/thesis-studio/editor-data/manuscript-v8-bem.json
+            public/thesis-studio/figure-reference-register.json
+            public/thesis-studio/downloads/10MW-thesis-v8r9-he28-20261123.part*.bin
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install pillow==10.4.0
+      - run: python public/thesis-studio/figure-audit/R52/recover_word_figures.py
+      - name: Archive exact recovered originals and source receipts
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add -f public/thesis-studio/figure-audit/R52/
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Archive R52 original Word media recovered from verified caption relations"
+          git fetch origin main
+          git rebase FETCH_HEAD
+          git push origin HEAD:main
