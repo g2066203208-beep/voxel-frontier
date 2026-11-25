@@ -1,3 +1,14 @@
+### 2026-11-25｜v0.32.220 — REV22期刊模型质量对照
+
+- RUN45576585492 success，main 4898218935f95abaf64e3a6d5ae830fa0e5e16af，三篇Buildings原图及实际网格拼图已回读。DOI 10.3390/buildings15203786 Fig3：31节/112.28m、约11万C3D8R、常规500mm/局部100mm、厚度3层以上、36束每束8根140mm²；10.3390/buildings14061740 Fig2：120m不同塔型、914571单元、螺栓及预紧、主体100mm/法兰20mm；10.3390/buildings16193854 Fig2：4.55MW 35段、底部开门区域、16束×18根，塔节Tie；不能直接移植到本原型。其他关键参照：Engineering Structures 2023 S0141029623000366 双尺度与缩尺试验；何泽瑜等太阳能学报2026 DOI10.19912/j.0254-0096.tynxb.2024-1794 已联合仿真材料非线性与P-Δ，不能把这些常规方法宣称首创。
+- 实际源SHA e84851887735305c6387ca38a972bebd97ba9cdff7baa7735c0ed89cecf925b5。31混凝土节均3个轴向节点平面、2个径向节点环、96实体单元/节（48周向×2轴向×1径向）；4钢节均5个轴向平面、2径向环、96单元/节（24×4×1）。首混凝土节厚0.28m、轴向网格1.82m；首钢节轴向约2.875m。混凝土2976、钢384、法兰6912、环筋80256，不能用总96464宣称高保真。PT36×140mm²=5040mm²，需回到本原型资料确认单根/束，不将不同文献8倍面积直接替换。局部接触/损伤网格收敛及原生计算未验，REV22仅粗网格候选，建议全局筛选与局部实体细化分级、锚固/法兰真实构造、预应力合力核对、局部及整体独立验证。工作室入口e726b6d0db59b85722ca4eecfbab540d22e33743，Pages未验；未改INP。
+
+![2025-3786期刊原图左，REV22实际网格右](https://raw.githubusercontent.com/g2066203208-beep/voxel-frontier/4898218935f95abaf64e3a6d5ae830fa0e5e16af/public/thesis-studio/inp-archive/REV22_VALIDATION_KIT/mesh-view/literature/2025-3786-comparison.jpg)
+
+![2024-1740期刊原图左，REV22实际网格右](https://raw.githubusercontent.com/g2066203208-beep/voxel-frontier/4898218935f95abaf64e3a6d5ae830fa0e5e16af/public/thesis-studio/inp-archive/REV22_VALIDATION_KIT/mesh-view/literature/2024-1740-comparison.jpg)
+
+![2026-3854期刊原图左，REV22实际网格右](https://raw.githubusercontent.com/g2066203208-beep/voxel-frontier/4898218935f95abaf64e3a6d5ae830fa0e5e16af/public/thesis-studio/inp-archive/REV22_VALIDATION_KIT/mesh-view/literature/2026-3854-comparison.jpg)
+
 ### 2026-11-25｜v0.32.219 — REV22原始网格实际可视化
 
 - RUN45576130275实际由原始INP（SHA256 e84851887735305c6387ca38a972bebd97ba9cdff7baa7735c0ed89cecf925b5）解析100 Part及100 Instance，96604零件节点、96464零件单元；逐一应用实际平移、校验连接节点存在，提取C3D8外表面、T3D2/B31真实端点及MASS节点；不绘ROTARYI独立虚构几何，另有1装配参考点未绘。未修改输入、无变形、非CAE截图。
