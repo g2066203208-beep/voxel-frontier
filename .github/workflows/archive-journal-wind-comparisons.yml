@@ -1,0 +1,24 @@
+name: Archive journal wind figure comparisons
+on:
+  push:
+    paths:
+      - '.github/workflows/archive-journal-wind-comparisons.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          set -eu
+          python -m pip install -q pillow pymupdf
+          python public/thesis-studio/wind-figures/build_journal_pairs.py
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/thesis-studio/wind-figures/journal-comparison/
+          git diff --cached --quiet && exit 0
+          git commit -m 'Archive verified original wind literature figures and actual thesis PNG comparisons'
+          git pull --rebase origin main
+          git push origin HEAD:main
