@@ -2254,7 +2254,7 @@
           "id": "b0191",
           "kind": "text",
           "style": "Normal",
-          "text": "混凝土塔底第1、2节采用C70，其余29节采用C65；相应弹性模量分别为37.0 GPa和36.5 GPa，密度均取2400 kg/m³，泊松比均取0.20。历史原型复现算例的钢塔采用S345材料参数。混凝土受拉开裂及受压非线性通过Abaqus混凝土塑性损伤模型（CDP）描述。",
+          "text": "混凝土塔底第1、2节采用C70，其余29节采用C65。单轴拉压代表强度及弹性模量取值与Xu等[100]的混合塔模型一致，泊松比参考文献[19]取0.20，密度按原型复现模型取2400 kg/m³。历史原型复现算例的钢塔采用S345材料参数。混凝土受拉开裂及受压非线性采用混凝土塑性损伤模型（CDP）描述。",
           "has_media": false,
           "has_math": false,
           "word_body_index": 198
@@ -2263,7 +2263,7 @@
           "id": "b0192",
           "kind": "text",
           "style": "Normal",
-          "text": "CDP模型以受拉、受压单轴应力—应变关系为基础，按GB 50010及Li等[32]的方法换算非弹性应变、塑性应变和损伤变量。采用Sidoroff能量等价关系定义损伤因子，压缩非弹性应变及塑性应变的转换分别按式（2-1）～式（2-3）计算。受拉分支按同一方法处理。",
+          "text": "依据文献[19]附录C.2.3、C.2.4建立混凝土单轴拉压应力—应变包络，依据Li等[32]的转换方法确定损伤变量和Abaqus输入应变。令σ、ε分别为单轴应力和总应变的非负幅值，E₀为初始弹性模量，d为相应拉压损伤变量，εⁱⁿ为压缩非弹性应变或拉伸开裂应变。采用能量等效关系及塑性应变转换式：",
           "has_media": false,
           "has_math": false,
           "word_body_index": 199
@@ -2272,34 +2272,40 @@
           "id": "b0193",
           "kind": "text",
           "style": "Normal",
-          "text": "",
+          "text": "（2-1）",
           "has_media": false,
           "has_math": true,
-          "word_body_index": 200
+          "word_body_index": 200,
+          "equation_label": "2-1",
+          "equation_latex": "d=1-\\sqrt{\\frac{\\sigma}{E_0\\varepsilon}}"
         },
         {
           "id": "b0194",
           "kind": "text",
           "style": "Normal",
-          "text": "",
+          "text": "（2-2）",
           "has_media": false,
           "has_math": true,
-          "word_body_index": 201
+          "word_body_index": 201,
+          "equation_label": "2-2",
+          "equation_latex": "\\varepsilon^{\\mathrm{in}}=\\varepsilon-\\frac{\\sigma}{E_0}"
         },
         {
           "id": "b0195",
           "kind": "text",
           "style": "Normal",
-          "text": "",
+          "text": "（2-3）",
           "has_media": false,
           "has_math": true,
-          "word_body_index": 202
+          "word_body_index": 202,
+          "equation_label": "2-3",
+          "equation_latex": "\\varepsilon^{\\mathrm{pl}}=\\varepsilon^{\\mathrm{in}}-\\frac{d}{1-d}\\frac{\\sigma}{E_0}"
         },
         {
           "id": "b0196",
           "kind": "text",
           "style": "Normal",
-          "text": "上述应力—应变关系转换为Abaqus所需的材料输入序列；CDP参数及材料曲线的计算方式见表2-4。为减小损伤软化阶段的局部数值振荡，模型采用黏塑性正则化参数1×10⁻⁵ s，该参数区别于后述结构黏性阻尼。",
+          "text": "CDP屈服面和塑性流动参数见表2-4。黏塑性正则化参数取1×10⁻⁵ s，用于改善软化阶段的数值收敛性，不代表材料实测黏性或结构阻尼。",
           "has_media": false,
           "has_math": false,
           "word_body_index": 203
@@ -2318,47 +2324,179 @@
           "kind": "table",
           "rows": [
             [
-              "项目",
-              "计算方法与参数",
-              "参考依据"
+              "参数或方法",
+              "取值",
+              "依据"
             ],
             [
-              "1",
-              "确定C65/C70材料身份及弹性参数",
-              "何泽瑜[1]、GB 50010[19]"
+              "单轴拉压包络",
+              "附录C.2.3、C.2.4",
+              "文献[19]"
             ],
             [
-              "2",
-              "构造单轴拉压物理包络",
-              "GB 50010附录C.2.3/C.2.4"
+              "损伤及应变转换",
+              "式（2-1）～式（2-3）",
+              "Li等[32]；Abaqus CDP定义"
             ],
             [
-              "3",
-              "GB曲线转换为Abaqus CDP变量",
-              "Li等[32] §3.2—3.3、式(6)—(12)、Table 3"
+              "膨胀角 ψ",
+              "30°",
+              "同类风机塔研究[30]；取值需验证"
             ],
             [
-              "4",
-              "Sidoroff损伤（见式（2-1））",
-              "Li等[32]式(6)，Sidoroff能量等价"
+              "流动势偏心率 e",
+              "0.1",
+              "Abaqus默认值"
             ],
             [
-              "5",
-              "ψ=30°、e=0.1、fb0/fc0=1.16、Kc=2/3",
-              "Abaqus变量身份；Wang[30]仅作C70对象级旁证"
+              "双轴与单轴初始屈服应力比",
+              "1.16",
+              "Abaqus默认值"
             ],
             [
-              "6",
-              "μ=1×10⁻⁵ s",
-              "BF1 V7实际输入值；Abaqus CDP黏塑性正则化的松弛时间参数，与结构瑞雷阻尼分别定义。"
+              "屈服面形状参数 Kc",
+              "2/3",
+              "Abaqus默认值"
             ],
             [
-              "材料与结构分析",
-              "材料单轴计算、整塔推覆及模态分析",
-              "本章数值试验"
+              "黏塑性正则化参数",
+              "1×10⁻⁵ s",
+              "计算选取值；非软件默认值"
+            ],
+            [
+              "受压/受拉刚度恢复系数",
+              "1/0",
+              "Abaqus默认值；REV22显式定义"
             ]
           ],
           "word_body_index": 205
+        },
+        {
+          "id": "r16-cdp-def",
+          "kind": "text",
+          "style": "Normal",
+          "text": "令x=ε/εₚ，εₚ为相应单轴峰值应变，fₜ、f꜀为单轴拉压代表峰值应力。按文献[19]附录C，受拉和受压应力关系可分别表示为：",
+          "has_media": false,
+          "has_math": false
+        },
+        {
+          "id": "r16-cdp-eq-t",
+          "kind": "text",
+          "style": "Normal",
+          "text": "（2.2-1）",
+          "has_media": false,
+          "has_math": true,
+          "equation_label": "2.2-1",
+          "equation_latex": "\\sigma_t=f_t\\begin{cases}x(1.2-0.2x^5),&0\\le x\\le1\\\\\\frac{x}{\\alpha_t(x-1)^{1.7}+x},&x>1\\end{cases}"
+        },
+        {
+          "id": "r16-cdp-eq-c",
+          "kind": "text",
+          "style": "Normal",
+          "text": "（2.2-2）",
+          "has_media": false,
+          "has_math": true,
+          "equation_label": "2.2-2",
+          "equation_latex": "\\sigma_c=f_c\\begin{cases}\\frac{nx}{n-1+x^n},&0\\le x\\le1\\\\\\frac{x}{\\alpha_c(x-1)^2+x},&x>1\\end{cases}"
+        },
+        {
+          "id": "r16-cdp-eq-n",
+          "kind": "text",
+          "style": "Normal",
+          "text": "（2.2-3）",
+          "has_media": false,
+          "has_math": true,
+          "equation_label": "2.2-3",
+          "equation_latex": "n=\\frac{1}{1-f_c/(E_0\\varepsilon_{p,c})}"
+        },
+        {
+          "id": "r16-cdp-param",
+          "kind": "text",
+          "style": "Normal",
+          "text": "式中，αₜ、α꜀为下降段形状参数，峰值应变和下降段参数按文献[19]附录C相邻表值线性插值确定，计算结果见表2.2-1。",
+          "has_media": false,
+          "has_math": false
+        },
+        {
+          "id": "r16-cdp-tabcap",
+          "kind": "caption",
+          "style": "表题",
+          "text": "表2.2-1  C65与C70单轴本构参数",
+          "has_media": false,
+          "has_math": false
+        },
+        {
+          "id": "r16-cdp-tab",
+          "kind": "table",
+          "style": "Table Grid",
+          "rows": [
+            [
+              "参数",
+              "C65",
+              "C70"
+            ],
+            [
+              "弹性模量 / MPa",
+              "36500",
+              "37000"
+            ],
+            [
+              "单轴抗压代表峰值 / MPa",
+              "41.5",
+              "44.5"
+            ],
+            [
+              "单轴抗拉代表峰值 / MPa",
+              "2.93",
+              "2.99"
+            ],
+            [
+              "受压峰值应变",
+              "0.001808",
+              "0.001844"
+            ],
+            [
+              "受拉峰值应变",
+              "0.00011646",
+              "0.00011778"
+            ],
+            [
+              "受压下降段参数",
+              "2.021",
+              "2.183"
+            ],
+            [
+              "受拉下降段参数",
+              "2.6896",
+              "2.7928"
+            ]
+          ]
+        },
+        {
+          "id": "r16-cdp-points",
+          "kind": "text",
+          "style": "Normal",
+          "text": "REV22动力分析输入中，两种混凝土各离散为26个受压点及24个受拉点，首行输入非弹性应变或开裂应变及损伤值均置零，以初始弹性段近似峰前响应。图2.2-1为由实际输入数据恢复的应力—总应变关系及相应损伤关系。",
+          "has_media": false,
+          "has_math": false
+        },
+        {
+          "id": "r16-cdp-figure",
+          "kind": "figure",
+          "style": "图题",
+          "text": "图2.2-1  C65与C70单轴拉压本构及损伤演化曲线",
+          "has_media": false,
+          "has_math": false,
+          "figure_asset": "./inp-archive/REV22_REVIEW/rev22-cdp-curves.svg",
+          "figure_caption_match": "图2.2-1  C65与C70单轴拉压本构及损伤演化曲线"
+        },
+        {
+          "id": "r16-cdp-limits",
+          "kind": "text",
+          "style": "Normal",
+          "text": "上述曲线为规范本构计算值，非材料实测曲线。采用应变形式描述拉伸软化时，局部损伤及后峰响应可能随单元特征长度变化；因此局部损伤范围与极限承载力的判定需结合网格敏感性及断裂能分析。",
+          "has_media": false,
+          "has_math": false
         },
         {
           "id": "b0199",
@@ -2400,7 +2538,7 @@
           "id": "b0201",
           "kind": "text",
           "style": "Normal",
-          "text": "BF1模型采用36根预应力T3D2构件，单根面积140 mm²，弹性模量195 GPa，初始应力1280 MPa，相应初始总轴力为6.4512 MN。T057候选模型采用36组、每组8股的布置形式，单股面积同为140 mm²，名义初始总轴力为51.6096 MN。两套构造具有不同的预压水平，本章的既有平衡和推覆结果采用BF1模型。BF1等效连接模型以SPRING2单元模拟水平接缝；接触模型在30道水平缝处采用法向硬接触和切向摩擦，摩擦系数取0.5。钢—混过渡段及钢塔节间采用Tie约束。 水平干接缝的摩擦系数取值参考Tan等（2025，Engineering Structures，336：120443）经接缝试验验证的数值模型。Tie为整体响应分析的连接理想化，不用于评价螺栓预紧、局部法兰开合或滑移；此类局部响应需结合实际连接构造另行建模验证。",
+          "text": "BF1模型采用36根预应力T3D2构件，单根面积140 mm²，弹性模量195 GPa，初始应力1280 MPa，相应初始总轴力为6.4512 MN。T057候选模型采用36组、每组8股的布置形式，单股面积同为140 mm²，名义初始总轴力为51.6096 MN。两套构造具有不同的预压水平，本章的既有平衡和推覆结果采用BF1模型。BF1等效连接模型以SPRING2单元模拟水平接缝；接触模型在30道水平干接缝处采用面—面接触，法向采用硬接触并允许分离，切向采用罚函数摩擦，摩擦系数取0.5。钢—混过渡段及钢塔节间采用Tie约束。水平干接缝的接触属性参考Tan等[86]第4.2节。该研究通过预应力混凝土塔水平接缝扭转试验验证有限元模型，四组试件极限扭矩的计算误差均小于5%。本文采用其摩擦参数作为同类接缝分析基准，而非本工程接触面的实测摩擦系数。Tie为整体响应分析的连接理想化，不用于评价螺栓预紧、局部法兰开合或滑移；此类局部响应需结合实际连接构造另行建模验证。",
           "has_media": false,
           "has_math": false,
           "word_body_index": 210
@@ -2481,7 +2619,7 @@
           "id": "b0210",
           "kind": "text",
           "style": "Normal",
-          "text": "分别建立C65、C70材料的单轴受压和受拉试件模型，输入2.2节确定的应力—应变及损伤参数。数值试验完成了预设加载路径，材料输入及损伤变量的演化能够用于后续整塔非线性分析。该试验用于检查本构实现，材料参数仍取自规范及参考文献。",
+          "text": "REV22材料输入通过单轴本构数据复算检查。除首行弹性阶段简化外，96个离散应力点与规范插值公式的最大绝对误差小于0.0001 Pa；100个损伤值与式（2-1）的最大绝对误差小于1.1×10⁻¹²。按式（2-3）转换的四组等效塑性应变均非负且单调。该检查验证输入数据与理论关系的一致性，不替代Abaqus单轴及循环加载试件的求解验证；REV22相应原生试件尚待复核。",
           "has_media": false,
           "has_math": false,
           "word_body_index": 219
@@ -11242,7 +11380,7 @@
           "id": "b0819",
           "kind": "text",
           "style": "Normal",
-          "text": "[19] 中华人民共和国住房和城乡建设部. 混凝土结构设计规范: GB 50010—2010(2015年版)[S]. 北京: 中国建筑工业出版社, 2015.",
+          "text": "[19] 中华人民共和国住房和城乡建设部. 混凝土结构设计标准: GB/T 50010—2010（2024年局部修订）[S].",
           "has_media": false,
           "has_math": false,
           "word_body_index": 964
@@ -11359,7 +11497,7 @@
           "id": "b0832",
           "kind": "text",
           "style": "Normal",
-          "text": "[32] LI Q F, et al. Parameter calculation and verification of concrete plastic damage model[J]. 2020.",
+          "text": "[32] LI Q F, GUO W, KUANG Y H. Parameter calculation and verification of concrete plastic damage model of ABAQUS[J]. IOP Conference Series: Materials Science and Engineering, 2020, 794:012036. DOI:10.1088/1757-899X/794/1/012036.",
           "has_media": false,
           "has_math": false,
           "word_body_index": 977
@@ -12295,14 +12433,16 @@
     }
   ],
   "online_revision": {
-    "version": "V8-R15-REV22-METHOD",
+    "version": "V8-R16-REV22-CDP",
     "date": "2026-11-25",
-    "scope": "V8-R14 plus historical connection and flexible RNA method limits in chapter 2; REV22 exact-source audit separate; no new Abaqus results or material replacement; Word/PDF unchanged.",
+    "scope": "Chapter 2 exact REV22 input curves, GB envelope equations, material table, friction source and validation boundary; historical results not relabeled; Word/PDF unchanged.",
     "source_gate": "74fb3aee9dfef058b972a3f0e03aa571319c2fe2",
     "source_inp": "cdb719b95b8ce4301011489b4ab8ffc9e73c18bf",
     "wind_manifest": "./wind-figures/core/manifest.json",
     "historical_control_receipt": "./wind-figures/historical-control/receipt.json",
     "tower_drag_receipt": "./wind-figures/tower-drag/receipt.json",
-    "rev22_review": "./inp-archive/REV22_REVIEW/"
+    "rev22_review": "./inp-archive/REV22_REVIEW/",
+    "cdp_figure": "./inp-archive/REV22_REVIEW/rev22-cdp-curves.svg",
+    "cdp_data": "./inp-archive/REV22_REVIEW/rev22-cdp-curves.csv"
   }
 }
