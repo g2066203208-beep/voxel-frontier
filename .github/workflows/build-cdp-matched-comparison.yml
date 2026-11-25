@@ -1,0 +1,58 @@
+name: Build verified CDP comparison
+on:
+  push:
+    paths:
+      - '.github/workflows/build-cdp-matched-comparison.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Render source-preserving comparison
+        run: |
+          python -m pip install --quiet pillow cairosvg
+          cd public/thesis-studio/inp-archive/REV22_REVIEW
+          python - <<'PY'
+          from PIL import Image, ImageDraw, ImageFont, ImageStat
+          from pathlib import Path
+          import io, json, hashlib
+          import cairosvg
+          original=Path('original-literature/chen-2020-fig7.png')
+          receipt=json.loads(original.with_suffix('.json').read_text())
+          assert hashlib.sha256(original.read_bytes()).hexdigest()==receipt['sha256']
+          a=Image.open(original).convert('RGB')
+          svg=Path('cdp-matched-total-strain.svg')
+          b=Image.open(io.BytesIO(cairosvg.svg2png(bytestring=svg.read_bytes(),output_width=2100,output_height=1300))).convert('RGB')
+          assert a.size==(receipt['width'],receipt['height'])
+          assert max(ImageStat.Stat(b).stddev)>5
+          w=2100
+          a=a.resize((w,round(a.height*w/a.width)),Image.Resampling.LANCZOS)
+          canvas=Image.new('RGB',(2*w+150,1450),'white')
+          draw=ImageDraw.Draw(canvas)
+          font=ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf',32)
+          sub=ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf',24)
+          draw.text((45,24),'Chen et al. (2020), Fig. 7 — C30',font=font,fill='black')
+          draw.text((w+105,24),'REV22 — C65 and C70',font=font,fill='black')
+          canvas.paste(a,(45,200))
+          canvas.paste(b,(w+105,85))
+          draw.text((45,930),'Energies 13(3), 533; DOI: 10.3390/en13030533; CC BY 4.0',font=sub,fill='black')
+          draw.text((45,970),'Original publisher figure; no redrawing.',font=sub,fill='black')
+          draw.line((w+75,20,w+75,1390),fill='#b0b0b0',width=2)
+          out=Path('cdp-matched-comparison.png')
+          canvas.save(out,dpi=(300,300))
+          with Image.open(out) as im:
+              im.verify()
+          Path('cdp-matched-comparison.json').write_text(json.dumps(dict(source_image_sha256=receipt['sha256'],model_svg_sha256=hashlib.sha256(svg.read_bytes()).hexdigest(),comparison_sha256=hashlib.sha256(out.read_bytes()).hexdigest(),size=list(canvas.size),scope='Same physical quantities; different concrete strengths; not validation'),indent=2)+'\n')
+          PY
+      - name: Commit comparison
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/thesis-studio/inp-archive/REV22_REVIEW/cdp-matched-comparison.*
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Publish verified original-versus-REV22 CDP comparison PNG'
+          git pull --rebase origin main
+          git push origin HEAD:main
