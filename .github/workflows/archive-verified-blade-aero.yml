@@ -1,0 +1,156 @@
+name: Archive verified blade aerodynamic figures
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/archive-verified-blade-aero.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: verified-blade-aero-archive
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          sparse-checkout: |
+            public/thesis-studio/wind-figures
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: 45444014505
+          name: verified-blade-full-11m4-NTM
+          path: inputs/NTM
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: 45444014505
+          name: verified-blade-full-11m4-1ETM
+          path: inputs/1ETM
+      - name: Independent binary decode, plot and archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          pip install numpy==1.26.4 matplotlib==3.9.2 pillow==10.4.0
+          python - <<'PY'
+          import numpy as np, pathlib as pl, json, struct, re, hashlib, shutil, csv
+          import matplotlib
+          matplotlib.use('Agg')
+          import matplotlib.pyplot as plt
+          out=pl.Path('public/thesis-studio/wind-figures/blade-aero')
+          out.mkdir(parents=True,exist_ok=True)
+          cases={}; receipt={}
+          for typ,aid,sha in [('NTM',14947071978,'f69a6bf3f8f337fd2190ef6a43d891f6da7f0f4ccd30e5e7fd8e641d4b54570d'),('1ETM',14946269358,'4a3dd4264d4277a13a5baa693f99a28c33856026e6e4170d3e1ff646cdb31292')]:
+              src=pl.Path('inputs')/typ
+              raw=(src/'case/DTU_10MW_RWT.outb').read_bytes()
+              assert hashlib.sha256(raw).hexdigest()==sha
+              fid,w,n,nt,t0,dt=struct.unpack_from('<hhii dd',raw)
+              assert (fid,w,n,nt,t0,dt)==(4,12,1381,12001,100.,.05)
+              off=28
+              scale=np.frombuffer(raw,'<f4',n,off).astype(float);off+=4*n
+              offset=np.frombuffer(raw,'<f4',n,off).astype(float);off+=4*n
+              dl=struct.unpack_from('<i',raw,off)[0];off+=4+dl
+              names=[raw[off+i*w:off+(i+1)*w].decode().strip() for i in range(n+1)];off+=(n+1)*w
+              units=[raw[off+i*w:off+(i+1)*w].decode().strip() for i in range(n+1)];off+=(n+1)*w
+              assert names[0]=='Time' and len(set(names))==len(names) and len(raw)==off+nt*n*2 and np.all(scale!=0)
+              d=(np.frombuffer(raw,'<i2',nt*n,off).reshape(nt,n).astype(float)-offset)/scale
+              assert np.isfinite(d).all()
+              t=t0+dt*np.arange(nt);idx={k:i-1 for i,k in enumerate(names)}
+              r=np.array([float(s.split()[0]) for s in (src/'case/Rotor/DTU_10MW_AeroDyn15_blade.dat').read_text().splitlines()[6:46]])
+              assert len(r)==40 and np.all(np.diff(r)>0)
+              gnames=['Fx','Fy','Mm','Fn','Ft','Fl','Fd','VRel','Alpha']
+              found={k for k in names if re.fullmatch(r'AB[123]N\d{3}(Fx|Fy|Mm|Fn|Ft|Fl|Fd|VRel|Alpha)',k)}
+              assert found=={f'AB{b}N{j:03d}{g}' for b in range(1,4) for j in range(1,41) for g in gnames}
+              orig=json.loads((src/'result_receipt.json').read_text()); prev=np.load(src/'blade_node_aero.npz')
+              assert np.array_equal(prev['time_s'],t) and np.array_equal(prev['span_m'],r)
+              v={}; maxdiff=0
+              for g in gnames:
+                  assert all(units[idx[f'AB{b}N{j:03d}{g}']+1]==orig['node_units'][g] for b in range(1,4) for j in range(1,41))
+                  arr=np.stack([np.stack([d[:,idx[f'AB{b}N{j:03d}{g}']] for j in range(1,41)],1) for b in range(1,4)],1)
+                  diff=float(np.max(np.abs(prev[g]-arr)));assert diff<1e-8;maxdiff=max(maxdiff,diff)
+                  if g in ('Fx','Fy'):v[g]=(arr.mean(axis=(0,1)),arr.std(axis=(0,1),ddof=1))
+              keys=['RtAero'+k+'h' for k in ['Fx','Fy','Fz','Mx','My','Mz']]
+              assert all(units[idx[k]+1]==orig['rotor_units'][k] for k in keys)
+              a=d[:,[idx[k] for k in keys]]
+              assert np.allclose(np.loadtxt(src/'rotor_aero_wrench.csv',delimiter=',',skiprows=1),np.column_stack([t,a]),rtol=0,atol=1e-8)
+              cases[typ]=(r,t,a,v)
+              dest=out/typ;dest.mkdir(exist_ok=True)
+              (dest/'DTU_10MW_RWT.outb').write_bytes(raw)
+              for fn in ['rotor_aero_wrench.csv','blade_span_statistics.csv','result_receipt.json','run_config.json','native.log','source_receipt.json']:
+                  shutil.copy2(src/fn,dest/fn)
+              np.savetxt(dest/'span_mean_std.csv',np.column_stack([r,*v['Fx'],*v['Fy']]),delimiter=',',header='span_m,Fx_mean_N_per_m,Fx_std_N_per_m,Fy_mean_N_per_m,Fy_std_N_per_m',comments='')
+              receipt[typ]={'artifact_id':aid,'outb_sha256':sha,'samples':nt,'node_channels':1080,'independent_npz_max_abs_diff':maxdiff,'rotor':{k:{'mean':float(a[:,i].mean()),'std':float(a[:,i].std(ddof=1)),'min':float(a[:,i].min()),'max':float(a[:,i].max())} for i,k in enumerate(keys)}}
+              del d,arr,prev
+          (out/'audit.json').write_text(json.dumps(receipt,indent=2)+'\n')
+          plt.rcParams.update({'font.family':'DejaVu Serif','font.size':10,'axes.linewidth':.8,'svg.fonttype':'none','xtick.direction':'in','ytick.direction':'in'})
+          colors=['#1d3e68','#ae4134']
+          fig,axs=plt.subplots(2,1,figsize=(5.7,5.5),sharex=True,layout='constrained')
+          for ax,g,title in zip(axs,['Fx','Fy'],['(a) Out-of-plane','(b) In-plane']):
+              for (typ,(r,t,a,v)),c in zip(cases.items(),colors):
+                  m,s=v[g];ax.plot(r,m,label=typ,c=c,lw=1.25);ax.fill_between(r,m-s,m+s,color=c,alpha=.15,linewidth=0)
+              ax.set_ylabel(g+' (N/m)');ax.set_title(title,loc='left',fontsize=10);ax.grid(alpha=.2);ax.axhline(0,c='.5',lw=.5)
+          axs[0].legend(frameon=False,ncol=2);axs[-1].set_xlabel('Blade-root span (m)');axs[-1].set_xlim(0,86.4)
+          for ext in ['png','svg','pdf']:fig.savefig(out/('blade_span.'+ext),dpi=300)
+          plt.close(fig)
+          fig,axs=plt.subplots(3,2,figsize=(10,6.8),sharex=True,layout='constrained')
+          for i,k in enumerate(['Fx','Fy','Fz','Mx','My','Mz']):
+              ax=axs[i%3,i//3];unit='kN' if i<3 else 'kN m'
+              for (typ,(r,t,a,v)),c in zip(cases.items(),colors):ax.plot(t-100,a[:,i]/1e3,label=typ,c=c,lw=.45,alpha=.8)
+              ax.set_ylabel(k+'h ('+unit+')');ax.set_title('('+chr(97+i)+')',loc='left',fontsize=10);ax.grid(alpha=.15)
+          for ax in axs[-1,:]:ax.set_xlabel('Elapsed time (s)');ax.set_xlim(0,600)
+          axs[0,0].legend(frameon=False,ncol=2)
+          for ext in ['png','svg','pdf']:fig.savefig(out/('rotor_wrench.'+ext),dpi=300)
+          plt.close(fig)
+          print(json.dumps(receipt,indent=2))
+          PY
+      - name: Archive publisher original comparisons where accessible
+        shell: bash
+        run: |
+          python - <<'PY'
+          import urllib.request, pathlib as pl, json, hashlib, io
+          from PIL import Image,ImageOps,ImageDraw,ImageFont
+          out=pl.Path('public/thesis-studio/wind-figures/blade-aero')
+          refs=[
+              ('span','https://mdpi-res.com/energies/energies-13-05753/article_deploy/html/images/energies-13-05753-g006-550.jpg','10.3390/en13215753, Fig. 6','blade_span.png','DTU 10 MW; steady 9 m/s, three-blade sum; our single-blade pooled mean, 11.4 m/s'),
+              ('wrench','https://mdpi-res.com/jmse/jmse-14-01489/article_deploy/html/images/jmse-14-01489-g0A4-550.jpg','10.3390/jmse14161489, Fig. A4','rotor_wrench.png','NREL 1.5 MW rigid rotor, prescribed operation; our DTU 10 MW turbulent cases')]
+          receipt=[]
+          for key,url,ref,ours,note in refs:
+              row={'id':key,'url':url,'citation':ref,'our_asset':ours,'note':note,'status':'HOLD'}
+              try:
+                  req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0'})
+                  data=urllib.request.urlopen(req,timeout=30).read()
+                  im=Image.open(io.BytesIO(data));im.verify();im=Image.open(io.BytesIO(data)).convert('RGB')
+                  assert im.width>=500 and im.height>=200
+                  (out/(key+'-reference.jpg')).write_bytes(data)
+                  other=Image.open(out/ours).convert('RGB')
+                  def fit(img,w,h):
+                      return ImageOps.contain(img,(w,h),Image.Resampling.LANCZOS)
+                  canvas=Image.new('RGB',(2400,1650),'white');d=ImageDraw.Draw(canvas)
+                  font=ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf',40)
+                  d.text((40,22),'Reference | '+ref,fill='black',font=font)
+                  d.text((1240,22),'This study | DTU 10 MW',fill='black',font=font)
+                  for x,im0 in [(25,im),(1225,other)]:
+                      pic=fit(im0,1150,1510);canvas.paste(pic,(x+(1150-pic.width)//2,95+(1510-pic.height)//2))
+                  target=out/(key+'-comparison.png');canvas.save(target,dpi=(300,300))
+                  Image.open(target).verify()
+                  row.update(status='OK',reference_sha256=hashlib.sha256(data).hexdigest(),our_sha256=hashlib.sha256((out/ours).read_bytes()).hexdigest(),comparison_sha256=hashlib.sha256(target.read_bytes()).hexdigest())
+              except Exception as e:row['error']=str(e)
+              receipt.append(row)
+          (out/'comparison_receipt.json').write_text(json.dumps(receipt,indent=2)+'\n')
+          PY
+      - name: Commit only verified files
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add public/thesis-studio/wind-figures/blade-aero/
+          git diff --cached --stat
+          git commit -m "Archive independently verified 700 s blade loads and original figure comparisons"
+          git push origin HEAD:main
