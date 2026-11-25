@@ -8049,6 +8049,24 @@
           "online_only": true
         },
         {
+          "id": "wind-r25-001",
+          "kind": "text",
+          "style": "Normal",
+          "text": "为获得叶片展向气动力，采用OpenFAST v3.5.3及ROSCO v2.6.0，在恢复的整机模型中设置三片叶片全部40个气动节点的输出，并分别输入参考风速11.4 m/s的NTM和1ETM风场。两工况计算时长均为700 s，时间步长为0.05 s，截取100～700 s的有效时段，包含12001个时刻（含两端点）。两组计算均正常终止，三片叶片共120个气动节点，每个节点输出9项物理量，合计1080个节点输出通道。",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true
+        },
+        {
+          "id": "wind-r25-002",
+          "kind": "text",
+          "style": "Normal",
+          "text": "节点输出包括局部坐标方向的单位展长气动力、气动俯仰力矩、相对风速及攻角，同时记录转子气动力和气动力矩。单位展长气动力须沿叶片展向积分，并经坐标转换与作用点移置，才能建立与塔顶接口相一致的合力及合力矩。该两组计算保留原整机模型的塔身气动关闭设置，与独立计算的塔身风阻相区分；其结果用于额定风速工况的气动力提取，不代表全风速范围的统计结果，也不作为混合塔架结构响应的直接验证。",
+          "has_media": false,
+          "has_math": false,
+          "online_only": true
+        },
+        {
           "id": "b0524",
           "kind": "h3",
           "style": "论文二级标题",
@@ -12497,9 +12515,9 @@
     }
   ],
   "online_revision": {
-    "version": "V8-R24-FIGURE-BATCH",
+    "version": "V8-R25-BLADE-AERO",
     "date": "2026-11-25",
-    "scope": "Three exact-source figures redrawn; further batch figures require render receipt and visual acceptance. No new physical results.",
+    "scope": "Chapter 3 adds two completed 700 s native blade-aerodynamic output cases, based on actual normal-termination and channel audit logs; numerical distribution and mapping not yet verified independently. Restores existing source comparisons on the figure page.",
     "source_gate": "74fb3aee9dfef058b972a3f0e03aa571319c2fe2",
     "source_inp": "cdb719b95b8ce4301011489b4ab8ffc9e73c18bf",
     "wind_manifest": "./wind-figures/core/manifest.json",
@@ -12507,6 +12525,11 @@
     "tower_drag_receipt": "./wind-figures/tower-drag/receipt.json",
     "rev22_review": "./inp-archive/REV22_REVIEW/",
     "cdp_figure": "./inp-archive/REV22_REVIEW/cdp-matched-total-strain.svg",
-    "cdp_data": "./inp-archive/REV22_REVIEW/rev22-cdp-curves.csv"
+    "cdp_data": "./inp-archive/REV22_REVIEW/rev22-cdp-curves.csv",
+    "blade_aero_run": "https://github.com/g2066203208-beep/voxel-frontier/actions/runs/45444014505",
+    "blade_aero_artifact_ids": [
+      14947071978,
+      14946269358
+    ]
   }
 }
