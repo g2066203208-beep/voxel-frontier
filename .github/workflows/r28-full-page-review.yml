@@ -1,0 +1,121 @@
+name: R28 original full-page thesis comparisons
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/r28-full-page-review.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  pages:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          sparse-checkout: |
+            public/thesis-studio
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: |
+          pip install pymupdf==1.24.13 pillow==10.4.0 playwright==1.49.1
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-noto-cjk
+          python -m playwright install chromium
+      - name: Render actual original PDF pages and current manuscript pages
+        run: |
+          cat > /tmp/r28.py <<'PY'
+          import json,pathlib as P,html,urllib.request,hashlib,re,io
+          import fitz
+          from PIL import Image,ImageOps,ImageDraw,ImageFont
+          from playwright.sync_api import sync_playwright
+          root=P.Path('public/thesis-studio')
+          out=root/'wind-figures/blade-aero/r28-pages';out.mkdir(exist_ok=True)
+          j=json.loads((root/'editor-data/manuscript-v8-bem.json').read_text())
+          assert j['online_revision']['version']=='V8-R28-PAGE-REVIEW'
+          blocks={b['id']:b for c in j['chapters'] if c['id']=='03' for b in c['blocks']}
+          groups={'span':['wind-r26-001','wind-r26-003','wind-r28-001','wind-r28-002','wind-r28-003'],'wrench':['wind-r26-002','wind-r28-004']}
+          esc=html.escape
+          def render(b):
+              if b['kind']=='table':
+                  return '<table>'+''.join('<tr>'+''.join(('<th>' if i==0 else '<td>')+esc(str(v))+('</th>' if i==0 else '</td>') for v in row)+'</tr>' for i,row in enumerate(b['rows']))+'</table>'
+              if b.get('figure_asset'):
+                  return '<figure><img src="../../../'+esc(b['figure_asset'].removeprefix('./'))+'"><figcaption>'+esc(b['text'])+'</figcaption></figure>'
+              return '<p class="'+('caption' if b['kind']=='caption' else 'text')+'">'+esc(b['text'])+'</p>'
+          style='''@page{size:A4;margin:0}*{box-sizing:border-box}body{margin:0;background:#eee;color:#111;font-family:"Noto Serif CJK SC",serif}.sheet{width:210mm;height:297mm;background:white;padding:20mm 22mm 17mm;margin:0 auto;position:relative;overflow:hidden;font-size:12pt;line-height:1.6}.head{font-size:10pt;text-align:center;border-bottom:1px solid #444;padding-bottom:3mm;margin-bottom:5mm}.text{text-indent:2em;text-align:justify;margin:0 0 3mm}.caption,figcaption{font-size:10.5pt;text-align:center;line-height:1.45;margin:2mm 0}figure{margin:3mm 0}img{display:block;max-width:100%;max-height:112mm;margin:auto}table{border-collapse:collapse;width:100%;font-size:9pt;line-height:1.35;border-top:1.5px solid;border-bottom:1.5px solid}th,td{padding:2mm 1mm;text-align:center;font-weight:normal}th{border-bottom:1px solid}footer{position:absolute;bottom:10mm;left:0;right:0;text-align:center;font-size:9pt;color:#555}'''
+          for key,ids in groups.items():
+              body=''.join(render(blocks[k]) for k in ids)
+              doc='<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>第三章 A4审阅页</title><style>'+style+'</style><article class="sheet"><header class="head">第三章　风荷载与结构动力分析</header><main>'+body+'</main><footer>V8-R28 · 第三章 A4审阅页（未定正式页码）</footer></article></html>'
+              (out/(key+'-ours.html')).write_text(doc)
+          with sync_playwright() as p:
+              browser=p.chromium.launch(args=['--no-sandbox'])
+              page=browser.new_page(viewport={'width':794,'height':1123},device_scale_factor=2)
+              for key in groups:
+                  page.goto((out/(key+'-ours.html')).resolve().as_uri())
+                  page.evaluate("document.fonts.ready")
+                  page.wait_for_function("Array.from(document.images).every(i=>i.complete&&i.naturalWidth>0)")
+                  geom=page.evaluate("({content:document.querySelector('main').getBoundingClientRect().bottom, footer:document.querySelector('footer').getBoundingClientRect().top})")
+                  assert geom['content']<geom['footer'],geom
+                  page.locator('.sheet').screenshot(path=str(out/(key+'-ours.png')))
+              browser.close()
+          def get(url):
+              req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0'})
+              return urllib.request.urlopen(req,timeout=25).read()
+          refs={
+          'span':('Figure 6.','10.3390/en13215753',['https://backend.orbit.dtu.dk/ws/portalfiles/portal/235339219/energies_13_05753.pdf','https://mdpi-res.com/energies/energies-13-05753/article_deploy/energies-13-05753.pdf']),
+          'wrench':('Figure A4.','10.3390/jmse14161489',['https://mdpi-res.com/jmse/jmse-14-01489/article_deploy/jmse-14-01489.pdf','https://www.mdpi.com/2077-1312/14/16/1489/pdf'])}
+          try:
+              meta=json.loads(get('https://api.figshare.com/v2/articles/34552773'))
+              assert 'A Coupled Aero-Hydro-Elastic-Mooring' in meta['title']
+              refs['wrench'][2].extend(x['downloadUrl'] for x in meta['files'] if x['name'].lower().endswith('.pdf'))
+          except Exception as e: print('figshare lookup',str(e))
+          receipt={}
+          for key,(needle,doi,urls) in refs.items():
+              row={'doi':doi,'figure':needle,'block_ids':groups[key],'status':'HOLD','errors':[]}
+              for url in urls:
+                  try:
+                      raw=get(url)
+                      assert raw.startswith(b'%PDF')
+                      d=fitz.open(stream=raw,filetype='pdf')
+                      assert doi in ''.join(d[i].get_text() for i in range(min(2,len(d))))
+                      matches=[i for i,p in enumerate(d) if re.search(re.escape(needle)+r'\s',p.get_text()) and (len(p.get_images())>0 or len(p.get_drawings())>40)]
+                      assert matches, 'figure caption plus image not found'
+                      idx=8 if key=='span' and 8 in matches else matches[-1]
+                      if key=='span':
+                          assert 'Table 3.' in d[idx].get_text()
+                      pix=d[idx].get_pixmap(matrix=fitz.Matrix(2,2),alpha=False)
+                      pix.save(out/(key+'-reference-page.png'))
+                      ref=Image.open(out/(key+'-reference-page.png')).convert('RGB')
+                      ours=Image.open(out/(key+'-ours.png')).convert('RGB')
+                      H=1750; W=2500
+                      canvas=Image.new('RGB',(W,H),'#eeeeee');draw=ImageDraw.Draw(canvas);font=ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf',28)
+                      draw.text((30,15),'LEFT: Published PDF | '+doi,font=font,fill='black');draw.text((1270,15),'RIGHT: Current thesis | V8-R28 A4 review',font=font,fill='black')
+                      for x,im in [(15,ref),(1265,ours)]:
+                          pic=ImageOps.contain(im,(1220,1670),Image.Resampling.LANCZOS)
+                          canvas.paste(pic,(x+(1220-pic.width)//2,65+(1670-pic.height)//2))
+                      target=out/(key+'-page-comparison.jpg');canvas.save(target,quality=88,subsampling=0)
+                      row.update(status='OK',source_url=url,pdf_sha256=hashlib.sha256(raw).hexdigest(),pdf_page_index=idx,pdf_pages=len(d),comparison_sha256=hashlib.sha256(target.read_bytes()).hexdigest())
+                      break
+                  except Exception as e:row['errors'].append([url,str(e)])
+              receipt[key]=row
+          (out/'receipt.json').write_text(json.dumps(receipt,indent=2,ensure_ascii=False))
+          print(json.dumps(receipt,indent=2))
+          parts=[]
+          for key,title in [('span','图3.5-6：叶片展向分布'),('wrench','图3.5-8：六分量40 s细部')]:
+              row=receipt[key]
+              parts.append('<section><h2>'+title+'</h2><p><a href="'+key+'-ours.html">本文A4审阅页</a> · <a href="https://doi.org/'+row['doi']+'">参考文献原文</a></p>'+('<a href="'+key+'-page-comparison.jpg"><img src="'+key+'-page-comparison.jpg"></a>' if row['status']=='OK' else '<p>原PDF整页获取未通过，暂不拼图。</p>')+'</section>')
+          (out/'index.html').write_text('<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>第三章整页对照</title><style>body{max-width:1400px;margin:24px auto;padding:0 20px;font:16px/1.6 serif;color:#222}img{display:block;width:100%;height:auto}section{border-top:1px solid #999;padding:16px 0}</style><a href="../../../manuscript-workbench.html#chapter-03">论文第三章</a> · <a href="../../journal-comparison.html">逐图对照</a><h1>第三章原文整页对照</h1><p>左：出版PDF原页；右：同一在线正文JSON生成的A4审阅页，非整本正式页码。</p>'+''.join(parts)+'<a href="receipt.json">来源及校验记录</a></html>')
+          
+          PY
+          python /tmp/r28.py
+      - name: Publish page images and provenance
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add public/thesis-studio/wind-figures/blade-aero/r28-pages
+          git commit -m "R28 actual PDF pages and current manuscript A4 review comparisons"
+          git fetch --depth=20 origin main
+          git rebase FETCH_HEAD
+          git push origin HEAD:main
