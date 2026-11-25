@@ -82,3 +82,9 @@ Codex先对原始TXT运行比较器，再对独立CAE导出运行并保存JSON�
 - 纠正原图对照错误：张田2024图3是荷载—位移，图5是循环试验验证，不能与REV22单调材料输入图直接对照。
 - 主对照为Energies 2020, 13(3), 533（DOI 10.3390/en13030533）图7：原出版方JPG已在网页检视，单轴拉压应力和损伤因子对总应变双轴图。补充Xiao等2017（DOI 10.1177/1687814017719642）图7、8，明确总应变及应变/能量等效方法不同；Prestress Technology 2024（DOI 10.59238/j.pt.2024.03.003）图8为风机塔本构。后者PDF截图请求超时，未宣称取得原图。
 - 新增cdp-matched-total-strain.svg（5392d7cf4f2983b57d7e209ec9ca7493158ed77d），按实际100行CSV恢复总应变并连接输入点。图件对照页已替换首项，原正式论文V8-R19保留待评审。外网JPG本地下载失败，页面仅引用已核验的出版方原图直链，未验收站内图片显示；无本地拼图或原生仿真结果。
+
+## V2.0 同物理量期刊原图实际归档（2026-11-25）
+- Chen J, Xu Y, Li J. Numerical Investigation of the Strengthening Method by Circumferential Prestressing to Improve the Fatigue Life of Embedded-Ring Concrete Foundation for Onshore Wind Turbine Tower. Energies 2020, 13(3), 533, DOI 10.3390/en13030533, Fig.7, CC BY 4.0。
+- 出版方原始PNG已通过GitHub Actions下载及Pillow完整性、尺寸、非空检查，保存于 public/thesis-studio/inp-archive/REV22_REVIEW/original-literature/chen-2020-fig7.png；提交 bd29259616b63cc7f215af0c1d54e4030a391e86。3662×1231像素，755495字节，SHA-256 4260eb771214c9cd3d950319ee65e5fc16a41e5fa05c887b649931f2e97ff8d4；同目录JSON为来源收据。原图不重绘。
+- 对照图物理量一致：横坐标总应变，左纵坐标应力（MPa），右纵坐标损伤变量；C30与C65/C70等级及曲线范围不同，不构成实验验证。REV22 SVG由原始CSV 100行数值恢复，零点代表弹性起始；不将生成式图片用于论文。工作室同类型对照页面已指向站内原图，并保留出版方来源。正式论文R19未改，未进行Abaqus计算或Word/PDF同步。
+- 拼图工作流 build-cdp-matched-comparison.yml 已提交（67e920a9051d93d7d492ac6bf078ab10246f3246），从归档原图和数据SVG生成并写入哈希收据；截至本条记录尚未读取到拼图收据，须以实际文件为准。网站部署及浏览器渲染尚未验收。
