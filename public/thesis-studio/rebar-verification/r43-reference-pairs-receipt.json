@@ -1,0 +1,121 @@
+[
+  {
+    "file": "r43-wu-fig4-cage-pair.png",
+    "sha256": "c94d9dc203969a5efe47e6d5710cf17be86b75ee1c9addc9c13bb22950749c89",
+    "reference_file": "research/wind-tower/references/open-access/Wu_2022_SCS_44_407_160m_Hybrid_Tower.pdf",
+    "reference_sha256": "cfaee65bc0adfff21f1f4df815d1f202c149d9cc477b3776e83e3bc17fded7f4",
+    "reference_pdf_page": 3,
+    "crop_fraction": [
+      0.07,
+      0.215,
+      0.94,
+      0.515
+    ],
+    "reference_image_sha256": "54241ba0de68a42c787838209a9b00855e8b726ae5a698d176dd2d632d1b36f2",
+    "our_source": "r43-fig-cage.svg",
+    "our_sha256": "1ce4248e981cc65c047be6d6f3430d3647a6e90fca32fe3d48949deb5b015362",
+    "note": "同类钢筋布置图；不同塔型与材料，不作验证或直接移植。"
+  },
+  {
+    "file": "r43-wu-table2-rebar-pair.png",
+    "sha256": "3eefae17b19a0206fc383e3ccf1cd6925c598a0c83c7627e278cf4047fac6e7a",
+    "reference_file": "research/wind-tower/references/open-access/Wu_2022_SCS_44_407_160m_Hybrid_Tower.pdf",
+    "reference_sha256": "cfaee65bc0adfff21f1f4df815d1f202c149d9cc477b3776e83e3bc17fded7f4",
+    "reference_pdf_page": 4,
+    "crop_fraction": [
+      0.07,
+      0.085,
+      0.49,
+      0.64
+    ],
+    "reference_image_sha256": "d27316f297a3da4ebe2b79534649914da2b887c3205dfa3e852e5f975c9cd36d",
+    "our_source": "r43-thesis-table.csv",
+    "our_sha256": "aa5c7176ae7e7c2ac72ac140d6f327c6468657a402c39e2fee0ad294e08f818c",
+    "note": "同类分段配筋表；文献28段，本研究31段。"
+  },
+  {
+    "file": "r43-he-fig33-cage-pair.png",
+    "sha256": "0c676208dac925050f41b50b9deba8df1aa7a8482ef743d268324e50e5bd6d59",
+    "reference_file": "public/thesis-studio/documents/He_Zeyu_2024_hybrid_tower_thesis.pdf",
+    "reference_sha256": "85fb7d2e35a039e38e4b442deadab6ce7ddbf8bf0e57885de0238d92113f511c",
+    "reference_pdf_page": 31,
+    "crop_fraction": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "reference_image_sha256": "54af49d7ccf26138ce9ec960cda3e9b5060ebe48d4a9778279a0336f6dc87c8f",
+    "our_source": "r43-fig-cage.svg",
+    "our_sha256": "1ce4248e981cc65c047be6d6f3430d3647a6e90fca32fe3d48949deb5b015362",
+    "note": "原页图3-3为复合截面；本文补充普通钢筋构造。"
+  },
+  {
+    "file": "r43-he-table32-rebar-pair.png",
+    "sha256": "64c08c168018096b7a7dc922ca3fcf7adf62fd0900553ceb6578cce41a931609",
+    "reference_file": "public/thesis-studio/documents/He_Zeyu_2024_hybrid_tower_thesis.pdf",
+    "reference_sha256": "85fb7d2e35a039e38e4b442deadab6ce7ddbf8bf0e57885de0238d92113f511c",
+    "reference_pdf_page": 34,
+    "crop_fraction": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "reference_image_sha256": "4ad38487d2029433174504bb1e770d6d15c712c610a39d389f91d7b8d5e1633b",
+    "our_source": "r43-thesis-table.csv",
+    "our_sha256": "aa5c7176ae7e7c2ac72ac140d6f327c6468657a402c39e2fee0ad294e08f818c",
+    "note": "原页表3-2提供几何和根数；新表直径和环筋为独立候选。"
+  },
+  {
+    "file": "r43-he-fig46-section-method.png",
+    "sha256": "a0b569742ef628cdc2510c7c2d35ecc1dca4bfe8d2308236955e7cf271217e26",
+    "reference_file": "public/thesis-studio/documents/He_Zeyu_2024_hybrid_tower_thesis.pdf",
+    "reference_sha256": "85fb7d2e35a039e38e4b442deadab6ce7ddbf8bf0e57885de0238d92113f511c",
+    "reference_pdf_page": 44,
+    "crop_fraction": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "reference_image_sha256": "db4d57e4b2a905e2ba6d197b3c918fbf1d83b46a3842c61634d05f51d6392f8e",
+    "our_source": "r43-fig-section.svg",
+    "our_sha256": "d3f6fe91b2b8b42542a8380e1177f7a84a275db320caa0e13730699e81183dda",
+    "note": "仅纤维计算方法参照，图中物理量不同，不能作一对一验证。"
+  },
+  {
+    "file": "r43-wu-fig13-strut-method.png",
+    "sha256": "abc93bc796c5a30b606bf0b5d840467fccf4971b055329e393ab877022806fcb",
+    "reference_file": "research/wind-tower/references/open-access/Wu_2022_SCS_44_407_160m_Hybrid_Tower.pdf",
+    "reference_sha256": "cfaee65bc0adfff21f1f4df815d1f202c149d9cc477b3776e83e3bc17fded7f4",
+    "reference_pdf_page": 7,
+    "crop_fraction": [
+      0.07,
+      0.395,
+      0.94,
+      0.64
+    ],
+    "reference_image_sha256": "5153d33ddb8f9a17eed251386ca9c3a3d34619a5f74fe758ad23066f4d08f8a5",
+    "our_source": "r43-fig-strut.svg",
+    "our_sha256": "e804c02aca7b281319f6e8f3fbbf9beed71019d7e504ea4e27606a12ec2dddf8",
+    "note": "截面力学分析参照；不同物理量，不计为正式同类图匹配。"
+  },
+  {
+    "file": "r43-wu-table3-pt-method.png",
+    "sha256": "b57de1d87d5d3cb7800ca0edca702b0313073a3f3dce7f8a068852a977571dd1",
+    "reference_file": "research/wind-tower/references/open-access/Wu_2022_SCS_44_407_160m_Hybrid_Tower.pdf",
+    "reference_sha256": "cfaee65bc0adfff21f1f4df815d1f202c149d9cc477b3776e83e3bc17fded7f4",
+    "reference_pdf_page": 4,
+    "crop_fraction": [
+      0.51,
+      0.085,
+      0.94,
+      0.66
+    ],
+    "reference_image_sha256": "19d04a95b0e405a87e7c06778043a251bb69544e45f1b8b28f787286565aeb97",
+    "our_source": "r43-fig-pt.svg",
+    "our_sha256": "8e75767daa85c422a982f8313dece32e61718385b082647739b099cab29c48ab",
+    "note": "预应力输入的组织方式参照；非相同输出指标，不计为正式同类图匹配。"
+  }
+]
