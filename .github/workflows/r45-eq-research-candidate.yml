@@ -1,0 +1,41 @@
+name: R45 frozen V7 earthquake input audit
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/r45-eq-research-candidate.yml','public/thesis-studio/inp-archive/R45_EQ_RESEARCH_CANDIDATE/build_r45.py']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  static-input-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          sparse-checkout: |
+            public/thesis-studio/inp-archive/R44_REBAR_RESEARCH_PRECHECK
+            public/thesis-studio/inp-archive/REV25_HOOP_COST
+            public/thesis-studio/inp-archive/R45_EQ_RESEARCH_CANDIDATE
+            public/thesis-studio/seismic-archive/v7
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Audit all seven archives and generate only EQ01 diagnostic deck
+        run: |
+          python public/thesis-studio/inp-archive/R45_EQ_RESEARCH_CANDIDATE/build_r45.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: R45-static-EQ01-candidate
+          path: public/thesis-studio/inp-archive/R45_EQ_RESEARCH_CANDIDATE/
+      - name: Archive generated candidate and actual receipt
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add -f public/thesis-studio/inp-archive/R45_EQ_RESEARCH_CANDIDATE/*.inc public/thesis-studio/inp-archive/R45_EQ_RESEARCH_CANDIDATE/*.inp public/thesis-studio/inp-archive/R45_EQ_RESEARCH_CANDIDATE/receipt.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Archive R45 static-only earthquake diagnostic and verified histories"
+          git fetch origin main
+          git rebase FETCH_HEAD
+          git push origin HEAD:main
