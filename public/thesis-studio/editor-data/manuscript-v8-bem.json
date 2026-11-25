@@ -14403,9 +14403,9 @@
     }
   ],
   "online_revision": {
-    "version": "V8-R39-CAGE",
+    "version": "V8-R43-REBAR-FIGURES",
     "date": "2026-11-25",
-    "scope": "Actual source-based candidate cage geometry and conditional section/strut sensitivity; production INP HOLD",
+    "scope": "R43 conditional calculation figures and tables; R44 static research precheck archived; native analysis NOT_RUN",
     "source_gate": "74fb3aee9dfef058b972a3f0e03aa571319c2fe2",
     "source_inp": "cdb719b95b8ce4301011489b4ab8ffc9e73c18bf",
     "wind_manifest": "./wind-figures/core/manifest.json",
@@ -14430,6 +14430,9 @@
     "section_reserve": "./rebar-verification/r36-section-reserve.json",
     "reserved_section": "./rebar-verification/r37-design-candidate.json",
     "cover_anchor": "./rebar-verification/r38-cover-anchor.json",
-    "cage": "./rebar-verification/r39-cage-layout.json"
+    "cage": "./rebar-verification/r39-cage-layout.json",
+    "r44_candidate": "./inp-archive/R44_REBAR_RESEARCH_PRECHECK/HE_R44_REBAR_RESEARCH_PRECHECK.inp",
+    "r44_receipt": "./inp-archive/R44_REBAR_RESEARCH_PRECHECK/receipt.json",
+    "rebar_reference_pairs": "./rebar-verification/r43-reference-pairs-receipt.json"
   }
 }
