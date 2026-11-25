@@ -1,0 +1,59 @@
+name: R44 research precheck and reference comparisons
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/r44-rebar-precheck.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          sparse-checkout: |
+            public/thesis-studio/inp-archive/REV25_HOOP_COST
+            public/thesis-studio/inp-archive/REV22_REVIEW
+            public/thesis-studio/inp-archive/R44_REBAR_RESEARCH_PRECHECK
+            public/thesis-studio/rebar-verification
+            public/thesis-studio/documents/He_Zeyu_2024_hybrid_tower_thesis.pdf
+            research/wind-tower/references/open-access/Wu_2022_SCS_44_407_160m_Hybrid_Tower.pdf
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Generate and audit the native-format precheck deck
+        run: |
+          node public/thesis-studio/inp-archive/R44_REBAR_RESEARCH_PRECHECK/build_r44.mjs
+          python public/thesis-studio/rebar-verification/audit_rev25_cdp.py
+          python public/thesis-studio/rebar-verification/audit_rev25_cdp.py public/thesis-studio/inp-archive/R44_REBAR_RESEARCH_PRECHECK/HE_R44_REBAR_RESEARCH_PRECHECK.inp
+      - name: Render PDF source crops and comparison PNGs
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y fonts-noto-cjk libcairo2
+          python -m pip install pillow pymupdf cairosvg
+          python public/thesis-studio/rebar-verification/build_r43_reference_pairs.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: R44-research-precheck-and-pairs
+          path: |
+            public/thesis-studio/inp-archive/R44_REBAR_RESEARCH_PRECHECK/
+            public/thesis-studio/rebar-verification/r43-*-pair.png
+            public/thesis-studio/rebar-verification/r43-*-method.png
+            public/thesis-studio/rebar-verification/r43-reference-pairs-receipt.json
+      - name: Archive generated files only
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add -f public/thesis-studio/inp-archive/R44_REBAR_RESEARCH_PRECHECK/HE_R44_REBAR_RESEARCH_PRECHECK.inp public/thesis-studio/inp-archive/R44_REBAR_RESEARCH_PRECHECK/receipt.json
+          git add -f public/thesis-studio/rebar-verification/r43-*.png public/thesis-studio/rebar-verification/r43-reference-pairs-receipt.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Archive generated R44 research precheck and original-PDF comparisons"
+          git fetch origin main
+          git rebase FETCH_HEAD
+          git push origin HEAD:main
