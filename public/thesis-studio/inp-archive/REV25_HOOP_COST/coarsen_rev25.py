@@ -115,6 +115,23 @@ def reduce(m):
             if (i+1)%96 not in keep and (i+2)%96 in keep:
                 if safe(N[ns[i]],N[ns[(i+2)%96]],inner,outer)<.005:
                     keep.add((i+1)%96);keep.add((i+49)%96)
+        # Refine any ring that exceeds the predeclared area or inertia tolerance.
+        area=float(fields(sections[s][1][0])[0])
+        v0,c0,I0=moments([E[e] for e in es],N,area)
+        while True:
+            kk=sorted(keep)
+            trial=[(ns[i],ns[j%96]) for i,j in zip(kk,kk[1:]+[kk[0]+96])]
+            L=sum(norm(N[u]-N[w]) for u,w in trial)
+            A=v0/L
+            v1,c1,I1=moments(trial,N,A)
+            if norm(c1-c0)<1e-5 and np.max(np.abs(I1/I0-1))<.005 and 1-1e-10<=A/area<=1.002:break
+            missing=[i for i in range(96) if i not in keep]
+            assert missing,(name,s,'original ring fails tolerance')
+            def deficit(i):
+                a,b,c=N[ns[(i-1)%96]],N[ns[i]],N[ns[(i+1)%96]]
+                return norm(b-a)+norm(c-b)-norm(c-a)
+            i=max(missing,key=lambda k:deficit(k)+deficit((k+48)%96))
+            keep.add(i);keep.add((i+48)%96)
         kept=sorted(keep); edges=[];outids=set()
         for i,j in zip(kept,kept[1:]+[kept[0]+96]):
             assert 1<=j-i<=2
