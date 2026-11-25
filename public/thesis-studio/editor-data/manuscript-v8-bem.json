@@ -8070,7 +8070,7 @@
           "id": "wind-r26-001",
           "kind": "text",
           "style": "Normal",
-          "text": "如图3.5-6所示，对两组原始二进制输出独立解码后，将100～700 s内三片叶片对应展向节点的气动力合并统计。AeroDyn的Fx、Fy为局部旧式坐标系下的面外、面内单位长度气动力，不同于弦向坐标系的Fn、Ft[133]。NTM与1ETM工况的Fx展向均值峰值分别为7217.6 N/m和6389.0 N/m，均位于距叶根77.381 m处；Fy展向均值峰值分别为1090.8 N/m和1142.3 N/m，均位于距叶根23.265 m处。三叶片与同一时段的合并统计用于描述展向载荷分布，其离散程度不代表独立随机种子之间的变异。",
+          "text": "对100～700 s内三片叶片各对应展向节点的气动力进行时均统计。AeroDyn的Fx、Fy为旧式局部输出坐标系下的面外、面内单位长度气动力，区别于弦向坐标系下的Fn、Ft[133]。图3.5-6采用三片叶片同一展向节点的时均合力密度，名义半径r取轮毂半径2.8 m与叶根展向距离之和，名义切向力、轴向力及转矩密度分别取Fy的三叶片合计、Fx的三叶片合计及名义半径与前者的乘积。由于未输出变形后的局部极坐标节点位置和相应气动力分量，该分布为名义几何近似，不能作为精确转矩积分或有限元载荷映射依据。",
           "has_media": false,
           "has_math": false,
           "online_only": true
@@ -8079,12 +8079,12 @@
           "id": "wind-r26-003",
           "kind": "caption",
           "style": "Caption",
-          "text": "图3.5-6  额定风速下叶片展向单位长度气动力统计（均值及标准差）",
+          "text": "图3.5-6  额定风速下三叶片展向气动力及转矩密度分布（名义几何近似）",
           "has_media": false,
           "has_math": false,
           "online_only": true,
-          "figure_asset": "./wind-figures/blade-aero/blade_span.svg",
-          "figure_caption_match": "图3.5-6  额定风速下叶片展向单位长度气动力统计（均值及标准差）"
+          "figure_asset": "./wind-figures/blade-aero/r27/blade_span_r27.svg",
+          "figure_caption_match": "图3.5-6  额定风速下三叶片展向气动力及转矩密度分布（名义几何近似）"
         },
         {
           "id": "wind-r26-002",
@@ -8103,7 +8103,7 @@
           "has_media": false,
           "has_math": false,
           "online_only": true,
-          "figure_asset": "./wind-figures/blade-aero/rotor_wrench.svg",
+          "figure_asset": "./wind-figures/blade-aero/r27/rotor_wrench_r27_full.svg",
           "figure_caption_match": "图3.5-7  额定风速下轮毂坐标系气动力及气动力矩时程"
         },
         {
@@ -12555,9 +12555,9 @@
     }
   ],
   "online_revision": {
-    "version": "V8-R26-BLADE-STATISTICS",
+    "version": "V8-R27-REFERENCE-FIGURES",
     "date": "2026-11-25",
-    "scope": "Chapter 3 adds independently decoded paired 700 s blade and rotor statistics and two verified original-data figures; archived OUTB and comparison receipts.",
+    "scope": "R27 reference-style layout, nominal legacy-axis span comparison with explicit limitations and native hub-frame full 600 s histories",
     "source_gate": "74fb3aee9dfef058b972a3f0e03aa571319c2fe2",
     "source_inp": "cdb719b95b8ce4301011489b4ab8ffc9e73c18bf",
     "wind_manifest": "./wind-figures/core/manifest.json",
@@ -12571,6 +12571,7 @@
       14947071978,
       14946269358
     ],
-    "blade_aero_independent_audit": "./wind-figures/blade-aero/audit.json"
+    "blade_aero_independent_audit": "./wind-figures/blade-aero/audit.json",
+    "blade_aero_figure_audit": "./wind-figures/blade-aero/r27/receipt.json"
   }
 }
