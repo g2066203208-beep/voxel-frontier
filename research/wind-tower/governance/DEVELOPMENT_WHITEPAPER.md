@@ -1,3 +1,9 @@
+### 2026-11-25｜v0.32.218 — REV22装配层级专项核验与标准INP交付
+
+- 用户本轮明确授权装配问题专项处理。RUN45575428403 success，原始REV22 TXT SHA256 e84851887735305c6387ca38a972bebd97ba9cdff7baa7735c0ed89cecf925b5，15,693,508 bytes，实际逐关键字读取：100 Part、100 Instance、1 Assembly，31 CSEG、31 RBLONG、31 RHOOP、4 SSEG、1 FLANGE_SOLID、1 PT_36x15p2、1 RNA_FLEX_DPM；装配层仅1参考节点，无裸单元，30 Contact Pair、62 Embedded Element、5 Tie、108 Equation、1 Coupling、1 Rigid Body。报告blob23d2a1b164825c05613c876c825bc070dc791c4b。RNA和PT仍分别各为一个组合零件，不声称叶片、轮毂或各PT已分别独立。
+- 因源文件本已具备装配结构，未盲目重写物理或创建假REV23。RUN45575561748 success，标准后缀INP与TXT字节及Git blob605c18263354554782b44e752996e8b770f9dd37完全相同。新增import_rev22_assembly.py（704af69e00c75cda165360bfbf2fa9a1c1bf9b78）语法静检通过；仅在原生CAE中执行ModelFromInputFile、核对零件名和实例归属后另存新CAE，未运行、未验证CAE导入、关键词往返或原生求解。README aceb0cb709230e5d056d32714396dcc3f30ca711；既有工作室入口92bc1e6316a4230201a2197c591f02ae6491269c。
+- 官方Abaqus/CAE 2026文档 https://docs.software.vt.edu/abaqusv2026/English/SIMACAECAERefMap/simacae-c-impinputfiles.htm ：INP导入为网格零件而非原生几何特征树，关键词支持有限。用户实际CAE版本、导入方式、当前工程树未见，不能定位根因或宣称修好本地模型。如需可参数化、重划网格的原生几何，则必须从真实几何参数重建并核验，不能将网格Part冒充原生几何。本专项未改变结构材料、RNA物理、接触、地震或分析门禁，Pages未实测。
+
 ### 2026-11-25｜v0.32.217 — R28论文正文与文献整页对照
 
 - 正文main 3e213979597a8949ce23e6a5465ac1efcec3d49d，V8-R28-PAGE-REVIEW，第三章增加图3.5-8（真实100–140s细部）、表3.5-1（原生轮毂轴向力/矩100–700s统计）、参考文献[138]Sun 2020及[139]Qiu 2026；保留图3.5-6名义坐标近似与图3.5-7完整600s。真实表值NTM Fx均值/标准差/峰1.139/0.169/1.739 MN，Mx 9.569/1.454/16.360 MNm；1ETM Fx 1.034/0.221/1.954 MN，Mx 9.252/2.128/19.583 MNm。工作台导航a63c47447467f682122e6415b0f1aafd4cc6b598。
