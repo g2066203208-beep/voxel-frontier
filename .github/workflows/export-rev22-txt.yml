@@ -1,0 +1,55 @@
+name: Export exact REV22 full TXT
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/export-rev22-txt.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: write
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            public/thesis-studio/inp-archive/REV21_MODE_PILOT
+            public/thesis-studio/inp-archive/REV22_VALIDATION_KIT
+      - name: Restore byte-identical REV22
+        run: |
+          python - <<'PY'
+          import pathlib, hashlib, zipfile
+          root=pathlib.Path('public/thesis-studio/inp-archive')
+          source=root/'REV21_MODE_PILOT/REV21_MODE_PILOT.zip'
+          assert hashlib.sha256(source.read_bytes()).hexdigest()=='f389e927a4b42f0c26bf22f1f9ef24202255b8dd03a8d0e7585edfae83a6af91'
+          with zipfile.ZipFile(source) as z:
+              raw=z.read('HE_REV21_MODE_FULL_ASSEMBLY.inp')
+          assert hashlib.sha256(raw).hexdigest()=='7538ccb15a0af82364f0482f4a30e65a59d157a3b33efb94c4beb295a646721c'
+          old=b'0.005, 199.995, 1.e-7, 0.01'
+          assert raw.count(old)==1
+          out=raw.replace(old,b'0.005, 199.995, 1.e-7, 0.005')
+          assert len(out)==15693508 and hashlib.sha256(out).hexdigest()=='e84851887735305c6387ca38a972bebd97ba9cdff7baa7735c0ed89cecf925b5'
+          assert out.lower().count(b'*concrete tension damage,')==2
+          target=root/'REV22_VALIDATION_KIT/HE_REV22_FULL_ASSEMBLY_EQ005.txt'
+          target.write_bytes(out)
+          print(target,len(out),hashlib.sha256(out).hexdigest())
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: REV22-full-original-txt
+          path: public/thesis-studio/inp-archive/REV22_VALIDATION_KIT/HE_REV22_FULL_ASSEMBLY_EQ005.txt
+      - name: Publish plain-text file
+        run: |
+          git config user.name "paper-studio-bot"
+          git config user.email "paper-studio-bot@users.noreply.github.com"
+          git add public/thesis-studio/inp-archive/REV22_VALIDATION_KIT/HE_REV22_FULL_ASSEMBLY_EQ005.txt
+          if ! git diff --cached --quiet; then
+            git commit -m "Archive exact REV22 original bytes as TXT"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
+      - name: Refresh studio
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run pages.yml --ref main
