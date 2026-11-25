@@ -1,0 +1,66 @@
+{
+  "source_r37_blob": "5bc66216e2ea808e11f77943596707e479411347",
+  "scope": "conditional scan only; 45mm sensitivity not assumed standard availability; retained T077 diameter list for selection",
+  "rows": [
+    {
+      "seg": "CSEG_25",
+      "d": 40,
+      "solved": 20,
+      "feasible": 17,
+      "max_concrete_strain_ratio": 1.5721331068171123,
+      "max_steel_strain_ratio": 1.4292112659532483
+    },
+    {
+      "seg": "CSEG_25",
+      "d": 45,
+      "solved": 20,
+      "feasible": 20,
+      "max_concrete_strain_ratio": 0.5310887445957728,
+      "max_steel_strain_ratio": 0.27631570014721946
+    },
+    {
+      "seg": "CSEG_25",
+      "d": 50,
+      "solved": 20,
+      "feasible": 20,
+      "max_concrete_strain_ratio": 0.459512586624349,
+      "max_steel_strain_ratio": 0.20430817263371645
+    },
+    {
+      "seg": "CSEG_28",
+      "d": 36,
+      "solved": 19,
+      "feasible": 16,
+      "max_concrete_strain_ratio": 2.7401637595267965,
+      "max_steel_strain_ratio": 2.6622483759295874
+    },
+    {
+      "seg": "CSEG_28",
+      "d": 40,
+      "solved": 20,
+      "feasible": 20,
+      "max_concrete_strain_ratio": 0.5519370212563998,
+      "max_steel_strain_ratio": 0.30225662661368674
+    },
+    {
+      "seg": "CSEG_28",
+      "d": 45,
+      "solved": 20,
+      "feasible": 20,
+      "max_concrete_strain_ratio": 0.46031074328246785,
+      "max_steel_strain_ratio": 0.20549044257280455
+    },
+    {
+      "seg": "CSEG_28",
+      "d": 50,
+      "solved": 20,
+      "feasible": 20,
+      "max_concrete_strain_ratio": 0.4093488128739731,
+      "max_steel_strain_ratio": 0.169761862275631
+    }
+  ],
+  "selected": {
+    "CSEG_25": 50,
+    "CSEG_28": 40
+  }
+}
