@@ -1,5 +1,5 @@
 {
-  "version": "V8-R22-WIND-FOCUS",
+  "version": "V8-R23-FIGURE-QUALITY",
   "scope": "登记在线正文中明确标记的图件（包括旧版figure块及新图题）；无显式图件标记的历史文本需另核查。ARCHIVED只表示仓库有对应拼图，未代表网页实际显示验收。",
   "rule": "每幅正文图必须具有独立同类型文献真实原图对照拼图及来源，未通过不定稿；不强行匹配不同物理量。原创图如无完全对应图，注明最接近的参考、差异及理由，经审阅后决定。",
   "counts": {
@@ -20,17 +20,17 @@
     {
       "chapter": "02",
       "id": "b0219",
-      "caption": "图2-1  两组推覆算例的塔顶反力—位移曲线",
+      "caption": "图2-1  两组历史推覆算例塔顶反力—位移曲线（归档图数字化重绘）",
       "asset": "./editor-data/manuscript-figures-v6/FIG_2_1.png",
       "status": "ARCHIVED",
       "reference": "何泽瑜（2024）图4-8",
       "pair": "wind-figures/pushover-he-comparison.svg",
-      "note": "同为塔顶反力—位移；文献达到4m，本文历史推覆终止0.901/0.928m。"
+      "note": "V6源记录明确为历史图数字化提取，原始ODB未取得；拼图只作历史证据审查，不作最终原始结果。"
     },
     {
       "chapter": "02",
       "id": "b0225",
-      "caption": "图2-2  两组推覆算例的人工能占内能比例",
+      "caption": "图2-2  两组历史推覆算例人工能占内能比例（归档图数字化重绘）",
       "asset": "./editor-data/manuscript-figures-v6/FIG_2_2.png",
       "status": "UNREVIEWED"
     },
@@ -126,10 +126,11 @@
       "chapter": "03",
       "id": "wind-r11-004",
       "caption": "图3.2-3  轮毂中心风速自谱与Kaimal目标谱对比",
-      "asset": "./wind-figures/core/03_hub_autospectrum.svg",
+      "asset": "./wind-figures/core/03_hub_autospectrum_r23.svg",
       "reference": "何泽瑜（2024）图2-3",
-      "pair": "wind-figures/he-comparison-03.svg",
-      "status": "ARCHIVED"
+      "pair": "wind-figures/he-comparison-03-r23.svg",
+      "status": "ARCHIVED",
+      "note": "两工况各1024个原始PSD频点，统一坐标及图例，不平滑；SVG尚未进行浏览器渲染验收。"
     },
     {
       "chapter": "03",
