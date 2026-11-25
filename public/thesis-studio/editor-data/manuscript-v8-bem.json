@@ -2254,7 +2254,7 @@
           "id": "b0191",
           "kind": "text",
           "style": "Normal",
-          "text": "混凝土塔底第1、2节采用C70，其余29节采用C65；相应弹性模量分别为37.0 GPa和36.5 GPa，密度均取2400 kg/m³，泊松比均取0.20。钢塔采用S345材料参数。混凝土受拉开裂及受压非线性通过Abaqus混凝土塑性损伤模型（CDP）描述。",
+          "text": "混凝土塔底第1、2节采用C70，其余29节采用C65；相应弹性模量分别为37.0 GPa和36.5 GPa，密度均取2400 kg/m³，泊松比均取0.20。历史原型复现算例的钢塔采用S345材料参数。混凝土受拉开裂及受压非线性通过Abaqus混凝土塑性损伤模型（CDP）描述。",
           "has_media": false,
           "has_math": false,
           "word_body_index": 198
@@ -2400,7 +2400,7 @@
           "id": "b0201",
           "kind": "text",
           "style": "Normal",
-          "text": "BF1模型采用36根预应力T3D2构件，单根面积140 mm²，弹性模量195 GPa，初始应力1280 MPa，相应初始总轴力为6.4512 MN。T057候选模型采用36组、每组8股的布置形式，单股面积同为140 mm²，名义初始总轴力为51.6096 MN。两套构造具有不同的预压水平，本章的既有平衡和推覆结果采用BF1模型。BF1等效连接模型以SPRING2单元模拟水平接缝；接触模型在30道水平缝处采用法向硬接触和切向摩擦，摩擦系数取0.5。钢—混过渡段及钢塔节间采用Tie约束。",
+          "text": "BF1模型采用36根预应力T3D2构件，单根面积140 mm²，弹性模量195 GPa，初始应力1280 MPa，相应初始总轴力为6.4512 MN。T057候选模型采用36组、每组8股的布置形式，单股面积同为140 mm²，名义初始总轴力为51.6096 MN。两套构造具有不同的预压水平，本章的既有平衡和推覆结果采用BF1模型。BF1等效连接模型以SPRING2单元模拟水平接缝；接触模型在30道水平缝处采用法向硬接触和切向摩擦，摩擦系数取0.5。钢—混过渡段及钢塔节间采用Tie约束。 水平干接缝的摩擦系数取值参考Tan等（2025，Engineering Structures，336：120443）经接缝试验验证的数值模型。Tie为整体响应分析的连接理想化，不用于评价螺栓预紧、局部法兰开合或滑移；此类局部响应需结合实际连接构造另行建模验证。",
           "has_media": false,
           "has_math": false,
           "word_body_index": 210
@@ -2418,7 +2418,7 @@
           "id": "b0203",
           "kind": "text",
           "style": "Normal",
-          "text": "RNA采用B31空间梁骨架模拟，并通过调整截面与密度使其质量分布与参考组件一致。等效骨架与塔顶参考点耦合，保留组件质心偏心和转动惯量对整塔振动特性的影响。对于空间偏心质量，其动力惯性由总质量、质心位置和绕参考点的转动惯量共同确定。",
+          "text": "RNA采用B31空间梁骨架模拟，并通过调整截面与密度使其质量分布与参考组件一致。等效骨架与塔顶参考点耦合，保留组件质心偏心和转动惯量对整塔振动特性的影响。对于空间偏心质量，其动力惯性由总质量、质心位置和绕参考点的转动惯量共同确定。 对于柔性RNA的后续对照模型，梁单元离散与独立质量、转动惯量定义需分别核对；其适用性由整机模态及动力响应对照确定，不以实体几何外观作为精度判据。",
           "has_media": false,
           "has_math": false,
           "word_body_index": 212
@@ -12295,13 +12295,14 @@
     }
   ],
   "online_revision": {
-    "version": "V8-R14-TOWER-DRAG",
-    "date": "2026-11-24",
-    "scope": "V8-R13 plus six SHA-verified full BTS stationary tower quasi-steady drag cases, actual 36-part geometry and three figures in 3.3.4; no native FE load mapping or rotor aerodynamic coupling; Word/PDF unchanged.",
+    "version": "V8-R15-REV22-METHOD",
+    "date": "2026-11-25",
+    "scope": "V8-R14 plus historical connection and flexible RNA method limits in chapter 2; REV22 exact-source audit separate; no new Abaqus results or material replacement; Word/PDF unchanged.",
     "source_gate": "74fb3aee9dfef058b972a3f0e03aa571319c2fe2",
     "source_inp": "cdb719b95b8ce4301011489b4ab8ffc9e73c18bf",
     "wind_manifest": "./wind-figures/core/manifest.json",
     "historical_control_receipt": "./wind-figures/historical-control/receipt.json",
-    "tower_drag_receipt": "./wind-figures/tower-drag/receipt.json"
+    "tower_drag_receipt": "./wind-figures/tower-drag/receipt.json",
+    "rev22_review": "./inp-archive/REV22_REVIEW/"
   }
 }

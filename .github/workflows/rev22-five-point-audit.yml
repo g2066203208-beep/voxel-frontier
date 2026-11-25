@@ -1,0 +1,44 @@
+name: REV22 five-point original INP audit
+on:
+  push:
+    branches: [main]
+    paths: ['public/thesis-studio/inp-archive/REV22_REVIEW/audit_rev22.py','.github/workflows/rev22-five-point-audit.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: rev22-five-point-audit
+  cancel-in-progress: false
+jobs:
+  readback:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            public/thesis-studio/inp-archive/REV21_MODE_PILOT
+            public/thesis-studio/inp-archive/REV22_REVIEW
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python public/thesis-studio/inp-archive/REV22_REVIEW/audit_rev22.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rev22-exact-source-five-point-audit
+          path: public/thesis-studio/inp-archive/REV22_REVIEW/source-audit.json
+      - name: Publish audited source facts to studio
+        run: |
+          git config user.name "paper-studio-bot"
+          git config user.email "paper-studio-bot@users.noreply.github.com"
+          git add public/thesis-studio/inp-archive/REV22_REVIEW/source-audit.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Publish exact REV22 source audit, native not run"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
+      - name: Rebuild existing paper studio
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run pages.yml --ref main
