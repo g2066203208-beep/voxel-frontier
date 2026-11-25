@@ -2476,7 +2476,7 @@
           "id": "r16-cdp-points",
           "kind": "text",
           "style": "Normal",
-          "text": "REV22动力分析输入中，C65和C70分别设置26个受压点及24个受拉点。首个非弹性应变或开裂应变及损伤值取零。图2.2-1给出规范单轴应力—应变包络与实际输入离散点的对比，以及相应的损伤演化关系。",
+          "text": "C65及C70分别设置26个受压点和24个受拉点。图2.2-1(a)、(b)中的线为规范单轴包络，空心符号为由实际材料输入恢复的应力与总应变；图(c)、(d)的线连接相应损伤离散点。受拉峰值区间采用局部放大显示。首个输入点的非弹性应变或开裂应变置零，因而该点与规范包络存在偏差。",
           "has_media": false,
           "has_math": false
         },
@@ -2487,14 +2487,14 @@
           "text": "图2.2-1  C65与C70单轴拉压本构及损伤演化曲线",
           "has_media": false,
           "has_math": false,
-          "figure_asset": "./inp-archive/REV22_REVIEW/rev22-cdp-curves-academic.svg",
+          "figure_asset": "./inp-archive/REV22_REVIEW/rev22-cdp-curves-v3.svg",
           "figure_caption_match": "图2.2-1  C65与C70单轴拉压本构及损伤演化曲线"
         },
         {
           "id": "r16-cdp-limits",
           "kind": "text",
           "style": "Normal",
-          "text": "上述曲线为规范本构计算值，非材料实测曲线。采用应变形式描述拉伸软化时，局部损伤及后峰响应可能随单元特征长度变化；因此局部损伤范围与极限承载力的判定需结合网格敏感性及断裂能分析。",
+          "text": "图2.2-1为理论本构及材料输入关系，不代表单轴试验或有限元验证结果。现有受拉输入从低于峰值的应力开始，峰前开裂应变处理及基于断裂能的软化正则化需进一步验证。",
           "has_media": false,
           "has_math": false
         },
@@ -12433,16 +12433,16 @@
     }
   ],
   "online_revision": {
-    "version": "V8-R17-REV22-FIGURES",
+    "version": "V8-R18-REV22-CDP-FIGURE",
     "date": "2026-11-25",
-    "scope": "Replace formal CDP figure with journal-style GB envelopes and exact input markers; refine concrete joint literature boundary; no unverified solver plots; Word/PDF unchanged.",
+    "scope": "Refined four-panel CDP input figure with tensile-peak inset, inward ticks, concise labels and explicit first-point difference. No solver results; Word/PDF unchanged.",
     "source_gate": "74fb3aee9dfef058b972a3f0e03aa571319c2fe2",
     "source_inp": "cdb719b95b8ce4301011489b4ab8ffc9e73c18bf",
     "wind_manifest": "./wind-figures/core/manifest.json",
     "historical_control_receipt": "./wind-figures/historical-control/receipt.json",
     "tower_drag_receipt": "./wind-figures/tower-drag/receipt.json",
     "rev22_review": "./inp-archive/REV22_REVIEW/",
-    "cdp_figure": "./inp-archive/REV22_REVIEW/rev22-cdp-curves-academic.svg",
+    "cdp_figure": "./inp-archive/REV22_REVIEW/rev22-cdp-curves-v3.svg",
     "cdp_data": "./inp-archive/REV22_REVIEW/rev22-cdp-curves.csv"
   }
 }
