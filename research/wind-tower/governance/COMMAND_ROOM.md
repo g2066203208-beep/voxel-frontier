@@ -1,3 +1,6 @@
+## 2026-11-25｜第三章原图对照页修复 · START
+- READ_BASE_SHA=75bd21d34e5beac93d8908d5d23eb5e900c9f59a；main=6a9638e8cc9c0fa1b684e4d8355e56d4445796b4。网页版GPT已读根/研究AGENTS、指挥室、白皮书v0.32.214、main风图目录及期刊对照HTML、load-comparison/receipt.json、何图对照页。继承已存塔身风阻和Ct拼图及Brown原图，修复现有展示缺项和失效路径，区分不同对象/工况的图形参照与定量验证。拟改main现有journal-comparison.html、风图index及研究交接/白皮书；不新造图、不改INP、不执行Abaqus、不合并PR。700s结果单独按真实RUN核验。
+
 ## 2026-11-24｜同源波定向获取 · 阶段交接
 - RUN45391764497成功，研究分支5c8458d3a45163091ce5b9a47018eb94789059ec实际取得SBRC官方扩展频带V2A CSV 2409点、dt .02 s、水平PGA .4652/.6854 m/s²。发现常规/扩展版本同名覆盖风险，立即修正文件名；CSV未受覆盖。YPT ESM metadata确有精确事件台站、UNDEF computation failure，去质量筛选尝试官方服务并保留状态，禁止将未核验样本当正式输入。CESMD修正groupby。申2024表4仍为图像待核。 
 
