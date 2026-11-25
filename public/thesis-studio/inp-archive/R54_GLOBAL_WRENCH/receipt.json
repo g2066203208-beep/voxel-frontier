@@ -1,0 +1,272 @@
+{
+  "status": "AXIS_AND_SOURCE_AUDIT_ONLY",
+  "reference_point": "moving rotor apex; NOT transported",
+  "rotation_R47B_to_R44": [
+    [
+      0.0,
+      0.0,
+      -1.0
+    ],
+    [
+      0.0,
+      1.0,
+      0.0
+    ],
+    [
+      1.0,
+      0.0,
+      0.0
+    ]
+  ],
+  "cases": {
+    "NTM": {
+      "source_csv_sha256": "f2f66d74bbfa6c080e4987b032fa772af4db1aa158169d37774417ac41d5f77c",
+      "source_outb_sha256": "781a0de9d31d63ae3341165ee892ef01082f141ca405576814ba0fe0eac4f79a",
+      "rotated_csv_sha256": "0361388e12db5e354397b9e01410b6da6df1adad5cfeb60b3a6b19a2bbf60298",
+      "samples": 12001,
+      "tower_overlap_samples": 12000,
+      "force_norm_max_error_N": 2.3283064365386963e-10,
+      "moment_norm_max_error_Nm": 3.725290298461914e-09,
+      "peak_abs_force_N": [
+        109846.692388,
+        230128.443537,
+        1729850.052016
+      ],
+      "peak_abs_moment_Nm": [
+        17559701.76531,
+        12922795.36745,
+        15852638.83963
+      ],
+      "motion_channel_candidates_not_verified_positions": [
+        {
+          "channel": "Azimuth",
+          "unit": "(deg)"
+        },
+        {
+          "channel": "RotSpeed",
+          "unit": "(rpm)"
+        },
+        {
+          "channel": "GenAccel",
+          "unit": "(deg/s^2)"
+        },
+        {
+          "channel": "YawBrTDxp",
+          "unit": "(m)"
+        },
+        {
+          "channel": "YawBrTDyp",
+          "unit": "(m)"
+        },
+        {
+          "channel": "YawBrTDzp",
+          "unit": "(m)"
+        },
+        {
+          "channel": "YawBrTDxt",
+          "unit": "(m)"
+        },
+        {
+          "channel": "YawBrTDyt",
+          "unit": "(m)"
+        },
+        {
+          "channel": "YawBrTDzt",
+          "unit": "(m)"
+        },
+        {
+          "channel": "YawBrTAxp",
+          "unit": "(m/s^2)"
+        },
+        {
+          "channel": "YawBrTAyp",
+          "unit": "(m/s^2)"
+        },
+        {
+          "channel": "YawBrTAzp",
+          "unit": "(m/s^2)"
+        },
+        {
+          "channel": "YawBrTDxi",
+          "unit": "(m)"
+        },
+        {
+          "channel": "YawBrTDyi",
+          "unit": "(m)"
+        },
+        {
+          "channel": "YawBrTDzi",
+          "unit": "(m)"
+        },
+        {
+          "channel": "YawBrFxn",
+          "unit": "(kN)"
+        },
+        {
+          "channel": "YawBrFyn",
+          "unit": "(kN)"
+        },
+        {
+          "channel": "YawBrFzn",
+          "unit": "(kN)"
+        },
+        {
+          "channel": "YawBrFxp",
+          "unit": "(kN)"
+        },
+        {
+          "channel": "YawBrFyp",
+          "unit": "(kN)"
+        },
+        {
+          "channel": "YawBrMxn",
+          "unit": "(kN-m)"
+        },
+        {
+          "channel": "YawBrMyn",
+          "unit": "(kN-m)"
+        },
+        {
+          "channel": "YawBrMzn",
+          "unit": "(kN-m)"
+        },
+        {
+          "channel": "YawBrMxp",
+          "unit": "(kN-m)"
+        },
+        {
+          "channel": "YawBrMyp",
+          "unit": "(kN-m)"
+        }
+      ]
+    },
+    "1ETM": {
+      "source_csv_sha256": "f11f3b4468e0d079bd280aeb57d40a14aad7b7c507b924e3311623c43712d238",
+      "source_outb_sha256": "af6db9d02c6a886689b8ae429b0ac3778d3a27c947f8f58883cbb5566c09d049",
+      "rotated_csv_sha256": "4415effc84305a2f7512c633abddbc93c38e0a0a0fc5c182d8ac0f0f762734b5",
+      "samples": 12001,
+      "tower_overlap_samples": 12000,
+      "force_norm_max_error_N": 2.3283064365386963e-10,
+      "moment_norm_max_error_Nm": 3.725290298461914e-09,
+      "peak_abs_force_N": [
+        153205.290522,
+        269856.4062229,
+        1945306.667906
+      ],
+      "peak_abs_moment_Nm": [
+        24571979.21743,
+        19169288.36438,
+        18442615.79684
+      ],
+      "motion_channel_candidates_not_verified_positions": [
+        {
+          "channel": "Azimuth",
+          "unit": "(deg)"
+        },
+        {
+          "channel": "RotSpeed",
+          "unit": "(rpm)"
+        },
+        {
+          "channel": "GenAccel",
+          "unit": "(deg/s^2)"
+        },
+        {
+          "channel": "YawBrTDxp",
+          "unit": "(m)"
+        },
+        {
+          "channel": "YawBrTDyp",
+          "unit": "(m)"
+        },
+        {
+          "channel": "YawBrTDzp",
+          "unit": "(m)"
+        },
+        {
+          "channel": "YawBrTDxt",
+          "unit": "(m)"
+        },
+        {
+          "channel": "YawBrTDyt",
+          "unit": "(m)"
+        },
+        {
+          "channel": "YawBrTDzt",
+          "unit": "(m)"
+        },
+        {
+          "channel": "YawBrTAxp",
+          "unit": "(m/s^2)"
+        },
+        {
+          "channel": "YawBrTAyp",
+          "unit": "(m/s^2)"
+        },
+        {
+          "channel": "YawBrTAzp",
+          "unit": "(m/s^2)"
+        },
+        {
+          "channel": "YawBrTDxi",
+          "unit": "(m)"
+        },
+        {
+          "channel": "YawBrTDyi",
+          "unit": "(m)"
+        },
+        {
+          "channel": "YawBrTDzi",
+          "unit": "(m)"
+        },
+        {
+          "channel": "YawBrFxn",
+          "unit": "(kN)"
+        },
+        {
+          "channel": "YawBrFyn",
+          "unit": "(kN)"
+        },
+        {
+          "channel": "YawBrFzn",
+          "unit": "(kN)"
+        },
+        {
+          "channel": "YawBrFxp",
+          "unit": "(kN)"
+        },
+        {
+          "channel": "YawBrFyp",
+          "unit": "(kN)"
+        },
+        {
+          "channel": "YawBrMxn",
+          "unit": "(kN-m)"
+        },
+        {
+          "channel": "YawBrMyn",
+          "unit": "(kN-m)"
+        },
+        {
+          "channel": "YawBrMzn",
+          "unit": "(kN-m)"
+        },
+        {
+          "channel": "YawBrMxp",
+          "unit": "(kN-m)"
+        },
+        {
+          "channel": "YawBrMyp",
+          "unit": "(kN-m)"
+        }
+      ]
+    }
+  },
+  "release": "HOLD",
+  "abaqus": "NOT_RUN",
+  "figure_sha256": {
+    "png": "251639a2385306edc02aad0a12d371ca4eab0f830dbc481aa5ddce0cdbea2d7f",
+    "svg": "146e2d24e333d6512d56a779d8443a594aa1fd31443ec725dd7d119cd34fa3e6",
+    "pdf": "b6635557f4c75a4d5ae85a9720447600aeac75301cee3e5c8478da8990aafa76"
+  }
+}
