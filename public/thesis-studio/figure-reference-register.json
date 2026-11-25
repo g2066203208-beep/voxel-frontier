@@ -1,0 +1,204 @@
+{
+  "version": "V8-R22-WIND-FOCUS",
+  "scope": "正式正文图件逐项登记；未核查不等于无参考文献，已归档不等于托管显示已验收。",
+  "rule": "每幅正文图必须具有独立同类型文献真实原图对照拼图及来源，未通过不定稿；不强行匹配不同物理量。原创图如无完全对应图，注明最接近的参考、差异及理由，经审阅后决定。",
+  "counts": {
+    "ARCHIVED": 4,
+    "UNREVIEWED": 21,
+    "SOURCE_INSPECTED_PAIR_PENDING": 1
+  },
+  "figures": [
+    {
+      "chapter": "02",
+      "id": "r16-cdp-figure",
+      "caption": "图2.2-1  C65与C70混凝土应力—应变及损伤因子—应变曲线",
+      "asset": "./inp-archive/REV22_REVIEW/cdp-matched-total-strain.svg",
+      "reference": "Chen等（2020）图7",
+      "pair": "inp-archive/REV22_REVIEW/cdp-matched-comparison.png",
+      "status": "ARCHIVED"
+    },
+    {
+      "chapter": "02",
+      "id": "b0219",
+      "caption": "图2-1  两组推覆算例的塔顶反力—位移曲线",
+      "asset": "./editor-data/manuscript-figures-v6/FIG_2_1.png",
+      "status": "UNREVIEWED"
+    },
+    {
+      "chapter": "02",
+      "id": "b0225",
+      "caption": "图2-2  两组推覆算例的人工能占内能比例",
+      "asset": "./editor-data/manuscript-figures-v6/FIG_2_2.png",
+      "status": "UNREVIEWED"
+    },
+    {
+      "chapter": "02",
+      "id": "b0237",
+      "caption": "图2-3  一阶水平弯曲频率对比",
+      "asset": "./editor-data/manuscript-figures-v6/FIG_2_3.png",
+      "status": "UNREVIEWED"
+    },
+    {
+      "chapter": "02",
+      "id": "b0240",
+      "caption": "图2-4  前30阶模态累计有效质量参与率",
+      "asset": "./editor-data/manuscript-figures-v6/FIG_2_4.png",
+      "status": "UNREVIEWED"
+    },
+    {
+      "chapter": "03",
+      "id": "wind-r11-006",
+      "caption": "图3.2-1  随机风场离散示意图",
+      "asset": "./wind-figures/core/01_wind_grid.svg",
+      "reference": "何泽瑜（2024）图2-1",
+      "pair": "wind-figures/he-comparison-01.svg",
+      "status": "ARCHIVED"
+    },
+    {
+      "chapter": "03",
+      "id": "wind-r11-002",
+      "caption": "图3.2-2  轮毂中心纵向风速时程",
+      "asset": "./wind-figures/core/02_hub_wind_history.svg",
+      "reference": "何泽瑜（2024）图2-2",
+      "pair": "wind-figures/he-comparison-02.svg",
+      "status": "ARCHIVED"
+    },
+    {
+      "chapter": "03",
+      "id": "wind-r11-004",
+      "caption": "图3.2-3  轮毂中心风速自谱与Kaimal目标谱对比",
+      "asset": "./wind-figures/core/03_hub_autospectrum.svg",
+      "reference": "何泽瑜（2024）图2-3",
+      "pair": "wind-figures/he-comparison-03.svg",
+      "status": "ARCHIVED"
+    },
+    {
+      "chapter": "03",
+      "id": "wind-r21-fig6",
+      "caption": "图3.2-4  额定风速NTM工况平均风速及纵向湍流强度剖面",
+      "asset": "./wind-figures/native/native-full-11.4-NTM/06_profiles.png",
+      "reference": "Brown等（2024）图10",
+      "doi": "10.5194/wes-9-1791-2024",
+      "status": "SOURCE_INSPECTED_PAIR_PENDING"
+    },
+    {
+      "chapter": "03",
+      "id": "v8-012",
+      "caption": "图3.3-1  环形流管与叶片展向离散示意图",
+      "asset": "./downloads/bem-streamtube-rotor-v9.svg",
+      "status": "UNREVIEWED"
+    },
+    {
+      "chapter": "03",
+      "id": "v8-022",
+      "caption": "图3.3-2  叶素相对速度、攻角及气动力分解示意图",
+      "asset": "./downloads/bem-airfoil-velocity-force-v9.svg",
+      "status": "UNREVIEWED"
+    },
+    {
+      "chapter": "03",
+      "id": "wind-r14-005",
+      "caption": "图3.3-3  额定风速下塔身纵向风阻线荷载沿高程分布",
+      "asset": "./wind-figures/tower-drag/01_heightwise_drag.svg",
+      "status": "UNREVIEWED"
+    },
+    {
+      "chapter": "03",
+      "id": "wind-r14-007",
+      "caption": "图3.3-4  额定风速下塔身风阻合力及基底一阶矩时程",
+      "asset": "./wind-figures/tower-drag/02_resultant_histories.svg",
+      "status": "UNREVIEWED"
+    },
+    {
+      "chapter": "03",
+      "id": "wind-r14-009",
+      "caption": "图3.3-5  不同参考风速下塔身风阻峰值及阻力系数敏感性",
+      "asset": "./wind-figures/tower-drag/03_cd_sensitivity.svg",
+      "status": "UNREVIEWED"
+    },
+    {
+      "chapter": "03",
+      "id": "b0462",
+      "caption": "图3-9  五个代表ROSCO工作点的OpenFAST运行Campbell阶段结果",
+      "asset": null,
+      "status": "UNREVIEWED"
+    },
+    {
+      "chapter": "03",
+      "id": "wind-r11-008",
+      "caption": "图3.5-1  三组参考风速下NTM与ETM整机峰值响应比较",
+      "asset": "./wind-figures/04_archived_response.svg",
+      "status": "UNREVIEWED"
+    },
+    {
+      "chapter": "03",
+      "id": "wind-r13-002",
+      "caption": "图3.5-2  额定风速下运行状态与塔底弯矩同步时程",
+      "asset": "./wind-figures/historical-control/01_synchronous_control_response.svg",
+      "status": "UNREVIEWED"
+    },
+    {
+      "chapter": "03",
+      "id": "wind-r13-004",
+      "caption": "图3.5-3  额定风速下发电机功率与转子推力通道时程",
+      "asset": "./wind-figures/historical-control/02_power_rotor_thrust.svg",
+      "status": "UNREVIEWED"
+    },
+    {
+      "chapter": "03",
+      "id": "wind-r13-006",
+      "caption": "图3.5-4  不同参考风速下气动推力系数的六种子统计",
+      "asset": "./wind-figures/historical-control/03_aerodynamic_ct.svg",
+      "status": "UNREVIEWED"
+    },
+    {
+      "chapter": "03",
+      "id": "wind-r13-008",
+      "caption": "图3.5-5  塔底及叶根双向弯矩绝对峰值统计",
+      "asset": "./wind-figures/historical-control/04_structural_peak_loads.svg",
+      "status": "UNREVIEWED"
+    },
+    {
+      "chapter": "03",
+      "id": "eq-r10-010",
+      "caption": "图3-12  七组基准地震动双水平加速度时程",
+      "asset": "./seismic-archive/journal-figures/V7_backup_01_acceleration.png",
+      "status": "UNREVIEWED"
+    },
+    {
+      "chapter": "03",
+      "id": "eq-r10-012",
+      "caption": "图3-13  七组基准地震动功率谱密度",
+      "asset": "./seismic-archive/journal-figures/V7_backup_02_PSD.png",
+      "status": "UNREVIEWED"
+    },
+    {
+      "chapter": "03",
+      "id": "eq-r10-016",
+      "caption": "图3-14  七组基准地震动反应谱及参数化研究目标谱",
+      "asset": "./seismic-archive/journal-figures/V7_backup_03_response_spectra.png",
+      "status": "UNREVIEWED"
+    },
+    {
+      "chapter": "03",
+      "id": "eq-r10-024",
+      "caption": "图3-15  两组近断层脉冲候选记录速度时程（研究诊断）",
+      "asset": "./seismic-archive/second-suite/qualification/05_pulse_candidate_velocity_screening.png",
+      "status": "UNREVIEWED"
+    },
+    {
+      "chapter": "04",
+      "id": "b0718",
+      "caption": "图4-1  TwrBsMyt在三个URef下的六seed平均load-DEL及离散性",
+      "asset": null,
+      "status": "UNREVIEWED"
+    },
+    {
+      "chapter": "04",
+      "id": "b0721",
+      "caption": "图4-2  11.4 m/s、S03条件下NTM与ETM的TwrBsMyt rainflow范围分布",
+      "asset": null,
+      "status": "UNREVIEWED"
+    }
+  ]
+}
