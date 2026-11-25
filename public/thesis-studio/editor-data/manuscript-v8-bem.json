@@ -8033,7 +8033,7 @@
           "id": "r55-rna-008",
           "kind": "text",
           "style": "正文",
-          "text": "图3.3-6给出两工况关于参考点的六分量等效气动荷载时程。上述时程与塔身节点风载采用相同采样轴，动力诊断输入采用10 s三次平滑启动，之后保留原始幅值。两种工况的风荷载均包含150个独立幅值，其中144个对应塔身、6个对应RNA参考点。联合诊断中EQ01地震于风载时间30 s开始，保留原始双分量地震动。该时序属于研究性假设，不代表规范规定的联合发生概率。",
+          "text": "图3.3-6给出两工况关于参考点的六分量等效气动荷载时程。上述时程与塔身节点风载采用相同采样轴，动力诊断输入采用10 s三次平滑启动，之后保留原始幅值。两种工况的风荷载均包含150个独立幅值，其中144个对应塔身、6个对应RNA参考点。联合诊断中七组地震分别于风载时间30 s开始，保留各组原始双分量地震动。该时序属于研究性假设，不代表规范规定的联合发生概率。",
           "has_media": false,
           "has_math": false,
           "online_only": true
@@ -12116,7 +12116,7 @@
           "id": "r50-eq-001",
           "kind": "text",
           "style": "正文",
-          "text": "为分离荷载输入与结构响应的验证，额定风速下NTM和1ETM分别构建独立的塔身风荷载短时诊断、完整塔身风荷载诊断及塔身风—MODE地震同步诊断。各工况由共同的预应力、自重平衡及模态预检模型出发，分析入口独立，不将不同工况顺序累积。",
+          "text": "为分离外荷载输入与结构响应验证，额定风速下NTM与1ETM分别设置短时风荷载、完整风荷载及与七组地震动组合的独立诊断工况。风载包括塔身风阻与轮毂气动力在名义RNA参考点的等效作用。单独地震工况沿用同一预应力、自重平衡及模态预检模型，各工况相互独立。",
           "has_media": false,
           "has_math": false,
           "online_only": true
@@ -12125,7 +12125,7 @@
           "id": "r50-eq-002",
           "kind": "caption",
           "style": "表题",
-          "text": "表3-27  塔身风荷载及风—地震同步诊断的动力分析参数",
+          "text": "表3-27  风荷载、地震及风震联合诊断的动力分析参数",
           "has_media": false,
           "has_math": false,
           "online_only": true
@@ -12137,31 +12137,38 @@
           "rows": [
             [
               "分析工况",
+              "组数",
               "动力持续时间/s",
               "最大时间增量/s",
-              "地震起始时刻/s",
-              "外荷载范围"
+              "地震起始时刻/s"
             ],
             [
               "短时风荷载",
+              "2",
               "20.000",
               "0.025",
-              "—",
-              "塔身风阻"
+              "—"
             ],
             [
               "完整风荷载",
+              "2",
               "599.950",
               "0.025",
-              "—",
-              "塔身风阻"
+              "—"
             ],
             [
-              "风—MODE地震",
-              "229.995",
+              "单独地震",
+              "7",
+              "79.995～248.995",
               "0.005",
-              "30",
-              "塔身风阻、双向地震惯性"
+              "0"
+            ],
+            [
+              "风震联合",
+              "14",
+              "109.995～278.995",
+              "0.005",
+              "30"
             ]
           ],
           "has_media": false,
@@ -12172,7 +12179,7 @@
           "id": "r50-eq-004",
           "kind": "text",
           "style": "正文",
-          "text": "风荷载有效时段从原始100 s起重新计时，以r=3(t/10)²−2(t/10)³在0～10 s内渐增，随后保持原始风载幅值。同步诊断中将MODE加速度时程平移30 s，事件前加速度为零，原40000点及幅值均保持不变。起始过渡、事件发生时刻及分析增量为研究诊断参数，非正式规范组合；本阶段不含风轮气动力，继承阻尼尚未校准，不作为完整风震响应结果。",
+          "text": "风荷载有效时段从原始100 s起重新计时，以r=3(t/10)²−2(t/10)³在0～10 s内渐增，随后保持原始幅值。七组双水平地震幅值共217264个时刻，逐条核对时间轴与峰值，最大时间误差为2.84×10⁻¹⁴ s。联合诊断中原地震动时程平移30 s，事件前加速度为零，不重复调幅。上述启动过渡、地震发生时刻及分析增量属于研究性参数，并非规范规定的组合时序。采用名义RNA几何的风轮合力系，不等同于转动叶片分布气动力耦合；继承阻尼未校准。工况矩阵已确定，结构响应需经实际求解后评价。",
           "has_media": false,
           "has_math": false,
           "online_only": true
@@ -14971,9 +14978,9 @@
     }
   ],
   "online_revision": {
-    "version": "V8-R55-WIND-EQ-DIAGNOSTIC",
+    "version": "V8-R56-CASE-MATRIX",
     "date": "2026-11-25",
-    "scope": "R55 source-verified diagnostic deck generation and nominal RNA wrench figure; native analysis NOT_RUN",
+    "scope": "Seven source earthquake amplitudes independently numerically checked; 25 independent diagnostic cases configured; native structural analysis NOT_RUN",
     "source_gate": "74fb3aee9dfef058b972a3f0e03aa571319c2fe2",
     "source_inp": "cdb719b95b8ce4301011489b4ab8ffc9e73c18bf",
     "wind_manifest": "./wind-figures/core/manifest.json",
@@ -15008,6 +15015,7 @@
     "r54_receipt": "./inp-archive/R54_GLOBAL_WRENCH/receipt.json",
     "r55_nominal_transfer": "./inp-archive/R55_FULL_WIND_EQ_DIAGNOSTIC/nominal_transfer_source_audit.json",
     "r55_receipt": "./inp-archive/R55_FULL_WIND_EQ_DIAGNOSTIC/receipt.json",
-    "r55_gallery": "./inp-archive/R55_FULL_WIND_EQ_DIAGNOSTIC/index.html"
+    "r55_gallery": "./inp-archive/R55_FULL_WIND_EQ_DIAGNOSTIC/index.html",
+    "r56_eq_source": "./inp-archive/R56_SEVEN_EQ_DELIVERY/source_audit.json"
   }
 }
