@@ -1,0 +1,62 @@
+{
+  "version": "CONNECTION_PILOT_V1",
+  "scope": "Two separate local method specimens, not the 10MW prototype flange or foundation; REV22 unchanged",
+  "native": "NOT_RUN",
+  "units": "N, mm, MPa",
+  "flange": {
+    "nodes": 894,
+    "elements": 514,
+    "types": {
+      "C3D8R": 512,
+      "B31": 2
+    },
+    "min_jacobian_mm3": 68.94459565541689,
+    "paper": "https://doi.org/10.3390/app14093670",
+    "reference": {
+      "MW": 2,
+      "bolts": 110,
+      "nominal": "M48",
+      "PCD_mm": 3980,
+      "outer_diameter_mm": 4200,
+      "inner_diameter_mm": 3800,
+      "plate_thickness_mm": 140,
+      "wall_thickness_mm": 32,
+      "stress_area_mm2": 1470,
+      "pretension_N": 926100,
+      "washer_outer_diameter_mm": 92,
+      "washer_thickness_mm": 8
+    },
+    "assumptions": [
+      "straight one-bolt pitch segment, 52 mm hole, 100 mm wall stubs, elastic materials, frictionless contact, equivalent bearing patch instead of actual washers/head/nut, 0.3 mm trial axial displacement; no fatigue or full-ring periodic verification"
+    ]
+  },
+  "anchor": {
+    "nodes": 578,
+    "elements": 337,
+    "types": {
+      "C3D8R": 336,
+      "T3D2": 1
+    },
+    "min_jacobian_mm3": 266.2992258961269,
+    "reference": {
+      "diameter_mm": 15.2,
+      "area_mm2": 140,
+      "E_MPa": 195000,
+      "stress_MPa": 1280,
+      "nominal_initial_force_N": 179200
+    },
+    "assumptions": [
+      "300x300x250 concrete block, 140x140x30 anchor plate, 40 mm concrete opening, 30 mm plate hole, 1030 mm test length; elastic C70, no wedge slip, no local bursting/steel yield, no real anchor size or foundation"
+    ]
+  },
+  "checks": [
+    "positive C3D8R eight Gauss point Jacobians",
+    "all elements generated from node index lists",
+    "local model geometry preview generated from actual connectivity"
+  ],
+  "limits": [
+    "native Data Check and solver NOT_RUN",
+    "not a full ring; local proof-of-method only",
+    "no physical claim or load rating"
+  ]
+}
