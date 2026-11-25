@@ -1,0 +1,921 @@
+{
+  "source_sha256": "e84851887735305c6387ca38a972bebd97ba9cdff7baa7735c0ed89cecf925b5",
+  "source": "HE_REV22_FULL_ASSEMBLY_EQ005.inp",
+  "parts": 100,
+  "instances": 100,
+  "instance_transform": "all translation-only, applied exactly",
+  "nodes_in_parts": 96604,
+  "elements_in_parts": 96464,
+  "assembly_reference_node_not_drawn": 1,
+  "method": "Actual external C3D8 face extraction; exact B31/T3D2 endpoints; MASS nodes as markers; ROTARYI no separate geometry; no deformation, no geometry invented. Full assembly hides reinforcement for legibility. Orthographic projections, not Abaqus screenshots.",
+  "images": {
+    "01-full-assembly.jpg": "f64d819c5a4d5b33cd90ef2cd5fd5cc1002b588391ec76e26bf05b03a9e60ad7",
+    "02-internal-reinforcement.jpg": "d4dfe9ccfd2bad731d608b014f8e5db7b8dccfbaff4afb6f00a0bee26e385d22",
+    "03-part-detail.jpg": "049f42b2a341a127b9ba94a8e8bb6d5271eec76d7c366790367a38db5222f582",
+    "04-rna-detail.jpg": "e652d44b641b13485d4f2ab299630fbfbe3a5f5270afe141fe4ca43f6481b0f7"
+  },
+  "objects": [
+    {
+      "name": "CSEG_01-1",
+      "part": "CSEG_01",
+      "nodes": 288,
+      "elements": 96,
+      "types": {
+        "C3D8R": 96
+      }
+    },
+    {
+      "name": "CSEG_02-1",
+      "part": "CSEG_02",
+      "nodes": 288,
+      "elements": 96,
+      "types": {
+        "C3D8R": 96
+      }
+    },
+    {
+      "name": "CSEG_03-1",
+      "part": "CSEG_03",
+      "nodes": 288,
+      "elements": 96,
+      "types": {
+        "C3D8R": 96
+      }
+    },
+    {
+      "name": "CSEG_04-1",
+      "part": "CSEG_04",
+      "nodes": 288,
+      "elements": 96,
+      "types": {
+        "C3D8R": 96
+      }
+    },
+    {
+      "name": "CSEG_05-1",
+      "part": "CSEG_05",
+      "nodes": 288,
+      "elements": 96,
+      "types": {
+        "C3D8R": 96
+      }
+    },
+    {
+      "name": "CSEG_06-1",
+      "part": "CSEG_06",
+      "nodes": 288,
+      "elements": 96,
+      "types": {
+        "C3D8R": 96
+      }
+    },
+    {
+      "name": "CSEG_07-1",
+      "part": "CSEG_07",
+      "nodes": 288,
+      "elements": 96,
+      "types": {
+        "C3D8R": 96
+      }
+    },
+    {
+      "name": "CSEG_08-1",
+      "part": "CSEG_08",
+      "nodes": 288,
+      "elements": 96,
+      "types": {
+        "C3D8R": 96
+      }
+    },
+    {
+      "name": "CSEG_09-1",
+      "part": "CSEG_09",
+      "nodes": 288,
+      "elements": 96,
+      "types": {
+        "C3D8R": 96
+      }
+    },
+    {
+      "name": "CSEG_10-1",
+      "part": "CSEG_10",
+      "nodes": 288,
+      "elements": 96,
+      "types": {
+        "C3D8R": 96
+      }
+    },
+    {
+      "name": "CSEG_11-1",
+      "part": "CSEG_11",
+      "nodes": 288,
+      "elements": 96,
+      "types": {
+        "C3D8R": 96
+      }
+    },
+    {
+      "name": "CSEG_12-1",
+      "part": "CSEG_12",
+      "nodes": 288,
+      "elements": 96,
+      "types": {
+        "C3D8R": 96
+      }
+    },
+    {
+      "name": "CSEG_13-1",
+      "part": "CSEG_13",
+      "nodes": 288,
+      "elements": 96,
+      "types": {
+        "C3D8R": 96
+      }
+    },
+    {
+      "name": "CSEG_14-1",
+      "part": "CSEG_14",
+      "nodes": 288,
+      "elements": 96,
+      "types": {
+        "C3D8R": 96
+      }
+    },
+    {
+      "name": "CSEG_15-1",
+      "part": "CSEG_15",
+      "nodes": 288,
+      "elements": 96,
+      "types": {
+        "C3D8R": 96
+      }
+    },
+    {
+      "name": "CSEG_16-1",
+      "part": "CSEG_16",
+      "nodes": 288,
+      "elements": 96,
+      "types": {
+        "C3D8R": 96
+      }
+    },
+    {
+      "name": "CSEG_17-1",
+      "part": "CSEG_17",
+      "nodes": 288,
+      "elements": 96,
+      "types": {
+        "C3D8R": 96
+      }
+    },
+    {
+      "name": "CSEG_18-1",
+      "part": "CSEG_18",
+      "nodes": 288,
+      "elements": 96,
+      "types": {
+        "C3D8R": 96
+      }
+    },
+    {
+      "name": "CSEG_19-1",
+      "part": "CSEG_19",
+      "nodes": 288,
+      "elements": 96,
+      "types": {
+        "C3D8R": 96
+      }
+    },
+    {
+      "name": "CSEG_20-1",
+      "part": "CSEG_20",
+      "nodes": 288,
+      "elements": 96,
+      "types": {
+        "C3D8R": 96
+      }
+    },
+    {
+      "name": "CSEG_21-1",
+      "part": "CSEG_21",
+      "nodes": 288,
+      "elements": 96,
+      "types": {
+        "C3D8R": 96
+      }
+    },
+    {
+      "name": "CSEG_22-1",
+      "part": "CSEG_22",
+      "nodes": 288,
+      "elements": 96,
+      "types": {
+        "C3D8R": 96
+      }
+    },
+    {
+      "name": "CSEG_23-1",
+      "part": "CSEG_23",
+      "nodes": 288,
+      "elements": 96,
+      "types": {
+        "C3D8R": 96
+      }
+    },
+    {
+      "name": "CSEG_24-1",
+      "part": "CSEG_24",
+      "nodes": 288,
+      "elements": 96,
+      "types": {
+        "C3D8R": 96
+      }
+    },
+    {
+      "name": "CSEG_25-1",
+      "part": "CSEG_25",
+      "nodes": 288,
+      "elements": 96,
+      "types": {
+        "C3D8R": 96
+      }
+    },
+    {
+      "name": "CSEG_26-1",
+      "part": "CSEG_26",
+      "nodes": 288,
+      "elements": 96,
+      "types": {
+        "C3D8R": 96
+      }
+    },
+    {
+      "name": "CSEG_27-1",
+      "part": "CSEG_27",
+      "nodes": 288,
+      "elements": 96,
+      "types": {
+        "C3D8R": 96
+      }
+    },
+    {
+      "name": "CSEG_28-1",
+      "part": "CSEG_28",
+      "nodes": 288,
+      "elements": 96,
+      "types": {
+        "C3D8R": 96
+      }
+    },
+    {
+      "name": "CSEG_29-1",
+      "part": "CSEG_29",
+      "nodes": 288,
+      "elements": 96,
+      "types": {
+        "C3D8R": 96
+      }
+    },
+    {
+      "name": "CSEG_30-1",
+      "part": "CSEG_30",
+      "nodes": 288,
+      "elements": 96,
+      "types": {
+        "C3D8R": 96
+      }
+    },
+    {
+      "name": "CSEG_31-1",
+      "part": "CSEG_31",
+      "nodes": 288,
+      "elements": 96,
+      "types": {
+        "C3D8R": 96
+      }
+    },
+    {
+      "name": "RBLONG_01-1",
+      "part": "RBLONG_01",
+      "nodes": 432,
+      "elements": 216,
+      "types": {
+        "T3D2": 216
+      }
+    },
+    {
+      "name": "RBLONG_02-1",
+      "part": "RBLONG_02",
+      "nodes": 432,
+      "elements": 216,
+      "types": {
+        "T3D2": 216
+      }
+    },
+    {
+      "name": "RBLONG_03-1",
+      "part": "RBLONG_03",
+      "nodes": 432,
+      "elements": 216,
+      "types": {
+        "T3D2": 216
+      }
+    },
+    {
+      "name": "RBLONG_04-1",
+      "part": "RBLONG_04",
+      "nodes": 432,
+      "elements": 216,
+      "types": {
+        "T3D2": 216
+      }
+    },
+    {
+      "name": "RBLONG_05-1",
+      "part": "RBLONG_05",
+      "nodes": 384,
+      "elements": 192,
+      "types": {
+        "T3D2": 192
+      }
+    },
+    {
+      "name": "RBLONG_06-1",
+      "part": "RBLONG_06",
+      "nodes": 384,
+      "elements": 192,
+      "types": {
+        "T3D2": 192
+      }
+    },
+    {
+      "name": "RBLONG_07-1",
+      "part": "RBLONG_07",
+      "nodes": 384,
+      "elements": 192,
+      "types": {
+        "T3D2": 192
+      }
+    },
+    {
+      "name": "RBLONG_08-1",
+      "part": "RBLONG_08",
+      "nodes": 384,
+      "elements": 192,
+      "types": {
+        "T3D2": 192
+      }
+    },
+    {
+      "name": "RBLONG_09-1",
+      "part": "RBLONG_09",
+      "nodes": 384,
+      "elements": 192,
+      "types": {
+        "T3D2": 192
+      }
+    },
+    {
+      "name": "RBLONG_10-1",
+      "part": "RBLONG_10",
+      "nodes": 384,
+      "elements": 192,
+      "types": {
+        "T3D2": 192
+      }
+    },
+    {
+      "name": "RBLONG_11-1",
+      "part": "RBLONG_11",
+      "nodes": 384,
+      "elements": 192,
+      "types": {
+        "T3D2": 192
+      }
+    },
+    {
+      "name": "RBLONG_12-1",
+      "part": "RBLONG_12",
+      "nodes": 360,
+      "elements": 180,
+      "types": {
+        "T3D2": 180
+      }
+    },
+    {
+      "name": "RBLONG_13-1",
+      "part": "RBLONG_13",
+      "nodes": 360,
+      "elements": 180,
+      "types": {
+        "T3D2": 180
+      }
+    },
+    {
+      "name": "RBLONG_14-1",
+      "part": "RBLONG_14",
+      "nodes": 360,
+      "elements": 180,
+      "types": {
+        "T3D2": 180
+      }
+    },
+    {
+      "name": "RBLONG_15-1",
+      "part": "RBLONG_15",
+      "nodes": 360,
+      "elements": 180,
+      "types": {
+        "T3D2": 180
+      }
+    },
+    {
+      "name": "RBLONG_16-1",
+      "part": "RBLONG_16",
+      "nodes": 336,
+      "elements": 168,
+      "types": {
+        "T3D2": 168
+      }
+    },
+    {
+      "name": "RBLONG_17-1",
+      "part": "RBLONG_17",
+      "nodes": 336,
+      "elements": 168,
+      "types": {
+        "T3D2": 168
+      }
+    },
+    {
+      "name": "RBLONG_18-1",
+      "part": "RBLONG_18",
+      "nodes": 336,
+      "elements": 168,
+      "types": {
+        "T3D2": 168
+      }
+    },
+    {
+      "name": "RBLONG_19-1",
+      "part": "RBLONG_19",
+      "nodes": 336,
+      "elements": 168,
+      "types": {
+        "T3D2": 168
+      }
+    },
+    {
+      "name": "RBLONG_20-1",
+      "part": "RBLONG_20",
+      "nodes": 336,
+      "elements": 168,
+      "types": {
+        "T3D2": 168
+      }
+    },
+    {
+      "name": "RBLONG_21-1",
+      "part": "RBLONG_21",
+      "nodes": 304,
+      "elements": 152,
+      "types": {
+        "T3D2": 152
+      }
+    },
+    {
+      "name": "RBLONG_22-1",
+      "part": "RBLONG_22",
+      "nodes": 304,
+      "elements": 152,
+      "types": {
+        "T3D2": 152
+      }
+    },
+    {
+      "name": "RBLONG_23-1",
+      "part": "RBLONG_23",
+      "nodes": 304,
+      "elements": 152,
+      "types": {
+        "T3D2": 152
+      }
+    },
+    {
+      "name": "RBLONG_24-1",
+      "part": "RBLONG_24",
+      "nodes": 304,
+      "elements": 152,
+      "types": {
+        "T3D2": 152
+      }
+    },
+    {
+      "name": "RBLONG_25-1",
+      "part": "RBLONG_25",
+      "nodes": 304,
+      "elements": 152,
+      "types": {
+        "T3D2": 152
+      }
+    },
+    {
+      "name": "RBLONG_26-1",
+      "part": "RBLONG_26",
+      "nodes": 304,
+      "elements": 152,
+      "types": {
+        "T3D2": 152
+      }
+    },
+    {
+      "name": "RBLONG_27-1",
+      "part": "RBLONG_27",
+      "nodes": 304,
+      "elements": 152,
+      "types": {
+        "T3D2": 152
+      }
+    },
+    {
+      "name": "RBLONG_28-1",
+      "part": "RBLONG_28",
+      "nodes": 304,
+      "elements": 152,
+      "types": {
+        "T3D2": 152
+      }
+    },
+    {
+      "name": "RBLONG_29-1",
+      "part": "RBLONG_29",
+      "nodes": 304,
+      "elements": 152,
+      "types": {
+        "T3D2": 152
+      }
+    },
+    {
+      "name": "RBLONG_30-1",
+      "part": "RBLONG_30",
+      "nodes": 304,
+      "elements": 152,
+      "types": {
+        "T3D2": 152
+      }
+    },
+    {
+      "name": "RBLONG_31-1",
+      "part": "RBLONG_31",
+      "nodes": 304,
+      "elements": 152,
+      "types": {
+        "T3D2": 152
+      }
+    },
+    {
+      "name": "RHOOP_01-1",
+      "part": "RHOOP_01",
+      "nodes": 2112,
+      "elements": 2976,
+      "types": {
+        "T3D2": 2976
+      }
+    },
+    {
+      "name": "RHOOP_02-1",
+      "part": "RHOOP_02",
+      "nodes": 2112,
+      "elements": 2976,
+      "types": {
+        "T3D2": 2976
+      }
+    },
+    {
+      "name": "RHOOP_03-1",
+      "part": "RHOOP_03",
+      "nodes": 2112,
+      "elements": 2976,
+      "types": {
+        "T3D2": 2976
+      }
+    },
+    {
+      "name": "RHOOP_04-1",
+      "part": "RHOOP_04",
+      "nodes": 2112,
+      "elements": 2976,
+      "types": {
+        "T3D2": 2976
+      }
+    },
+    {
+      "name": "RHOOP_05-1",
+      "part": "RHOOP_05",
+      "nodes": 2112,
+      "elements": 2688,
+      "types": {
+        "T3D2": 2688
+      }
+    },
+    {
+      "name": "RHOOP_06-1",
+      "part": "RHOOP_06",
+      "nodes": 2112,
+      "elements": 2544,
+      "types": {
+        "T3D2": 2544
+      }
+    },
+    {
+      "name": "RHOOP_07-1",
+      "part": "RHOOP_07",
+      "nodes": 2112,
+      "elements": 2544,
+      "types": {
+        "T3D2": 2544
+      }
+    },
+    {
+      "name": "RHOOP_08-1",
+      "part": "RHOOP_08",
+      "nodes": 2112,
+      "elements": 2544,
+      "types": {
+        "T3D2": 2544
+      }
+    },
+    {
+      "name": "RHOOP_09-1",
+      "part": "RHOOP_09",
+      "nodes": 2112,
+      "elements": 2544,
+      "types": {
+        "T3D2": 2544
+      }
+    },
+    {
+      "name": "RHOOP_10-1",
+      "part": "RHOOP_10",
+      "nodes": 2112,
+      "elements": 2544,
+      "types": {
+        "T3D2": 2544
+      }
+    },
+    {
+      "name": "RHOOP_11-1",
+      "part": "RHOOP_11",
+      "nodes": 2112,
+      "elements": 2544,
+      "types": {
+        "T3D2": 2544
+      }
+    },
+    {
+      "name": "RHOOP_12-1",
+      "part": "RHOOP_12",
+      "nodes": 2112,
+      "elements": 2544,
+      "types": {
+        "T3D2": 2544
+      }
+    },
+    {
+      "name": "RHOOP_13-1",
+      "part": "RHOOP_13",
+      "nodes": 2112,
+      "elements": 2544,
+      "types": {
+        "T3D2": 2544
+      }
+    },
+    {
+      "name": "RHOOP_14-1",
+      "part": "RHOOP_14",
+      "nodes": 2112,
+      "elements": 2544,
+      "types": {
+        "T3D2": 2544
+      }
+    },
+    {
+      "name": "RHOOP_15-1",
+      "part": "RHOOP_15",
+      "nodes": 2112,
+      "elements": 2544,
+      "types": {
+        "T3D2": 2544
+      }
+    },
+    {
+      "name": "RHOOP_16-1",
+      "part": "RHOOP_16",
+      "nodes": 2112,
+      "elements": 2544,
+      "types": {
+        "T3D2": 2544
+      }
+    },
+    {
+      "name": "RHOOP_17-1",
+      "part": "RHOOP_17",
+      "nodes": 2112,
+      "elements": 2544,
+      "types": {
+        "T3D2": 2544
+      }
+    },
+    {
+      "name": "RHOOP_18-1",
+      "part": "RHOOP_18",
+      "nodes": 2112,
+      "elements": 2544,
+      "types": {
+        "T3D2": 2544
+      }
+    },
+    {
+      "name": "RHOOP_19-1",
+      "part": "RHOOP_19",
+      "nodes": 2112,
+      "elements": 2544,
+      "types": {
+        "T3D2": 2544
+      }
+    },
+    {
+      "name": "RHOOP_20-1",
+      "part": "RHOOP_20",
+      "nodes": 2112,
+      "elements": 2544,
+      "types": {
+        "T3D2": 2544
+      }
+    },
+    {
+      "name": "RHOOP_21-1",
+      "part": "RHOOP_21",
+      "nodes": 2112,
+      "elements": 2544,
+      "types": {
+        "T3D2": 2544
+      }
+    },
+    {
+      "name": "RHOOP_22-1",
+      "part": "RHOOP_22",
+      "nodes": 2112,
+      "elements": 2544,
+      "types": {
+        "T3D2": 2544
+      }
+    },
+    {
+      "name": "RHOOP_23-1",
+      "part": "RHOOP_23",
+      "nodes": 2112,
+      "elements": 2544,
+      "types": {
+        "T3D2": 2544
+      }
+    },
+    {
+      "name": "RHOOP_24-1",
+      "part": "RHOOP_24",
+      "nodes": 2112,
+      "elements": 2544,
+      "types": {
+        "T3D2": 2544
+      }
+    },
+    {
+      "name": "RHOOP_25-1",
+      "part": "RHOOP_25",
+      "nodes": 2112,
+      "elements": 2544,
+      "types": {
+        "T3D2": 2544
+      }
+    },
+    {
+      "name": "RHOOP_26-1",
+      "part": "RHOOP_26",
+      "nodes": 2112,
+      "elements": 2544,
+      "types": {
+        "T3D2": 2544
+      }
+    },
+    {
+      "name": "RHOOP_27-1",
+      "part": "RHOOP_27",
+      "nodes": 2112,
+      "elements": 2544,
+      "types": {
+        "T3D2": 2544
+      }
+    },
+    {
+      "name": "RHOOP_28-1",
+      "part": "RHOOP_28",
+      "nodes": 2112,
+      "elements": 2544,
+      "types": {
+        "T3D2": 2544
+      }
+    },
+    {
+      "name": "RHOOP_29-1",
+      "part": "RHOOP_29",
+      "nodes": 2112,
+      "elements": 2544,
+      "types": {
+        "T3D2": 2544
+      }
+    },
+    {
+      "name": "RHOOP_30-1",
+      "part": "RHOOP_30",
+      "nodes": 2112,
+      "elements": 2544,
+      "types": {
+        "T3D2": 2544
+      }
+    },
+    {
+      "name": "RHOOP_31-1",
+      "part": "RHOOP_31",
+      "nodes": 1728,
+      "elements": 2064,
+      "types": {
+        "T3D2": 2064
+      }
+    },
+    {
+      "name": "FLANGE_SOLID-1",
+      "part": "FLANGE_SOLID",
+      "nodes": 10368,
+      "elements": 6912,
+      "types": {
+        "C3D8I": 6912
+      }
+    },
+    {
+      "name": "SSEG_01-1",
+      "part": "SSEG_01",
+      "nodes": 240,
+      "elements": 96,
+      "types": {
+        "C3D8I": 96
+      }
+    },
+    {
+      "name": "SSEG_02-1",
+      "part": "SSEG_02",
+      "nodes": 240,
+      "elements": 96,
+      "types": {
+        "C3D8I": 96
+      }
+    },
+    {
+      "name": "SSEG_03-1",
+      "part": "SSEG_03",
+      "nodes": 240,
+      "elements": 96,
+      "types": {
+        "C3D8I": 96
+      }
+    },
+    {
+      "name": "SSEG_04-1",
+      "part": "SSEG_04",
+      "nodes": 240,
+      "elements": 96,
+      "types": {
+        "C3D8I": 96
+      }
+    },
+    {
+      "name": "PT_36x15p2-1",
+      "part": "PT_36x15p2",
+      "nodes": 72,
+      "elements": 36,
+      "types": {
+        "T3D2": 36
+      }
+    },
+    {
+      "name": "RNA_FLEX_DPM-1",
+      "part": "RNA_FLEX_DPM",
+      "nodes": 308,
+      "elements": 460,
+      "types": {
+        "B31": 150,
+        "MASS": 155,
+        "ROTARYI": 155
+      }
+    }
+  ]
+}
