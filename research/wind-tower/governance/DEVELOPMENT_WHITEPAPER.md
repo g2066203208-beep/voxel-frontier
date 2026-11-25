@@ -1,3 +1,8 @@
+### 2026-11-25｜v0.32.219 — REV22原始网格实际可视化
+
+- RUN45576130275实际由原始INP（SHA256 e84851887735305c6387ca38a972bebd97ba9cdff7baa7735c0ed89cecf925b5）解析100 Part及100 Instance，96604零件节点、96464零件单元；逐一应用实际平移、校验连接节点存在，提取C3D8外表面、T3D2/B31真实端点及MASS节点；不绘ROTARYI独立虚构几何，另有1装配参考点未绘。未修改输入、无变形、非CAE截图。
+- main 07013dc13f50133f3c9754caf0491c57480f49a8 保存四组图和receipt.json；已实际回读图件，整塔隐藏内部钢筋，内部钢筋全高等比例图横轴标签有重叠，局部细节图清晰。RNA真实为150 B31、155 MASS、155 ROTARYI，没有实体机舱/叶片。工作室入口43ab011a20a94af25f0ca370054e8fdd7c90a6dd。Pages最终部署未核验，原生CAE导入未验。
+
 ### 2026-11-25｜v0.32.218 — REV22装配层级专项核验与标准INP交付
 
 - 用户本轮明确授权装配问题专项处理。RUN45575428403 success，原始REV22 TXT SHA256 e84851887735305c6387ca38a972bebd97ba9cdff7baa7735c0ed89cecf925b5，15,693,508 bytes，实际逐关键字读取：100 Part、100 Instance、1 Assembly，31 CSEG、31 RBLONG、31 RHOOP、4 SSEG、1 FLANGE_SOLID、1 PT_36x15p2、1 RNA_FLEX_DPM；装配层仅1参考节点，无裸单元，30 Contact Pair、62 Embedded Element、5 Tie、108 Equation、1 Coupling、1 Rigid Body。报告blob23d2a1b164825c05613c876c825bc070dc791c4b。RNA和PT仍分别各为一个组合零件，不声称叶片、轮毂或各PT已分别独立。
