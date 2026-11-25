@@ -1,0 +1,17 @@
+{
+  "reference": "Brown et al. 2024 Fig.10",
+  "doi": "10.5194/wes-9-1791-2024",
+  "source_pdf": "research/wind-tower/references/open-access/Brown_2024_WES_9_1791.pdf",
+  "pdf_sha256": "cd29e924829f6a8e5b7a6d340d07b4f84d6e851af7eee4ed33173e6c2e2cd623",
+  "pdf_page": 12,
+  "crop_pdf_points": [
+    113.10208129882812,
+    66.33023071289062,
+    481.60516357421875,
+    142.63372802734375
+  ],
+  "reference_png_sha256": "159cf1abff466d8fd1721961c2fada6e93e24076c891ce89e0644d2728a5124c",
+  "our_png_sha256": "0c38eae390ff3510e7037ff9959e8d52295395b3c6047ea2bde13b8d1edf71c2",
+  "comparison_sha256": "98fc0ce890c8268e03f7d08d51b12137725cad5332b8c8c2c7e788de897f8806",
+  "scope": "Partial quantity match: mean horizontal versus mean longitudinal speed; longitudinal TI; reference additionally shows direction and transverse/vertical TI. Not physical validation."
+}
