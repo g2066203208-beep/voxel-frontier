@@ -5551,7 +5551,7 @@
           "id": "wind-r22-load-reference",
           "kind": "text",
           "style": "Normal",
-          "text": "Zheng等[137]采用TurbSim生成入流，并通过OpenFAST计算叶片和塔身荷载后等效施加至有限元模型。本文分别计算风轮气动荷载与塔身分布风阻，塔身风阻的计算及离散方法如下。",
+          "text": "Zheng等[137]采用TurbSim生成入流，通过OpenFAST计算叶片及塔身荷载，并等效施加至有限元模型。本文历史整机气动计算与新风场塔身风阻计算分别进行，以下给出塔身分布风阻的计算与离散方法。",
           "has_media": false,
           "has_math": false,
           "online_only": true
